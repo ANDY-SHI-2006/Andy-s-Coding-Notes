@@ -29,6 +29,14 @@ This repository contains my personal programming study notes, documenting my lea
 
 本仓库包含我的个人编程学习笔记，记录我的编程学习历程。
 
+### ⚠️ Note | 注意
+
+> **English is the primary language** for note-taking. English notes are updated more frequently.
+> 
+> **中文笔记为辅助翻译版本**，由 AI 翻译生成。如有歧义或理解问题，请以英文笔记为准。
+> 
+> If there are any ambiguities or understanding issues, please refer to the English version.
+
 ---
 
 **Happy Learning! | 祝你学习愉快！** 🚀
