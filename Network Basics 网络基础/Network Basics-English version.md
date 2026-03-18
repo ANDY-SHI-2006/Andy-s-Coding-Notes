@@ -1,76 +1,92 @@
 # 1. Networking Fundamentals
 
----
+## 1.1 Network Architecture
 
-## Table of Contents
+Two primary network architectures: **C/S** and **B/S**.
 
-- [1.1 Introduction to Networks](#11-introduction-to-networks)
-- [1.2 Network Architecture](#12-network-architecture)
-- [1.3 Three Key Components of Networks](#13-three-key-components-of-networks)
-  - [1.3.1 IP Address](#131-ip-address)
-  - [1.3.2 Port Numbers](#132-port-numbers)
-  - [1.3.3 Protocols](#133-protocols)
-- [1.4 Network Communication Protocol Models](#14-network-communication-protocol-models)
-  - [1.4.1 The OSI Model](#141-the-osi-model)
-  - [1.4.2 The TCP/IP Model](#142-the-tcpip-model)
-- [1.5 Transport Layer: TCP and UDP](#15-transport-layer-tcp-and-udp)
-  - [1.5.1 Comparison and Summary](#151-comparison-and-summary)
-- [1.6 What Data Can Be Transmitted?](#16-what-data-can-be-transmitted)
+### C/S: Client / Server
+Requires downloading a client application to use.
 
----
+| Aspect | Description |
+|--------|-------------|
+| **Client** | Terminal program installed locally (WeChat, TikTok, Steam, LoL) |
+| **Server** | 24/7 standby, responds to requests (e.g., Tencent WeChat Server) |
+| **Use Cases** | Games, Banking Apps (high performance & security needs) |
 
-## 1.1 Introduction to Networks
+**Pros:**
+- Excellent UX: rich graphics/audio stored locally
+- Offline capability (single-player games, document editing)
+- Better security, data can be stored locally
 
-*(To be filled)*
+**Cons:**
+- Higher dev/maintenance cost (client + server)
+- Users must download updates
+- Cross-platform complexity (iOS, Android, Windows)
 
----
+### B/S: Browser / Server
+No installation needed; access via browser using URLs.
 
-## 1.2 Network Architecture
+| Aspect | Description |
+|--------|-------------|
+| **Access** | Browser + URL (baidu.com, jd.com, bilibili.com) |
+| **Use Cases** | Entertainment, shopping, web games (convenience-focused) |
 
-*(To be filled)*
+**Pros:**
+- No client development needed (web page + server only)
+- Zero install for users; open browser and go
+- Easy updates: server-side only, users just refresh
+- Cross-platform: any device with a browser
 
----
+**Cons:**
+- Everything loaded from server → network dependent
+- Poor performance for large apps (low quality graphics/audio)
+- Limited interactivity compared to native apps
 
-## 1.3 Three Key Components of Networks
+### Comparison Summary
 
-### 1.3.1 IP Address
+| Criteria | C/S Architecture | B/S Architecture |
+|----------|------------------|------------------|
+| **Usage** | Download required | Browser only |
+| **UX** | Fast, rich, smooth | Browser-limited, may lag |
+| **Cross-platform** | Multiple versions needed | Any browser works |
+| **Maintenance** | Client updates needed | Server-only updates |
+| **Security** | More secure (local data) | Server-dependent, vulnerable |
+| **Examples** | LoL, Banking apps | Taobao, JD, Weibo |
 
-*(To be filled)*
+> **Conclusion:** C/S for performance/security (games); B/S for ease of use (web apps). Many apps use both.
 
-### 1.3.2 Port Numbers
+## 1.2 Three Key Components of Networks
 
-*(To be filled)*
-
-### 1.3.3 Protocols
-
-*(To be filled)*
-
----
-
-## 1.4 Network Communication Protocol Models
-
-### 1.4.1 The OSI Model
-
-*(To be filled)*
-
-### 1.4.2 The TCP/IP Model
-
-*(To be filled)*
-
----
-
-## 1.5 Transport Layer: TCP and UDP
-
-### 1.5.1 Comparison and Summary
+### 1.2.1 IP Address
 
 *(To be filled)*
 
----
-
-## 1.6 What Data Can Be Transmitted?
+### 1.2.2 Port Numbers
 
 *(To be filled)*
 
----
+### 1.2.3 Protocols
+
+*(To be filled)*
+
+## 1.3 Network Communication Protocol Models
+
+### 1.3.1 The OSI Model
+
+*(To be filled)*
+
+### 1.3.2 The TCP/IP Model
+
+*(To be filled)*
+
+## 1.4 Transport Layer: TCP and UDP
+
+### 1.4.1 Comparison and Summary
+
+*(To be filled)*
+
+## 1.5 What Data Can Be Transmitted?
+
+*(To be filled)*
 
 > **Note**: This is an English version of the networking notes. The content is to be filled gradually.
