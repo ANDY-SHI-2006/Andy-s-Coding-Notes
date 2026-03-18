@@ -1,8 +1,8 @@
-# Basics
+# 1. Basics
 
-## Program Structure
+## 1.1 Program Structure
 
-### Include Header
+### 1.1.1 Include Header
 
 There are two ways to include header files:
 
@@ -16,11 +16,11 @@ There are two ways to include header files:
 | `< >`  | System directories first             | Standard library (e.g., `vector`, `string`) |
 | `" "`  | Current directory first, then system | Custom headers                              |
 
-### Using std Namespace
+### 1.1.2 Using std Namespace
 
 There are two ways to use standard library features:
 
-#### Method 1: Add `std::` prefix
+#### 1.1.2.1 Method 1: Add `std::` prefix
 
 ```cpp
 #include <iostream>
@@ -31,7 +31,7 @@ int main() {
 }
 ```
 
-#### Method 2: Use `using namespace std`
+#### 1.1.2.2 Method 2: Use `using namespace std`
 
 ```cpp
 #include <iostream>
@@ -43,7 +43,7 @@ int main() {
 }
 ```
 
-### Main Function
+### 1.1.3 Main Function
 
 | Declaration   | Standard       | Return Value                    | Usage                |
 | ------------- | -------------- | ------------------------------- | -------------------- |
@@ -66,9 +66,9 @@ int main(int argc, char* argv[]) {
 
 ---
 
-## Code Standardization
+## 1.2 Code Standardization
 
-### Comments
+### 1.2.1 Comments
 
 | Type | Syntax | Usage | Example |
 |------|--------|-------|---------|
@@ -94,7 +94,7 @@ int b = 20;
 - Use `//` to temporarily disable a line of code during debugging
 - Documentation tools (e.g., Doxygen) recognize special comment formats
 
-#### Comments for Program Structure
+#### 1.2.1.1 Comments for Program Structure
 
 Comments are often used to mark the beginning and end of sections:
 
@@ -109,7 +109,7 @@ The `return 0;` statement ends program execution and returns control to the oper
 
 The `}` (right brace) marks the end of the `main` function body, typically placed on a line by itself. A comment line can be used to delineate the end of the function for clarity.
 
-### White Space
+### 1.2.2 White Space
 
 **White space** (blank lines and indentation) makes programs more **readable**, easier to **modify**, and provides a **consistent style**.
 
@@ -118,7 +118,7 @@ The `}` (right brace) marks the end of the `main` function body, typically place
 | **Blank lines** | Separate different components | Between function sections |
 | **Indentation** | Show program structure        | Inside `{ }` blocks       |
 
-#### Blank Lines
+#### 1.2.2.1 Blank Lines
 
 Blank lines separate logical sections to improve readability:
 
@@ -137,7 +137,7 @@ int main() {
 }
 ```
 
-#### Indentation
+#### 1.2.2.2 Indentation
 
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
@@ -153,7 +153,7 @@ cout << "This is a very long message that "
      << endl;
 ```
 
-### Identifier Naming
+### 1.2.3 Identifier Naming
 
 Rules for selecting a valid identifier:
 
@@ -164,7 +164,7 @@ Rules for selecting a valid identifier:
 | **Case sensitivity** | `abc` ≠ `ABC` | — |
 | **Length** | Unlimited | — |
 
-#### Examples of Valid Identifiers
+#### 1.2.3.1 Examples of Valid Identifiers
 
 | Identifier | Note |
 |------------|------|
@@ -174,7 +174,7 @@ Rules for selecting a valid identifier:
 | `average_measurement` | Descriptive name with underscore |
 | `initial_time` | Clear and readable |
 
-#### Examples of Invalid Identifiers
+#### 1.2.3.2 Examples of Invalid Identifiers
 
 | Identifier | Reason |
 |------------|--------|
@@ -183,11 +183,11 @@ Rules for selecting a valid identifier:
 | `$sum` | Contains invalid character `$` |
 | `rate%` | Contains invalid character `%` |
 
-#### Reserved Keywords
+#### 1.2.3.3 Reserved Keywords
 
 Cannot use C++ keywords as identifiers (e.g., `int`, `return`, `if`, `while`).
 
-#### Complete Program Example
+#### 1.2.3.4 Complete Program Example
 
 ```cpp
 /*--------------------------------------*/
@@ -223,7 +223,7 @@ int main(void)
 
 ---
 
-## Declarations and Statements
+## 1.3 Declarations and Statements
 
 The `main` function contains two types of commands:
 
@@ -246,7 +246,7 @@ int main() {
 }
 ```
 
-### Initialization
+### 1.3.1 Initialization
 
 | Syntax | Description |
 |--------|-------------|
@@ -267,13 +267,13 @@ double side_1, side_2, distance;  // All uninitialized
 
 ---
 
-## Operators
+## 1.4 Operators
 
 Operators in C++ are symbols that perform operations on operands.
 
-### Classification of Operators
+### 1.4.1 Classification of Operators
 
-#### Classification by Number of Operands
+#### 1.4.1.1 Classification by Number of Operands
 
 Operators can be classified based on the **number of operands** they require:
 
@@ -289,7 +289,7 @@ Operators can be classified based on the **number of operands** they require:
 - `*` : Dereference vs. Multiplication
 - `&` : Address-of vs. Bitwise AND
 
-#### Classification by Purpose
+#### 1.4.1.2 Classification by Purpose
 
 Operators can also be categorized by their **function or purpose**:
 
@@ -307,9 +307,9 @@ Operators can also be categorized by their **function or purpose**:
 | **Scope** | `::` | Scope resolution |
 | **Other** | `,` `sizeof` `typeid` `new` `delete` | Comma, size query, memory management |
 
-### Binary Operators
+### 1.4.2 Binary Operators
 
-#### Division
+#### 1.4.2.1 Division
 
 ```cpp
 int a = 7 / 2;       // Result: 3 (integer division, truncates decimal)
@@ -322,7 +322,7 @@ double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
 | `int / int` | `int` | Decimal part discarded |
 | `double / int` | `double` | Normal division |
 
-#### Modulo
+#### 1.4.2.2 Modulo
 
 Returns the **remainder** of division.
 
@@ -338,11 +338,11 @@ int t = 6 % 2;   // Result: 0 (divisible, no remainder)
 // double x = 7.5 % 2;  // Error! % requires integers
 ```
 
-##### Modulo with Negative Numbers
+##### 1.4.2.2.1 Modulo with Negative Numbers
 
 If either of the integer values is negative, the result of `a % b` is **system dependent** according to different C++ standards:
 
-##### 1. C++98/03: Implementation-defined
+##### 1.4.2.2.2 C++98/03: Implementation-defined
 
 The behavior is **not specified** by the standard. Different compilers may produce different results.
 
@@ -351,7 +351,7 @@ The behavior is **not specified** by the standard. Different compilers may produ
 -5 % 3;  // Could be -2 or 1, depending on the compiler
 ```
 
-##### 2. C++11 and later: Truncate toward Zero
+##### 1.4.2.2.3 C++11 and later: Truncate toward Zero
 
 Since C++11, the standard uniformly specifies **truncation toward zero** for integer division, which determines the modulo result.
 
@@ -362,23 +362,23 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 -5 % -3;  // Result: -2 (guaranteed)
 ```
 
-##### Key Characteristics of C++11 Behavior
+##### 1.4.2.2.4 Key Characteristics of C++11 Behavior
 - The quotient `a / b` is truncated toward zero (fractional part is discarded)
 - The sign of the remainder follows the sign of the dividend (numerator)
 - The identity `(a/b)*b + a%b == a` always holds
 
 **Note:** There are only these two standards in C++. Modern compilers (C++11 and later) use the "truncate toward zero" rule.
 
-#### Mixed Operations (Implicit Type Conversion)
+#### 1.4.2.3 Mixed Operations (Implicit Type Conversion)
 
 When operands have different types, C++ automatically converts the "narrower" type to the "wider" type before performing the operation.
 
-##### Type Promotion Hierarchy
+##### 1.4.2.3.1 Type Promotion Hierarchy
 ```
 char → short → int → long → long long → float → double → long double
 ```
 
-##### Common Mixed Operation Scenarios
+##### 1.4.2.3.2 Common Mixed Operation Scenarios
 
 | Scenario | Result Type | Explanation |
 |----------|-------------|-------------|
@@ -387,7 +387,7 @@ char → short → int → long → long long → float → double → long doub
 | `short` + `int` | `int` | `short` is promoted to `int` |
 | `int` / `double` | `double` | Integer division becomes floating-point |
 
-##### Common Pitfall - Integer Division vs. Mixed Division
+##### 1.4.2.3.3 Common Pitfall - Integer Division vs. Mixed Division
 
 ```cpp
 int sum = 7, count = 2;
@@ -399,18 +399,18 @@ double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
 
 **Key Point:** In mixed operations, at least one operand must be floating-point to get a floating-point result. The assignment to `double` happens **after** the division operation.
 
-### Cast Operators (Type Conversion)
+### 1.4.3 Cast Operators (Type Conversion)
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
-#### Common Usage Scenarios
+#### 1.4.3.1 Common Usage Scenarios
 
 | Expression | Result | Explanation |
 |------------|--------|-------------|
 | `sum / count` (both `int`) | `3` (if sum=7, count=2) | Integer division, decimal dropped |
 | `(float)sum / count` | `3.5` | `sum` converted to float first |
 
-#### C-Style Cast
+#### 1.4.3.2 C-Style Cast
 
 ```cpp
 float average = (float)sum / count;  // C-style cast
@@ -442,7 +442,7 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 // (float)sum is temporary, sum itself remains unchanged!
 ```
 
-#### C++ Style Casts (Recommended)
+#### 1.4.3.3 C++ Style Casts (Recommended)
 
 C++ provides four type cast operators for safer, more explicit conversions:
 
@@ -453,7 +453,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 | `const_cast` | Add/remove const qualifier | `const_cast<char*>(str)` |
 | `reinterpret_cast` | Low-level bit reinterpretation | `reinterpret_cast<int*>(ptr)` |
 
-##### Comparison of C++ Cast Operators
+##### 1.4.3.3.1 Comparison of C++ Cast Operators
 
 | Characteristic | `static_cast` | `dynamic_cast` | `const_cast` | `reinterpret_cast` |
 |----------------|---------------|----------------|--------------|---------------------|
@@ -468,7 +468,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 double avg = static_cast<double>(sum) / count;
 ```
 
-### Operator Precedence
+### 1.4.4 Operator Precedence
 
 | Precedence | Operator | Associativity |
 |------------|----------|---------------|
@@ -492,9 +492,9 @@ float d = (float)5 / 2;  // Result: 2.5, cast has higher precedence
 
 ---
 
-## Data Types
+## 1.5 Data Types
 
-### Numeric Types
+### 1.5.1 Numeric Types
 
 Numeric data types are divided into two categories:
 
@@ -503,7 +503,7 @@ Numeric data types are divided into two categories:
 | **Integers**       | `short`, `int`, `long`           | Whole numbers without decimals |
 | **Floating-point** | `float`, `double`, `long double` | Numbers with decimal points    |
 
-#### Integer Ranges
+#### 1.5.1.1 Integer Ranges
 
 | Type | Size | Range |
 |------|------|-------|
@@ -514,7 +514,7 @@ Numeric data types are divided into two categories:
 | `long` | 4-8 bytes | Platform dependent |
 | `long long` | 8 bytes | -9 quintillion to 9 quintillion |
 
-#### Floating-Point Precision
+#### 1.5.1.2 Floating-Point Precision
 
 | Type          | Size       | Precision     | Typical Range      |
 | ------------- | ---------- | ------------- | ------------------ |
@@ -522,24 +522,11 @@ Numeric data types are divided into two categories:
 | `double`      | 8 bytes    | ~15 digits    | ±1.7 × 10³⁰⁸       |
 | `long double` | 8-16 bytes | ~18-21 digits | Platform dependent |
 
-#### Integers
+### 1.5.2 Integers
 
-| Modifier | Description | Range Example (32-bit int) |
-|----------|-------------|---------------------------|
-| `signed` | Can be positive or negative (default) | `-2,147,483,648` to `2,147,483,647` |
-| `unsigned` | Only non-negative (0 and positive) | `0` to `4,294,967,295` |
+**Note**: `signed` and `unsigned` modifiers can only be used with **integer types** (`short`, `int`, `long`, `long long`). They **cannot** be used with floating-point types (`float`, `double`, `long double`).
 
-```cpp
-int a = -100;           // Can be negative
-signed int b = 100;     // Explicitly signed
-unsigned int c = 100;   // Cannot be negative
-```
-
-**Note**: `unsigned` doubles the positive range but cannot represent negative numbers. Useful for counters, sizes, and bit manipulation.
-
-**Important**: `signed` and `unsigned` modifiers can only be used with **integer types** (`short`, `int`, `long`, `long long`). They **cannot** be used with floating-point types (`float`, `double`, `long double`).
-
-#### Floating-Point Values
+### 1.5.3 Floating-Point Values
 
 By default, a floating-point constant like `2.3` is treated as a **`double`** constant.
 
@@ -558,7 +545,7 @@ double c = 2.5;     // OK: 2.5 is double by default
 long double d = 2.5L;  // OK: 2.5L is long double
 ```
 
-### Character and String Literals
+### 1.5.4 Character and String Literals
 
 | Syntax | Type | Example | Storage |
 |--------|------|---------|---------|
@@ -578,7 +565,7 @@ string s2 = "Hello";    // OK, C++ string
 - `'\n'` is a `char` (newline character)
 - `"\n"` is a string containing newline + null terminator
 
-#### Character Constants
+#### 1.5.4.1 Character Constants
 
 - Enclosed in **single quotes**: `'A'`, `'b'`, `'3'`
 - Only **one character** allowed
@@ -590,11 +577,11 @@ char c = 'A';       // OK
 // char e = "A";    // Error: double quotes are for strings
 ```
 
-### Symbolic Constants
+### 1.5.5 Symbolic Constants
 
 The directive can appear anywhere in a C++ program.
 
-#### Ways to Define Constants
+#### 1.5.5.1 Ways to Define Constants
 
 | Method              | Syntax                           | Description                                      |
 | ------------------- | -------------------------------- | ------------------------------------------------ |
@@ -618,7 +605,7 @@ constexpr int MAX_SIZE = 100;
 
 **Note:**  `#define PI 3.14159` - Preprocessor directives do not end with a semicolon
 
-#### Redefinition Rules
+#### 1.5.5.2 Redefinition Rules
 
 **Same scope**: Cannot redefine with the same name
 ```cpp
@@ -647,21 +634,21 @@ int main() {
 #define PI 3.14159      // Now valid
 ```
 
-#### Recommendation
+#### 1.5.5.3 Recommendation
 
 - **Prefer `const` or `constexpr`** over `#define` in C++
 - `const`/`constexpr` have type checking and scope rules
 - `constexpr` is more strict: value must be computable at compile time
 
-### Type Conversion
+### 1.5.6 Type Conversion
 
-#### Type Promotion Hierarchy
+#### 1.5.6.1 Type Promotion Hierarchy
 
 ```
 char → short → int → long → long long → float → double → long double
 ```
 
-#### Operation Type Conversion 
+#### 1.5.6.2 Operation Type Conversion
 
 When operands have different types, C++ automatically converts the "narrower" type to the "wider" type.
 
@@ -679,7 +666,7 @@ double b = 2.5;
 auto c = a + b;     // Result: 7.5 (type: double)
 ```
 
-#### Common Pitfall
+#### 1.5.6.3 Common Pitfall
 
 ```cpp
 double x = 5 / 2;       // Result: 2.0 (integer division first!)
@@ -688,7 +675,7 @@ double y = 5.0 / 2;     // Result: 2.5 (correct)
 
 **Key Point**: Operations between integers produce integer results. Use at least one floating-point number for decimal results.
 
-#### Assignment Type Conversion
+#### 1.5.6.4 Assignment Type Conversion
 
 | Direction | Result | Example |
 |-----------|--------|---------|
@@ -716,15 +703,13 @@ int b = -2.7f;          // b = -2
 
 ---
 
-## Data Input
-
-
+## 1.6 Data Input
 
 ---
 
-## Data Output
+## 1.7 Data Output
 
-### Newline Control
+### 1.7.1 Newline Control
 
 Both create a new line, but with a key difference:
 
@@ -740,15 +725,15 @@ cout << "Hello" << '\n';    // Just newline, faster
 
 **Note**: Frequent use of `endl` can slow down the program. Use `'\n'` unless you need to force output immediately.
 
-### Output Formatting
+### 1.7.2 Output Formatting
 
-#### Header Dependency
+#### 1.7.2.1 Header Dependency
 
 ```cpp
 #include <iomanip>
 ```
 
-#### Core Mechanism
+#### 1.7.2.2 Core Mechanism
 
 C++ has three floating-point output formats:
 
@@ -758,14 +743,14 @@ C++ has three floating-point output formats:
 | `fixed` | Fixed-point notation | `12345.678900` |
 | `scientific` | Scientific notation | `1.234568e+04` |
 
-#### setprecision(n) Meaning
+#### 1.7.2.3 setprecision(n) Meaning
 
 `setprecision(n)` behavior depends on the current format:
 
 - **Default**: `n` significant digits
 - `fixed`/`scientific`: `n` digits after decimal point
 
-#### Detailed Comparison and Examples
+#### 1.7.2.4 Detailed Comparison and Examples
 
 ```cpp
 double pi = 3.1415926535;
@@ -786,7 +771,7 @@ cout << scientific << setprecision(4);
 cout << 123.456 << endl;  // 1.2346e+02
 ```
 
-#### State Persistence (Important)
+#### 1.7.2.5 State Persistence (Important)
 
 `fixed` and `setprecision` persist until explicitly changed.
 
@@ -796,7 +781,7 @@ cout << 1.234 << endl;  // 1.23
 cout << 5.678 << endl;  // 5.68 (format still active!)
 ```
 
-#### Reset to Default
+#### 1.7.2.6 Reset to Default
 
 ```cpp
 // C++11 method
@@ -807,21 +792,21 @@ cout.unsetf(ios::fixed | ios::scientific);
 cout << setprecision(6);
 ```
 
-#### C-style Output: `printf()` Format Specifier Syntax
+#### 1.7.2.7 C-style Output: `printf()` Format Specifier Syntax
 
-#### Header Dependency
+##### 1.7.2.7.1 Header Dependency
 
 ```c
 #include <stdio.h>
 ```
 
-#### Basic Syntax Structure
+##### 1.7.2.7.2 Basic Syntax Structure
 
 ```
 %[flags][width][.precision][length modifier]conversion specifier
 ```
 
-#### Conversion Specifiers (Required)
+##### 1.7.2.7.3 Conversion Specifiers (Required)
 
 | Specifier | Data Type | Output Form |
 |-----------|-----------|-------------|
@@ -838,7 +823,7 @@ cout << setprecision(6);
 | `%n` | `int*` | Write the number of characters printed so far |
 | `%%` | None | Literal percent sign |
 
-#### Flags (Optional)
+##### 1.7.2.7.4 Flags (Optional)
 
 | Flag | Name | Description |
 |------|------|-------------|
@@ -848,12 +833,12 @@ cout << setprecision(6);
 | `#` | Alternative form | Prefix octal with `0`, hex with `0x`/`0X`; force decimal point for floats |
 | `0` | Zero-padding | Pad with leading zeros instead of spaces |
 
-#### Width (Optional)
+##### 1.7.2.7.5 Width (Optional)
 
 - **Number**: Minimum field width. If the value is shorter, pad with spaces (or `0` if flag `0` is set). If longer, output is not truncated.
 - **`*`**: Width is specified by an additional `int` argument.
 
-#### Precision (Optional)
+##### 1.7.2.7.6 Precision (Optional)
 
 Prefix with `.`:
 
@@ -864,7 +849,7 @@ Prefix with `.`:
 | Scientific (`g`, `G`) | Maximum number of significant digits |
 | String (`s`) | Maximum number of characters to print (truncation) |
 
-#### Length Modifiers (Optional)
+##### 1.7.2.7.7 Length Modifiers (Optional)
 
 | Modifier | Use with `d`/`i`/`o`/`u`/`x`/`X` | Use with `n` |
 |----------|----------------------------------|--------------|
@@ -877,7 +862,7 @@ Prefix with `.`:
 | `t` | `ptrdiff_t` | `ptrdiff_t*` |
 | `L` | With `f`/`e`/`g`: `long double` | — |
 
-#### Examples
+##### 1.7.2.7.8 Examples
 
 ```c
 // Left-aligned, width 10
@@ -910,31 +895,23 @@ printf("%lld", 9223372036854775807LL);
 
 ---
 
-## Control Flow
-
-
+## 1.8 Control Flow
 
 ---
 
-## Functions
-
-
+## 1.9 Functions
 
 ---
 
-## Object-Oriented Programming
-
-
+## 1.10 Object-Oriented Programming
 
 ---
 
-## STL
-
-
+## 1.11 STL
 
 ---
 
-## Advanced Topics
+## 1.12 Advanced Topics
 
 
 

@@ -1,0 +1,23 @@
+{
+  "id": "conv-1773827929235-s0g6qf7eb",
+  "title": "Say hello",
+  "titleGenerationStatus": "success",
+  "createdAt": 1773827929242,
+  "updatedAt": 1773829772286,
+  "lastResponseAt": 1773829772286,
+  "sessionId": "b84e6ace-2ceb-418b-b2a7-7856fe7d5789",
+  "sdkSessionId": "b84e6ace-2ceb-418b-b2a7-7856fe7d5789",
+  "previousSdkSessionIds": [
+    "648eed9a-40e2-4522-8eac-26742ad1e0ed"
+  ],
+  "currentNote": "python/python.md",
+  "usage": {
+    "model": "kimi-k2.5",
+    "inputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 0,
+    "contextWindow": 200000,
+    "contextTokens": 0,
+    "percentage": 0
+  }
+}
