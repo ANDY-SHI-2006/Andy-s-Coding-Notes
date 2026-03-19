@@ -811,6 +811,28 @@ double c = 2.5;     // OK: 2.5 is double by default
 long double d = 2.5L;  // OK: 2.5L is long double
 ```
 
+#### 1.5.3.1 Overflow and Underflow
+
+Floating-point values have a limited range. If a computation exceeds this range, an error occurs.
+
+**Key Points:**
+- Values stored in computers have a wide but **finite** range of allowed values
+- If computation result exceeds the range → **overflow** error
+- If computation result is too small (near zero) → **underflow** error
+
+**Example Range (float):**
+- Typical exponent range: approximately -38 to 38
+- This accommodates most computations, but expressions can exceed this range
+
+```cpp
+float x = 1e38;      // Near max value
+float y = x * 10;    // Overflow! Result too large
+float z = 1e-38;     // Near min positive value
+float w = z / 100;   // Underflow! Result too small, becomes 0
+```
+
+**Note:** Use larger types (`double`, `long double`) for computations that may produce very large or very small values.
+
 ### 1.5.4 Character and String Literals
 
 | Syntax | Type | Example | Storage |
