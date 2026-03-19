@@ -972,6 +972,20 @@ char c = 'A';       // OK
 // char e = "A";    // Error: double quotes are for strings
 ```
 
+#### 1.5.4.2 Character and Numeric Arithmetic
+
+Characters can be used directly in arithmetic operations with numbers because characters are stored in memory as their ASCII values (binary integers).
+
+```cpp
+char c = 'A';           // ASCII 65
+int i = c + 1;          // 65 + 1 = 66, which is 'B'
+char d = c + 1;         // d = 'B'
+char e = 'C' - 1;       // e = 'B' (67 - 1 = 66)
+int diff = 'D' - 'A';   // 68 - 65 = 3
+```
+
+**Key Concept**: `char` is essentially a small integer (1 byte) storing the ASCII code value of the character.
+
 ### 1.5.5 Symbolic Constants
 
 The directive can appear anywhere in a C++ program.
