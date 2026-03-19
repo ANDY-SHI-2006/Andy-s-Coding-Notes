@@ -5,11 +5,13 @@
 
 ---
 
-## 🌐 Choose Your Language | 选择语言
+## 🌐 Documentation Versions | 文档版本
 
-| 🇺🇸 English | 🇨🇳 中文 |
-|:----------:|:-------:|
-| **[English Version →](README-English%20version.md)** | **[中文版 →](README-中文版.md)** |
+本仓库提供中英文双版本文档，点击下方链接查看对应语言的使用说明：
+
+| 🇺🇸 English Version | 🇨🇳 中文版 |
+|:------------------:|:---------:|
+| **[English Documentation →](README-English%20version.md)** | **[中文使用文档 →](README-中文版.md)** |
 
 ---
 
