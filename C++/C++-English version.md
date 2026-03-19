@@ -661,7 +661,26 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 > **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
 
-### 1.4.3 Compound Assignment Operators
+### 1.4.3 Assignment Operators
+
+#### 1.4.3.1 Simple Assignment
+
+The assignment operator `=` assigns a value to a variable.
+
+**Multiple Assignment:**
+```cpp
+x = y = z = 0;  // Assign 0 to z, then to y, then to x
+```
+
+**Evaluation Order:** Right to left (due to right-associativity of `=`)
+```cpp
+// Equivalent to:
+z = 0;
+y = z;  // y = 0
+x = y;  // x = 0
+```
+
+#### 1.4.3.2 Compound Assignment
 
 C/C++ allows simple assignment statements to be abbreviated using compound assignment operators.
 
@@ -671,8 +690,6 @@ identifier = identifier operator expression;  // Can be abbreviated to:
 identifier operator= expression;
 ```
 
-**Common Compound Assignment Operators:**
-
 | Operator | Example | Equivalent To |
 |----------|---------|---------------|
 | `+=` | `x += 3;` | `x = x + 3;` |
@@ -680,18 +697,6 @@ identifier operator= expression;
 | `*=` | `x *= 3;` | `x = x * 3;` |
 | `/=` | `x /= 3;` | `x = x / 3;` |
 | `%=` | `x %= 3;` | `x = x % 3;` |
-
-**Examples:**
-```cpp
-sum = sum + x;      // Can be written as:
-sum += x;
-
-d = d / 4.5;        // Can be written as:
-d /= 4.5;
-
-r = r % 2;          // Can be written as:
-r %= 2;
-```
 
 **Advantages:**
 - Shorter and more concise
@@ -702,14 +707,14 @@ r %= 2;
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
-#### 1.4.3.1 Common Usage Scenarios
+#### 1.4.4.1 Common Usage Scenarios
 
 | Expression | Result | Explanation |
 |------------|--------|-------------|
 | `sum / count` (both `int`) | `3` (if sum=7, count=2) | Integer division, decimal dropped |
 | `(float)sum / count` | `3.5` | `sum` converted to float first |
 
-#### 1.4.3.2 C-Style Cast
+#### 1.4.4.2 C-Style Cast
 
 ```cpp
 float average = (float)sum / count;  // C-style cast
