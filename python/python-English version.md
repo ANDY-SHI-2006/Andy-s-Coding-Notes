@@ -523,9 +523,9 @@ str1.count("on")         # 3
 "###hello###".strip("#")  # "hello"
 ```
 
-## 4.5 List CRUD Operations
+## 4.6 List Operations
 
-### 4.5.1 Add
+### 4.6.1 Add
 
 | Method | Syntax | Description | Notes |
 |--------|--------|-------------|-------|
@@ -541,7 +541,7 @@ list1.insert(100, "Eve")          # Adds to end (no error)
 list1.extend([1, 2])              # ['David', ..., 'Charlie', 'Eve', 1, 2]
 ```
 
-### 4.5.2 Delete
+### 4.6.2 Delete
 
 | Method | Syntax | Description | Error if Invalid |
 |--------|--------|-------------|----------------|
@@ -557,7 +557,7 @@ list1.remove("Bob")               # Remove by value
 list1.clear()                     # []
 ```
 
-### 4.5.3 Update
+### 4.6.3 Update
 
 ```python
 list1 = ["Alice", "Bob"]
@@ -575,7 +575,7 @@ list1.sort()                      # [1, 2, 3] - original modified
 new_list = sorted(list1, reverse=True)  # Returns [3, 2, 1]
 ```
 
-### 4.5.4 Query
+### 4.6.4 Query
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -589,7 +589,7 @@ print(list1.count(2))             # 2
 # list1.index(99)                 # ValueError
 ```
 
-## 4.6 Tuple Operations
+## 4.7 Tuple Operations
 
 Tuples are **immutable**, so only query methods are available (no add/delete/update).
 

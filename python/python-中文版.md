@@ -463,105 +463,6 @@ str1.count("on")         # 3
 
 | 方法 | 说明 |
 |--------|-------------|
-| `sep.join(iterable)` | 连接可迭代对象 → 字符串 |
-
-```python
-"-".join(["a", "b", "c"])      # "a-b-c"
-"".join(["a", "b", "c"])       # "abc"
-```
-
-| 方向 | 方法 |
-|-----------|--------|
-| 字符串 → 列表 | `split()` |
-| 列表 → 字符串 | `join()` |
-
-### 4.5.8 strip()
-
-| 方法 | 说明 |
-|--------|-------------|
-| `strip(chars)` | 移除首尾空白字符（或指定字符） |
-| `lstrip()` | 仅移除左侧 |
-| `rstrip()` | 仅移除右侧 |
-
-```python
-"  hello  ".strip()       # "hello"
-"###hello###".strip("#")  # "hello"
-```
-
-## 4.5 列表 CRUD 操作
-
-### 4.5.1 添加
-
-| 方法 | 语法 | 说明 | 注意 |
-|--------|--------|-------------|-------|
-| `append()` | `list.append(x)` | 在末尾添加单个元素 | - |
-| `insert()` | `list.insert(i, x)` | 在指定索引插入 | 索引越界 → 添加到末尾（鲁棒） |
-| `extend()` | `list.extend(iter)` | 合并另一个可迭代对象 | 适用于 str、list、tuple |
-
-```python
-list1 = ["Alice", "Bob"]
-list1.append("Charlie")           # ['Alice', 'Bob', 'Charlie']
-list1.insert(0, "David")          # ['David', 'Alice', 'Bob', 'Charlie']
-list1.insert(100, "Eve")          # 添加到末尾（无错误）
-list1.extend([1, 2])              # ['David', ..., 'Charlie', 'Eve', 1, 2]
-```
-
-### 4.5.2 删除
-
-| 方法 | 语法 | 说明 | 无效时错误 |
-|--------|--------|-------------|----------------|
-| `pop()` | `list.pop([i])` | 按索引删除，返回值 | 越界时 IndexError |
-| `remove()` | `list.remove(x)` | 按值删除（首个匹配） | 未找到时 ValueError |
-| `clear()` | `list.clear()` | 移除所有元素 | - |
-
-```python
-list1 = ["Alice", "Bob", "Charlie"]
-list1.pop()                       # 删除末尾，返回 'Charlie'
-list1.pop(0)                      # 删除索引 0，返回 'Alice'
-list1.remove("Bob")               # 按值删除
-list1.clear()                     # []
-```
-
-### 4.5.3 更新
-
-```python
-list1 = ["Alice", "Bob"]
-list1[0] = "Charlie"              # ['Charlie', 'Bob']
-# list1[100] = "x"                # IndexError：越界
-```
-
-**排序：**
-- `sort()` - 原地，修改原序列（仅列表）
-- `sorted()` - 返回新排序列表（适用于任何可迭代对象）
-
-```python
-list1 = [3, 1, 2]
-list1.sort()                      # [1, 2, 3] - 原序列被修改
-new_list = sorted(list1, reverse=True)  # 返回 [3, 2, 1]
-```
-
-### 4.5.4 查询
-
-| 方法 | 返回 | 未找到 |
-|--------|---------|-----------|
-| `index(x)` | 首个匹配索引 | ValueError |
-| `count(x)` | 出现次数 | 0 |
-
-```python
-list1 = [1, 2, 3, 2]
-print(list1.index(2))             # 1（首次出现）
-print(list1.count(2))             # 2
-# list1.index(99)                 # ValueError
-```
-
-## 4.6 元组操作
-
-元组**不可变**，因此仅查询方法可用（无增删改）。
-
-| 方法 | 返回 | 未找到 |
-|--------|---------|-----------|
-| `index(x)` | 首个匹配索引 | ValueError |
-| `count(x)` | 出现次数 | 0 |
 | `lower()` | 转为小写 |
 | `upper()` | 转为大写 |
 
@@ -597,6 +498,105 @@ print(list1.count(2))             # 2
 
 | 方法 | 说明 |
 |--------|-------------|
+| `sep.join(iterable)` | 连接可迭代对象 → 字符串 |
+
+```python
+"-".join(["a", "b", "c"])      # "a-b-c"
+"".join(["a", "b", "c"])       # "abc"
+```
+
+| 方向 | 方法 |
+|-----------|--------|
+| 字符串 → 列表 | `split()` |
+| 列表 → 字符串 | `join()` |
+
+### 4.5.8 strip()
+
+| 方法 | 说明 |
+|--------|-------------|
+| `strip(chars)` | 移除首尾空白字符（或指定字符） |
+| `lstrip()` | 仅移除左侧 |
+| `rstrip()` | 仅移除右侧 |
+
+```python
+"  hello  ".strip()       # "hello"
+"###hello###".strip("#")  # "hello"
+```
+
+## 4.6 列表操作
+
+### 4.6.1 添加
+
+| 方法 | 语法 | 说明 | 注意 |
+|--------|--------|-------------|-------|
+| `append()` | `list.append(x)` | 在末尾添加单个元素 | - |
+| `insert()` | `list.insert(i, x)` | 在指定索引插入 | 索引越界 → 添加到末尾（鲁棒） |
+| `extend()` | `list.extend(iter)` | 合并另一个可迭代对象 | 适用于 str、list、tuple |
+
+```python
+list1 = ["Alice", "Bob"]
+list1.append("Charlie")           # ['Alice', 'Bob', 'Charlie']
+list1.insert(0, "David")          # ['David', 'Alice', 'Bob', 'Charlie']
+list1.insert(100, "Eve")          # 添加到末尾（无错误）
+list1.extend([1, 2])              # ['David', ..., 'Charlie', 'Eve', 1, 2]
+```
+
+### 4.6.2 删除
+
+| 方法 | 语法 | 说明 | 无效时错误 |
+|--------|--------|-------------|----------------|
+| `pop()` | `list.pop([i])` | 按索引删除，返回值 | 越界时 IndexError |
+| `remove()` | `list.remove(x)` | 按值删除（首个匹配） | 未找到时 ValueError |
+| `clear()` | `list.clear()` | 移除所有元素 | - |
+
+```python
+list1 = ["Alice", "Bob", "Charlie"]
+list1.pop()                       # 删除末尾，返回 'Charlie'
+list1.pop(0)                      # 删除索引 0，返回 'Alice'
+list1.remove("Bob")               # 按值删除
+list1.clear()                     # []
+```
+
+### 4.6.3 更新
+
+```python
+list1 = ["Alice", "Bob"]
+list1[0] = "Charlie"              # ['Charlie', 'Bob']
+# list1[100] = "x"                # IndexError：越界
+```
+
+**排序：**
+- `sort()` - 原地，修改原序列（仅列表）
+- `sorted()` - 返回新排序列表（适用于任何可迭代对象）
+
+```python
+list1 = [3, 1, 2]
+list1.sort()                      # [1, 2, 3] - 原序列被修改
+new_list = sorted(list1, reverse=True)  # 返回 [3, 2, 1]
+```
+
+### 4.6.4 查询
+
+| 方法 | 返回 | 未找到 |
+|--------|---------|-----------|
+| `index(x)` | 首个匹配索引 | ValueError |
+| `count(x)` | 出现次数 | 0 |
+
+```python
+list1 = [1, 2, 3, 2]
+print(list1.index(2))             # 1（首次出现）
+print(list1.count(2))             # 2
+# list1.index(99)                 # ValueError
+```
+
+## 4.7 元组操作
+
+元组**不可变**，因此仅查询方法可用（无增删改）。
+
+| 方法 | 返回 | 未找到 |
+|--------|---------|-----------|
+| `index(x)` | 首个匹配索引 | ValueError |
+| `count(x)` | 出现次数 | 0 |
 
 ```python
 tuple1 = (11, 2, 34, 56, -100, 100)
