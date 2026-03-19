@@ -389,6 +389,40 @@ Operators can also be categorized by their **function or purpose**:
 | **Scope** | `::` | Scope resolution |
 | **Other** | `,` `sizeof` `typeid` `new` `delete` | Comma, size query, memory management |
 
+#### 1.4.1.3 Increment and Decrement Operators
+
+The `++` (increment) and `--` (decrement) operators are unary operators that increase or decrease a variable by 1.
+
+**Restrictions:**
+- Can only be used with **variables** (not constants or expressions)
+- Example: `++count` is valid, but `++5` or `++(a+b)` is invalid
+
+**Two Forms:**
+
+| Form | Syntax | Description |
+|------|--------|-------------|
+| **Prefix** | `++x` or `--x` | Increment/decrement first, then use the new value |
+| **Postfix** | `x++` or `x--` | Use the current value first, then increment/decrement |
+
+**Standalone Usage:**
+When used alone (not in an expression), both forms are equivalent:
+```cpp
+x++;    // Equivalent to: x = x + 1;
+++x;    // Equivalent to: x = x + 1;
+y--;    // Equivalent to: y = y - 1;
+```
+
+**Usage in Expressions:**
+
+| Expression | Equivalent To | Result (if x=5, y=3) |
+|------------|---------------|----------------------|
+| `w = ++x - y;` | `x = x + 1; w = x - y;` | x=6, w=3 |
+| `w = x++ - y;` | `w = x - y; x = x + 1;` | w=2, x=6 |
+
+**Key Rule:**
+- Prefix: modify first, then use
+- Postfix: use first, then modify
+
 ### 1.4.2 Binary Operators
 
 #### 1.4.2.1 Division
