@@ -779,21 +779,24 @@ double avg = static_cast<double>(sum) / count;
 | Precedence | Operator | Associativity |
 |------------|----------|---------------|
 | 1 | **Parentheses:** `( )` | Innermost first |
-| 2 | **Unary operators:** `+` `-` `(type)` | Right to left |
+| 2 | **Unary operators:** `+` `-` `++` `--` `(type)` | Right to left |
 | 3 | **Binary operators:** `*` `/` `%` | Left to right |
 | 4 | **Binary operators:** `+` `-` | Left to right |
+| 5 | **Assignment operators:** `=` `+=` `-=` `*=` `/=` `%=` | Right to left |
 
 **Key Rules:**
 
 - Unary operators are evaluated before the binary operations `*`, `/`, and `%`.
-- Binary addition and subtraction are evaluated last.
-- If there are several operators of the same precedence level in an expression, the variables or constants are grouped (or associated) with the operators in a specific order.
+- Binary addition and subtraction are evaluated last among arithmetic operators.
+- **Assignment operators are evaluated last** and have **right-to-left** associativity.
 - Higher precedence (smaller number) is evaluated first.
 - Parentheses can override precedence.
-- Operators with the same precedence are evaluated according to associativity (left-to-right or right-to-left).
+- Operators with the same precedence are evaluated according to associativity.
 
 **Examples:**
+
 ```cpp
+// Basic precedence
 int a = 5 + 3 * 2;       // Result: 11 (not 16), * has higher precedence than +
 int b = (5 + 3) * 2;     // Result: 16, parentheses override precedence
 int c = -5 + 3;          // Result: -2, unary - has higher precedence than binary +
@@ -805,6 +808,27 @@ float f = (float)5 / 2;  // Result: 2.5, cast has higher precedence
  a*b + b/c*d  // is evaluated as:  (a*b) + ((b/c)*d)
 // * and / have same precedence, grouped left to right
 ```
+
+**Compound Assignment Example:**
+
+```cpp
+// Complex expression with assignment operators
+a = b += c + d;
+
+// Evaluation order (assignment is right-to-left, + is before +=):
+// Step 1: c + d (arithmetic + has higher precedence)
+// Step 2: b += (c + d)  (compound assignment)
+// Step 3: a = b         (simple assignment)
+
+// Equivalent to:
+b = b + (c + d);
+a = b;
+```
+
+**Best Practices:**
+- Use parentheses to make complex expressions more readable
+- Avoid mixing multiple assignment operators in one statement
+- Put spaces around assignment operators for clarity (they are evaluated last)
 
 ---
 
