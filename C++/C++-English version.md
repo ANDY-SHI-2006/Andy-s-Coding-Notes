@@ -1152,6 +1152,38 @@ cin >> c1 >> c2 >> a;   // Input: "1234"
 
 **Note**: When mixing `char` and numeric input, `cin` extracts **per character** for `char` variables.
 
+### 1.6.2 `scanf` (C-style Input)
+
+Format-based input function from C.
+
+```cpp
+#include <cstdio>
+scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
+```
+
+**Common Format Specifiers:**
+
+| Specifier | Type | Example |
+|-----------|------|---------|
+| `%d` | int | `scanf("%d", &a);` |
+| `%f` | float | `scanf("%f", &x);` |
+| `%lf` | double | `scanf("%lf", &y);` |
+| `%c` | char | `scanf("%c", &c);` |
+| `%s` | string | `scanf("%s", str);` |
+
+**Key Points:**
+
+1. **Must use `&` (address)**: `scanf("%d", &a);` not `scanf("%d", a);`
+2. **No precision control**: `scanf("%5.2f", &a);` is invalid (unlike printf)
+3. **Whitespace as separator**: Multiple numeric inputs can be separated by space, tab, or newline
+4. **Non-format characters must match**: `scanf("a=%d", &a);` requires input `a=5`
+
+**The `*` (suppression) operator:**
+
+```cpp
+scanf("%d%*d%d", &a, &b);  // Input: 1 2 3 → a=1, b=3 (2 is skipped)
+```
+
 ---
 
 ## 1.7 Data Output
@@ -1299,106 +1331,76 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 > **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
 
-##### `printf()` Format Specifier Syntax
+### 1.7.2 `printf` (C-style Output)
 
-###### Header Dependency
+Format-based output function from C.
 
-```c
-#include <stdio.h>
+```cpp
+#include <cstdio>
+printf("format string", arg1, arg2, ...);
 ```
 
-###### Basic Syntax Structure
+**Basic Example:**
+
+```cpp
+int a = 88, b = 89;
+printf("%d %d\n", a, b);           // 88 89
+printf("%d,%d\n", a, b);           // 88,89
+printf("a=%d,b=%d\n", a, b);       // a=88,b=89
+```
+
+**Format String:** Double quotes required. Contains:
+- **Format specifiers** (e.g., `%d`, `%f`) - replaced by arguments
+- **Literal text** - printed as-is
+- **Escape sequences** (e.g., `\n`, `\t`)
+
+#### Format Specifier Syntax
 
 ```
-%[flags][width][.precision][length modifier]conversion specifier
+%[flags][width][.precision][length]specifier
 ```
 
-###### Conversion Specifiers (Required)
+#### Common Specifiers
 
-| Specifier | Data Type | Output Form |
-|-----------|-----------|-------------|
-| `%d` / `%i` | `int` | Signed decimal integer |
-| `%u` | `unsigned int` | Unsigned decimal integer |
-| `%o` | `unsigned int` | Unsigned octal integer |
-| `%x` / `%X` | `unsigned int` | Unsigned hexadecimal integer (lowercase/uppercase) |
-| `%f` / `%F` | `double` | Decimal floating-point (fixed-point notation) |
-| `%e` / `%E` | `double` | Scientific notation (lowercase/uppercase e) |
-| `%g` / `%G` | `double` | Use the shorter of `%f` or `%e` |
-| `%c` | `int` converted to `char` | Single character |
-| `%s` | `char*` | String (null-terminated) |
-| `%p` | `void*` | Pointer address (hexadecimal) |
-| `%n` | `int*` | Write the number of characters printed so far |
-| `%%` | None | Literal percent sign |
+| Specifier | Type | Output |
+|-----------|------|--------|
+| `%d` / `%i` | `int` | Signed decimal |
+| `%u` | `unsigned` | Unsigned decimal |
+| `%o` | `unsigned` | Octal |
+| `%x` / `%X` | `unsigned` | Hexadecimal |
+| `%f` / `%F` | `double` | Fixed-point |
+| `%e` / `%E` | `double` | Scientific notation |
+| `%g` / `%G` | `double` | Shorter of `%f` or `%e` |
+| `%c` | `int` | Single character |
+| `%s` | `char*` | String |
+| `%%` | - | Literal `%` |
 
-###### Flags (Optional)
+#### Flags and Modifiers
 
-| Flag | Name | Description |
-|------|------|-------------|
-| `-` | Left-justify | Left-align output; pad with spaces on the right (default is right-align) |
-| `+` | Sign | Display `+` for positive numbers (negative numbers always display `-`) |
-| ` ` (space) | Space | Output a space before positive numbers, `-` for negatives (for alignment) |
-| `#` | Alternative form | Prefix octal with `0`, hex with `0x`/`0X`; force decimal point for floats |
-| `0` | Zero-padding | Pad with leading zeros instead of spaces |
+| Flag | Description | Example |
+|------|-------------|---------|
+| `-` | Left-justify | `%-10d` |
+| `+` | Show sign | `%+d` → `+5` |
+| `0` | Zero-padding | `%05d` → `00042` |
+| `#` | Alternate form | `%#x` → `0xff` |
+| `m.n` | Width.m, Precision.n | `%8.2f` → `   34.50` |
 
-###### Width (Optional)
+**Precision Examples:**
 
-- **Number**: Minimum field width. If the value is shorter, pad with spaces (or `0` if flag `0` is set). If longer, output is not truncated.
-- **`*`**: Width is specified by an additional `int` argument.
-
-###### Precision (Optional)
-
-Prefix with `.`:
-
-| Type | Precision Effect |
-|------|------------------|
-| Integers (`d`, `i`, `o`, `u`, `x`, `X`) | Minimum number of digits; pad with leading zeros if needed |
-| Floating-point (`f`, `e`, `E`) | Number of digits after decimal point (default 6) |
-| Scientific (`g`, `G`) | Maximum number of significant digits |
-| String (`s`) | Maximum number of characters to print (truncation) |
-
-###### Length Modifiers (Optional)
-
-| Modifier | Use with `d`/`i`/`o`/`u`/`x`/`X` | Use with `n` |
-|----------|----------------------------------|--------------|
-| `hh` | `signed char` / `unsigned char` | `signed char*` |
-| `h` | `short` / `unsigned short` | `short*` |
-| `l` | `long` / `unsigned long` | `long*` |
-| `ll` | `long long` / `unsigned long long` | `long long*` |
-| `j` | `intmax_t` / `uintmax_t` | `intmax_t*` |
-| `z` | `size_t` | `size_t*` |
-| `t` | `ptrdiff_t` | `ptrdiff_t*` |
-| `L` | With `f`/`e`/`g`: `long double` | — |
-
-###### Examples
-
-```c
-// Left-aligned, width 10
-printf("%-10d", 42);       // "42        "
-
-// Show positive sign, width 10
-printf("%+10d", 42);       // "       +42"
-
-// Zero-padded, width 10
-printf("%010d", 42);       // "0000000042"
-
-// Precision 5, minimum 5 digits
-printf("%.5d", 42);        // "00042"
-
-// Width 10, 2 decimal places
-printf("%10.2f", 3.14159); // "      3.14"
-
-// String truncated to 5 characters
-printf("%.5s", "HelloWorld"); // "Hello"
-
-// Hex with 0x prefix
-printf("%#x", 255);        // "0xff"
-
-// Dynamic width (width = 10)
-printf("%*d", 10, 42);     // "        42"
-
-// Long long integer
-printf("%lld", 9223372036854775807LL);
+```cpp
+printf("%.2f\n", 10.0/6.0);     // 1.67 (2 decimal places)
+printf("%9.3f\n", 10.0/6.0);    //    1.667 (width 9, 3 decimals)
 ```
+
+#### Key Differences from `cout`
+
+| Feature | `printf` | `cout` |
+|---------|----------|--------|
+| Type-safe | No (runtime error if wrong) | Yes (compile-time check) |
+| Performance | Faster | Slower |
+| Extensibility | Limited | Easy to extend |
+
+> **Note:** Use `printf` for formatted output in performance-critical code, but prefer `cout` for type safety in modern C++.
 
 ---
 
