@@ -23,6 +23,37 @@
 
 ---
 
+## 🛠️ Problem Solving Approach | 问题解决方法论
+
+### ❌ The WRONG Way (Don't Do This!)
+
+1. Sit down in front of a computer and read the problem statement
+2. Get confused
+3. Recall something that might look like the current problem
+4. Quickly type out a program that kinda-sorta-might solve the problem
+5. Compile and get 10,000 syntax errors
+6. Get frustrated, submit a program that does not work
+7. Fail exams and switch to gardening 🌱
+
+### ✅ The CORRECT Engineering Approach
+
+1. **State the problem** | 明确问题
+   - Understand exactly what needs to be solved
+
+2. **Describe inputs and outputs** | 描述输入和输出
+   - What data goes in? What should come out?
+
+3. **Work out a hand example** | 手动演算示例
+   - Solve a simple case by hand to understand the logic
+
+4. **Develop the algorithm** | 设计算法
+   - Write down the step-by-step procedure
+
+5. **Then write code** | 然后编写代码
+   - Only after you fully understand the problem!
+
+> 💡 **Tip**: Follow these steps even for the simplest problems. You'll avoid many stupid mistakes and save tons of time in debugging!
+
 ## 📝 About | 关于
 
 This repository contains my personal programming study notes, documenting my learning journey in coding.
