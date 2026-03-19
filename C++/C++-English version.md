@@ -1112,18 +1112,20 @@ int b = -2.7f;          // b = -2
 
 ---
 
-## 1.6 `cin` Input
+## 1.6 Data Input
+
+### 1.6.1 `cin`
 
 Console input using `cin` (character input).
 
-### 1.6.1 Basic Syntax
+##### Basic Syntax
 
 ```cpp
 cin >> variable;           // Read single variable
 cin >> a >> b >> c;        // Chain input, separated by whitespace
 ```
 
-### 1.6.2 Input Separators
+##### Input Separators
 
 `cin` treats **whitespace** (space, tab, newline) as separators:
 
@@ -1133,13 +1135,13 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 | `1\n2 3\n4` | ✓ | Same (newlines = spaces) |
 | `1234 56.78` with `char c1,c2; int a; float b;` | ✓ | c1='1', c2='2', a=34, b=56.78 |
 
-### 1.6.3 Key Behaviors
+##### Key Behaviors
 
 1. **Type-aware extraction**: `cin` extracts bytes according to variable type
 2. **Excess input ignored**: Extra data beyond variables is discarded
 3. **Whitespace skipped**: Leading spaces/newlines are automatically skipped
 
-### 1.6.4 Common Pitfall
+##### Common Pitfall
 
 ```cpp
 char c1, c2;
