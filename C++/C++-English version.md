@@ -788,6 +788,35 @@ Numeric data types are divided into two categories:
 | `double`      | 8 bytes    | ~15 digits    | ±1.7 × 10³⁰⁸       |
 | `long double` | 8-16 bytes | ~18-21 digits | Platform dependent |
 
+#### 1.5.1.3 Overflow and Underflow
+
+All numeric types have limited ranges. When computation results exceed these ranges, errors occur.
+
+**Integer Overflow:** Result exceeds the maximum value of the type.
+```cpp
+int max = 2147483647;    // Max value for 32-bit int
+int x = max + 1;         // Overflow! Result becomes negative
+```
+
+**Floating-Point Overflow:** Result is too large to store.
+```cpp
+float x = 2.5e30;
+float y = 1.0e30;
+float z = x * y;         // Should be 2.5e60, but exceeds float range
+```
+
+**Floating-Point Underflow:** Result is too small (too close to zero) to store.
+```cpp
+float x = 2.5e-30;
+float y = 1.0e30;
+float z = x / y;         // Should be 2.5e-60, but too small for float
+```
+
+**Key Points:**
+- Overflow/underflow behavior is system dependent
+- Use larger types for computations that may produce extreme values
+- Be especially careful with intermediate results in complex expressions
+
 ### 1.5.2 Integers
 
 **Note**: `signed` and `unsigned` modifiers can only be used with **integer types** (`short`, `int`, `long`, `long long`). They **cannot** be used with floating-point types (`float`, `double`, `long double`).
