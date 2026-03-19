@@ -1112,9 +1112,11 @@ int b = -2.7f;          // b = -2
 
 ---
 
-## 1.6 Data Input
+## 1.6 `cin` Input
 
-### 1.6.1 Basic `cin` Syntax
+Console input using `cin` (character input).
+
+### 1.6.1 Basic Syntax
 
 ```cpp
 cin >> variable;           // Read single variable
