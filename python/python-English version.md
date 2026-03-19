@@ -1,4 +1,4 @@
-﻿# 1. Variables and Basic Data Types
+# 1. Variables and Basic Data Types
 
 ## 1.1 Comments
 
