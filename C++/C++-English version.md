@@ -240,6 +240,31 @@ int main(void)
 /*--------------------------------------*/
 ```
 
+### 1.2.4 Long Expressions
+
+Break long expressions into multiple statements for readability.
+
+**Example:** Computing f = (x³ - 2x² + x - 6.3) / (x² + 0.05005x - 3.14)
+
+```cpp
+// Bad: Hard to read
+f = (x*x*x - 2*x*x + x - 6.3) / (x*x + 0.05005*x - 3.14);
+
+// Better: Split using line continuation
+f = (x*x*x - 2*x*x + x - 6.3) /
+    (x*x + 0.05005*x - 3.14);
+
+// Best: Compute numerator and denominator separately
+numerator = x*x*x - 2*x*x + x - 6.3;
+denominator = x*x + 0.05005*x - 3.14;
+f = numerator / denominator;
+```
+
+**Key Points:**
+- Long one-line expressions are difficult to read and debug
+- Use intermediate variables for complex sub-expressions
+- Ensure variables are floating-point type for correct division
+
 ---
 
 ## 1.3 Declarations and Statements
