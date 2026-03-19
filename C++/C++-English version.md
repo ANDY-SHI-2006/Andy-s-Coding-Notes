@@ -153,6 +153,25 @@ cout << "This is a very long message that "
      << endl;
 ```
 
+#### 1.2.2.3 Spacing in Expressions
+
+| Style | Description | Example |
+|-------|-------------|---------|
+| **Spaces around all operators** | Some prefer spaces around every operator | `a * b + b / c * d` |
+| **Spaces only around + and -** | Preferred style: spaces only around binary addition/subtraction (evaluated last) | `a*b + b/c*d` |
+
+**Recommendation:** Put spaces only around binary `+` and `-` because they are evaluated last, making the expression structure clearer.
+
+```cpp
+// Preferred style
+int result = a*b + b/c*d;  // Clearer structure
+
+// Alternative style (also valid)
+int result = a * b + b / c * d;  // More spaces, but consistent
+```
+
+> See also: [1.4.5 Spacing in Expressions](#145-spacing-in-expressions) for the connection to operator precedence.
+
 ### 1.2.3 Identifier Naming
 
 Rules for selecting a valid identifier:
@@ -264,6 +283,44 @@ double side_1, side_2, distance;  // All uninitialized
 ```
 
 **Note**: Using uninitialized variables leads to undefined behavior. Always initialize before use.
+
+### 1.3.2 Auto Type Deduction (C++11)
+
+`auto` lets the compiler deduce the variable type from the initializer.
+
+**Basic Usage:**
+```cpp
+auto i = 5;        // int
+auto d = 5.0;      // double
+auto f = 5.0f;     // float
+auto c = 'a';      // char
+auto s = "hello";  // const char*
+```
+
+**Key Rules:**
+
+| Syntax | Result | Notes |
+|--------|--------|-------|
+| `auto x = expr` | Value type (copied) | Strips reference and top-level const |
+| `auto& x = expr` | Reference type | Preserves reference and const |
+| `auto* x = expr` | Pointer type | Explicit pointer |
+| `const auto x = expr` | const value | Explicit const |
+
+**Common Patterns:**
+```cpp
+// Iterators (saves typing long type names)
+vector<int>::iterator it = v.begin();  // Verbose
+auto it = v.begin();                    // Clean
+
+// Range-based for loops
+for (auto& elem : container)  // Reference, avoid copy
+for (const auto& elem : container)  // const reference
+
+// Lambda expressions
+auto func = [](int x) { return x * 2; };
+```
+
+**Important:** `auto` requires initialization. `auto x;` is an error.
 
 ---
 
@@ -399,6 +456,152 @@ double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
 
 **Key Point:** In mixed operations, at least one operand must be floating-point to get a floating-point result. The assignment to `double` happens **after** the division operation.
 
+> See also: [Power (Exponentiation)](#1424-power-exponentiation)
+
+#### 1.4.2.4 Power (Exponentiation)
+
+**Important:** There is **no operator** for exponentiation in C++.
+
+| Expression | C++                       | Note                                              |
+| ---------- | ------------------------- | ------------------------------------------------- |
+| x⁴         | ❌ No `^` or `**` operator | Unlike Python (`**`) or math notation             |
+| a²         | `a * a`                   | Use repeated multiplication for integer exponents |
+
+**Two Solutions:**
+
+##### Option 1: Repeated Multiplication (Recommended for small integer exponents)
+
+```cpp
+int square = a * a;           // a² - Fast, efficient
+int cube = a * a * a;         // a³ - Still efficient
+int fourth = a * a * a * a;   // a⁴ - Acceptable
+```
+
+**When to use:**
+- Exponent is a small fixed integer (2, 3, 4)
+- Performance-critical code
+- Working with integers
+
+**Why it's faster:** Direct CPU multiplication, no function call overhead, no floating-point conversion.
+
+##### Option 2: `pow()` Function (For general exponentiation)
+
+```cpp
+#include <cmath>  // Required header
+
+// Syntax: pow(base, exponent)
+double result1 = pow(x, 4);      // x⁴
+double result2 = pow(2.0, 10);   // 2¹⁰ = 1024
+double result3 = pow(x, 0.5);    // √x (square root)
+double result4 = pow(x, -1);     // 1/x
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `base` | `double` | The base number |
+| `exponent` | `double` | The exponent (can be fractional or negative) |
+| **Returns** | `double` | base raised to the power of exponent |
+
+**Type Conversion Behavior:**
+
+| Your Input | What Happens | Result Type |
+|------------|--------------|-------------|
+| `pow(2, 3)` | `int` → implicitly converted to `double` | `double` (8.0) |
+| `pow(2.0f, 3)` | `float` → converted to `double` | `double` |
+| `pow(2.0, 3.0)` | already `double` | `double` |
+
+**Key Points:**
+- ✅ **Parameters don't have to be double** - `int`, `float`, etc. are **implicitly converted** to `double`
+- ✅ **Return value is always double** - even if you pass integers, the result is `double`
+
+```cpp
+int a = pow(2, 3);        // ⚠️ Warning: possible loss of data (double to int)
+                          // Actual result 8.0 is truncated to 8
+
+double b = pow(2, 3);     // ✅ Correct: b = 8.0
+
+// Common pitfall
+int c = pow(2, 3) / 2;    // Result is 4.0 / 2 = 2.0, truncated to 2
+```
+
+**When to use:**
+- Exponent is large or not known at compile time
+- Exponent is fractional (e.g., square root, cube root)
+- Exponent is negative
+- Working with floating-point numbers
+
+**Performance:** Slower than repeated multiplication due to function call overhead and floating-point calculations.
+
+##### Comparison Summary
+
+| Method | Speed | Use Case | Example |
+|--------|-------|----------|---------|
+| `a * a` | ⚡ Fastest | Small fixed integer exponents | `a²`, `a³` |
+| `pow(a, 2)` | 🐢 Slower | Variable or fractional exponents | `a^b`, `√a` |
+
+##### Important Warning
+
+> **Note:** The `^` symbol in C++ is the **bitwise XOR operator**, not exponentiation!
+```cpp
+int result = 2 ^ 3;  // Result: 1 (binary XOR: 10 XOR 11 = 01), NOT 8!
+```
+
+##### cout Formatting for double Values
+
+> See also: [1.7.2.7 cout Formatting for double Values](#1727-cout-formatting-for-double-values)
+
+**The Issue:**
+```cpp
+cout << pow(5, 2);      // Output: 25 (not 25.0!)
+cout << 25.0;           // Output: 25 (not 25.0!)
+```
+
+`pow()` **does** return `double` (25.0), but `cout` has **default formatting rules** for floating-point numbers.
+
+| Format Flag | Effect | Default |
+|-------------|--------|---------|
+| `ios::fixed` | Fixed decimal places | Not set |
+| `ios::scientific` | Scientific notation | Not set |
+| `ios::showpoint` | **Force show decimal point** | **Not set** |
+
+**Default Behavior:**
+- When `showpoint` is not set and the decimal part is `.0`, `cout` **omits the decimal point**
+- This is a design choice in C++ to make output cleaner
+
+**Memory vs Display:**
+
+```
+Memory (IEEE 754):  [01000011 01100100 0000...] = 25.0 (double)
+       ↓
+   cout formatting
+       ↓
+Display:            "25" (default, omits .0)
+```
+
+**How to Force Display of Decimal:**
+
+```cpp
+#include <iomanip>  // Required for formatting
+
+// Method 1: Force showpoint
+cout << showpoint << 25.0;              // Output: 25.0000
+
+// Method 2: Fixed precision
+cout << fixed << setprecision(2) << 25.0;  // Output: 25.00
+
+// Method 3: Scientific notation
+cout << scientific << 25.0;             // Output: 2.500000e+01
+```
+
+**Verification:**
+
+```cpp
+auto result = pow(5, 2);  // auto deduces: double
+cout << typeid(result).name();  // Confirm: it's double!
+```
+
+> **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
+
 ### 1.4.3 Cast Operators (Type Conversion)
 
 Cast operators are used to explicitly convert a value from one data type to another.
@@ -442,6 +645,8 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 // (float)sum is temporary, sum itself remains unchanged!
 ```
 
+> See also: [Power (Exponentiation)](#1424-power-exponentiation)
+
 #### 1.4.3.3 C++ Style Casts (Recommended)
 
 C++ provides four type cast operators for safer, more explicit conversions:
@@ -478,17 +683,53 @@ double avg = static_cast<double>(sum) / count;
 | 4 | **Binary operators:** `+` `-` | Left to right |
 
 **Key Rules:**
-- Higher precedence (smaller number) is evaluated first
-- Parentheses can override precedence
-- Operators with the same precedence are evaluated according to associativity (left-to-right or right-to-left)
+
+- Unary operators are evaluated before the binary operations `*`, `/`, and `%`.
+- Binary addition and subtraction are evaluated last.
+- If there are several operators of the same precedence level in an expression, the variables or constants are grouped (or associated) with the operators in a specific order.
+- Higher precedence (smaller number) is evaluated first.
+- Parentheses can override precedence.
+- Operators with the same precedence are evaluated according to associativity (left-to-right or right-to-left).
 
 **Examples:**
 ```cpp
-int a = 5 + 3 * 2;       // Result: 11 (not 16), * has higher precedence
+int a = 5 + 3 * 2;       // Result: 11 (not 16), * has higher precedence than +
 int b = (5 + 3) * 2;     // Result: 16, parentheses override precedence
-int c = -5 + 3;          // Result: -2, unary - has higher precedence
-float d = (float)5 / 2;  // Result: 2.5, cast has higher precedence
+int c = -5 + 3;          // Result: -2, unary - has higher precedence than binary +
+int d = -3 * 5;          // Result: -15, unary - evaluated before *
+int e = 8 / 4 / 2;       // Result: 1, left associativity: (8/4)/2
+float f = (float)5 / 2;  // Result: 2.5, cast has higher precedence
+
+// Expression grouping with same precedence (left-to-right associativity)
+ a*b + b/c*d  // is evaluated as:  (a*b) + ((b/c)*d)
+// * and / have same precedence, grouped left to right
 ```
+
+---
+
+### 1.4.5 Spacing in Expressions
+
+Spacing around operators is a **style issue**. Choose a style and use it consistently.
+
+| Style | Description | Example |
+|-------|-------------|---------|
+| **Spaces around all operators** | Some prefer spaces around every operator | `a * b + b / c * d` |
+| **Spaces only around + and -** | Preferred style: spaces only around binary addition/subtraction (evaluated last) | `a*b + b/c*d` |
+
+**Key Points:**
+- Spacing is a style choice, not a syntax requirement
+- **Recommendation:** Put spaces only around binary `+` and `-` because they are evaluated last
+- This makes the expression structure clearer
+
+```cpp
+// Preferred style - spaces only around + and -
+int result = a*b + b/c*d;  // Clearer structure
+
+// Alternative style - spaces around all operators
+int result = a * b + b / c * d;  // Also valid, but less clear
+```
+
+> See also: [1.2.2.3 Spacing in Expressions](#1223-spacing-in-expressions) for more details on whitespace usage.
 
 ---
 
@@ -792,7 +1033,63 @@ cout.unsetf(ios::fixed | ios::scientific);
 cout << setprecision(6);
 ```
 
-#### 1.7.2.7 C-style Output: `printf()` Format Specifier Syntax
+#### 1.7.2.7 cout Formatting for double Values
+
+> See also: [1.4.2.4 Power - cout Formatting for double Values](#1424-power-exponentiation)
+
+**The Issue:**
+```cpp
+cout << pow(5, 2);      // Output: 25 (not 25.0!)
+cout << 25.0;           // Output: 25 (not 25.0!)
+```
+
+`pow()` **does** return `double` (25.0), but `cout` has **default formatting rules** for floating-point numbers.
+
+| Format Flag | Effect | Default |
+|-------------|--------|---------|
+| `ios::fixed` | Fixed decimal places | Not set |
+| `ios::scientific` | Scientific notation | Not set |
+| `ios::showpoint` | **Force show decimal point** | **Not set** |
+
+**Default Behavior:**
+- When `showpoint` is not set and the decimal part is `.0`, `cout` **omits the decimal point**
+- This is a design choice in C++ to make output cleaner
+
+**Memory vs Display:**
+
+```
+Memory (IEEE 754):  [01000011 01100100 0000...] = 25.0 (double)
+       ↓
+   cout formatting
+       ↓
+Display:            "25" (default, omits .0)
+```
+
+**How to Force Display of Decimal:**
+
+```cpp
+#include <iomanip>  // Required for formatting
+
+// Method 1: Force showpoint
+cout << showpoint << 25.0;              // Output: 25.0000
+
+// Method 2: Fixed precision
+cout << fixed << setprecision(2) << 25.0;  // Output: 25.00
+
+// Method 3: Scientific notation
+cout << scientific << 25.0;             // Output: 2.500000e+01
+```
+
+**Verification:**
+
+```cpp
+auto result = pow(5, 2);  // auto deduces: double
+cout << typeid(result).name();  // Confirm: it's double!
+```
+
+> **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
+
+#### 1.7.2.8 `printf()` Format Specifier Syntax
 
 ##### 1.7.2.7.1 Header Dependency
 
