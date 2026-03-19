@@ -18,7 +18,7 @@
 | Topic | English | 中文 |
 |-------|---------|------|
 | **C++** | [C++ Notes](C++/C++-English%20version.md) | [C++ 笔记](C++/C++-中文版.md) |
-| **Python** | [Python Notes](python/python-English%20version.md) | [Python 笔记](python/python-中文版.md) |
+| **Python** ✅ | [Python Notes](python/python-English%20version.md) | [Python 笔记](python/python-中文版.md) |
 | **LaTeX** | [LaTeX Notes](LaTeX/LaTeX-English%20version.md) | [LaTeX 笔记](LaTeX/LaTeX-中文版.md) |
 
 ---
@@ -67,6 +67,12 @@ This repository contains my personal programming study notes, documenting my lea
 > **中文笔记为辅助翻译版本**，由 AI 翻译生成。如有歧义或理解问题，请以英文笔记为准。
 > 
 > If there are any ambiguities or understanding issues, please refer to the English version.
+
+### ✅ Completed Notes | 已完成笔记
+
+| Topic | Status | Note |
+|-------|--------|------|
+| **Python** | ✅ Complete | 笔记结构已完善，中英文版本已同步，往后不再频繁更新 |
 
 ---
 
