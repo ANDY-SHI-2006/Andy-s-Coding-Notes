@@ -15,11 +15,20 @@
 
 ## 📚 Available Topics | 主题内容
 
-| Topic | English | 中文 |
-|-------|---------|------|
-| **C++** | [C++ Notes](C++/C++-English%20version.md) | [C++ 笔记](C++/C++-中文版.md) |
-| **Python** ✅ | [Python Notes](python/python-English%20version.md) | [Python 笔记](python/python-中文版.md) |
-| **LaTeX** | [LaTeX Notes](LaTeX/LaTeX-English%20version.md) | [LaTeX 笔记](LaTeX/LaTeX-中文版.md) |
+### 💻 Programming | 编程
+
+| Topic | English | 中文 | Status |
+|-------|---------|------|--------|
+| **C++** | [C++ Notes](C++/C++-English%20version.md) | [C++ 笔记](C++/C++-中文版.md) | 📝 In Progress |
+| **Python** | [Python Notes](python/python-English%20version.md) | [Python 笔记](python/python-中文版.md) | ✅ Completed |
+| **LaTeX** | [LaTeX Notes](LaTeX/LaTeX-English%20version.md) | [LaTeX 笔记](LaTeX/LaTeX-中文版.md) | 📝 In Progress |
+
+### 🛠️ Tools & Skills | 工具与技能
+
+| Topic | English | 中文 | Status |
+|-------|---------|------|--------|
+| **Microsoft Word** | [Word Notes](Microsoft/Microsoft%20Word/Microsoft%20Word-English%20version.md) | [Word 笔记](Microsoft/Microsoft%20Word/Microsoft%20Word-中文版.md) | 📝 In Progress |
+| **Network Basics** | [Network Notes](Network%20Basics%20网络基础/Network%20Basics-English%20version.md) | [网络基础笔记](Network%20Basics%20网络基础/网络基础-中文版.md) | 📝 In Progress |
 
 ---
 
@@ -70,11 +79,18 @@ This repository contains my personal programming study notes, documenting my lea
 
 ### ✅ Completed Notes | 已完成笔记
 
+| Topic | Status | Completion Date | Note |
+|-------|--------|-----------------|------|
+| **Python** | ✅ Complete | 2026-03-18 | 笔记结构已完善，中英文版本已同步，往后不再频繁更新 |
+
+### 📝 In Progress | 进行中
+
 | Topic | Status | Note |
 |-------|--------|------|
-| **Python** | ✅ Complete | 笔记结构已完善，中英文版本已同步，往后不再频繁更新 |
-
-> 📅 **完成时间 | Completion Date**: 2026-03-18
+| **C++** | 📝 Active | 持续更新中 |
+| **LaTeX** | 📝 Active | 持续更新中 |
+| **Microsoft Word** | 📝 Active | 持续更新中 |
+| **Network Basics** | 📝 Active | 持续更新中 |
 
 ---
 
