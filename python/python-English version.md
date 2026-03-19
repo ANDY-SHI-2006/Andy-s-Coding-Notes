@@ -1,40 +1,40 @@
-## 1. Variables and Basic Data Types
+﻿# 1. Variables and Basic Data Types
 
-### 1.1 Comments
+## 1.1 Comments
 
-#### 1.1.1 Single-line Comments
+### 1.1.1 Single-line Comments
 - Use `#` to start a single-line comment
 - Everything after `#` on the same line is ignored by the interpreter
 - Shortcut: `Ctrl+/` (in most IDEs)
 
-#### 1.1.2 Multi-line Comments
+### 1.1.2 Multi-line Comments
 - Use triple quotes `'''` or `"""` to create multi-line comments
 - Actually treated as string literals that are not assigned to any variable
 - Can span multiple lines
 
-### 1.2 Variable Naming
+## 1.2 Variable Naming
 
-#### 1.2.1 Meaningful Names
+### 1.2.1 Meaningful Names
 - Variable names should clearly describe their purpose
 - Avoid single-letter names (except for loop counters)
 - Example: use `age = 18` instead of `a = 18`
 
-#### 1.2.2 PascalCase (Upper CamelCase)
+### 1.2.2 PascalCase (Upper CamelCase)
 - Capitalize the first letter of each word
 - Used for: **Class names**
 - Example: `StudentAgeInfo = 18`
 
-#### 1.2.3 snake_case (Recommended)
+### 1.2.3 snake_case (Recommended)
 - All lowercase with underscores between words
 - **Standard for Python variables and functions**
 - Example: `student_age_info = 18`
 
-#### 1.2.4 camelCase (Lower CamelCase)
+### 1.2.4 camelCase (Lower CamelCase)
 - First word lowercase, subsequent words capitalized
 - Not commonly used in Python (more common in JavaScript)
 - Example: `studentAgeInfo = 18`
 
-### 1.3 Integer Type
+## 1.3 Integer Type
 
 - Python integers have unlimited precision (no overflow)
 - Underscore separators `_` for readability (Python 3.6+)
@@ -42,22 +42,22 @@
   million = 1_000_000  # Same as 1000000, more readable
   ```
 
-### 1.4 Float Type
+## 1.4 Float Type
 
 - Decimal numbers with floating-point precision
 - Scientific notation for very large/small numbers
   ```python
-  x = 9.9e2      # 9.9 × 10² = 990.0
-  y = 3.14E-2    # 3.14 × 10⁻² = 0.0314
+  x = 9.9e2      # 9.9 脳 10虏 = 990.0
+  y = 3.14E-2    # 3.14 脳 10鈦宦?= 0.0314
   # e/E case insensitive
   ```
 
-### 1.5 String Type
+## 1.5 String Type
 
 - Immutable sequence of characters
 - Single quotes `' '` or double quotes `" "` both work
 
-#### 1.5.1 Raw Strings
+### 1.5.1 Raw Strings
 
 - Prefix with `r` to create a raw string
 - Backslashes are treated as literal characters (no escape sequences)
@@ -70,7 +70,7 @@
   path = r"C:\Users\EDY\Desktop\demo.py"
   ```
 
-#### 1.5.2 Multi-line Strings
+### 1.5.2 Multi-line Strings
 
 - Use triple quotes `'''` or `"""` for multi-line text
 - Preserves line breaks and formatting
@@ -81,11 +81,11 @@
   that spans several lines"""
   ```
 
-## 2. User Interaction and Operators
+# 2. User Interaction and Operators
 
-### 2.1 print() Function
+## 2.1 print() Function
 
-#### 2.1.1 `sep` Parameter
+### 2.1.1 `sep` Parameter
 
 - Specifies the separator between multiple values
 - Default is a space `' '`
@@ -96,7 +96,7 @@
   print(1, 2, 3, sep='\n') # Output: each on new line
   ```
 
-#### 2.1.2 `end` Parameter
+### 2.1.2 `end` Parameter
 
 - Specifies what to print at the end
 - Default is a newline `'\n'`
@@ -107,7 +107,7 @@
   print(3)                 # Output: 1 2 3
   ```
 
-### 2.2 Identity Operators
+## 2.2 Identity Operators
 
 Identity operators compare memory addresses (identity), not just values.
 
@@ -135,13 +135,13 @@ print(a is c)   # True - same object (c references a)
 print(id(a))    # Memory address of a
 ```
 
-## 3. Flow Control
+# 3. Flow Control
 
-### 3.1 Sequential Structure
+## 3.1 Sequential Structure
 
-### 3.2 Branching Structure
+## 3.2 Branching Structure
 
-#### 3.2.1 Ternary Operator
+### 3.2.1 Ternary Operator
 
 A concise way to write simple if-else statements in one line.
 
@@ -164,7 +164,7 @@ status = "adult" if age >= 18 else "minor"
 
 **Use Case:** Best for simple conditional assignments. For complex logic, use standard if-else for readability.
 
-#### 3.2.2 Single-line if Statement
+### 3.2.2 Single-line if Statement
 
 Python allows simple `if` statements to be written on a single line.
 
@@ -189,9 +189,9 @@ if x > 0: print("positive")
 
 **Note:** Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
 
-### 3.3 Loop Structures
+## 3.3 Loop Structures
 
-#### 3.3.1 for Loop
+### 3.3.1 for Loop
 
 **`range(start, stop, step)`:**
 - **start**: Starting value (inclusive). Default: 0
@@ -212,7 +212,7 @@ for i in range(10, 0, -1):
     print(i)
 ```
 
-#### 3.3.2 Loop else Clause
+### 3.3.2 Loop else Clause
 
 The `else` block executes **only if the loop completed normally** (without hitting a `break`).
 
@@ -229,9 +229,9 @@ else:
 
 **Use Case:** Useful for search operations where you want to know if the item was not found.
 
-## 4. Sequences
+# 4. Sequences
 
-### 4.1 ASCII Encoding Conversion Functions
+## 4.1 ASCII Encoding Conversion Functions
 
 - `ord(char)`: Returns the ASCII code (integer) of a character
 - `chr(int)`: Returns the character represented by an ASCII code
@@ -246,16 +246,16 @@ print(chr(65))    # 'A'
 # 'a' (97) - 'A' (65) = 32
 ```
 
-#### 4.1.1 Comparing Numbers
+### 4.1.1 Comparing Numbers
 
 - Numbers are compared by their numeric values
 - Integers and floats can be compared directly
 
-#### 4.1.2 Comparing Strings
+### 4.1.2 Comparing Strings
 
 String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
 
-##### 4.1.2.1 Single Character Comparison
+#### 4.1.2.1 Single Character Comparison
 
 Compare characters by their Unicode code point values:
 
@@ -265,7 +265,7 @@ print(ord('a'))            # 97 (Unicode code point)
 print(ord('A'))            # 65 (Unicode code point)
 ```
 
-##### 4.1.2.2 Multi-character Comparison
+#### 4.1.2.2 Multi-character Comparison
 
 Compare character by character from left to right until a difference is found:
 
@@ -273,10 +273,10 @@ Compare character by character from left to right until a difference is found:
 print(max("apple", "banana"))  # Output: "banana"
 
 # Comparison process:
-#   'a' vs 'b' → 'b' > 'a' → immediately returns "banana"
+#   'a' vs 'b' 鈫?'b' > 'a' 鈫?immediately returns "banana"
 ```
 
-##### 4.1.2.3 Case Sensitivity
+#### 4.1.2.3 Case Sensitivity
 
 Uppercase letters have smaller code points than lowercase letters:
 
@@ -284,7 +284,7 @@ Uppercase letters have smaller code points than lowercase letters:
 print(max("Cat", "cat"))  # Output: "cat" ('c' > 'C')
 ```
 
-#### 4.1.3 Custom Comparison Rules
+### 4.1.3 Custom Comparison Rules
 
 Use the `key` parameter to specify custom comparison logic:
 
@@ -298,12 +298,12 @@ print(max("Apple", "banana", key=str.lower))
 # Output: "banana" (compare as lowercase: 'b' > 'a')
 ```
 
-#### 4.1.4 Mixed Type Limitations
+### 4.1.4 Mixed Type Limitations
 
 - Cannot directly compare strings with numbers
 - `max(1, "a")` raises `TypeError`
 
-#### 4.1.5 Key Summary
+### 4.1.5 Key Summary
 
 | Comparison Type | Method | Notes |
 |----------------|--------|-------|
@@ -312,7 +312,7 @@ print(max("Apple", "banana", key=str.lower))
 | Case sensitivity | Uppercase < Lowercase | `'Z'` (90) < `'a'` (97) |
 | Custom rule | Use `key` parameter | `key=len`, `key=str.lower` |
 
-### 4.2 List Comprehensions
+## 4.2 List Comprehensions
 
 **Only available for lists** - A flexible and powerful way to create lists concisely.
 
@@ -337,7 +337,7 @@ print(list3)  # [2, 4, 6, 8, 10]
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
 
-### 4.3 sorted() and .sort() Methods
+## 4.3 sorted() and .sort() Methods
 
 **`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
@@ -361,9 +361,9 @@ new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 | Returns | New list | `None` (modifies original) |
 | Original list | Unchanged | Modified in-place |
 | Works on | Any iterable | Only lists |
-| Recommended | ✅ Yes | ❌ No |
+| Recommended | 鉁?Yes | 鉂?No |
 
-### 4.4 Mutable and Immutable Types
+## 4.4 Mutable and Immutable Types
 
 **Mutable Types:** Lists, Dictionaries, Sets
 
@@ -417,12 +417,12 @@ print(t1 == t2)        # True (same values)
 
 | Type | Examples | Can Modify? | Memory Address |
 |------|----------|-------------|----------------|
-| Mutable | `list`, `dict`, `set` | ✅ Yes | Stays same |
-| Immutable | `int`, `str`, `tuple`, `bool`, `float` | ❌ No | Changes (new object) |
+| Mutable | `list`, `dict`, `set` | 鉁?Yes | Stays same |
+| Immutable | `int`, `str`, `tuple`, `bool`, `float` | 鉂?No | Changes (new object) |
 
-### 4.5 Common String Methods
+## 4.5 Common String Methods
 
-#### 4.5.1 find() ⭐
+### 4.5.1 find() 猸?
 
 | Method | Returns | Not Found | Parameters |
 |--------|---------|-----------|------------|
@@ -435,7 +435,7 @@ str1.find("a")           # -1 (not found)
 str1.find("y", 2)        # 5 (start from index 2)
 ```
 
-#### 4.5.2 index()
+### 4.5.2 index()
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -447,7 +447,7 @@ str1.index("y")          # 1
 # str1.index("a")        # ValueError
 ```
 
-#### 4.5.3 count()
+### 4.5.3 count()
 
 | Method | Returns |
 |--------|---------|
@@ -459,7 +459,7 @@ str1.count("y")          # 4
 str1.count("on")         # 3
 ```
 
-#### 4.5.4 lower() and upper()
+### 4.5.4 lower() and upper()
 
 | Method | Description |
 |--------|-------------|
@@ -471,11 +471,11 @@ str1.count("on")         # 3
 "Hello".upper()          # "HELLO"
 ```
 
-#### 4.5.5 split() ⭐⭐
+### 4.5.5 split() 猸愨瓙
 
 | Method | Description | Default Delimiter |
 |--------|-------------|-------------------|
-| `split(sep)` | Split string → list | Whitespace |
+| `split(sep)` | Split string 鈫?list | Whitespace |
 
 ```python
 "a b c".split()          # ['a', 'b', 'c']
@@ -483,7 +483,7 @@ str1.count("on")         # 3
 # "".split()             # ValueError
 ```
 
-#### 4.5.6 replace() ⭐⭐
+### 4.5.6 replace() 猸愨瓙
 
 | Method | Description | Note |
 |--------|-------------|------|
@@ -494,11 +494,11 @@ str1.count("on")         # 3
 "hello".replace('l', 'x', 1)   # "hexlo" (only first 1)
 ```
 
-#### 4.5.7 join()
+### 4.5.7 join()
 
 | Method | Description |
 |--------|-------------|
-| `sep.join(iterable)` | Join iterable → string |
+| `sep.join(iterable)` | Join iterable 鈫?string |
 
 ```python
 "-".join(["a", "b", "c"])      # "a-b-c"
@@ -507,10 +507,10 @@ str1.count("on")         # 3
 
 | Direction | Method |
 |-----------|--------|
-| String → List | `split()` |
-| List → String | `join()` |
+| String 鈫?List | `split()` |
+| List 鈫?String | `join()` |
 
-#### 4.5.8 strip()
+### 4.5.8 strip()
 
 | Method | Description |
 |--------|-------------|
@@ -523,14 +523,14 @@ str1.count("on")         # 3
 "###hello###".strip("#")  # "hello"
 ```
 
-### 4.5 List CRUD Operations
+## 4.5 List CRUD Operations
 
-#### 4.5.1 Add
+### 4.5.1 Add
 
 | Method | Syntax | Description | Notes |
 |--------|--------|-------------|-------|
 | `append()` | `list.append(x)` | Add single element to end | - |
-| `insert()` | `list.insert(i, x)` | Insert at specific index | Index out of range → adds to end (robust) |
+| `insert()` | `list.insert(i, x)` | Insert at specific index | Index out of range 鈫?adds to end (robust) |
 | `extend()` | `list.extend(iter)` | Merge another iterable | Works with str, list, tuple |
 
 ```python
@@ -541,7 +541,7 @@ list1.insert(100, "Eve")          # Adds to end (no error)
 list1.extend([1, 2])              # ['David', ..., 'Charlie', 'Eve', 1, 2]
 ```
 
-#### 4.5.2 Delete
+### 4.5.2 Delete
 
 | Method | Syntax | Description | Error if Invalid |
 |--------|--------|-------------|----------------|
@@ -557,7 +557,7 @@ list1.remove("Bob")               # Remove by value
 list1.clear()                     # []
 ```
 
-#### 4.5.3 Update
+### 4.5.3 Update
 
 ```python
 list1 = ["Alice", "Bob"]
@@ -575,7 +575,7 @@ list1.sort()                      # [1, 2, 3] - original modified
 new_list = sorted(list1, reverse=True)  # Returns [3, 2, 1]
 ```
 
-#### 4.5.4 Query
+### 4.5.4 Query
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -589,7 +589,7 @@ print(list1.count(2))             # 2
 # list1.index(99)                 # ValueError
 ```
 
-### 4.6 Tuple Operations
+## 4.6 Tuple Operations
 
 Tuples are **immutable**, so only query methods are available (no add/delete/update).
 
@@ -605,11 +605,11 @@ print(tuple1.count(11))      # 1
 # tuple1.index(66)           # ValueError: 66 is not in tuple
 ```
 
-## 5. Hash Types
+# 5. Hash Types
 
-### 5.1 Sets
+## 5.1 Sets
 
-#### 5.1.1 Properties
+### 5.1.1 Properties
 
 | Property | Description |
 |----------|-------------|
@@ -632,16 +632,16 @@ list1 = [1, 2, 3, 4, 1, 2, 3, 4]
 unique_list = list(set(list1))  # [1, 2, 3, 4]
 ```
 
-#### 5.1.2 Operations
+### 5.1.2 Operations
 
 | Operator | Meaning | Example |
 |----------|---------|---------|
-| `&` | Intersection (common elements) | `{1,2,3} & {2,3,4}` → `{2, 3}` |
-| `\|` | Union (all elements) | `{1,2,3} \| {2,3,4}` → `{1, 2, 3, 4}` |
-| `-` | Difference (in A but not B) | `{1,2,3} - {2,3,4}` → `{1}` |
-| `in` / `not in` | Membership test | `2 in {1,2,3}` → `True` |
+| `&` | Intersection (common elements) | `{1,2,3} & {2,3,4}` 鈫?`{2, 3}` |
+| `\|` | Union (all elements) | `{1,2,3} \| {2,3,4}` 鈫?`{1, 2, 3, 4}` |
+| `-` | Difference (in A but not B) | `{1,2,3} - {2,3,4}` 鈫?`{1}` |
+| `in` / `not in` | Membership test | `2 in {1,2,3}` 鈫?`True` |
 
-##### 5.1.2.1 Methods
+#### 5.1.2.1 Methods
 
 | Operation | Method | Description | Error if Invalid |
 |-----------|--------|-------------|----------------|
@@ -660,7 +660,7 @@ set1.remove("Bob")                   # Remove specific
 set1.clear()                         # Empty set
 ```
 
-##### 5.1.2.2 Iteration
+#### 5.1.2.2 Iteration
 
 Sets don't support index access. Use direct iteration only.
 
@@ -673,9 +673,9 @@ for item in set1:        # Only way to traverse
 print("Alice" in set1)   # True
 ```
 
-### 5.2 Dictionaries
+## 5.2 Dictionaries
 
-#### 5.2.1 Methods
+### 5.2.1 Methods
 
 | Operation | Method/Syntax | Description | Error if Invalid |
 |-----------|---------------|-------------|----------------|
@@ -733,19 +733,19 @@ for key, value in dict1.items():
 # Syntax: dict.get(key, default=None)
 dict1 = {"theme": "dark", "font_size": 14}
 
-# Key exists → return value
+# Key exists 鈫?return value
 print(dict1.get("theme"))           # "dark"
 
-# Key not exists → return default (None if not specified)
+# Key not exists 鈫?return default (None if not specified)
 print(dict1.get("language"))        # None
 print(dict1.get("language", "en"))  # "en" (custom default)
 
 # Comparison: direct access vs get()
-# print(dict1["unknown"])           # ❌ KeyError
-dict1.get("unknown")                # ✅ None (no error)
+# print(dict1["unknown"])           # 鉂?KeyError
+dict1.get("unknown")                # 鉁?None (no error)
 ```
 
-#### 5.2.2 Iteration
+### 5.2.2 Iteration
 
 | # | Method | Iterates Over | Use Case |
 |---|--------|---------------|----------|
@@ -774,7 +774,7 @@ for name, code in dict1.items():
     print(f"{name}: {code}")
 ```
 
-#### 5.2.3 Nested Dictionaries
+### 5.2.3 Nested Dictionaries
 
 **Structure:** Key can be any immutable type; Value can be any type (including dict).
 
@@ -806,11 +806,11 @@ for info in students.values():
 print(gender_count)                 # {'F': 2, 'M': 1}
 ```
 
-## 6. Custom Functions
+# 6. Custom Functions
 
-### 6.1 Function Parameters
+## 6.1 Function Parameters
 
-#### 6.1.1 Formal Parameters Definition
+### 6.1.1 Formal Parameters Definition
 
 | Parameter Type | Syntax | Description |
 |---------------|--------|-------------|
@@ -826,7 +826,7 @@ greet("Alice")           # Hello, Alice!
 greet("Bob", "Hi")       # Hi, Bob!
 ```
 
-#### 6.1.2 Actual Arguments Passing
+### 6.1.2 Actual Arguments Passing
 
 | Passing Type | Syntax | Description |
 |-------------|--------|-------------|
@@ -843,9 +843,9 @@ info(name="Bob", age=25, gender="M")      # Keyword
 info("Charlie", gender="F", age=30)       # Mixed
 ```
 
-### 6.2 Variable Parameters
+## 6.2 Variable Parameters
 
-#### 6.2.1 Variable Positional Parameters *args
+### 6.2.1 Variable Positional Parameters *args
 
 | Feature | Description |
 |---------|-------------|
@@ -869,7 +869,7 @@ info(1, 2)                  # a=1, b=2, rest=()
 info(1, 2, 3, 4, 5)         # a=1, b=2, rest=(3, 4, 5)
 ```
 
-#### 6.2.2 Variable Keyword Parameters **kwargs
+### 6.2.2 Variable Keyword Parameters **kwargs
 
 | Feature | Description |
 |---------|-------------|
@@ -894,7 +894,7 @@ universal(1, 2, 3, name="Alice", age=20)
 # Keyword: {'name': 'Alice', 'age': 20}
 ```
 
-### 6.3 Summary
+## 6.3 Summary
 
 **Parameter Order:**
 ```
@@ -909,7 +909,7 @@ def fn(regular, default=val, *args, **kwargs):
 | `*args` | Variable positional | `def fn(*args)` |
 | `**kwargs` | Variable keyword | `def fn(**kwargs)` |
 
-### 6.4 Parameter Unpacking
+## 6.4 Parameter Unpacking
 
 | Operation | Syntax | Description |
 |-----------|--------|-------------|
@@ -927,7 +927,7 @@ data = {"a": 1, "b": 2, "c": 3}
 print(add(**data))          # Equivalent to add(a=1, b=2, c=3)
 ```
 
-### 6.5 Function Return Values
+## 6.5 Function Return Values
 
 | Feature | Description |
 |---------|-------------|
@@ -947,7 +947,7 @@ def stats(x, y):
 sum_val, diff = stats(10, 3)  # Unpacking
 ```
 
-### 6.6 Scope
+## 6.6 Scope
 
 | Keyword | Purpose | Usage |
 |---------|---------|-------|
@@ -971,7 +971,7 @@ def outer():
     return x
 ```
 
-### 6.7 Advanced Usage
+## 6.7 Advanced Usage
 
 Functions in Python are first-class objects:
 
@@ -1006,9 +1006,9 @@ triple = multiplier(3)      # Returns inner function
 triple(10)                  # 30
 ```
 
-## 7. Advanced Functions
+# 7. Advanced Functions
 
-### 7.1 Lambda Anonymous Functions
+## 7.1 Lambda Anonymous Functions
 
 | Feature | Description |
 |---------|-------------|
@@ -1032,9 +1032,9 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 
 **Note:** Lambda doesn't improve performance; use `def` for complex logic.
 
-### 7.2 Higher-Order Functions
+## 7.2 Higher-Order Functions
 
-#### 7.2.1 Introduction
+### 7.2.1 Introduction
 
 **Higher-Order Function:** Takes function as argument or returns function.
 
@@ -1044,7 +1044,7 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 | `filter()` | Select elements matching condition |
 | `sorted()` | Sort with custom key |
 
-#### 7.2.2 map()
+### 7.2.2 map()
 
 | Feature | Description |
 |---------|-------------|
@@ -1061,7 +1061,7 @@ list(map(int, nums))        # [1, 2, 3]
 list(map(lambda x: x ** 2, [1, 2, 3]))  # [1, 4, 9]
 ```
 
-#### 7.2.3 filter()
+### 7.2.3 filter()
 
 | Feature | Description |
 |---------|-------------|
@@ -1079,7 +1079,7 @@ users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 17}]
 list(filter(lambda u: u["age"] >= 18, users))
 ```
 
-#### 7.2.4 sorted()
+### 7.2.4 sorted()
 
 | Feature | Description |
 |---------|-------------|
@@ -1101,7 +1101,7 @@ users = [{"name": "Bob", "age": 30}, {"name": "Alice", "age": 25}]
 sorted(users, key=lambda x: x["age"])  # Alice first
 ```
 
-#### 7.2.5 Iterators
+### 7.2.5 Iterators
 
 | Method | Description |
 |--------|-------------|
@@ -1128,7 +1128,7 @@ for item in lst:            # Calls iter(), then next() repeatedly
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
-#### 7.2.6 Generators
+### 7.2.6 Generators
 
 | Feature | Description |
 |---------|-------------|
@@ -1160,9 +1160,9 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-## 8. Closures and Decorators
+# 8. Closures and Decorators
 
-### 8.1 Closures
+## 8.1 Closures
 
 **Closure:** A nested function that references variables from its enclosing scope and is returned from the outer function.
 
@@ -1189,11 +1189,11 @@ c2 = counter()              # Independent closure
 c2()                        # 1
 ```
 
-### 8.2 Decorators
+## 8.2 Decorators
 
 **Decorator:** A function that wraps another function to extend its behavior without modifying it.
 
-#### 8.2.1 Decorator 1.0 (Basic Template)
+### 8.2.1 Decorator 1.0 (Basic Template)
 
 ```python
 def decorator(func):
@@ -1218,7 +1218,7 @@ def greet():
     print("Hello")
 ```
 
-#### 8.2.2 Decorator 2.0 (With Parameters)
+### 8.2.2 Decorator 2.0 (With Parameters)
 
 ```python
 def timer(func):
@@ -1239,7 +1239,7 @@ def slow_function(n):
 slow_function(1)            # Measures and prints execution time
 ```
 
-#### 8.2.3 Decorator Final Version (Preserves Return Value)
+### 8.2.3 Decorator Final Version (Preserves Return Value)
 
 ```python
 # Universal decorator template
@@ -1264,9 +1264,9 @@ def view_profile(user):
     return user["profile"]
 ```
 
-## 9. File Operations
+# 9. File Operations
 
-### 9.1 Opening Files
+## 9.1 Opening Files
 
 ```python
 # Syntax: open(file, mode='r', encoding=None)
@@ -1286,7 +1286,7 @@ file = open("data.txt", mode="r", encoding="utf-8")
 - **Relative:** `"./file.txt"` or `"../data/file.txt"`
 - **Absolute:** `"C:/Users/name/file.txt"` (use `/` for cross-platform)
 
-### 9.2 Reading Files
+## 9.2 Reading Files
 
 | Method | Description |
 |--------|-------------|
@@ -1302,7 +1302,7 @@ with open("data.txt", encoding="utf-8") as f:
     lines = f.readlines()       # List of lines
 ```
 
-### 9.3 Writing Files
+## 9.3 Writing Files
 
 ```python
 # Write (overwrite)
@@ -1315,7 +1315,7 @@ with open("log.txt", "a", encoding="utf-8") as f:
     f.write("New entry\n")
 ```
 
-### 9.4 Closing Files
+## 9.4 Closing Files
 
 **Always close files to free system resources:**
 
@@ -1331,7 +1331,7 @@ with open("file.txt") as f:
 # File automatically closed
 ```
 
-### 9.5 Binary Files
+## 9.5 Binary Files
 
 ```python
 # Copy image file
@@ -1340,22 +1340,22 @@ with open("photo.jpg", "rb") as src:
         dst.write(src.read())
 ```
 
-### 9.6 JSON Strings
+## 9.6 JSON Strings
 
 | Function | Purpose |
 |----------|---------|
-| `json.dumps(obj)` | Python object → JSON string |
-| `json.loads(string)` | JSON string → Python object |
+| `json.dumps(obj)` | Python object 鈫?JSON string |
+| `json.loads(string)` | JSON string 鈫?Python object |
 
 ```python
 import json
 
-# Serialize (Python → JSON)
+# Serialize (Python 鈫?JSON)
 data = {"name": "Alice", "age": 25}
 json_str = json.dumps(data, ensure_ascii=False)
 # '{"name": "Alice", "age": 25}'
 
-# Deserialize (JSON → Python)
+# Deserialize (JSON 鈫?Python)
 parsed = json.loads(json_str)
 # {'name': 'Alice', 'age': 25}
 
@@ -1367,7 +1367,7 @@ with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
-### 9.7 Character Encoding
+## 9.7 Character Encoding
 
 | Encoding | Description | Bytes per char |
 |----------|-------------|----------------|
@@ -1388,14 +1388,14 @@ print(chr(65))              # 'A'
 
 # UTF-8 for Chinese (3 bytes per character)
 with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")         # 6 bytes total
+    f.write("涓枃")         # 6 bytes total
 ```
 
-## 10. Members and Exceptions
+# 10. Members and Exceptions
 
-### 10.1 Members
+## 10.1 Members
 
-#### 10.1.1 Class Attributes
+### 10.1.1 Class Attributes
 
 | Feature | Description |
 |---------|-------------|
@@ -1412,7 +1412,7 @@ s = Student()
 print(s.school)             # Access via instance
 ```
 
-#### 10.1.2 Instance Attributes
+### 10.1.2 Instance Attributes
 
 | Feature | Description |
 |---------|-------------|
@@ -1430,7 +1430,7 @@ s1 = Student("Alice", 20)
 s2 = Student("Bob", 21)     # Each has independent name/age
 ```
 
-#### 10.1.3 Instance Methods
+### 10.1.3 Instance Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -1453,7 +1453,7 @@ s = Student("Alice", 95)
 print(s.get_grade())            # "A"
 ```
 
-#### 10.1.4 Class Methods
+### 10.1.4 Class Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -1476,7 +1476,7 @@ class Student:
 print(Student.get_count())      # 0
 ```
 
-#### 10.1.5 Static Methods
+### 10.1.5 Static Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -1493,7 +1493,7 @@ class MathUtils:
 print(MathUtils.add(3, 5))      # 8 (no instance needed)
 ```
 
-#### 10.1.6 Special Methods (Magic Methods)
+### 10.1.6 Special Methods (Magic Methods)
 
 | Method | Purpose | Triggered by |
 |--------|---------|--------------|
@@ -1521,9 +1521,9 @@ v = Vector(1, 2)
 print(v)                        # Vector(1, 2)
 ```
 
-### 10.2 Exception Handling
+## 10.2 Exception Handling
 
-#### 10.2.1 Exceptions and Errors
+### 10.2.1 Exceptions and Errors
 
 | Exception | Cause |
 |-----------|-------|
@@ -1553,7 +1553,7 @@ def demo_exceptions():
     "1" + 2                     # Can't add str and int
 ```
 
-#### 10.2.2 Exception Handling
+### 10.2.2 Exception Handling
 
 | Syntax | Purpose |
 |--------|---------|
@@ -1582,7 +1582,7 @@ except (ValueError, TypeError):
     print("Invalid input")
 ```
 
-#### 10.2.3 raise
+### 10.2.3 raise
 
 | Feature | Description |
 |---------|-------------|
@@ -1607,7 +1607,7 @@ def validate_age(age):
         raise ValidationError("Age cannot be negative")
 ```
 
-#### 10.2.4 assert
+### 10.2.4 assert
 
 | Feature | Description |
 |---------|-------------|
