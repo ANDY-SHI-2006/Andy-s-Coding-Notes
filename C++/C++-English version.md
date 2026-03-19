@@ -1156,7 +1156,11 @@ cin >> c1 >> c2 >> a;   // Input: "1234"
 
 ## 1.7 Data Output
 
-### 1.7.1 Newline Control
+### 1.7.1 `cout`
+
+Console output using `cout` (character output).
+
+#### Newline Control
 
 Both create a new line, but with a key difference:
 
@@ -1172,15 +1176,15 @@ cout << "Hello" << '\n';    // Just newline, faster
 
 **Note**: Frequent use of `endl` can slow down the program. Use `'\n'` unless you need to force output immediately.
 
-### 1.7.2 `cout` Output Formatting
+#### Output Formatting
 
-#### 1.7.2.1 Header Dependency
+##### Header Dependency
 
 ```cpp
 #include <iomanip>
 ```
 
-#### 1.7.2.2 Core Mechanism
+##### Core Mechanism
 
 C++ has three floating-point output formats:
 
@@ -1190,14 +1194,14 @@ C++ has three floating-point output formats:
 | `fixed` | Fixed-point notation | `12345.678900` |
 | `scientific` | Scientific notation | `1.234568e+04` |
 
-#### 1.7.2.3 setprecision(n) Meaning
+##### setprecision(n) Meaning
 
 `setprecision(n)` behavior depends on the current format:
 
 - **Default**: `n` significant digits
 - `fixed`/`scientific`: `n` digits after decimal point
 
-#### 1.7.2.4 Detailed Comparison and Examples
+##### Detailed Comparison and Examples
 
 ```cpp
 double pi = 3.1415926535;
@@ -1218,7 +1222,7 @@ cout << scientific << setprecision(4);
 cout << 123.456 << endl;  // 1.2346e+02
 ```
 
-#### 1.7.2.5 State Persistence (Important)
+##### State Persistence (Important)
 
 `fixed` and `setprecision` persist until explicitly changed.
 
@@ -1228,7 +1232,7 @@ cout << 1.234 << endl;  // 1.23
 cout << 5.678 << endl;  // 5.68 (format still active!)
 ```
 
-#### 1.7.2.6 Reset to Default
+##### Reset to Default
 
 ```cpp
 // C++11 method
@@ -1239,7 +1243,7 @@ cout.unsetf(ios::fixed | ios::scientific);
 cout << setprecision(6);
 ```
 
-#### 1.7.2.7 cout Formatting for double Values
+##### cout Formatting for double Values
 
 > See also: [1.4.2.4 Power - cout Formatting for double Values](#1424-power-exponentiation)
 
@@ -1295,21 +1299,21 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 > **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
 
-#### 1.7.2.8 `printf()` Format Specifier Syntax
+##### `printf()` Format Specifier Syntax
 
-##### 1.7.2.7.1 Header Dependency
+###### Header Dependency
 
 ```c
 #include <stdio.h>
 ```
 
-##### 1.7.2.7.2 Basic Syntax Structure
+###### Basic Syntax Structure
 
 ```
 %[flags][width][.precision][length modifier]conversion specifier
 ```
 
-##### 1.7.2.7.3 Conversion Specifiers (Required)
+###### Conversion Specifiers (Required)
 
 | Specifier | Data Type | Output Form |
 |-----------|-----------|-------------|
@@ -1326,7 +1330,7 @@ cout << typeid(result).name();  // Confirm: it's double!
 | `%n` | `int*` | Write the number of characters printed so far |
 | `%%` | None | Literal percent sign |
 
-##### 1.7.2.7.4 Flags (Optional)
+###### Flags (Optional)
 
 | Flag | Name | Description |
 |------|------|-------------|
@@ -1336,12 +1340,12 @@ cout << typeid(result).name();  // Confirm: it's double!
 | `#` | Alternative form | Prefix octal with `0`, hex with `0x`/`0X`; force decimal point for floats |
 | `0` | Zero-padding | Pad with leading zeros instead of spaces |
 
-##### 1.7.2.7.5 Width (Optional)
+###### Width (Optional)
 
 - **Number**: Minimum field width. If the value is shorter, pad with spaces (or `0` if flag `0` is set). If longer, output is not truncated.
 - **`*`**: Width is specified by an additional `int` argument.
 
-##### 1.7.2.7.6 Precision (Optional)
+###### Precision (Optional)
 
 Prefix with `.`:
 
@@ -1352,7 +1356,7 @@ Prefix with `.`:
 | Scientific (`g`, `G`) | Maximum number of significant digits |
 | String (`s`) | Maximum number of characters to print (truncation) |
 
-##### 1.7.2.7.7 Length Modifiers (Optional)
+###### Length Modifiers (Optional)
 
 | Modifier | Use with `d`/`i`/`o`/`u`/`x`/`X` | Use with `n` |
 |----------|----------------------------------|--------------|
@@ -1365,7 +1369,7 @@ Prefix with `.`:
 | `t` | `ptrdiff_t` | `ptrdiff_t*` |
 | `L` | With `f`/`e`/`g`: `long double` | — |
 
-##### 1.7.2.7.8 Examples
+###### Examples
 
 ```c
 // Left-aligned, width 10
