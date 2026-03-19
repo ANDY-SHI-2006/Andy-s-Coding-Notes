@@ -1154,8 +1154,6 @@ cin >> c1 >> c2 >> a;   // Input: "1234"
 
 ### 1.6.2 `scanf` (C-style Input)
 
-Format-based input function from C.
-
 ```cpp
 #include <cstdio>
 scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
