@@ -661,7 +661,44 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 > **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
 
-### 1.4.3 Cast Operators (Type Conversion)
+### 1.4.3 Compound Assignment Operators
+
+C/C++ allows simple assignment statements to be abbreviated using compound assignment operators.
+
+**General Form:**
+```cpp
+identifier = identifier operator expression;  // Can be abbreviated to:
+identifier operator= expression;
+```
+
+**Common Compound Assignment Operators:**
+
+| Operator | Example | Equivalent To |
+|----------|---------|---------------|
+| `+=` | `x += 3;` | `x = x + 3;` |
+| `-=` | `x -= 3;` | `x = x - 3;` |
+| `*=` | `x *= 3;` | `x = x * 3;` |
+| `/=` | `x /= 3;` | `x = x / 3;` |
+| `%=` | `x %= 3;` | `x = x % 3;` |
+
+**Examples:**
+```cpp
+sum = sum + x;      // Can be written as:
+sum += x;
+
+d = d / 4.5;        // Can be written as:
+d /= 4.5;
+
+r = r % 2;          // Can be written as:
+r %= 2;
+```
+
+**Advantages:**
+- Shorter and more concise
+- May be more efficient (variable evaluated only once)
+- Commonly used in practice
+
+### 1.4.4 Cast Operators (Type Conversion)
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
@@ -732,7 +769,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 double avg = static_cast<double>(sum) / count;
 ```
 
-### 1.4.4 Operator Precedence
+### 1.4.5 Operator Precedence
 
 | Precedence | Operator | Associativity |
 |------------|----------|---------------|
@@ -766,7 +803,7 @@ float f = (float)5 / 2;  // Result: 2.5, cast has higher precedence
 
 ---
 
-### 1.4.5 Spacing in Expressions
+### 1.4.6 Spacing in Expressions
 
 Spacing around operators is a **style issue**. Choose a style and use it consistently.
 
