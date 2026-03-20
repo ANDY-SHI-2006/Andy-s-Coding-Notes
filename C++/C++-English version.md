@@ -1441,16 +1441,27 @@ When `scanf`'s format string contains **non-format characters** (characters othe
 // Format string with literal characters
 scanf("a = %d, b = %d, c = %d", &a, &b, &c);
 
-// CORRECT input:
-// a = 1, b = 2, c = 3
-//   ↑   ↑ ↑   ↑ ↑   ↑
-// Must match exactly! Spaces, commas, "a =", "b =", "c =" are all required
+// CORRECT input: (MUST match exactly!)
+// a = 123, b = 456, c = 789
+//   ↑    ↑  ↑    ↑  ↑    ↑
+// Every character must match: "a =", comma+space, "b =", comma+space, "c ="
 
-// WRONG inputs:
-// 1 2 3          ← Missing "a =", commas
-// a=1, b=2       ← Missing space after "a"
-// a = 1 b = 2    ← Missing commas
+// If input doesn't match the format, scanf STOP reading at the mismatch point
 ```
+
+**⚠️ Strict Matching Requirement:**
+
+When `scanf` encounters non-format characters in the format string, it **requires** the input to contain those exact characters at that position.
+
+| Input | Result | Explanation |
+|-------|--------|-------------|
+| `a = 123, b = 456, c = 789` | ✅ All 3 values read | Exact match |
+| `a = 123, b=456, c = 789` | ❌ Only `a=123`, `b` unread | Missing space after `b` |
+| `a=123, b = 456, c = 789` | ❌ Nothing read | Missing space after `a` |
+| `123, 456, 789` | ❌ Nothing read | Missing `a = ` prefix |
+| `a = 123 b = 456, c = 789` | ❌ Only `a=123` read | Missing comma after first value |
+
+> **Critical:** If input doesn't match, `scanf` stops and returns early. Remaining variables keep their original values (or garbage if uninitialized).
 
 **Key Points:**
 
