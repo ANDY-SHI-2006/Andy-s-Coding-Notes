@@ -830,8 +830,6 @@ a = b;
 - Avoid mixing multiple assignment operators in one statement
 - Put spaces around assignment operators for clarity (they are evaluated last)
 
----
-
 ### 1.4.6 Spacing in Expressions
 
 Spacing around operators is a **style issue**. Choose a style and use it consistently.
@@ -1166,8 +1164,6 @@ scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
----
-
 #### 1. Flags - **OPTIONAL**
 
 | Flag | Description | Example |
@@ -1180,8 +1176,6 @@ scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
 scanf("%d%*d%d", &a, &b);  // Input: 1 2 3 → a=1, b=3 (2 is skipped)
 ```
 
----
-
 #### 2. Width - **OPTIONAL**
 
 Maximum field width to read.
@@ -1189,8 +1183,6 @@ Maximum field width to read.
 | Width | Description | Example |
 |-------|-------------|---------|
 | `n` | Read at most n characters | `scanf("%3d", &a);` // Input: "12345" → a=123 |
-
----
 
 #### 3. Length Modifier - **OPTIONAL**
 
@@ -1202,8 +1194,6 @@ Maximum field width to read.
 | `ll` | `%d`, `%o`, `%x` | `long long` | `scanf("%lld", &ll);` |
 | `L` | `%f`, `%e`, `%g` | `long double` | `scanf("%Lf", &ld);` |
 | `l` | `%c`, `%s` | `wchar_t` / `wchar_t*` | `scanf("%lc", &wc);` |
-
----
 
 #### 4. Specifier (Conversion Specifier) - **REQUIRED**
 
@@ -1225,8 +1215,6 @@ Maximum field width to read.
 | `%p` | `void*` | Pointer address | `0x7ffeeb2b3a5c` |
 | `%n` | `int*` | Count of characters read so far | (stores count) |
 | `%[` | `char[]` | Scanset (custom set of characters) | `%[abc]` |
-
----
 
 #### Key Differences from `cin`
 
@@ -1430,8 +1418,6 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 **Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
 
----
-
 #### 1. Flags - **OPTIONAL**
 
 | Flag | Description | Example |
@@ -1442,16 +1428,12 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
 | `0` | Zero-pad (with width) | `%05d` → `00042` |
 
----
-
 #### 2. Width - **OPTIONAL**
 
 | Width | Description | Example |
 |-------|-------------|---------|
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
-
----
 
 #### 3. Precision (`.precision`) - **OPTIONAL**
 
@@ -1462,8 +1444,6 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `.n` | `%s` | Max n characters | `%.3s` → `"Hel"` |
 | `.n` | `%d` | Minimum n digits (pad with 0) | `%.5d` → `00042` |
 | `.*` | any | Precision from argument | `printf("%.*f", 2, 3.14159);` |
-
----
 
 #### 4. Length Modifier - **OPTIONAL**
 
@@ -1478,8 +1458,6 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
 | `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf` |
 | `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
-
----
 
 #### 5. Specifier (Conversion Specifier) - **REQUIRED**
 
@@ -1533,6 +1511,3 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ## 1.12 Advanced Topics
 
-
-
----
