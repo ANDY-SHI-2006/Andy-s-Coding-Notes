@@ -65,6 +65,7 @@ int main(int argc, char* argv[]) {
 **Note**: `void main()` works on some old compilers (e.g., Turbo C++), but is **not valid C++**. Always use `int main()` for portable code.
 
 
+
 ---
 
 ## 1.2 Code Standardization
@@ -267,6 +268,7 @@ f = numerator / denominator;
 - Ensure variables are floating-point type for correct division
 
 
+
 ---
 
 ## 1.3 Declarations and Statements
@@ -348,6 +350,7 @@ auto func = [](int x) { return x * 2; };
 ```
 
 **Important:** `auto` requires initialization. `auto x;` is an error.
+
 
 
 ---
@@ -858,6 +861,7 @@ int result = a * b + b / c * d;  // Also valid, but less clear
 > See also: [1.2.2.3 Spacing in Expressions](#1223-spacing-in-expressions) for more details on whitespace usage.
 
 
+
 ---
 
 ## 1.5 Data Types
@@ -1136,6 +1140,7 @@ float y = 3.14f;        // OK: 3.14f is float
 int a = 3.9f;           // a = 3 (not 4!)
 int b = -2.7f;          // b = -2
 ```
+
 
 
 ---
@@ -1500,6 +1505,7 @@ scanf("%d", &a);
 > Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
 
 
+
 ---
 
 ## 1.7 Data Output
@@ -1756,6 +1762,7 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | Extensibility | Limited | Easy to extend |
 
 > **Note:** Use `printf` for formatted output in performance-critical code, but prefer `cout` for type safety in modern C++.
+
 
 
 ---
