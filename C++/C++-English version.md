@@ -1366,58 +1366,84 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ```
 %[flags][width][.precision][length]specifier
+     ↑      ↑       ↑         ↑       ↑
+   可选    可选    可选      可选    必需
 ```
 
-#### Common Specifiers
+**Order**: `flags` → `width` → `.precision` → `length` → `specifier` (从左到右)
 
-**Integer Types:**
+---
+
+#### 1. Specifier (Conversion Specifier) - **REQUIRED**
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
+| **Integer Types** ||||
 | `%d` / `%i` | `int` | Signed decimal | `123`, `-456` |
 | `%u` | `unsigned int` | Unsigned decimal | `789` |
 | `%o` | `unsigned int` | Octal | `377` |
-| `%x` / `%X` | `unsigned int` | Hexadecimal (lower/upper) | `ff` / `FF` |
-
-**Floating-Point Types:**
-
-| Specifier | Type | Output | Example |
-|-----------|------|--------|---------|
-| `%f` / `%F` | `double` | Fixed-point notation | `3.141500` |
-| `%e` / `%E` | `double` | Scientific notation | `3.141500e+00` / `E+00` |
+| `%x` / `%X` | `unsigned int` | Hexadecimal | `ff` / `FF` |
+| **Floating-Point Types** ||||
+| `%f` / `%F` | `double` | Fixed-point | `3.141500` |
+| `%e` / `%E` | `double` | Scientific notation | `3.141500e+00` |
 | `%g` / `%G` | `double` | Shorter of `%f` or `%e` | `3.1415` |
-| `%a` / `%A` | `double` | Hexadecimal floating-point | `0x1.921fb54442d18p+1` |
-
-**Character and String Types:**
-
-| Specifier | Type | Output | Example |
-|-----------|------|--------|---------|
+| `%a` / `%A` | `double` | Hexadecimal floating-point | `0x1.921fb5p+1` |
+| **Character/String Types** ||||
 | `%c` | `int` | Single character | `A` |
 | `%s` | `char*` | String | `Hello` |
-
-**Other Specifiers:**
-
-| Specifier | Type | Output | Example |
-|-----------|------|--------|---------|
+| **Other** ||||
 | `%p` | `void*` | Pointer address | `0x7ffeeb2b3a5c` |
-| `%n` | `int*` | Count of characters printed so far | (stores count) |
-| `%%` | - | Literal percent sign | `%` |
+| `%n` | `int*` | Count chars printed so far | (stores count) |
+| `%%` | - | Literal `%` | `%` |
 
-#### Length Modifiers
+---
 
-Combine with specifiers for specific integer/float types:
+#### 2. Flags - **OPTIONAL**
 
-| Modifier | Use with | Type | Example |
-|----------|----------|------|---------|
-| `hh` | `%d`, `%u`, `%o`, `%x` | `signed char`, `unsigned char` | `%hhd` |
-| `h` | `%d`, `%u`, `%o`, `%x` | `short`, `unsigned short` | `%hd` |
-| `l` | `%d`, `%u`, `%o`, `%x` | `long`, `unsigned long` | `%ld` |
-| `ll` | `%d`, `%u`, `%o`, `%x` | `long long`, `unsigned long long` | `%lld` |
-| `j` | `%d`, `%u`, `%o`, `%x` | `intmax_t`, `uintmax_t` | `%jd` |
+| Flag | Description | Example |
+|------|-------------|---------|
+| `-` | Left-justify (default: right) | `%-10d` → `"42        "` |
+| `+` | Show sign for positive | `%+d` → `+42` |
+| ` ` (space) | Space before positive numbers | `% d` → ` 42` |
+| `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
+| `0` | Zero-pad (with width) | `%05d` → `00042` |
+
+---
+
+#### 3. Width - **OPTIONAL**
+
+| Width | Description | Example |
+|-------|-------------|---------|
+| `n` | Minimum field width | `%10d` → `        42` |
+| `*` | Width from argument list | `printf("%*d", 10, 42);` |
+
+---
+
+#### 4. Precision (`.precision`) - **OPTIONAL**
+
+| Precision | For Type | Effect | Example |
+|-----------|----------|--------|---------|
+| `.n` | `%f`, `%e` | n decimal places | `%.2f` → `3.14` |
+| `.n` | `%g` | n significant digits | `%.3g` → `3.14` |
+| `.n` | `%s` | Max n characters | `%.3s` → `"Hel"` |
+| `.n` | `%d` | Minimum n digits (pad with 0) | `%.5d` → `00042` |
+| `.*` | any | Precision from argument | `printf("%.*f", 2, 3.14159);` |
+
+---
+
+#### 5. Length Modifier - **OPTIONAL**
+
+| Modifier | Use With | C Type | Example |
+|----------|----------|--------|---------|
+| `hh` | `%d`, `%u`, `%o`, `%x` | `signed/unsigned char` | `%hhd` |
+| `h` | `%d`, `%u`, `%o`, `%x` | `short` / `unsigned short` | `%hd` |
+| `l` | `%d`, `%u`, `%o`, `%x` | `long` / `unsigned long` | `%ld` |
+| `ll` | `%d`, `%u`, `%o`, `%x` | `long long` / `unsigned long long` | `%lld` |
+| `j` | `%d`, `%u`, `%o`, `%x` | `intmax_t` / `uintmax_t` | `%jd` |
 | `z` | `%d`, `%u`, `%o`, `%x` | `size_t` | `%zu` |
 | `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
 | `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf` |
-| `l` | `%c`, `%s` | `wint_t`, `wchar_t*` (wide char) | `%lc`, `%ls` |
+| `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
 
 #### Flags and Modifiers
 
