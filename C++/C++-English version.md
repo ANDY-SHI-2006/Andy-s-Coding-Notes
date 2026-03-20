@@ -1152,21 +1152,6 @@ scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-> **⚠️ Important Note: `scanf` vs `printf` Difference**
->
-> Unlike `printf`, **`scanf` cannot display non-format strings** (i.e., prompt messages in the format string are NOT displayed).
->
-> ```cpp
-> // ❌ WRONG: scanf does NOT print the prompt!
-> scanf("Enter a number: %d", &a);  // The text is NOT displayed, just waits for input
->
-> // ✓ CORRECT: Use printf first to display the prompt
-> printf("Enter a number: ");
-> scanf("%d", &a);
-> ```
->
-> Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
-
 #### Format Specifier Syntax
 
 ```
@@ -1365,6 +1350,29 @@ int a;
 scanf("%d", &a);    // ✓ Correct
 scanf("%d", a);     // ✗ Wrong! Undefined behavior
 ```
+
+#### Key Differences from `printf`
+
+| Feature | `scanf` | `printf` |
+|---------|---------|----------|
+| Non-format strings in format | **NOT displayed** | Displayed as-is |
+| Prompt message | Cannot display | Can display |
+| Usage pattern | `printf` first, then `scanf` | Direct output |
+
+> **⚠️ Important Note: `scanf` vs `printf` Difference**
+>
+> Unlike `printf`, **`scanf` cannot display non-format strings** (i.e., prompt messages in the format string are NOT displayed).
+>
+> ```cpp
+> // ❌ WRONG: scanf does NOT print the prompt!
+> scanf("Enter a number: %d", &a);  // The text is NOT displayed, just waits for input
+>
+> // ✓ CORRECT: Use printf first to display the prompt
+> printf("Enter a number: ");
+> scanf("%d", &a);
+> ```
+>
+> Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
 
 ---
 
