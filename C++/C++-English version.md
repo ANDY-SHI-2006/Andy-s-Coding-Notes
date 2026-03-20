@@ -1163,6 +1163,8 @@ scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 > **Header Required**: `#include <cstdio>` (or `#include <stdio.h>` in C)
 
+**Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
+
 **Common Format Specifiers:**
 
 | Specifier | Type | Example |
@@ -1343,6 +1345,8 @@ printf("format string", arg1, arg2, ...);
 ```
 
 > **Header Required**: `#include <cstdio>` (or `#include <stdio.h>` in C)
+
+**Performance**: Generally faster than `cout` for large data output, but less type-safe.
 
 **Basic Example:**
 
