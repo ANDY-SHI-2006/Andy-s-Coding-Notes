@@ -1370,18 +1370,54 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 #### Common Specifiers
 
-| Specifier | Type | Output |
-|-----------|------|--------|
-| `%d` / `%i` | `int` | Signed decimal |
-| `%u` | `unsigned` | Unsigned decimal |
-| `%o` | `unsigned` | Octal |
-| `%x` / `%X` | `unsigned` | Hexadecimal |
-| `%f` / `%F` | `double` | Fixed-point |
-| `%e` / `%E` | `double` | Scientific notation |
-| `%g` / `%G` | `double` | Shorter of `%f` or `%e` |
-| `%c` | `int` | Single character |
-| `%s` | `char*` | String |
-| `%%` | - | Literal `%` |
+**Integer Types:**
+
+| Specifier | Type | Output | Example |
+|-----------|------|--------|---------|
+| `%d` / `%i` | `int` | Signed decimal | `123`, `-456` |
+| `%u` | `unsigned int` | Unsigned decimal | `789` |
+| `%o` | `unsigned int` | Octal | `377` |
+| `%x` / `%X` | `unsigned int` | Hexadecimal (lower/upper) | `ff` / `FF` |
+
+**Floating-Point Types:**
+
+| Specifier | Type | Output | Example |
+|-----------|------|--------|---------|
+| `%f` / `%F` | `double` | Fixed-point notation | `3.141500` |
+| `%e` / `%E` | `double` | Scientific notation | `3.141500e+00` / `E+00` |
+| `%g` / `%G` | `double` | Shorter of `%f` or `%e` | `3.1415` |
+| `%a` / `%A` | `double` | Hexadecimal floating-point | `0x1.921fb54442d18p+1` |
+
+**Character and String Types:**
+
+| Specifier | Type | Output | Example |
+|-----------|------|--------|---------|
+| `%c` | `int` | Single character | `A` |
+| `%s` | `char*` | String | `Hello` |
+
+**Other Specifiers:**
+
+| Specifier | Type | Output | Example |
+|-----------|------|--------|---------|
+| `%p` | `void*` | Pointer address | `0x7ffeeb2b3a5c` |
+| `%n` | `int*` | Count of characters printed so far | (stores count) |
+| `%%` | - | Literal percent sign | `%` |
+
+#### Length Modifiers
+
+Combine with specifiers for specific integer/float types:
+
+| Modifier | Use with | Type | Example |
+|----------|----------|------|---------|
+| `hh` | `%d`, `%u`, `%o`, `%x` | `signed char`, `unsigned char` | `%hhd` |
+| `h` | `%d`, `%u`, `%o`, `%x` | `short`, `unsigned short` | `%hd` |
+| `l` | `%d`, `%u`, `%o`, `%x` | `long`, `unsigned long` | `%ld` |
+| `ll` | `%d`, `%u`, `%o`, `%x` | `long long`, `unsigned long long` | `%lld` |
+| `j` | `%d`, `%u`, `%o`, `%x` | `intmax_t`, `uintmax_t` | `%jd` |
+| `z` | `%d`, `%u`, `%o`, `%x` | `size_t` | `%zu` |
+| `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
+| `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf` |
+| `l` | `%c`, `%s` | `wint_t`, `wchar_t*` (wide char) | `%lc`, `%ls` |
 
 #### Flags and Modifiers
 
