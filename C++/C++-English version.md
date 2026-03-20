@@ -1377,10 +1377,56 @@ scanf("%[^\n]", fullname);  // Reads entire line
    ```
 
 6. **Non-Format Characters Must Match Exactly**
-   
-   If format string contains literal characters, input must include them exactly.
+
+   When `scanf`'s format string contains **non-format characters** (characters other than `%`), these characters are **NOT displayed**, but are used for **matching/validating the input**.
+
    ```cpp
-   scanf("a=%d", &a);  // Input must be: "a=123" (not just "123")
+   // Format string with literal characters
+   scanf("a = %d, b = %d, c = %d", &a, &b, &c);
+
+   // CORRECT input: (MUST match exactly!)
+   // a = 123, b = 456, c = 789
+   //   ↑    ↑  ↑    ↑  ↑    ↑
+   // Every character must match: "a =", comma+space, "b =", comma+space, "c ="
+   ```
+
+   **⚠️ Strict Matching Requirement:**
+
+   When `scanf` encounters non-format characters in the format string, it **requires** the input to contain those exact characters at that position.
+
+   | Input | Result | Explanation |
+   |-------|--------|-------------|
+   | `a = 123, b = 456, c = 789` | ✅ All 3 values read | Exact match |
+   | `a = 123, b=456, c = 789` | ❌ Only `a=123`, `b` unread | Missing space after `b` |
+   | `a=123, b = 456, c = 789` | ❌ Nothing read | Missing space after `a` |
+   | `123, 456, 789` | ❌ Nothing read | Missing `a = ` prefix |
+   | `a = 123 b = 456, c = 789` | ❌ Only `a=123` read | Missing comma after first value |
+
+   > **Critical:** If input doesn't match, `scanf` stops and returns early. Remaining variables keep their original values (or garbage if uninitialized).
+
+   **Key Points:**
+
+   | Aspect | Behavior |
+   |--------|----------|
+   | Display | Non-format chars are **NOT displayed** (unlike `printf`) |
+   | Purpose | Used for **input matching/validation** |
+   | Whitespace | Spaces in format match **any amount of whitespace** in input |
+   | Other chars | Must match **exactly** (case-sensitive) |
+
+   **Common Use Cases:**
+
+   ```cpp
+   // Date parsing: input must be "2024-03-20"
+   int year, month, day;
+   scanf("%d-%d-%d", &year, &month, &day);
+
+   // Coordinate parsing: input must be "(3, 4)"
+   int x, y;
+   scanf("(%d, %d)", &x, &y);
+
+   // Time parsing: input must be "14:30:00"
+   int h, m, s;
+   scanf("%d:%d:%d", &h, &m, &s);
    ```
 
 7. **Type Mismatch = Wrong Results**
@@ -1430,63 +1476,6 @@ printf("Enter a number: ");
 scanf("%d", &a);
 ```
 > Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
-
-#### Non-Format Characters in `scanf` Format String
-
-When `scanf`'s format string contains **non-format characters** (characters other than `%`), these characters are **NOT displayed**, but are used for **matching/validating the input**.
-
-**Input must strictly match the format:**
-
-```cpp
-// Format string with literal characters
-scanf("a = %d, b = %d, c = %d", &a, &b, &c);
-
-// CORRECT input: (MUST match exactly!)
-// a = 123, b = 456, c = 789
-//   ↑    ↑  ↑    ↑  ↑    ↑
-// Every character must match: "a =", comma+space, "b =", comma+space, "c ="
-
-// If input doesn't match the format, scanf STOP reading at the mismatch point
-```
-
-**⚠️ Strict Matching Requirement:**
-
-When `scanf` encounters non-format characters in the format string, it **requires** the input to contain those exact characters at that position.
-
-| Input | Result | Explanation |
-|-------|--------|-------------|
-| `a = 123, b = 456, c = 789` | ✅ All 3 values read | Exact match |
-| `a = 123, b=456, c = 789` | ❌ Only `a=123`, `b` unread | Missing space after `b` |
-| `a=123, b = 456, c = 789` | ❌ Nothing read | Missing space after `a` |
-| `123, 456, 789` | ❌ Nothing read | Missing `a = ` prefix |
-| `a = 123 b = 456, c = 789` | ❌ Only `a=123` read | Missing comma after first value |
-
-> **Critical:** If input doesn't match, `scanf` stops and returns early. Remaining variables keep their original values (or garbage if uninitialized).
-
-**Key Points:**
-
-| Aspect | Behavior |
-|--------|----------|
-| Display | Non-format chars are **NOT displayed** (unlike `printf`) |
-| Purpose | Used for **input matching/validation** |
-| Whitespace | Spaces in format match **any amount of whitespace** in input |
-| Other chars | Must match **exactly** (case-sensitive) |
-
-**Common Use Cases:**
-
-```cpp
-// Date parsing: input must be "2024-03-20"
-int year, month, day;
-scanf("%d-%d-%d", &year, &month, &day);
-
-// Coordinate parsing: input must be "(3, 4)"
-int x, y;
-scanf("(%d, %d)", &x, &y);
-
-// Time parsing: input must be "14:30:00"
-int h, m, s;
-scanf("%d:%d:%d", &h, &m, &s);
-```
 
 ---
 
