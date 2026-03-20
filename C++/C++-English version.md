@@ -1141,17 +1141,6 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 2. **Excess input ignored**: Extra data beyond variables is discarded
 3. **Whitespace skipped**: Leading spaces/newlines are automatically skipped
 
-##### Common Pitfall
-
-```cpp
-char c1, c2;
-int a;
-cin >> c1 >> c2 >> a;   // Input: "1234"
-// c1='1', c2='2', a=34 (not a=1234!)
-```
-
-**Note**: When mixing `char` and numeric input, `cin` extracts **per character** for `char` variables.
-
 ### 1.6.2 `scanf` (C-style Input)
 
 Format-based input function from C. Requires header `<cstdio>`.
@@ -1165,28 +1154,97 @@ scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-**Common Format Specifiers:**
+#### Format Specifier Syntax
 
-| Specifier | Type | Example |
-|-----------|------|---------|
-| `%d` | int | `scanf("%d", &a);` |
-| `%f` | float | `scanf("%f", &x);` |
-| `%lf` | double | `scanf("%lf", &y);` |
-| `%c` | char | `scanf("%c", &c);` |
-| `%s` | string | `scanf("%s", str);` |
+```
+%[flags][width][length]specifier
+     ↑      ↑       ↑       ↑
+ Optional Optional Optional Required
+```
 
-**Key Points:**
+**Order**: `flags` → `width` → `length` → `specifier` (left to right)
 
-1. **Must use `&` (address)**: `scanf("%d", &a);` not `scanf("%d", a);`
-2. **No precision control**: `scanf("%5.2f", &a);` is invalid (unlike printf)
-3. **Whitespace as separator**: Multiple numeric inputs can be separated by space, tab, or newline
-4. **Non-format characters must match**: `scanf("a=%d", &a);` requires input `a=5`
+> **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-**The `*` (suppression) operator:**
+---
+
+#### 1. Flags - **OPTIONAL**
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `*` | Suppression (read but don't assign) | `scanf("%*d");` |
+
+**Suppression Example:**
 
 ```cpp
 scanf("%d%*d%d", &a, &b);  // Input: 1 2 3 → a=1, b=3 (2 is skipped)
 ```
+
+---
+
+#### 2. Width - **OPTIONAL**
+
+Maximum field width to read.
+
+| Width | Description | Example |
+|-------|-------------|---------|
+| `n` | Read at most n characters | `scanf("%3d", &a);` // Input: "12345" → a=123 |
+
+---
+
+#### 3. Length Modifier - **OPTIONAL**
+
+| Modifier | Use With | C Type | Example |
+|----------|----------|--------|---------|
+| `hh` | `%d`, `%o`, `%x` | `signed/unsigned char` | `scanf("%hhd", &c);` |
+| `h` | `%d`, `%o`, `%x` | `short` / `unsigned short` | `scanf("%hd", &s);` |
+| `l` | `%d`, `%o`, `%x` | `long` / `unsigned long` | `scanf("%ld", &l);` |
+| `ll` | `%d`, `%o`, `%x` | `long long` | `scanf("%lld", &ll);` |
+| `L` | `%f`, `%e`, `%g` | `long double` | `scanf("%Lf", &ld);` |
+| `l` | `%c`, `%s` | `wchar_t` / `wchar_t*` | `scanf("%lc", &wc);` |
+
+---
+
+#### 4. Specifier (Conversion Specifier) - **REQUIRED**
+
+| Specifier | Type | Input Format | Example |
+|-----------|------|--------------|---------|
+| **Integer Types** ||||
+| `%d` | `int` | Signed decimal | `123`, `-456` |
+| `%u` | `unsigned int` | Unsigned decimal | `789` |
+| `%o` | `unsigned int` | Octal | `377` |
+| `%x` / `%X` | `unsigned int` | Hexadecimal | `ff`, `FF` |
+| **Floating-Point Types** ||||
+| `%f` | `float` | Decimal or scientific | `3.14`, `1.5e-2` |
+| `%lf` | `double` | Decimal or scientific | `3.14159` |
+| `%Lf` | `long double` | Decimal or scientific | (with `L` modifier) |
+| **Character/String Types** ||||
+| `%c` | `char` | Single character (including whitespace) | `A`, ` ` |
+| `%s` | `char[]` | String (stops at whitespace) | `hello` |
+| **Other** ||||
+| `%p` | `void*` | Pointer address | `0x7ffeeb2b3a5c` |
+| `%n` | `int*` | Count of characters read so far | (stores count) |
+| `%[` | `char[]` | Scanset (custom set of characters) | `%[abc]` |
+
+---
+
+#### Key Differences from `cin`
+
+| Feature | `scanf` | `cin` |
+|---------|---------|-------|
+| Type-safe | No (runtime error if wrong) | Yes (compile-time check) |
+| Performance | Faster | Slower |
+| Address operator (`&`) | Required for non-strings | Not required |
+| Whitespace handling | Auto-skips for numbers; `%c` reads all | `>>` skips, `get()` does not |
+| Bounds checking | No | `std::string` is safe |
+| Precision control | Not supported | N/A |
+
+> **Important:** Always use `&` (address-of operator) for non-string variables:
+> ```cpp
+> int a;
+> scanf("%d", &a);    // ✓ Correct
+> scanf("%d", a);     // ✗ Wrong! Undefined behavior
+> ```
 
 ---
 
