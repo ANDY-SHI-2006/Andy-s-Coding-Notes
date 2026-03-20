@@ -1367,10 +1367,10 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 ```
 %[flags][width][.precision][length]specifier
      ↑      ↑       ↑         ↑       ↑
-   可选    可选    可选      可选    必需
+ Optional Optional Optional  Optional Required
 ```
 
-**Order**: `flags` → `width` → `.precision` → `length` → `specifier` (从左到右)
+**Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
 
 ---
 
