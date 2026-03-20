@@ -1012,7 +1012,32 @@ constexpr int MAX_SIZE = 100;
 
 **Note:**  `#define PI 3.14159` - Preprocessor directives do not end with a semicolon
 
-#### 1.5.5.2 Redefinition Rules
+#### 1.5.5.2 Constants Must Be Initialized
+
+**Constants (`const` and `constexpr`) must be initialized at the time of declaration.**
+
+```cpp
+const int a = 10;       // ✓ Correct: initialized immediately
+const int b;            // ✗ Error! const variable must be initialized
+
+constexpr int c = 20;   // ✓ Correct: initialized at compile time
+constexpr int d;        // ✗ Error! constexpr must be initialized
+```
+
+**Why?**
+- Constants are **immutable** - their value cannot change after declaration
+- Without initialization, a constant would have an **undefined/indeterminate value**
+- This defeats the purpose of using a constant
+
+**Comparison with regular variables:**
+
+| Variable Type | Initialization Required | Can Assign Later |
+|---------------|------------------------|------------------|
+| `int x;` | No | Yes |
+| `const int x;` | **Yes** | No |
+| `constexpr int x;` | **Yes** | No |
+
+#### 1.5.5.3 Redefinition Rules
 
 **Same scope**: Cannot redefine with the same name
 ```cpp
@@ -1041,7 +1066,7 @@ int main() {
 #define PI 3.14159      // Now valid
 ```
 
-#### 1.5.5.3 Recommendation
+#### 1.5.5.4 Recommendation
 
 - **Prefer `const` or `constexpr`** over `#define` in C++
 - `const`/`constexpr` have type checking and scope rules
