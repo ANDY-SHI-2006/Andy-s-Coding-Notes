@@ -1374,7 +1374,7 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ---
 
-#### 1. Specifier (Conversion Specifier) - **REQUIRED**
+#### Specifier (Conversion Specifier)**REQUIRED**
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
@@ -1398,7 +1398,7 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ---
 
-#### 2. Flags - **OPTIONAL**
+#### Flags**OPTIONAL**
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -1410,7 +1410,7 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ---
 
-#### 3. Width - **OPTIONAL**
+#### Width**OPTIONAL**
 
 | Width | Description | Example |
 |-------|-------------|---------|
@@ -1419,7 +1419,7 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ---
 
-#### 4. Precision (`.precision`) - **OPTIONAL**
+#### Precision (`.precision`)**OPTIONAL**
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
@@ -1431,7 +1431,7 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ---
 
-#### 5. Length Modifier - **OPTIONAL**
+#### Length Modifier**OPTIONAL**
 
 | Modifier | Use With | C Type | Example |
 |----------|----------|--------|---------|
@@ -1444,23 +1444,6 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
 | `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf` |
 | `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
-
-#### Flags and Modifiers
-
-| Flag | Description | Example |
-|------|-------------|---------|
-| `-` | Left-justify | `%-10d` |
-| `+` | Show sign | `%+d` → `+5` |
-| `0` | Zero-padding | `%05d` → `00042` |
-| `#` | Alternate form | `%#x` → `0xff` |
-| `m.n` | Width.m, Precision.n | `%8.2f` → `   34.50` |
-
-**Precision Examples:**
-
-```cpp
-printf("%.2f\n", 10.0/6.0);     // 1.67 (2 decimal places)
-printf("%9.3f\n", 10.0/6.0);    //    1.667 (width 9, 3 decimals)
-```
 
 #### Key Differences from `cout`
 
