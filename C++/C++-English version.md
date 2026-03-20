@@ -918,6 +918,47 @@ float y = 1.0e30;
 float z = x / y;         // Should be 2.5e-60, but too small for float
 ```
 
+### 1.5.2 Boolean Type
+
+The `bool` type represents logical values with only two possible states: `true` or `false`.
+
+```cpp
+bool isReady = true;
+bool hasError = false;
+```
+
+**Memory Size**: Typically 1 byte (implementation-defined, but always at least 1 byte).
+
+#### Boolean Output with `cout`
+
+By default, `cout` displays `bool` values as integers:
+
+| Value | Default Output | With `boolalpha` |
+|-------|---------------|------------------|
+| `true` | `1` | `true` |
+| `false` | `0` | `false` |
+
+```cpp
+bool flag = true;
+
+// Default behavior - outputs integer representation
+cout << flag << endl;           // Output: 1
+
+// Enable textual representation
+cout << boolalpha << flag << endl;   // Output: true
+
+// Disable textual representation (back to default)
+cout << noboolalpha << flag << endl; // Output: 1
+```
+
+**Why the default is integer?** For backward compatibility with C, which uses integers (1/0) to represent boolean logic.
+
+**Key Points:**
+- `boolalpha` manipulator changes output format to "true"/"false"
+- `noboolalpha` restores the default integer format
+- The setting persists until explicitly changed
+- Applies to all subsequent boolean outputs in the same stream
+
 **Key Points:**
 - Overflow/underflow behavior is system dependent
 - Use larger types for computations that may produce extreme values
