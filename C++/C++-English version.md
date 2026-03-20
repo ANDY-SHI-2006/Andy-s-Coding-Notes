@@ -1331,12 +1331,14 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 ### 1.7.2 `printf` (C-style Output)
 
-Format-based output function from C.
+Format-based output function from C. Requires header `<cstdio>`.
 
 ```cpp
 #include <cstdio>
 printf("format string", arg1, arg2, ...);
 ```
+
+> **Header Required**: `#include <cstdio>` (or `#include <stdio.h>` in C)
 
 **Basic Example:**
 
