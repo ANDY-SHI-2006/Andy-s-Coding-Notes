@@ -1154,10 +1154,14 @@ cin >> c1 >> c2 >> a;   // Input: "1234"
 
 ### 1.6.2 `scanf` (C-style Input)
 
+Format-based input function from C. Requires header `<cstdio>`.
+
 ```cpp
 #include <cstdio>
 scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
 ```
+
+> **Header Required**: `#include <cstdio>` (or `#include <stdio.h>` in C)
 
 **Common Format Specifiers:**
 
