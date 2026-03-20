@@ -875,6 +875,15 @@ Numeric data types are divided into two categories:
 | **Integers**       | `short`, `int`, `long`           | Whole numbers without decimals |
 | **Floating-point** | `float`, `double`, `long double` | Numbers with decimal points    |
 
+#### Signed and Unsigned Modifiers
+
+The `signed` and `unsigned` modifiers can only be used with **integer types** (`short`, `int`, `long`, `long long`). They **cannot** be used with floating-point types (`float`, `double`, `long double`).
+
+| Modifier | Effect | Example |
+|----------|--------|---------|
+| `signed` | Allows negative values (default for most integers) | `signed int x = -10;` |
+| `unsigned` | Only non-negative values (0 and positive), doubles positive range | `unsigned int y = 10;` |
+
 #### 1.5.1.1 Integer Ranges
 
 | Type | Size | Range |
@@ -953,20 +962,37 @@ cout << noboolalpha << flag << endl; // Output: 1
 
 **Why the default is integer?** For backward compatibility with C, which uses integers (1/0) to represent boolean logic.
 
-**Key Points:**
-- `boolalpha` manipulator changes output format to "true"/"false"
-- `noboolalpha` restores the default integer format
-- The setting persists until explicitly changed
-- Applies to all subsequent boolean outputs in the same stream
+#### Boolean Output with `printf`
 
-**Key Points:**
-- Overflow/underflow behavior is system dependent
-- Use larger types for computations that may produce extreme values
-- Be especially careful with intermediate results in complex expressions
+`printf` has **no built-in format specifier** for `bool` to display "true"/"false". By default, it treats `bool` as `int` (1/0).
 
-### 1.5.2 Integers
+**Solution: Use `%s` with ternary operator**
 
-**Note**: `signed` and `unsigned` modifiers can only be used with **integer types** (`short`, `int`, `long`, `long long`). They **cannot** be used with floating-point types (`float`, `double`, `long double`).
+```cpp
+bool flag = true;
+printf("%s\n", flag ? "true" : "false");  // Output: true
+
+bool status = false;
+printf("Status: %s\n", status ? "true" : "false");  // Output: Status: false
+```
+
+**Alternative: Create a helper macro (for C-style code)**
+
+```cpp
+#define BOOL_STR(b) ((b) ? "true" : "false")
+
+bool ready = true;
+printf("Ready: %s\n", BOOL_STR(ready));  // Output: Ready: true
+```
+
+**Comparison Summary:**
+
+| Method | Output | Code Example |
+|--------|--------|--------------|
+| `printf` with `%d` | `1` / `0` | `printf("%d", flag)` |
+| `printf` with `%s` | `true` / `false` | `printf("%s", flag?"true":"false")` |
+| `cout` default | `1` / `0` | `cout << flag` |
+| `cout` with `boolalpha` | `true` / `false` | `cout << boolalpha << flag` |
 
 ### 1.5.3 Floating-Point Values
 
