@@ -1208,7 +1208,347 @@ int a = 3.9f;           // a = 3 (not 4!)
 int b = -2.7f;          // b = -2
 ```
 
+### 1.5.7 Enumeration
 
+Enumeration allows the programmer to declare a **new data type** which takes specific values only.
+
+#### Basic Syntax
+
+```cpp
+enum Color {
+    Red,        // 0 (default)
+    Yellow,     // 1
+    Green       // 2
+};
+
+Color c1 = Yellow;   // Declare and assign
+```
+
+> **Note:** Enumerators inside `{}` must be separated by **commas** `,` (comma after each item, optional for the last one).
+
+| Feature | Description |
+|---------|-------------|
+| New Type | User-defined type |
+| Named Values | Symbolic constants (Red, Yellow, Green) |
+| Underlying Type | Typically `int` |
+
+#### Custom Values
+
+```cpp
+enum Status {
+    OK = 200,
+    NotFound = 404,  // Explicit value
+    Error           // 405 (auto-increment from last)
+};
+```
+
+#### Restrictions
+
+```cpp
+c1 = 123;       // Error! Cannot assign integer directly
+c2++;           // Error! ++ not defined for enum
+```
+
+| Operation | Valid? |
+|-----------|--------|
+| `c1 = Yellow` | ✅ Yes |
+| `c1 = 123` | ❌ No |
+| `c2++` | ❌ No |
+
+#### Usage
+
+**In `switch`:**
+```cpp
+switch (myColor) {
+    case Red:    ...
+    case Yellow: ...
+    case Green:  ...
+}
+```
+
+**Conversions:**
+```cpp
+// Enum → Integer (implicit)
+int i = Yellow;     // i = 1
+
+// Integer → Enum (explicit cast)
+Color c = Color(1);  // Yellow
+```
+
+#### `enum class` (C++11)
+
+Strongly-typed enum with better type safety:
+
+```cpp
+enum class Color {
+    Red, Green, Blue
+};
+
+Color c = Color::Red;   // Scope operator required
+// int i = c;           // Error! No implicit conversion
+```
+
+| Feature | `enum` | `enum class` |
+|---------|--------|--------------|
+| Scope | Global | Scoped (`Color::Red`) |
+| Implicit int conversion | ✅ Yes | ❌ No |
+| Type safety | Weak | Strong |
+
+### 1.5.8 Array
+
+Array stores a set of values with the same data type under a single identifier, allowing efficient management of multiple related values.
+
+#### Why Use Arrays?
+
+Without arrays, managing 100 temperature readings would require 100 separate variables:
+```cpp
+double temp1, temp2, temp3, ..., temp100;  // Tedious!
+```
+
+With arrays, use a single identifier with indices:
+```cpp
+double temp[100];  // All 100 values under one name
+temp[0] = 25.5;    // First reading
+temp[99] = 28.3;   // Last reading (index 99, not 100!)
+```
+
+#### Declaration
+
+```cpp
+type name[size];   // size: number of elements (must be constant)
+
+int    s[6];       // 6 integers (indices 0-5)
+char   v[5];       // 5 characters (indices 0-4)
+double t[4];       // 4 doubles (indices 0-3)
+```
+
+**Key Characteristics:**
+
+| Feature | Description |
+|---------|-------------|
+| **Indexing** | Starts at **0**, ends at **size-1** |
+| **Fixed Size** | Size determined at compile time, cannot change |
+| **Homogeneous** | All elements must be the same type |
+| **Contiguous Memory** | Elements stored sequentially in memory |
+| **Access** | `s[0]`, `s[1]`, ... `s[5]` (subscript operator `[]`) |
+
+> **Note:** Array size must be specified in declaration using **either a constant in brackets** or **an initialization sequence in braces**.
+
+#### Memory Layout
+
+Arrays store elements in contiguous memory locations:
+
+```cpp
+int s[6] = {5, 0, -1, 2, 15, 2};
+```
+
+| Index | 0 | 1 | 2 | 3 | 4 | 5 |
+|-------|---|---|---|---|---|---|
+| Value | 5 | 0 | -1 | 2 | 15 | 2 |
+| Address | s | s+4 | s+8 | s+12 | s+16 | s+20 |
+
+> Each `int` typically occupies 4 bytes, so addresses are 4 bytes apart.
+
+#### Initialization
+
+**1. With explicit size:**
+```cpp
+int s[6] = {5, 0, -1, 2, 15, 2};
+char v[5] = {'a', 'e', 'i', 'o', 'u'};
+```
+
+**2. Size inferred from initializer (omitting size):**
+```cpp
+int s[] = {5, 0, -1, 2, 15, 2};  // Compiler infers size = 6
+char v[] = {'a', 'e', 'i'};       // Size = 3
+```
+
+**3. Partial initialization → remaining elements are 0:**
+```cpp
+int s[100] = {0};     // All 100 elements initialized to 0
+int t[5] = {1, 2};    // t[0]=1, t[1]=2, t[2]=0, t[3]=0, t[4]=0
+int u[5] = {};        // All elements = 0 (C++11+)
+```
+
+**4. No initialization → elements contain garbage values:**
+```cpp
+int s[5];   // s[0] through s[4] contain undefined (garbage) values
+```
+
+**5. Character array special cases:**
+```cpp
+char str1[6] = {'H', 'e', 'l', 'l', 'o', '\0'};  // C-style string
+char str2[6] = "Hello";                           // Same as above
+char str3[] = "Hello";                            // Size = 6 (includes '\0')
+```
+
+**6. Runtime initialization (with program statements):**
+
+Arrays can also be initialized during program execution using loops or other statements:
+
+```cpp
+int s[5];
+
+// Initialize with for loop
+for (int i = 0; i < 5; i++) {
+    s[i] = i * 10;  // s = {0, 10, 20, 30, 40}
+}
+
+// Initialize based on user input
+for (int i = 0; i < 5; i++) {
+    cin >> s[i];    // Read values from user
+}
+
+// Initialize with calculated values
+int fib[10];
+fib[0] = 0;
+fib[1] = 1;
+for (int i = 2; i < 10; i++) {
+    fib[i] = fib[i-1] + fib[i-2];  // Fibonacci sequence
+}
+```
+
+> **Compile-time vs Runtime initialization:**
+> - `{ }` initialization happens at compile time or program start
+> - Loop/`cin` initialization happens during program execution
+
+#### Accessing and Modifying Elements
+
+```cpp
+int s[5] = {10, 20, 30, 40, 50};
+
+// Access
+int first = s[0];    // 10
+int last = s[4];     // 50
+
+// Modify
+s[0] = 100;          // s is now {100, 20, 30, 40, 50}
+s[2] = s[1] + s[0];  // s[2] = 20 + 100 = 120
+
+// Using variables as index
+int i = 3;
+int val = s[i];      // 40
+s[i + 1] = 999;      // s[4] = 999
+```
+
+#### Traversing Arrays
+
+Use loops to process all elements:
+
+```cpp
+int s[5] = {10, 20, 30, 40, 50};
+
+// Using for loop (most common)
+for (int i = 0; i < 5; i++) {
+    cout << s[i] << " ";
+}
+// Output: 10 20 30 40 50
+
+// Reading values into array
+for (int i = 0; i < 5; i++) {
+    cin >> s[i];
+}
+
+// Calculating sum
+int sum = 0;
+for (int i = 0; i < 5; i++) {
+    sum += s[i];
+}
+```
+
+#### Arrays and Functions
+
+Arrays are passed by reference (not by value):
+
+```cpp
+// Function modifies the original array
+void doubleValues(int arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        arr[i] *= 2;  // Modifies original array
+    }
+}
+
+int main() {
+    int s[3] = {1, 2, 3};
+    doubleValues(s, 3);  // s is now {2, 4, 6}
+    return 0;
+}
+```
+
+> When passing arrays to functions, also pass the size since the function cannot determine the array size from the parameter alone.
+
+#### Multidimensional Arrays
+
+Arrays of arrays (matrices, grids, tables):
+
+```cpp
+// 2D array: 3 rows, 4 columns
+int matrix[3][4] = {
+    {1, 2, 3, 4},
+    {5, 6, 7, 8},
+    {9, 10, 11, 12}
+};
+
+// Access: matrix[row][col]
+int val = matrix[1][2];  // 7 (row 1, column 2)
+
+// Traversing 2D array
+for (int i = 0; i < 3; i++) {       // rows
+    for (int j = 0; j < 4; j++) {   // columns
+        cout << matrix[i][j] << " ";
+    }
+    cout << endl;
+}
+```
+
+#### Cautions
+
+| Operation | Valid? | Explanation |
+|-----------|--------|-------------|
+| `int[10] func()` | ❌ No | Cannot return array from function directly |
+| `ia = ib` | ❌ No | Cannot assign one array to another (use loop or `memcpy`) |
+| `s[10]` for `s[6]` | ❌ No | Out of bounds access → undefined behavior (segmentation fault) |
+| `int n=5; int s[n];` | ⚠️ C++99+ | Variable Length Arrays (VLAs) are not standard C++ (use `vector` instead) |
+
+**Common Array Mistakes:**
+
+```cpp
+int s[5];
+
+// 1. Off-by-one error
+for (int i = 0; i <= 5; i++) {  // Wrong! Should be i < 5
+    s[i] = i;  // s[5] is out of bounds!
+}
+
+// 2. Uninitialized array
+int t[5];
+int sum = t[0] + t[1];  // Garbage values!
+
+// 3. Array decay (losing size info)
+void func(int arr[]) {  // arr is just a pointer here
+    // sizeof(arr) gives pointer size, not array size
+}
+```
+
+#### Array vs `std::vector`
+
+For dynamic sizing and safer operations, prefer `std::vector`:
+
+| Feature | Array | `std::vector` |
+|---------|-------|---------------|
+| Size | Fixed at compile time | Dynamic (can grow/shrink) |
+| Bounds checking | No | Yes (with `at()`) |
+| Memory | Stack (usually) | Heap |
+| Pass to function | Decays to pointer | Maintains size info |
+| Modern C++ | C-style | Recommended |
+
+```cpp
+#include <vector>
+
+std::vector<int> v = {1, 2, 3};  // Dynamic array
+v.push_back(4);                   // Add element
+int val = v.at(10);               // Throws exception if out of bounds
+```
 
 ---
 
