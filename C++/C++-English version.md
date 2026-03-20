@@ -64,6 +64,7 @@ int main(int argc, char* argv[]) {
 
 **Note**: `void main()` works on some old compilers (e.g., Turbo C++), but is **not valid C++**. Always use `int main()` for portable code.
 
+
 ---
 
 ## 1.2 Code Standardization
@@ -265,6 +266,7 @@ f = numerator / denominator;
 - Use intermediate variables for complex sub-expressions
 - Ensure variables are floating-point type for correct division
 
+
 ---
 
 ## 1.3 Declarations and Statements
@@ -346,6 +348,7 @@ auto func = [](int x) { return x * 2; };
 ```
 
 **Important:** `auto` requires initialization. `auto x;` is an error.
+
 
 ---
 
@@ -854,6 +857,7 @@ int result = a * b + b / c * d;  // Also valid, but less clear
 
 > See also: [1.2.2.3 Spacing in Expressions](#1223-spacing-in-expressions) for more details on whitespace usage.
 
+
 ---
 
 ## 1.5 Data Types
@@ -1133,6 +1137,7 @@ int a = 3.9f;           // a = 3 (not 4!)
 int b = -2.7f;          // b = -2
 ```
 
+
 ---
 
 ## 1.6 Data Input
@@ -1210,8 +1215,6 @@ scanf("%*s%d", &a);  // Input: "hello 42" → a=42 ("hello" is skipped)
 
 > **Note**: Unlike `printf`, `scanf` does NOT support flags like `-`, `+`, `0`, `#` for formatting. These are only for output.
 
----
-
 #### 2. Width - **OPTIONAL**
 
 Specifies the **maximum** number of characters to read for this field.
@@ -1240,8 +1243,6 @@ scanf("%2d%2d%4d", &day, &month, &year);  // Input: "25122024" → day=25, month
 
 > **Important**: For `%s`, width should be **one less** than buffer size to leave room for `\0`.
 
----
-
 #### 3. Length Modifier - **OPTIONAL**
 
 Specifies the size of the receiving variable. **Critical for correct memory access.**
@@ -1269,8 +1270,6 @@ double d;
 scanf("%f", &d);        // ✗ WRONG! Should use %lf for double
 scanf("%lf", &d);       // ✓ CORRECT
 ```
-
----
 
 #### 4. Specifier (Conversion Specifier) - **REQUIRED**
 
@@ -1357,8 +1356,6 @@ scanf("%s", fullname);  // Input: "John Doe" → only "John" is read
 // FIX: Use scanset for multi-word input
 scanf("%[^\n]", fullname);  // Reads entire line
 ```
-
----
 
 #### Summary: scanf Important Notes
 
@@ -1501,6 +1498,7 @@ printf("Enter a number: ");
 scanf("%d", &a);
 ```
 > Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
+
 
 ---
 
@@ -1759,21 +1757,26 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 > **Note:** Use `printf` for formatted output in performance-critical code, but prefer `cout` for type safety in modern C++.
 
+
 ---
 
 ## 1.8 Control Flow
+
 
 ---
 
 ## 1.9 Functions
 
+
 ---
 
 ## 1.10 Object-Oriented Programming
 
+
 ---
 
 ## 1.11 STL
+
 
 ---
 
