@@ -1374,7 +1374,56 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 ---
 
-#### Specifier (Conversion Specifier)**REQUIRED**
+#### 1. Flags - **OPTIONAL**
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `-` | Left-justify (default: right) | `%-10d` → `"42        "` |
+| `+` | Show sign for positive | `%+d` → `+42` |
+| ` ` (space) | Space before positive numbers | `% d` → ` 42` |
+| `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
+| `0` | Zero-pad (with width) | `%05d` → `00042` |
+
+---
+
+#### 2. Width - **OPTIONAL**
+
+| Width | Description | Example |
+|-------|-------------|---------|
+| `n` | Minimum field width | `%10d` → `        42` |
+| `*` | Width from argument list | `printf("%*d", 10, 42);` |
+
+---
+
+#### 3. Precision (`.precision`) - **OPTIONAL**
+
+| Precision | For Type | Effect | Example |
+|-----------|----------|--------|---------|
+| `.n` | `%f`, `%e` | n decimal places | `%.2f` → `3.14` |
+| `.n` | `%g` | n significant digits | `%.3g` → `3.14` |
+| `.n` | `%s` | Max n characters | `%.3s` → `"Hel"` |
+| `.n` | `%d` | Minimum n digits (pad with 0) | `%.5d` → `00042` |
+| `.*` | any | Precision from argument | `printf("%.*f", 2, 3.14159);` |
+
+---
+
+#### 4. Length Modifier - **OPTIONAL**
+
+| Modifier | Use With | C Type | Example |
+|----------|----------|--------|---------|
+| `hh` | `%d`, `%u`, `%o`, `%x` | `signed/unsigned char` | `%hhd` |
+| `h` | `%d`, `%u`, `%o`, `%x` | `short` / `unsigned short` | `%hd` |
+| `l` | `%d`, `%u`, `%o`, `%x` | `long` / `unsigned long` | `%ld` |
+| `ll` | `%d`, `%u`, `%o`, `%x` | `long long` / `unsigned long long` | `%lld` |
+| `j` | `%d`, `%u`, `%o`, `%x` | `intmax_t` / `uintmax_t` | `%jd` |
+| `z` | `%d`, `%u`, `%o`, `%x` | `size_t` | `%zu` |
+| `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
+| `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf` |
+| `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
+
+---
+
+#### 5. Specifier (Conversion Specifier) - **REQUIRED**
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
@@ -1395,55 +1444,6 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `%p` | `void*` | Pointer address | `0x7ffeeb2b3a5c` |
 | `%n` | `int*` | Count chars printed so far | (stores count) |
 | `%%` | - | Literal `%` | `%` |
-
----
-
-#### Flags**OPTIONAL**
-
-| Flag | Description | Example |
-|------|-------------|---------|
-| `-` | Left-justify (default: right) | `%-10d` → `"42        "` |
-| `+` | Show sign for positive | `%+d` → `+42` |
-| ` ` (space) | Space before positive numbers | `% d` → ` 42` |
-| `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
-| `0` | Zero-pad (with width) | `%05d` → `00042` |
-
----
-
-#### Width**OPTIONAL**
-
-| Width | Description | Example |
-|-------|-------------|---------|
-| `n` | Minimum field width | `%10d` → `        42` |
-| `*` | Width from argument list | `printf("%*d", 10, 42);` |
-
----
-
-#### Precision (`.precision`)**OPTIONAL**
-
-| Precision | For Type | Effect | Example |
-|-----------|----------|--------|---------|
-| `.n` | `%f`, `%e` | n decimal places | `%.2f` → `3.14` |
-| `.n` | `%g` | n significant digits | `%.3g` → `3.14` |
-| `.n` | `%s` | Max n characters | `%.3s` → `"Hel"` |
-| `.n` | `%d` | Minimum n digits (pad with 0) | `%.5d` → `00042` |
-| `.*` | any | Precision from argument | `printf("%.*f", 2, 3.14159);` |
-
----
-
-#### Length Modifier**OPTIONAL**
-
-| Modifier | Use With | C Type | Example |
-|----------|----------|--------|---------|
-| `hh` | `%d`, `%u`, `%o`, `%x` | `signed/unsigned char` | `%hhd` |
-| `h` | `%d`, `%u`, `%o`, `%x` | `short` / `unsigned short` | `%hd` |
-| `l` | `%d`, `%u`, `%o`, `%x` | `long` / `unsigned long` | `%ld` |
-| `ll` | `%d`, `%u`, `%o`, `%x` | `long long` / `unsigned long long` | `%lld` |
-| `j` | `%d`, `%u`, `%o`, `%x` | `intmax_t` / `uintmax_t` | `%jd` |
-| `z` | `%d`, `%u`, `%o`, `%x` | `size_t` | `%zu` |
-| `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
-| `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf` |
-| `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
 
 #### Key Differences from `cout`
 
