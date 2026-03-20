@@ -752,12 +752,12 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 
 C++ provides four type cast operators for safer, more explicit conversions:
 
-| Cast | Usage | Example |
-|------|-------|---------|
-| `static_cast` | Safe, compile-time conversions | `static_cast<double>(sum) / count` |
-| `dynamic_cast` | Polymorphic class conversions | (OOP chapter) |
-| `const_cast` | Add/remove const qualifier | `const_cast<char*>(str)` |
-| `reinterpret_cast` | Low-level bit reinterpretation | `reinterpret_cast<int*>(ptr)` |
+| Cast               | Usage                          | Example                            |
+| ------------------ | ------------------------------ | ---------------------------------- |
+| `static_cast`      | Safe, compile-time conversions | `static_cast<double>(sum) / count` |
+| `dynamic_cast`     | Polymorphic class conversions  | (OOP chapter)                      |
+| `const_cast`       | Add/remove const qualifier     | `const_cast<char*>(str)`           |
+| `reinterpret_cast` | Low-level bit reinterpretation | `reinterpret_cast<int*>(ptr)`      |
 
 ##### 1.4.3.3.1 Comparison of C++ Cast Operators
 
@@ -1373,6 +1373,52 @@ scanf("%d", a);     // ✗ Wrong! Undefined behavior
 > ```
 >
 > Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
+
+#### Non-Format Characters in `scanf` Format String
+
+When `scanf`'s format string contains **non-format characters** (characters other than `%`), these characters are **NOT displayed**, but are used for **matching/validating the input**.
+
+**Input must strictly match the format:**
+
+```cpp
+// Format string with literal characters
+scanf("a = %d, b = %d, c = %d", &a, &b, &c);
+
+// CORRECT input:
+// a = 1, b = 2, c = 3
+//   ↑   ↑ ↑   ↑ ↑   ↑
+// Must match exactly! Spaces, commas, "a =", "b =", "c =" are all required
+
+// WRONG inputs:
+// 1 2 3          ← Missing "a =", commas
+// a=1, b=2       ← Missing space after "a"
+// a = 1 b = 2    ← Missing commas
+```
+
+**Key Points:**
+
+| Aspect | Behavior |
+|--------|----------|
+| Display | Non-format chars are **NOT displayed** (unlike `printf`) |
+| Purpose | Used for **input matching/validation** |
+| Whitespace | Spaces in format match **any amount of whitespace** in input |
+| Other chars | Must match **exactly** (case-sensitive) |
+
+**Common Use Cases:**
+
+```cpp
+// Date parsing: input must be "2024-03-20"
+int year, month, day;
+scanf("%d-%d-%d", &year, &month, &day);
+
+// Coordinate parsing: input must be "(3, 4)"
+int x, y;
+scanf("(%d, %d)", &x, &y);
+
+// Time parsing: input must be "14:30:00"
+int h, m, s;
+scanf("%d:%d:%d", &h, &m, &s);
+```
 
 ---
 
