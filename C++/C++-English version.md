@@ -1333,6 +1333,64 @@ scanf("%s", fullname);  // Input: "John Doe" → only "John" is read
 scanf("%[^\n]", fullname);  // Reads entire line
 ```
 
+---
+
+#### Summary: scanf Important Notes
+
+1. **No Precision Control**
+   
+   `scanf` does **not** support precision (e.g., `%.2f`). The `.precision` field is only for `printf`.
+   ```cpp
+   scanf("%5.2f", &a);  // ✗ ILLEGAL! Compile error or undefined behavior
+   scanf("%f", &a);     // ✓ Correct
+   ```
+
+2. **Must Use Address Operator `&`**
+   
+   Forgetting `&` results in undefined behavior.
+   ```cpp
+   int a;
+   scanf("%d", a);    // ✗ Wrong! UB - treats value of 'a' as address
+   scanf("%d", &a);   // ✓ Correct - passes address of 'a'
+   ```
+
+3. **Whitespace as Separator for Numeric Input**
+   
+   When format string has no non-format characters between specifiers, whitespace (space, TAB, newline) can separate input values.
+   ```cpp
+   scanf("%d%d", &a, &b);
+   // Valid inputs: "1 2", "1\t2", "1\n2"
+   ```
+
+4. **Data End Markers for Numeric Input**
+   
+   `scanf` stops reading a number when it encounters whitespace, TAB, newline, or invalid data.
+   ```cpp
+   scanf("%d", &a);  // Input: "123abc" → a=123, "abc" left in buffer
+   ```
+
+5. **Character Input Behavior**
+   
+   When using `%c` or `%[`, **all characters are valid** (including whitespace) unless non-format characters are specified in the format string.
+   ```cpp
+   scanf("%c%c%c", &a, &b, &c);  // Input: "X Y" → a='X', b=' ', c='Y'
+   ```
+
+6. **Non-Format Characters Must Match Exactly**
+   
+   If format string contains literal characters, input must include them exactly.
+   ```cpp
+   scanf("a=%d", &a);  // Input must be: "a=123" (not just "123")
+   ```
+
+7. **Type Mismatch = Wrong Results**
+   
+   If input data type doesn't match specifier, the result is undefined. May compile but produce garbage values.
+   ```cpp
+   int a;
+   scanf("%f", &a);  // ✗ Input 3.14 → a contains garbage bits!
+   ```
+
 #### Key Differences from `cin`
 
 | Feature | `scanf` | `cin` |
@@ -1363,15 +1421,14 @@ scanf("%d", a);     // ✗ Wrong! Undefined behavior
 >
 > Unlike `printf`, **`scanf` cannot display non-format strings** (i.e., prompt messages in the format string are NOT displayed).
 >
-> ```cpp
-> // ❌ WRONG: scanf does NOT print the prompt!
-> scanf("Enter a number: %d", &a);  // The text is NOT displayed, just waits for input
->
-> // ✓ CORRECT: Use printf first to display the prompt
-> printf("Enter a number: ");
-> scanf("%d", &a);
-> ```
->
+```cpp
+// ❌ WRONG: scanf does NOT print the prompt!
+scanf("Enter a number: %d", &a);  // The text is NOT displayed, just waits for input
+
+// ✓ CORRECT: Use printf first to display the prompt
+printf("Enter a number: ");
+scanf("%d", &a);
+```
 > Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
 
 #### Non-Format Characters in `scanf` Format String
