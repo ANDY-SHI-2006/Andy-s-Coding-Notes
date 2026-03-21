@@ -2131,15 +2131,24 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
 
+**Field width behavior:**
+- Value is **right justified** by default (extra positions filled with blanks on the left)
+- Field width will be **increased if necessary** to fit the actual value
+- Use with `-` flag for **left justify** (e.g., `%-8i` with `42` → `"42      "`)
+
 #### 3. Precision (`.precision`) - **OPTIONAL**
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
-| `.n` | `%f`, `%e` | n decimal places | `%.2f` → `3.14` |
+| `.n` | `%f`, `%e` | n decimal places (default is 6) | `%.2f` → `3.14` |
 | `.n` | `%g` | n significant digits | `%.3g` → `3.14` |
 | `.n` | `%s` | Max n characters | `%.3s` → `"Hel"` |
 | `.n` | `%d` | Minimum n digits (pad with 0) | `%.5d` → `00042` |
 | `.*` | any | Precision from argument | `printf("%.*f", 2, 3.14159);` |
+
+**Precision behavior:**
+- The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
+- **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` → `"    3.14"`)
 
 #### 4. Length Modifier - **OPTIONAL**
 
@@ -2165,9 +2174,9 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `%o` | `unsigned int` | Octal | `377` |
 | `%x` / `%X` | `unsigned int` | Hexadecimal | `ff` / `FF` |
 | **Floating-Point Types** ||||
-| `%f` / `%F` | `double` | Fixed-point | `3.141500` |
-| `%e` / `%E` | `double` | Scientific notation | `3.141500e+00` |
-| `%g` / `%G` | `double` | Shorter of `%f` or `%e` | `3.1415` |
+| `%f` / `%F` | `double` | Fixed-point (floating-point form) | `3.141500` |
+| `%e` / `%E` | `double` | Exponential form (e.g., `2.3e+02` / `2.3E+02`) | `3.141500e+00` |
+| `%g` / `%G` | `double` | Shorter of `%f` or `%e`/`%E` | `%g` uses `%e`, `%G` uses `%E` |
 | `%a` / `%A` | `double` | Hexadecimal floating-point | `0x1.921fb5p+1` |
 | **Character/String Types** ||||
 | `%c` | `int` | Single character | `A` |
@@ -2179,24 +2188,10 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 
 > **Note:** `%d` and `%i` are equivalent for output (both print signed decimal integers).
 
-#### Format Modifiers
-
-**Field Width and Precision:**
-
-After selecting the conversion specifier, additional formatting can be added:
-
-| Feature | Syntax | Description | Example |
-|---------|--------|-------------|---------|
-| **Minimum field width** | `%5d` | Minimum width; value is **right justified** by default | `%5i` with `42` → `"   42"` |
-| **Left justify** | `%-5d` | Minus sign before width left-justifies the value | `%-8i` with `42` → `"42      "` |
-| **Precision** | `%.2f` | Decimal places for `%f` (default is 6) | `%.2f` with `3.14159` → `"3.14"` |
-| **Width + Precision** | `%8.2f` | Both can be used together | `%8.2f` with `3.14159` → `"    3.14"` |
-| **Always show sign** | `%+d` | Plus sign forces positive/negative sign | `%+6f` with `3.14` → `" +3.14"` |
-
-**Key behaviors:**
-- The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
-- If field width is larger than needed, extra positions are filled with blanks on the left (right justification)
-- Field width will be **increased if necessary** to fit the actual value
+**Selecting the right specifier:**
+- `short` or `int` → use `%i` (integer) or `%d` (decimal)
+- `long` → use `%li` or `%ld`
+- `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
 #### Key Differences from `cout`
 
