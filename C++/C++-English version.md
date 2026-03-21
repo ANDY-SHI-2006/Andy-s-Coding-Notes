@@ -139,17 +139,32 @@ int main() {
 }
 ```
 
-#### 1.2.2.2 Indentation
+#### 1.2.2.2 Indentation and Splitting Lines
 
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
-```cpp
-// Long statement split across multiple lines
-printf("The distance between the two points is "
-       "%5.2f\n", distance);
-// ^ Second line is indented to show continuation
+**Splitting Long printf Statements:**
 
-// Another example
+If a `printf` statement is too long, split it over two lines at a point that preserves readability. To split text in quotation marks, divide it into separate pieces, each in its own quotation marks.
+
+```cpp
+// Method 1: Split after comma, indent the continuation
+printf("The distance between the two points is %5.2f \n",
+       distance);
+
+// Method 2: Split the string into two quoted parts
+printf("The distance between the two points is"
+       " %5.2f \n", distance);
+       
+// Method 3: Split at a natural break in the text
+printf("The distance between the "
+       "points is %5.2f \n", distance);
+```
+
+> **Note:** When splitting strings, adjacent quoted strings are automatically concatenated by the compiler.
+
+```cpp
+// Another example with cout
 cout << "This is a very long message that "
      << "needs to be split into multiple lines"
      << endl;
@@ -2104,6 +2119,43 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 - **Literal text** - printed as-is
 - **Escape sequences** (e.g., `\n`, `\t`)
 
+**Multiple Specifiers:**
+
+If a control string contains multiple conversion specifiers, the same number of arguments must follow:
+
+```cpp
+printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
+// Output: Results: x = 4.52, y = 0.15, z = -1.34
+```
+
+> **Note:** Arguments can be variables or expressions (e.g., `z + 3`).
+
+**Escape Character:**
+
+The backslash (`\`) is called an **escape character** when used in a control string. It combines with the following character to give it special meaning.
+
+**Common Escape Sequences:**
+
+| Sequence | Meaning | Description |
+|----------|---------|-------------|
+| `\n` | newline | Skip to a new line |
+| `\t` | horizontal tab | Move to next tab stop |
+| `\a` | alert (bell) | Audible alert |
+| `\b` | backspace | Move back one position |
+| `\f` | formfeed | New page (rarely used) |
+| `\r` | carriage return | Return to start of line |
+| `\v` | vertical tab | Vertical spacing |
+| `\\` | backslash | Print a single backslash |
+| `\'` | single quote | Print a single quote |
+| `\"` | double quote | Print a double quote |
+
+**Examples:**
+
+```cpp
+printf("\"The End.\"\n");     // Output: "The End." (with newline)
+printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
+```
+
 #### Conversion Specifier Syntax
 
 ```
@@ -2149,6 +2201,28 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 **Precision behavior:**
 - The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
 - **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` → `"    3.14"`)
+
+**Examples (integer value = -145):**
+
+| Specifier | Output | Explanation |
+|-----------|--------|-------------|
+| `%i` | `-145` | Default, no padding |
+| `%4d` | `-145` | Width 4, value fits exactly |
+| `%3i` | `-145` | Width 3, auto-expanded to fit |
+| `%6i` | `  -145` | Width 6, right-justified (2 blanks on left) |
+| `%-6i` | `-145  ` | Width 6, left-justified (2 blanks on right) |
+
+**Examples (double value = 157.8926):**
+
+| Specifier | Output | Explanation |
+|-----------|--------|-------------|
+| `%f` | `157.892600` | Default: 6 decimal places |
+| `%6.2f` | `157.89` | Width 6, 2 decimal places, rounded |
+| `%+8.2f` | ` +157.89` | Width 8, show sign, right-justified |
+| `%7.5f` | `157.89260` | Width 7, 5 decimal places |
+| `%e` | `1.578926e+02` | Exponential form |
+| `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
+| `%g` | `157.893` | Auto-select shorter format, rounded |
 
 #### 4. Length Modifier - **OPTIONAL**
 

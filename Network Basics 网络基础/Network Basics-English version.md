@@ -166,14 +166,106 @@ A set of rules that define how data is transmitted over a network.
 
 The TCP/IP model is the de facto standard for internet communication.
 
+#### OSI Model (7 Layers)
+
+A theoretical model used in network education.
+
+| Layer | Name | Function |
+|-------|------|----------|
+| 7 | **Application** | Provides services directly to end-user applications |
+| 6 | **Presentation** | Data formatting, encryption/decryption, compression |
+| 5 | **Session** | Establishes, manages, and terminates sessions between applications |
+| 4 | **Transport** | Provides reliable process-to-process communication |
+| 3 | **Network** | Implements end-to-end data routing |
+| 2 | **Data Link** | Provides node-to-node reliable transmission |
+| 1 | **Physical** | Transmits raw bit streams over physical medium |
+
+**Data Flow:**
+- **Sender**: Data starts at Application layer, processed downward through each layer, finally transmitted as binary signals at Physical layer.
+- **Receiver**: Binary signals processed at Physical layer, moves upward through each layer, finally reconstructed to usable data at Application layer.
+
+**Pros:** Establishes unified communication standards, reduces development difficulty through clear layer separation.
+**Cons:** Overly idealistic, structurally too complex for practical engineering implementation.
+
+#### TCP/IP Model (4 Layers)
+
+Practical implementation standard used in actual networking.
+
+| Layer | Name | Main Protocols | Function |
+|-------|------|----------------|----------|
+| 4 | **Application** | HTTP, FTP, SMTP, DNS | Application-specific protocols |
+| 3 | **Transport** | TCP, UDP | Process-to-process communication |
+| 2 | **Internet** | IP, ICMP, ARP | End-to-end data routing |
+| 1 | **Network Interface** | Ethernet, Wi-Fi | Binary signal transmission over physical medium |
+
+**Key Protocols:**
+- **Application Layer**: HTTP (web browsing), FTP (file transfer), SMTP (email), DNS (domain name resolution)
+- **Transport Layer**: TCP (reliable, slower), UDP (unreliable, fast)
+- **Internet Layer**: IP (addressing), ICMP (error reporting), ARP (address resolution)
+
 ## 1.3 Transport Layer: TCP and UDP
 
-### 1.4.1 Comparison and Summary
+### 1.3.1 TCP vs UDP Comparison
 
-*(To be filled)*
+| Feature | UDP | TCP |
+|---------|-----|-----|
+| **Connection** | Connectionless | Connection-oriented (3-way handshake to establish, 4-way to terminate) |
+| **Reliability** | No guarantee of delivery or order | Guaranteed delivery with correct order |
+| **Latency** | Low latency, fast transmission | Higher latency due to acknowledgment and retransmission |
+| **Data Size** | Small data, high-frequency transmission | Large data transmission |
+| **Use Cases** | Gaming, voice calls, live streaming, DNS, IoT | File transfer, web browsing, email, payment, remote login |
+| **Requirements** | Low latency, high real-time requirements | High data integrity, acceptable delay |
 
-## 1.5 What Data Can Be Transmitted?
+**TCP Use Cases:** File downloads/uploads, email, database synchronization, banking/payment transactions, online games with low latency tolerance (e.g., World of Warcraft).
 
-*(To be filled)*
+**UDP Use Cases:** Competitive gaming, video conferencing, live streaming, DNS queries, IoT devices.
 
-> **Note**: This is an English version of the networking notes. The content is to be filled gradually.
+### 1.3.2 Connection Analogy
+
+- **TCP (Phone Call)**: Connection-based and reliable
+  - Call must be connected first
+  - Two-way communication
+  - Hang up when finished
+
+- **UDP (Text Message)**: Connectionless and unreliable
+  - Did the recipient receive it?
+  - Is the content complete?
+  - Unknown network conditions
+
+## 1.4 Data Transmission Format
+
+All data (strings, numbers, containers) must be converted to byte sequences (binary data) before transmission.
+
+### 1.4.1 String Encoding/Decoding
+
+| Operation | Direction | Description |
+|-----------|-----------|-------------|
+| **encode** | Data → Binary | Converts human-readable data to transmittable binary format |
+| **decode** | Binary → Data | Converts binary data back to human-readable format |
+
+**Example:**
+```
+"hello world" → b"hello world"
+"你好世界" → b'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
+```
+
+Byte sequences are indicated by the `b` prefix.
+
+### 1.4.2 Container Data (Lists, Dictionaries)
+
+Containers cannot be directly encoded. Must be converted to string first (e.g., JSON), then encoded to binary.
+
+**Process:** Container → String (JSON) → Binary Data
+
+**Example:**
+```python
+list1 = ['apple', 'banana', 'watermelon']
+# Step 1: Convert list to JSON string
+str_list = json.dumps(list1)  # '["apple", "banana", "watermelon"]'
+# Step 2: Encode string to binary
+bytelist = str_list.encode()   # b'[...]'
+
+# Reverse process:
+strinfo2 = bytelist.decode()   # JSON string
+list2 = json.loads(strinfo2)   # Original list
+```
