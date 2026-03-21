@@ -59,15 +59,33 @@ No installation needed; access via browser using URLs.
 
 ### 1.2.1 IP Address
 
-*(To be filled)*
+A logical address assigned to each computer or network device on the internet, used to identify and locate the device within a network.
+
+| Type | Description |
+|------|-------------|
+| **Public IP** | Globally unique address accessible from the internet |
+| **Private IP** | Address used within local networks (LAN), not directly accessible from the internet |
 
 ### 1.2.2 Port Numbers
 
-*(To be filled)*
+A numerical identifier for specific applications or services on a device. Each application corresponds to a unique port number.
+
+| Attribute | Details |
+|-----------|---------|
+| **Range** | 0 - 65535 |
+| **Well-known ports** | 0 - 1023 (reserved for system services, already occupied) |
+| **Purpose** | Identifies specific software/applications on a device |
+| **Uniqueness** | Each port number can only be used by one application at a time |
 
 ### 1.2.3 Protocols
 
-*(To be filled)*
+A set of rules that define how data is transmitted over a network. Protocols determine the format, timing, sequencing, and error checking of data communication.
+
+| Function | Description |
+|----------|-------------|
+| **Message format** | Defines how data is structured |
+| **Transmission rules** | Determines how messages are sent and received |
+| **Error handling** | Specifies how errors are detected and corrected |
 
 ## 1.3 Network Communication Protocol Models
 
