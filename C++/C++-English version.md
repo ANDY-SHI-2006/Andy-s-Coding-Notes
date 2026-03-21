@@ -964,7 +964,7 @@ cout << noboolalpha << flag << endl; // Output: 1
 
 #### Boolean Output with `printf`
 
-`printf` has **no built-in format specifier** for `bool` to display "true"/"false". By default, it treats `bool` as `int` (1/0).
+`printf` has **no built-in conversion specifier** for `bool` to display "true"/"false". By default, it treats `bool` as `int` (1/0).
 
 **Solution: Use `%s` with ternary operator**
 
@@ -1431,31 +1431,6 @@ int val = s[i];      // 40
 s[i + 1] = 999;      // s[4] = 999
 ```
 
-#### Traversing Arrays
-
-Use loops to process all elements:
-
-```cpp
-int s[5] = {10, 20, 30, 40, 50};
-
-// Using for loop (most common)
-for (int i = 0; i < 5; i++) {
-    cout << s[i] << " ";
-}
-// Output: 10 20 30 40 50
-
-// Reading values into array
-for (int i = 0; i < 5; i++) {
-    cin >> s[i];
-}
-
-// Calculating sum
-int sum = 0;
-for (int i = 0; i < 5; i++) {
-    sum += s[i];
-}
-```
-
 #### Arrays and Functions
 
 Arrays are passed by reference (not by value):
@@ -1475,7 +1450,14 @@ int main() {
 }
 ```
 
-> When passing arrays to functions, also pass the size since the function cannot determine the array size from the parameter alone.
+**Key Points:**
+
+| Aspect              | Behavior                                                                                |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| Passing mechanism   | By reference (address), not by value                                                    |
+| Modification effect | Changes affect the original array                                                       |
+| Size information    | Must pass `size` separately - function cannot determine array size from parameter alone |
+| Why pass size?      | `arr[]` decays to pointer, losing size info                                             |
 
 #### Multidimensional Arrays
 
@@ -1503,32 +1485,12 @@ for (int i = 0; i < 3; i++) {       // rows
 
 #### Cautions
 
-| Operation | Valid? | Explanation |
-|-----------|--------|-------------|
-| `int[10] func()` | ❌ No | Cannot return array from function directly |
-| `ia = ib` | ❌ No | Cannot assign one array to another (use loop or `memcpy`) |
-| `s[10]` for `s[6]` | ❌ No | Out of bounds access → undefined behavior (segmentation fault) |
+| Operation            | Valid?    | Explanation                                                               |
+| -------------------- | --------- | ------------------------------------------------------------------------- |
+| `int[10] func()`     | ❌ No      | Cannot return array from function directly                                |
+| `ia = ib`            | ❌ No      | Cannot assign one array to another (use loop or `memcpy`)                 |
+| `s[10]` for `s[6]`   | ❌ No      | Out of bounds access → undefined behavior (segmentation fault)            |
 | `int n=5; int s[n];` | ⚠️ C++99+ | Variable Length Arrays (VLAs) are not standard C++ (use `vector` instead) |
-
-**Common Array Mistakes:**
-
-```cpp
-int s[5];
-
-// 1. Off-by-one error
-for (int i = 0; i <= 5; i++) {  // Wrong! Should be i < 5
-    s[i] = i;  // s[5] is out of bounds!
-}
-
-// 2. Uninitialized array
-int t[5];
-int sum = t[0] + t[1];  // Garbage values!
-
-// 3. Array decay (losing size info)
-void func(int arr[]) {  // arr is just a pointer here
-    // sizeof(arr) gives pointer size, not array size
-}
-```
 
 #### Array vs `std::vector`
 
@@ -1548,6 +1510,47 @@ For dynamic sizing and safer operations, prefer `std::vector`:
 std::vector<int> v = {1, 2, 3};  // Dynamic array
 v.push_back(4);                   // Add element
 int val = v.at(10);               // Throws exception if out of bounds
+```
+
+### 1.5.9 Structure
+
+Structure stores a collection of heterogeneous data (different types) describing a common entity.
+
+#### Declaration
+
+```cpp
+struct Person {
+    char name[50];   // String
+    int age;         // Integer
+    char gender;     // Character
+};
+
+Person s1;           // C++: declare variable
+struct Person s2;    // C: need 'struct' keyword
+```
+
+| Feature | Array | Structure |
+|---------|-------|-----------|
+| Data type | Homogeneous (same type) | Heterogeneous (different types) |
+| Elements | Indexed (s[0], s[1]) | Named members (s.age, s.name) |
+| Purpose | Collection of same items | Describing a complex entity |
+
+#### Initialization and Usage
+
+```cpp
+// Declare and initialize
+Person s1 = {"Potter", 13, 'm'};
+
+// Declare only
+Person s2;
+
+// Structure assignment (everything copied)
+s2 = s1;
+
+// Access member using '.'
+s1.age = 14;                    // Modify field
+s2.age = s1.age * 2;            // Read and store
+s2.gender = 'f';                // Modify field
 ```
 
 ---
@@ -1583,18 +1586,25 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 
 ### 1.6.2 `scanf` (C-style Input)
 
-Format-based input function from C. Requires header `<cstdio>`.
+Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
 
 ```cpp
 #include <cstdio>
-scanf("format string", &var1, &var2, ...);  // Note the & (address-of operator)
+scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 ```
 
-> **Header Required**: `#include <cstdio>` (or `#include <stdio.h>` in C)
+#### Header Style: C vs C++
+
+| Style | Header | Usage | Namespace |
+|-------|--------|-------|-----------|
+| **C-style** | `#include <stdio.h>` | C / C++ | Global namespace |
+| **C++-style** | `#include <cstdio>` | C++ only | `std::` namespace (may also be in global) |
+
+> **Note**: In C++ code, prefer `<cstdio>` over `<stdio.h>`. Both work, but `<cstdio>` is more idiomatic.
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-#### Format Specifier Syntax
+#### Conversion Specifier Syntax
 
 ```
 %[flags][width][length]specifier
@@ -1662,8 +1672,8 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 | Modifier | Use With | C/C++ Type | Example |
 |----------|----------|------------|---------|
 | `hh` | `%d`, `%i`, `%o`, `%x`, `%n` | `signed char` / `unsigned char` | `scanf("%hhd", &c);` |
-| `h` | `%d`, `%i`, `%o`, `%x`, `%n` | `short` / `unsigned short` | `scanf("%hd", &s);` |
-| `l` | `%d`, `%i`, `%o`, `%x`, `%n` | `long` / `unsigned long` | `scanf("%ld", &l);` |
+| `h` | `%d`, `%i`, `%o`, `%x`, `%u`, `%n` | `short` / `unsigned short` | `scanf("%hd", &s);` |
+| `l` | `%d`, `%i`, `%o`, `%x`, `%u`, `%n` | `long` / `unsigned long` | `scanf("%ld", &l);` |
 | `ll` | `%d`, `%i`, `%o`, `%x`, `%n` | `long long` / `unsigned long long` | `scanf("%lld", &ll);` |
 | `j` | `%d`, `%i`, `%o`, `%x`, `%n` | `intmax_t` / `uintmax_t` | `scanf("%jd", &im);` |
 | `z` | `%d`, `%i`, `%o`, `%x`, `%n` | `size_t` | `scanf("%zu", &sz);` |
@@ -1790,7 +1800,7 @@ scanf("%[^\n]", fullname);  // Reads entire line
 
 3. **Whitespace as Separator for Numeric Input**
    
-   When format string has no non-format characters between specifiers, whitespace (space, TAB, newline) can separate input values.
+   When control string has no non-format characters between specifiers, whitespace (space, TAB, newline) can separate input values.
    ```cpp
    scanf("%d%d", &a, &b);
    // Valid inputs: "1 2", "1\t2", "1\n2"
@@ -1805,17 +1815,17 @@ scanf("%[^\n]", fullname);  // Reads entire line
 
 5. **Character Input Behavior**
    
-   When using `%c` or `%[`, **all characters are valid** (including whitespace) unless non-format characters are specified in the format string.
+   When using `%c` or `%[`, **all characters are valid** (including whitespace) unless non-format characters are specified in the control string.
    ```cpp
    scanf("%c%c%c", &a, &b, &c);  // Input: "X Y" → a='X', b=' ', c='Y'
    ```
 
 6. **Non-Format Characters Must Match Exactly**
 
-   When `scanf`'s format string contains **non-format characters** (characters other than `%`), these characters are **NOT displayed**, but are used for **matching/validating the input**.
+   When `scanf`'s control string contains **non-format characters** (characters other than `%`), these characters are **NOT displayed**, but are used for **matching/validating the input**.
 
    ```cpp
-   // Format string with literal characters
+   // Control string with literal characters
    scanf("a = %d, b = %d, c = %d", &a, &b, &c);
 
    // CORRECT input: (MUST match exactly!)
@@ -1826,7 +1836,7 @@ scanf("%[^\n]", fullname);  // Reads entire line
 
    **⚠️ Strict Matching Requirement:**
 
-   When `scanf` encounters non-format characters in the format string, it **requires** the input to contain those exact characters at that position.
+   When `scanf` encounters non-format characters in the control string, it **requires** the input to contain those exact characters at that position.
 
    | Input | Result | Explanation |
    |-------|--------|-------------|
@@ -1893,13 +1903,13 @@ scanf("%d", a);     // ✗ Wrong! Undefined behavior
 
 | Feature | `scanf` | `printf` |
 |---------|---------|----------|
-| Non-format strings in format | **NOT displayed** | Displayed as-is |
+| Non-format strings in control string | **NOT displayed** | Displayed as-is |
 | Prompt message | Cannot display | Can display |
 | Usage pattern | `printf` first, then `scanf` | Direct output |
 
 > **⚠️ Important Note: `scanf` vs `printf` Difference**
 >
-> Unlike `printf`, **`scanf` cannot display non-format strings** (i.e., prompt messages in the format string are NOT displayed).
+> Unlike `printf`, **`scanf` cannot display non-format strings** (i.e., prompt messages in the control string are NOT displayed).
 >
 ```cpp
 // ❌ WRONG: scanf does NOT print the prompt!
@@ -2062,14 +2072,21 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 ### 1.7.2 `printf` (C-style Output)
 
-Format-based output function from C. Requires header `<cstdio>`.
+Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
 
 ```cpp
 #include <cstdio>
-printf("format string", arg1, arg2, ...);
+printf("control string", arg1, arg2, ...);
 ```
 
-> **Header Required**: `#include <cstdio>` (or `#include <stdio.h>` in C)
+#### Header Style: C vs C++
+
+| Style | Header | Usage | Namespace |
+|-------|--------|-------|-----------|
+| **C-style** | `#include <stdio.h>` | C / C++ | Global namespace |
+| **C++-style** | `#include <cstdio>` | C++ only | `std::` namespace (may also be in global) |
+
+> **Note**: In C++ code, prefer `<cstdio>` over `<stdio.h>`. Both work, but `<cstdio>` is more idiomatic.
 
 **Performance**: Generally faster than `cout` for large data output, but less type-safe.
 
@@ -2082,12 +2099,12 @@ printf("%d,%d\n", a, b);           // 88,89
 printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 ```
 
-**Format String:** Double quotes required. Contains:
-- **Format specifiers** (e.g., `%d`, `%f`) - replaced by arguments
+**Control String:** Double quotes required. Contains:
+- **Conversion specifiers** (e.g., `%d`, `%f`) - replaced by arguments
 - **Literal text** - printed as-is
 - **Escape sequences** (e.g., `\n`, `\t`)
 
-#### Format Specifier Syntax
+#### Conversion Specifier Syntax
 
 ```
 %[flags][width][.precision][length]specifier
@@ -2129,13 +2146,13 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | Modifier | Use With | C Type | Example |
 |----------|----------|--------|---------|
 | `hh` | `%d`, `%u`, `%o`, `%x` | `signed/unsigned char` | `%hhd` |
-| `h` | `%d`, `%u`, `%o`, `%x` | `short` / `unsigned short` | `%hd` |
-| `l` | `%d`, `%u`, `%o`, `%x` | `long` / `unsigned long` | `%ld` |
+| `h` | `%d`, `%i`, `%o`, `%x`, `%u` | `short` / `unsigned short` | `%hd`, `%hi`, `%hu` |
+| `l` | `%d`, `%i`, `%o`, `%x`, `%u` | `long` / `unsigned long` | `%ld`, `%li`, `%lu` |
 | `ll` | `%d`, `%u`, `%o`, `%x` | `long long` / `unsigned long long` | `%lld` |
 | `j` | `%d`, `%u`, `%o`, `%x` | `intmax_t` / `uintmax_t` | `%jd` |
 | `z` | `%d`, `%u`, `%o`, `%x` | `size_t` | `%zu` |
 | `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
-| `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf` |
+| `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
 | `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
 
 #### 5. Specifier (Conversion Specifier) - **REQUIRED**
@@ -2159,6 +2176,27 @@ printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 | `%p` | `void*` | Pointer address | `0x7ffeeb2b3a5c` |
 | `%n` | `int*` | Count chars printed so far | (stores count) |
 | `%%` | - | Literal `%` | `%` |
+
+> **Note:** `%d` and `%i` are equivalent for output (both print signed decimal integers).
+
+#### Format Modifiers
+
+**Field Width and Precision:**
+
+After selecting the conversion specifier, additional formatting can be added:
+
+| Feature | Syntax | Description | Example |
+|---------|--------|-------------|---------|
+| **Minimum field width** | `%5d` | Minimum width; value is **right justified** by default | `%5i` with `42` → `"   42"` |
+| **Left justify** | `%-5d` | Minus sign before width left-justifies the value | `%-8i` with `42` → `"42      "` |
+| **Precision** | `%.2f` | Decimal places for `%f` (default is 6) | `%.2f` with `3.14159` → `"3.14"` |
+| **Width + Precision** | `%8.2f` | Both can be used together | `%8.2f` with `3.14159` → `"    3.14"` |
+| **Always show sign** | `%+d` | Plus sign forces positive/negative sign | `%+6f` with `3.14` → `" +3.14"` |
+
+**Key behaviors:**
+- The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
+- If field width is larger than needed, extra positions are filled with blanks on the left (right justification)
+- Field width will be **increased if necessary** to fit the actual value
 
 #### Key Differences from `cout`
 
