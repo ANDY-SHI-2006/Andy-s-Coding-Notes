@@ -235,9 +235,11 @@ Practical implementation standard used in actual networking.
 - **Transport Layer**: TCP (reliable, slower), UDP (unreliable, fast)
 - **Internet Layer**: IP (addressing), ICMP (error reporting), ARP (address resolution)
 
-## 1.3 Transport Layer: TCP and UDP
+## 1.3 TCP/IP Model
 
-### 1.3.1 TCP vs UDP Comparison
+### 1.3.1 Transport Layer: TCP and UDP
+
+#### 1.3.1.1 TCP vs UDP Comparison
 
 | Feature | UDP | TCP |
 |---------|-----|-----|
@@ -248,15 +250,15 @@ Practical implementation standard used in actual networking.
 | **Use Cases** | Gaming, voice calls, live streaming, DNS, IoT | File transfer, web browsing, email, payment, remote login |
 | **Requirements** | Low latency, high real-time requirements | High data integrity, acceptable delay |
 
-#### 1.3.1.1 TCP Use Cases
+##### 1.3.1.1.1 TCP Use Cases
 
 File downloads/uploads, email, database synchronization, banking/payment transactions, online games with low latency tolerance (e.g., World of Warcraft).
 
-#### 1.3.1.2 UDP Use Cases
+##### 1.3.1.1.2 UDP Use Cases
 
 Competitive gaming, video conferencing, live streaming, DNS queries, IoT devices.
 
-### 1.3.2 Connection Analogy
+#### 1.3.1.2 Connection Analogy
 
 - **TCP (Phone Call)**: Connection-based and reliable
   - Call must be connected first
