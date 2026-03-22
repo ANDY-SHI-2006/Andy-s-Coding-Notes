@@ -273,7 +273,7 @@ Compare character by character from left to right until a difference is found:
 print(max("apple", "banana"))  # Output: "banana"
 
 # Comparison process:
-#   'a' vs 'b' 鈫?'b' > 'a' 鈫?immediately returns "banana"
+#   'a' vs 'b' →'b' > 'a' →immediately returns "banana"
 ```
 
 #### 4.1.2.3 Case Sensitivity
@@ -475,7 +475,7 @@ str1.count("on")         # 3
 
 | Method | Description | Default Delimiter |
 |--------|-------------|-------------------|
-| `split(sep)` | Split string 鈫?list | Whitespace |
+| `split(sep)` | Split string →list | Whitespace |
 
 ```python
 "a b c".split()          # ['a', 'b', 'c']
@@ -498,7 +498,7 @@ str1.count("on")         # 3
 
 | Method | Description |
 |--------|-------------|
-| `sep.join(iterable)` | Join iterable 鈫?string |
+| `sep.join(iterable)` | Join iterable →string |
 
 ```python
 "-".join(["a", "b", "c"])      # "a-b-c"
@@ -507,8 +507,8 @@ str1.count("on")         # 3
 
 | Direction | Method |
 |-----------|--------|
-| String 鈫?List | `split()` |
-| List 鈫?String | `join()` |
+| String →List | `split()` |
+| List →String | `join()` |
 
 ### 4.5.8 strip()
 
@@ -530,7 +530,7 @@ str1.count("on")         # 3
 | Method | Syntax | Description | Notes |
 |--------|--------|-------------|-------|
 | `append()` | `list.append(x)` | Add single element to end | - |
-| `insert()` | `list.insert(i, x)` | Insert at specific index | Index out of range 鈫?adds to end (robust) |
+| `insert()` | `list.insert(i, x)` | Insert at specific index | Index out of range →adds to end (robust) |
 | `extend()` | `list.extend(iter)` | Merge another iterable | Works with str, list, tuple |
 
 ```python
@@ -636,10 +636,10 @@ unique_list = list(set(list1))  # [1, 2, 3, 4]
 
 | Operator | Meaning | Example |
 |----------|---------|---------|
-| `&` | Intersection (common elements) | `{1,2,3} & {2,3,4}` 鈫?`{2, 3}` |
-| `\|` | Union (all elements) | `{1,2,3} \| {2,3,4}` 鈫?`{1, 2, 3, 4}` |
-| `-` | Difference (in A but not B) | `{1,2,3} - {2,3,4}` 鈫?`{1}` |
-| `in` / `not in` | Membership test | `2 in {1,2,3}` 鈫?`True` |
+| `&` | Intersection (common elements) | `{1,2,3} & {2,3,4}` →`{2, 3}` |
+| `\|` | Union (all elements) | `{1,2,3} \| {2,3,4}` →`{1, 2, 3, 4}` |
+| `-` | Difference (in A but not B) | `{1,2,3} - {2,3,4}` →`{1}` |
+| `in` / `not in` | Membership test | `2 in {1,2,3}` →`True` |
 
 #### 5.1.2.1 Methods
 
@@ -733,10 +733,10 @@ for key, value in dict1.items():
 # Syntax: dict.get(key, default=None)
 dict1 = {"theme": "dark", "font_size": 14}
 
-# Key exists 鈫?return value
+# Key exists →return value
 print(dict1.get("theme"))           # "dark"
 
-# Key not exists 鈫?return default (None if not specified)
+# Key not exists →return default (None if not specified)
 print(dict1.get("language"))        # None
 print(dict1.get("language", "en"))  # "en" (custom default)
 
@@ -1344,18 +1344,18 @@ with open("photo.jpg", "rb") as src:
 
 | Function             | Purpose                     |
 | -------------------- | --------------------------- |
-| `json.dumps(obj)`    | Python object 鈫?JSON string |
-| `json.loads(string)` | JSON string 鈫?Python object |
+| `json.dumps(obj)`    | Python object →JSON string |
+| `json.loads(string)` | JSON string →Python object |
 
 ```python
 import json
 
-# Serialize (Python 鈫?JSON)
+# Serialize (Python →JSON)
 data = {"name": "Alice", "age": 25}
 json_str = json.dumps(data, ensure_ascii=False)
 # '{"name": "Alice", "age": 25}'
 
-# Deserialize (JSON 鈫?Python)
+# Deserialize (JSON →Python)
 parsed = json.loads(json_str)
 # {'name': 'Alice', 'age': 25}
 
