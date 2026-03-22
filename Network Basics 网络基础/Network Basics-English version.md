@@ -330,10 +330,12 @@ list2 = json.loads(strinfo2)   # Original list
 
 # 2. Socket Programming
 
-**Socket**: A technical means to implement network programming for data transmission. Most network services on the internet are based on Socket for communication. Sockets can be used with different network protocols, such as TCP/IP and UDP (transport layer tasks).
+**Socket**: A technical means to implement network programming for data transmission. 
 
 - **UDP Socket**: Connectionless, data transmission is not secure, but has higher efficiency.
 - **TCP Socket**: Connection-oriented, data transmission is secure, stable, but relatively lower efficiency.
+
+### 2.0.1 Library Dependencies
 
 Python socket programming module: `import socket`
 
