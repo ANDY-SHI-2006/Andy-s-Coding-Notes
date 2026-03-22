@@ -898,7 +898,7 @@ universal(1, 2, 3, name="Alice", age=20)
 
 ## 6.3 总结
 
-### 参数顺序
+### 6.3.1 参数顺序
 ```
 
 def fn(regular, default=val, *args, **kwargs):
