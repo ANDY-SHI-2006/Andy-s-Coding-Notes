@@ -116,11 +116,11 @@ Identity operators compare memory addresses (identity), not just values.
 | `is` | Returns `True` if both operands refer to the same object in memory | `x is y` |
 | `is not` | Returns `True` if operands refer to different objects | `x is not y` |
 
-#### 2.2.1 `id()` Function
+### 2.2.1 `id()` Function
 - Returns the memory address (identity) of an object
 - `id(x) == id(y)` is equivalent to `x is y`
 
-##### 2.2.1.1 Key Difference
+#### 2.2.1.1 Key Difference
 - `==` compares **values** (equality)
 - `is` compares **memory addresses** (identity)
 
@@ -227,7 +227,7 @@ else:
     print("Not found - loop completed normally")
 ```
 
-##### 3.3.2.1.1 Use Case: Useful for search operations where you want to know if the item was not found.
+#### 3.3.2.1 Use Case: Useful for search operations where you want to know if the item was not found.
 
 # 4. Sequences
 
@@ -314,9 +314,9 @@ print(max("Apple", "banana", key=str.lower))
 
 ## 4.2 List Comprehensions
 
-#### 4.2.1 Only available for lists - A flexible and powerful way to create lists concisely.
+### 4.2.1 Only available for lists - A flexible and powerful way to create lists concisely.
 
-#### 4.2.2 Syntax: `[expression for item in iterable]`
+### 4.2.2 Syntax: `[expression for item in iterable]`
 
 ```python
 # Generate a list of integers from 1 to 10
@@ -332,16 +332,16 @@ list3 = [i for i in range(1, 11) if i % 2 == 0]
 print(list3)  # [2, 4, 6, 8, 10]
 ```
 
-#### 4.2.3 Key Points:
+### 4.2.3 Key Points:
 - Wrap the entire expression in square brackets `[]`
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
 
 ## 4.3 sorted() and .sort() Methods
 
-#### 4.3.1 `sorted()`: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
+### 4.3.1 `sorted()`: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
-#### 4.3.2 `.sort()`: Modifies the list **in-place** (not recommended; use `sorted()` instead).
+### 4.3.2 `.sort()`: Modifies the list **in-place** (not recommended; use `sorted()` instead).
 
 ```python
 list1 = [11, 25, 3, 0, -1, 99]
@@ -365,12 +365,12 @@ new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 
 ## 4.4 Mutable and Immutable Types
 
-#### 4.4.1 Mutable Types: Lists, Dictionaries, Sets
+### 4.4.1 Mutable Types: Lists, Dictionaries, Sets
 
 - Can be modified after creation
 - Internal values change, but **memory address remains the same**
 
-#### 4.4.2 Immutable Types: Integers, Strings, Tuples, Booleans, Floats
+### 4.4.2 Immutable Types: Integers, Strings, Tuples, Booleans, Floats
 
 - Cannot be modified after creation
 - Attempting to modify actually creates a **new object** with a different memory address
@@ -399,7 +399,7 @@ a = 30                # Creates a NEW integer object
 print(id(a))          # Different address: 140234567900
 ```
 
-#### 4.4.3 Identity vs Equality Comparison:
+### 4.4.3 Identity vs Equality Comparison:
 
 ```python
 # Lists (mutable) - different objects with same values
@@ -1030,7 +1030,7 @@ list(map(lambda x: x * 2, [1, 2, 3]))      # [2, 4, 6]
 list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 ```
 
-##### 7.1.1.1 Note: Lambda doesn't improve performance; use `def` for complex logic.
+### 7.1.1 Note: Lambda doesn't improve performance; use `def` for complex logic.
 
 ## 7.2 Higher-Order Functions
 
@@ -1164,7 +1164,7 @@ fib = fibonacci()
 
 ## 8.1 Closures
 
-#### 8.1.1 Closure: A nested function that references variables from its enclosing scope and is returned from the outer function.
+### 8.1.1 Closure: A nested function that references variables from its enclosing scope and is returned from the outer function.
 
 | Condition | Description |
 |-----------|-------------|
@@ -1191,7 +1191,7 @@ c2()                        # 1
 
 ## 8.2 Decorators
 
-#### 8.2.1 Decorator: A function that wraps another function to extend its behavior without modifying it.
+### 8.2.1 Decorator: A function that wraps another function to extend its behavior without modifying it.
 
 ### 8.2.1 Decorator 1.0 (Basic Template)
 
@@ -1282,7 +1282,7 @@ file = open("data.txt", mode="r", encoding="utf-8")
 | `"w+"` | Write and read (truncate first) |
 | `"rb"`, `"wb"` | Binary mode |
 
-#### 9.1.1 Path Types:
+### 9.1.1 Path Types:
 - **Relative:** `"./file.txt"` or `"../data/file.txt"`
 - **Absolute:** `"C:/Users/name/file.txt"` (use `/` for cross-platform)
 
@@ -1317,7 +1317,7 @@ with open("log.txt", "a", encoding="utf-8") as f:
 
 ## 9.4 Closing Files
 
-#### 9.4.1 Always close files to free system resources:
+### 9.4.1 Always close files to free system resources:
 
 ```python
 # Method 1: Manual close
@@ -1375,7 +1375,7 @@ with open("data.json", encoding="utf-8") as f:
 | UTF-8 | Unicode, variable length | 1-4 (Chinese: 3) |
 | GBK | Chinese standard | 1 (EN), 2 (CN) |
 
-#### 9.7.1 Storage Units:
+### 9.7.1 Storage Units:
 - 1 Byte = 8 bits
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
