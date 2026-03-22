@@ -896,7 +896,7 @@ universal(1, 2, 3, name="Alice", age=20)
 
 ## 6.3 Summary
 
-### Parameter Order
+### 6.3.1 Parameter Order
 ```
 def fn(regular, default=val, *args, **kwargs):
     pass
