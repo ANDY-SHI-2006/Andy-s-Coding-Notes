@@ -34,39 +34,6 @@ This repository provides documentation in both English and Chinese. Click the li
 
 ---
 
-## 🛠️ Problem Solving Approach | 问题解决方法论
-
-### ❌ The WRONG Way | 错误做法 (Don't Do This! | 不要这样做！)
-
-1. Sit down in front of a computer and read the problem statement | 坐在电脑前阅读题目
-2. Get confused | 感到困惑
-3. Recall something that might look like the current problem | 回忆一些看似相关的内容
-4. Quickly type out a program that kinda-sorta-might solve the problem | 快速敲出一个可能大概也许能解决问题的程序
-5. Compile and get 10,000 syntax errors | 编译后出现10,000个语法错误
-6. Get frustrated, submit a program that does not work | 感到沮丧，提交一个不能运行的程序
-7. Fail exams and switch to gardening 🌱 | 考试不及格然后改行去种花 🌱
-
-### ✅ The CORRECT Engineering Approach | 正确的工程方法
-
-1. **State the problem | 明确问题**
-   - Understand exactly what needs to be solved | 准确理解需要解决的问题
-
-2. **Describe inputs and outputs | 描述输入和输出**
-   - What data goes in? What should come out? | 输入什么数据？应该输出什么？
-
-3. **Work out a hand example | 手动演算示例**
-   - Solve a simple case by hand to understand the logic | 手动解决一个简单的例子来理解逻辑
-
-4. **Develop the algorithm | 设计算法**
-   - Write down the step-by-step procedure | 写下逐步执行的流程
-
-5. **Then write code | 然后编写代码**
-   - Only after you fully understand the problem! | 只有在完全理解问题之后！
-
-> 💡 **Tip / 提示**: Follow these steps even for the simplest problems. You'll avoid many stupid mistakes and save tons of time in debugging!<br>即使是最简单的问题也要遵循这些步骤。这样可以避免很多愚蠢的错误，节省大量调试时间！
-
----
-
 ## 📝 About | 关于
 
 This repository contains my personal programming study notes, documenting my learning journey in coding.
