@@ -116,11 +116,11 @@ Identity operators compare memory addresses (identity), not just values.
 | `is` | Returns `True` if both operands refer to the same object in memory | `x is y` |
 | `is not` | Returns `True` if operands refer to different objects | `x is not y` |
 
-#### 2.0.0.1. `id()` Function
+#### 2.2.1 `id()` Function
 - Returns the memory address (identity) of an object
 - `id(x) == id(y)` is equivalent to `x is y`
 
-##### 2.0.0.1.1. Key Difference
+##### 2.2.1.1 Key Difference
 - `==` compares **values** (equality)
 - `is` compares **memory addresses** (identity)
 
@@ -145,12 +145,12 @@ print(id(a))    # Memory address of a
 
 A concise way to write simple if-else statements in one line.
 
-#### 3.0.0.1. Syntax:
+#### 3.2.1.1 Syntax:
 ```python
 value_if_true if condition else value_if_false
 ```
 
-#### 3.0.0.2. Example:
+#### 3.2.1.2 Example:
 ```python
 # Standard if-else
 if age >= 18:
@@ -162,23 +162,23 @@ else:
 status = "adult" if age >= 18 else "minor"
 ```
 
-##### 3.0.0.2.1. Use Case: Best for simple conditional assignments. For complex logic, use standard if-else for readability.
+##### 3.2.1.2.1 Use Case: Best for simple conditional assignments. For complex logic, use standard if-else for readability.
 
 ### 3.2.2 Single-line if Statement
 
 Python allows simple `if` statements to be written on a single line.
 
-#### 3.0.0.3. Syntax:
+#### 3.2.2.1 Syntax:
 ```python
 if condition: statement
 ```
 
-#### 3.0.0.4. Constraints:
+#### 3.2.2.2 Constraints:
 - The statement must be a **simple, non-compound statement**
 - Allowed: assignments, function calls, single expressions
 - Not allowed: nested `if`, loops, or other compound statements
 
-#### 3.0.0.5. Example:
+#### 3.2.2.3 Example:
 ```python
 # Valid: simple statement on one line
 if x > 0: print("positive")
@@ -187,13 +187,13 @@ if x > 0: print("positive")
 # if x > 0: if y > 0: print("both positive")  # SyntaxError
 ```
 
-##### 3.0.0.5.1. Note: Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
+##### 3.2.2.3.1 Note: Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
 
 ## 3.3 Loop Structures
 
 ### 3.3.1 for Loop
 
-#### 3.0.0.6. `range(start, stop, step)`:
+#### 3.3.1.1 `range(start, stop, step)`:
 - **start**: Starting value (inclusive). Default: 0
 - **stop**: Ending value (**exclusive**)
 - **step**: Increment/decrement. Default: 1
@@ -227,7 +227,7 @@ else:
     print("Not found - loop completed normally")
 ```
 
-##### 3.0.0.6.1. Use Case: Useful for search operations where you want to know if the item was not found.
+##### 3.3.2.1.1 Use Case: Useful for search operations where you want to know if the item was not found.
 
 # 4. Sequences
 
@@ -314,9 +314,9 @@ print(max("Apple", "banana", key=str.lower))
 
 ## 4.2 List Comprehensions
 
-#### 4.0.0.4. Only available for lists - A flexible and powerful way to create lists concisely.
+#### 4.2.1 Only available for lists - A flexible and powerful way to create lists concisely.
 
-#### 4.0.0.5. Syntax: `[expression for item in iterable]`
+#### 4.2.2 Syntax: `[expression for item in iterable]`
 
 ```python
 # Generate a list of integers from 1 to 10
@@ -332,16 +332,16 @@ list3 = [i for i in range(1, 11) if i % 2 == 0]
 print(list3)  # [2, 4, 6, 8, 10]
 ```
 
-#### 4.0.0.6. Key Points:
+#### 4.2.3 Key Points:
 - Wrap the entire expression in square brackets `[]`
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
 
 ## 4.3 sorted() and .sort() Methods
 
-#### 4.0.0.7. `sorted()`: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
+#### 4.3.1 `sorted()`: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
-#### 4.0.0.8. `.sort()`: Modifies the list **in-place** (not recommended; use `sorted()` instead).
+#### 4.3.2 `.sort()`: Modifies the list **in-place** (not recommended; use `sorted()` instead).
 
 ```python
 list1 = [11, 25, 3, 0, -1, 99]
@@ -365,12 +365,12 @@ new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 
 ## 4.4 Mutable and Immutable Types
 
-#### 4.0.0.9. Mutable Types: Lists, Dictionaries, Sets
+#### 4.4.1 Mutable Types: Lists, Dictionaries, Sets
 
 - Can be modified after creation
 - Internal values change, but **memory address remains the same**
 
-#### 4.0.0.10. Immutable Types: Integers, Strings, Tuples, Booleans, Floats
+#### 4.4.2 Immutable Types: Integers, Strings, Tuples, Booleans, Floats
 
 - Cannot be modified after creation
 - Attempting to modify actually creates a **new object** with a different memory address
@@ -399,7 +399,7 @@ a = 30                # Creates a NEW integer object
 print(id(a))          # Different address: 140234567900
 ```
 
-#### 4.0.0.11. Identity vs Equality Comparison:
+#### 4.4.3 Identity vs Equality Comparison:
 
 ```python
 # Lists (mutable) - different objects with same values
@@ -565,7 +565,7 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 # list1[100] = "x"                # IndexError: out of range
 ```
 
-#### 4.0.0.12. Sorting:
+#### 4.6.3.1 Sorting:
 - `sort()` - In-place, modifies original (list only)
 - `sorted()` - Returns new sorted list (works on any iterable)
 
@@ -703,7 +703,7 @@ print(dict1.get("Unknown", 0)) # 0 (default, no error)
 # print(dict1["Unknown"])      # KeyError
 ```
 
-#### 5.0.0.3. Get All Keys/Values/Items:
+#### 5.2.1.1 Get All Keys/Values/Items:
 
 | Method | Returns | Use Case |
 |--------|---------|----------|
@@ -727,7 +727,7 @@ for key, value in dict1.items():
     print(f"{key}: {value}")  # A: 1, B: 2, C: 3
 ```
 
-#### 5.0.0.4. `dict.get()` - Safe Access:
+#### 5.2.1.2 `dict.get()` - Safe Access:
 
 ```python
 # Syntax: dict.get(key, default=None)
@@ -776,7 +776,7 @@ for name, code in dict1.items():
 
 ### 5.2.3 Nested Dictionaries
 
-#### 5.0.0.5. Structure: Key can be any immutable type; Value can be any type (including dict).
+#### 5.2.3.1 Structure: Key can be any immutable type; Value can be any type (including dict).
 
 ```python
 # Nested structure: students with scores
@@ -1030,13 +1030,13 @@ list(map(lambda x: x * 2, [1, 2, 3]))      # [2, 4, 6]
 list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 ```
 
-##### 7.0.0.0.1. Note: Lambda doesn't improve performance; use `def` for complex logic.
+##### 7.1.1.1 Note: Lambda doesn't improve performance; use `def` for complex logic.
 
 ## 7.2 Higher-Order Functions
 
 ### 7.2.1 Introduction
 
-#### 7.0.0.1. Higher-Order Function: Takes function as argument or returns function.
+#### 7.2.1.1 Higher-Order Function: Takes function as argument or returns function.
 
 | Built-in HOF | Purpose |
 |-------------|---------|
@@ -1124,7 +1124,7 @@ for item in lst:            # Calls iter(), then next() repeatedly
     print(item)
 ```
 
-#### 7.0.0.2. Iterable vs Iterator:
+#### 7.2.5.1 Iterable vs Iterator:
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
@@ -1164,7 +1164,7 @@ fib = fibonacci()
 
 ## 8.1 Closures
 
-#### 8.0.0.1. Closure: A nested function that references variables from its enclosing scope and is returned from the outer function.
+#### 8.1.1 Closure: A nested function that references variables from its enclosing scope and is returned from the outer function.
 
 | Condition | Description |
 |-----------|-------------|
@@ -1191,7 +1191,7 @@ c2()                        # 1
 
 ## 8.2 Decorators
 
-#### 8.0.0.2. Decorator: A function that wraps another function to extend its behavior without modifying it.
+#### 8.2.1 Decorator: A function that wraps another function to extend its behavior without modifying it.
 
 ### 8.2.1 Decorator 1.0 (Basic Template)
 
@@ -1282,7 +1282,7 @@ file = open("data.txt", mode="r", encoding="utf-8")
 | `"w+"` | Write and read (truncate first) |
 | `"rb"`, `"wb"` | Binary mode |
 
-#### 9.0.0.1. Path Types:
+#### 9.1.1 Path Types:
 - **Relative:** `"./file.txt"` or `"../data/file.txt"`
 - **Absolute:** `"C:/Users/name/file.txt"` (use `/` for cross-platform)
 
@@ -1317,7 +1317,7 @@ with open("log.txt", "a", encoding="utf-8") as f:
 
 ## 9.4 Closing Files
 
-#### 9.0.0.2. Always close files to free system resources:
+#### 9.4.1 Always close files to free system resources:
 
 ```python
 # Method 1: Manual close
@@ -1342,9 +1342,9 @@ with open("photo.jpg", "rb") as src:
 
 ## 9.6 JSON Strings
 
-| Function | Purpose |
-|----------|---------|
-| `json.dumps(obj)` | Python object 鈫?JSON string |
+| Function             | Purpose                     |
+| -------------------- | --------------------------- |
+| `json.dumps(obj)`    | Python object 鈫?JSON string |
 | `json.loads(string)` | JSON string 鈫?Python object |
 
 ```python
@@ -1375,7 +1375,7 @@ with open("data.json", encoding="utf-8") as f:
 | UTF-8 | Unicode, variable length | 1-4 (Chinese: 3) |
 | GBK | Chinese standard | 1 (EN), 2 (CN) |
 
-#### 9.0.0.3. Storage Units:
+#### 9.7.1 Storage Units:
 - 1 Byte = 8 bits
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
@@ -1628,6 +1628,6 @@ class Stack:
         return self.items.pop()
 ```
 
-#### 10.0.0.1. Assertion vs Exception:
+#### 10.2.4.1 Assertion vs Exception:
 - **Assertion**: Internal bug check, can be disabled
 - **Exception**: Expected error cases, always handled
