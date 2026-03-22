@@ -13,12 +13,14 @@ Requires downloading a client application to use.
 | **Server** | 24/7 standby, responds to requests (e.g., Tencent WeChat Server) |
 | **Use Cases** | Games, Banking Apps (high performance & security needs) |
 
-**Pros:**
+#### Pros
+
 - Excellent UX: rich graphics/audio stored locally
 - Offline capability (single-player games, document editing)
 - Better security, data can be stored locally
 
-**Cons:**
+#### Cons
+
 - Higher dev/maintenance cost (client + server)
 - Users must download updates
 - Cross-platform complexity (iOS, Android, Windows)
@@ -31,13 +33,15 @@ No installation needed; access via browser using URLs.
 | **Access** | Browser + URL (baidu.com, jd.com, bilibili.com) |
 | **Use Cases** | Entertainment, shopping, web games (convenience-focused) |
 
-**Pros:**
+#### Pros
+
 - No client development needed (web page + server only)
 - Zero install for users; open browser and go
 - Easy updates: server-side only, users just refresh
 - Cross-platform: any device with a browser
 
-**Cons:**
+#### Cons
+
 - Everything loaded from server → network dependent
 - Poor performance for large apps (low quality graphics/audio)
 - Limited interactivity compared to native apps
@@ -59,8 +63,6 @@ No installation needed; access via browser using URLs.
 
 ### 1.2.1 IP Address
 
-A logical address assigned to each computer or network device on the internet, used to identify and locate the device within a network.
-
 #### IP Address Classification
 
 | Version | Description | Address Length | Format |
@@ -75,30 +77,14 @@ A logical address assigned to each computer or network device on the internet, u
 - **Value range per octet**: 0 - 255
 - **Total address space**: Approximately 4.2 billion (256^4) unique addresses
 
-**Binary to Decimal Conversion:**
-Each bit represents a power of 2, from right to left starting at 2^0.
-
-```
-11000000 = 1×2^7 + 1×2^6 = 128 + 64 = 192
-10101000 = 1×2^7 + 1×2^5 + 1×2^3 = 128 + 32 + 8 = 168
-00000001 = 1×2^0 = 1
-00100010 = 1×2^5 + 1×2^1 = 32 + 2 = 34
-```
-
-**Number Systems:**
-| System | Base | Digits |
-|--------|------|--------|
-| Binary | 2 | 0, 1 |
-| Octal | 8 | 0-7 |
-| Decimal | 10 | 0-9 |
-| Hexadecimal | 16 | 0-9, a-f (where a=10, b=11, c=12, d=13, e=14, f=15) |
-
 #### IPv6 Address Structure
 
 - **Address format**: 8 groups of 4 hexadecimal digits separated by colons
 - **Example**: `2001:0db8:85a3:0000:0000:8a2e:0370:7334`
-- **Zero compression**: Consecutive groups of zeros can be replaced with `::` (can only be used once per address)
-- **Compressed example**: `2001:0db8:85a3::8a2e:0370:7334`
+- **Zero compression**: Consecutive groups of zeros can be replaced with `::`
+  - Example: `2001:0db8:0000:0000:0000:0000:0000:0001` → `2001:0db8::0001`
+  - **Rule**: Can only be used once per address
+  - **Reason**: Using `::` twice would make it impossible to determine how many zero groups each represents (8 total groups minus visible groups = groups represented by `::`)
 
 #### IP Address Types
 
@@ -108,36 +94,63 @@ Each bit represents a power of 2, from right to left starting at 2^0.
 | **Private IP** | Address used within local networks (LAN) | 192.168.x.x, 10.x.x.x, 172.16.x.x - 172.31.x.x | Internal network communication |
 | **Loopback** | Local address referring to the current device | 127.0.0.1 (IPv4), ::1 (IPv6) | Local testing and development |
 
-#### IPv4 Address Exhaustion Solution
+#### IPv4 Address Exhaustion
 
-IPv4 addresses were fully allocated by November 26, 2019. Two primary solutions:
+IPv4 provides approximately 4.2 billion unique addresses (2^32). With the explosive growth of internet-connected devices, IPv4 addresses were fully allocated by **November 26, 2019**.
 
-1. **IPv6 Deployment**: Gradually replacing IPv4 with the larger address space of IPv6
-2. **Network Address Translation (NAT)**: Allows multiple devices on a private network to share a single public IP address for internet access
+##### Solutions
+
+1. **IPv6 Deployment**
+   - 128-bit address space provides 340 undecillion addresses (2^128)
+   - Written as 8 groups of hexadecimal numbers separated by colons
+   - Gradually replacing IPv4 as the standard protocol
+
+2. **Network Address Translation (NAT)**
+   - Allows multiple devices on a private network to share a single public IP
+   - Router translates private IP to public IP for internet access
+   - Temporarily extends IPv4 lifespan but creates network complexity
+
+3. **Classless Inter-Domain Routing (CIDR)**
+   - More flexible allocation of IP addresses
+   - Replaces old class-based system (A, B, C classes)
+   - Reduces address waste through subnetting
+
+4. **Address Recycling**
+   - Reclaiming unused address blocks from organizations
+   - Selling allocated but unused addresses on the market
+   - Limited effectiveness as a long-term solution
 
 #### Common IP-Related Commands
 
-| Operating System | Command | Purpose |
-|------------------|---------|---------|
-| Windows | `ipconfig` | Display private IP address |
-| Linux/macOS | `ifconfig` | Display private IP address |
-| Universal | `curl ifconfig.me` | Display public IP address |
-| Universal | `ping [IP/hostname]` | Test network connectivity |
+| Operating System | Command              | Purpose                    |
+| ---------------- | -------------------- | -------------------------- |
+| Windows          | `ipconfig`           | Display private IP address |
+| Linux/macOS      | `ifconfig`           | Display private IP address |
+| Universal        | `curl ifconfig.me`   | Display public IP address  |
+| Universal        | `ping [IP/hostname]` | Test network connectivity  |
+
+> **Note on hostname**: Hostname is a network identifier that can be:
+> - **Domain name**: `google.com`, `github.com`
+> - **Local hostname**: `localhost` (refers to 127.0.0.1)
+> - **FQDN**: `www.example.com` (Fully Qualified Domain Name)
+>
+> Examples: `ping google.com`, `ping localhost`, `ping 192.168.1.1`
 
 ### 1.2.2 Port Numbers
 
 A numerical identifier for specific applications or services on a device.
 
-| Attribute | Details |
-|-----------|---------|
-| **Range** | 0 - 65535 |
-| **Well-known ports** | 0 - 1023 (reserved for system services) |
-| **Registered ports** | 1024 - 49151 |
-| **Dynamic/Private ports** | 49152 - 65535 |
-| **Purpose** | Identifies specific applications/services on a device |
-| **Uniqueness** | Each port number can only be used by one application at a time per device |
+| Attribute                 | Details                                                                   |
+| ------------------------- | ------------------------------------------------------------------------- |
+| **Range**                 | 0 - 65535                                                                 |
+| **Well-known ports**      | 0 - 1023 (reserved for system services)                                   |
+| **Registered ports**      | 1024 - 49151                                                              |
+| **Dynamic/Private ports** | 49152 - 65535                                                             |
+| **Purpose**               | Identifies specific applications/services on a device                     |
+| **Uniqueness**            | Each port number can only be used by one application at a time per device |
 
-**Common Port Numbers:**
+#### Common Port Numbers
+
 | Port | Service |
 |------|---------|
 | 80 | HTTP |
@@ -170,22 +183,28 @@ The TCP/IP model is the de facto standard for internet communication.
 
 A theoretical model used in network education.
 
-| Layer | Name | Function |
-|-------|------|----------|
-| 7 | **Application** | Provides services directly to end-user applications |
-| 6 | **Presentation** | Data formatting, encryption/decryption, compression |
-| 5 | **Session** | Establishes, manages, and terminates sessions between applications |
-| 4 | **Transport** | Provides reliable process-to-process communication |
-| 3 | **Network** | Implements end-to-end data routing |
-| 2 | **Data Link** | Provides node-to-node reliable transmission |
-| 1 | **Physical** | Transmits raw bit streams over physical medium |
+| Layer | Name             | Function                                                           |
+| ----- | ---------------- | ------------------------------------------------------------------ |
+| 7     | **Application**  | Provides services directly to end-user applications                |
+| 6     | **Presentation** | Data formatting, encryption/decryption, compression                |
+| 5     | **Session**      | Establishes, manages, and terminates sessions between applications |
+| 4     | **Transport**    | Provides reliable process-to-process communication                 |
+| 3     | **Network**      | Implements end-to-end data routing                                 |
+| 2     | **Data Link**    | Provides node-to-node reliable transmission                        |
+| 1     | **Physical**     | Transmits raw bit streams over physical medium                     |
 
-**Data Flow:**
+##### Data Flow
+
 - **Sender**: Data starts at Application layer, processed downward through each layer, finally transmitted as binary signals at Physical layer.
 - **Receiver**: Binary signals processed at Physical layer, moves upward through each layer, finally reconstructed to usable data at Application layer.
 
-**Pros:** Establishes unified communication standards, reduces development difficulty through clear layer separation.
-**Cons:** Overly idealistic, structurally too complex for practical engineering implementation.
+##### Pros
+
+Establishes unified communication standards, reduces development difficulty through clear layer separation.
+
+##### Cons
+
+Overly idealistic, structurally too complex for practical engineering implementation.
 
 #### TCP/IP Model (4 Layers)
 
@@ -198,7 +217,8 @@ Practical implementation standard used in actual networking.
 | 2 | **Internet** | IP, ICMP, ARP | End-to-end data routing |
 | 1 | **Network Interface** | Ethernet, Wi-Fi | Binary signal transmission over physical medium |
 
-**Key Protocols:**
+##### Key Protocols
+
 - **Application Layer**: HTTP (web browsing), FTP (file transfer), SMTP (email), DNS (domain name resolution)
 - **Transport Layer**: TCP (reliable, slower), UDP (unreliable, fast)
 - **Internet Layer**: IP (addressing), ICMP (error reporting), ARP (address resolution)
@@ -216,9 +236,13 @@ Practical implementation standard used in actual networking.
 | **Use Cases** | Gaming, voice calls, live streaming, DNS, IoT | File transfer, web browsing, email, payment, remote login |
 | **Requirements** | Low latency, high real-time requirements | High data integrity, acceptable delay |
 
-**TCP Use Cases:** File downloads/uploads, email, database synchronization, banking/payment transactions, online games with low latency tolerance (e.g., World of Warcraft).
+#### TCP Use Cases
 
-**UDP Use Cases:** Competitive gaming, video conferencing, live streaming, DNS queries, IoT devices.
+File downloads/uploads, email, database synchronization, banking/payment transactions, online games with low latency tolerance (e.g., World of Warcraft).
+
+#### UDP Use Cases
+
+Competitive gaming, video conferencing, live streaming, DNS queries, IoT devices.
 
 ### 1.3.2 Connection Analogy
 
@@ -243,7 +267,8 @@ All data (strings, numbers, containers) must be converted to byte sequences (bin
 | **encode** | Data → Binary | Converts human-readable data to transmittable binary format |
 | **decode** | Binary → Data | Converts binary data back to human-readable format |
 
-**Example:**
+#### Example
+
 ```
 "hello world" → b"hello world"
 "你好世界" → b'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
@@ -255,9 +280,12 @@ Byte sequences are indicated by the `b` prefix.
 
 Containers cannot be directly encoded. Must be converted to string first (e.g., JSON), then encoded to binary.
 
-**Process:** Container → String (JSON) → Binary Data
+#### Process
 
-**Example:**
+Container → String (JSON) → Binary Data
+
+#### Example
+
 ```python
 list1 = ['apple', 'banana', 'watermelon']
 # Step 1: Convert list to JSON string
