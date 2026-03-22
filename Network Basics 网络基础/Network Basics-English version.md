@@ -348,15 +348,36 @@ UDP socket is connectionless, with higher efficiency but no data transmission se
 #### 2.2.1.1 Create Socket
 
 ```python
-socket.socket(address_family, socket_type)
+socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-| Parameter | Value | Description |
-|-----------|-------|-------------|
-| `address_family` | `socket.AF_INET` | IPv4 |
-| `address_family` | `socket.AF_INET6` | IPv6 |
-| `socket_type` | `socket.SOCK_DGRAM` | UDP socket |
-| `socket_type` | `socket.SOCK_STREAM` | TCP socket |
+**`address_family`** — address type:
+
+| Value | Description |
+|-------|-------------|
+| `socket.AF_INET` | IPv4 (most common) |
+| `socket.AF_INET6` | IPv6 |
+| `socket.AF_UNIX` | Unix domain socket — IPC on the same machine (Linux/macOS only) |
+| `socket.AF_BLUETOOTH` | Bluetooth communication |
+
+**`socket_type`** — transport mode:
+
+| Value | Description |
+|-------|-------------|
+| `socket.SOCK_STREAM` | TCP: connection-oriented, reliable, stream-based |
+| `socket.SOCK_DGRAM` | UDP: connectionless, unreliable, datagram-based |
+| `socket.SOCK_RAW` | Raw socket: direct network-layer access; requires admin privileges; used for custom protocols or packet capture |
+| `socket.SOCK_SEQPACKET` | Ordered, reliable, connection-oriented datagrams (rarely used) |
+
+**`proto`** (optional, default `0`) — protocol number; system auto-selects from the first two args. Only specify when using `SOCK_RAW`:
+
+| Value | Description |
+|-------|-------------|
+| `socket.IPPROTO_TCP` (6) | TCP |
+| `socket.IPPROTO_UDP` (17) | UDP |
+| `socket.IPPROTO_ICMP` (1) | ICMP — used for `ping` |
+
+**`fileno`** (optional) — wraps an existing OS file descriptor into a socket object. Low-level system programming only; ignore in daily use.
 
 ```python
 import socket
