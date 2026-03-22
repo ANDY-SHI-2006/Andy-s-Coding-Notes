@@ -400,6 +400,18 @@ server.bind(('127.0.0.1', 8080))
 | `'127.0.0.1'` | IPv4 loopback (localhost) | Local access only, most reliable |
 | `'localhost'` | Hostname resolving to 127.0.0.1 | Development (requires hosts file) |
 | `'0.0.0.0'` | All network interfaces | Allow external/LAN access |
+| `''` | Empty string (same as `'0.0.0.0'`) | Allow all interfaces (shorthand) |
+| Specific IP | `'192.168.x.x'`, `'10.x.x.x'` | Bind to specific network interface |
+
+**IPv4 Format** (`AF_INET`):
+```python
+socket.bind((host, port))
+# Examples:
+# server.bind(('127.0.0.1', 8080))   # Local only
+# server.bind(('0.0.0.0', 8080))     # All interfaces
+# server.bind(('', 8080))            # All interfaces (shorthand)
+# server.bind(('192.168.1.10', 8080)) # Specific interface
+```
 
 > **Note:** `bind()` accepts a **single tuple argument** `(ip, port)` — note the double parentheses.
 
