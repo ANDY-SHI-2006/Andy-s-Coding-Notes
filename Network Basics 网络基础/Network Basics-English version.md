@@ -417,17 +417,29 @@ socket.bind((host, port))
 
 **Special Port Value:**
 - `port=0` — Let OS assign an available port automatically
+  ```python
+  server.bind(('127.0.0.1', 0))
+  actual_port = server.getsockname()[1]  # Get the assigned port
+  ```
+- Port range: 0-65535 (0-1023 are well-known ports, require admin privileges on Unix)
 
 **IPv6 Format** (`AF_INET6`):
 ```python
 socket.bind((host, port, flowinfo, scopeid))
-# Example: server.bind(('::1', 8080, 0, 0))
+# Examples:
+# server.bind(('::1', 8080, 0, 0))   # IPv6 loopback (localhost)
+# server.bind(('::', 8080, 0, 0))    # All IPv6 interfaces (:: is IPv6's '0.0.0.0')
 ```
 
 **Unix Domain Socket** (`AF_UNIX`):
 ```python
 socket.bind(path)  # Example: server.bind('/tmp/my_socket')
 ```
+
+**Key Points:**
+- **Must use tuple**: `bind(('127.0.0.1', 8080))` ✓, `bind('127.0.0.1', 8080)` ✗
+- **IPv6 loopback**: `'::1'` is equivalent to `'127.0.0.1'`
+- **IPv6 wildcard**: `'::'` is equivalent to `'0.0.0.0'`
 
 #### 2.2.1.3 Receive and Send
 
