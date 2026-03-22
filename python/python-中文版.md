@@ -145,12 +145,12 @@ print(id(a))    # a 的内存地址
 
 在一行中编写简单 if-else 语句的简洁方式。
 
-#### 3.2.1.1 语法：
+**语法：**
 ```python
 条件为真时的值 if 条件 else 条件为假时的值
 ```
 
-#### 3.2.1.2 示例：
+**示例：**
 ```python
 # 标准 if-else
 if age >= 18:
@@ -168,17 +168,17 @@ status = "adult" if age >= 18 else "minor"
 
 Python 允许将简单 `if` 语句写在一行。
 
-#### 3.2.2.1 语法：
+**语法：**
 ```python
 if 条件: 语句
 ```
 
-#### 3.2.2.2 限制：
+**限制：**
 - 语句必须是**简单的非复合语句**
 - 允许：赋值、函数调用、单表达式
 - 不允许：嵌套 `if`、循环或其他复合语句
 
-#### 3.2.2.3 示例：
+**示例：**
 ```python
 # 有效：单行简单语句
 if x > 0: print("positive")
@@ -193,7 +193,7 @@ if x > 0: print("positive")
 
 ### 3.3.1 for 循环
 
-#### 3.3.1.1 `range(start, stop, step)`：
+**`range(start, stop, step)`：**
 - **start**：起始值（含）。默认：0
 - **stop**：结束值（**不含**）
 - **step**：增量/减量。默认：1
@@ -565,7 +565,7 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 # list1[100] = "x"                # IndexError：越界
 ```
 
-#### 4.6.3.1 排序：
+**排序：**
 - `sort()` - 原地，修改原序列（仅列表）
 - `sorted()` - 返回新排序列表（适用于任何可迭代对象）
 
@@ -704,7 +704,7 @@ print(dict1.get("Unknown", 0)) # 0（默认值，无错误）
 # print(dict1["Unknown"])      # KeyError
 ```
 
-#### 5.2.1.1 获取所有键/值/项：
+**获取所有键/值/项：**
 
 | 方法 | 返回 | 使用场景 |
 |--------|---------|----------|
@@ -728,7 +728,7 @@ for key, value in dict1.items():
     print(f"{key}: {value}")  # A: 1, B: 2, C: 3
 ```
 
-#### 5.2.1.2 `dict.get()` - 安全访问：
+**`dict.get()` - 安全访问：**
 
 ```python
 # 语法：dict.get(key, default=None)
@@ -798,7 +798,6 @@ print(score_dict)                   # {'Alice': 80, 'Bob': 90, 'Charlie': 100}
 
 # 计算平均值
 avg_score = sum(score_dict.values()) / len(score_dict)
-```
 
 # 按性别统计
 gender_count = {}
@@ -1129,7 +1128,7 @@ for item in lst:            # 调用 iter()，然后重复调用 next()
     print(item)
 ```
 
-#### 7.2.5.1 可迭代对象 vs 迭代器：
+**可迭代对象 vs 迭代器：**
 - **可迭代对象：** 有 `__iter__()`（可多次循环）
 - **迭代器：** 有 `__iter__()` 和 `__next__()`（一次性使用）
 
@@ -1288,7 +1287,7 @@ file = open("data.txt", mode="r", encoding="utf-8")
 | `"w+"` | 写读（先截断） |
 | `"rb"`、 `"wb"` | 二进制模式 |
 
-### 9.1.1 路径类型：
+**路径类型：**
 - **相对：** `"./file.txt"` 或 `"../data/file.txt"`
 - **绝对：** `"C:/Users/name/file.txt"`（使用 `/` 跨平台）
 
@@ -1383,7 +1382,7 @@ with open("data.json", encoding="utf-8") as f:
 | UTF-8 | Unicode，变长 | 1-4（中文：3） |
 | GBK | 中文标准 | 1（英）、2（中） |
 
-### 9.7.1 存储单位：
+**存储单位：**
 - 1 字节 = 8 位
 - 1 KB = 1024 字节
 - 1 MB = 1024 KB
@@ -1639,6 +1638,6 @@ class Stack:
         return self.items.pop()
 ```
 
-#### 10.2.4.1 断言 vs 异常：
+**断言 vs 异常：**
 - **断言**：内部错误检查，可禁用
 - **异常**：预期的错误情况，始终处理

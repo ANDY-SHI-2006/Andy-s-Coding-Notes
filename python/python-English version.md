@@ -145,12 +145,12 @@ print(id(a))    # Memory address of a
 
 A concise way to write simple if-else statements in one line.
 
-#### 3.2.1.1 Syntax:
+**Syntax:**
 ```python
 value_if_true if condition else value_if_false
 ```
 
-#### 3.2.1.2 Example:
+**Example:**
 ```python
 # Standard if-else
 if age >= 18:
@@ -168,17 +168,17 @@ status = "adult" if age >= 18 else "minor"
 
 Python allows simple `if` statements to be written on a single line.
 
-#### 3.2.2.1 Syntax:
+**Syntax:**
 ```python
 if condition: statement
 ```
 
-#### 3.2.2.2 Constraints:
+**Constraints:**
 - The statement must be a **simple, non-compound statement**
 - Allowed: assignments, function calls, single expressions
 - Not allowed: nested `if`, loops, or other compound statements
 
-#### 3.2.2.3 Example:
+**Example:**
 ```python
 # Valid: simple statement on one line
 if x > 0: print("positive")
@@ -193,7 +193,7 @@ if x > 0: print("positive")
 
 ### 3.3.1 for Loop
 
-#### 3.3.1.1 `range(start, stop, step)`:
+**`range(start, stop, step)`:**
 - **start**: Starting value (inclusive). Default: 0
 - **stop**: Ending value (**exclusive**)
 - **step**: Increment/decrement. Default: 1
@@ -565,7 +565,7 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 # list1[100] = "x"                # IndexError: out of range
 ```
 
-#### 4.6.3.1 Sorting:
+**Sorting:**
 - `sort()` - In-place, modifies original (list only)
 - `sorted()` - Returns new sorted list (works on any iterable)
 
@@ -703,7 +703,7 @@ print(dict1.get("Unknown", 0)) # 0 (default, no error)
 # print(dict1["Unknown"])      # KeyError
 ```
 
-#### 5.2.1.1 Get All Keys/Values/Items:
+**Get All Keys/Values/Items:**
 
 | Method | Returns | Use Case |
 |--------|---------|----------|
@@ -727,7 +727,7 @@ for key, value in dict1.items():
     print(f"{key}: {value}")  # A: 1, B: 2, C: 3
 ```
 
-#### 5.2.1.2 `dict.get()` - Safe Access:
+**`dict.get()` - Safe Access:**
 
 ```python
 # Syntax: dict.get(key, default=None)
@@ -1124,7 +1124,7 @@ for item in lst:            # Calls iter(), then next() repeatedly
     print(item)
 ```
 
-#### 7.2.5.1 Iterable vs Iterator:
+**Iterable vs Iterator:**
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
@@ -1282,7 +1282,7 @@ file = open("data.txt", mode="r", encoding="utf-8")
 | `"w+"` | Write and read (truncate first) |
 | `"rb"`, `"wb"` | Binary mode |
 
-### 9.1.1 Path Types:
+**Path Types:**
 - **Relative:** `"./file.txt"` or `"../data/file.txt"`
 - **Absolute:** `"C:/Users/name/file.txt"` (use `/` for cross-platform)
 
@@ -1375,7 +1375,7 @@ with open("data.json", encoding="utf-8") as f:
 | UTF-8 | Unicode, variable length | 1-4 (Chinese: 3) |
 | GBK | Chinese standard | 1 (EN), 2 (CN) |
 
-### 9.7.1 Storage Units:
+**Storage Units:**
 - 1 Byte = 8 bits
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
@@ -1628,6 +1628,6 @@ class Stack:
         return self.items.pop()
 ```
 
-#### 10.2.4.1 Assertion vs Exception:
+**Assertion vs Exception:**
 - **Assertion**: Internal bug check, can be disabled
 - **Exception**: Expected error cases, always handled
