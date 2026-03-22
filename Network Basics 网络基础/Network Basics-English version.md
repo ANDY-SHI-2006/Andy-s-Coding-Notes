@@ -327,3 +327,102 @@ bytelist = str_list.encode()   # b'[...]'
 strinfo2 = bytelist.decode()   # JSON string
 list2 = json.loads(strinfo2)   # Original list
 ```
+
+## 1.5 Socket Programming Overview
+
+**Socket**: A technical means to implement network programming for data transmission. Most network services on the internet are based on Socket for communication. Sockets can be used with different network protocols, such as TCP/IP and UDP (transport layer tasks).
+
+- **UDP Socket**: Connectionless, data transmission is not secure, but has higher efficiency.
+- **TCP Socket**: Connection-oriented, data transmission is secure, stable, but relatively lower efficiency.
+
+Python socket programming module: `import socket`
+
+### 1.5.1 UDP Socket
+
+UDP socket is connectionless, with higher efficiency but no data transmission security guarantee.
+
+#### 1.5.1.1 UDP Server Workflow
+
+1. Create socket - returns a socket object
+2. Bind IP and port number - test address (127.0.0.1), port range 0-65535
+3. Receive and send messages
+4. Close socket
+
+#### 1.5.1.2 UDP Client Workflow
+
+1. Create socket - returns a socket object
+2. Send/receive messages - no need to bind address
+3. Close socket
+
+#### 1.5.1.3 UDP Socket Characteristics
+
+- **May experience data loss**
+- **Simple transmission process, easy to implement**
+- **Data transmitted in packets**
+- **High data transmission efficiency**
+- **Connectionless**: When sending data, the client's IP, port, and target IP/port must all be included in the packet.
+
+### 1.5.2 TCP Socket
+
+TCP socket is connection-oriented, providing secure and stable data transmission with relatively lower efficiency.
+
+#### 1.5.2.1 Connection-Oriented Transmission Service
+
+- Provides reliable data delivery: no loss, no disorder, no errors, no duplication during transmission
+- Has reliability guarantee mechanisms (automatically completed):
+  - Establish data connection before communication
+  - Acknowledgment response mechanism
+  - Normal disconnection after communication ends
+
+#### 1.5.2.2 Three-Way Handshake (Establish Connection)
+
+1. Client sends request packet to server requesting connection
+2. Server receives request and replies that connection is possible
+3. Client receives reply and sends packet again to establish connection
+
+**Terminology:**
+- **SYN**: Synchronization bit. When SYN = 1, it indicates a connection request
+- **ACK**: Acknowledgment bit. ACK = 1 means acknowledgment is valid, ACK = 0 means invalid
+- **ack**: Acknowledgment number = sequence number sent by the other party + 1
+- **seq**: Sequence number. Random, uncertain, non-fixed value
+
+#### 1.5.2.3 Four-Way Handshake (Disconnect)
+
+1. Active party sends packet requesting disconnection
+2. Passive party receives request and immediately replies, indicating preparation for disconnection
+3. Passive party is ready and sends packet again indicating disconnection is possible
+4. Active party receives confirmation and sends final packet to complete disconnection
+
+**Terminology:**
+- **FIN = 1**: Indicates request to disconnect
+
+#### 1.5.2.4 TCP Server Workflow
+
+1. Create socket (`socket.SOCK_STREAM`)
+2. Bind address (same as UDP)
+3. Set listening (`server.listen(5)`)
+4. Handle client connection requests (`server.accept()`)
+5. Message send/receive (using connection object)
+6. Close connection object
+7. Close socket (same as UDP)
+
+#### 1.5.2.5 TCP Client Workflow
+
+1. Create TCP socket (`socket.SOCK_STREAM`)
+2. Request connection (`client.connect((ip, port))`)
+3. Send/receive messages
+4. Close socket
+
+#### 1.5.2.6 TCP Socket Details
+
+- When one side exits in a TCP connection, if the other side is blocked in `recv`, `recv` will immediately return an empty string
+- If one side no longer exists and you still try to send data via `send`, it will raise `BrokenPipeError`
+- One server can be connected by multiple clients simultaneously
+- **TCP**: Suitable for scenarios requiring high accuracy and large data transmission:
+  - File transfer, data download, photo upload, website access
+  - Email sending/receiving
+  - Peer-to-peer data transmission: login, remote access, red packets, one-on-one chat
+- **UDP**: Suitable for scenarios with relatively low reliability requirements and free transmission:
+  - Video streaming: live streaming, video chat
+  - Broadcasting: network broadcast, mass messaging
+  - High real-time requirements: such as games
