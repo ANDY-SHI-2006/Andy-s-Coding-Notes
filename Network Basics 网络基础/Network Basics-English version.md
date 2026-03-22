@@ -398,14 +398,13 @@ server.bind(('127.0.0.1', 8080))
 socket.bind((host, port))
 
 # Address Options:
+
 # server.bind(('127.0.0.1', 8080))    # IPv4 loopback (localhost) - local access only, most reliable
 # server.bind(('localhost', 8080))    # Hostname resolving to 127.0.0.1 - development only
 # server.bind(('0.0.0.0', 8080))      # All network interfaces - allow external/LAN access
 # server.bind(('', 8080))             # Empty string, same as '0.0.0.0' - shorthand for all interfaces
 # server.bind(('192.168.1.10', 8080)) # Specific IP - bind to specific network interface
 ```
-
-> **Note:** `bind()` accepts a **single tuple argument** `(ip, port)` — note the double parentheses.
 
 **Special Port Value:**
 - `port=0` — Let OS assign an available port automatically
