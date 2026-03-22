@@ -401,6 +401,22 @@ server.bind(('127.0.0.1', 8080))
 | `'localhost'` | Hostname resolving to 127.0.0.1 | Development (requires hosts file) |
 | `'0.0.0.0'` | All network interfaces | Allow external/LAN access |
 
+> **Note:** `bind()` accepts a **single tuple argument** `(ip, port)` — note the double parentheses.
+
+**Special Port Value:**
+- `port=0` — Let OS assign an available port automatically
+
+**IPv6 Format** (`AF_INET6`):
+```python
+socket.bind((host, port, flowinfo, scopeid))
+# Example: server.bind(('::1', 8080, 0, 0))
+```
+
+**Unix Domain Socket** (`AF_UNIX`):
+```python
+socket.bind(path)  # Example: server.bind('/tmp/my_socket')
+```
+
 #### 2.2.1.3 Receive and Send
 
 ```python
