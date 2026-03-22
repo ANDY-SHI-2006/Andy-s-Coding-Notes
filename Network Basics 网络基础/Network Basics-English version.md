@@ -339,6 +339,19 @@ list2 = json.loads(strinfo2)   # Original list
 
 Python socket programming module: `import socket`
 
+### socket.socket() Constructor
+
+```python
+socket.socket(address_family, socket_type)
+```
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| `address_family` | `socket.AF_INET` | IPv4 |
+| `address_family` | `socket.AF_INET6` | IPv6 |
+| `socket_type` | `socket.SOCK_DGRAM` | UDP socket |
+| `socket_type` | `socket.SOCK_STREAM` | TCP socket |
+
 ## 2.2 UDP Socket
 
 UDP socket is connectionless, with higher efficiency but no data transmission security guarantee.
@@ -350,11 +363,51 @@ UDP socket is connectionless, with higher efficiency but no data transmission se
 3. Receive and send messages
 4. Close socket
 
+**Code:**
+```python
+import socket
+
+# 1. Create UDP socket
+# socket.AF_INET: IPv4    socket.SOCK_DGRAM: UDP
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # returns a socket object
+
+# 2. Bind IP and port
+server.bind(('127.0.0.1', 8888))
+
+# 3. Receive and send messages
+# recvfrom(bufsize) returns (data_bytes, (client_ip, client_port))
+data, client_addr = server.recvfrom(1024)
+print(f"Received from {client_addr}: {data.decode()}")
+
+server.sendto("Hello Client".encode(), client_addr)
+
+# 4. Close socket
+server.close()
+```
+
 ### 2.2.2 UDP Client Workflow
 
 1. Create socket - returns a socket object
 2. Send/receive messages - no need to bind address
 3. Close socket
+
+**Code:**
+```python
+import socket
+
+# 1. Create UDP socket (no bind needed)
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# 2. Send message - must specify target (ip, port) in sendto()
+client.sendto("Hello Server".encode(), ('127.0.0.1', 8888))
+
+# Receive response
+data, server_addr = client.recvfrom(1024)
+print(f"Received: {data.decode()}")
+
+# 3. Close socket
+client.close()
+```
 
 ### 2.2.3 UDP Socket Characteristics
 
@@ -408,12 +461,62 @@ TCP socket is connection-oriented, providing secure and stable data transmission
 6. Close connection object
 7. Close socket (same as UDP)
 
+**Code:**
+```python
+import socket
+
+# 1. Create TCP socket
+# socket.SOCK_STREAM: TCP
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# 2. Bind address
+server.bind(('127.0.0.1', 8888))
+
+# 3. Start listening (max 5 pending connections in queue)
+server.listen(5)
+
+# 4. Accept client connection (blocks until a client connects)
+# accept() returns (connection_object, (client_ip, client_port))
+conn, client_addr = server.accept()
+print(f"Connected by {client_addr}")
+
+# 5. Send/receive using the connection object (not server)
+data = conn.recv(1024)           # recv() - no address needed (connection-oriented)
+print(f"Received: {data.decode()}")
+conn.send("Hello Client".encode())
+
+# 6. Close connection object
+conn.close()
+
+# 7. Close server socket
+server.close()
+```
+
 ### 2.3.5 TCP Client Workflow
 
 1. Create TCP socket (`socket.SOCK_STREAM`)
 2. Request connection (`client.connect((ip, port))`)
 3. Send/receive messages
 4. Close socket
+
+**Code:**
+```python
+import socket
+
+# 1. Create TCP socket
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# 2. Connect to server (three-way handshake happens here automatically)
+client.connect(('127.0.0.1', 8888))
+
+# 3. Send/receive (no address needed - already connected)
+client.send("Hello Server".encode())
+data = client.recv(1024)
+print(f"Received: {data.decode()}")
+
+# 4. Close socket (four-way handshake happens here automatically)
+client.close()
+```
 
 ### 2.3.6 TCP Socket Details
 
@@ -428,3 +531,17 @@ TCP socket is connection-oriented, providing secure and stable data transmission
   - Video streaming: live streaming, video chat
   - Broadcasting: network broadcast, mass messaging
   - High real-time requirements: such as games
+
+## 2.4 UDP vs TCP API Comparison
+
+| Step | UDP | TCP |
+|------|-----|-----|
+| **Create socket** | `socket.SOCK_DGRAM` | `socket.SOCK_STREAM` |
+| **Server bind** | `server.bind((ip, port))` | `server.bind((ip, port))` |
+| **Server listen** | ❌ Not needed | `server.listen(n)` |
+| **Server accept** | ❌ Not needed | `conn, addr = server.accept()` |
+| **Send** | `socket.sendto(data, (ip, port))` | `socket.send(data)` |
+| **Receive** | `data, addr = socket.recvfrom(n)` | `data = socket.recv(n)` |
+| **Close** | `socket.close()` | `conn.close()` then `server.close()` |
+
+> **Key difference**: UDP `sendto`/`recvfrom` always carry the address; TCP `send`/`recv` don't need it because the connection is already established.
