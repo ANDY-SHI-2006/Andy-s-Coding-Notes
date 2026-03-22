@@ -358,25 +358,25 @@ UDP socket is connectionless, with higher efficiency but no data transmission se
 
 ### 2.2.1 UDP Server Workflow
 
-1. Create socket - returns a socket object
-2. Bind IP and port number - test address (127.0.0.1), port range 0-65535
-3. Receive and send messages
-4. Close socket
+#### 2.2.1.1 Create Socket
 
-**Code:**
 ```python
 import socket
 
-# 1. Create UDP socket
 # socket.AF_INET: IPv4    socket.SOCK_DGRAM: UDP
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # returns a socket object
 ```
+
+#### 2.2.1.2 Bind IP and Port
+
 ```python
-# 2. Bind IP and port  (bind takes a single tuple argument)
+# bind takes a single tuple argument: (ip, port)
 server.bind(('127.0.0.1', 8080))
 ```
+
+#### 2.2.1.3 Receive and Send
+
 ```python
-# 3. Receive and send
 # recvfrom() BLOCKS here until a message arrives
 # returns (data_bytes, (client_ip, client_port))
 info, addr = server.recvfrom(1024)   # 1024 = max bytes per receive
@@ -385,8 +385,10 @@ print(f"From: {addr}")
 
 server.sendto("Reply from server".encode(), addr)  # must pass addr back
 ```
+
+#### 2.2.1.4 Close Socket
+
 ```python
-# 4. Close socket
 server.close()
 ```
 
@@ -402,29 +404,29 @@ server.close()
 
 ### 2.2.2 UDP Client Workflow
 
-1. Create socket - returns a socket object
-2. Send/receive messages - no need to bind address
-3. Close socket
+#### 2.2.2.1 Create Socket
 
-**Code:**
 ```python
 import socket
 
-# 1. Create UDP socket (no bind needed for client)
+# No bind needed for client
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 ```
+
+#### 2.2.2.2 Send and Receive
+
 ```python
-# 2. Send message
 # sendto: 1st arg = data (bytes), 2nd arg = target (ip, port) tuple
 msg = input("Message: ")
 client.sendto(msg.encode(), ('127.0.0.1', 8080))
 
-# Receive response
 info, addr = client.recvfrom(1024)
 print(f"Server reply: {info.decode()}")
 ```
+
+#### 2.2.2.3 Close Socket
+
 ```python
-# 3. Close socket
 client.close()
 ```
 
@@ -484,47 +486,50 @@ TCP socket is connection-oriented, providing secure and stable data transmission
 
 ### 2.3.4 TCP Server Workflow
 
-1. Create socket (`socket.SOCK_STREAM`)
-2. Bind address (same as UDP)
-3. Set listening (`server.listen(5)`)
-4. Handle client connection requests (`server.accept()`)
-5. Message send/receive (using connection object)
-6. Close connection object
-7. Close socket (same as UDP)
+#### 2.3.4.1 Create Socket
 
-**Code:**
 ```python
 import socket
 
-# 1. Create TCP socket  (SOCK_STREAM = TCP)
+# SOCK_STREAM = TCP
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ```
+
+#### 2.3.4.2 Bind Address
+
 ```python
-# 2. Bind address
 server.bind(('127.0.0.1', 9090))
 ```
+
+#### 2.3.4.3 Set Listening
+
 ```python
-# 3. Start listening (max pending connections in queue)
-server.listen(5)
+server.listen(5)  # max pending connections in queue
 ```
+
+#### 2.3.4.4 Accept Connection
+
 ```python
-# 4. Accept client connection (three-way handshake happens here, BLOCKS)
+# BLOCKS until a client connects (three-way handshake happens here)
 # accept() returns (conn_object, (client_ip, client_port))
-# conn = connection object — all future send/recv use this, NOT server
+# conn = connection object — all future send/recv use conn, NOT server
 conn, addr = server.accept()
 print(f"Connected by {addr}")
 ```
+
+#### 2.3.4.5 Send and Receive
+
 ```python
-# 5. Send/receive via connection object
 info = conn.recv(1024)           # recv() — no address needed (connection-oriented)
 print(f"Received: {info.decode()}")
 conn.send("Hello from server".encode())
 ```
+
+#### 2.3.4.6 Close
+
 ```python
-# 6. Close connection object  (four-way handshake)
-conn.close()
-# 7. Close server socket
-server.close()
+conn.close()     # close connection object (four-way handshake)
+server.close()   # close server socket
 ```
 
 **Loop pattern + disconnect detection:**
@@ -543,33 +548,36 @@ server.close()
 
 ### 2.3.5 TCP Client Workflow
 
-1. Create TCP socket (`socket.SOCK_STREAM`)
-2. Request connection (`client.connect((ip, port))`)
-3. Send/receive messages
-4. Close socket
+#### 2.3.5.1 Create Socket
 
-**Code:**
 ```python
 import socket
 
-# 1. Create TCP socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ```
+
+#### 2.3.5.2 Connect to Server
+
 ```python
-# 2. Connect to server  (three-way handshake triggers automatically)
 # connect() takes a single tuple: (server_ip, server_port)
+# three-way handshake triggers automatically
 client.connect(('127.0.0.1', 9090))
 ```
+
+#### 2.3.5.3 Send and Receive
+
 ```python
-# 3. Send/receive  (no address needed — already connected)
+# No address needed — already connected
 msg = input("Message: ")
 client.send(msg.encode())   # send(): only one arg, data must be bytes
 data = client.recv(1024)
 print(f"Server reply: {data.decode()}")
 ```
+
+#### 2.3.5.4 Close Socket
+
 ```python
-# 4. Close socket  (four-way handshake triggers automatically)
-client.close()
+client.close()   # four-way handshake triggers automatically
 ```
 
 **Loop pattern + empty string guard:**
