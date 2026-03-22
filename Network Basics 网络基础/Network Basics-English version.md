@@ -328,7 +328,7 @@ strinfo2 = bytelist.decode()   # JSON string
 list2 = json.loads(strinfo2)   # Original list
 ```
 
-## 1.5 Socket Programming Overview
+# 2. Socket Programming
 
 **Socket**: A technical means to implement network programming for data transmission. Most network services on the internet are based on Socket for communication. Sockets can be used with different network protocols, such as TCP/IP and UDP (transport layer tasks).
 
@@ -337,24 +337,24 @@ list2 = json.loads(strinfo2)   # Original list
 
 Python socket programming module: `import socket`
 
-### 1.5.1 UDP Socket
+## 2.1 UDP Socket
 
 UDP socket is connectionless, with higher efficiency but no data transmission security guarantee.
 
-#### 1.5.1.1 UDP Server Workflow
+### 2.1.1 UDP Server Workflow
 
 1. Create socket - returns a socket object
 2. Bind IP and port number - test address (127.0.0.1), port range 0-65535
 3. Receive and send messages
 4. Close socket
 
-#### 1.5.1.2 UDP Client Workflow
+### 2.1.2 UDP Client Workflow
 
 1. Create socket - returns a socket object
 2. Send/receive messages - no need to bind address
 3. Close socket
 
-#### 1.5.1.3 UDP Socket Characteristics
+### 2.1.3 UDP Socket Characteristics
 
 - **May experience data loss**
 - **Simple transmission process, easy to implement**
@@ -362,11 +362,11 @@ UDP socket is connectionless, with higher efficiency but no data transmission se
 - **High data transmission efficiency**
 - **Connectionless**: When sending data, the client's IP, port, and target IP/port must all be included in the packet.
 
-### 1.5.2 TCP Socket
+## 2.2 TCP Socket
 
 TCP socket is connection-oriented, providing secure and stable data transmission with relatively lower efficiency.
 
-#### 1.5.2.1 Connection-Oriented Transmission Service
+### 2.2.1 Connection-Oriented Transmission Service
 
 - Provides reliable data delivery: no loss, no disorder, no errors, no duplication during transmission
 - Has reliability guarantee mechanisms (automatically completed):
@@ -374,7 +374,7 @@ TCP socket is connection-oriented, providing secure and stable data transmission
   - Acknowledgment response mechanism
   - Normal disconnection after communication ends
 
-#### 1.5.2.2 Three-Way Handshake (Establish Connection)
+### 2.2.2 Three-Way Handshake (Establish Connection)
 
 1. Client sends request packet to server requesting connection
 2. Server receives request and replies that connection is possible
@@ -386,7 +386,7 @@ TCP socket is connection-oriented, providing secure and stable data transmission
 - **ack**: Acknowledgment number = sequence number sent by the other party + 1
 - **seq**: Sequence number. Random, uncertain, non-fixed value
 
-#### 1.5.2.3 Four-Way Handshake (Disconnect)
+### 2.2.3 Four-Way Handshake (Disconnect)
 
 1. Active party sends packet requesting disconnection
 2. Passive party receives request and immediately replies, indicating preparation for disconnection
@@ -396,7 +396,7 @@ TCP socket is connection-oriented, providing secure and stable data transmission
 **Terminology:**
 - **FIN = 1**: Indicates request to disconnect
 
-#### 1.5.2.4 TCP Server Workflow
+### 2.2.4 TCP Server Workflow
 
 1. Create socket (`socket.SOCK_STREAM`)
 2. Bind address (same as UDP)
@@ -406,14 +406,14 @@ TCP socket is connection-oriented, providing secure and stable data transmission
 6. Close connection object
 7. Close socket (same as UDP)
 
-#### 1.5.2.5 TCP Client Workflow
+### 2.2.5 TCP Client Workflow
 
 1. Create TCP socket (`socket.SOCK_STREAM`)
 2. Request connection (`client.connect((ip, port))`)
 3. Send/receive messages
 4. Close socket
 
-#### 1.5.2.6 TCP Socket Details
+### 2.2.6 TCP Socket Details
 
 - When one side exits in a TCP connection, if the other side is blocked in `recv`, `recv` will immediately return an empty string
 - If one side no longer exists and you still try to send data via `send`, it will raise `BrokenPipeError`
