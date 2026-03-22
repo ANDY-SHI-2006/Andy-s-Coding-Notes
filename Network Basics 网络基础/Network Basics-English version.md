@@ -370,18 +370,33 @@ import socket
 # 1. Create UDP socket
 # socket.AF_INET: IPv4    socket.SOCK_DGRAM: UDP
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # returns a socket object
+```
+```python
+# 2. Bind IP and port  (bind takes a single tuple argument)
+server.bind(('127.0.0.1', 8080))
+```
+```python
+# 3. Receive and send
+# recvfrom() BLOCKS here until a message arrives
+# returns (data_bytes, (client_ip, client_port))
+info, addr = server.recvfrom(1024)   # 1024 = max bytes per receive
+print(f"Message: {info.decode()}")
+print(f"From: {addr}")
 
-# 2. Bind IP and port
-server.bind(('127.0.0.1', 8888))
-
-# 3. Receive and send messages
-# recvfrom(bufsize) returns (data_bytes, (client_ip, client_port))
-data, client_addr = server.recvfrom(1024)
-print(f"Received from {client_addr}: {data.decode()}")
-
-server.sendto("Hello Client".encode(), client_addr)
-
+server.sendto("Reply from server".encode(), addr)  # must pass addr back
+```
+```python
 # 4. Close socket
+server.close()
+```
+
+**Loop pattern (continuous receive):**
+```python
+while True:
+    info, addr = server.recvfrom(1024)
+    if info.decode() == 'exit':
+        break
+    server.sendto("Reply".encode(), addr)
 server.close()
 ```
 
@@ -395,17 +410,33 @@ server.close()
 ```python
 import socket
 
-# 1. Create UDP socket (no bind needed)
+# 1. Create UDP socket (no bind needed for client)
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-# 2. Send message - must specify target (ip, port) in sendto()
-client.sendto("Hello Server".encode(), ('127.0.0.1', 8888))
+```
+```python
+# 2. Send message
+# sendto: 1st arg = data (bytes), 2nd arg = target (ip, port) tuple
+msg = input("Message: ")
+client.sendto(msg.encode(), ('127.0.0.1', 8080))
 
 # Receive response
-data, server_addr = client.recvfrom(1024)
-print(f"Received: {data.decode()}")
-
+info, addr = client.recvfrom(1024)
+print(f"Server reply: {info.decode()}")
+```
+```python
 # 3. Close socket
+client.close()
+```
+
+**Loop pattern (continuous send):**
+```python
+while True:
+    msg = input("Message: ")
+    client.sendto(msg.encode(), ('127.0.0.1', 8080))
+    if msg == 'exit':
+        break
+    info, addr = client.recvfrom(1024)
+    print(f"Server reply: {info.decode()}")
 client.close()
 ```
 
@@ -465,30 +496,48 @@ TCP socket is connection-oriented, providing secure and stable data transmission
 ```python
 import socket
 
-# 1. Create TCP socket
-# socket.SOCK_STREAM: TCP
+# 1. Create TCP socket  (SOCK_STREAM = TCP)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+```
+```python
 # 2. Bind address
-server.bind(('127.0.0.1', 8888))
-
-# 3. Start listening (max 5 pending connections in queue)
+server.bind(('127.0.0.1', 9090))
+```
+```python
+# 3. Start listening (max pending connections in queue)
 server.listen(5)
-
-# 4. Accept client connection (blocks until a client connects)
-# accept() returns (connection_object, (client_ip, client_port))
-conn, client_addr = server.accept()
-print(f"Connected by {client_addr}")
-
-# 5. Send/receive using the connection object (not server)
-data = conn.recv(1024)           # recv() - no address needed (connection-oriented)
-print(f"Received: {data.decode()}")
-conn.send("Hello Client".encode())
-
-# 6. Close connection object
+```
+```python
+# 4. Accept client connection (three-way handshake happens here, BLOCKS)
+# accept() returns (conn_object, (client_ip, client_port))
+# conn = connection object — all future send/recv use this, NOT server
+conn, addr = server.accept()
+print(f"Connected by {addr}")
+```
+```python
+# 5. Send/receive via connection object
+info = conn.recv(1024)           # recv() — no address needed (connection-oriented)
+print(f"Received: {info.decode()}")
+conn.send("Hello from server".encode())
+```
+```python
+# 6. Close connection object  (four-way handshake)
 conn.close()
-
 # 7. Close server socket
+server.close()
+```
+
+**Loop pattern + disconnect detection:**
+```python
+while True:
+    info = conn.recv(1024)
+    if info.decode() == '':      # client disconnected unexpectedly → recv returns empty string
+        print("Client disconnected")
+        break
+    if info.decode() == 'exit':  # client sent exit signal
+        break
+    conn.send("Reply".encode())
+conn.close()
 server.close()
 ```
 
@@ -505,16 +554,35 @@ import socket
 
 # 1. Create TCP socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# 2. Connect to server (three-way handshake happens here automatically)
-client.connect(('127.0.0.1', 8888))
-
-# 3. Send/receive (no address needed - already connected)
-client.send("Hello Server".encode())
+```
+```python
+# 2. Connect to server  (three-way handshake triggers automatically)
+# connect() takes a single tuple: (server_ip, server_port)
+client.connect(('127.0.0.1', 9090))
+```
+```python
+# 3. Send/receive  (no address needed — already connected)
+msg = input("Message: ")
+client.send(msg.encode())   # send(): only one arg, data must be bytes
 data = client.recv(1024)
-print(f"Received: {data.decode()}")
+print(f"Server reply: {data.decode()}")
+```
+```python
+# 4. Close socket  (four-way handshake triggers automatically)
+client.close()
+```
 
-# 4. Close socket (four-way handshake happens here automatically)
+**Loop pattern + empty string guard:**
+```python
+while True:
+    msg = input("Message: ")
+    if msg == '':               # ⚠ cannot send empty string — causes issues
+        continue
+    client.send(msg.encode())
+    if msg == 'exit':
+        break
+    data = client.recv(1024)
+    print(f"Server reply: {data.decode()}")
 client.close()
 ```
 
@@ -523,6 +591,8 @@ client.close()
 - When one side exits in a TCP connection, if the other side is blocked in `recv`, `recv` will immediately return an empty string
 - If one side no longer exists and you still try to send data via `send`, it will raise `BrokenPipeError`
 - One server can be connected by multiple clients simultaneously
+- **`recv(n)` reads from a buffer** — reads at most n bytes; excess data stays in the buffer for the next `recv` call (no data loss, no error)
+- **Cannot send empty string** — `client.send("".encode())` causes issues; always validate input before sending
 - **TCP**: Suitable for scenarios requiring high accuracy and large data transmission:
   - File transfer, data download, photo upload, website access
   - Email sending/receiving
