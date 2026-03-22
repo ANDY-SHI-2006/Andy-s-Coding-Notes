@@ -206,6 +206,26 @@ Establishes unified communication standards, reduces development difficulty thro
 
 Overly idealistic, structurally too complex for practical engineering implementation.
 
+#### OSI vs TCP/IP Layer Mapping
+
+| OSI Layer | OSI Name | TCP/IP Layer | TCP/IP Name | Merged? |
+|-----------|----------|--------------|-------------|---------|
+| 7 | Application | 4 | Application | ✅ Merged |
+| 6 | Presentation | 4 | Application | ✅ Merged |
+| 5 | Session | 4 | Application | ✅ Merged |
+| 4 | Transport | 3 | Transport | ❌ Same |
+| 3 | Network | 2 | Internet | ❌ Same (renamed) |
+| 2 | Data Link | 1 | Network Interface | ✅ Merged |
+| 1 | Physical | 1 | Network Interface | ✅ Merged |
+
+**TCP/IP merges OSI layers as follows:**
+- **Application Layer (4)**: Combines OSI Application + Presentation + Session layers
+- **Transport Layer (3)**: Directly corresponds to OSI Transport layer
+- **Internet Layer (2)**: Corresponds to OSI Network layer
+- **Network Interface Layer (1)**: Combines OSI Data Link + Physical layers
+
+> **Key Insight:** TCP/IP simplifies the 7-layer OSI model into 4 layers by merging the top 3 layers (Application/Presentation/Session) into one Application layer, and merging the bottom 2 layers (Data Link/Physical) into one Network Interface layer.
+
 #### TCP/IP Model (4 Layers)
 
 Practical implementation standard used in actual networking.
