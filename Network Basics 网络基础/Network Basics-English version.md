@@ -339,7 +339,13 @@ list2 = json.loads(strinfo2)   # Original list
 
 Python socket programming module: `import socket`
 
-### socket.socket() Constructor
+## 2.2 UDP Socket
+
+UDP socket is connectionless, with higher efficiency but no data transmission security guarantee.
+
+### 2.2.1 UDP Server Workflow
+
+#### 2.2.1.1 Create Socket
 
 ```python
 socket.socket(address_family, socket_type)
@@ -351,14 +357,6 @@ socket.socket(address_family, socket_type)
 | `address_family` | `socket.AF_INET6` | IPv6 |
 | `socket_type` | `socket.SOCK_DGRAM` | UDP socket |
 | `socket_type` | `socket.SOCK_STREAM` | TCP socket |
-
-## 2.2 UDP Socket
-
-UDP socket is connectionless, with higher efficiency but no data transmission security guarantee.
-
-### 2.2.1 UDP Server Workflow
-
-#### 2.2.1.1 Create Socket
 
 ```python
 import socket
