@@ -162,7 +162,7 @@ else:
 status = "adult" if age >= 18 else "minor"
 ```
 
-**Use Case:** Best for simple conditional assignments. For complex logic, use standard if-else for readability.
+##### Use Case: Best for simple conditional assignments. For complex logic, use standard if-else for readability.
 
 ### 3.2.2 Single-line if Statement
 
@@ -187,7 +187,7 @@ if x > 0: print("positive")
 # if x > 0: if y > 0: print("both positive")  # SyntaxError
 ```
 
-**Note:** Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
+##### Note: Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
 
 ## 3.3 Loop Structures
 
@@ -227,7 +227,7 @@ else:
     print("Not found - loop completed normally")
 ```
 
-**Use Case:** Useful for search operations where you want to know if the item was not found.
+##### Use Case: Useful for search operations where you want to know if the item was not found.
 
 # 4. Sequences
 
@@ -314,9 +314,9 @@ print(max("Apple", "banana", key=str.lower))
 
 ## 4.2 List Comprehensions
 
-**Only available for lists** - A flexible and powerful way to create lists concisely.
+#### Only available for lists - A flexible and powerful way to create lists concisely.
 
-**Syntax:** `[expression for item in iterable]`
+#### Syntax: `[expression for item in iterable]`
 
 ```python
 # Generate a list of integers from 1 to 10
@@ -339,9 +339,9 @@ print(list3)  # [2, 4, 6, 8, 10]
 
 ## 4.3 sorted() and .sort() Methods
 
-**`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
+#### `sorted()`: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
-**`.sort()`**: Modifies the list **in-place** (not recommended; use `sorted()` instead).
+#### `.sort()`: Modifies the list **in-place** (not recommended; use `sorted()` instead).
 
 ```python
 list1 = [11, 25, 3, 0, -1, 99]
@@ -365,12 +365,12 @@ new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 
 ## 4.4 Mutable and Immutable Types
 
-**Mutable Types:** Lists, Dictionaries, Sets
+#### Mutable Types: Lists, Dictionaries, Sets
 
 - Can be modified after creation
 - Internal values change, but **memory address remains the same**
 
-**Immutable Types:** Integers, Strings, Tuples, Booleans, Floats
+#### Immutable Types: Integers, Strings, Tuples, Booleans, Floats
 
 - Cannot be modified after creation
 - Attempting to modify actually creates a **new object** with a different memory address
@@ -776,7 +776,7 @@ for name, code in dict1.items():
 
 ### 5.2.3 Nested Dictionaries
 
-**Structure:** Key can be any immutable type; Value can be any type (including dict).
+#### Structure: Key can be any immutable type; Value can be any type (including dict).
 
 ```python
 # Nested structure: students with scores
@@ -1030,13 +1030,13 @@ list(map(lambda x: x * 2, [1, 2, 3]))      # [2, 4, 6]
 list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 ```
 
-**Note:** Lambda doesn't improve performance; use `def` for complex logic.
+##### Note: Lambda doesn't improve performance; use `def` for complex logic.
 
 ## 7.2 Higher-Order Functions
 
 ### 7.2.1 Introduction
 
-**Higher-Order Function:** Takes function as argument or returns function.
+#### Higher-Order Function: Takes function as argument or returns function.
 
 | Built-in HOF | Purpose |
 |-------------|---------|
@@ -1164,7 +1164,7 @@ fib = fibonacci()
 
 ## 8.1 Closures
 
-**Closure:** A nested function that references variables from its enclosing scope and is returned from the outer function.
+#### Closure: A nested function that references variables from its enclosing scope and is returned from the outer function.
 
 | Condition | Description |
 |-----------|-------------|
@@ -1191,7 +1191,7 @@ c2()                        # 1
 
 ## 8.2 Decorators
 
-**Decorator:** A function that wraps another function to extend its behavior without modifying it.
+#### Decorator: A function that wraps another function to extend its behavior without modifying it.
 
 ### 8.2.1 Decorator 1.0 (Basic Template)
 
