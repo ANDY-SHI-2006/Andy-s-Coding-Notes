@@ -393,12 +393,13 @@ server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # returns a socket ob
 server.bind(('127.0.0.1', 8080))
 ```
 
-> **Bind Address Options:**
-> | Address | Description | Use Case |
-> |---------|-------------|----------|
-> | `'127.0.0.1'` | IPv4 loopback (localhost) | Local access only, most reliable |
-> | `'localhost'` | Hostname resolving to 127.0.0.1 | Development (requires hosts file) |
-> | `'0.0.0.0'` | All network interfaces | Allow external/LAN access |
+**Bind Address Options:**
+
+| Address | Description | Use Case |
+|---------|-------------|----------|
+| `'127.0.0.1'` | IPv4 loopback (localhost) | Local access only, most reliable |
+| `'localhost'` | Hostname resolving to 127.0.0.1 | Development (requires hosts file) |
+| `'0.0.0.0'` | All network interfaces | Allow external/LAN access |
 
 #### 2.2.1.3 Receive and Send
 
