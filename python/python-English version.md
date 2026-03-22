@@ -116,11 +116,11 @@ Identity operators compare memory addresses (identity), not just values.
 | `is` | Returns `True` if both operands refer to the same object in memory | `x is y` |
 | `is not` | Returns `True` if operands refer to different objects | `x is not y` |
 
-**`id()` Function**
+#### `id()` Function
 - Returns the memory address (identity) of an object
 - `id(x) == id(y)` is equivalent to `x is y`
 
-**Key Difference**
+##### Key Difference
 - `==` compares **values** (equality)
 - `is` compares **memory addresses** (identity)
 
@@ -145,12 +145,12 @@ print(id(a))    # Memory address of a
 
 A concise way to write simple if-else statements in one line.
 
-**Syntax:**
+#### Syntax:
 ```python
 value_if_true if condition else value_if_false
 ```
 
-**Example:**
+#### Example:
 ```python
 # Standard if-else
 if age >= 18:
@@ -168,17 +168,17 @@ status = "adult" if age >= 18 else "minor"
 
 Python allows simple `if` statements to be written on a single line.
 
-**Syntax:**
+#### Syntax:
 ```python
 if condition: statement
 ```
 
-**Constraints:**
+#### Constraints:
 - The statement must be a **simple, non-compound statement**
 - Allowed: assignments, function calls, single expressions
 - Not allowed: nested `if`, loops, or other compound statements
 
-**Example:**
+#### Example:
 ```python
 # Valid: simple statement on one line
 if x > 0: print("positive")
@@ -193,7 +193,7 @@ if x > 0: print("positive")
 
 ### 3.3.1 for Loop
 
-**`range(start, stop, step)`:**
+#### `range(start, stop, step)`:
 - **start**: Starting value (inclusive). Default: 0
 - **stop**: Ending value (**exclusive**)
 - **step**: Increment/decrement. Default: 1
@@ -332,7 +332,7 @@ list3 = [i for i in range(1, 11) if i % 2 == 0]
 print(list3)  # [2, 4, 6, 8, 10]
 ```
 
-**Key Points:**
+#### Key Points:
 - Wrap the entire expression in square brackets `[]`
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
@@ -399,7 +399,7 @@ a = 30                # Creates a NEW integer object
 print(id(a))          # Different address: 140234567900
 ```
 
-**Identity vs Equality Comparison:**
+#### Identity vs Equality Comparison:
 
 ```python
 # Lists (mutable) - different objects with same values
@@ -565,7 +565,7 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 # list1[100] = "x"                # IndexError: out of range
 ```
 
-**Sorting:**
+#### Sorting:
 - `sort()` - In-place, modifies original (list only)
 - `sorted()` - Returns new sorted list (works on any iterable)
 
@@ -703,7 +703,7 @@ print(dict1.get("Unknown", 0)) # 0 (default, no error)
 # print(dict1["Unknown"])      # KeyError
 ```
 
-**Get All Keys/Values/Items:**
+#### Get All Keys/Values/Items:
 
 | Method | Returns | Use Case |
 |--------|---------|----------|
@@ -727,7 +727,7 @@ for key, value in dict1.items():
     print(f"{key}: {value}")  # A: 1, B: 2, C: 3
 ```
 
-**`dict.get()` - Safe Access:**
+#### `dict.get()` - Safe Access:
 
 ```python
 # Syntax: dict.get(key, default=None)
@@ -896,7 +896,7 @@ universal(1, 2, 3, name="Alice", age=20)
 
 ## 6.3 Summary
 
-**Parameter Order:**
+### Parameter Order
 ```
 def fn(regular, default=val, *args, **kwargs):
     pass
@@ -1124,7 +1124,7 @@ for item in lst:            # Calls iter(), then next() repeatedly
     print(item)
 ```
 
-**Iterable vs Iterator:**
+#### Iterable vs Iterator:
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
@@ -1282,7 +1282,7 @@ file = open("data.txt", mode="r", encoding="utf-8")
 | `"w+"` | Write and read (truncate first) |
 | `"rb"`, `"wb"` | Binary mode |
 
-**Path Types:**
+#### Path Types:
 - **Relative:** `"./file.txt"` or `"../data/file.txt"`
 - **Absolute:** `"C:/Users/name/file.txt"` (use `/` for cross-platform)
 
@@ -1317,7 +1317,7 @@ with open("log.txt", "a", encoding="utf-8") as f:
 
 ## 9.4 Closing Files
 
-**Always close files to free system resources:**
+#### Always close files to free system resources:
 
 ```python
 # Method 1: Manual close
@@ -1375,7 +1375,7 @@ with open("data.json", encoding="utf-8") as f:
 | UTF-8 | Unicode, variable length | 1-4 (Chinese: 3) |
 | GBK | Chinese standard | 1 (EN), 2 (CN) |
 
-**Storage Units:**
+#### Storage Units:
 - 1 Byte = 8 bits
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
@@ -1628,6 +1628,6 @@ class Stack:
         return self.items.pop()
 ```
 
-**Assertion vs Exception:**
+#### Assertion vs Exception:
 - **Assertion**: Internal bug check, can be disabled
 - **Exception**: Expected error cases, always handled
