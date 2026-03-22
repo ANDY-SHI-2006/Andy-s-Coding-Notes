@@ -422,7 +422,7 @@ print(t1 == t2)        # True (same values)
 
 ## 4.5 Common String Methods
 
-### 4.5.1 find() 猸?
+### 4.5.1 find() ⭐
 
 | Method | Returns | Not Found | Parameters |
 |--------|---------|-----------|------------|
@@ -471,7 +471,7 @@ str1.count("on")         # 3
 "Hello".upper()          # "HELLO"
 ```
 
-### 4.5.5 split() 猸愨瓙
+### 4.5.5 split() ⭐⭐
 
 | Method | Description | Default Delimiter |
 |--------|-------------|-------------------|
@@ -483,7 +483,7 @@ str1.count("on")         # 3
 # "".split()             # ValueError
 ```
 
-### 4.5.6 replace() 猸愨瓙
+### 4.5.6 replace() ⭐⭐
 
 | Method | Description | Note |
 |--------|-------------|------|
