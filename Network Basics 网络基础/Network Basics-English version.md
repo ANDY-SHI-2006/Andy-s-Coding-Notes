@@ -4,7 +4,7 @@
 
 Two primary network architectures: **C/S** and **B/S**.
 
-### C/S: Client / Server
+### 1.1.1 C/S: Client / Server
 Requires downloading a client application to use.
 
 | Aspect | Description |
@@ -13,19 +13,19 @@ Requires downloading a client application to use.
 | **Server** | 24/7 standby, responds to requests (e.g., Tencent WeChat Server) |
 | **Use Cases** | Games, Banking Apps (high performance & security needs) |
 
-#### Pros
+#### 1.1.1.1 Pros
 
 - Excellent UX: rich graphics/audio stored locally
 - Offline capability (single-player games, document editing)
 - Better security, data can be stored locally
 
-#### Cons
+#### 1.1.1.2 Cons
 
 - Higher dev/maintenance cost (client + server)
 - Users must download updates
 - Cross-platform complexity (iOS, Android, Windows)
 
-### B/S: Browser / Server
+### 1.1.2 B/S: Browser / Server
 No installation needed; access via browser using URLs.
 
 | Aspect | Description |
@@ -33,20 +33,20 @@ No installation needed; access via browser using URLs.
 | **Access** | Browser + URL (baidu.com, jd.com, bilibili.com) |
 | **Use Cases** | Entertainment, shopping, web games (convenience-focused) |
 
-#### Pros
+#### 1.1.2.1 Pros
 
 - No client development needed (web page + server only)
 - Zero install for users; open browser and go
 - Easy updates: server-side only, users just refresh
 - Cross-platform: any device with a browser
 
-#### Cons
+#### 1.1.2.2 Cons
 
 - Everything loaded from server → network dependent
 - Poor performance for large apps (low quality graphics/audio)
 - Limited interactivity compared to native apps
 
-### Comparison Summary
+### 1.1.3 Comparison Summary
 
 | Criteria | C/S Architecture | B/S Architecture |
 |----------|------------------|------------------|
@@ -63,21 +63,21 @@ No installation needed; access via browser using URLs.
 
 ### 1.2.1 IP Address
 
-#### IP Address Classification
+#### 1.2.1.1 IP Address Classification
 
 | Version | Description | Address Length | Format |
 |---------|-------------|----------------|--------|
 | **IPv4** | Internet Protocol version 4 | 32-bit binary | Dot-decimal notation (e.g., 192.168.1.34) |
 | **IPv6** | Internet Protocol version 6 | 128-bit binary | 8 groups of hexadecimal numbers separated by colons |
 
-#### IPv4 Address Structure
+#### 1.2.1.2 IPv4 Address Structure
 
 - **Binary representation**: 32 bits divided into 4 octets (8 bits each)
 - **Display format**: Dot-decimal notation (e.g., 192.168.1.34)
 - **Value range per octet**: 0 - 255
 - **Total address space**: Approximately 4.2 billion (256^4) unique addresses
 
-#### IPv6 Address Structure
+#### 1.2.1.3 IPv6 Address Structure
 
 - **Address format**: 8 groups of 4 hexadecimal digits separated by colons
 - **Example**: `2001:0db8:85a3:0000:0000:8a2e:0370:7334`
@@ -86,7 +86,7 @@ No installation needed; access via browser using URLs.
   - **Rule**: Can only be used once per address
   - **Reason**: Using `::` twice would make it impossible to determine how many zero groups each represents (8 total groups minus visible groups = groups represented by `::`)
 
-#### IP Address Types
+#### 1.2.1.4 IP Address Types
 
 | Type | Description | Address Range | Usage |
 |------|-------------|---------------|-------|
@@ -94,11 +94,11 @@ No installation needed; access via browser using URLs.
 | **Private IP** | Address used within local networks (LAN) | 192.168.x.x, 10.x.x.x, 172.16.x.x - 172.31.x.x | Internal network communication |
 | **Loopback** | Local address referring to the current device | 127.0.0.1 (IPv4), ::1 (IPv6) | Local testing and development |
 
-#### IPv4 Address Exhaustion
+#### 1.2.1.5 IPv4 Address Exhaustion
 
 IPv4 provides approximately 4.2 billion unique addresses (2^32). With the explosive growth of internet-connected devices, IPv4 addresses were fully allocated by **November 26, 2019**.
 
-##### Solutions
+##### 1.2.1.5.1 Solutions
 
 1. **IPv6 Deployment**
    - 128-bit address space provides 340 undecillion addresses (2^128)
@@ -120,7 +120,7 @@ IPv4 provides approximately 4.2 billion unique addresses (2^32). With the explos
    - Selling allocated but unused addresses on the market
    - Limited effectiveness as a long-term solution
 
-#### Common IP-Related Commands
+#### 1.2.1.6 Common IP-Related Commands
 
 | Operating System | Command              | Purpose                    |
 | ---------------- | -------------------- | -------------------------- |
@@ -149,7 +149,7 @@ A numerical identifier for specific applications or services on a device.
 | **Purpose**               | Identifies specific applications/services on a device                     |
 | **Uniqueness**            | Each port number can only be used by one application at a time per device |
 
-#### Common Port Numbers
+#### 1.2.2.1 Common Port Numbers
 
 | Port | Service |
 |------|---------|
@@ -170,7 +170,7 @@ A set of rules that define how data is transmitted over a network.
 | **Transmission rules** | Determines how messages are sent and received |
 | **Error handling** | Specifies how errors are detected and corrected |
 
-#### Network Communication Protocol Models
+#### 1.2.3.1 Network Communication Protocol Models
 
 | Model | Layers | Description |
 |-------|--------|-------------|
@@ -179,7 +179,7 @@ A set of rules that define how data is transmitted over a network.
 
 The TCP/IP model is the de facto standard for internet communication.
 
-#### OSI Model (7 Layers)
+#### 1.2.3.2 OSI Model (7 Layers)
 
 A theoretical model used in network education.
 
@@ -193,20 +193,20 @@ A theoretical model used in network education.
 | 2     | **Data Link**    | Provides node-to-node reliable transmission                        |
 | 1     | **Physical**     | Transmits raw bit streams over physical medium                     |
 
-##### Data Flow
+##### 1.2.3.2.1 Data Flow
 
 - **Sender**: Data starts at Application layer, processed downward through each layer, finally transmitted as binary signals at Physical layer.
 - **Receiver**: Binary signals processed at Physical layer, moves upward through each layer, finally reconstructed to usable data at Application layer.
 
-##### Pros
+##### 1.2.3.2.2 Pros
 
 Establishes unified communication standards, reduces development difficulty through clear layer separation.
 
-##### Cons
+##### 1.2.3.2.3 Cons
 
 Overly idealistic, structurally too complex for practical engineering implementation.
 
-#### OSI vs TCP/IP Layer Mapping
+#### 1.2.3.3 OSI vs TCP/IP Layer Mapping
 
 | OSI Layer | OSI Name | TCP/IP Layer | TCP/IP Name | Merged? |
 |-----------|----------|--------------|-------------|---------|
@@ -218,15 +218,7 @@ Overly idealistic, structurally too complex for practical engineering implementa
 | 2 | Data Link | 1 | Network Interface | ✅ Merged |
 | 1 | Physical | 1 | Network Interface | ✅ Merged |
 
-**TCP/IP merges OSI layers as follows:**
-- **Application Layer (4)**: Combines OSI Application + Presentation + Session layers
-- **Transport Layer (3)**: Directly corresponds to OSI Transport layer
-- **Internet Layer (2)**: Corresponds to OSI Network layer
-- **Network Interface Layer (1)**: Combines OSI Data Link + Physical layers
-
-> **Key Insight:** TCP/IP simplifies the 7-layer OSI model into 4 layers by merging the top 3 layers (Application/Presentation/Session) into one Application layer, and merging the bottom 2 layers (Data Link/Physical) into one Network Interface layer.
-
-#### TCP/IP Model (4 Layers)
+#### 1.2.3.4 TCP/IP Model (4 Layers)
 
 Practical implementation standard used in actual networking.
 
@@ -237,7 +229,7 @@ Practical implementation standard used in actual networking.
 | 2 | **Internet** | IP, ICMP, ARP | End-to-end data routing |
 | 1 | **Network Interface** | Ethernet, Wi-Fi | Binary signal transmission over physical medium |
 
-##### Key Protocols
+##### 1.2.3.4.1 Key Protocols
 
 - **Application Layer**: HTTP (web browsing), FTP (file transfer), SMTP (email), DNS (domain name resolution)
 - **Transport Layer**: TCP (reliable, slower), UDP (unreliable, fast)
@@ -256,11 +248,11 @@ Practical implementation standard used in actual networking.
 | **Use Cases** | Gaming, voice calls, live streaming, DNS, IoT | File transfer, web browsing, email, payment, remote login |
 | **Requirements** | Low latency, high real-time requirements | High data integrity, acceptable delay |
 
-#### TCP Use Cases
+#### 1.3.1.1 TCP Use Cases
 
 File downloads/uploads, email, database synchronization, banking/payment transactions, online games with low latency tolerance (e.g., World of Warcraft).
 
-#### UDP Use Cases
+#### 1.3.1.2 UDP Use Cases
 
 Competitive gaming, video conferencing, live streaming, DNS queries, IoT devices.
 
@@ -287,7 +279,7 @@ All data (strings, numbers, containers) must be converted to byte sequences (bin
 | **encode** | Data → Binary | Converts human-readable data to transmittable binary format |
 | **decode** | Binary → Data | Converts binary data back to human-readable format |
 
-#### Example
+#### 1.4.1.1 Example
 
 ```
 "hello world" → b"hello world"
@@ -300,11 +292,11 @@ Byte sequences are indicated by the `b` prefix.
 
 Containers cannot be directly encoded. Must be converted to string first (e.g., JSON), then encoded to binary.
 
-#### Process
+#### 1.4.2.1 Process
 
 Container → String (JSON) → Binary Data
 
-#### Example
+#### 1.4.2.2 Example
 
 ```python
 list1 = ['apple', 'banana', 'watermelon']
