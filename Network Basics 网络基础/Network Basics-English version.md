@@ -250,14 +250,6 @@ Practical implementation standard used in actual networking.
 | **Use Cases** | Gaming, voice calls, live streaming, DNS, IoT | File transfer, web browsing, email, payment, remote login |
 | **Requirements** | Low latency, high real-time requirements | High data integrity, acceptable delay |
 
-##### 1.3.1.1.1 TCP Use Cases
-
-File downloads/uploads, email, database synchronization, banking/payment transactions, online games with low latency tolerance (e.g., World of Warcraft).
-
-##### 1.3.1.1.2 UDP Use Cases
-
-Competitive gaming, video conferencing, live streaming, DNS queries, IoT devices.
-
 #### 1.3.1.2 Connection Analogy
 
 - **TCP (Phone Call)**: Connection-based and reliable
@@ -270,7 +262,7 @@ Competitive gaming, video conferencing, live streaming, DNS queries, IoT devices
   - Is the content complete?
   - Unknown network conditions
 
-## 1.4 Data Transmission Format
+## 1.4 Python Data Encoding for Network Transmission
 
 All data (strings, numbers, containers) must be converted to byte sequences (binary data) before transmission.
 
@@ -283,12 +275,36 @@ All data (strings, numbers, containers) must be converted to byte sequences (bin
 
 #### 1.4.1.1 Example
 
-```
-"hello world" → b"hello world"
-"你好世界" → b'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
+```python
+# String to binary (encode)
+original_string = "hello world"
+byte_data = original_string.encode()
+print(f"Original: {original_string}")
+print(f"Encoded:  {byte_data}")
+# Output: b'hello world'
+
+# Binary back to string (decode)
+decoded_string = byte_data.decode()
+print(f"Decoded:  {decoded_string}")
+# Output: hello world
+
+# Non-ASCII characters (e.g., Chinese)
+chinese_text = "你好世界"
+byte_data_cn = chinese_text.encode('utf-8')
+print(f"Original: {chinese_text}")
+print(f"Encoded:  {byte_data_cn}")
+# Output: b'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
+
+decoded_cn = byte_data_cn.decode('utf-8')
+print(f"Decoded:  {decoded_cn}")
+# Output: 你好世界
 ```
 
-Byte sequences are indicated by the `b` prefix.
+**Key points:**
+- `encode()` converts string to bytes (default encoding is UTF-8)
+- `decode()` converts bytes back to string
+- The `b` prefix indicates byte sequences
+- Non-ASCII characters (Chinese, emoji, etc.) require UTF-8 encoding
 
 ### 1.4.2 Container Data (Lists, Dictionaries)
 
