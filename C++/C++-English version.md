@@ -1549,12 +1549,33 @@ for (int i = 0; i < 3; i++) {       // rows
 
 #### 1.5.8.8 Cautions
 
-| Operation            | Valid?    | Explanation                                                               |
-| -------------------- | --------- | ------------------------------------------------------------------------- |
-| `int[10] func()`     | ❌ No      | Cannot return array from function directly                                |
-| `ia = ib`            | ❌ No      | Cannot assign one array to another (use loop or `memcpy`)                 |
-| `s[10]` for `s[6]`   | ❌ No      | Out of bounds access → undefined behavior (segmentation fault)            |
-| `int n=5; int s[n];` | ⚠️ C++99+ | Variable Length Arrays (VLAs) are not standard C++ (use `vector` instead) |
+**Cannot Return Array from Function**
+```cpp
+int[10] func();  // ❌ Error: cannot return array directly
+```
+Use pointer or `std::vector` instead.
+
+**Cannot Assign Arrays Directly**
+```cpp
+int ia[5] = {1,2,3,4,5};
+int ib[5];
+ib = ia;  // ❌ Error: cannot assign one array to another
+```
+Use loop or `memcpy` instead.
+
+**Out of Bounds Access = Undefined Behavior**
+```cpp
+int s[6];
+s[10] = 5;  // ❌ Runtime error: out of bounds access
+// May cause segmentation fault or silent memory corruption
+```
+
+**Variable Length Arrays (VLAs) Not Standard**
+```cpp
+int n = 5;
+int s[n];  // ⚠️ Works in some compilers, but NOT standard C++
+```
+Use `std::vector` for dynamic sizing instead.
 
 #### 1.5.8.9 Array vs `std::vector`
 
