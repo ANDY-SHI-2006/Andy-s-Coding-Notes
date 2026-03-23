@@ -1229,32 +1229,30 @@ Enumeration allows the programmer to declare a **new data type** which takes spe
 
 #### Basic Syntax
 
+| Feature | Description | Example |
+|---------|-------------|---------|
+| Declaration | `enum Name { ... };` | `enum Color { ... };` |
+| Default Value | Starts from 0 | `Red = 0` |
+| Auto-increment | Each enumerator = previous + 1 | `Yellow = 1, Green = 2` |
+| Separator | Commas between enumerators | `Red, Yellow, Green` |
+| Usage | Declare and assign | `Color c = Yellow;` |
+
+> **Note:** Trailing comma after the last enumerator is optional.
+
 ```cpp
-enum Color {
-    Red,        // 0 (default)
-    Yellow,     // 1
-    Green       // 2
-};
-
-Color c1 = Yellow;   // Declare and assign
+enum Color { Red, Yellow, Green };  // Red=0, Yellow=1, Green=2
+Color c = Yellow;
 ```
-
-> **Note:** Enumerators inside `{}` must be separated by **commas** `,` (comma after each item, optional for the last one).
-
-| Feature | Description |
-|---------|-------------|
-| New Type | User-defined type |
-| Named Values | Symbolic constants (Red, Yellow, Green) |
-| Underlying Type | Typically `int` |
 
 #### Custom Values
 
+| Assignment | Behavior | Example |
+|------------|----------|---------|
+| Explicit | Specified integer value | `OK = 200` |
+| Auto-increment | Previous value + 1 | `Error` becomes 405 |
+
 ```cpp
-enum Status {
-    OK = 200,
-    NotFound = 404,  // Explicit value
-    Error           // 405 (auto-increment from last)
-};
+enum Status { OK = 200, NotFound = 404, Error };  // Error = 405
 ```
 
 #### Restrictions
@@ -1299,27 +1297,19 @@ switch (myColor) {
 }
 ```
 
-**Conversions:**
-```cpp
-// Enum → Integer (implicit)
-int i = Yellow;     // i = 1
+#### Conversions
 
-// Integer → Enum (explicit cast)
-Color c = Color(1);  // Yellow
+| Direction | Conversion | Syntax | Notes |
+|-----------|------------|--------|-------|
+| Enum → Integer | Implicit | `int i = c;` | Allowed in traditional `enum` |
+| Integer → Enum | Explicit | `Color c = Color(1);` | Must cast |
+
+```cpp
+int i = Yellow;           // OK: implicit enum→int (i = 1)
+Color c = Color(1);       // OK: explicit int→enum (c = Yellow)
 ```
 
 #### `enum class` (C++11)
-
-Strongly-typed enum with better type safety:
-
-```cpp
-enum class Color {
-    Red, Green, Blue
-};
-
-Color c = Color::Red;   // Scope operator required
-// int i = c;           // Error! No implicit conversion
-```
 
 | Feature | `enum` | `enum class` |
 |---------|--------|--------------|
@@ -1327,6 +1317,13 @@ Color c = Color::Red;   // Scope operator required
 | Implicit int conversion | ✅ Yes | ❌ No |
 | Type safety | Weak | Strong |
 | Underlying type | Compiler-dependent | `int` by default |
+| Access | Direct | Require scope operator (`::`) |
+
+```cpp
+enum class Color { Red, Green, Blue };
+Color c = Color::Red;     // Must use scope operator
+// int i = c;             // Error: no implicit conversion to int
+```
 
 #### Specifying Underlying Type
 
@@ -1361,7 +1358,10 @@ enum Status : unsigned char; // OK (traditional enum)
 
 #### Type Traits and Utilities (C++11/C++23)
 
-**`std::underlying_type`** - Get the underlying integer type:
+| Feature | Version | Purpose | Syntax |
+|---------|---------|---------|--------|
+| `std::underlying_type` | C++11 | Get underlying integer type | `std::underlying_type_t<Enum>` |
+| `std::to_underlying` | C++23 | Convert enum to underlying value | `std::to_underlying(e)` |
 
 ```cpp
 #include <type_traits>
@@ -1371,49 +1371,43 @@ enum class Color : unsigned char { Red, Green, Blue };
 // Get underlying type
 using Underlying = std::underlying_type_t<Color>;  // unsigned char
 
-// Use in templates or generic code
-static_assert(std::is_same_v<Underlying, unsigned char>);
-```
-
-**`std::to_underlying` (C++23)** - Convert enum to underlying value:
-
-```cpp
-#include <utility>  // C++23
-
+// Convert enum to underlying value (C++23)
 Color c = Color::Red;
-auto val = std::to_underlying(c);  // Returns unsigned char, no cast needed
+auto val = std::to_underlying(c);  // unsigned char
 
 // Pre-C++23 equivalent
-auto val = static_cast<std::underlying_type_t<Color>>(c);
+auto val2 = static_cast<std::underlying_type_t<Color>>(c);
 ```
 
 #### Bit Flags Pattern
 
-Enums are commonly used for bitwise operations (flags):
+| Technique | Description | Example |
+|-----------|-------------|---------|
+| Power of 2 values | Each flag = single bit | `1 << 0, 1 << 1, 1 << 2` |
+| Combine with OR | `|` operator to combine flags | `Read \| Write` |
+| Check with AND | `&` operator to test flag | `p & Permission::Read` |
 
 ```cpp
 enum class Permission : unsigned int {
-    None   = 0,
-    Read   = 1 << 0,  // 0b0001 = 1
-    Write  = 1 << 1,  // 0b0010 = 2
-    Execute= 1 << 2   // 0b0100 = 4
+    None    = 0,
+    Read    = 1 << 0,   // 0b0001 = 1
+    Write   = 1 << 1,   // 0b0010 = 2
+    Execute = 1 << 2    // 0b0100 = 4
 };
 
-// Overload bitwise operators
+// Overload bitwise OR operator
 inline Permission operator|(Permission a, Permission b) {
     return static_cast<Permission>(
-        static_cast<unsigned int>(a) |
-        static_cast<unsigned int>(b)
+        static_cast<unsigned int>(a) | static_cast<unsigned int>(b)
     );
 }
 
-// Usage
 Permission p = Permission::Read | Permission::Write;
 ```
 
-**Built-in alternatives for flags:**
-- `std::bitset<N>` - Fixed-size bitset with logical operations
-- `std::vector<bool>` - Dynamic bit-packed bool array
+**Built-in alternatives:**
+- `std::bitset<N>` - Fixed-size bitset
+- `std::vector<bool>` - Dynamic bit-packed array
 
 #### Best Practices
 
