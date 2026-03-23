@@ -410,7 +410,7 @@ Operators can also be categorized by their **function or purpose**:
 | **Scope** | `::` | Scope resolution |
 | **Other** | `,` `sizeof` `typeid` `new` `delete` | Comma, size query, memory management |
 
-#### 1.4.1.3 Increment and Decrement Operators
+### 1.4.2 Increment and Decrement Operators
 
 The `++` (increment) and `--` (decrement) operators are unary operators that increase or decrease a variable by 1.
 
@@ -444,9 +444,9 @@ y--;    // Equivalent to: y = y - 1;
 - Prefix: modify first, then use
 - Postfix: use first, then modify
 
-### 1.4.2 Binary Operators
+### 1.4.3 Binary Operators
 
-#### 1.4.2.1 Division
+#### 1.4.3.1 Division
 
 ```cpp
 int a = 7 / 2;       // Result: 3 (integer division, truncates decimal)
@@ -459,7 +459,7 @@ double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
 | `int / int` | `int` | Decimal part discarded |
 | `double / int` | `double` | Normal division |
 
-#### 1.4.2.2 Modulo
+#### 1.4.3.2 Modulo
 
 Returns the **remainder** of division.
 
@@ -506,7 +506,7 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 
 **Note:** There are only these two standards in C++. Modern compilers (C++11 and later) use the "truncate toward zero" rule.
 
-#### 1.4.2.3 Mixed Operations
+#### 1.4.3.3 Mixed Operations
 
 When operands have different types, C++ automatically converts the "narrower" type to the "wider" type before performing the operation.
 
@@ -536,9 +536,9 @@ double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
 
 **Key Point:** In mixed operations, at least one operand must be floating-point to get a floating-point result. The assignment to `double` happens **after** the division operation.
 
-> See also: [Power (Exponentiation)](#1424-power-exponentiation)
+> See also: [Power (Exponentiation)](#1434-power-exponentiation)
 
-#### 1.4.2.4 Power (Exponentiation)
+#### 1.4.3.4 Power (Exponentiation)
 
 **Important:** C++ has **no operator** for exponentiation.
 
@@ -552,7 +552,7 @@ double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
 | x⁴ | ❌ No `^` or `**` | Unlike Python (`**`) or math notation |
 | a² | `a * a` | Use repeated multiplication |
 
-##### 1.4.2.4.1 Method 1: Repeated Multiplication
+##### 1.4.3.4.1 Method 1: Repeated Multiplication
 
 Fastest for small integer exponents.
 
@@ -569,7 +569,7 @@ int fourth = a * a * a * a;   // a⁴
 
 **Why fast:** Direct CPU multiplication, no function call overhead.
 
-##### 1.4.2.4.2 Method 2: `pow()` Function
+##### 1.4.3.4.2 Method 2: `pow()` Function
 
 For fractional or variable exponents.
 
@@ -599,16 +599,16 @@ double b = pow(2, 3);     // ✅ Correct: b = 8.0
 
 **Performance:** Slower due to function call and floating-point operations.
 
-##### 1.4.2.4.3 Comparison
+##### 1.4.3.4.3 Comparison
 
 | Method | Speed | Use Case |
 |--------|-------|----------|
 | `a * a` | ⚡ Fastest | Small fixed exponents: `a²`, `a³` |
 | `pow(a, b)` | 🐢 Slower | Variable/fractional: `a^b`, `√a` |
 
-### 1.4.3 Assignment Operators
+### 1.4.4 Assignment Operators
 
-#### 1.4.3.1 Simple Assignment
+#### 1.4.4.1 Simple Assignment
 
 The assignment operator `=` assigns a value to a variable.
 
@@ -625,7 +625,7 @@ y = z;  // y = 0
 x = y;  // x = 0
 ```
 
-#### 1.4.3.2 Compound Assignment
+#### 1.4.4.2 Compound Assignment
 
 C/C++ allows simple assignment statements to be abbreviated using compound assignment operators.
 
@@ -648,7 +648,7 @@ identifier operator= expression;
 - May be more efficient (variable evaluated only once)
 - Commonly used in practice
 
-### 1.4.4 Cast Operators (Type Conversion)
+### 1.4.5 Cast Operators (Type Conversion)
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
@@ -659,7 +659,7 @@ Cast operators are used to explicitly convert a value from one data type to anot
 | `sum / count` (both `int`) | `3` (if sum=7, count=2) | Integer division, decimal dropped |
 | `(float)sum / count` | `3.5` | `sum` converted to float first |
 
-#### 1.4.4.2 C-Style Cast
+#### 1.4.5.2 C-Style Cast
 
 ```cpp
 float average = (float)sum / count;  // C-style cast
@@ -691,9 +691,9 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 // (float)sum is temporary, sum itself remains unchanged!
 ```
 
-> See also: [Power (Exponentiation)](#1424-power-exponentiation)
+> See also: [Power (Exponentiation)](#1434-power-exponentiation)
 
-#### 1.4.4.3 C++ Style Casts
+#### 1.4.5.3 C++ Style Casts
 
 C++ provides four type cast operators for safer, more explicit conversions:
 
@@ -719,7 +719,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 double avg = static_cast<double>(sum) / count;
 ```
 
-### 1.4.5 Operator Precedence
+### 1.4.6 Operator Precedence
 
 | Precedence | Operator | Associativity |
 |------------|----------|---------------|
@@ -775,7 +775,7 @@ a = b;
 - Avoid mixing multiple assignment operators in one statement
 - Put spaces around assignment operators for clarity (they are evaluated last)
 
-### 1.4.6 Spacing in Expressions
+### 1.4.7 Spacing in Expressions
 
 Spacing around operators is a **style issue**. Choose a style and use it consistently.
 
@@ -2080,7 +2080,7 @@ cout << setprecision(6);
 
 ##### 1.7.1.3.7 cout Formatting for double Values
 
-> See also: [1.4.2.4 Power - cout Formatting for double Values](#1424-power-exponentiation)
+> See also: [1.4.3.4 Power - cout Formatting for double Values](#1434-power-exponentiation)
 
 **The Issue:**
 ```cpp
