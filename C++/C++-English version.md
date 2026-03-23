@@ -549,7 +549,7 @@ double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
 
 **Two Solutions:**
 
-##### Option 1: Repeated Multiplication (Recommended for small integer exponents)
+##### 1.4.2.4.1 Option 1: Repeated Multiplication
 
 ```cpp
 int square = a * a;           // a² - Fast, efficient
@@ -564,7 +564,7 @@ int fourth = a * a * a * a;   // a⁴ - Acceptable
 
 **Why it's faster:** Direct CPU multiplication, no function call overhead, no floating-point conversion.
 
-##### Option 2: `pow()` Function (For general exponentiation)
+##### 1.4.2.4.2 Option 2: `pow()` Function
 
 ```cpp
 #include <cmath>  // Required header
@@ -612,14 +612,14 @@ int c = pow(2, 3) / 2;    // Result is 4.0 / 2 = 2.0, truncated to 2
 
 **Performance:** Slower than repeated multiplication due to function call overhead and floating-point calculations.
 
-##### Comparison Summary
+##### 1.4.2.4.3 Comparison Summary
 
 | Method | Speed | Use Case | Example |
 |--------|-------|----------|---------|
 | `a * a` | ⚡ Fastest | Small fixed integer exponents | `a²`, `a³` |
 | `pow(a, 2)` | 🐢 Slower | Variable or fractional exponents | `a^b`, `√a` |
 
-##### Important Warning
+##### 1.4.2.4.4 Important Warning
 
 > **Note:** The `^` symbol in C++ is the **bitwise XOR operator**, not exponentiation!
 ```cpp
@@ -1701,14 +1701,14 @@ s2.gender = 'f';                // Modify field
 
 Console input using `cin` (character input).
 
-##### Basic Syntax
+##### 1.6.1.1 Basic Syntax
 
 ```cpp
 cin >> variable;           // Read single variable
 cin >> a >> b >> c;        // Chain input, separated by whitespace
 ```
 
-##### Input Separators
+##### 1.6.1.2 Input Separators
 
 `cin` treats **whitespace** (space, tab, newline) as separators:
 
@@ -1718,7 +1718,7 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 | `1\n2 3\n4` | ✓ | Same (newlines = spaces) |
 | `1234 56.78` with `char c1,c2; int a; float b;` | ✓ | c1='1', c2='2', a=34, b=56.78 |
 
-##### Key Behaviors
+##### 1.6.1.3 Key Behaviors
 
 1. **Type-aware extraction**: `cin` extracts bytes according to variable type
 2. **Excess input ignored**: Extra data beyond variables is discarded
@@ -2089,13 +2089,13 @@ cout << "Hello" << '\n';    // Just newline, faster
 
 #### 1.7.1.3 Output Formatting
 
-##### Header Dependency
+##### 1.7.1.3.1 Header Dependency
 
 ```cpp
 #include <iomanip>
 ```
 
-##### Core Mechanism
+##### 1.7.1.3.2 Core Mechanism
 
 C++ has three floating-point output formats:
 
@@ -2112,7 +2112,7 @@ C++ has three floating-point output formats:
 - **Default**: `n` significant digits
 - `fixed`/`scientific`: `n` digits after decimal point
 
-##### Detailed Comparison and Examples
+##### 1.7.1.3.3 Detailed Comparison and Examples
 
 ```cpp
 double pi = 3.1415926535;
@@ -2133,7 +2133,7 @@ cout << scientific << setprecision(4);
 cout << 123.456 << endl;  // 1.2346e+02
 ```
 
-##### State Persistence (Important)
+##### 1.7.1.3.4 State Persistence
 
 `fixed` and `setprecision` persist until explicitly changed.
 
@@ -2143,7 +2143,7 @@ cout << 1.234 << endl;  // 1.23
 cout << 5.678 << endl;  // 5.68 (format still active!)
 ```
 
-##### Reset to Default
+##### 1.7.1.3.5 Reset to Default
 
 ```cpp
 // C++11 method
