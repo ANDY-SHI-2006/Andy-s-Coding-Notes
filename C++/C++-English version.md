@@ -1289,12 +1289,12 @@ enum Status : unsigned char {  // Explicit underlying type (C++11)
 };
 ```
 
-| Allowed Types | Examples |
-|---------------|----------|
-| `char`, `unsigned char` | `A = 'x'` (ASCII value) |
-| `short`, `unsigned short` | `B = 100` |
-| `int`, `unsigned int` | Default underlying type |
-| `long`, `long long` | `C = 1LL << 63` |
+| Allowed Types             | Examples                |
+| ------------------------- | ----------------------- |
+| `char`, `unsigned char`   | `A = 'x'` (ASCII value) |
+| `short`, `unsigned short` | `B = 100`               |
+| `int`, `unsigned int`     | Default underlying type |
+| `long`, `long long`       | `C = 1LL << 63`         |
 
 #### Usage
 
@@ -1314,9 +1314,17 @@ switch (myColor) {
 | Enum → Integer | Implicit | `int i = c;` | Allowed in traditional `enum` |
 | Integer → Enum | Explicit | `Color c = Color(1);` | Must cast |
 
+**Why these rules?**
+
+| Direction | Design Rationale |
+|-----------|-----------------|
+| Enum → Integer (implicit) | Convenient for getting the numeric value for calculations or storage |
+| Integer → Enum (explicit) | Prevents accidental assignment; the integer may not correspond to a valid enumerator |
+
 ```cpp
 int i = Yellow;           // OK: implicit enum→int (i = 1)
 Color c = Color(1);       // OK: explicit int→enum (c = Yellow)
+// Color c = 1;           // Error: cannot convert 'int' to 'Color' implicitly
 ```
 
 #### `enum class` (C++11)
