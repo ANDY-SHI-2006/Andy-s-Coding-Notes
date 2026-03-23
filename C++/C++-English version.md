@@ -652,7 +652,7 @@ identifier operator= expression;
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
-**Usage Scenarios**
+#### 1.4.5.1 Usage Scenarios
 
 | Expression | Result | Explanation |
 |------------|--------|-------------|
@@ -823,7 +823,7 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 | `signed` | Allows negative values (default for most integers) | `signed int x = -10;` |
 | `unsigned` | Only non-negative values (0 and positive), doubles positive range | `unsigned int y = 10;` |
 
-#### 1.5.1.1 Integer Ranges
+#### 1.5.1.2 Integer Ranges
 
 | Type | Size | Range |
 |------|------|-------|
@@ -1026,9 +1026,9 @@ constexpr int MAX_SIZE = 100;
 
 **Note:**  `#define PI 3.14159` - Preprocessor directives do not end with a semicolon
 
-**Constants Must Be Initialized**
+#### 1.5.5.2 Constants Must Be Initialized
 
-**Constants (`const` and `constexpr`) must be initialized at the time of declaration.**
+Constants (`const` and `constexpr`) **must be initialized** at the time of declaration.
 
 ```cpp
 const int a = 10;       // ✓ Correct: initialized immediately
@@ -1657,7 +1657,7 @@ Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
 scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 ```
 
-#### 1.6.2.2 Header Style: C vs C++
+#### 1.6.2.1 Header Style: C vs C++
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
@@ -1668,7 +1668,7 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-#### 1.6.2.1 Conversion Specifier Syntax
+#### 1.6.2.2 Conversion Specifier Syntax
 
 ```
 %[flags][width][length]specifier
@@ -1963,7 +1963,7 @@ scanf("%d", &a);    // ✓ Correct
 scanf("%d", a);     // ✗ Wrong! Undefined behavior
 ```
 
-#### 1.7.1.1 Key Differences from `printf`
+#### 1.6.2.5 Key Differences from `printf`
 
 | Feature | `scanf` | `printf` |
 |---------|---------|----------|
