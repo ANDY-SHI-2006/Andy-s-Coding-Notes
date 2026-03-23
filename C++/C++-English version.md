@@ -890,7 +890,7 @@ Numeric data types are divided into two categories:
 | **Integers**       | `short`, `int`, `long`           | Whole numbers without decimals |
 | **Floating-point** | `float`, `double`, `long double` | Numbers with decimal points    |
 
-#### Signed and Unsigned Modifiers
+#### 1.5.1.1 Signed and Unsigned Modifiers
 
 The `signed` and `unsigned` modifiers can only be used with **integer types** (`short`, `int`, `long`, `long long`). They **cannot** be used with floating-point types (`float`, `double`, `long double`).
 
@@ -953,7 +953,7 @@ bool hasError = false;
 
 **Memory Size**: Typically 1 byte (implementation-defined, but always at least 1 byte).
 
-#### Boolean Output with `cout`
+#### 1.5.2.1 Boolean Output with `cout`
 
 By default, `cout` displays `bool` values as integers:
 
@@ -977,7 +977,7 @@ cout << noboolalpha << flag << endl; // Output: 1
 
 **Why the default is integer?** For backward compatibility with C, which uses integers (1/0) to represent boolean logic.
 
-#### Boolean Output with `printf`
+#### 1.5.2.2 Boolean Output with `printf`
 
 `printf` has **no built-in conversion specifier** for `bool` to display "true"/"false". By default, it treats `bool` as `int` (1/0).
 
@@ -1227,7 +1227,7 @@ int b = -2.7f;          // b = -2
 
 Enumeration allows the programmer to declare a **new data type** which takes specific values only.
 
-#### Basic Syntax
+#### 1.5.7.1 Basic Syntax
 
 **Declaration:**
 ```cpp
@@ -1265,7 +1265,7 @@ enum Status { OK = 200, NotFound = 404, Error };
 
 > **Note:** Enumerators must be separated by **commas** `,`. A trailing comma after the last enumerator is optional but recommended for cleaner diffs.
 
-#### Restrictions
+#### 1.5.7.2 Restrictions
 
 **Type Safety Rules:**
 
@@ -1275,7 +1275,7 @@ enum Status { OK = 200, NotFound = 404, Error };
 | Increment/decrement | `c2++;` | `++` not defined for enum types |
 | Implicit conversion | `int x = c1;` (C++98) | Must use explicit `static_cast<int>(c1)` |
 
-#### Underlying Type and Value Constraints
+#### 1.5.7.3 Underlying Type and Value Constraints
 
 **Value Constraints:**
 Enum constants must be compile-time integer constants. Floating-point and string values are not allowed.
@@ -1309,7 +1309,7 @@ enum Color : short { Red, Green, Blue };  // Traditional enum with short
 | `long`, `long long` | 8 bytes | Large values (e.g., `1LL << 63`) |
 | `unsigned int` | 4 bytes | Bit flags (recommended) |
 
-#### Usage
+#### 1.5.7.4 Usage
 
 **In `switch`:**
 ```cpp
@@ -1320,7 +1320,7 @@ switch (myColor) {
 }
 ```
 
-#### Conversions
+#### 1.5.7.5 Conversions
 
 | Direction | Conversion | Syntax | Notes |
 |-----------|------------|--------|-------|
@@ -1356,7 +1356,7 @@ Color c = Color::Red;     // Must use scope operator
 // int i = c;             // Error: no implicit conversion to int
 ```
 
-#### Forward Declaration
+#### 1.5.7.6 Forward Declaration
 
 Enums can be forward-declared to reduce header dependencies:
 
@@ -1367,7 +1367,7 @@ enum Status : unsigned char; // OK (traditional enum)
 // enum Color;               // Error: type not specified
 ```
 
-#### Type Traits and Utilities (C++11/C++23)
+#### 1.5.7.7 Type Traits and Utilities (C++11/C++23)
 
 | Feature                | Version | Purpose                          | Syntax                         |
 | ---------------------- | ------- | -------------------------------- | ------------------------------ |
@@ -1392,7 +1392,7 @@ auto val2 = static_cast<std::underlying_type_t<Color>>(c);
 
 > **Summary**: `underlying_type` tells you what integer type an enum uses (e.g., `unsigned char` vs `int`). `to_underlying` converts an enum value to that integer type without writing a long `static_cast`. These are mainly used in template/generic code; you won't need them in everyday programming.
 
-#### Bit Flags Pattern
+#### 1.5.7.8 Bit Flags Pattern
 
 | Technique | Description | Example |
 |-----------|-------------|---------|
@@ -1422,7 +1422,7 @@ Permission p = Permission::Read | Permission::Write;
 - `std::bitset<N>` - Fixed-size bitset
 - `std::vector<bool>` - Dynamic bit-packed array
 
-#### Best Practices
+#### 1.5.7.9 Best Practices
 
 | Practice | Recommendation |
 |----------|---------------|
@@ -1436,7 +1436,7 @@ Permission p = Permission::Read | Permission::Write;
 
 Array stores a set of values with the same data type under a single identifier, allowing efficient management of multiple related values.
 
-#### Benefits of Using Arrays
+#### 1.5.8.1 Benefits of Using Arrays
 
 Without arrays, managing 100 temperature readings would require 100 separate variables:
 ```cpp
@@ -1450,7 +1450,7 @@ temp[0] = 25.5;    // First reading
 temp[99] = 28.3;   // Last reading (index 99, not 100!)
 ```
 
-#### Declaration
+#### 1.5.8.2 Declaration
 
 ```cpp
 type name[size];   // size: number of elements (must be constant)
@@ -1472,7 +1472,7 @@ double t[4];       // 4 doubles (indices 0-3)
 
 > **Note:** Array size must be specified in declaration using **either a constant in brackets** or **an initialization sequence in braces**. Essentially, this tells the system how much memory space to allocate for the array.
 
-#### Memory Layout
+#### 1.5.8.3 Memory Layout
 
 Arrays store elements in contiguous memory locations:
 
@@ -1487,7 +1487,7 @@ int s[6] = {5, 0, -1, 2, 15, 2};
 
 > Each `int` typically occupies 4 bytes, so addresses are 4 bytes apart.
 
-#### Initialization
+#### 1.5.8.4 Initialization
 
 **1. With explicit size:**
 ```cpp
@@ -1552,7 +1552,7 @@ for (int i = 2; i < 10; i++) {
 > - `{ }` initialization happens at compile time or program start
 > - Loop/`cin` initialization happens during program execution
 
-#### Accessing and Modifying Elements
+#### 1.5.8.5 Accessing and Modifying Elements
 
 ```cpp
 int s[5] = {10, 20, 30, 40, 50};
@@ -1571,7 +1571,7 @@ int val = s[i];      // 40
 s[i + 1] = 999;      // s[4] = 999
 ```
 
-#### Arrays and Functions
+#### 1.5.8.6 Arrays and Functions
 
 Arrays are passed by reference (not by value):
 
@@ -1599,7 +1599,7 @@ int main() {
 | Size information    | Must pass `size` separately - function cannot determine array size from parameter alone |
 | Why pass size?      | `arr[]` decays to pointer, losing size info                                             |
 
-#### Multidimensional Arrays
+#### 1.5.8.7 Multidimensional Arrays
 
 Arrays of arrays (matrices, grids, tables):
 
@@ -1623,7 +1623,7 @@ for (int i = 0; i < 3; i++) {       // rows
 }
 ```
 
-#### Cautions
+#### 1.5.8.8 Cautions
 
 | Operation            | Valid?    | Explanation                                                               |
 | -------------------- | --------- | ------------------------------------------------------------------------- |
@@ -1632,7 +1632,7 @@ for (int i = 0; i < 3; i++) {       // rows
 | `s[10]` for `s[6]`   | ❌ No      | Out of bounds access → undefined behavior (segmentation fault)            |
 | `int n=5; int s[n];` | ⚠️ C++99+ | Variable Length Arrays (VLAs) are not standard C++ (use `vector` instead) |
 
-#### Array vs `std::vector`
+#### 1.5.8.9 Array vs `std::vector`
 
 For dynamic sizing and safer operations, prefer `std::vector`:
 
@@ -1656,7 +1656,7 @@ int val = v.at(10);               // Throws exception if out of bounds
 
 Structure stores a collection of heterogeneous data (different types) describing a common entity.
 
-#### Declaration
+#### 1.5.9.1 Declaration
 
 ```cpp
 struct Person {
@@ -1675,7 +1675,7 @@ struct Person s2;    // C: need 'struct' keyword
 | Elements | Indexed (s[0], s[1]) | Named members (s.age, s.name) |
 | Purpose | Collection of same items | Describing a complex entity |
 
-#### Initialization and Usage
+#### 1.5.9.2 Initialization and Usage
 
 ```cpp
 // Declare and initialize
@@ -1733,7 +1733,7 @@ Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
 scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 ```
 
-#### Header Style: C vs C++
+#### 1.6.2.2 Header Style: C vs C++
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
@@ -1744,7 +1744,7 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-#### Conversion Specifier Syntax
+#### 1.6.2.1 Conversion Specifier Syntax
 
 ```
 %[flags][width][length]specifier
@@ -1919,7 +1919,7 @@ scanf("%s", fullname);  // Input: "John Doe" → only "John" is read
 scanf("%[^\n]", fullname);  // Reads entire line
 ```
 
-#### Summary: scanf Important Notes
+#### 1.6.2.3 Summary: scanf Important Notes
 
 1. **No Precision Control**
    
@@ -2021,7 +2021,7 @@ scanf("%[^\n]", fullname);  // Reads entire line
    scanf("%f", &a);  // ✗ Input 3.14 → a contains garbage bits!
    ```
 
-#### Key Differences from `cin`
+#### 1.6.2.4 Key Differences from `cin`
 
 | Feature | `scanf` | `cin` |
 |---------|---------|-------|
@@ -2039,7 +2039,7 @@ scanf("%d", &a);    // ✓ Correct
 scanf("%d", a);     // ✗ Wrong! Undefined behavior
 ```
 
-#### Key Differences from `printf`
+#### 1.7.1.1 Key Differences from `printf`
 
 | Feature | `scanf` | `printf` |
 |---------|---------|----------|
@@ -2071,7 +2071,7 @@ scanf("%d", &a);
 
 Console output using `cout` (character output).
 
-#### Newline Control
+#### 1.7.1.2 Newline Control
 
 Both create a new line, but with a key difference:
 
@@ -2087,7 +2087,7 @@ cout << "Hello" << '\n';    // Just newline, faster
 
 **Note**: Frequent use of `endl` can slow down the program. Use `'\n'` unless you need to force output immediately.
 
-#### Output Formatting
+#### 1.7.1.3 Output Formatting
 
 ##### Header Dependency
 
@@ -2219,7 +2219,7 @@ Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
 printf("control string", arg1, arg2, ...);
 ```
 
-#### Header Style: C vs C++
+#### 1.7.2.1 Header Style: C vs C++
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
@@ -2281,7 +2281,7 @@ printf("\"The End.\"\n");     // Output: "The End." (with newline)
 printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 ```
 
-#### Conversion Specifier Syntax
+#### 1.7.2.2 Conversion Specifier Syntax
 
 ```
 %[flags][width][.precision][length]specifier
@@ -2392,7 +2392,7 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 - `long` → use `%li` or `%ld`
 - `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
-#### Key Differences from `cout`
+#### 1.7.2.3 Key Differences from `cout`
 
 | Feature | `printf` | `cout` |
 |---------|----------|--------|
