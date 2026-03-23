@@ -605,53 +605,6 @@ double b = pow(2, 3);     // ✅ Correct: b = 8.0
 |--------|-------|----------|
 | `a * a` | ⚡ Fastest | Small fixed exponents: `a²`, `a³` |
 | `pow(a, b)` | 🐢 Slower | Variable/fractional: `a^b`, `√a` |
-```
-
-`pow()` **does** return `double` (25.0), but `cout` has **default formatting rules** for floating-point numbers.
-
-| Format Flag | Effect | Default |
-|-------------|--------|---------|
-| `ios::fixed` | Fixed decimal places | Not set |
-| `ios::scientific` | Scientific notation | Not set |
-| `ios::showpoint` | **Force show decimal point** | **Not set** |
-
-**Default Behavior:**
-- When `showpoint` is not set and the decimal part is `.0`, `cout` **omits the decimal point**
-- This is a design choice in C++ to make output cleaner
-
-**Memory vs Display:**
-
-```
-Memory (IEEE 754):  [01000011 01100100 0000...] = 25.0 (double)
-       ↓
-   cout formatting
-       ↓
-Display:            "25" (default, omits .0)
-```
-
-**How to Force Display of Decimal:**
-
-```cpp
-#include <iomanip>  // Required for formatting
-
-// Method 1: Force showpoint
-cout << showpoint << 25.0;              // Output: 25.0000
-
-// Method 2: Fixed precision
-cout << fixed << setprecision(2) << 25.0;  // Output: 25.00
-
-// Method 3: Scientific notation
-cout << scientific << 25.0;             // Output: 2.500000e+01
-```
-
-**Verification:**
-
-```cpp
-auto result = pow(5, 2);  // auto deduces: double
-cout << typeid(result).name();  // Confirm: it's double!
-```
-
-> **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
 
 ### 1.4.3 Assignment Operators
 
