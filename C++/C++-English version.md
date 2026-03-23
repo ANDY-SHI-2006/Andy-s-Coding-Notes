@@ -20,7 +20,7 @@ There are two ways to include header files:
 
 There are two ways to use standard library features:
 
-#### 1.1.2.1 Method 1: Add `std::` prefix
+**Method 1:** Add `std::` prefix
 
 ```cpp
 #include <iostream>
@@ -31,7 +31,7 @@ int main() {
 }
 ```
 
-#### 1.1.2.2 Method 2: Use `using namespace std`
+**Method 2:** Use `using namespace std`
 
 ```cpp
 #include <iostream>
@@ -96,7 +96,7 @@ int b = 20;
 - Use `//` to temporarily disable a line of code during debugging
 - Documentation tools (e.g., Doxygen) recognize special comment formats
 
-#### 1.2.1.1 Comments for Program Structure
+**Program Structure Comments**
 
 Comments are often used to mark the beginning and end of sections:
 
@@ -139,7 +139,7 @@ int main() {
 }
 ```
 
-#### 1.2.2.2 Indentation and Splitting Lines
+#### 1.2.2.2 Indentation and Line Splitting
 
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
@@ -200,7 +200,7 @@ Rules for selecting a valid identifier:
 | **Case sensitivity** | `abc` ≠ `ABC` | — |
 | **Length** | Unlimited | — |
 
-#### 1.2.3.1 Examples of Valid Identifiers
+#### 1.2.3.1 Valid Identifiers
 
 | Identifier | Note |
 |------------|------|
@@ -210,7 +210,7 @@ Rules for selecting a valid identifier:
 | `average_measurement` | Descriptive name with underscore |
 | `initial_time` | Clear and readable |
 
-#### 1.2.3.2 Examples of Invalid Identifiers
+#### 1.2.3.2 Invalid Identifiers
 
 | Identifier | Reason |
 |------------|--------|
@@ -223,7 +223,7 @@ Rules for selecting a valid identifier:
 
 Cannot use C++ keywords as identifiers (e.g., `int`, `return`, `if`, `while`).
 
-#### 1.2.3.4 Complete Program Example
+**Program Example**
 
 ```cpp
 /*--------------------------------------*/
@@ -376,7 +376,7 @@ Operators in C++ are symbols that perform operations on operands.
 
 ### 1.4.1 Classification of Operators
 
-#### 1.4.1.1 Classification by Number of Operands
+**By Operand Count**
 
 Operators can be classified based on the **number of operands** they require:
 
@@ -392,7 +392,7 @@ Operators can be classified based on the **number of operands** they require:
 - `*` : Dereference vs. Multiplication
 - `&` : Address-of vs. Bitwise AND
 
-#### 1.4.1.2 Classification by Purpose
+**By Purpose**
 
 Operators can also be categorized by their **function or purpose**:
 
@@ -475,11 +475,11 @@ int t = 6 % 2;   // Result: 0 (divisible, no remainder)
 // double x = 7.5 % 2;  // Error! % requires integers
 ```
 
-##### 1.4.2.2.1 Modulo with Negative Numbers
+**Modulo with Negative Numbers**
 
 If either of the integer values is negative, the result of `a % b` is **system dependent** according to different C++ standards:
 
-##### 1.4.2.2.2 C++98/03: Implementation-defined
+**C++98/03:** Implementation-defined
 
 The behavior is **not specified** by the standard. Different compilers may produce different results.
 
@@ -488,7 +488,7 @@ The behavior is **not specified** by the standard. Different compilers may produ
 -5 % 3;  // Could be -2 or 1, depending on the compiler
 ```
 
-##### 1.4.2.2.3 C++11 and later: Truncate toward Zero
+**C++11+:** Truncate toward Zero
 
 Since C++11, the standard uniformly specifies **truncation toward zero** for integer division, which determines the modulo result.
 
@@ -499,23 +499,23 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 -5 % -3;  // Result: -2 (guaranteed)
 ```
 
-##### 1.4.2.2.4 Key Characteristics of C++11 Behavior
+**Key Characteristics**
 - The quotient `a / b` is truncated toward zero (fractional part is discarded)
 - The sign of the remainder follows the sign of the dividend (numerator)
 - The identity `(a/b)*b + a%b == a` always holds
 
 **Note:** There are only these two standards in C++. Modern compilers (C++11 and later) use the "truncate toward zero" rule.
 
-#### 1.4.2.3 Mixed Operations (Implicit Type Conversion)
+#### 1.4.2.3 Mixed Operations
 
 When operands have different types, C++ automatically converts the "narrower" type to the "wider" type before performing the operation.
 
-##### 1.4.2.3.1 Type Promotion Hierarchy
+**Type Promotion Hierarchy**
 ```
 char → short → int → long → long long → float → double → long double
 ```
 
-##### 1.4.2.3.2 Common Mixed Operation Scenarios
+**Common Scenarios**
 
 | Scenario | Result Type | Explanation |
 |----------|-------------|-------------|
@@ -524,7 +524,7 @@ char → short → int → long → long long → float → double → long doub
 | `short` + `int` | `int` | `short` is promoted to `int` |
 | `int` / `double` | `double` | Integer division becomes floating-point |
 
-##### 1.4.2.3.3 Common Pitfall - Integer Division vs. Mixed Division
+**Pitfall:** Integer vs Mixed Division
 
 ```cpp
 int sum = 7, count = 2;
@@ -728,7 +728,7 @@ identifier operator= expression;
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
-#### 1.4.4.1 Common Usage Scenarios
+**Usage Scenarios**
 
 | Expression | Result | Explanation |
 |------------|--------|-------------|
@@ -769,7 +769,7 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 
 > See also: [Power (Exponentiation)](#1424-power-exponentiation)
 
-#### 1.4.3.3 C++ Style Casts (Recommended)
+#### 1.4.4.3 C++ Style Casts
 
 C++ provides four type cast operators for safer, more explicit conversions:
 
@@ -780,7 +780,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 | `const_cast`       | Add/remove const qualifier     | `const_cast<char*>(str)`           |
 | `reinterpret_cast` | Low-level bit reinterpretation | `reinterpret_cast<int*>(ptr)`      |
 
-##### 1.4.3.3.1 Comparison of C++ Cast Operators
+**Comparison Table**
 
 | Characteristic | `static_cast` | `dynamic_cast` | `const_cast` | `reinterpret_cast` |
 |----------------|---------------|----------------|--------------|---------------------|
@@ -1060,7 +1060,7 @@ char c = 'A';       // OK
 // char e = "A";    // Error: double quotes are for strings
 ```
 
-#### 1.5.4.2 Character and Numeric Arithmetic
+#### 1.5.4.2 Character-Numeric Arithmetic
 
 Characters can be used directly in arithmetic operations with numbers because characters are stored in memory as their ASCII values (binary integers).
 
@@ -1078,7 +1078,7 @@ int diff = 'D' - 'A';   // 68 - 65 = 3
 
 The directive can appear anywhere in a C++ program.
 
-#### 1.5.5.1 Ways to Define Constants
+#### 1.5.5.1 Defining Constants
 
 | Method              | Syntax                           | Description                                      |
 | ------------------- | -------------------------------- | ------------------------------------------------ |
@@ -1102,7 +1102,7 @@ constexpr int MAX_SIZE = 100;
 
 **Note:**  `#define PI 3.14159` - Preprocessor directives do not end with a semicolon
 
-#### 1.5.5.2 Constants Must Be Initialized
+**Constants Must Be Initialized**
 
 **Constants (`const` and `constexpr`) must be initialized at the time of declaration.**
 
