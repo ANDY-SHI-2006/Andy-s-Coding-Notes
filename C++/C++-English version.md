@@ -1229,20 +1229,31 @@ Enumeration allows the programmer to declare a **new data type** which takes spe
 
 #### Basic Syntax
 
-| Feature | Description | Example |
-|---------|-------------|---------|
-| Declaration | `enum Name { ... };` | `enum Color { ... };` |
-| Default Value | Starts from 0 | `Red = 0` |
-| Auto-increment | Each enumerator = previous + 1 | `Yellow = 1, Green = 2` |
-| Separator | Commas between enumerators | `Red, Yellow, Green` |
-| Usage | Declare and assign | `Color c = Yellow;` |
+**Declaration:**
+```cpp
+enum Color { Red, Yellow, Green };
+Color c = Yellow;   // Declare variable and assign
+```
 
-> **Note:** Trailing comma after the last enumerator is optional.
+**Default Value Rule:**
+If no explicit value is assigned, the first enumerator starts at **0**.
 
 ```cpp
-enum Color { Red, Yellow, Green };  // Red=0, Yellow=1, Green=2
-Color c = Yellow;
+enum Color { Red, Yellow, Green };
+// Red = 0, Yellow = 1, Green = 2
 ```
+
+**Auto-increment Rule:**
+Each subsequent enumerator is automatically assigned the value of the previous enumerator plus **1**.
+
+```cpp
+enum Color { Red, Yellow, Green };
+// Red = 0 (default start)
+// Yellow = Red + 1 = 1
+// Green = Yellow + 1 = 2
+```
+
+> **Note:** Enumerators must be separated by **commas** `,`. A trailing comma after the last enumerator is optional but recommended for cleaner diffs.
 
 #### Custom Values
 
