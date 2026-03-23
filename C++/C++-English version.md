@@ -1253,18 +1253,17 @@ enum Color { Red, Yellow, Green };
 // Green = Yellow + 1 = 2
 ```
 
-> **Note:** Enumerators must be separated by **commas** `,`. A trailing comma after the last enumerator is optional but recommended for cleaner diffs.
-
-#### Custom Values
-
-| Assignment | Behavior | Example |
-|------------|----------|---------|
-| Explicit | Specified integer value | `OK = 200` |
-| Auto-increment | Previous value + 1 | `Error` becomes 405 |
+**Explicit Value Assignment:**
+You can assign explicit integer values to any enumerator. After an explicit assignment, auto-increment continues from that value.
 
 ```cpp
-enum Status { OK = 200, NotFound = 404, Error };  // Error = 405
+enum Status { OK = 200, NotFound = 404, Error };
+// OK = 200 (explicit)
+// NotFound = 404 (explicit)
+// Error = 405 (auto-increment from 404)
 ```
+
+> **Note:** Enumerators must be separated by **commas** `,`. A trailing comma after the last enumerator is optional but recommended for cleaner diffs.
 
 #### Restrictions
 
