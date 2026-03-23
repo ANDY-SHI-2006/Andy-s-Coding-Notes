@@ -2199,6 +2199,19 @@ printf("control string", arg1, arg2, ...);
 
 **Performance**: Generally faster than `cout` for large data output, but less type-safe.
 
+#### 1.7.2.2 Basic Usage
+
+**Control String Structure:**
+
+```cpp
+printf("control string", arg1, arg2, ...);
+```
+
+The control string contains:
+- **Conversion specifiers** (e.g., `%d`, `%f`) - replaced by arguments
+- **Literal text** - printed as-is
+- **Escape sequences** (e.g., `\n`, `\t`)
+
 **Basic Example:**
 
 ```cpp
@@ -2207,11 +2220,6 @@ printf("%d %d\n", a, b);           // 88 89
 printf("%d,%d\n", a, b);           // 88,89
 printf("a=%d,b=%d\n", a, b);       // a=88,b=89
 ```
-
-**Control String:** Double quotes required. Contains:
-- **Conversion specifiers** (e.g., `%d`, `%f`) - replaced by arguments
-- **Literal text** - printed as-is
-- **Escape sequences** (e.g., `\n`, `\t`)
 
 **Multiple Specifiers:**
 
@@ -2224,11 +2232,9 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 > **Note:** Arguments can be variables or expressions (e.g., `z + 3`).
 
-**Escape Character:**
+#### 1.7.2.3 Escape Sequences
 
-The backslash (`\`) is called an **escape character** when used in a control string. It combines with the following character to give it special meaning.
-
-**Common Escape Sequences:**
+The backslash (`\`) is an **escape character** that gives special meaning to the following character.
 
 | Sequence | Meaning | Description |
 |----------|---------|-------------|
@@ -2250,7 +2256,7 @@ printf("\"The End.\"\n");     // Output: "The End." (with newline)
 printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 ```
 
-#### 1.7.2.2 Conversion Specifier Syntax
+#### 1.7.2.4 Format Specifier Syntax
 
 ```
 %[flags][width][.precision][length]specifier
@@ -2260,7 +2266,7 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 
 **Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
 
-**1. Flags** - **OPTIONAL**
+##### **1. Flags** (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -2270,28 +2276,26 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 | `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
 | `0` | Zero-pad (with width) | `%05d` → `00042` |
 
-**2. Width** - **OPTIONAL**
+##### **2. Width** (Optional)
 
-Specifies the **minimum** number of characters to print. If the value is shorter, it is padded with spaces (or zeros if `0` flag is used). If the value is longer, the field is **auto-expanded** (not truncated).
+Specifies the **minimum** number of characters to print.
 
 | Behavior | Meaning | Example |
 |----------|---------|---------|
 | **Right-aligned by default** | Numbers aligned right, padded with spaces on the left | `%8d` with `42` → `"      42"` (6 spaces + 42) |
-| **Auto-expands if needed** | If the number is too long, field width increases to fit; never truncated | `%4d` with `-145` → `"-145"` (exactly 4 chars, not compressed) |
+| **Auto-expands if needed** | If the number is too long, field width increases to fit; never truncated | `%4d` with `-145` → `"-145"` (exactly 4 chars) |
 
-**In short:**
-
+**Key points:**
 - `%8d` = **at least** 8 characters; if shorter, pad with spaces on the left; if longer, auto-expand
 - Width is a **minimum**, not a fixed value
-
-Think of it like an Excel cell with minimum width: when content is short, fill with spaces; when content is long, auto-expand without truncation.
+- Think of it like an Excel cell with minimum width: when content is short, fill with spaces; when content is long, auto-expand without truncation.
 
 | Width | Description | Example |
 |-------|-------------|---------|
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
 
-**3. Precision** (`.precision`) - **OPTIONAL**
+##### **3. Precision** (`.precision`) - Optional
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
@@ -2305,29 +2309,7 @@ Think of it like an Excel cell with minimum width: when content is short, fill w
 - The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
 - **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` → `"    3.14"`)
 
-**Examples (integer value = -145):**
-
-| Specifier | Output | Explanation |
-|-----------|--------|-------------|
-| `%i` | `-145` | Default, no padding |
-| `%4d` | `-145` | Width 4, value fits exactly |
-| `%3i` | `-145` | Width 3, auto-expanded to fit |
-| `%6i` | `  -145` | Width 6, right-justified (2 blanks on left) |
-| `%-6i` | `-145  ` | Width 6, left-justified (2 blanks on right) |
-
-**Examples (double value = 157.8926):**
-
-| Specifier | Output | Explanation |
-|-----------|--------|-------------|
-| `%f` | `157.892600` | Default: 6 decimal places |
-| `%6.2f` | `157.89` | Width 6, 2 decimal places, rounded |
-| `%+8.2f` | ` +157.89` | Width 8, show sign, right-justified |
-| `%7.5f` | `157.89260` | Width 7, 5 decimal places |
-| `%e` | `1.578926e+02` | Exponential form |
-| `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
-| `%g` | `157.893` | Auto-select shorter format, rounded |
-
-**4. Length Modifier** - **OPTIONAL**
+##### **4. Length Modifier** (Optional)
 
 | Modifier | Use With | C Type | Example |
 |----------|----------|--------|---------|
@@ -2341,7 +2323,7 @@ Think of it like an Excel cell with minimum width: when content is short, fill w
 | `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
 | `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
 
-**5. Specifier (Conversion Specifier)** - **REQUIRED**
+##### **5. Conversion Specifiers** (Required)
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
@@ -2370,7 +2352,31 @@ Think of it like an Excel cell with minimum width: when content is short, fill w
 - `long` → use `%li` or `%ld`
 - `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
-#### 1.7.2.3 Key Differences from `cout`
+#### 1.7.2.5 Format Examples
+
+**Integer Examples (value = -145):**
+
+| Specifier | Output | Explanation |
+|-----------|--------|-------------|
+| `%i` | `-145` | Default, no padding |
+| `%4d` | `-145` | Width 4, value fits exactly |
+| `%3i` | `-145` | Width 3, auto-expanded to fit |
+| `%6i` | `  -145` | Width 6, right-justified (2 blanks on left) |
+| `%-6i` | `-145  ` | Width 6, left-justified (2 blanks on right) |
+
+**Floating-Point Examples (value = 157.8926):**
+
+| Specifier | Output | Explanation |
+|-----------|--------|-------------|
+| `%f` | `157.892600` | Default: 6 decimal places |
+| `%6.2f` | `157.89` | Width 6, 2 decimal places, rounded |
+| `%+8.2f` | ` +157.89` | Width 8, show sign, right-justified |
+| `%7.5f` | `157.89260` | Width 7, 5 decimal places |
+| `%e` | `1.578926e+02` | Exponential form |
+| `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
+| `%g` | `157.893` | Auto-select shorter format, rounded |
+
+#### 1.7.2.6 Key Differences from `cout`
 
 | Feature | `printf` | `cout` |
 |---------|----------|--------|
