@@ -1520,6 +1520,8 @@ char str2[6] = "Hello";                           // Same as above
 char str3[] = "Hello";                            // Size = 6 (includes '\0')
 ```
 
+> **Note:** Array size must be **string length + 1** to accommodate the null terminator `\0`.
+
 **6. Runtime initialization (with program statements):**
 
 Arrays can also be initialized during program execution using loops or other statements:
