@@ -2272,17 +2272,24 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 
 **2. Width** - **OPTIONAL**
 
+Specifies the **minimum** number of characters to print. If the value is shorter, it is padded with spaces (or zeros if `0` flag is used). If the value is longer, the field is **auto-expanded** (not truncated).
+
+| Behavior | Meaning | Example |
+|----------|---------|---------|
+| **Right-aligned by default** | Numbers aligned right, padded with spaces on the left | `%8d` with `42` → `"      42"` (6 spaces + 42) |
+| **Auto-expands if needed** | If the number is too long, field width increases to fit; never truncated | `%4d` with `-145` → `"-145"` (exactly 4 chars, not compressed) |
+
+**In short:**
+
+- `%8d` = **at least** 8 characters; if shorter, pad with spaces on the left; if longer, auto-expand
+- Width is a **minimum**, not a fixed value
+
+Think of it like an Excel cell with minimum width: when content is short, fill with spaces; when content is long, auto-expand without truncation.
+
 | Width | Description | Example |
 |-------|-------------|---------|
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
-
-**Field Width Behavior:**
-
-| Behavior | Description | Example |
-|----------|-------------|---------|
-| Right justified by default | Extra positions filled with blanks on the left | `%8d` with `42` → `"      42"` |
-| Auto-expands if needed | Field width increases to fit value if necessary | `%4d` with `-145` → `"-145"` (4 chars, not truncated) |
 
 **3. Precision** (`.precision`) - **OPTIONAL**
 
