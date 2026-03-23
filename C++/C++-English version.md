@@ -540,100 +540,71 @@ double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
 
 #### 1.4.2.4 Power (Exponentiation)
 
-**Important:** There is **no operator** for exponentiation in C++.
+**Important:** C++ has **no operator** for exponentiation.
 
-| Expression | C++                       | Note                                              |
-| ---------- | ------------------------- | ------------------------------------------------- |
-| x⁴         | ❌ No `^` or `**` operator | Unlike Python (`**`) or math notation             |
-| a²         | `a * a`                   | Use repeated multiplication for integer exponents |
+> ⚠️ **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
+> ```cpp
+> int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
+> ```
 
-**Two Solutions:**
+| Expression | C++ | Note |
+|------------|-----|------|
+| x⁴ | ❌ No `^` or `**` | Unlike Python (`**`) or math notation |
+| a² | `a * a` | Use repeated multiplication |
 
-##### 1.4.2.4.1 Option 1: Repeated Multiplication
+##### 1.4.2.4.1 Method 1: Repeated Multiplication
+
+Fastest for small integer exponents.
 
 ```cpp
-int square = a * a;           // a² - Fast, efficient
-int cube = a * a * a;         // a³ - Still efficient
-int fourth = a * a * a * a;   // a⁴ - Acceptable
+int square = a * a;           // a²
+int cube = a * a * a;         // a³
+int fourth = a * a * a * a;   // a⁴
 ```
 
 **When to use:**
-- Exponent is a small fixed integer (2, 3, 4)
+- Exponent is small (2, 3, 4)
 - Performance-critical code
 - Working with integers
 
-**Why it's faster:** Direct CPU multiplication, no function call overhead, no floating-point conversion.
+**Why fast:** Direct CPU multiplication, no function call overhead.
 
-##### 1.4.2.4.2 Option 2: `pow()` Function
+##### 1.4.2.4.2 Method 2: `pow()` Function
+
+For fractional or variable exponents.
 
 ```cpp
-#include <cmath>  // Required header
+#include <cmath>
 
-// Syntax: pow(base, exponent)
 double result1 = pow(x, 4);      // x⁴
-double result2 = pow(2.0, 10);   // 2¹⁰ = 1024
-double result3 = pow(x, 0.5);    // √x (square root)
+double result2 = pow(2.0, 10);   // 2¹⁰
+double result3 = pow(x, 0.5);    // √x
 double result4 = pow(x, -1);     // 1/x
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `base` | `double` | The base number |
-| `exponent` | `double` | The exponent (can be fractional or negative) |
-| **Returns** | `double` | base raised to the power of exponent |
-
-**Type Conversion Behavior:**
-
-| Your Input | What Happens | Result Type |
-|------------|--------------|-------------|
-| `pow(2, 3)` | `int` → implicitly converted to `double` | `double` (8.0) |
-| `pow(2.0f, 3)` | `float` → converted to `double` | `double` |
-| `pow(2.0, 3.0)` | already `double` | `double` |
-
-**Key Points:**
-- ✅ **Parameters don't have to be double** - `int`, `float`, etc. are **implicitly converted** to `double`
-- ✅ **Return value is always double** - even if you pass integers, the result is `double`
+| Aspect | Description |
+|--------|-------------|
+| Parameters | `double, double` (implicit conversion from `int`/`float`) |
+| Returns | Always `double` |
 
 ```cpp
-int a = pow(2, 3);        // ⚠️ Warning: possible loss of data (double to int)
-                          // Actual result 8.0 is truncated to 8
-
+int a = pow(2, 3);        // ⚠️ Warning: double to int conversion
 double b = pow(2, 3);     // ✅ Correct: b = 8.0
-
-// Common pitfall
-int c = pow(2, 3) / 2;    // Result is 4.0 / 2 = 2.0, truncated to 2
 ```
 
 **When to use:**
-- Exponent is large or not known at compile time
-- Exponent is fractional (e.g., square root, cube root)
-- Exponent is negative
-- Working with floating-point numbers
+- Variable or large exponents
+- Fractional exponents (square root, etc.)
+- Negative exponents
 
-**Performance:** Slower than repeated multiplication due to function call overhead and floating-point calculations.
+**Performance:** Slower due to function call and floating-point operations.
 
-##### 1.4.2.4.3 Comparison Summary
+##### 1.4.2.4.3 Comparison
 
-| Method | Speed | Use Case | Example |
-|--------|-------|----------|---------|
-| `a * a` | ⚡ Fastest | Small fixed integer exponents | `a²`, `a³` |
-| `pow(a, 2)` | 🐢 Slower | Variable or fractional exponents | `a^b`, `√a` |
-
-##### 1.4.2.4.4 Important Warning
-
-> **Note:** The `^` symbol in C++ is the **bitwise XOR operator**, not exponentiation!
-```cpp
-int result = 2 ^ 3;  // Result: 1 (binary XOR: 10 XOR 11 = 01), NOT 8!
-```
-
-##### 1.4.2.4.5 cout Formatting for double Values
-
-> See also: [1.7.2.7 cout Formatting for double Values](#1727-cout-formatting-for-double-values)
-
-**The Issue:**
-```cpp
-cout << pow(5, 2);      // Output: 25 (not 25.0!)
-cout << 25.0;           // Output: 25 (not 25.0!)
+| Method | Speed | Use Case |
+|--------|-------|----------|
+| `a * a` | ⚡ Fastest | Small fixed exponents: `a²`, `a³` |
+| `pow(a, b)` | 🐢 Slower | Variable/fractional: `a^b`, `√a` |
 ```
 
 `pow()` **does** return `double` (25.0), but `cout` has **default formatting rules** for floating-point numbers.
