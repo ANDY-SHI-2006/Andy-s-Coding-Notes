@@ -1601,6 +1601,24 @@ int val = v.at(10);               // Throws exception if out of bounds
 
 Structure stores a collection of heterogeneous data (different types) describing a common entity.
 
+**Key Point:** Members in a structure should be logically related and describe a common entity. Don't put unrelated data together just because you can.
+
+```cpp
+// Good: All members describe a "Person"
+struct Person {
+    char name[50];   // Name of the person
+    int age;         // Age of the person
+    char gender;     // Gender of the person
+};
+
+// Bad: Unrelated data forced together
+struct Random {
+    int temperature;   // Weather data
+    double price;      // Product price
+    char grade;        // Student grade
+};
+```
+
 #### 1.5.9.1 Declaration
 
 ```cpp
@@ -1622,20 +1640,26 @@ struct Person s2;    // C: need 'struct' keyword
 
 #### 1.5.9.2 Initialization and Usage
 
+**Declare and Initialize**
 ```cpp
-// Declare and initialize
-Person s1 = {"Potter", 13, 'm'};
+Person s1 = {"Potter", 13, 'm'};  // Initialize all members
+```
 
-// Declare only
-Person s2;
+**Declare Only**
+```cpp
+Person s2;  // Members contain garbage values until assigned
+```
 
-// Structure assignment (everything copied)
-s2 = s1;
+**Structure Assignment**
+```cpp
+s2 = s1;  // All members copied from s1 to s2
+```
 
-// Access member using '.'
-s1.age = 14;                    // Modify field
-s2.age = s1.age * 2;            // Read and store
-s2.gender = 'f';                // Modify field
+**Access Member Using Dot Operator**
+```cpp
+s1.age = 14;           // Modify field
+s2.age = s1.age * 2;   // Read and store
+s2.gender = 'f';       // Modify field
 ```
 
 ---
