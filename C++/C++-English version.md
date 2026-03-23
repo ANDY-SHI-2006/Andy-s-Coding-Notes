@@ -1259,10 +1259,13 @@ enum Status {
 
 #### Restrictions
 
-```cpp
-c1 = 123;       // Error! Cannot assign integer directly
-c2++;           // Error! ++ not defined for enum
-```
+**Type Safety Rules:**
+
+| Invalid Operation | Code | Reason |
+|-------------------|------|--------|
+| Integer assignment | `c1 = 123;` | Cannot assign `int` directly to enum variable |
+| Increment/decrement | `c2++;` | `++` not defined for enum types |
+| Implicit conversion | `int x = c1;` (C++98) | Must use explicit `static_cast<int>(c1)` |
 
 **Enumerator Values Must Be Integral Types**
 
@@ -1284,12 +1287,6 @@ enum Status : unsigned char {  // Explicit underlying type (C++11)
 | `short`, `unsigned short` | `B = 100` |
 | `int`, `unsigned int` | Default underlying type |
 | `long`, `long long` | `C = 1LL << 63` |
-
-| Operation | Valid? |
-|-----------|--------|
-| `c1 = Yellow` | ✅ Yes |
-| `c1 = 123` | ❌ No |
-| `c2++` | ❌ No |
 
 #### Usage
 
