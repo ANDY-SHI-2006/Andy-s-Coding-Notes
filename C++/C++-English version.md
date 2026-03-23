@@ -834,7 +834,7 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 | `long` | 4-8 bytes | Platform dependent |
 | `long long` | 8 bytes | -9 quintillion to 9 quintillion |
 
-#### 1.5.1.2 Floating-Point Precision
+#### 1.5.1.3 Floating-Point Precision
 
 | Type          | Size       | Precision     | Typical Range      |
 | ------------- | ---------- | ------------- | ------------------ |
@@ -842,7 +842,7 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 | `double`      | 8 bytes    | ~15 digits    | ±1.7 × 10³⁰⁸       |
 | `long double` | 8-16 bytes | ~18-21 digits | Platform dependent |
 
-#### 1.5.1.3 Overflow and Underflow
+#### 1.5.1.4 Overflow and Underflow
 
 All numeric types have limited ranges. When computation results exceed these ranges, errors occur.
 
@@ -1680,7 +1680,7 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-#### 1. Flags - **OPTIONAL**
+**1. Flags** - **OPTIONAL**
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -1701,7 +1701,7 @@ scanf("%*s%d", &a);  // Input: "hello 42" → a=42 ("hello" is skipped)
 
 > **Note**: Unlike `printf`, `scanf` does NOT support flags like `-`, `+`, `0`, `#` for formatting. These are only for output.
 
-#### 2. Width - **OPTIONAL**
+**2. Width** - **OPTIONAL**
 
 Specifies the **maximum** number of characters to read for this field.
 
@@ -1729,7 +1729,7 @@ scanf("%2d%2d%4d", &day, &month, &year);  // Input: "25122024" → day=25, month
 
 > **Important**: For `%s`, width should be **one less** than buffer size to leave room for `\0`.
 
-#### 3. Length Modifier - **OPTIONAL**
+**3. Length Modifier** - **OPTIONAL**
 
 Specifies the size of the receiving variable. **Critical for correct memory access.**
 
@@ -1757,7 +1757,7 @@ scanf("%f", &d);        // ✗ WRONG! Should use %lf for double
 scanf("%lf", &d);       // ✓ CORRECT
 ```
 
-#### 4. Specifier (Conversion Specifier) - **REQUIRED**
+**4. Specifier (Conversion Specifier)** - **REQUIRED**
 
 | Specifier | Type | Input Format | Example Input |
 |-----------|------|--------------|---------------|
@@ -1995,7 +1995,7 @@ scanf("%d", &a);
 
 Console output using `cout` (character output).
 
-#### 1.7.1.2 Newline Control
+#### 1.7.1.1 Newline Control
 
 Both create a new line, but with a key difference:
 
@@ -2011,15 +2011,15 @@ cout << "Hello" << '\n';    // Just newline, faster
 
 **Note**: Frequent use of `endl` can slow down the program. Use `'\n'` unless you need to force output immediately.
 
-#### 1.7.1.3 Output Formatting
+#### 1.7.1.2 Output Formatting
 
-##### 1.7.1.3.1 Header Dependency
+##### 1.7.1.2.1 Header Dependency
 
 ```cpp
 #include <iomanip>
 ```
 
-##### 1.7.1.3.2 Core Mechanism
+##### 1.7.1.2.2 Core Mechanism
 
 C++ has three floating-point output formats:
 
@@ -2029,14 +2029,14 @@ C++ has three floating-point output formats:
 | `fixed` | Fixed-point notation | `12345.678900` |
 | `scientific` | Scientific notation | `1.234568e+04` |
 
-##### 1.7.1.3.3 setprecision(n) Meaning
+##### 1.7.1.2.3 setprecision(n) Meaning
 
 `setprecision(n)` behavior depends on the current format:
 
 - **Default**: `n` significant digits
 - `fixed`/`scientific`: `n` digits after decimal point
 
-##### 1.7.1.3.4 Detailed Comparison and Examples
+##### 1.7.1.2.4 Detailed Comparison and Examples
 
 ```cpp
 double pi = 3.1415926535;
@@ -2057,7 +2057,7 @@ cout << scientific << setprecision(4);
 cout << 123.456 << endl;  // 1.2346e+02
 ```
 
-##### 1.7.1.3.5 State Persistence
+##### 1.7.1.2.5 State Persistence
 
 `fixed` and `setprecision` persist until explicitly changed.
 
@@ -2067,7 +2067,7 @@ cout << 1.234 << endl;  // 1.23
 cout << 5.678 << endl;  // 5.68 (format still active!)
 ```
 
-##### 1.7.1.3.6 Reset to Default
+##### 1.7.1.2.6 Reset to Default
 
 ```cpp
 // C++11 method
@@ -2078,7 +2078,7 @@ cout.unsetf(ios::fixed | ios::scientific);
 cout << setprecision(6);
 ```
 
-##### 1.7.1.3.7 cout Formatting for double Values
+##### 1.7.1.2.7 cout Formatting for double Values
 
 > See also: [1.4.3.4 Power - cout Formatting for double Values](#1434-power-exponentiation)
 
@@ -2215,7 +2215,7 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 
 **Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
 
-#### 1. Flags - **OPTIONAL**
+**1. Flags** - **OPTIONAL**
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -2225,7 +2225,7 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 | `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
 | `0` | Zero-pad (with width) | `%05d` → `00042` |
 
-#### 2. Width - **OPTIONAL**
+**2. Width** - **OPTIONAL**
 
 | Width | Description | Example |
 |-------|-------------|---------|
@@ -2237,7 +2237,7 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 - Field width will be **increased if necessary** to fit the actual value
 - Use with `-` flag for **left justify** (e.g., `%-8i` with `42` → `"42      "`)
 
-#### 3. Precision (`.precision`) - **OPTIONAL**
+**3. Precision** (`.precision`) - **OPTIONAL**
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
@@ -2273,7 +2273,7 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 | `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
 | `%g` | `157.893` | Auto-select shorter format, rounded |
 
-#### 4. Length Modifier - **OPTIONAL**
+**4. Length Modifier** - **OPTIONAL**
 
 | Modifier | Use With | C Type | Example |
 |----------|----------|--------|---------|
@@ -2287,7 +2287,7 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 | `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
 | `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
 
-#### 5. Specifier (Conversion Specifier) - **REQUIRED**
+**5. Specifier (Conversion Specifier)** - **REQUIRED**
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
