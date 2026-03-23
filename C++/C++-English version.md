@@ -1369,10 +1369,10 @@ enum Status : unsigned char; // OK (traditional enum)
 
 #### Type Traits and Utilities (C++11/C++23)
 
-| Feature | Version | Purpose | Syntax |
-|---------|---------|---------|--------|
-| `std::underlying_type` | C++11 | Get underlying integer type | `std::underlying_type_t<Enum>` |
-| `std::to_underlying` | C++23 | Convert enum to underlying value | `std::to_underlying(e)` |
+| Feature                | Version | Purpose                          | Syntax                         |
+| ---------------------- | ------- | -------------------------------- | ------------------------------ |
+| `std::underlying_type` | C++11   | Get underlying integer type      | `std::underlying_type_t<Enum>` |
+| `std::to_underlying`   | C++23   | Convert enum to underlying value | `std::to_underlying(e)`        |
 
 ```cpp
 #include <type_traits>
@@ -1389,6 +1389,8 @@ auto val = std::to_underlying(c);  // unsigned char
 // Pre-C++23 equivalent
 auto val2 = static_cast<std::underlying_type_t<Color>>(c);
 ```
+
+> **Summary**: `underlying_type` tells you what integer type an enum uses (e.g., `unsigned char` vs `int`). `to_underlying` converts an enum value to that integer type without writing a long `static_cast`. These are mainly used in template/generic code; you won't need them in everyday programming.
 
 #### Bit Flags Pattern
 
@@ -1434,7 +1436,7 @@ Permission p = Permission::Read | Permission::Write;
 
 Array stores a set of values with the same data type under a single identifier, allowing efficient management of multiple related values.
 
-#### Why Use Arrays?
+#### Benefits of Using Arrays
 
 Without arrays, managing 100 temperature readings would require 100 separate variables:
 ```cpp
