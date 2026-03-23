@@ -1275,26 +1275,39 @@ enum Status { OK = 200, NotFound = 404, Error };
 | Increment/decrement | `c2++;` | `++` not defined for enum types |
 | Implicit conversion | `int x = c1;` (C++98) | Must use explicit `static_cast<int>(c1)` |
 
-**Enumerator Values Must Be Integral Types**
+#### Underlying Type and Value Constraints
 
-Enum constants must be compile-time integer constants:
+**Value Constraints:**
+Enum constants must be compile-time integer constants. Floating-point and string values are not allowed.
 
 ```cpp
-enum Status : unsigned char {  // Explicit underlying type (C++11)
+enum Status {
     OK = 0,
     NotFound = 1,
-    Error = 2,
     // Bad = 3.14,      // Error: floating-point not allowed
     // Bad = "error"    // Error: string not allowed
 };
 ```
 
-| Allowed Types             | Examples                |
-| ------------------------- | ----------------------- |
-| `char`, `unsigned char`   | `A = 'x'` (ASCII value) |
-| `short`, `unsigned short` | `B = 100`               |
-| `int`, `unsigned int`     | Default underlying type |
-| `long`, `long long`       | `C = 1LL << 63`         |
+**Specifying Underlying Type (C++11):**
+Both `enum` and `enum class` can explicitly specify the underlying integer type:
+
+```cpp
+enum class Status : unsigned char {  // 1 byte instead of 4
+    OK = 200,
+    ERROR = 500
+};
+
+enum Color : short { Red, Green, Blue };  // Traditional enum with short
+```
+
+| Underlying Type | Size | Use Case |
+|-----------------|------|----------|
+| `unsigned char` | 1 byte | Small values (0-255), memory-constrained systems |
+| `short` | 2 bytes | Small to medium value range |
+| `int` (default) | 4 bytes | General use, default for `enum class` |
+| `long`, `long long` | 8 bytes | Large values (e.g., `1LL << 63`) |
+| `unsigned int` | 4 bytes | Bit flags (recommended) |
 
 #### Usage
 
@@ -1342,26 +1355,6 @@ enum class Color { Red, Green, Blue };
 Color c = Color::Red;     // Must use scope operator
 // int i = c;             // Error: no implicit conversion to int
 ```
-
-#### Specifying Underlying Type
-
-Both `enum` and `enum class` can specify the underlying integer type (C++11):
-
-```cpp
-enum class Status : unsigned char {  // 1 byte instead of 4
-    OK = 200,
-    ERROR = 500
-};
-
-enum Color : short { Red, Green, Blue };  // Traditional enum with short
-```
-
-| Use Case | Recommended Type |
-|----------|-----------------|
-| Small value range (0-255) | `unsigned char` |
-| Memory-constrained systems | Smallest fitting type |
-| Large values | `int`, `long`, `long long` |
-| Bit flags | `unsigned int` |
 
 #### Forward Declaration
 
