@@ -1264,6 +1264,27 @@ c1 = 123;       // Error! Cannot assign integer directly
 c2++;           // Error! ++ not defined for enum
 ```
 
+**Enumerator Values Must Be Integral Types**
+
+Enum constants must be compile-time integer constants:
+
+```cpp
+enum Status : unsigned char {  // Explicit underlying type (C++11)
+    OK = 0,
+    NotFound = 1,
+    Error = 2,
+    // Bad = 3.14,      // Error: floating-point not allowed
+    // Bad = "error"    // Error: string not allowed
+};
+```
+
+| Allowed Types | Examples |
+|---------------|----------|
+| `char`, `unsigned char` | `A = 'x'` (ASCII value) |
+| `short`, `unsigned short` | `B = 100` |
+| `int`, `unsigned int` | Default underlying type |
+| `long`, `long long` | `C = 1LL << 63` |
+
 | Operation | Valid? |
 |-----------|--------|
 | `c1 = Yellow` | ✅ Yes |
@@ -1308,6 +1329,104 @@ Color c = Color::Red;   // Scope operator required
 | Scope | Global | Scoped (`Color::Red`) |
 | Implicit int conversion | ✅ Yes | ❌ No |
 | Type safety | Weak | Strong |
+| Underlying type | Compiler-dependent | `int` by default |
+
+#### Specifying Underlying Type
+
+Both `enum` and `enum class` can specify the underlying integer type (C++11):
+
+```cpp
+enum class Status : unsigned char {  // 1 byte instead of 4
+    OK = 200,
+    ERROR = 500
+};
+
+enum Color : short { Red, Green, Blue };  // Traditional enum with short
+```
+
+| Use Case | Recommended Type |
+|----------|-----------------|
+| Small value range (0-255) | `unsigned char` |
+| Memory-constrained systems | Smallest fitting type |
+| Large values | `int`, `long`, `long long` |
+| Bit flags | `unsigned int` |
+
+#### Forward Declaration
+
+Enums can be forward-declared to reduce header dependencies:
+
+```cpp
+// Must specify underlying type for forward declaration
+enum class Color : int;      // OK
+enum Status : unsigned char; // OK (traditional enum)
+// enum Color;               // Error: type not specified
+```
+
+#### Type Traits and Utilities (C++11/C++23)
+
+**`std::underlying_type`** - Get the underlying integer type:
+
+```cpp
+#include <type_traits>
+
+enum class Color : unsigned char { Red, Green, Blue };
+
+// Get underlying type
+using Underlying = std::underlying_type_t<Color>;  // unsigned char
+
+// Use in templates or generic code
+static_assert(std::is_same_v<Underlying, unsigned char>);
+```
+
+**`std::to_underlying` (C++23)** - Convert enum to underlying value:
+
+```cpp
+#include <utility>  // C++23
+
+Color c = Color::Red;
+auto val = std::to_underlying(c);  // Returns unsigned char, no cast needed
+
+// Pre-C++23 equivalent
+auto val = static_cast<std::underlying_type_t<Color>>(c);
+```
+
+#### Bit Flags Pattern
+
+Enums are commonly used for bitwise operations (flags):
+
+```cpp
+enum class Permission : unsigned int {
+    None   = 0,
+    Read   = 1 << 0,  // 0b0001 = 1
+    Write  = 1 << 1,  // 0b0010 = 2
+    Execute= 1 << 2   // 0b0100 = 4
+};
+
+// Overload bitwise operators
+inline Permission operator|(Permission a, Permission b) {
+    return static_cast<Permission>(
+        static_cast<unsigned int>(a) |
+        static_cast<unsigned int>(b)
+    );
+}
+
+// Usage
+Permission p = Permission::Read | Permission::Write;
+```
+
+**Built-in alternatives for flags:**
+- `std::bitset<N>` - Fixed-size bitset with logical operations
+- `std::vector<bool>` - Dynamic bit-packed bool array
+
+#### Best Practices
+
+| Practice | Recommendation |
+|----------|---------------|
+| Prefer `enum class` | Always use scoped enums for new code |
+| Specify underlying type | When memory size matters or for forward declarations |
+| Use `switch` | Compiler can warn on missing cases |
+| Avoid `operator++` | Not defined for enums; use explicit assignment |
+| Use `std::to_underlying` | C++23 for safe conversion to integer |
 
 ### 1.5.8 Array
 
