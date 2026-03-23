@@ -2277,10 +2277,12 @@ printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
 
-**Field width behavior:**
-- Value is **right justified** by default (extra positions filled with blanks on the left)
-- Field width will be **increased if necessary** to fit the actual value
-- Use with `-` flag for **left justify** (e.g., `%-8i` with `42` → `"42      "`)
+**Field Width Behavior:**
+
+| Behavior | Description | Example |
+|----------|-------------|---------|
+| Right justified by default | Extra positions filled with blanks on the left | `%8d` with `42` → `"      42"` |
+| Auto-expands if needed | Field width increases to fit value if necessary | `%4d` with `-145` → `"-145"` (4 chars, not truncated) |
 
 **3. Precision** (`.precision`) - **OPTIONAL**
 
