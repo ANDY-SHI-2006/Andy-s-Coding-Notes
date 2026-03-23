@@ -1470,7 +1470,7 @@ double t[4];       // 4 doubles (indices 0-3)
 | **Contiguous Memory** | Elements stored sequentially in memory |
 | **Access** | `s[0]`, `s[1]`, ... `s[5]` (subscript operator `[]`) |
 
-> **Note:** Array size must be specified in declaration using **either a constant in brackets** or **an initialization sequence in braces**.
+> **Note:** Array size must be specified in declaration using **either a constant in brackets** or **an initialization sequence in braces**. Essentially, this tells the system how much memory space to allocate for the array.
 
 #### Memory Layout
 
