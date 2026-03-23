@@ -626,7 +626,7 @@ int c = pow(2, 3) / 2;    // Result is 4.0 / 2 = 2.0, truncated to 2
 int result = 2 ^ 3;  // Result: 1 (binary XOR: 10 XOR 11 = 01), NOT 8!
 ```
 
-##### cout Formatting for double Values
+##### 1.4.2.4.5 cout Formatting for double Values
 
 > See also: [1.7.2.7 cout Formatting for double Values](#1727-cout-formatting-for-double-values)
 
@@ -1340,7 +1340,7 @@ Color c = Color(1);       // OK: explicit int→enum (c = Yellow)
 // Color c = 1;           // Error: cannot convert 'int' to 'Color' implicitly
 ```
 
-#### `enum class` (C++11)
+#### 1.5.7.6 `enum class` (C++11)
 
 | Feature | `enum` | `enum class` |
 |---------|--------|--------------|
@@ -1356,7 +1356,7 @@ Color c = Color::Red;     // Must use scope operator
 // int i = c;             // Error: no implicit conversion to int
 ```
 
-#### 1.5.7.6 Forward Declaration
+#### 1.5.7.7 Forward Declaration
 
 Enums can be forward-declared to reduce header dependencies:
 
@@ -1367,7 +1367,7 @@ enum Status : unsigned char; // OK (traditional enum)
 // enum Color;               // Error: type not specified
 ```
 
-#### 1.5.7.7 Type Traits and Utilities (C++11/C++23)
+#### 1.5.7.8 Type Traits and Utilities (C++11/C++23)
 
 | Feature                | Version | Purpose                          | Syntax                         |
 | ---------------------- | ------- | -------------------------------- | ------------------------------ |
@@ -1392,7 +1392,7 @@ auto val2 = static_cast<std::underlying_type_t<Color>>(c);
 
 > **Summary**: `underlying_type` tells you what integer type an enum uses (e.g., `unsigned char` vs `int`). `to_underlying` converts an enum value to that integer type without writing a long `static_cast`. These are mainly used in template/generic code; you won't need them in everyday programming.
 
-#### 1.5.7.8 Bit Flags Pattern
+#### 1.5.7.9 Bit Flags Pattern
 
 | Technique | Description | Example |
 |-----------|-------------|---------|
@@ -1422,7 +1422,7 @@ Permission p = Permission::Read | Permission::Write;
 - `std::bitset<N>` - Fixed-size bitset
 - `std::vector<bool>` - Dynamic bit-packed array
 
-#### 1.5.7.9 Best Practices
+#### 1.5.7.10 Best Practices
 
 | Practice | Recommendation |
 |----------|---------------|
@@ -2105,14 +2105,14 @@ C++ has three floating-point output formats:
 | `fixed` | Fixed-point notation | `12345.678900` |
 | `scientific` | Scientific notation | `1.234568e+04` |
 
-##### setprecision(n) Meaning
+##### 1.7.1.3.3 setprecision(n) Meaning
 
 `setprecision(n)` behavior depends on the current format:
 
 - **Default**: `n` significant digits
 - `fixed`/`scientific`: `n` digits after decimal point
 
-##### 1.7.1.3.3 Detailed Comparison and Examples
+##### 1.7.1.3.4 Detailed Comparison and Examples
 
 ```cpp
 double pi = 3.1415926535;
@@ -2133,7 +2133,7 @@ cout << scientific << setprecision(4);
 cout << 123.456 << endl;  // 1.2346e+02
 ```
 
-##### 1.7.1.3.4 State Persistence
+##### 1.7.1.3.5 State Persistence
 
 `fixed` and `setprecision` persist until explicitly changed.
 
@@ -2143,7 +2143,7 @@ cout << 1.234 << endl;  // 1.23
 cout << 5.678 << endl;  // 5.68 (format still active!)
 ```
 
-##### 1.7.1.3.5 Reset to Default
+##### 1.7.1.3.6 Reset to Default
 
 ```cpp
 // C++11 method
@@ -2154,7 +2154,7 @@ cout.unsetf(ios::fixed | ios::scientific);
 cout << setprecision(6);
 ```
 
-##### cout Formatting for double Values
+##### 1.7.1.3.7 cout Formatting for double Values
 
 > See also: [1.4.2.4 Power - cout Formatting for double Values](#1424-power-exponentiation)
 
