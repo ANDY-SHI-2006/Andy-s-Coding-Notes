@@ -98,12 +98,34 @@ int main() {
 
 **`int main()` vs `int main(void)`:**
 
-| Declaration | C++ | C Language |
-|-------------|-----|------------|
-| `int main()` | ✅ No parameters | ⚠️ Old style, may accept any parameters |
-| `int main(void)` | ✅ No parameters | ✅ Explicitly states no parameters |
+| Declaration | C++ | C Language | Usage |
+|-------------|-----|------------|-------|
+| `int main()` | ✅ No parameters | ⚠️ Old style, may accept any parameters | Standard C++ |
+| `int main(void)` | ✅ No parameters | ✅ Explicitly states no parameters | Explicit no-args |
+| `int main(int argc, char* argv[])` | ✅ Command-line args | ✅ Command-line args | Receive program arguments |
 
 > **Conclusion**: In C++, `int main()` and `int main(void)` are identical. Write `int main()` as it is the most standard form in C++.
+
+**Command-line Arguments:**
+
+```cpp
+int main(int argc, char* argv[]) {
+    // argc = argument count (including program name)
+    // argv = argument vector (array of strings)
+    
+    for (int i = 0; i < argc; i++) {
+        cout << "Arg " << i << ": " << argv[i] << endl;
+    }
+    return 0;
+}
+```
+
+Running: `./program hello world`
+```
+Arg 0: ./program
+Arg 1: hello
+Arg 2: world
+`
 
 ---
 
