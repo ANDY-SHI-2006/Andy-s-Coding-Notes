@@ -2165,7 +2165,7 @@ The backslash (`\`) is an **escape character** that gives special meaning to the
 |----------|---------|-------------|
 | `\n` | newline | Skip to a new line |
 | `\t` | horizontal tab | Move to next tab stop |
-| `\a` | alert (bell) | Audible alert (may not sound on modern systems) |
+| `\a` | alert (bell) | Audible alert |
 | `\b` | backspace | Move back one position |
 | `\f` | formfeed | New page (rarely used) |
 | `\r` | carriage return | Return to start of line |
@@ -2179,14 +2179,7 @@ The backslash (`\`) is an **escape character** that gives special meaning to the
 ```cpp
 printf("\"The End.\"\n");     // Output: "The End." (with newline)
 printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
-printf("\a");  // Alert bell (may not produce sound on modern systems)
 ```
-
-> **Note:** `\a` (alert bell) may not produce audible sound on modern systems due to:
-> - System sound settings disabling beep
-> - Terminal/IDE not supporting audible alerts
-> - Missing motherboard speaker hardware
-> Use `Beep(frequency, duration)` (Windows) or system-specific APIs for guaranteed sound.
 
 #### 1.7.2.4 Format Specifier Syntax
 
