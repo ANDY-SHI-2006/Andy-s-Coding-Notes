@@ -152,6 +152,8 @@ Arg 2: world
 
 ## 2.1 Comments
 
+### 2.1.1 Comment Types
+
 | Type | Syntax | Usage | Example |
 |------|--------|-------|---------|
 | **Single-line** | `//` | Comments from `//` to end of line | `// This is a single-line comment` |
@@ -171,11 +173,14 @@ int b = 20;
 /* Multi-line comments can also be on one line */ int c = 30;
 ```
 
-**Notes**:
-- Multi-line comments cannot be nested (`/* /* */ */` will cause errors)
-- Use `//` to temporarily disable a line of code during debugging
+### 2.1.2 Important Notes
 
-**Program Structure Comments**
+| Note | Description |
+|------|-------------|
+| Nesting | Multi-line comments cannot be nested (`/* /* */ */` will cause errors) |
+| Debugging | Use `//` to temporarily disable a line of code during debugging |
+
+### 2.1.3 Program Structure Comments
 
 Comments are often used to mark the beginning and end of sections:
 
