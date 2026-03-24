@@ -148,11 +148,53 @@ Arg 2: world
 
 ---
 
-# 2 Code Standardization
+## 2.1 Program Example
 
-## 2.1 Comments
+This is a complete example program that demonstrates good coding standards and conventions:
 
-### 2.1.1 Comment Types
+```cpp
+/*--------------------------------------*/
+/* Program lecture1_1                   */
+/*                                      */
+/* This program computes the            */
+/* distance between two points.         */
+/*--------------------------------------*/
+
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    // Declare and initialize variables.
+    double x1=1, y1=5, x2=4, y2=7,
+           side_1, side_2, distance;
+
+    /* Compute sides of a right triangle. */
+    side_1 = x2 - x1;
+    side_2 = y2 - y1;
+    distance = sqrt(side_1*side_1 + side_2*side_2);
+
+    /* Print distance. */
+    printf("The distance between the two points is "
+           "%5.2f \n", distance);
+
+    /* Exit program. */
+    return 0;
+}
+/*--------------------------------------*/
+```
+
+**Key features demonstrated:**
+- Header comments with program description
+- Consistent indentation (4 spaces)
+- Descriptive variable names (`side_1`, `distance`)
+- Comments explaining each section
+- String splitting across lines in printf
+- Proper program termination with return
+
+## 2.2 Comments
+
+### 2.2.1 Comment Types
 
 | Type | Syntax | Usage | Example |
 |------|--------|-------|---------|
@@ -173,14 +215,14 @@ int b = 20;
 /* Multi-line comments can also be on one line */ int c = 30;
 ```
 
-### 2.1.2 Important Notes
+### 2.2.2 Important Notes
 
 | Note | Description |
 |------|-------------|
 | Nesting | Multi-line comments cannot be nested (`/* /* */ */` will cause errors) |
 | Debugging | Use `//` to temporarily disable a line of code during debugging |
 
-### 2.1.3 Program Structure Comments
+### 2.2.3 Program Structure Comments
 
 Comments are often used to mark the beginning and end of sections:
 
@@ -191,7 +233,7 @@ return 0;
 /*---------------------------------------------*/
 ```
 
-## 2.2 White Space
+## 2.3 White Space
 
 **White space** (blank lines and indentation) makes programs more **readable**, easier to **modify**, and provides a **consistent style**.
 
@@ -200,7 +242,7 @@ return 0;
 | **Blank lines** | Separate different components | Between function sections |
 | **Indentation** | Show program structure        | Inside `{ }` blocks       |
 
-### 2.2.1 Blank Lines
+### 2.3.1 Blank Lines
 
 Blank lines separate logical sections to improve readability:
 
@@ -219,9 +261,9 @@ int main() {
 }
 ```
 
-### 2.2.2 Indentation and Line Splitting
+### 2.3.2 Indentation and Line Splitting
 
-#### 2.2.2.1 Basic Indentation Rule
+#### 2.3.2.1 Basic Indentation Rule
 
 Code inside braces `{}` must be indented to show hierarchy.
 
@@ -236,15 +278,15 @@ int main() {          // Level 0: No indent
 }                     // Level 0: No indent
 ```
 
-#### 2.2.2.2 Line Continuation
+#### 2.3.2.2 Line Continuation
 
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
-#### 2.2.2.3 Splitting Long Statements
+#### 2.3.2.3 Splitting Long Statements
 
 If a statement is too long, split it over two lines at a point that preserves readability.
 
-##### 2.2.2.3.1 Splitting printf Statements
+##### 2.3.2.3.1 Splitting printf Statements
 
 **Method 1: Split after comma**
 
@@ -275,7 +317,7 @@ printf("The distance between the "
 
 > **See also:** [7.2.3 Splitting Long printf Statements](#723-splitting-long-printf-statements) for complete syntax details and additional examples.
 
-##### 2.2.2.3.2 String Concatenation Rule
+##### 2.3.2.3.2 String Concatenation Rule
 
 When splitting strings, adjacent quoted strings are automatically concatenated by the compiler. This works for any string literal, not just in printf statements.
 
@@ -286,7 +328,7 @@ cout << "This is a very long message that "
      << endl;
 ```
 
-### 2.2.3 Spacing in Expressions
+### 2.3.3 Spacing in Expressions
 
 | Style | Description | Example |
 |-------|-------------|---------|
@@ -305,87 +347,93 @@ int result = a * b + b / c * d;  // More spaces, but consistent
 
 > See also: [1.4.5 Spacing in Expressions](#145-spacing-in-expressions) for the connection to operator precedence.
 
-## 2.3 Identifier Naming
+## 2.4 Identifier Naming
 
-C++ variable naming must follow strict rules defined by the **C++ Language Standard**; otherwise, the program will fail to compile. Additionally, for code clarity, maintainability, and team collaboration, there are widely accepted **best practice conventions**.
+### 2.4.1 Mandatory Rules (Must Follow)
 
-This section covers **Mandatory Rules** and **Best Practices** in detail.
+These rules are enforced by the compiler. Violations result in compilation errors.
 
-### Part 1: Mandatory Rules (Must Follow)
+#### 2.4.1.1 Characters
 
-These rules come directly from the C++ International Standard (ISO/IEC 14882) and are enforced by the compiler during lexical analysis.
+##### Legal Characters
 
-| Rule | ✅ Valid | ❌ Invalid |
-|------|---------|-----------|
-| **First character** | Letter or `_` | Digit or special char |
-| **Other characters** | Letters, digits, `_` | `-`, `@`, space, etc. |
-| **Case sensitivity** | `abc` ≠ `ABC` | — |
-| **Length** | Unlimited (compiler-dependent) | — |
+| Position | Allowed | Not Allowed |
+|----------|---------|-------------|
+| **First character** | Letters (`a-z`, `A-Z`), underscore (`_`) | Digits (`0-9`), special chars (`@`, `$`, etc.) |
+| **Subsequent characters** | Letters, digits (`0-9`), underscore (`_`) | Spaces, hyphens (`-`), punctuation, special chars |
 
-**Detailed Rules:**
+**Examples:**
 
-**1. Legal Character Set**
-- **First character**: Must be a **letter** (`a-z`, `A-Z`) or **underscore** (`_`)
-- **Subsequent characters**: Can be **letters**, **underscores**, or **digits** (`0-9`)
+| ✅ Valid | ❌ Invalid | Why Invalid |
+|----------|-----------|-------------|
+| `distance` | `1x` | Starts with digit |
+| `x_1` | `my name` | Contains space |
+| `_value` | `my-name` | Contains hyphen |
+| `studentCount` | `$sum` | Contains `$` |
 
-**2. Case Sensitivity**
-- C++ is **case-sensitive**: `myVariable`, `myvariable`, and `MYVARIABLE` are three completely different identifiers
+##### Illegal Characters
 
-**3. Reserved Words (Prohibited)**
-- Identifiers **cannot** be identical to C++ **keywords** (e.g., `int`, `class`, `for`, `if`)
-- Identifiers **should not** conflict with C++ standard library **reserved identifiers**:
-  - Names starting with double underscore (`__`)
-  - Names starting with underscore followed by uppercase letter (`_A`) in global namespace
+| Character | Allowed? | Example |
+|-----------|----------|---------|
+| Space | ❌ No | `my var` → Invalid |
+| Hyphen `-` | ❌ No | `my-var` → Invalid |
+| At sign `@` | ❌ No | `@value` → Invalid |
+| Percent `%` | ❌ No | `rate%` → Invalid |
 
-**4. Special Characters and Spaces**
-- **Spaces**, **punctuation** (e.g., `,`, `.`, `;`, `-`, `+`), and other special characters are **not allowed**
-- **Exception**: C++11 allows **universal character names** (e.g., `\u4E2D` for Chinese characters), but **strongly discouraged** in production code due to portability issues
+**Other Prohibited Characters (by Category):**
 
-### 2.3.1 Valid and Invalid Examples
+| Category | Characters | Used For |
+|----------|------------|----------|
+| **Punctuation** | `,` `.` `;` `:` `'` `"` | Separators, member access, statements |
+| **Brackets** | `()` `[]` `{}` | Function calls, arrays, code blocks |
+| **Arithmetic** | `+` `-` `*` `/` | Math operations |
+| **Comparison** | `<` `>` `=` `!` | Boolean expressions |
+| **Logic/Bitwise** | `&` `|` `^` `~` | Logical and bitwise operations |
+| **Others** | `?` `#` `\` `$` | Ternary, preprocessor, escape |
 
-**Valid Identifiers:**
+> **Core Principle**: Only `[a-zA-Z0-9_]` are allowed. When in doubt, stick to letters, digits, and underscores.
 
-| Identifier | Explanation |
-|------------|-------------|
-| `distance` | Starts with letter |
-| `x_1` | Contains underscore and digit |
-| `X_sum` | Case matters — different from `x_sum` |
-| `average_measurement` | Descriptive name with underscore |
-| `studentCount` | Clear and readable (camelCase) |
+#### 2.4.1.2 Case Sensitivity
 
-**Invalid Identifiers:**
+C++ distinguishes uppercase and lowercase letters.
 
-| Identifier | Reason |
-|------------|--------|
-| `1x` | Begins with a digit |
-| `switch` | Reserved keyword |
-| `$sum` | Contains invalid character `$` |
-| `rate%` | Contains invalid character `%` |
-| `my name` | Contains space |
-| `my-name` | Contains hyphen |
+| Identifiers | Are they the same? |
+|-------------|-------------------|
+| `myVariable` vs `myvariable` | ❌ Different |
+| `myVariable` vs `MYVARIABLE` | ❌ Different |
+| `count` vs `Count` | ❌ Different |
 
-### 2.3.2 Reserved Keywords
+#### 2.4.1.3 Reserved Words
 
-Cannot use C++ keywords as identifiers. Common reserved keywords by category:
+**C++ Keywords (Prohibited):**
 
 | Category | Keywords |
 |----------|----------|
-| **Types** | `int`, `char`, `double`, `float`, `bool`, `void`, `auto` |
-| **Control flow** | `if`, `else`, `for`, `while`, `do`, `switch`, `case`, `break`, `continue`, `return` |
-| **Classes & OOP** | `class`, `struct`, `public`, `private`, `protected`, `virtual`, `template` |
-| **Memory** | `const`, `static`, `sizeof`, `new`, `delete` |
+| **Types** | `int`, `char`, `double`, `float`, `bool`, `void`, `auto`, `short`, `long`, `signed`, `unsigned` |
+| **Char Types** | `wchar_t`, `char8_t`, `char16_t`, `char32_t` |
+| **Type Modifiers** | `const`, `volatile`, `mutable`, `inline`, `explicit`, `extern`, `register` |
+| **Control Flow** | `if`, `else`, `for`, `while`, `do`, `switch`, `case`, `default`, `break`, `continue`, `return`, `goto` |
+| **Classes & OOP** | `class`, `struct`, `union`, `enum`, `public`, `private`, `protected`, `virtual`, `template`, `this`, `friend`, `final`, `override` |
+| **Memory** | `static`, `sizeof`, `new`, `delete`, `alignas`, `alignof`, `thread_local` |
+| **Type Casting** | `const_cast`, `static_cast`, `dynamic_cast`, `reinterpret_cast` |
+| **Exception Handling** | `try`, `catch`, `throw`, `noexcept` |
+| **Type Info** | `typeid`, `typename`, `typedef`, `decltype` |
+| **Boolean & Null** | `true`, `false`, `nullptr` |
 | **Namespace** | `namespace`, `using` |
+| **Operator Alternatives** | `and`, `and_eq`, `bitand`, `bitor`, `compl`, `not`, `not_eq`, `or`, `or_eq`, `xor`, `xor_eq` |
+| **C++20 Features** | `concept`, `consteval`, `constexpr`, `constinit`, `co_await`, `co_return`, `co_yield`, `export`, `import`, `module`, `requires`, `static_assert` |
+| **Other** | `asm`, `operator` |
 
 > **Tip:** Most IDEs highlight keywords in a different color (usually blue or purple), making them easy to identify.
 
-### Part 2: Best Practices and Naming Conventions
+**Reserved Identifiers (Avoid):**
 
-These conventions are not enforced by the compiler but are crucial for writing professional, readable, and collaborative code.
+| Pattern | Example | Where |
+|---------|---------|-------|
+| Double underscore (`__*`) | `__internal` | Anywhere |
+| Underscore + uppercase (`_[A-Z]*`) | `_GlobalVar` | Global namespace |
 
-#### Core Principles
-
-1. **Clarity of Intent**: Names should clearly indicate the variable's purpose. Avoid meaningless single letters (except for loop counters `i, j, k`) or obscure abbreviations
-2. **Avoid Ambiguity**: Names should not be similar to existing names or imply incorrect data types
+### 2.4.2 Best Practices and Naming Conventions
 
 #### Common Naming Styles
 
@@ -424,41 +472,7 @@ These conventions are not enforced by the compiler but are crucial for writing p
 | `int _Tmp;` | Leading underscore + uppercase is reserved | `int tempValue;` |
 | `class my_class` | Class name style confused with variables | `class DataParser` |
 
-**Program Example**
-
-```cpp
-/*--------------------------------------*/
-/* Program lecture1_1                   */
-/*                                      */
-/* This program computes the            */
-/* distance between two points.         */
-/*--------------------------------------*/
-
-#include <stdio.h>
-#include <math.h>
-
-int main(void)
-{
-    // Declare and initialize variables.
-    double x1=1, y1=5, x2=4, y2=7,
-           side_1, side_2, distance;
-
-    /* Compute sides of a right triangle. */
-    side_1 = x2 - x1;
-    side_2 = y2 - y1;
-    distance = sqrt(side_1*side_1 + side_2*side_2);
-
-    /* Print distance. */
-    printf("The distance between the two points is "
-           "%5.2f \n", distance);
-
-    /* Exit program. */
-    return 0;
-}
-/*--------------------------------------*/
-```
-
-## 2.4 Long Expressions
+## 2.5 Long Expressions
 
 Break long expressions into multiple statements for readability.
 
@@ -2370,73 +2384,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 > **See also:** [2.2.2.3.1 Splitting printf Statements](#222231-splitting-printf-statements) for line continuation techniques.
 
-### 7.2.3 Splitting Long printf Statements
-
-When printf statements become too long for a single line, use these techniques to split them while maintaining readability.
-
-**Method 1: Split after comma**
-
-Split after the comma and indent the continuation to align with the opening parenthesis or first argument.
-
-```cpp
-printf("The distance between the two points is %5.2f \n",
-       distance);
-```
-
-**Method 2: Split string into two quoted parts**
-
-Divide the string literal into separate pieces, each in its own quotation marks. The compiler automatically concatenates them.
-
-```cpp
-printf("The distance between the two points is"
-       " %5.2f \n", distance);
-```
-
-**Method 3: Split at natural break in text**
-
-Split at a logical point in the text (e.g., between words) for better readability.
-
-```cpp
-printf("The distance between the "
-       "points is %5.2f \n", distance);
-```
-
-**String Concatenation Rule**
-
-When splitting strings, adjacent quoted strings are automatically concatenated by the compiler. This works for any string literal, not just in printf statements.
-
-```cpp
-// Example with cout
-cout << "This is a very long message that "
-     << "needs to be split into multiple lines"
-     << endl;
-```
-
-### 7.2.4 Escape Sequences
-
-The backslash (`\`) is an **escape character** that gives special meaning to the following character.
-
-| Sequence | Meaning | Description |
-|----------|---------|-------------|
-| `\n` | newline | Skip to a new line |
-| `\t` | horizontal tab | Move to next tab stop |
-| `\a` | alert (bell) | Audible alert |
-| `\b` | backspace | Move back one position |
-| `\f` | formfeed | New page (rarely used) |
-| `\r` | carriage return | Return to start of line |
-| `\v` | vertical tab | Vertical spacing |
-| `\\` | backslash | Print a single backslash |
-| `\'` | single quote | Print a single quote |
-| `\"` | double quote | Print a double quote |
-
-**Examples:**
-
-```cpp
-printf("\"The End.\"\n");     // Output: "The End." (with newline)
-printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
-```
-
-### 7.2.5 Format Specifier Syntax
+### 7.2.3 Format Specifier Syntax
 
 ```
 %[flags][width][.precision][length]specifier
@@ -2532,7 +2480,7 @@ Specifies the **minimum** number of characters to print.
 - `long` → use `%li` or `%ld`
 - `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
-### 7.2.6 Format Examples
+### 7.2.4 Format Examples
 
 **Integer Examples (value = -145):**
 
@@ -2555,6 +2503,72 @@ Specifies the **minimum** number of characters to print.
 | `%e` | `1.578926e+02` | Exponential form |
 | `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
 | `%g` | `157.893` | Auto-select shorter format, rounded |
+
+### 7.2.5 Escape Sequences
+
+The backslash (`\`) is an **escape character** that gives special meaning to the following character.
+
+| Sequence | Meaning | Description |
+|----------|---------|-------------|
+| `\n` | newline | Skip to a new line |
+| `\t` | horizontal tab | Move to next tab stop |
+| `\a` | alert (bell) | Audible alert |
+| `\b` | backspace | Move back one position |
+| `\f` | formfeed | New page (rarely used) |
+| `\r` | carriage return | Return to start of line |
+| `\v` | vertical tab | Vertical spacing |
+| `\\` | backslash | Print a single backslash |
+| `\'` | single quote | Print a single quote |
+| `\"` | double quote | Print a double quote |
+
+**Examples:**
+
+```cpp
+printf("\"The End.\"\n");     // Output: "The End." (with newline)
+printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
+```
+
+### 7.2.6 Splitting Long printf Statements
+
+When printf statements become too long for a single line, use these techniques to split them while maintaining readability.
+
+**Method 1: Split after comma**
+
+Split after the comma and indent the continuation to align with the opening parenthesis or first argument.
+
+```cpp
+printf("The distance between the two points is %5.2f \n",
+       distance);
+```
+
+**Method 2: Split string into two quoted parts**
+
+Divide the string literal into separate pieces, each in its own quotation marks. The compiler automatically concatenates them.
+
+```cpp
+printf("The distance between the two points is"
+       " %5.2f \n", distance);
+```
+
+**Method 3: Split at natural break in text**
+
+Split at a logical point in the text (e.g., between words) for better readability.
+
+```cpp
+printf("The distance between the "
+       "points is %5.2f \n", distance);
+```
+
+**String Concatenation Rule**
+
+When splitting strings, adjacent quoted strings are automatically concatenated by the compiler. This works for any string literal, not just in printf statements.
+
+```cpp
+// Example with cout
+cout << "This is a very long message that "
+     << "needs to be split into multiple lines"
+     << endl;
+```
 
 ### 7.2.7 Key Differences from `cout`
 
