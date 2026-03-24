@@ -29,6 +29,30 @@ There are two ways to include header files:
 > - `<stdio.h>` → C library, has `.h`
 > - `"myheader.h"` → Custom header, has `.h`
 
+**Why No Semicolon after `#include`?**
+
+`#include` is a **preprocessor directive**, not a C++ statement:
+
+| | Preprocessor Directive | C++ Statement |
+|--|------------------------|---------------|
+| **Nature** | Preprocessing instruction | Executable code |
+| **When processed** | Before compilation | During compilation |
+| **Syntax** | No `;` required | `;` required |
+| **Function** | Text substitution (insert file content) | Perform operations |
+
+```cpp
+#include <iostream>   // Preprocessor: copy iostream content here (no ;)
+int main() {          // C++ statement: needs ;
+    cout << "Hi";     // C++ statement: needs ;
+    return 0;         // C++ statement: needs ;
+}
+```
+
+Other preprocessor directives (also no `;`):
+- `#define PI 3.14` — Macro definition
+- `#ifdef DEBUG` — Conditional compilation
+- `#pragma once` — Compiler directive
+
 ## 1.2 Using std Namespace
 
 There are two ways to use standard library features:
