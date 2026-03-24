@@ -221,7 +221,7 @@ int main() {
 
 ### 2.2.2 Indentation and Line Splitting
 
-#### Basic Indentation Rule
+#### 2.2.2.1 Basic Indentation Rule
 
 Code inside braces `{}` must be indented to show hierarchy.
 
@@ -236,11 +236,11 @@ int main() {          // Level 0: No indent
 }                     // Level 0: No indent
 ```
 
-#### Line Continuation
+#### 2.2.2.2 Line Continuation
 
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
-#### Splitting Long Statements
+#### 2.2.2.3 Splitting Long Statements
 
 If a statement is too long, split it over two lines at a point that preserves readability.
 
