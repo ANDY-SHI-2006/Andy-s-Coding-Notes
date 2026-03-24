@@ -216,7 +216,7 @@ int main() {
 
 ### 2.2.2 Indentation and Line Splitting
 
-**Basic Indentation Rule:**
+#### Basic Indentation Rule
 
 Code inside braces `{}` must be indented to show hierarchy.
 
@@ -231,28 +231,32 @@ int main() {          // Level 0: No indent
 }                     // Level 0: No indent
 ```
 
-**Line Continuation:**
+#### Line Continuation
 
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
-**Splitting Long printf Statements:**
+#### Splitting Long Statements
 
-If a `printf` statement is too long, split it over two lines at a point that preserves readability. To split text in quotation marks, divide it into separate pieces, each in its own quotation marks.
+If a statement is too long, split it over two lines at a point that preserves readability.
 
-**Method 1:** Split after comma, indent the continuation
+**Example: Splitting printf Statements**
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| **Method 1** | Split after comma, indent the continuation | `printf("...%5.2f \n",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`distance);` |
+| **Method 2** | Split string into two quoted parts | `printf("...points is"`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`" %5.2f \n", distance);` |
+| **Method 3** | Split at natural break in text | `printf("...between the "`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"points is %5.2f \n", distance);` |
+
 ```cpp
+// Method 1: Split after comma
 printf("The distance between the two points is %5.2f \n",
        distance);
-```
 
-**Method 2:** Split the string into two quoted parts
-```cpp
+// Method 2: Split the string into two quoted parts
 printf("The distance between the two points is"
        " %5.2f \n", distance);
-```
 
-**Method 3:** Split at a natural break in the text
-```cpp
+// Method 3: Split at a natural break
 printf("The distance between the "
        "points is %5.2f \n", distance);
 ```
