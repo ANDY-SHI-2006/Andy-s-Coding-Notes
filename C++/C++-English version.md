@@ -167,10 +167,6 @@ return 0;
 /*---------------------------------------------*/
 ```
 
-The `return 0;` statement ends program execution and returns control to the operating system. A value of **0** indicates successful execution.
-
-The `}` (right brace) marks the end of the `main` function body, typically placed on a line by itself. A comment line can be used to delineate the end of the function for clarity.
-
 ## 2.2 White Space
 
 **White space** (blank lines and indentation) makes programs more **readable**, easier to **modify**, and provides a **consistent style**.
@@ -207,16 +203,20 @@ Indenting of the second line indicates that it is a **continuation of the previo
 
 If a `printf` statement is too long, split it over two lines at a point that preserves readability. To split text in quotation marks, divide it into separate pieces, each in its own quotation marks.
 
+**Method 1:** Split after comma, indent the continuation
 ```cpp
-// Method 1: Split after comma, indent the continuation
 printf("The distance between the two points is %5.2f \n",
        distance);
+```
 
-// Method 2: Split the string into two quoted parts
+**Method 2:** Split the string into two quoted parts
+```cpp
 printf("The distance between the two points is"
        " %5.2f \n", distance);
-       
-// Method 3: Split at a natural break in the text
+```
+
+**Method 3:** Split at a natural break in the text
+```cpp
 printf("The distance between the "
        "points is %5.2f \n", distance);
 ```
