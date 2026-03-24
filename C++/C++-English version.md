@@ -1768,9 +1768,10 @@ For numeric arrays, you typically need to read elements one by one:
 int numbers[5];
 
 // Read first element - array name is the address
+// Note: This only reads ONE integer into numbers[0]
 scanf("%d", numbers);        // Equivalent to &numbers[0]
 
-// Read each element in a loop
+// To fill the entire array, use a loop:
 for (int i = 0; i < 5; i++) {
     scanf("%d", &numbers[i]);  // & required for individual elements
 }
