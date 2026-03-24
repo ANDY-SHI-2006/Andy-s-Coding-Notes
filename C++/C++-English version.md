@@ -1733,7 +1733,7 @@ scanf("%i", &year);  // ✅ CORRECT - scanf receives the address
 
 #### 1.6.2.3 Arrays and `scanf`
 
-##### 1. Core Principle
+##### 1.6.2.3.1 Core Principle
 
 In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). Since `scanf` requires the **address** of variables, you can pass the array name directly **without** the `&` operator.
 
@@ -1743,7 +1743,7 @@ In C/C++, **the array name itself represents the address of the first element** 
 | Array (entire array) | Array name only | `scanf("%s", name);` |
 | Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
 
-##### 2. Character Arrays (Strings)
+##### 1.6.2.3.2 Character Arrays (Strings)
 
 ```c
 char name[50];
@@ -1760,7 +1760,7 @@ scanf("%s", name);      // ✅ Correct: name is the address of first element
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
 
-##### 3. Numeric Arrays
+##### 1.6.2.3.3 Numeric Arrays
 
 For numeric arrays, you typically need to read elements one by one:
 
@@ -1776,7 +1776,7 @@ for (int i = 0; i < 5; i++) {
 }
 ```
 
-##### 4. Safety Considerations
+##### 1.6.2.3.4 Safety Considerations
 
 **Buffer Overflow Protection:**
 
@@ -1801,7 +1801,7 @@ char line[100];
 scanf("%[^\n]", line);  // Read until newline (but not including it)
 ```
 
-##### 5. Summary Table
+##### 1.6.2.3.5 Summary Table
 
 | Data Type | `scanf` Usage | `&` Required? | Example |
 |-----------|---------------|---------------|---------|
