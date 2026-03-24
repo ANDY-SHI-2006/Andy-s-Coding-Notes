@@ -244,7 +244,7 @@ Indenting of the second line indicates that it is a **continuation of the previo
 
 If a statement is too long, split it over two lines at a point that preserves readability.
 
-##### 2.2.2.3.1 Example: Splitting printf Statements
+##### 2.2.2.3.1 Splitting printf Statements
 
 **Method 1: Split after comma**
 
@@ -272,6 +272,8 @@ Split at a logical point in the text (e.g., between words) for better readabilit
 printf("The distance between the "
        "points is %5.2f \n", distance);
 ```
+
+> **See also:** [7.2.3 Splitting Long printf Statements](#723-splitting-long-printf-statements) for complete syntax details and additional examples.
 
 ##### 2.2.2.3.2 String Concatenation Rule
 
@@ -335,7 +337,32 @@ Rules for selecting a valid identifier:
 
 ### 2.3.3 Reserved Keywords
 
-Cannot use C++ keywords as identifiers (e.g., `int`, `return`, `if`, `while`).
+Cannot use C++ keywords as identifiers. Common reserved keywords include:
+
+| Category | Keywords |
+|----------|----------|
+| **Types** | `int`, `char`, `double`, `float`, `bool`, `void`, `auto` |
+| **Control flow** | `if`, `else`, `for`, `while`, `do`, `switch`, `case`, `break`, `continue`, `return` |
+| **Classes** | `class`, `struct`, `public`, `private`, `protected`, `virtual`, `virtual` |
+| **Others** | `const`, `static`, `sizeof`, `new`, `delete`, `namespace`, `using` |
+
+> **Tip:** Most IDEs highlight keywords in a different color (usually blue or purple), making them easy to identify.
+
+### 2.3.4 Naming Conventions (Best Practices)
+
+While not enforced by the compiler, following naming conventions makes code more readable:
+
+| Style | Pattern | Usage | Example |
+|-------|---------|-------|---------|
+| **Lower camelCase** | `myVariableName` | Variables, functions | `studentName`, `totalScore` |
+| **Upper camelCase** | `MyClassName` | Class names, structs | `StudentInfo`, `MyClass` |
+| **Snake_case** | `my_variable_name` | Variables (alternative) | `student_name`, `total_score` |
+| **ALL_CAPS** | `MY_CONSTANT` | Constants, macros | `MAX_SIZE`, `PI` |
+
+**Recommendations:**
+- Use **descriptive names**: `studentCount` is better than `sc` or `n`
+- Avoid single-letter names except for loop counters (`i`, `j`, `k`)
+- Be consistent with one style throughout your project
 
 **Program Example**
 
@@ -2281,7 +2308,51 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 > **Note:** Arguments can be variables or expressions (e.g., `z + 3`).
 
-### 7.2.3 Escape Sequences
+> **See also:** [2.2.2.3.1 Splitting printf Statements](#222231-splitting-printf-statements) for line continuation techniques.
+
+### 7.2.3 Splitting Long printf Statements
+
+When printf statements become too long for a single line, use these techniques to split them while maintaining readability.
+
+**Method 1: Split after comma**
+
+Split after the comma and indent the continuation to align with the opening parenthesis or first argument.
+
+```cpp
+printf("The distance between the two points is %5.2f \n",
+       distance);
+```
+
+**Method 2: Split string into two quoted parts**
+
+Divide the string literal into separate pieces, each in its own quotation marks. The compiler automatically concatenates them.
+
+```cpp
+printf("The distance between the two points is"
+       " %5.2f \n", distance);
+```
+
+**Method 3: Split at natural break in text**
+
+Split at a logical point in the text (e.g., between words) for better readability.
+
+```cpp
+printf("The distance between the "
+       "points is %5.2f \n", distance);
+```
+
+**String Concatenation Rule**
+
+When splitting strings, adjacent quoted strings are automatically concatenated by the compiler. This works for any string literal, not just in printf statements.
+
+```cpp
+// Example with cout
+cout << "This is a very long message that "
+     << "needs to be split into multiple lines"
+     << endl;
+```
+
+### 7.2.4 Escape Sequences
 
 The backslash (`\`) is an **escape character** that gives special meaning to the following character.
 
@@ -2305,7 +2376,7 @@ printf("\"The End.\"\n");     // Output: "The End." (with newline)
 printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 ```
 
-### 7.2.4 Format Specifier Syntax
+### 7.2.5 Format Specifier Syntax
 
 ```
 %[flags][width][.precision][length]specifier
@@ -2401,7 +2472,7 @@ Specifies the **minimum** number of characters to print.
 - `long` → use `%li` or `%ld`
 - `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
-### 7.2.5 Format Examples
+### 7.2.6 Format Examples
 
 **Integer Examples (value = -145):**
 
@@ -2425,7 +2496,7 @@ Specifies the **minimum** number of characters to print.
 | `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
 | `%g` | `157.893` | Auto-select shorter format, rounded |
 
-### 7.2.6 Key Differences from `cout`
+### 7.2.7 Key Differences from `cout`
 
 | Feature | `printf` | `cout` |
 |---------|----------|--------|
