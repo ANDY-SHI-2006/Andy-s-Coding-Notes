@@ -125,7 +125,7 @@ Running: `./program hello world`
 Arg 0: ./program
 Arg 1: hello
 Arg 2: world
-`
+```
 
 ---
 
