@@ -1731,7 +1731,88 @@ scanf("%i", &year);  // ✅ CORRECT - scanf receives the address
 
 > **Important:** For arrays (like `char name[50]`), the array name itself represents the address, so `&` is not needed.
 
-**Address Operator Precedence:**
+#### 1.6.2.3 Arrays and `scanf`
+
+##### 1. Core Principle
+
+In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). Since `scanf` requires the **address** of variables, you can pass the array name directly **without** the `&` operator.
+
+| Variable Type | Address Syntax | Example |
+|---------------|----------------|---------|
+| Regular variable | `&variable` | `scanf("%d", &age);` |
+| Array (entire array) | Array name only | `scanf("%s", name);` |
+| Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
+
+##### 2. Character Arrays (Strings)
+
+```c
+char name[50];
+scanf("%s", name);  // Correct: name itself is the address
+```
+
+**Common Error:** Adding `&` to array name
+
+```c
+char name[50];
+scanf("%s", &name);     // ❌ Wrong: &name is a "pointer to array", type mismatch
+scanf("%s", name);      // ✅ Correct: name is the address of first element
+```
+
+**Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
+
+##### 3. Numeric Arrays
+
+For numeric arrays, you typically need to read elements one by one:
+
+```c
+int numbers[5];
+
+// Read first element - array name is the address
+scanf("%d", numbers);        // Equivalent to &numbers[0]
+
+// Read each element in a loop
+for (int i = 0; i < 5; i++) {
+    scanf("%d", &numbers[i]);  // & required for individual elements
+}
+```
+
+##### 4. Safety Considerations
+
+**Buffer Overflow Protection:**
+
+`scanf` does not check array boundaries. Always specify maximum width for strings:
+
+```c
+char name[50];
+scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
+```
+
+| Array Size | Safe Format Specifier | Explanation |
+|------------|----------------------|-------------|
+| `char[50]` | `%49s` | 49 chars + 1 null terminator |
+| `char[100]` | `%99s` | 99 chars + 1 null terminator |
+
+**Reading Lines with Spaces:**
+
+`%s` stops at whitespace. To read entire lines including spaces:
+
+```c
+char line[100];
+scanf("%[^\n]", line);  // Read until newline (but not including it)
+```
+
+##### 5. Summary Table
+
+| Data Type | `scanf` Usage | `&` Required? | Example |
+|-----------|---------------|---------------|---------|
+| `int` | `%d` | Yes | `scanf("%d", &x);` |
+| `double` | `%lf` | Yes | `scanf("%lf", &d);` |
+| `char` (single) | `%c` | Yes | `scanf("%c", &c);` |
+| `char[]` (string) | `%s` | **No** | `scanf("%s", str);` |
+| Array element | specifier | Yes | `scanf("%d", &arr[i]);` |
+| Array (first element) | specifier | **No** | `scanf("%d", arr);` |
+
+**Key Takeaway:** Array names are addresses. Use them directly with `scanf`, but always protect against buffer overflow by specifying width limits.
 
 The address operator `&` has the same precedence level as other unary operators. If multiple unary operators appear in the same statement, they are **associated from right to left**.
 
@@ -1740,7 +1821,7 @@ The address operator `&` has the same precedence level as other unary operators.
 !~x      // First: ~x (bitwise NOT), then: ! (logical NOT)
 ```
 
-#### 1.6.2.3 Format Specifier Syntax
+#### 1.6.2.4 Format Specifier Syntax
 
 ```
 %[flags][width][length]specifier
@@ -1752,7 +1833,7 @@ The address operator `&` has the same precedence level as other unary operators.
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-#### 1.6.2.4 Conversion Specifiers
+#### 1.6.2.5 Conversion Specifiers
 
 | Specifier | Type | Input Format | Example Input |
 |-----------|------|--------------|---------------|
@@ -1773,7 +1854,7 @@ The address operator `&` has the same precedence level as other unary operators.
 | `%[chars]` | `char[]` | Read only specified characters | `%[abc]` reads "abcb" from "abcba" |
 | `%[^chars]` | `char[]` | Read until specified character | `%[^,]` reads "hello" from "hello,world" |
 
-#### 1.6.2.5 Length Modifiers
+#### 1.6.2.6 Length Modifiers
 
 Specifies the size of the receiving variable. **Critical for correct memory access.**
 
@@ -1796,7 +1877,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 > **⚠️ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
 
-#### 1.6.2.6 Width and Suppression
+#### 1.6.2.7 Width and Suppression
 
 **Width** - Specifies the **maximum** number of characters to read:
 
@@ -1815,7 +1896,7 @@ int a, b;
 scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
 ```
 
-#### 1.6.2.7 Type-Specifier Quick Reference
+#### 1.6.2.8 Type-Specifier Quick Reference
 
 | Variable Type | `scanf` Specifier | Example |
 |---------------|-------------------|---------|
@@ -1830,7 +1911,7 @@ scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
 | `char` | `%c` | `scanf("%c", &c);` |
 | `char[]` | `%s` | `scanf("%s", str);` |
 
-#### 1.6.2.8 Common Pitfalls
+#### 1.6.2.9 Common Pitfalls
 
 | Pitfall | Problem | Solution |
 |---------|---------|----------|
@@ -1841,14 +1922,14 @@ scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
 | `%s` stops at space | `"John Doe"` → only "John" read | Use `scanf("%[^\n]", str);` for whole line |
 | Format string mismatch | `scanf("a=%d", &a);` with input "10" | Input must match exactly: "a=10" |
 
-#### 1.6.2.9 Important Notes
+#### 1.6.2.10 Important Notes
 
 1. **No Precision Control**: `scanf` does not support `%.2f` (only `printf` does)
 2. **Whitespace as Separator**: `%d%d` accepts "1 2", "1\t2", or "1\n2"
 3. **Non-format Characters Must Match**: `scanf("(%d)", &x)` requires input "(42)", not just "42"
 4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
-#### 1.6.2.10 Comparison with `cin` and `printf`
+#### 1.6.2.11 Comparison with `cin` and `printf`
 
 **vs `cin`:**
 
