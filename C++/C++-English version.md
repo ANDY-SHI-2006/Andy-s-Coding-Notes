@@ -244,29 +244,38 @@ Indenting of the second line indicates that it is a **continuation of the previo
 
 If a statement is too long, split it over two lines at a point that preserves readability.
 
-**Example: Splitting printf Statements**
+##### 2.2.2.3.1 Example: Splitting printf Statements
 
-| Method | Description | Example |
-|--------|-------------|---------|
-| **Method 1** | Split after comma, indent the continuation | `printf("...%5.2f \n",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`distance);` |
-| **Method 2** | Split string into two quoted parts | `printf("...points is"`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`" %5.2f \n", distance);` |
-| **Method 3** | Split at natural break in text | `printf("...between the "`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"points is %5.2f \n", distance);` |
+**Method 1: Split after comma**
+
+Split after the comma and indent the continuation to align with the opening parenthesis or first argument.
 
 ```cpp
-// Method 1: Split after comma
 printf("The distance between the two points is %5.2f \n",
        distance);
+```
 
-// Method 2: Split the string into two quoted parts
+**Method 2: Split string into two quoted parts**
+
+Divide the string literal into separate pieces, each in its own quotation marks. The compiler automatically concatenates them.
+
+```cpp
 printf("The distance between the two points is"
        " %5.2f \n", distance);
+```
 
-// Method 3: Split at a natural break
+**Method 3: Split at natural break in text**
+
+Split at a logical point in the text (e.g., between words) for better readability.
+
+```cpp
 printf("The distance between the "
        "points is %5.2f \n", distance);
 ```
 
-> **Note:** When splitting strings, adjacent quoted strings are automatically concatenated by the compiler.
+##### 2.2.2.3.2 String Concatenation Rule
+
+When splitting strings, adjacent quoted strings are automatically concatenated by the compiler. This works for any string literal, not just in printf statements.
 
 ```cpp
 // Another example with cout
