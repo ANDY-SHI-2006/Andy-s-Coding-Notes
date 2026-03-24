@@ -1713,7 +1713,34 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-#### 1.6.2.2 Conversion Specifier Syntax
+#### 1.6.2.2 The Address Operator `&`
+
+`scanf` requires the **address** of variables to store input values. The `&` operator returns the memory address of a variable.
+
+```cpp
+int year;
+scanf("%i", &year);  // &year = address of year variable
+```
+
+**Common Error:** Forgetting `&` is one of the most frequent mistakes in C++:
+
+```cpp
+scanf("%i", year);   // ❌ WRONG - scanf receives the value, not the address
+scanf("%i", &year);  // ✅ CORRECT - scanf receives the address
+```
+
+> **Important:** For arrays (like `char name[50]`), the array name itself represents the address, so `&` is not needed.
+
+**Address Operator Precedence:**
+
+The address operator `&` has the same precedence level as other unary operators. If multiple unary operators appear in the same statement, they are **associated from right to left**.
+
+```cpp
+&*ptr    // First: *ptr (dereference), then: & (get address)
+!~x      // First: ~x (bitwise NOT), then: ! (logical NOT)
+```
+
+#### 1.6.2.3 Format Specifier Syntax
 
 ```
 %[flags][width][length]specifier
@@ -1725,84 +1752,7 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-**1. Flags** - **OPTIONAL**
-
-| Flag | Description | Example |
-|------|-------------|---------|
-| `*` | Suppression - read but don't assign to variable | `scanf("%*d");` |
-
-**Suppression (`*`) Details:**
-
-The `*` flag tells `scanf` to read and discard the input without storing it in any variable.
-
-```cpp
-int a, b;
-// Read 3 integers, but only store 1st and 3rd
-scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
-
-// Skip a string
-scanf("%*s%d", &a);  // Input: "hello 42" → a=42 ("hello" is skipped)
-```
-
-> **Note**: Unlike `printf`, `scanf` does NOT support flags like `-`, `+`, `0`, `#` for formatting. These are only for output.
-
-**2. Width** - **OPTIONAL**
-
-Specifies the **maximum** number of characters to read for this field.
-
-| Width | Description | Example |
-|-------|-------------|---------|
-| `n` | Read at most n characters | `scanf("%3d", &a);` |
-| `*` | (Not supported in scanf for width) | N/A |
-
-**Width Examples:**
-
-```cpp
-// Integer with width
-int a;
-scanf("%3d", &a);      // Input: "12345" → reads "123", a=123, "45" left in buffer
-
-// String with width (safety!)
-char str[10];
-scanf("%9s", str);     // Read at most 9 chars + null terminator
-                       // Prevents buffer overflow on input "thisisaverylongstring"
-
-// Multiple fields with width
-int day, month, year;
-scanf("%2d%2d%4d", &day, &month, &year);  // Input: "25122024" → day=25, month=12, year=2024
-```
-
-> **Important**: For `%s`, width should be **one less** than buffer size to leave room for `\0`.
-
-**3. Length Modifier** - **OPTIONAL**
-
-Specifies the size of the receiving variable. **Critical for correct memory access.**
-
-| Modifier | Use With | C/C++ Type | Example |
-|----------|----------|------------|---------|
-| `hh` | `%d`, `%i`, `%o`, `%x`, `%n` | `signed char` / `unsigned char` | `scanf("%hhd", &c);` |
-| `h` | `%d`, `%i`, `%o`, `%x`, `%u`, `%n` | `short` / `unsigned short` | `scanf("%hd", &s);` |
-| `l` | `%d`, `%i`, `%o`, `%x`, `%u`, `%n` | `long` / `unsigned long` | `scanf("%ld", &l);` |
-| `ll` | `%d`, `%i`, `%o`, `%x`, `%n` | `long long` / `unsigned long long` | `scanf("%lld", &ll);` |
-| `j` | `%d`, `%i`, `%o`, `%x`, `%n` | `intmax_t` / `uintmax_t` | `scanf("%jd", &im);` |
-| `z` | `%d`, `%i`, `%o`, `%x`, `%n` | `size_t` | `scanf("%zu", &sz);` |
-| `t` | `%d`, `%i`, `%o`, `%x`, `%n` | `ptrdiff_t` | `scanf("%td", &pd);` |
-| `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `scanf("%Lf", &ld);` |
-| `l` | `%c`, `%s`, `%[` | `wchar_t` / `wchar_t*` (wide char) | `scanf("%lc", &wc);` |
-
-**Common Mistakes:**
-
-```cpp
-long long big;
-scanf("%d", &big);      // ✗ WRONG! Undefined behavior on large values
-scanf("%lld", &big);    // ✓ CORRECT
-
-double d;
-scanf("%f", &d);        // ✗ WRONG! Should use %lf for double
-scanf("%lf", &d);       // ✓ CORRECT
-```
-
-**4. Specifier (Conversion Specifier)** - **REQUIRED**
+#### 1.6.2.4 Conversion Specifiers
 
 | Specifier | Type | Input Format | Example Input |
 |-----------|------|--------------|---------------|
@@ -1813,222 +1763,115 @@ scanf("%lf", &d);       // ✓ CORRECT
 | `%o` | `unsigned int` | Octal (base 8) | `377` |
 | `%x` / `%X` | `unsigned int` | Hexadecimal (base 16) | `ff`, `FF`, `0x1a` |
 | **Floating-Point Types** ||||
-| `%f` | `float` | Decimal or scientific notation | `3.14`, `1.5e-2`, `-2.5E+10` |
+| `%f` | `float` | Decimal or scientific notation | `3.14`, `1.5e-2` |
 | `%lf` | `double` | Decimal or scientific notation | `3.1415926535` |
-| `%Lf` | `long double` | Decimal or scientific notation | (use with `L` modifier) |
-| `%e` / `%E` / `%g` / `%G` / `%a` / `%A` | `float`/`double` | Same as `%f` in scanf | `3.14e10` |
+| `%Lf` | `long double` | Decimal or scientific notation | `3.1415926535L` |
 | **Character/String Types** ||||
 | `%c` | `char` | Single character (including whitespace!) | `A`, ` `, `\n` |
 | `%s` | `char[]` | String (sequence of non-whitespace chars) | `hello` |
 | **Scanset (Pattern Matching)** ||||
 | `%[chars]` | `char[]` | Read only specified characters | `%[abc]` reads "abcb" from "abcba" |
 | `%[^chars]` | `char[]` | Read until specified character | `%[^,]` reads "hello" from "hello,world" |
-| **Other** ||||
-| `%p` | `void*` | Pointer address (implementation-defined format) | `0x7ffeeb2b3a5c` |
-| `%n` | `int*` | Store count of characters read so far | (no input consumed) |
-| `%%` | - | Literal percent sign | `%` |
 
-**Scanset (`%[` ) Examples:**
+#### 1.6.2.5 Length Modifiers
 
-```cpp
-// Read only vowels
-char vowels[20];
-scanf("%[aeiou]", vowels);   // Input: "aeixyz" → vowels="aei", stops at 'x'
+Specifies the size of the receiving variable. **Critical for correct memory access.**
 
-// Read until comma (comma not included)
-char word[50];
-scanf("%[^,]", word);        // Input: "hello,world" → word="hello"
+| Modifier | Use With | C/C++ Type | Example |
+|----------|----------|------------|---------|
+| `hh` | `%d`, `%i`, `%o`, `%x` | `signed/unsigned char` | `scanf("%hhd", &c);` |
+| `h` | `%d`, `%i`, `%o`, `%x`, `%u` | `short` / `unsigned short` | `scanf("%hd", &s);` |
+| `l` | `%d`, `%i`, `%o`, `%x`, `%u` | `long` / `unsigned long` | `scanf("%ld", &l);` |
+| `ll` | `%d`, `%i`, `%o`, `%x` | `long long` / `unsigned long long` | `scanf("%lld", &ll);` |
+| `L` | `%f`, `%e`, `%g` | `long double` | `scanf("%Lf", &ld);` |
+| `l` | `%c`, `%s` | `wchar_t` / `wchar_t*` (wide char) | `scanf("%lc", &wc);` |
 
-// Read until newline (safer than gets!)
-char line[100];
-scanf("%[^\n]", line);       // Reads entire line except the newline
+**Critical Difference - `printf` vs `scanf` for `double`:**
 
-// Include the delimiter in the scanset
-scanf("%[^\n]\n", line);     // Reads line and consumes the newline
-```
+| Variable Type | `printf` Specifier | `scanf` Specifier |
+|---------------|-------------------|-------------------|
+| `float` | `%f` | `%f` |
+| `double` | `%f` (auto-promoted) | **`%lf`** (REQUIRED) |
+| `long double` | `%Lf` | `%Lf` |
 
-**Whitespace Handling Behavior:**
+> **⚠️ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
 
-| Specifier | Whitespace Handling | Example |
-|-----------|---------------------|---------|
-| `%d`, `%i`, `%u`, `%o`, `%x`, `%f`, `%s` | **Skips leading whitespace** | `"  123"` → reads `123` |
-| `%c` | **Does NOT skip whitespace** | `"  "` → reads `' '` (space) |
-| `%[` | **Does NOT skip whitespace** | `"  abc"` → reads `' '` first |
-| `%n` | **Does not read input** | Just counts characters read |
+#### 1.6.2.6 Width and Suppression
 
-**Common scanf Pitfalls:**
+**Width** - Specifies the **maximum** number of characters to read:
 
 ```cpp
-// Pitfall 1: %c reads whitespace
-char c;
-scanf("%d", &a);      // User types: "42\n"
-scanf("%c", &c);      // c = '\n' (newline), not next visible char!
-// FIX: Add space before %c to skip whitespace
-scanf(" %c", &c);     // Space tells scanf to skip any whitespace first
-
-// Pitfall 2: Buffer overflow with %s
-char name[10];
-scanf("%s", name);    // User types "supercalifragilistic" → BUFFER OVERFLOW!
-// FIX: Always specify width
-scanf("%9s", name);   // Maximum 9 chars + '\0'
-
-// Pitfall 3: Wrong specifier for type
-int x;
-scanf("%f", &x);      // ✗ UB! Writing float bits into int variable
-
-// Pitfall 4: Missing & (address-of)
 int a;
-scanf("%d", a);       // ✗ UB! scanf receives value of uninitialized 'a'
-scanf("%d", &a);      // ✓ Correct
+scanf("%3d", &a);      // Input: "12345" → reads "123", a=123, "45" left in buffer
 
-// Pitfall 5: %s stops at whitespace
-char fullname[50];
-scanf("%s", fullname);  // Input: "John Doe" → only "John" is read
-// FIX: Use scanset for multi-word input
-scanf("%[^\n]", fullname);  // Reads entire line
+char str[10];
+scanf("%9s", str);     // Read at most 9 chars + null terminator (prevents overflow)
 ```
 
-#### 1.6.2.3 Summary: scanf Important Notes
+**Suppression (`*`)** - Read but don't assign:
 
-1. **No Precision Control**
-   
-   `scanf` does **not** support precision (e.g., `%.2f`). The `.precision` field is only for `printf`.
-   ```cpp
-   scanf("%5.2f", &a);  // ✗ ILLEGAL! Compile error or undefined behavior
-   scanf("%f", &a);     // ✓ Correct
-   ```
+```cpp
+int a, b;
+scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
+```
 
-2. **Must Use Address Operator `&`**
-   
-   Forgetting `&` results in undefined behavior.
-   ```cpp
-   int a;
-   scanf("%d", a);    // ✗ Wrong! UB - treats value of 'a' as address
-   scanf("%d", &a);   // ✓ Correct - passes address of 'a'
-   ```
+#### 1.6.2.7 Type-Specifier Quick Reference
 
-3. **Whitespace as Separator for Numeric Input**
-   
-   When control string has no non-format characters between specifiers, whitespace (space, TAB, newline) can separate input values.
-   ```cpp
-   scanf("%d%d", &a, &b);
-   // Valid inputs: "1 2", "1\t2", "1\n2"
-   ```
+| Variable Type | `scanf` Specifier | Example |
+|---------------|-------------------|---------|
+| `int` | `%d` | `scanf("%d", &a);` |
+| `short` | `%hd` | `scanf("%hd", &s);` |
+| `long` | `%ld` | `scanf("%ld", &l);` |
+| `long long` | `%lld` | `scanf("%lld", &ll);` |
+| `unsigned int` | `%u` | `scanf("%u", &u);` |
+| `float` | `%f` | `scanf("%f", &f);` |
+| **`double`** | **`%lf`** | `scanf("%lf", &d);` |
+| `long double` | `%Lf` | `scanf("%Lf", &ld);` |
+| `char` | `%c` | `scanf("%c", &c);` |
+| `char[]` | `%s` | `scanf("%s", str);` |
 
-4. **Data End Markers for Numeric Input**
-   
-   `scanf` stops reading a number when it encounters whitespace, TAB, newline, or invalid data.
-   ```cpp
-   scanf("%d", &a);  // Input: "123abc" → a=123, "abc" left in buffer
-   ```
+#### 1.6.2.8 Common Pitfalls
 
-5. **Character Input Behavior**
-   
-   When using `%c` or `%[`, **all characters are valid** (including whitespace) unless non-format characters are specified in the control string.
-   ```cpp
-   scanf("%c%c%c", &a, &b, &c);  // Input: "X Y" → a='X', b=' ', c='Y'
-   ```
+| Pitfall | Problem | Solution |
+|---------|---------|----------|
+| Missing `&` | `scanf("%d", a);` | Use `scanf("%d", &a);` |
+| Wrong float specifier | `scanf("%f", &d);` for `double` | Use `%lf` for `double` |
+| Buffer overflow | `scanf("%s", str);` with long input | Use `scanf("%99s", str);` with width |
+| `%c` reads whitespace | `scanf("%c", &c);` reads newline | Use `scanf(" %c", &c);` (space skips whitespace) |
+| `%s` stops at space | `"John Doe"` → only "John" read | Use `scanf("%[^\n]", str);` for whole line |
+| Format string mismatch | `scanf("a=%d", &a);` with input "10" | Input must match exactly: "a=10" |
 
-6. **Non-Format Characters Must Match Exactly**
+#### 1.6.2.9 Important Notes
 
-   When `scanf`'s control string contains **non-format characters** (characters other than `%`), these characters are **NOT displayed**, but are used for **matching/validating the input**.
+1. **No Precision Control**: `scanf` does not support `%.2f` (only `printf` does)
+2. **Whitespace as Separator**: `%d%d` accepts "1 2", "1\t2", or "1\n2"
+3. **Non-format Characters Must Match**: `scanf("(%d)", &x)` requires input "(42)", not just "42"
+4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
-   ```cpp
-   // Control string with literal characters
-   scanf("a = %d, b = %d, c = %d", &a, &b, &c);
+#### 1.6.2.10 Comparison with `cin` and `printf`
 
-   // CORRECT input: (MUST match exactly!)
-   // a = 123, b = 456, c = 789
-   //   ↑    ↑  ↑    ↑  ↑    ↑
-   // Every character must match: "a =", comma+space, "b =", comma+space, "c ="
-   ```
-
-   **⚠️ Strict Matching Requirement:**
-
-   When `scanf` encounters non-format characters in the control string, it **requires** the input to contain those exact characters at that position.
-
-   | Input | Result | Explanation |
-   |-------|--------|-------------|
-   | `a = 123, b = 456, c = 789` | ✅ All 3 values read | Exact match |
-   | `a = 123, b=456, c = 789` | ❌ Only `a=123`, `b` unread | Missing space after `b` |
-   | `a=123, b = 456, c = 789` | ❌ Nothing read | Missing space after `a` |
-   | `123, 456, 789` | ❌ Nothing read | Missing `a = ` prefix |
-   | `a = 123 b = 456, c = 789` | ❌ Only `a=123` read | Missing comma after first value |
-
-   > **Critical:** If input doesn't match, `scanf` stops and returns early. Remaining variables keep their original values (or garbage if uninitialized).
-
-   **Key Points:**
-
-   | Aspect | Behavior |
-   |--------|----------|
-   | Display | Non-format chars are **NOT displayed** (unlike `printf`) |
-   | Purpose | Used for **input matching/validation** |
-   | Whitespace | Spaces in format match **any amount of whitespace** in input |
-   | Other chars | Must match **exactly** (case-sensitive) |
-
-   **Common Use Cases:**
-
-   ```cpp
-   // Date parsing: input must be "2024-03-20"
-   int year, month, day;
-   scanf("%d-%d-%d", &year, &month, &day);
-
-   // Coordinate parsing: input must be "(3, 4)"
-   int x, y;
-   scanf("(%d, %d)", &x, &y);
-
-   // Time parsing: input must be "14:30:00"
-   int h, m, s;
-   scanf("%d:%d:%d", &h, &m, &s);
-   ```
-
-7. **Type Mismatch = Wrong Results**
-   
-   If input data type doesn't match specifier, the result is undefined. May compile but produce garbage values.
-   ```cpp
-   int a;
-   scanf("%f", &a);  // ✗ Input 3.14 → a contains garbage bits!
-   ```
-
-#### 1.6.2.4 Key Differences from `cin`
+**vs `cin`:**
 
 | Feature | `scanf` | `cin` |
 |---------|---------|-------|
-| Type-safe | No (runtime error if wrong) | Yes (compile-time check) |
+| Type-safe | No | Yes |
 | Performance | Faster | Slower |
-| Address operator (`&`) | Required for non-strings | Not required |
-| Whitespace handling | Auto-skips for numbers; `%c` reads all | `>>` skips, `get()` does not |
+| Address operator (`&`) | Required | Not required |
 | Bounds checking | No | `std::string` is safe |
-| Precision control | Not supported | N/A |
 
-> **Important:** Always use `&` (address-of operator) for non-string variables:
-```cpp
-int a;
-scanf("%d", &a);    // ✓ Correct
-scanf("%d", a);     // ✗ Wrong! Undefined behavior
-```
-
-#### 1.6.2.5 Key Differences from `printf`
+**vs `printf`:**
 
 | Feature | `scanf` | `printf` |
 |---------|---------|----------|
-| Non-format strings in control string | **NOT displayed** | Displayed as-is |
+| Non-format strings | **NOT displayed** (matching only) | Displayed as-is |
 | Prompt message | Cannot display | Can display |
 | Usage pattern | `printf` first, then `scanf` | Direct output |
 
-> **⚠️ Important Note: `scanf` vs `printf` Difference**
->
-> Unlike `printf`, **`scanf` cannot display non-format strings** (i.e., prompt messages in the control string are NOT displayed).
->
-```cpp
-// ❌ WRONG: scanf does NOT print the prompt!
-scanf("Enter a number: %d", &a);  // The text is NOT displayed, just waits for input
-
-// ✓ CORRECT: Use printf first to display the prompt
-printf("Enter a number: ");
-scanf("%d", &a);
-```
-> Always use `printf` (or `cout`) to output prompts **before** calling `scanf`.
+> **⚠️ Important:** `scanf` cannot display prompts. Always use `printf` first:
+> ```cpp
+> printf("Enter a number: ");  // Display prompt
+> scanf("%d", &a);             // Read input
+> ```
 
 
 
