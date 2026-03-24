@@ -33,16 +33,16 @@ There are two ways to include header files:
 
 `#include` is a **preprocessor directive**, not a C++ statement:
 
-| | Preprocessor Directive | C++ Statement |
-|--|------------------------|---------------|
-| **Nature** | Preprocessing instruction | Executable code |
-| **When processed** | Before compilation | During compilation |
-| **Syntax** | No `;` required | `;` required |
-| **Function** | Text substitution (insert file content) | Perform operations |
+|                    | Preprocessor Directive                  | C++ Statement      |
+| ------------------ | --------------------------------------- | ------------------ |
+| **Nature**         | Preprocessing instruction               | Executable code    |
+| **When processed** | Before compilation                      | During compilation |
+| **Syntax**         | No `;` required                         | `;` required       |
+| **Function**       | Text substitution (insert file content) | Perform operations |
 
 ```cpp
 #include <iostream>   // Preprocessor: copy iostream content here (no ;)
-int main() {          // C++ statement: needs ;
+int main() {          
     cout << "Hi";     // C++ statement: needs ;
     return 0;         // C++ statement: needs ;
 }
@@ -96,6 +96,15 @@ int main() {
 
 **Note**: `void main()` works on some old compilers (e.g., Turbo C++), but is **not valid C++**. Always use `int main()` for portable code.
 
+**`int main()` vs `int main(void)`:**
+
+| Declaration | C++ | C Language |
+|-------------|-----|------------|
+| `int main()` | ✅ No parameters | ⚠️ Old style, may accept any parameters |
+| `int main(void)` | ✅ No parameters | ✅ Explicitly states no parameters |
+
+> **Conclusion**: In C++, `int main()` and `int main(void)` are identical. Write `int main()` as it is the most standard form in C++.
+
 ---
 
 # 2 Code Standardization
@@ -124,7 +133,6 @@ int b = 20;
 **Notes**:
 - Multi-line comments cannot be nested (`/* /* */ */` will cause errors)
 - Use `//` to temporarily disable a line of code during debugging
-- Documentation tools (e.g., Doxygen) recognize special comment formats
 
 **Program Structure Comments**
 
