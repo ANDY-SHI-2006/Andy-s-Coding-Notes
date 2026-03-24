@@ -33,8 +33,6 @@ There are two ways to include header files:
 
 ### 1.1.3 Preprocessor Directives
 
-**Why No Semicolon after `#include`?**
-
 `#include` is a **preprocessor directive**, not a C++ statement:
 
 |                    | Preprocessor Directive                  | C++ Statement      |
@@ -89,6 +87,8 @@ int main() {
 
 ## 1.3 Main Function
 
+### 1.3.1 Function Declarations
+
 | Declaration   | Standard       | Return Value                    | Usage                |
 | ------------- | -------------- | ------------------------------- | -------------------- |
 | `int main()`  | ✅ Standard     | `0` = success, non-zero = error | **Always use this**  |
@@ -101,7 +101,18 @@ int main() {
 }
 ```
 
-**Note**: `void main()` works on some old compilers (e.g., Turbo C++), but is **not valid C++**. Always use `int main()` for portable code.
+> **Warning**: `void main()` works on some old compilers (e.g., Turbo C++), but is **not valid C++**. Always use `int main()` for portable code.
+
+### 1.3.2 Return Value
+
+The `return 0;` statement ends program execution and returns control to the operating system.
+
+| Return Value | Meaning |
+|--------------|---------|
+| `0` | Program executed successfully |
+| Non-zero | Error occurred (specific value indicates error type) |
+
+### 1.3.3 Parameter Forms
 
 **`int main()` vs `int main(void)`:**
 
@@ -113,13 +124,13 @@ int main() {
 
 > **Conclusion**: In C++, `int main()` and `int main(void)` are identical. Write `int main()` as it is the most standard form in C++.
 
-**Command-line Arguments:**
+### 1.3.4 Command-line Arguments
 
 ```cpp
 int main(int argc, char* argv[]) {
     // argc = argument count (including program name)
     // argv = argument vector (array of strings)
-    
+
     for (int i = 0; i < argc; i++) {
         cout << "Arg " << i << ": " << argv[i] << endl;
     }
@@ -128,6 +139,7 @@ int main(int argc, char* argv[]) {
 ```
 
 Running: `./program hello world`
+
 ```
 Arg 0: ./program
 Arg 1: hello
