@@ -18,12 +18,12 @@ There are two ways to include header files:
 
 **About `.h` Extension:**
 
-| Type | Extension | Example | Note |
-|------|-----------|---------|------|
-| C++ Standard Library | **No** `.h` | `<iostream>`, `<vector>`, `<string>` | Modern C++ style |
-| C Standard Library | **Has** `.h` | `<stdio.h>`, `<stdlib.h>` | Original C style |
-| C Standard Library (C++ style) | **No** `.h` | `<cstdio>`, `<cstdlib>` | Add `c` prefix, remove `.h` |
-| Custom headers | **Has** `.h` or `.hpp` | `"myheader.h"`, `"myclass.hpp"` | User-defined |
+| Type                           | Extension              | Example                              | Note                        |
+| ------------------------------ | ---------------------- | ------------------------------------ | --------------------------- |
+| C++ Standard Library           | **No** `.h`            | `<iostream>`, `<vector>`, `<string>` | Modern C++ style            |
+| C Standard Library             | **Has** `.h`           | `<stdio.h>`, `<stdlib.h>`            | Original C style            |
+| C Standard Library (C++ style) | **No** `.h`            | `<cstdio>`, `<cstdlib>`              | Add `c` prefix, remove `.h` |
+| Custom headers                 | **Has** `.h` or `.hpp` | `"myheader.h"`, `"myclass.hpp"`      | User-defined                |
 
 > **Quick Reference:**
 > - `<iostream>` → C++ standard library, no `.h`
