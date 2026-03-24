@@ -307,26 +307,53 @@ int result = a * b + b / c * d;  // More spaces, but consistent
 
 ## 2.3 Identifier Naming
 
-Rules for selecting a valid identifier:
+C++ variable naming must follow strict rules defined by the **C++ Language Standard**; otherwise, the program will fail to compile. Additionally, for code clarity, maintainability, and team collaboration, there are widely accepted **best practice conventions**.
+
+This section covers **Mandatory Rules** and **Best Practices** in detail.
+
+### Part 1: Mandatory Rules (Must Follow)
+
+These rules come directly from the C++ International Standard (ISO/IEC 14882) and are enforced by the compiler during lexical analysis.
 
 | Rule | ✅ Valid | ❌ Invalid |
 |------|---------|-----------|
 | **First character** | Letter or `_` | Digit or special char |
 | **Other characters** | Letters, digits, `_` | `-`, `@`, space, etc. |
 | **Case sensitivity** | `abc` ≠ `ABC` | — |
-| **Length** | Unlimited | — |
+| **Length** | Unlimited (compiler-dependent) | — |
 
-### 2.3.1 Valid Identifiers
+**Detailed Rules:**
 
-| Identifier | Note |
-|------------|------|
+**1. Legal Character Set**
+- **First character**: Must be a **letter** (`a-z`, `A-Z`) or **underscore** (`_`)
+- **Subsequent characters**: Can be **letters**, **underscores**, or **digits** (`0-9`)
+
+**2. Case Sensitivity**
+- C++ is **case-sensitive**: `myVariable`, `myvariable`, and `MYVARIABLE` are three completely different identifiers
+
+**3. Reserved Words (Prohibited)**
+- Identifiers **cannot** be identical to C++ **keywords** (e.g., `int`, `class`, `for`, `if`)
+- Identifiers **should not** conflict with C++ standard library **reserved identifiers**:
+  - Names starting with double underscore (`__`)
+  - Names starting with underscore followed by uppercase letter (`_A`) in global namespace
+
+**4. Special Characters and Spaces**
+- **Spaces**, **punctuation** (e.g., `,`, `.`, `;`, `-`, `+`), and other special characters are **not allowed**
+- **Exception**: C++11 allows **universal character names** (e.g., `\u4E2D` for Chinese characters), but **strongly discouraged** in production code due to portability issues
+
+### 2.3.1 Valid and Invalid Examples
+
+**Valid Identifiers:**
+
+| Identifier | Explanation |
+|------------|-------------|
 | `distance` | Starts with letter |
 | `x_1` | Contains underscore and digit |
 | `X_sum` | Case matters — different from `x_sum` |
 | `average_measurement` | Descriptive name with underscore |
-| `initial_time` | Clear and readable |
+| `studentCount` | Clear and readable (camelCase) |
 
-### 2.3.2 Invalid Identifiers
+**Invalid Identifiers:**
 
 | Identifier | Reason |
 |------------|--------|
@@ -334,35 +361,68 @@ Rules for selecting a valid identifier:
 | `switch` | Reserved keyword |
 | `$sum` | Contains invalid character `$` |
 | `rate%` | Contains invalid character `%` |
+| `my name` | Contains space |
+| `my-name` | Contains hyphen |
 
-### 2.3.3 Reserved Keywords
+### 2.3.2 Reserved Keywords
 
-Cannot use C++ keywords as identifiers. Common reserved keywords include:
+Cannot use C++ keywords as identifiers. Common reserved keywords by category:
 
 | Category | Keywords |
 |----------|----------|
 | **Types** | `int`, `char`, `double`, `float`, `bool`, `void`, `auto` |
 | **Control flow** | `if`, `else`, `for`, `while`, `do`, `switch`, `case`, `break`, `continue`, `return` |
-| **Classes** | `class`, `struct`, `public`, `private`, `protected`, `virtual`, `virtual` |
-| **Others** | `const`, `static`, `sizeof`, `new`, `delete`, `namespace`, `using` |
+| **Classes & OOP** | `class`, `struct`, `public`, `private`, `protected`, `virtual`, `template` |
+| **Memory** | `const`, `static`, `sizeof`, `new`, `delete` |
+| **Namespace** | `namespace`, `using` |
 
 > **Tip:** Most IDEs highlight keywords in a different color (usually blue or purple), making them easy to identify.
 
-### 2.3.4 Naming Conventions (Best Practices)
+### Part 2: Best Practices and Naming Conventions
 
-While not enforced by the compiler, following naming conventions makes code more readable:
+These conventions are not enforced by the compiler but are crucial for writing professional, readable, and collaborative code.
+
+#### Core Principles
+
+1. **Clarity of Intent**: Names should clearly indicate the variable's purpose. Avoid meaningless single letters (except for loop counters `i, j, k`) or obscure abbreviations
+2. **Avoid Ambiguity**: Names should not be similar to existing names or imply incorrect data types
+
+#### Common Naming Styles
 
 | Style | Pattern | Usage | Example |
 |-------|---------|-------|---------|
 | **Lower camelCase** | `myVariableName` | Variables, functions | `studentName`, `totalScore` |
-| **Upper camelCase** | `MyClassName` | Class names, structs | `StudentInfo`, `MyClass` |
-| **Snake_case** | `my_variable_name` | Variables (alternative) | `student_name`, `total_score` |
+| **Upper camelCase / PascalCase** | `MyClassName` | Classes, structs, enums | `StudentInfo`, `MyClass` |
+| **Snake_case** | `my_variable_name` | Variables, constants (alternative) | `student_name`, `total_score` |
 | **ALL_CAPS** | `MY_CONSTANT` | Constants, macros | `MAX_SIZE`, `PI` |
+| **Hungarian notation** | `iCount`, `pData` | ❌ **Deprecated** in modern C++ | Not recommended |
+
+#### Naming Conventions by Identifier Type
+
+| Identifier Type | Convention | Example |
+|-----------------|------------|---------|
+| **Class/Struct types** | Upper camelCase | `class StudentRecord`, `struct Point` |
+| **Variables & objects** | Lower camelCase or snake_case | `playerHealth` or `player_health` |
+| **Functions** | Lower camelCase or snake_case | `getValue()`, `calculate_average()` |
+| **Constants** | ALL_CAPS with snake_case | `MAX_CONNECTIONS`, `PI` |
+| **Private member variables** | Trailing underscore or `m_` prefix | `int count_;` or `int m_count;` |
+| **Macros** | ALL_CAPS (use sparingly) | `#define DEBUG_MODE` |
 
 **Recommendations:**
 - Use **descriptive names**: `studentCount` is better than `sc` or `n`
 - Avoid single-letter names except for loop counters (`i`, `j`, `k`)
 - Be consistent with one style throughout your project
+- **Follow your team's existing conventions** — consistency is more important than any single style
+
+#### Bad Naming Examples to Avoid
+
+| Name | Problem Analysis | Improved Version |
+|------|-----------------|------------------|
+| `int a;` | Meaningless, no context | `int numberOfStudents;` |
+| `string str1, str2;` | Ambiguous, cannot distinguish | `string sourceFile, targetFile;` |
+| `void func(int data);` | Function name doesn't describe behavior | `void processUserData(int userId);` |
+| `int _Tmp;` | Leading underscore + uppercase is reserved | `int tempValue;` |
+| `class my_class` | Class name style confused with variables | `class DataParser` |
 
 **Program Example**
 
