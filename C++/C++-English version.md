@@ -197,6 +197,23 @@ int main() {
 
 ### 2.2.2 Indentation and Line Splitting
 
+**Basic Indentation Rule:**
+
+Code inside braces `{}` must be indented to show hierarchy.
+
+```cpp
+int main() {          // Level 0: No indent
+    int a = 10;       // Level 1: 1 indent (inside main)
+    int b = 20;       // Level 1: 1 indent
+    if (a > b) {      // Level 1: 1 indent
+        cout << a;    // Level 2: 2 indents (inside if)
+    }                  // Level 1: Back to 1 indent
+    return 0;         // Level 1: 1 indent
+}                     // Level 0: No indent
+```
+
+**Line Continuation:**
+
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
 **Splitting Long printf Statements:**
