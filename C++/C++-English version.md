@@ -2386,8 +2386,6 @@ Specifies the **minimum** number of characters to print.
 
 > **Note:** Use `printf` for formatted output in performance-critical code, but prefer `cout` for type safety in modern C++.
 
-
-
 ---
 
 ## 1.8 Control Flow
