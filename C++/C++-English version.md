@@ -2,6 +2,8 @@
 
 ## 1.1 Include Header
 
+### 1.1.1 Include Syntax
+
 There are two ways to include header files:
 
 ```cpp
@@ -14,7 +16,7 @@ There are two ways to include header files:
 | `< >`  | System directories first             | Standard library (e.g., `vector`, `string`) |
 | `" "`  | Current directory first, then system | Custom headers                              |
 
-**About `.h` Extension:**
+### 1.1.2 Header File Extensions
 
 | Type                           | Extension              | Example                              | Note                        |
 | ------------------------------ | ---------------------- | ------------------------------------ | --------------------------- |
@@ -29,6 +31,8 @@ There are two ways to include header files:
 > - `<stdio.h>` → C library, has `.h`
 > - `"myheader.h"` → Custom header, has `.h`
 
+### 1.1.3 Preprocessor Directives
+
 **Why No Semicolon after `#include`?**
 
 `#include` is a **preprocessor directive**, not a C++ statement:
@@ -42,16 +46,19 @@ There are two ways to include header files:
 
 ```cpp
 #include <iostream>   // Preprocessor: copy iostream content here (no ;)
-int main() {          
+int main() {
     cout << "Hi";     // C++ statement: needs ;
     return 0;         // C++ statement: needs ;
 }
 ```
 
-Other preprocessor directives (also no `;`):
-- `#define PI 3.14` — Macro definition
-- `#ifdef DEBUG` — Conditional compilation
-- `#pragma once` — Compiler directive
+**Other Preprocessor Directives** (also no `;`):
+
+| Directive | Purpose | Example |
+|-----------|---------|---------|
+| `#define` | Macro definition | `#define PI 3.14` |
+| `#ifdef` | Conditional compilation | `#ifdef DEBUG` |
+| `#pragma` | Compiler-specific directive | `#pragma once` |
 
 ## 1.2 Using std Namespace
 
