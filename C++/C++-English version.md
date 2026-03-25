@@ -993,33 +993,12 @@ Logical operators perform boolean operations and return `true` or `false`.
 
 **Truth Table**
 
-| A | B | !A | A && B | A || B |
+| A | B | !A | A && B | A \|\| B |
 |---|---|----|--------|--------|
 | true | true | false | true | true |
 | true | false | false | false | true |
 | false | true | true | false | true |
 | false | false | true | false | false |
-
-**Short-Circuit Evaluation**
-
-C++ uses short-circuit evaluation for logical operators:
-
-- `&&`: If left operand is `false`, right operand is **not evaluated**
-- `||`: If left operand is `true`, right operand is **not evaluated**
-
-```cpp
-int x = 5;
-
-// y++ is NOT evaluated because x > 10 is false
-if (x > 10 && y++ > 0) {  // y remains unchanged
-    // ...
-}
-
-// y++ IS evaluated because x < 10 is true
-if (x < 10 && y++ > 0) {  // y is incremented
-    // ...
-}
-```
 
 **Common Use Cases**
 
