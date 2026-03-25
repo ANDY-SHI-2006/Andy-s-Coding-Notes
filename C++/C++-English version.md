@@ -881,21 +881,7 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 - The sign of the remainder follows the sign of the dividend (numerator)
 - The identity `(a/b)*b + a%b == a` always holds
 
-### 4.2.2 Addition and Subtraction (+, -)
-
-**Binary Addition (`+`)**
-```cpp
-int sum = 5 + 3;         // 8
-double total = 10.5 + 2.5;  // 13.0
-```
-
-**Binary Subtraction (`-`)**
-```cpp
-int diff = 10 - 4;       // 6
-double result = 5.5 - 2.0;  // 3.5
-```
-
-**Exponentiation (Power)**
+#### 4.2.1.4 Exponentiation (Power)
 
 **Important:** C++ has **no operator** for exponentiation.
 
@@ -931,6 +917,20 @@ double result4 = pow(x, -1);     // 1/x
 |--------|-------|----------|
 | `a * a` | Fastest | Small fixed exponents: a^2, a^3 |
 | `pow(a, b)` | Slower | Variable/fractional: a^b, sqrt(a) |
+
+### 4.2.2 Addition and Subtraction (+, -)
+
+**Binary Addition (`+`)**
+```cpp
+int sum = 5 + 3;         // 8
+double total = 10.5 + 2.5;  // 13.0
+```
+
+**Binary Subtraction (`-`)**
+```cpp
+int diff = 10 - 4;       // 6
+double result = 5.5 - 2.0;  // 3.5
+```
 
 ## 4.3 Increment and Decrement Operators
 
