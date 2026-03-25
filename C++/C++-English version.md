@@ -148,6 +148,8 @@ Arg 2: world
 
 ---
 
+# 2 Code Standardization
+
 ## 2.1 Program Example
 
 This is a complete example program that demonstrates good coding standards and conventions:
@@ -370,15 +372,6 @@ These rules are enforced by the compiler. Violations result in compilation error
 | `x_1` | `my name` | Contains space |
 | `_value` | `my-name` | Contains hyphen |
 | `studentCount` | `$sum` | Contains `$` |
-
-##### Illegal Characters
-
-| Character | Allowed? | Example |
-|-----------|----------|---------|
-| Space | ❌ No | `my var` → Invalid |
-| Hyphen `-` | ❌ No | `my-var` → Invalid |
-| At sign `@` | ❌ No | `@value` → Invalid |
-| Percent `%` | ❌ No | `rate%` → Invalid |
 
 **Other Prohibited Characters (by Category):**
 
