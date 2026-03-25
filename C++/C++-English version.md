@@ -588,6 +588,45 @@ int b{};        // ✓ Correctly initializes b to 0
 | **Container init**         | Limited                  | ✅ Full support (`vector<int>{1,2,3}`)      |
 | **Auto with single value** | `auto a(5)` → `int`      | `auto a{5}` → `std::initializer_list` (⚠️) |
 
+**Important Edge Cases:**
+
+**1. Auto with Single Value (Trap!)**
+
+| Syntax | Result Type | Meaning |
+|--------|-------------|---------|
+| `auto a(5)` | `int` | a is integer 5 |
+| `auto a{5}` | `std::initializer_list<int>` | a is an initializer list (contains 5), not int! |
+
+```cpp
+auto x(5);  // x is int, value is 5
+auto y{5};  // y is std::initializer_list<int> with one element!
+
+// If you want int with braces, use copy initialization:
+auto z = 5;  // z is int
+```
+
+**Why this happens:** Brace initialization `{}` is designed to prefer matching `std::initializer_list` constructors. When `auto` meets `{}`, it deduces to initializer list type instead of single value.
+
+**2. Container Initialization**
+
+| Capability | Direct Init `()` | Brace Init `{}` |
+|------------|------------------|-----------------|
+| Usage | Limited | Full support |
+| Example | `vector<int> v(5, 0);` // 5 zeros | `vector<int> v{1, 2, 3};` // elements 1,2,3 |
+
+```cpp
+// Direct initialization () - limited
+vector<int> v1(5, 0);      // ✓ 5 elements, all 0
+// vector<int> v2(1, 2, 3); // ❌ Compile error!
+
+// Brace initialization {} - full support
+vector<int> v3{1, 2, 3};   // ✓ elements are 1, 2, 3
+vector<int> v4{5, 0};      // ✓ elements are 5 and 0
+vector<int> v5{};          // ✓ empty container
+```
+
+**Key Point:** Brace `{}` supports initializer list syntax and can directly fill containers with values inside braces. Parentheses `()` for containers usually only works for `(count, initial_value)` construction and cannot directly list multiple specific values.
+
 ### 3.1.4 Recommendation
 
 **Modern C++ Style (C++11 and later):**
