@@ -264,6 +264,179 @@ Use emoji shortcodes or Unicode characters.
 
 Output: 😄 ❤️ 👍
 
+## 2.4 HTML Inline
+
+Markdown allows you to use raw HTML tags for advanced formatting.
+
+| HTML Tag | Purpose | Example |
+|----------|---------|---------|
+| `<br>` | Line break | `Line 1<br>Line 2` |
+| `<center>` | Center alignment | `<center>Centered text</center>` |
+| `<u>` | Underline | `<u>Underlined text</u>` |
+| `<sub>` | Subscript | `H<sub>2</sub>O` → H₂O |
+| `<sup>` | Superscript | `x<sup>2</sup>` → x² |
+| `<mark>` | Highlight | `<mark>Highlighted</mark>` |
+
+**Example:**
+```markdown
+This is <u>underlined</u> and this is <mark>highlighted</mark>.
+
+Chemical formula: H<sub>2</sub>O
+Math exponent: x<sup>2</sup> + y<sup>2</sup> = z<sup>2</sup>
+```
+
+## 2.5 Collapsible Sections
+
+Use HTML `<details>` and `<summary>` tags to create collapsible content.
+
+**Example:**
+```markdown
+<details>
+<summary>Click to expand</summary>
+
+This content is hidden by default.
+- Item 1
+- Item 2
+- Item 3
+
+</details>
+```
+
+**Output:**
+<details>
+<summary>Click to expand</summary>
+
+This content is hidden by default.
+- Item 1
+- Item 2
+- Item 3
+
+</details>
+
+## 2.6 Mathematical Expressions
+
+Many platforms support LaTeX math expressions.
+
+| Syntax | Type | Example |
+|--------|------|---------|
+| `$...$` | Inline math | `$E = mc^2$` |
+| `$$...$$` | Block math | `$$\sum_{i=1}^n i = \frac{n(n+1)}{2}$$` |
+
+**Inline example:**
+```markdown
+The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
+```
+
+**Block example:**
+```markdown
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+```
+
+> **Note:** Math support varies by platform (GitHub, Jupyter, Typora support it; standard Markdown does not).
+
+## 2.7 Diagrams (Mermaid)
+
+Some platforms support Mermaid syntax for diagrams.
+
+**Flowchart example:**
+<pre>
+```mermaid
+graph TD;
+    A[Start] --> B{Decision};
+    B -->|Yes| C[Action 1];
+    B -->|No| D[Action 2];
+    C --> E[End];
+    D --> E;
+```
+</pre>
+
+**Sequence diagram example:**
+<pre>
+```mermaid
+sequenceDiagram
+    participant A as User
+    participant B as System
+    A->>B: Request
+    B-->>A: Response
+```
+</pre>
+
+> **Note:** Mermaid requires platform support (GitHub, Notion, Typora, etc.).
+
+## 2.8 YAML Front Matter
+
+Add metadata at the beginning of the document using YAML format.
+
+**Example:**
+```markdown
+---
+title: My Document
+author: John Doe
+date: 2024-01-15
+tags: [markdown, tutorial]
+---
+
+# Document Content
+
+Starts here...
+```
+
+> **Use case:** Common in static site generators (Jekyll, Hugo) and note-taking apps (Obsidian).
+
+## 2.9 Automatic Table of Contents
+
+Some platforms automatically generate TOC from headings.
+
+| Platform | Syntax | Description |
+|----------|--------|-------------|
+| **GitHub** | Automatic | Click the list icon next to the filename |
+| **Typora** | `[TOC]` | Inserts table of contents |
+| **VS Code** | Extension | Use Markdown All in One extension |
+
+**Manual anchor links:**
+```markdown
+# Table of Contents
+- [Section 1](#section-1)
+- [Section 2](#section-2)
+
+## Section 1
+Content here...
+
+## Section 2
+Content here...
+```
+
+## 2.10 Text Highlighting (Extended)
+
+Some platforms support highlight syntax using `==`.
+
+| Syntax | Output | Support |
+|--------|--------|---------|
+| `==highlighted==` | ==highlighted== | Limited (Obsidian, Typora) |
+| `<mark>text</mark>` | <mark>text</mark> | Universal (HTML) |
+
+**Recommendation:** Use `<mark>` for better compatibility.
+
+## 2.11 Comments
+
+Add invisible comments in Markdown.
+
+| Syntax | Usage |
+|--------|-------|
+| `<!-- comment -->` | HTML comment (standard) |
+| `[//]: # (comment)` | Link reference comment |
+
+**Example:**
+```markdown
+<!-- This is a comment, not visible in rendered output -->
+
+Visible text here.
+
+[//]: # (This is another type of comment)
+```
+
 ---
 
 # 3 Best Practices
