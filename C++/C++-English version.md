@@ -782,45 +782,47 @@ Operators can also be categorized by their **function or purpose**:
 | **Scope** | `::` | Scope resolution |
 | **Other** | `,` `sizeof` `typeid` `new` `delete` | Comma, size query, memory management |
 
-## 4.2 Unary Operators
+## 4.2 Arithmetic Operators
 
-### 4.2.1 Increment and Decrement Operators
+Arithmetic operators perform mathematical calculations on numeric operands.
 
-The `++` (increment) and `--` (decrement) operators increase or decrease a variable by 1.
+### 4.2.1 Unary Plus and Minus (+, -)
 
-**Restrictions:**
-- Can only be used with **variables** (not constants or expressions)
-- Example: `++count` is valid, but `++5` or `++(a+b)` is invalid
+The unary plus (`+`) and unary minus (`-`) operators work on a single operand.
 
-**Two Forms:**
+**Unary Plus (`+`)**
+- Rarely used explicitly (exists for completeness)
+- Returns the value unchanged: `+5` is just `5`
+- Can be used for clarity: `int x = +10;`
 
-| Form | Syntax | Description |
-|------|--------|-------------|
-| **Prefix** | `++x` or `--x` | Increment/decrement first, then use the new value |
-| **Postfix** | `x++` or `x--` | Use the current value first, then increment/decrement |
+**Unary Minus (`-`) - Negation**
+- Negates the value of its operand
+- Changes positive to negative, negative to positive
 
-**Standalone Usage:**
-When used alone (not in an expression), both forms are equivalent:
 ```cpp
-x++;    // Equivalent to: x = x + 1;
-++x;    // Equivalent to: x = x + 1;
-y--;    // Equivalent to: y = y - 1;
+int a = 5;
+int b = -a;      // b = -5 (negation)
+int c = -(-a);   // c = 5 (double negation)
+int d = +a;      // d = 5 (unary plus, no effect)
+
+// Common use case: negative literals
+int temp = -10;
+double debt = -1500.50;
 ```
 
-**Usage in Expressions:**
+> **Note:** The unary minus has higher precedence than multiplication/division but lower than postfix increment/decrement.
 
-| Expression | Equivalent To | Result (if x=5, y=3) |
-|------------|---------------|----------------------|
-| `w = ++x - y;` | `x = x + 1; w = x - y;` | x=6, w=3 |
-| `w = x++ - y;` | `w = x - y; x = x + 1;` | w=2, x=6 |
+### 4.2.2 Multiplication, Division, and Modulo (*, /, %)
 
-**Key Rule:**
-- Prefix: modify first, then use
-- Postfix: use first, then modify
+These operators perform basic arithmetic operations.
 
-## 4.3 Binary Operators
+**Multiplication (`*`)**
+```cpp
+int product = 5 * 3;     // 15
+double area = 4.5 * 2.0; // 9.0
+```
 
-### 4.3.1 Division
+**Division (`/`)**
 
 ```cpp
 int a = 7 / 2;       // Result: 3 (integer division, truncates decimal)
@@ -833,7 +835,7 @@ double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
 | `int / int` | `int` | Decimal part discarded |
 | `double / int` | `double` | Normal division |
 
-### 4.3.2 Modulo
+**Modulo (`%`) - Remainder**
 
 Returns the **remainder** of division.
 
@@ -878,45 +880,25 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 - The sign of the remainder follows the sign of the dividend (numerator)
 - The identity `(a/b)*b + a%b == a` always holds
 
-**Note:** There are only these two standards in C++. Modern compilers (C++11 and later) use the "truncate toward zero" rule.
+### 4.2.3 Addition and Subtraction (+, -)
 
-### 4.3.3 Mixed Operations
-
-When operands have different types, C++ automatically converts the "narrower" type to the "wider" type before performing the operation.
-
-**Type Promotion Hierarchy**
-```
-char → short → int → long → long long → float → double → long double
-```
-
-**Common Scenarios**
-
-| Scenario | Result Type | Explanation |
-|----------|-------------|-------------|
-| `int` + `double` | `double` | `int` is promoted to `double` |
-| `float` + `double` | `double` | `float` is promoted to `double` |
-| `short` + `int` | `int` | `short` is promoted to `int` |
-| `int` / `double` | `double` | Integer division becomes floating-point |
-
-**Pitfall:** Integer vs Mixed Division
-
+**Binary Addition (`+`)**
 ```cpp
-int sum = 7, count = 2;
-double avg1 = sum / count;       // Result: 3.0 (integer division first!)
-double avg2 = (double)sum / count; // Result: 3.5 (correct)
-double avg3 = sum / (double)count; // Result: 3.5 (correct)
-double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
+int sum = 5 + 3;         // 8
+double total = 10.5 + 2.5;  // 13.0
 ```
 
-**Key Point:** In mixed operations, at least one operand must be floating-point to get a floating-point result. The assignment to `double` happens **after** the division operation.
+**Binary Subtraction (`-`)**
+```cpp
+int diff = 10 - 4;       // 6
+double result = 5.5 - 2.0;  // 3.5
+```
 
-> See also: [Power (Exponentiation)](#1434-power-exponentiation)
-
-### 4.3.4 Power (Exponentiation)
+**Exponentiation (Power)**
 
 **Important:** C++ has **no operator** for exponentiation.
 
-> ⚠️ **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
+> **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
 
 ```cpp
 int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
@@ -924,66 +906,239 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 
 | Expression | C++ | Note |
 |------------|-----|------|
-| x⁴ | ❌ No `^` or `**` | Unlike Python (`**`) or math notation |
-| a² | `a * a` | Use repeated multiplication |
+| x^4 | No `^` or `**` | Unlike Python (`**`) or math notation |
+| a^2 | `a * a` | Use repeated multiplication |
 
-#### 4.3.4.1 Method 1: Repeated Multiplication
-
-Fastest for small integer exponents.
-
+**Method 1: Repeated Multiplication (for small exponents)**
 ```cpp
-int square = a * a;           // a²
-int cube = a * a * a;         // a³
-int fourth = a * a * a * a;   // a⁴
+int square = a * a;           // a^2
+int cube = a * a * a;         // a^3
+int fourth = a * a * a * a;   // a^4
 ```
 
-**When to use:**
-- Exponent is small (2, 3, 4)
-- Performance-critical code
-- Working with integers
-
-**Why fast:** Direct CPU multiplication, no function call overhead.
-
-#### 4.3.4.2 Method 2: `pow()` Function
-
-For fractional or variable exponents.
-
+**Method 2: `pow()` Function (for fractional/variable exponents)**
 ```cpp
 #include <cmath>
 
-double result1 = pow(x, 4);      // x⁴
-double result2 = pow(2.0, 10);   // 2¹⁰
-double result3 = pow(x, 0.5);    // √x
+double result1 = pow(x, 4);      // x^4
+double result2 = pow(2.0, 10);   // 2^10
+double result3 = pow(x, 0.5);    // sqrt(x)
 double result4 = pow(x, -1);     // 1/x
 ```
 
-| Aspect | Description |
-|--------|-------------|
-| Parameters | `double, double` (implicit conversion from `int`/`float`) |
-| Returns | Always `double` |
-
-```cpp
-int a = pow(2, 3);        // ⚠️ Warning: double to int conversion
-double b = pow(2, 3);     // ✅ Correct: b = 8.0
-```
-
-**When to use:**
-- Variable or large exponents
-- Fractional exponents (square root, etc.)
-- Negative exponents
-
-**Performance:** Slower due to function call and floating-point operations.
-
-#### 4.3.4.3 Comparison
-
 | Method | Speed | Use Case |
 |--------|-------|----------|
-| `a * a` | ⚡ Fastest | Small fixed exponents: `a²`, `a³` |
-| `pow(a, b)` | 🐢 Slower | Variable/fractional: `a^b`, `√a` |
+| `a * a` | Fastest | Small fixed exponents: a^2, a^3 |
+| `pow(a, b)` | Slower | Variable/fractional: a^b, sqrt(a) |
 
-## 4.4 Assignment Operators
+## 4.3 Increment and Decrement Operators
 
-### 4.4.1 Simple Assignment
+The `++` (increment) and `--` (decrement) operators increase or decrease a variable by 1.
+
+**Restrictions:**
+- Can only be used with **variables** (not constants or expressions)
+- Example: `++count` is valid, but `++5` or `++(a+b)` is invalid
+
+**Two Forms:**
+
+| Form | Syntax | Description |
+|------|--------|-------------|
+| **Prefix** | `++x` or `--x` | Increment/decrement first, then use the new value |
+| **Postfix** | `x++` or `x--` | Use the current value first, then increment/decrement |
+
+**Standalone Usage:**
+When used alone (not in an expression), both forms are equivalent:
+```cpp
+x++;    // Equivalent to: x = x + 1;
+++x;    // Equivalent to: x = x + 1;
+y--;    // Equivalent to: y = y - 1;
+```
+
+**Usage in Expressions:**
+
+| Expression | Equivalent To | Result (if x=5, y=3) |
+|------------|---------------|----------------------|
+| `w = ++x - y;` | `x = x + 1; w = x - y;` | x=6, w=3 |
+| `w = x++ - y;` | `w = x - y; x = x + 1;` | w=2, x=6 |
+
+**Key Rule:**
+- Prefix: modify first, then use
+- Postfix: use first, then modify
+
+## 4.4 Relational Operators
+
+Relational operators compare two values and return a boolean result (`true` or `false`).
+
+| Operator | Name | Example | Result |
+|----------|------|---------|--------|
+| `==` | Equal to | `5 == 5` | `true` |
+| `!=` | Not equal to | `5 != 3` | `true` |
+| `<` | Less than | `3 < 5` | `true` |
+| `>` | Greater than | `5 > 3` | `true` |
+| `<=` | Less than or equal | `5 <= 5` | `true` |
+| `>=` | Greater than or equal | `5 >= 3` | `true` |
+
+**Common Pitfall: `==` vs `=`**
+
+```cpp
+// WRONG: Assignment instead of comparison
+if (x = 5) {  // Assigns 5 to x, always evaluates to true (non-zero)
+    // This will ALWAYS execute
+}
+
+// CORRECT: Comparison
+if (x == 5) {  // Checks if x equals 5
+    // Only executes when x is 5
+}
+```
+
+**Floating-Point Comparison**
+
+Direct equality comparison with floating-point numbers can be problematic due to precision errors.
+
+```cpp
+double a = 0.1 + 0.2;
+// a == 0.3 might be false due to floating-point precision
+
+// Better approach: check if close enough
+const double EPSILON = 1e-9;
+bool equal = fabs(a - 0.3) < EPSILON;
+```
+
+## 4.5 Logical Operators
+
+Logical operators perform boolean operations and return `true` or `false`.
+
+| Operator | Name | Description | Example |
+|----------|------|-------------|---------|
+| `!` | Logical NOT | Inverts the boolean value | `!true` → `false` |
+| `&&` | Logical AND | True if both operands are true | `true && false` → `false` |
+| `||` | Logical OR | True if at least one operand is true | `true || false` → `true` |
+
+**Truth Table**
+
+| A | B | `!A` | `A && B` | `A || B` |
+|---|---|------|----------|----------|
+| true | true | false | true | true |
+| true | false | false | false | true |
+| false | true | true | false | true |
+| false | false | true | false | false |
+
+**Short-Circuit Evaluation**
+
+C++ uses short-circuit evaluation for logical operators:
+
+- `&&`: If left operand is `false`, right operand is **not evaluated**
+- `||`: If left operand is `true`, right operand is **not evaluated**
+
+```cpp
+int x = 5;
+
+// y++ is NOT evaluated because x > 10 is false
+if (x > 10 && y++ > 0) {  // y remains unchanged
+    // ...
+}
+
+// y++ IS evaluated because x < 10 is true
+if (x < 10 && y++ > 0) {  // y is incremented
+    // ...
+}
+```
+
+**Common Use Cases**
+
+```cpp
+// Range checking
+if (age >= 18 && age <= 65) {
+    // Working age
+}
+
+// Multiple conditions
+if (isValid || isAdmin) {
+    // Allow access
+}
+
+// Negation
+if (!isEmpty) {
+    // Process if not empty
+}
+```
+
+## 4.6 Bitwise Operators
+
+Bitwise operators perform operations on individual bits of integer values.
+
+| Operator | Name | Description | Example |
+|----------|------|-------------|---------|
+| `&` | Bitwise AND | 1 if both bits are 1 | `5 & 3` → `1` (0101 & 0011 = 0001) |
+| `|` | Bitwise OR | 1 if at least one bit is 1 | `5 | 3` → `7` (0101 | 0011 = 0111) |
+| `^` | Bitwise XOR | 1 if bits are different | `5 ^ 3` → `6` (0101 ^ 0011 = 0110) |
+| `~` | Bitwise NOT | Inverts all bits | `~5` → `-6` (inverts all bits including sign) |
+| `<<` | Left shift | Shifts bits left | `5 << 1` → `10` (0101 → 1010) |
+| `>>` | Right shift | Shifts bits right | `5 >> 1` → `2` (0101 → 0010) |
+
+**Practical Examples**
+
+**Checking if a number is even/odd using bitwise AND:**
+```cpp
+// Check least significant bit
+if (num & 1) {
+    // Odd number (LSB is 1)
+} else {
+    // Even number (LSB is 0)
+}
+```
+
+**Setting a specific bit:**
+```cpp
+int flags = 0;
+flags = flags | (1 << 2);  // Set bit 2 (now flags = 4)
+```
+
+**Clearing a specific bit:**
+```cpp
+flags = flags & ~(1 << 2);  // Clear bit 2
+```
+
+**Toggling a specific bit:**
+```cpp
+flags = flags ^ (1 << 2);  // Toggle bit 2
+```
+
+**Bit Flags Pattern**
+
+```cpp
+const int READ = 1 << 0;    // 0b0001 = 1
+const int WRITE = 1 << 1;   // 0b0010 = 2
+const int EXECUTE = 1 << 2; // 0b0100 = 4
+
+int permissions = READ | WRITE;  // 0b0011 = 3
+
+// Check if read permission is set
+if (permissions & READ) {
+    // Has read permission
+}
+
+// Add execute permission
+permissions = permissions | EXECUTE;
+```
+
+### 4.6.1 Division
+
+```cpp
+int a = 7 / 2;       // Result: 3 (integer division, truncates decimal)
+double b = 7 / 2;    // Result: 3.0 (still integer division!)
+double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
+```
+
+| Operation | Result | Note |
+|-----------|--------|------|
+| `int / int` | `int` | Decimal part discarded |
+| `double / int` | `double` | Normal division |
+
+## 4.7 Assignment Operators
+
+### 4.7.1 Simple Assignment
 
 The assignment operator `=` assigns a value to a variable.
 
@@ -1000,7 +1155,7 @@ y = z;  // y = 0
 x = y;  // x = 0
 ```
 
-### 4.4.2 Compound Assignment
+### 4.7.2 Compound Assignment
 
 C/C++ allows simple assignment statements to be abbreviated using compound assignment operators.
 
@@ -1023,18 +1178,102 @@ identifier operator= expression;
 - May be more efficient (variable evaluated only once)
 - Commonly used in practice
 
-## 4.5 Cast Operators (Type Conversion)
+## 4.8 Ternary Conditional Operator
+
+The ternary conditional operator `?:` is the only ternary operator in C++. It provides a compact way to write simple if-else expressions.
+
+### 4.8.1 Syntax and Usage
+
+**Syntax:**
+```cpp
+condition ? expression_if_true : expression_if_false
+```
+
+**How it works:**
+1. Evaluate `condition`
+2. If `condition` is true (non-zero), evaluate and return `expression_if_true`
+3. If `condition` is false (zero), evaluate and return `expression_if_false`
+
+```cpp
+int max = (a > b) ? a : b;  // If a > b, max = a, else max = b
+
+// Equivalent to:
+int max;
+if (a > b) {
+    max = a;
+} else {
+    max = b;
+}
+```
+
+### 4.8.2 Common Use Cases
+
+**Selecting between two values:**
+```cpp
+int absolute = (x < 0) ? -x : x;  // Absolute value
+char sign = (num >= 0) ? '+' : '-';  // Sign indicator
+```
+
+**Output formatting:**
+```cpp
+cout << "You have " << count << (count == 1 ? " message" : " messages") << endl;
+// Output: "You have 1 message" or "You have 5 messages"
+```
+
+**Function return:**
+```cpp
+int getMax(int a, int b) {
+    return (a > b) ? a : b;
+}
+```
+
+### 4.8.3 Nested Ternary Operators
+
+Ternary operators can be nested, but this should be done with caution as it reduces readability.
+
+```cpp
+// Grade classification (avoid deeply nested ternaries)
+char grade = (score >= 90) ? 'A' :
+             (score >= 80) ? 'B' :
+             (score >= 70) ? 'C' :
+             (score >= 60) ? 'D' : 'F';
+```
+
+> **Caution:** Deeply nested ternary operators make code hard to read. For complex conditions, use `if-else` statements instead.
+
+### 4.8.4 Type Compatibility
+
+Both expressions must be compatible types (or implicitly convertible).
+
+```cpp
+int a = 5;
+double b = 3.14;
+
+auto result = (condition) ? a : b;  // result is double (int promoted to double)
+```
+
+**Important:** The ternary operator is an **expression**, not a statement. It returns a value and can be used anywhere an expression is expected.
+
+```cpp
+// Can be used in expressions
+int x = 10 + ((y > 0) ? y : 0);
+
+// Can be assigned to
+((flag) ? a : b) = 100;  // Assigns 100 to either a or b (C++ allows this)
+```
+
+## 4.9 Type Cast Operators
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
-### 4.5.1 Usage Scenarios
+### 4.9.1 Usage Scenarios
 
 | Expression | Result | Explanation |
 |------------|--------|-------------|
 | `sum / count` (both `int`) | `3` (if sum=7, count=2) | Integer division, decimal dropped |
 | `(float)sum / count` | `3.5` | `sum` converted to float first |
 
-### 4.5.2 C-Style Cast
+### 4.9.2 C-Style Cast
 
 ```cpp
 float average = (float)sum / count;  // C-style cast
@@ -1068,7 +1307,7 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 
 > See also: [Power (Exponentiation)](#1434-power-exponentiation)
 
-### 4.6.3 C++ Style Casts
+### 4.9.3 C++ Style Casts
 
 C++ provides four type cast operators for safer, more explicit conversions:
 
@@ -1094,24 +1333,181 @@ C++ provides four type cast operators for safer, more explicit conversions:
 double avg = static_cast<double>(sum) / count;
 ```
 
-## 4.7 Operator Precedence
+## 4.10 Other Operators
 
-| Precedence | Operator | Associativity |
-|------------|----------|---------------|
-| 1 | **Parentheses:** `( )` | Innermost first |
-| 2 | **Unary operators:** `+` `-` `++` `--` `(type)` | Right to left |
-| 3 | **Binary operators:** `*` `/` `%` | Left to right |
-| 4 | **Binary operators:** `+` `-` | Left to right |
-| 5 | **Assignment operators:** `=` `+=` `-=` `*=` `/=` `%=` | Right to left |
+This section covers miscellaneous operators that don't fit into the categories above.
+
+### 4.10.1 Member Access Operators
+
+**Dot Operator (`.`)** - Access members of an object directly:
+```cpp
+struct Person {
+    string name;
+    int age;
+};
+
+Person p = {"Alice", 25};
+cout << p.name;  // Access name member: "Alice"
+cout << p.age;   // Access age member: 25
+```
+
+**Arrow Operator (`->`)** - Access members through a pointer:
+```cpp
+Person* ptr = &p;
+cout << ptr->name;  // Equivalent to (*ptr).name
+```
+
+### 4.10.2 Scope Resolution Operator (`::`)
+
+The scope resolution operator is used to access identifiers in different scopes.
+
+**Global scope access:**
+```cpp
+int x = 10;  // Global variable
+
+void func() {
+    int x = 5;  // Local variable
+    cout << x;      // Prints 5 (local)
+    cout << ::x;    // Prints 10 (global)
+}
+```
+
+**Namespace scope:**
+```cpp
+std::cout << "Hello";  // Access cout from std namespace
+```
+
+**Class scope (static members):**
+```cpp
+class MyClass {
+public:
+    static int count;
+};
+int MyClass::count = 0;  // Define static member outside class
+```
+
+### 4.10.3 Comma Operator (`,`)
+
+The comma operator evaluates expressions from left to right and returns the value of the rightmost expression.
+
+```cpp
+int a = (1, 2, 3);  // a = 3 (rightmost value)
+
+// Common use in for loops
+for (int i = 0, j = 10; i < j; i++, j--) {
+    // Multiple operations in loop control
+}
+```
+
+**Note:** The comma operator has the lowest precedence of all operators.
+
+### 4.10.4 sizeof Operator
+
+The `sizeof` operator returns the size of a type or variable in bytes.
+
+```cpp
+int arr[10];
+cout << sizeof(int);     // Size of int (typically 4)
+cout << sizeof(arr);     // Size of entire array: 40 (10 * 4)
+cout << sizeof(arr[0]);  // Size of one element: 4
+
+// Calculate array length
+int length = sizeof(arr) / sizeof(arr[0]);  // 10
+```
+
+**Key Points:**
+- `sizeof` is evaluated at compile time (except for C99 variable-length arrays)
+- When applied to an array, returns the total size of all elements
+- When applied to a pointer, returns the size of the pointer itself
+
+### 4.10.5 Pointer Operators
+
+**Address-of Operator (`&`)** - Returns the memory address of a variable:
+```cpp
+int x = 10;
+int* ptr = &x;  // ptr stores the address of x
+```
+
+**Dereference Operator (`*`)** - Accesses the value at a memory address:
+```cpp
+int y = *ptr;   // y = 10 (value at address stored in ptr)
+*ptr = 20;      // x is now 20
+```
+
+> See also: Chapter on Pointers for detailed coverage.
+
+### 4.10.6 Power (Exponentiation)
+
+**Important:** C++ has **no built-in operator** for exponentiation.
+
+> ⚠️ **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
+
+```cpp
+int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
+```
+
+| Expression | C++ | Note |
+|------------|-----|------|
+| x⁴ | ❌ No `^` or `**` | Unlike Python (`**`) or math notation |
+| a² | `a * a` | Use repeated multiplication for small exponents |
+| aⁿ | `pow(a, n)` | Use `<cmath>` library for variable exponents |
+
+**Method 1: Repeated Multiplication**
+```cpp
+int square = a * a;           // a²
+int cube = a * a * a;         // a³
+int fourth = a * a * a * a;   // a⁴
+```
+
+**Method 2: `pow()` Function**
+```cpp
+#include <cmath>
+double result = pow(x, 4);  // x⁴
+```
+
+| Method | Speed | Use Case |
+|--------|-------|----------|
+| `a * a` | ⚡ Fastest | Small fixed exponents: `a²`, `a³` |
+| `pow(a, b)` | 🐢 Slower | Variable/fractional exponents |
+
+## 4.11 Operator Precedence and Associativity
+
+The following table lists all operators covered in this chapter from highest to lowest precedence.
+
+| Precedence | Operator | Description | Associativity |
+|------------|----------|-------------|---------------|
+| 1 | `::` | Scope resolution | Left to right |
+| 2 | `()` `[]` `->` `.` | Parentheses, subscript, member access | Left to right |
+| 3 | `++` `--` (postfix) | Postfix increment/decrement | Left to right |
+| 4 | `++` `--` (prefix) `+` `-` `!` `~` `*` `&` `(type)` `sizeof` | Prefix unary operators | Right to left |
+| 5 | `.*` `->*` | Pointer-to-member | Left to right |
+| 6 | `*` `/` `%` | Multiplication, division, modulo | Left to right |
+| 7 | `+` `-` | Addition, subtraction | Left to right |
+| 8 | `<<` `>>` | Bitwise shift | Left to right |
+| 9 | `<` `<=` `>` `>=` | Relational operators | Left to right |
+| 10 | `==` `!=` | Equality operators | Left to right |
+| 11 | `&` | Bitwise AND | Left to right |
+| 12 | `^` | Bitwise XOR | Left to right |
+| 13 | `\|` | Bitwise OR | Left to right |
+| 14 | `&&` | Logical AND | Left to right |
+| 15 | `\|\|` | Logical OR | Left to right |
+| 16 | `?:` | Ternary conditional | Right to left |
+| 17 | `=` `+=` `-=` `*=` `/=` `%=` `&=` `^=` `\|=` `<<=` `>>=` | Assignment operators | Right to left |
+| 18 | `,` | Comma operator | Left to right |
 
 **Key Rules:**
 
-- Unary operators are evaluated before the binary operations `*`, `/`, and `%`.
-- Binary addition and subtraction are evaluated last among arithmetic operators.
-- **Assignment operators are evaluated last** and have **right-to-left** associativity.
-- Higher precedence (smaller number) is evaluated first.
-- Parentheses can override precedence.
-- Operators with the same precedence are evaluated according to associativity.
+- **Parentheses and scope resolution** have the highest precedence - use them to override other precedence rules.
+- **Unary operators** (prefix `++`, `--`, `+`, `-`, `!`, `~`, etc.) are evaluated before arithmetic operators.
+- **Arithmetic operators** follow the standard order: `*`, `/`, `%` before `+`, `-`.
+- **Bitwise operators** are evaluated after arithmetic but before logical operators.
+- **Relational operators** (`<`, `<=`, `>`, `>=`) are evaluated before equality operators (`==`, `!=`).
+- **Logical AND (`&&`)** has higher precedence than **Logical OR (`||`)**.
+- **Ternary conditional (`?:`)** is evaluated after logical operators.
+- **Assignment operators** have the lowest precedence (except comma) and associate right-to-left.
+- **Comma operator** has the lowest precedence of all.
+- Operators with the same precedence are evaluated according to their associativity (left-to-right or right-to-left).
+- Parentheses can always be used to override default precedence and improve readability.
 
 **Examples:**
 
@@ -1150,9 +1546,9 @@ a = b;
 - Avoid mixing multiple assignment operators in one statement
 - Put spaces around assignment operators for clarity (they are evaluated last)
 
-> **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for style guidelines on whitespace around operators.
+> **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for style guidelines on whitespace around operators.
 
-## 4.8 Spacing in Expressions
+## 4.12 Spacing and Style Guidelines
 
 Spacing around operators is a **style issue**. Choose a style and use it consistently.
 
@@ -1174,7 +1570,7 @@ int result = a*b + b/c*d;  // Clearer structure
 int result = a * b + b / c * d;  // Also valid, but less clear
 ```
 
-> **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for more details on whitespace usage.
+> **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for more details on whitespace usage.
 
 
 
