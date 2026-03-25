@@ -923,18 +923,20 @@ double result4 = pow(x, -1);     // 1/x
 
 The `++` (increment) and `--` (decrement) operators increase or decrease a variable by 1.
 
-**Restrictions:**
+### 4.3.1 Restrictions
+
 - Can only be used with **variables** (not constants or expressions)
 - Example: `++count` is valid, but `++5` or `++(a+b)` is invalid
 
-**Two Forms:**
+### 4.3.2 Two Forms
 
 | Form        | Syntax         | Description                                           |
 | ----------- | -------------- | ----------------------------------------------------- |
 | **Prefix**  | `++x` or `--x` | Increment/decrement first, then use the new value     |
 | **Postfix** | `x++` or `x--` | Use the current value first, then increment/decrement |
 
-**Standalone Usage:**
+### 4.3.3 Standalone Usage
+
 When used alone (not in an expression), both forms are equivalent:
 ```cpp
 x++;    // Equivalent to: x = x + 1;
@@ -942,16 +944,16 @@ x++;    // Equivalent to: x = x + 1;
 y--;    // Equivalent to: y = y - 1;
 ```
 
-**Usage in Expressions:**
+### 4.3.4 Usage in Expressions
 
 | Expression | Equivalent To | Result (if x=5, y=3) |
 |------------|---------------|----------------------|
 | `w = ++x - y;` | `x = x + 1; w = x - y;` | x=6, w=3 |
 | `w = x++ - y;` | `w = x - y; x = x + 1;` | w=2, x=6 |
 
-**Key Rule:**
-- Prefix: modify first, then use
-- Postfix: use first, then modify
+> **Key Rule:**
+> - Prefix: modify first, then use
+> - Postfix: use first, then modify
 
 ## 4.4 Relational Operators
 
