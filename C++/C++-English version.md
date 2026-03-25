@@ -968,21 +968,7 @@ Relational operators compare two values and return a boolean result (`true` or `
 | `<=` | Less than or equal | `5 <= 5` | `true` |
 | `>=` | Greater than or equal | `5 >= 3` | `true` |
 
-**Common Pitfall: `==` vs `=`**
-
-```cpp
-// WRONG: Assignment instead of comparison
-if (x = 5) {  // Assigns 5 to x, always evaluates to true (non-zero)
-    // This will ALWAYS execute
-}
-
-// CORRECT: Comparison
-if (x == 5) {  // Checks if x equals 5
-    // Only executes when x is 5
-}
-```
-
-**Floating-Point Comparison**
+### 4.4.1 Floating-Point Comparison
 
 Direct equality comparison with floating-point numbers can be problematic due to precision errors.
 
@@ -1007,8 +993,8 @@ Logical operators perform boolean operations and return `true` or `false`.
 
 **Truth Table**
 
-| A | B | `!A` | `A && B` | `A || B` |
-|---|---|------|----------|----------|
+| A | B | !A | A && B | A || B |
+|---|---|----|--------|--------|
 | true | true | false | true | true |
 | true | false | false | false | true |
 | false | true | true | false | true |
