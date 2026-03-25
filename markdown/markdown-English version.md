@@ -437,6 +437,199 @@ Visible text here.
 [//]: # (This is another type of comment)
 ```
 
+## 2.12 Keyboard Keys
+
+Use `<kbd>` tag to represent keyboard keys.
+
+| Syntax | Output | Use Case |
+|--------|--------|----------|
+| `<kbd>Ctrl</kbd>` | <kbd>Ctrl</kbd> | Single key |
+| `<kbd>Ctrl</kbd>+<kbd>C</kbd>` | <kbd>Ctrl</kbd>+<kbd>C</kbd> | Key combination |
+
+**Example:**
+```markdown
+Press <kbd>Ctrl</kbd>+<kbd>S</kbd> to save.
+
+Use <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> for navigation.
+```
+
+**Output:**
+Press <kbd>Ctrl</kbd>+<kbd>S</kbd> to save.
+
+Use <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> for navigation.
+
+## 2.13 Code Block Features
+
+### 2.13.1 Syntax Highlighting with Line Numbers
+
+Some platforms support line numbers in code blocks.
+
+<pre>
+```python linenums="1"
+def hello():
+    print("Hello")
+    return True
+```
+</pre>
+
+> **Note:** `linenums` attribute is supported by MkDocs Material, not standard Markdown.
+
+### 2.13.2 Highlight Specific Lines
+
+Highlight specific lines in code blocks.
+
+<pre>
+```python hl_lines="2 3"
+def hello():
+    print("Hello")  # This line highlighted
+    return True     # This line highlighted
+```
+</pre>
+
+> **Note:** `hl_lines` is an extension feature (MkDocs Material).
+
+### 2.13.3 Code Block Titles
+
+Add titles to code blocks.
+
+<pre>
+```python title="hello.py"
+def hello():
+    print("Hello World")
+```
+</pre>
+
+## 2.14 Abbr (Abbreviations)
+
+Define abbreviations that show tooltip on hover (some platforms).
+
+**Syntax:**
+```markdown
+The HTML specification is maintained by the W3C.
+
+*[HTML]: Hyper Text Markup Language
+*[W3C]: World Wide Web Consortium
+```
+
+**Output:** Hover over HTML or W3C to see the definition.
+
+> **Note:** Supported by PHP Markdown Extra, MkDocs, and some other flavors.
+
+## 2.15 Superscript and Subscript (Alternative Syntax)
+
+Some platforms support Markdown-native superscript/subscript.
+
+| Syntax | Output | Platform |
+|--------|--------|----------|
+| `x^2^` | x^2^ | Pandoc, Obsidian, Typora |
+| `H~2~O` | H~2~O | Pandoc, Obsidian, Typora |
+| `x<sup>2</sup>` | x<sup>2</sup> | Universal (HTML) |
+
+**Recommendation:** Use HTML tags (`<sup>`, `<sub>`) for better compatibility.
+
+## 2.16 Video Embedding
+
+Embed videos using HTML or platform-specific syntax.
+
+**HTML5 Video:**
+```markdown
+<video src="video.mp4" controls width="640" height="360"></video>
+```
+
+**YouTube (if platform supports):**
+```markdown
+[![Alt text](thumbnail.jpg)](https://www.youtube.com/watch?v=VIDEO_ID "Video Title")
+```
+
+**IFrame (for supported platforms):**
+```markdown
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID"></iframe>
+```
+
+## 2.17 Smart Punctuation
+
+Markdown processors often convert straight quotes to smart quotes.
+
+| Input | Output | Description |
+|-------|--------|-------------|
+| `"Hello"` | "Hello" | Straight quotes |
+| `"Hello"` (smart) | "Hello" | Curly quotes (typographic) |
+| `'` | ' | Apostrophe |
+| `--` | -- | En dash |
+| `---` | --- | Em dash |
+| `...` | ... | Ellipsis |
+
+**Disable with:**
+```markdown
+Use `"`straight quotes`"` by escaping or using code spans.
+```
+
+## 2.18 Footnotes (Advanced)
+
+Multiple references to the same footnote.
+
+```markdown
+This needs a footnote[^1] and here it is again[^1].
+
+Another footnote[^2] for comparison.
+
+[^1]: Same footnote referenced twice.
+[^2]: A different footnote.
+```
+
+## 2.19 Nesting Elements
+
+You can nest most Markdown elements inside each other.
+
+**Blockquote with list:**
+```markdown
+> ### Important Notes:
+> - First item
+> - Second item
+>   ```cpp
+>   code inside list inside quote
+>   ```
+```
+
+**List with code and emphasis:**
+```markdown
+- **Bold item**
+  ```python
+  print("code")
+  ```
+- *Italic item* with `inline code`
+```
+
+## 2.20 Directory Tree Representation
+
+Use code blocks or ASCII art for directory trees.
+
+**Using code block:**
+<pre>
+```
+project/
+├── src/
+│   ├── main.cpp
+│   └── utils.cpp
+├── include/
+│   └── header.h
+├── README.md
+└── CMakeLists.txt
+```
+</pre>
+
+**Using Mermaid:**
+<pre>
+```mermaid
+graph TD
+    A[project] --> B[src]
+    A --> C[include]
+    A --> D[README.md]
+    B --> E[main.cpp]
+    B --> F[utils.cpp]
+```
+</pre>
+
 ---
 
 # 3 Best Practices
