@@ -1,3 +1,52 @@
+# Markdown Cheatsheet
+
+Quick reference for Markdown syntax.
+
+## Overview
+
+This cheatsheet provides a quick overview of all Markdown syntax elements. It doesn't cover every edge case, so if you need more information about any of these elements, refer to the [Basic Syntax](#1-markdown-basics) and [Extended Syntax](#2-extended-markdown-features) sections.
+
+---
+
+# Basic Syntax
+
+These elements are defined in John Gruber's original design document. All Markdown applications support these elements.
+
+| Element | Markdown Syntax |
+|---------|-----------------|
+| Heading | `# H1`<br>`## H2`<br>`### H3` |
+| Bold | `**bold text**` |
+| Italic | `*italicized text*` |
+| Blockquote | `> blockquote` |
+| Ordered List | `1. First item`<br>`2. Second item`<br>`3. Third item` |
+| Unordered List | `- First item`<br>`- Second item`<br>`- Third item` |
+| Code | `` `code` `` |
+| Horizontal Rule | `---` |
+| Link | `[title](https://www.example.com)` |
+| Image | `![alt text](image.jpg)` |
+
+---
+
+# Extended Syntax
+
+These elements extend the basic syntax by adding additional features. Not all Markdown applications support these elements.
+
+| Element | Markdown Syntax |
+|---------|-----------------|
+| Table | `\| Syntax \| Description \|`<br>`\| ----------- \| ----------- \|`<br>`\| Header \| Title \|`<br>`\| Paragraph \| Text \|` |
+| Fenced Code Block | ```` ``` `<br>`{`<br>`  "firstName": "John",`<br>`  "lastName": "Smith",`<br>`  "age": 25`<br>`}`<br>` ``` ```` |
+| Footnote | `Here's a sentence with a footnote. [^1]`<br>`[^1]: This is the footnote.` |
+| Heading ID | `### My Great Heading {#custom-id}` |
+| Definition List | `term`<br>`: definition` |
+| Strikethrough | `~~The world is flat.~~` |
+| Task List | `- [x] Write the press release`<br>`- [ ] Update the website`<br>`- [ ] Contact the media` |
+| Emoji | `That is so funny! :joy:` |
+| Highlight | `I need to highlight these ==very important words==.` |
+| Subscript | `H~2~O` |
+| Superscript | `X^2^` |
+
+---
+
 # 1 Markdown Basics
 
 Markdown is a lightweight markup language that you can use to add formatting elements to plaintext text documents.
@@ -56,12 +105,12 @@ This is line two.
 
 ### 1.3.1 Emphasis
 
-| Style | Syntax | Example | Output |
-|-------|--------|---------|--------|
-| **Bold** | `**text**` or `__text__` | `**bold**` | **bold** |
-| *Italic* | `*text*` or `_text_` | `*italic*` | *italic* |
-| ***Bold+Italic*** | `***text***` | `***both***` | ***both*** |
-| ~~Strikethrough~~ | `~~text~~` | `~~deleted~~` | ~~deleted~~ |
+| Style             | Syntax                   | Example       | Output      |
+| ----------------- | ------------------------ | ------------- | ----------- |
+| **Bold**          | `**text**` or `__text__` | `**bold**`    | **bold**    |
+| *Italic*          | `*text*` or `_text_`     | `*italic*`    | *italic*    |
+| ***Bold+Italic*** | `***text***`             | `***both***`  | ***both***  |
+| ~~Strikethrough~~ | `~~text~~`               | `~~deleted~~` | ~~deleted~~ |
 
 ### 1.3.2 Code Formatting
 
