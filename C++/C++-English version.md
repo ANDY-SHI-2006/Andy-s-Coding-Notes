@@ -973,6 +973,30 @@ a = b;
 
 > **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for style guidelines on whitespace around operators.
 
+## 4.7 Spacing in Expressions
+
+Spacing around operators is a **style issue**. Choose a style and use it consistently.
+
+| Style | Description | Example |
+|-------|-------------|---------|
+| **Spaces around all operators** | Some prefer spaces around every operator | `a * b + b / c * d` |
+| **Spaces only around + and -** | Preferred style: spaces only around binary addition/subtraction (evaluated last) | `a*b + b/c*d` |
+
+**Key Points:**
+- Spacing is a style choice, not a syntax requirement
+- **Recommendation:** Put spaces only around binary `+` and `-` because they are evaluated last
+- This makes the expression structure clearer
+
+```cpp
+// Preferred style - spaces only around + and -
+int result = a*b + b/c*d;  // Clearer structure
+
+// Alternative style - spaces around all operators
+int result = a * b + b / c * d;  // Also valid, but less clear
+```
+
+> **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for more details on whitespace usage.
+
 
 
 ---
