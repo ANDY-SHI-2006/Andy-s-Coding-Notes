@@ -630,6 +630,173 @@ graph TD
 ```
 </pre>
 
+## 2.21 GitHub Alerts (Callouts)
+
+GitHub Flavored Markdown supports special alert syntax for highlighting information.
+
+| Syntax | Type | Purpose |
+|--------|------|---------|
+| `> [!NOTE]` | Note | Useful information |
+| `> [!TIP]` | Tip | Helpful advice |
+| `> [!IMPORTANT]` | Important | Critical information |
+| `> [!WARNING]` | Warning | Caution needed |
+| `> [!CAUTION]` | Caution | Potential negative outcome |
+
+**Examples:**
+```markdown
+> [!NOTE]
+> This is a note for additional context.
+
+> [!TIP]
+> This is a tip to help users do things better.
+
+> [!IMPORTANT]
+> This is important information users need to know.
+
+> [!WARNING]
+> This is a warning about potential issues.
+
+> [!CAUTION]
+> This cautions about potential data loss.
+```
+
+**Output:**
+> [!NOTE]
+> This is a note for additional context.
+
+> [!TIP]
+> This is a tip to help users do things better.
+
+> **Note:** Only supported on GitHub and some modern platforms.
+
+## 2.22 Diff in Code Blocks
+
+Show code differences using `diff` language identifier.
+
+**Example:**
+<pre>
+```diff
+  function hello() {
+-   console.log("Hello");
++   console.log("Hello World");
+  }
+```
+</pre>
+
+**Output:**
+```diff
+  function hello() {
+-   console.log("Hello");
++   console.log("Hello World");
+  }
+```
+
+> **Use case:** Perfect for showing changes in documentation or PR descriptions.
+
+## 2.23 Custom Heading IDs
+
+Add custom IDs to headings for linking.
+
+**Syntax:**
+```markdown
+## Long Section Title {#custom-id}
+
+[Link to section](#custom-id)
+```
+
+**Without custom ID:**
+The ID is auto-generated from the heading text: `## Hello World` → `#hello-world`
+
+**With custom ID:**
+`## Hello World {#hw}` → Can link with `[Link](#hw)`
+
+> **Note:** Supported by GitHub, Pandoc, MkDocs, and many other platforms.
+
+## 2.24 GitHub-Specific References
+
+Special syntax for GitHub.
+
+| Syntax | Output | Description |
+|--------|--------|-------------|
+| `@username` | @octocat | Mention a user |
+| `#123` | #123 | Reference issue/PR |
+| `GH-123` | GH-123 | Alternative issue reference |
+| `user/repo#123` | user/repo#123 | Cross-repository reference |
+| `commit-sha` | `abc1234` | Reference commit |
+| `~label` | ~bug | Reference label (some contexts) |
+
+**Examples:**
+```markdown
+Thanks @alice for the help!
+
+This fixes #42 and relates to organization/repo#100.
+
+See commit 7d3c5a9 for details.
+```
+
+## 2.25 Markdown in HTML
+
+You can use Markdown inside block-level HTML tags by adding `markdown="1"` (some platforms).
+
+**Example:**
+```markdown
+<div markdown="1">
+
+# This H1 is parsed as Markdown
+
+- List item 1
+- List item 2
+
+</div>
+```
+
+> **Note:** This is platform-specific. Not all Markdown processors support it.
+
+## 2.26 Line Breaks in Tables
+
+Use `<br>` for line breaks within table cells.
+
+**Example:**
+```markdown
+| Header | Description |
+|--------|-------------|
+| Item 1 | Line 1<br>Line 2<br>Line 3 |
+| Item 2 | Single line |
+```
+
+**Output:**
+
+| Header | Description |
+|--------|-------------|
+| Item 1 | Line 1<br>Line 2<br>Line 3 |
+| Item 2 | Single line |
+
+## 2.27 Badges/Shields
+
+Use Shields.io to create badges for your projects.
+
+**Example:**
+```markdown
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-yellow)
+```
+
+**Output:**
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-yellow)
+
+**Common badges:**
+- Build status
+- Version
+- License
+- Downloads
+- Code coverage
+- Dependencies status
+
+> **Tip:** Visit [shields.io](https://shields.io) to generate custom badges.
+
 ---
 
 # 3 Best Practices
