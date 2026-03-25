@@ -372,7 +372,7 @@ int result = a*b + b/c*d;  // Clearer structure
 int result = a * b + b / c * d;  // More spaces, but consistent
 ```
 
-> See also: [1.4.5 Spacing in Expressions](#145-spacing-in-expressions) for the connection to operator precedence.
+> **See also:** [4.6 Operator Precedence](#46-operator-precedence) for the order of operations in expressions.
 
 ## 2.4 Identifier Naming
 
@@ -971,29 +971,7 @@ a = b;
 - Avoid mixing multiple assignment operators in one statement
 - Put spaces around assignment operators for clarity (they are evaluated last)
 
-## 4.7 Spacing in Expressions
-
-Spacing around operators is a **style issue**. Choose a style and use it consistently.
-
-| Style | Description | Example |
-|-------|-------------|---------|
-| **Spaces around all operators** | Some prefer spaces around every operator | `a * b + b / c * d` |
-| **Spaces only around + and -** | Preferred style: spaces only around binary addition/subtraction (evaluated last) | `a*b + b/c*d` |
-
-**Key Points:**
-- Spacing is a style choice, not a syntax requirement
-- **Recommendation:** Put spaces only around binary `+` and `-` because they are evaluated last
-- This makes the expression structure clearer
-
-```cpp
-// Preferred style - spaces only around + and -
-int result = a*b + b/c*d;  // Clearer structure
-
-// Alternative style - spaces around all operators
-int result = a * b + b / c * d;  // Also valid, but less clear
-```
-
-> See also: [1.2.2.3 Spacing in Expressions](#1223-spacing-in-expressions) for more details on whitespace usage.
+> **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for style guidelines on whitespace around operators.
 
 
 
@@ -2161,6 +2139,119 @@ scanf("%[^\n]", line);  // Read until newline (but not including it)
 3. **Non-format Characters Must Match**: `scanf("(%d)", &x)` requires input "(42)", not just "42"
 4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
+### 6.2.7 Return Value of `scanf`
+
+#### Basic Definition
+
+`scanf` returns an **`int`** value equal to **the number of successful conversions** (the number of input items successfully matched and assigned).
+
+```cpp
+int scanf(const char *format, ...);
+```
+
+#### Return Value Meanings
+
+| Return Value | Meaning |
+|-------------|---------|
+| **Positive integer** | Number of successfully converted data items |
+| **0** | Input exists but no conversion was successful (input didn't match format) |
+| **EOF** | End-of-file reached (usually `-1`, defined in `<cstdio>`), or read error occurred |
+
+> **Note**: `EOF` is a macro, typically defined as `-1` in `<cstdio>`.
+
+#### Practical Code Examples
+
+**Example 1: Normal successful read**
+```c
+int a, b;
+int result = scanf("%d %d", &a, &b);
+// Input: 10 20
+// result = 2 (successfully read 2 integers)
+```
+
+**Example 2: Partial match**
+```c
+int num;
+char ch;
+int result = scanf("%d %c", &num, &ch);
+// Input: 42 X  → result = 2
+// Input: 42 (Enter) → result = 1 (only integer read, newline stays in buffer)
+```
+
+**Example 3: Conversion failure**
+```c
+int num;
+int result = scanf("%d", &num);
+// Input: hello (non-numeric string)
+// result = 0 (cannot convert to integer)
+```
+
+**Example 4: EOF (End-of-File)**
+```c
+int num;
+int result = scanf("%d", &num);
+// Press Ctrl+Z (Windows) or Ctrl+D (Unix/Linux/Mac)
+// result = EOF (-1)
+```
+
+#### Practical Application Scenarios
+
+**1. Loop reading until EOF**
+```c
+int num;
+while (scanf("%d", &num) == 1) {  // Continue as long as one integer is successfully read
+    printf("Read: %d\n", num);
+}
+// Exits when non-numeric input or EOF is encountered
+```
+
+**2. Input validation**
+```c
+int num;
+printf("Enter a number: ");
+while (scanf("%d", &num) != 1) {
+    printf("Invalid input! Try again: ");
+    while (getchar() != '\n');  // Clear error input from buffer
+}
+```
+
+**3. Reading variable-length input**
+```c
+int a, b, c;
+int count = scanf("%d %d %d", &a, &b, &c);
+// Determine how many numbers the user entered based on count value
+```
+
+#### Common Pitfalls
+
+| Pitfall | Problem | Solution |
+|---------|---------|----------|
+| Ignoring return value | `scanf("%d", &num);` without checking result | Use `if (scanf(...) != 1)` to handle errors |
+| Confusing EOF with 0 | `result == 0` means no match, `result == EOF` means end-of-file | Distinguish between these two cases |
+
+#### Comparison with `printf` Return Value
+
+| Function | Return Value Meaning |
+|----------|---------------------|
+| `scanf` | **Number of successfully read items** |
+| `printf` | **Number of characters printed** (negative if error) |
+
+```c
+int n1 = printf("Hello\n");    // n1 = 6 (5 characters + newline)
+int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
+```
+
+#### Underlying Mechanism
+
+`scanf` maintains an internal **scanning pointer** that parses the input stream from left to right:
+
+1. Skip whitespace characters (spaces, tabs, newlines)
+2. Attempt to match the format string
+3. For each successful conversion, increment the counter by 1
+4. Stop when a mismatch or EOF is encountered
+
+The return value is the **final value of this internal counter**, reflecting the "actual work completed".
+
 
 
 ---
@@ -2550,6 +2641,8 @@ cout << "This is a very long message that "
      << "needs to be split into multiple lines"
      << endl;
 ```
+
+> **See also:** [2.3.2.3.1 Splitting printf Statements](#22231-splitting-printf-statements) for line continuation techniques.
 
 ### 7.2.7 Key Differences from `cout`
 
