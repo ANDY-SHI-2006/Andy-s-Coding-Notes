@@ -505,8 +505,6 @@ int main() {
 }
 ```
 
----
-
 ## 3.1 Variable Declaration
 
 ### 3.1.1 Basic Declaration Syntax
@@ -538,8 +536,6 @@ double side_1, side_2, distance;  // All uninitialized
 | **Example** | `extern int x;` | `int x = 5;` |
 
 For local variables inside functions, declaration and definition occur simultaneously.
-
----
 
 ## 3.2 Variable Initialization
 
