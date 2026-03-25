@@ -382,7 +382,7 @@ These rules are enforced by the compiler. Violations result in compilation error
 
 #### 2.4.1.1 Characters
 
-##### Legal Characters
+**Legal Characters**
 
 | Position | Allowed | Not Allowed |
 |----------|---------|-------------|
@@ -599,11 +599,11 @@ vector<int> v{1, 2, 3};  // Initialize container with list
 
 **Advantages:**
 
-| Advantage | Description |
-|-----------|-------------|
-| **Prevents narrowing conversion** | Compiler error if value would lose precision |
-| **Uniform syntax** | Works for all types (built-in, classes, arrays, containers) |
-| **Avoids "Most Vexing Parse"** | Cannot be interpreted as function declaration |
+| Advantage                         | Description                                                 |
+| --------------------------------- | ----------------------------------------------------------- |
+| **Prevents narrowing conversion** | Compiler error if value would lose precision                |
+| **Uniform syntax**                | Works for all types (built-in, classes, arrays, containers) |
+| **Avoids "Most Vexing Parse"**    | Cannot be interpreted as function declaration               |
 
 **Narrowing Conversion Prevention:**
 
@@ -2927,8 +2927,343 @@ int result = printf("%10d\n", 5);
 
 # 11 STL
 
+The Standard Template Library (STL) provides a collection of template classes and functions for common data structures and algorithms. `vector` is the most commonly used STL container.
+
+## 11.1 Vector
+
+`vector` is a **dynamic array** that can grow or shrink in size automatically. Unlike fixed-size arrays, vectors handle memory management internally and provide a rich set of operations.
+
+### 11.1.1 Why Use Vector?
+
+**Problem with fixed-size arrays:**
+```cpp
+int arr[100];  // Fixed size, cannot change at runtime
+// What if we need 101 elements? Or only 10?
+```
+
+**Solution with vector:**
+```cpp
+vector<int> v;  // Empty vector, can grow dynamically
+v.push_back(10);  // Add elements as needed
+v.push_back(20);  // Automatically manages memory
+```
+
+**Key Advantages:**
+
+| Feature | Array | Vector |
+|---------|-------|--------|
+| **Size** | Fixed at compile time | Dynamic, grows/shrinks at runtime |
+| **Memory** | Manual management | Automatic memory management |
+| **Safety** | No bounds checking | Bounds checking with `at()` |
+| **Operations** | Limited (raw pointer) | Rich set of built-in methods |
+| **Flexibility** | Cannot resize | Can resize, insert, delete |
+
+### 11.1.2 Header and Declaration
+
+```cpp
+#include <vector>  // Required header
+
+using namespace std;  // Or use std::vector explicitly
+
+// Declaration
+vector<int> v1;              // Empty vector of integers
+vector<double> v2;           // Empty vector of doubles
+vector<string> v3;           // Empty vector of strings
+vector<vector<int>> matrix;  // 2D vector (vector of vectors)
+```
+
+### 11.1.3 Initialization
+
+**1. Empty vector:**
+```cpp
+vector<int> v;  // Size = 0, capacity = 0
+```
+
+**2. With initial size (filled with default values):**
+```cpp
+vector<int> v(5);        // 5 elements, all 0
+vector<string> s(3);     // 3 elements, all empty strings
+```
+
+**3. With initial size and value:**
+```cpp
+vector<int> v(5, 100);        // 5 elements, all 100: {100, 100, 100, 100, 100}
+vector<string> s(3, "hi");    // 3 elements, all "hi"
+```
+
+**4. List initialization (C++11):**
+```cpp
+vector<int> v = {1, 2, 3, 4, 5};  // 5 elements
+vector<int> v{1, 2, 3, 4, 5};     // Same as above
+vector<string> colors{"red", "green", "blue"};
+```
+
+**5. From another vector (copy):**
+```cpp
+vector<int> v1 = {1, 2, 3};
+vector<int> v2(v1);           // Copy constructor
+vector<int> v3 = v1;          // Copy assignment
+vector<int> v4(v1.begin(), v1.end());  // Copy with iterators
+```
+
+**6. From an array:**
+```cpp
+int arr[] = {1, 2, 3, 4, 5};
+vector<int> v(arr, arr + 5);  // Copy from array
+```
+
+> **Note:** Prefer list initialization `{}` for clarity when initializing with specific values.
+
+### 11.1.4 Common Operations
+
+| Operation | Description | Example | Time Complexity |
+|-----------|-------------|---------|-----------------|
+| `push_back(x)` | Add element at the end | `v.push_back(10)` | Amortized O(1) |
+| `pop_back()` | Remove last element | `v.pop_back()` | O(1) |
+| `insert(pos, x)` | Insert at position | `v.insert(v.begin(), 5)` | O(n) |
+| `erase(pos)` | Remove at position | `v.erase(v.begin())` | O(n) |
+| `clear()` | Remove all elements | `v.clear()` | O(n) |
+| `empty()` | Check if empty | `if (v.empty())` | O(1) |
+| `size()` | Number of elements | `int n = v.size()` | O(1) |
+| `capacity()` | Storage capacity | `int c = v.capacity()` | O(1) |
+
+**Examples:**
+```cpp
+vector<int> v = {1, 2, 3};
+
+v.push_back(4);      // v = {1, 2, 3, 4}
+v.pop_back();        // v = {1, 2, 3}
+v.insert(v.begin(), 0);  // v = {0, 1, 2, 3}
+v.erase(v.begin() + 1);  // v = {0, 2, 3}
+
+if (!v.empty()) {
+    cout << "Size: " << v.size() << endl;  // 3
+}
+```
+
+### 11.1.5 Element Access
+
+| Method | Description | Example | Notes |
+|--------|-------------|---------|-------|
+| `v[i]` | Subscript operator | `v[0]` | No bounds checking |
+| `v.at(i)` | Access with checking | `v.at(0)` | Throws exception if out of range |
+| `v.front()` | First element | `v.front()` | Same as `v[0]` |
+| `v.back()` | Last element | `v.back()` | Same as `v[v.size()-1]` |
+| `v.data()` | Raw pointer | `int* p = v.data()` | For C-style API compatibility |
+
+**Examples:**
+```cpp
+vector<int> v = {10, 20, 30, 40, 50};
+
+cout << v[0] << endl;       // 10 (no bounds check)
+cout << v.at(0) << endl;    // 10 (bounds checked)
+cout << v.front() << endl;  // 10
+cout << v.back() << endl;   // 50
+
+// Safe access with at()
+try {
+    cout << v.at(100) << endl;  // Throws std::out_of_range
+} catch (const std::out_of_range& e) {
+    cout << "Error: " << e.what() << endl;
+}
+```
+
+> **Recommendation:** Use `at()` when you need bounds checking (safety), use `[]` when you are certain about indices (performance).
+
+### 11.1.6 Size and Capacity
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| `size()` | Number of elements | `v.size()` |
+| `capacity()` | Space allocated (can hold without reallocating) | `v.capacity()` |
+| `resize(n)` | Change size to n | `v.resize(10)` |
+| `resize(n, val)` | Resize and fill new elements with val | `v.resize(10, 0)` |
+| `reserve(n)` | Allocate space for at least n elements | `v.reserve(100)` |
+| `shrink_to_fit()` | Reduce capacity to fit size | `v.shrink_to_fit()` |
+
+**Size vs Capacity:**
+```cpp
+vector<int> v;
+cout << v.size() << " " << v.capacity() << endl;  // 0 0
+
+v.push_back(1);  // Size: 1, Capacity: 1
+v.push_back(2);  // Size: 2, Capacity: 2
+v.push_back(3);  // Size: 3, Capacity: 4 (usually doubles)
+
+v.reserve(100);  // Capacity >= 100, Size unchanged
+cout << v.size() << " " << v.capacity() << endl;  // 3 100
+
+v.resize(5);     // Size: 5, new elements default-initialized
+v.resize(10, 99); // Size: 10, new elements are 99
+```
+
+> **Note:** When `size()` exceeds `capacity()`, vector automatically reallocates memory (usually doubling capacity). This invalidates iterators and references.
+
+### 11.1.7 Iterators
+
+Iterators provide a uniform way to traverse containers.
+
+| Iterator | Description | Example |
+|----------|-------------|---------|
+| `begin()` | Iterator to first element | `auto it = v.begin()` |
+| `end()` | Iterator past last element | `auto it = v.end()` |
+| `rbegin()` | Reverse iterator to last element | `auto rit = v.rbegin()` |
+| `rend()` | Reverse iterator before first | `auto rit = v.rend()` |
+| `cbegin()` | Const iterator (C++11) | `auto cit = v.cbegin()` |
+| `cend()` | Const iterator (C++11) | `auto cit = v.cend()` |
+
+**Using Iterators:**
+```cpp
+vector<int> v = {10, 20, 30, 40, 50};
+
+// Forward iteration
+for (auto it = v.begin(); it != v.end(); ++it) {
+    cout << *it << " ";  // Dereference iterator
+}
+// Output: 10 20 30 40 50
+
+// Reverse iteration
+for (auto rit = v.rbegin(); rit != v.rend(); ++rit) {
+    cout << *rit << " ";
+}
+// Output: 50 40 30 20 10
+
+// Range-based for loop (C++11) - most common
+for (const auto& elem : v) {
+    cout << elem << " ";
+}
+
+// With index
+for (size_t i = 0; i < v.size(); i++) {
+    cout << v[i] << " ";
+}
+```
+
+> **Best Practice:** Use range-based for loops (`for (auto& elem : v)`) for simple iteration - cleaner and less error-prone.
+
+### 11.1.8 Algorithms with Vector
+
+STL algorithms work seamlessly with vectors via iterators.
+
+```cpp
+#include <vector>
+#include <algorithm>  // For algorithms
+#include <numeric>    // For accumulate
+
+vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+
+// Sorting
+sort(v.begin(), v.end());                    // Ascending: {1, 1, 2, 3, 4, 5, 6, 9}
+sort(v.begin(), v.end(), greater<int>());    // Descending
+
+// Searching
+if (binary_search(v.begin(), v.end(), 5)) {
+    cout << "Found 5!" << endl;
+}
+
+auto it = find(v.begin(), v.end(), 5);       // Find element
+if (it != v.end()) {
+    cout << "Found at index: " << (it - v.begin()) << endl;
+}
+
+// Min/Max
+auto minIt = min_element(v.begin(), v.end());
+auto maxIt = max_element(v.begin(), v.end());
+
+// Reversing
+reverse(v.begin(), v.end());
+
+// Accumulate (sum)
+int sum = accumulate(v.begin(), v.end(), 0);
+
+// Count occurrences
+int count1 = count(v.begin(), v.end(), 1);
+
+// Remove-erase idiom
+v.erase(remove(v.begin(), v.end(), 1), v.end());  // Remove all 1s
+```
+
+### 11.1.9 Vector vs Array
+
+| Feature | Array (`int arr[]`) | Vector (`vector<int>`) |
+|---------|---------------------|------------------------|
+| **Size** | Fixed at compile time | Dynamic at runtime |
+| **Memory** | Stack (usually) | Heap |
+| **Resize** | Not possible | `resize()`, `push_back()` |
+| **Bounds checking** | No | Yes (`at()`) |
+| **Memory management** | Automatic (stack) | Automatic (RAII) |
+| **Copy/assign** | Not assignable | Fully copyable and assignable |
+| **Pass to function** | Decays to pointer | Maintains size info |
+| **Overhead** | None | Small (size, capacity pointers) |
+| **Performance** | Maximum | Slightly slower (negligible) |
+
+**When to use Array:**
+- Fixed, known size at compile time
+- Maximum performance is critical
+- Embedded systems with limited resources
+- C compatibility required
+
+**When to use Vector:**
+- Size not known at compile time
+- Need to add/remove elements dynamically
+- Safety and convenience are priorities
+- Using STL algorithms
+
+### 11.1.10 Best Practices
+
+**1. Prefer `emplace_back` over `push_back` (C++11):**
+```cpp
+vector<pair<int, string>> v;
+v.push_back(make_pair(1, "hello"));  // Creates temporary
+v.emplace_back(1, "hello");          // Constructs in-place, more efficient
+```
+
+**2. Reserve capacity when size is known:**
+```cpp
+vector<int> v;
+v.reserve(10000);  // Avoid multiple reallocations
+for (int i = 0; i < 10000; i++) {
+    v.push_back(i);  // No reallocation until 10000 elements
+}
+```
+
+**3. Use `empty()` instead of `size() == 0`:**
+```cpp
+// Prefer this:
+if (!v.empty()) { }
+
+// Over this:
+if (v.size() > 0) { }  // Works but less idiomatic
+```
+
+**4. Pass by const reference to avoid copying:**
+```cpp
+// Efficient - no copy
+void printVector(const vector<int>& v) {
+    for (const auto& elem : v) {
+        cout << elem << " ";
+    }
+}
+
+// Inefficient - copies entire vector
+void badPrint(vector<int> v) {  // Don't do this
+    // ...
+}
+```
+
+**5. Be careful with iterator invalidation:**
+```cpp
+vector<int> v = {1, 2, 3, 4, 5};
+auto it = v.begin() + 2;  // Points to 3
+
+v.push_back(6);  // May invalidate all iterators!
+// *it is now undefined behavior
+```
+
+> **Warning:** Insertions (`push_back`, `insert`) may invalidate iterators when reallocation occurs. Use `reserve()` to prevent this when possible.
 
 ---
 
 # 12 Advanced Topics
+
 
