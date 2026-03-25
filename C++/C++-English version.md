@@ -2809,6 +2809,59 @@ cout << "This is a very long message that "
 
 > **Note:** Use `printf` for formatted output in performance-critical code, but prefer `cout` for type safety in modern C++.
 
+### 7.2.8 Return Value of `printf`
+
+#### Basic Definition
+
+`printf` returns an **`int`** value equal to **the number of characters successfully written** to the output stream.
+
+```cpp
+int printf(const char *format, ...);
+```
+
+#### Return Value Meanings
+
+| Return Value | Meaning |
+|-------------|---------|
+| **Positive integer** | Number of characters successfully written (excluding the terminating null byte `\0`) |
+| **0** | No characters were written |
+| **Negative number** | Error occurred during output (typically `-1`, check `errno` for details) |
+
+> **Note**: A negative return value indicates an output error (e.g., stream closed, disk full, I/O error).
+
+#### Practical Code Examples
+
+**Example 1: Normal successful output**
+```c
+int result = printf("Hello, World!\n");
+// result = 14 (13 characters + 1 newline)
+```
+
+**Example 2: Using return value to check output**
+```c
+int result = printf("Value: %d\n", 42);
+if (result < 0) {
+    // Handle output error
+    perror("printf failed");
+}
+// result = 10 ("Value: " = 7, "42" = 2, "\n" = 1)
+```
+
+**Example 3: Format specifier with width**
+```c
+int result = printf("%10d\n", 5);
+// Prints "         5" (10 characters: 9 spaces + "5")
+// result = 11 (10 characters + 1 newline)
+```
+
+#### Common Use Cases
+
+| Use Case | Example | Purpose |
+|----------|---------|---------|
+| **Error checking** | `if (printf(...) < 0)` | Detect output failures |
+| **Character counting** | `int len = printf(...)` | Know how many chars were printed |
+| **Formatted string length** | `snprintf` with `NULL` | Calculate required buffer size |
+
 ---
 
 # 8 Control Flow
