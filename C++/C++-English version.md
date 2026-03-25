@@ -330,6 +330,31 @@ cout << "This is a very long message that "
      << endl;
 ```
 
+#### 2.3.2.4 Splitting Long Expressions
+
+Break long expressions into multiple statements for readability.
+
+**Example:** Computing f = (x³ - 2x² + x - 6.3) / (x² + 0.05005x - 3.14)
+
+```cpp
+// Bad: Hard to read
+f = (x*x*x - 2*x*x + x - 6.3) / (x*x + 0.05005*x - 3.14);
+
+// Better: Split using line continuation
+f = (x*x*x - 2*x*x + x - 6.3) /
+    (x*x + 0.05005*x - 3.14);
+
+// Best: Compute numerator and denominator separately
+numerator = x*x*x - 2*x*x + x - 6.3;
+denominator = x*x + 0.05005*x - 3.14;
+f = numerator / denominator;
+```
+
+**Key Points:**
+- Long one-line expressions are difficult to read and debug
+- Use intermediate variables for complex sub-expressions
+- Ensure variables are floating-point type for correct division
+
 ### 2.3.3 Spacing in Expressions
 
 | Style | Description | Example |
@@ -430,13 +455,13 @@ C++ distinguishes uppercase and lowercase letters.
 
 #### Common Naming Styles
 
-| Style | Pattern | Usage | Example |
-|-------|---------|-------|---------|
-| **Lower camelCase** | `myVariableName` | Variables, functions | `studentName`, `totalScore` |
-| **Upper camelCase / PascalCase** | `MyClassName` | Classes, structs, enums | `StudentInfo`, `MyClass` |
-| **Snake_case** | `my_variable_name` | Variables, constants (alternative) | `student_name`, `total_score` |
-| **ALL_CAPS** | `MY_CONSTANT` | Constants, macros | `MAX_SIZE`, `PI` |
-| **Hungarian notation** | `iCount`, `pData` | ❌ **Deprecated** in modern C++ | Not recommended |
+| Style                            | Pattern            | Usage                              | Example                       |
+| -------------------------------- | ------------------ | ---------------------------------- | ----------------------------- |
+| **Lower camelCase**              | `myVariableName`   | Variables, functions               | `studentName`, `totalScore`   |
+| **Upper camelCase / PascalCase** | `MyClassName`      | Classes, structs, enums            | `StudentInfo`, `MyClass`      |
+| **Snake_case**                   | `my_variable_name` | Variables, constants (alternative) | `student_name`, `total_score` |
+| **ALL_CAPS**                     | `MY_CONSTANT`      | Constants, macros                  | `MAX_SIZE`, `PI`              |
+| **Hungarian notation**           | `iCount`, `pData`  | ❌ **Deprecated** in modern C++     | Not recommended               |
 
 #### Naming Conventions by Identifier Type
 
@@ -454,43 +479,6 @@ C++ distinguishes uppercase and lowercase letters.
 - Avoid single-letter names except for loop counters (`i`, `j`, `k`)
 - Be consistent with one style throughout your project
 - **Follow your team's existing conventions** — consistency is more important than any single style
-
-#### Bad Naming Examples to Avoid
-
-| Name | Problem Analysis | Improved Version |
-|------|-----------------|------------------|
-| `int a;` | Meaningless, no context | `int numberOfStudents;` |
-| `string str1, str2;` | Ambiguous, cannot distinguish | `string sourceFile, targetFile;` |
-| `void func(int data);` | Function name doesn't describe behavior | `void processUserData(int userId);` |
-| `int _Tmp;` | Leading underscore + uppercase is reserved | `int tempValue;` |
-| `class my_class` | Class name style confused with variables | `class DataParser` |
-
-## 2.5 Long Expressions
-
-Break long expressions into multiple statements for readability.
-
-**Example:** Computing f = (x³ - 2x² + x - 6.3) / (x² + 0.05005x - 3.14)
-
-```cpp
-// Bad: Hard to read
-f = (x*x*x - 2*x*x + x - 6.3) / (x*x + 0.05005*x - 3.14);
-
-// Better: Split using line continuation
-f = (x*x*x - 2*x*x + x - 6.3) /
-    (x*x + 0.05005*x - 3.14);
-
-// Best: Compute numerator and denominator separately
-numerator = x*x*x - 2*x*x + x - 6.3;
-denominator = x*x + 0.05005*x - 3.14;
-f = numerator / denominator;
-```
-
-**Key Points:**
-- Long one-line expressions are difficult to read and debug
-- Use intermediate variables for complex sub-expressions
-- Ensure variables are floating-point type for correct division
-
-
 
 ---
 
