@@ -524,7 +524,98 @@ double side_1, side_2, distance;  // All uninitialized
 
 **Note**: Using uninitialized variables leads to undefined behavior. Always initialize before use.
 
-## 3.2 Auto Type Deduction (C++11)
+### 3.1.1 Direct Initialization
+
+Direct initialization uses parentheses `()` to pass the initial value to the variable's constructor.
+
+```cpp
+int a(5);           // Direct initialization
+double b(3.14);     // Direct initialization
+string s("hello");  // Calls string constructor
+```
+
+**Characteristics:**
+- Traditional C++ syntax (available since early C++)
+- For class types, this calls the appropriate constructor
+- Works for all types but has some edge cases (see below)
+
+### 3.1.2 Brace Initialization (List Initialization)
+
+Brace initialization uses curly braces `{}` to initialize variables. Introduced in **C++11**.
+
+```cpp
+int a{5};           // Brace initialization
+double b{3.14};     // Brace initialization
+string s{"hello"};  // Brace initialization
+vector<int> v{1, 2, 3};  // Initialize container with list
+```
+
+**Advantages:**
+
+| Advantage | Description |
+|-----------|-------------|
+| **Prevents narrowing conversion** | Compiler error if value would lose precision |
+| **Uniform syntax** | Works for all types (built-in, classes, arrays, containers) |
+| **Avoids "Most Vexing Parse"** | Cannot be interpreted as function declaration |
+
+**Narrowing Conversion Prevention:**
+
+```cpp
+int x(7.5);     // ⚠️ Compiles, but x = 7 (truncates decimal)
+int y{7.5};     // ❌ Error! Cannot convert double to int with braces
+
+int a(1000);    // OK
+short b(100000); // ⚠️ Compiles (may overflow)
+short c{100000}; // ❌ Error! Value too large for short
+```
+
+**Most Vexing Parse Avoidance:**
+
+```cpp
+// Direct initialization problem
+int a();        // ❌ Declares a function "a" that returns int!
+int b{};        // ✓ Correctly initializes b to 0
+```
+
+### 3.1.3 Comparison Table
+
+| Feature                    | Direct Init `()`         | Brace Init `{}`                            |
+| -------------------------- | ------------------------ | ------------------------------------------ |
+| **Syntax**                 | `int a(5);`              | `int a{5};`                                |
+| **C++ Version**            | All versions             | C++11 and later                            |
+| **Narrowing check**        | ❌ No (silent truncation) | ✅ Yes (compile error)                      |
+| **Most vexing parse**      | ⚠️ Can be misinterpreted | ✅ Never ambiguous                          |
+| **Container init**         | Limited                  | ✅ Full support (`vector<int>{1,2,3}`)      |
+| **Auto with single value** | `auto a(5)` → `int`      | `auto a{5}` → `std::initializer_list` (⚠️) |
+
+### 3.1.4 Recommendation
+
+**Modern C++ Style (C++11 and later):**
+
+| Scenario | Recommended Syntax | Example |
+|----------|-------------------|---------|
+| **Basic types** | Brace initialization | `int x{5};` |
+| **Class types** | Brace initialization | `string s{"hi"};` |
+| **Containers/Arrays** | Brace initialization | `vector<int> v{1, 2, 3};` |
+| **With `auto`** | Direct initialization | `auto x = 5;` or `auto x(5);` |
+| **Zero initialization** | Empty braces | `int x{};` → 0 |
+
+**Key Takeaway:** Use **brace initialization `{}`** as your default choice. It provides better type safety by preventing accidental narrowing conversions. Use direct initialization `()` only when necessary (e.g., with `auto` type deduction).
+
+```cpp
+// Preferred modern C++ style
+int count{0};                    // Brace init
+double pi{3.14159};              // Brace init
+string name{"Alice"};            // Brace init
+vector<int> scores{85, 90, 78};  // Brace init with list
+
+// Zero initialization
+int x{};        // x = 0
+double y{};     // y = 0.0
+string s{};     // s = "" (empty string)
+```
+
+## 3.2 Auto Type Deduction
 
 `auto` lets the compiler deduce the variable type from the initializer.
 
@@ -560,7 +651,7 @@ for (const auto& elem : container)  // const reference
 auto func = [](int x) { return x * 2; };
 ```
 
-**Important:** `auto` requires initialization. `auto x;` is an error.
+> **Important:** `auto` requires initialization. `auto x;` is an error.
 
 
 
