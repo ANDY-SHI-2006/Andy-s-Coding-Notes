@@ -782,9 +782,11 @@ Operators can also be categorized by their **function or purpose**:
 | **Scope** | `::` | Scope resolution |
 | **Other** | `,` `sizeof` `typeid` `new` `delete` | Comma, size query, memory management |
 
-## 4.2 Increment and Decrement Operators
+## 4.2 Unary Operators
 
-The `++` (increment) and `--` (decrement) operators are unary operators that increase or decrease a variable by 1.
+### 4.2.1 Increment and Decrement Operators
+
+The `++` (increment) and `--` (decrement) operators increase or decrease a variable by 1.
 
 **Restrictions:**
 - Can only be used with **variables** (not constants or expressions)
@@ -915,9 +917,10 @@ double avg4 = 1.0 * sum / count;   // Result: 3.5 (correct)
 **Important:** C++ has **no operator** for exponentiation.
 
 > ⚠️ **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
-> ```cpp
-> int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
-> ```
+
+```cpp
+int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
+```
 
 | Expression | C++ | Note |
 |------------|-----|------|
@@ -1065,7 +1068,7 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 
 > See also: [Power (Exponentiation)](#1434-power-exponentiation)
 
-### 4.5.3 C++ Style Casts
+### 4.6.3 C++ Style Casts
 
 C++ provides four type cast operators for safer, more explicit conversions:
 
@@ -1091,7 +1094,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 double avg = static_cast<double>(sum) / count;
 ```
 
-## 4.6 Operator Precedence
+## 4.7 Operator Precedence
 
 | Precedence | Operator | Associativity |
 |------------|----------|---------------|
@@ -1149,7 +1152,7 @@ a = b;
 
 > **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for style guidelines on whitespace around operators.
 
-## 4.7 Spacing in Expressions
+## 4.8 Spacing in Expressions
 
 Spacing around operators is a **style issue**. Choose a style and use it consistently.
 
