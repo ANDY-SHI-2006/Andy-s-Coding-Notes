@@ -317,14 +317,14 @@ printf("The distance between the "
        "points is %5.2f \n", distance);
 ```
 
-> **See also:** [7.2.3 Splitting Long printf Statements](#723-splitting-long-printf-statements) for complete syntax details and additional examples.
+> **See also:** [7.2.6 Splitting Long printf Statements](#726-splitting-long-printf-statements) for complete syntax details and additional examples.
 
-##### 2.3.2.3.2 String Concatenation Rule
+**String Concatenation Rule**
 
 When splitting strings, adjacent quoted strings are automatically concatenated by the compiler. This works for any string literal, not just in printf statements.
 
 ```cpp
-// Another example with cout
+// Example with cout
 cout << "This is a very long message that "
      << "needs to be split into multiple lines"
      << endl;
