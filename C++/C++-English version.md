@@ -784,45 +784,61 @@ Operators can also be categorized by their **function or purpose**:
 
 ## 4.2 Arithmetic Operators
 
-Arithmetic operators perform mathematical calculations on numeric operands.
-
 ### 4.2.1 Unary Plus and Minus (+, -)
 
-The unary plus (`+`) and unary minus (`-`) operators work on a single operand.
+Unary operators operate on a single operand.
 
 **Unary Plus (`+`)**
-- Rarely used explicitly (exists for completeness)
-- Returns the value unchanged: `+5` is just `5`
-- Can be used for clarity: `int x = +10;`
 
-**Unary Minus (`-`) - Negation**
-- Negates the value of its operand
-- Changes positive to negative, negative to positive
+The unary plus operator returns the value of its operand. It is rarely used explicitly since positive numbers are positive by default, but it can be used for clarity or symmetry with unary minus.
+
+```cpp
+int a = +5;      // Equivalent to: int a = 5;
+int b = +(-3);   // Result: -3
+```
+
+**Unary Minus (`-`)**
+
+The unary minus operator negates the value of its operand.
+
+```cpp
+int x = 5;
+int y = -x;      // Result: -5
+int z = -(-3);   // Result: 3
+```
+
+**Key Points:**
+- Unary `+` and `-` have higher precedence than multiplication/division
+- They are right-associative
+- Can be applied to numeric types (int, float, double, etc.)
 
 ```cpp
 int a = 5;
-int b = -a;      // b = -5 (negation)
-int c = -(-a);   // c = 5 (double negation)
-int d = +a;      // d = 5 (unary plus, no effect)
-
-// Common use case: negative literals
-int temp = -10;
-double debt = -1500.50;
+int b = -a * 2;  // Result: -10 (unary minus applied first: (-5) * 2)
 ```
-
-> **Note:** The unary minus has higher precedence than multiplication/division but lower than postfix increment/decrement.
 
 ### 4.2.2 Multiplication, Division, and Modulo (*, /, %)
 
 These operators perform basic arithmetic operations.
 
-**Multiplication (`*`)**
+#### 4.2.2.1 Multiplication (*)
+
+The multiplication operator computes the product of two operands.
+
 ```cpp
 int product = 5 * 3;     // 15
 double area = 4.5 * 2.0; // 9.0
 ```
 
-**Division (`/`)**
+**Key Points:**
+- Works with both integers and floating-point numbers
+- If both operands are integers, result is integer
+- If either operand is floating-point, result is floating-point
+- Can overflow with large integers (wraps around for unsigned, undefined for signed)
+
+#### 4.2.2.2 Division (/)
+
+The division operator computes the quotient of two operands.
 
 ```cpp
 int a = 7 / 2;       // Result: 3 (integer division, truncates decimal)
@@ -834,10 +850,28 @@ double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
 |-----------|--------|------|
 | `int / int` | `int` | Decimal part discarded |
 | `double / int` | `double` | Normal division |
+| `int / double` | `double` | Normal division |
+| `double / double` | `double` | Normal division |
 
-**Modulo (`%`) - Remainder**
+**Integer Division Pitfalls:**
 
-Returns the **remainder** of division.
+```cpp
+// Common mistake: expecting floating-point result from integer division
+int x = 5, y = 2;
+double result = x / y;  // Result: 2.0, NOT 2.5!
+
+// Correct approaches:
+double result1 = (double)x / y;  // Cast one operand: 2.5
+double result2 = x / 2.0;        // Use floating-point literal: 2.5
+```
+
+**Division by Zero:**
+- Integer division by zero → Runtime error/crash
+- Floating-point division by zero → Returns `inf` or `nan` (IEEE 754 behavior)
+
+#### 4.2.2.3 Modulo (%) - Remainder
+
+The modulo operator returns the **remainder** of division.
 
 ```cpp
 int r = 7 % 3;   // Result: 1 (7 = 3*2 + 1)
@@ -849,6 +883,26 @@ int t = 6 % 2;   // Result: 0 (divisible, no remainder)
 
 ```cpp
 // double x = 7.5 % 2;  // Error! % requires integers
+```
+
+**Common Use Cases:**
+
+```cpp
+// Check if a number is even
+if (n % 2 == 0) {
+    // n is even
+}
+
+// Check divisibility
+if (n % 3 == 0) {
+    // n is divisible by 3
+}
+
+// Wrap around (circular indexing)
+int index = (current + step) % array_size;
+
+// Extract last digit
+int lastDigit = number % 10;
 ```
 
 **Modulo with Negative Numbers**
