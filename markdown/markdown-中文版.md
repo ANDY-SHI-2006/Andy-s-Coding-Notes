@@ -1,14 +1,8 @@
-# Markdown 速查表
+# 0 Markdown 速查表
 
 Markdown 语法快速参考。
 
-## 概述
-
-此 Markdown 备忘单对所有 Markdown 语法元素进行了快速概述。它无法涵盖所有特殊情况，因此，如果你需要有关任何这些元素的更多信息，请参阅 [基本语法](#1-markdown-基础) 和 [扩展语法](#2-扩展-markdown-功能) 的参考指南。
-
----
-
-# 基本语法
+## 0.1 基本语法
 
 这些是 John Gruber 的原始设计文档中概述的元素。所有 Markdown 应用程序都支持这些元素。
 
@@ -25,9 +19,7 @@ Markdown 语法快速参考。
 | 链接 | `[title](https://www.example.com)` |
 | 图片 | `![alt text](image.jpg)` |
 
----
-
-# 扩展语法
+## 0.2 扩展语法
 
 这些元素通过添加其他功能来扩展基本语法。并非所有 Markdown 应用程序都支持这些元素。
 

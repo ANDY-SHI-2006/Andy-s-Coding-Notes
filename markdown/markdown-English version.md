@@ -1,14 +1,8 @@
-# Markdown Cheatsheet
+# 0 Markdown Cheatsheet
 
 Quick reference for Markdown syntax.
 
-## Overview
-
-This cheatsheet provides a quick overview of all Markdown syntax elements. It doesn't cover every edge case, so if you need more information about any of these elements, refer to the [Basic Syntax](#1-markdown-basics) and [Extended Syntax](#2-extended-markdown-features) sections.
-
----
-
-# Basic Syntax
+## 0.1 Basic Syntax
 
 These elements are defined in John Gruber's original design document. All Markdown applications support these elements.
 
@@ -25,9 +19,7 @@ These elements are defined in John Gruber's original design document. All Markdo
 | Link | `[title](https://www.example.com)` |
 | Image | `![alt text](image.jpg)` |
 
----
-
-# Extended Syntax
+## 0.2 Extended Syntax
 
 These elements extend the basic syntax by adding additional features. Not all Markdown applications support these elements.
 
