@@ -985,11 +985,29 @@ bool equal = fabs(a - 0.3) < EPSILON;
 
 Logical operators perform boolean operations and return `true` or `false`.
 
-| Operator | Name | Description | Example |
-|----------|------|-------------|---------|
-| `!` | Logical NOT | Inverts the boolean value | `!true` → `false` |
-| `&&` | Logical AND | True if both operands are true | `true && false` → `false` |
-| `` `||` `` | Logical OR | True if at least one operand is true | `` `true || false` → `true` `` |
+**Logical NOT (`!`)**
+
+| Attribute | Description |
+|-----------|-------------|
+| Name | Logical NOT |
+| Description | Inverts the boolean value |
+| Example | `!true` → `false` |
+
+**Logical AND (`&&`)**
+
+| Attribute | Description |
+|-----------|-------------|
+| Name | Logical AND |
+| Description | True if both operands are true |
+| Example | `true && false` → `false` |
+
+**Logical OR (`||`)**
+
+| Attribute   | Description                          |     |                 |
+| ----------- | ------------------------------------ | --- | --------------- |
+| Name        | Logical OR                           |     |                 |
+| Description | True if at least one operand is true |     |                 |
+| Example     | `true                                |     | false` → `true` |
 
 **Truth Table**
 
