@@ -2269,11 +2269,12 @@ scanf("%[^\n]", line);  // Read until newline (but not including it)
 | Prompt message | Cannot display | Can display |
 | Usage pattern | `printf` first, then `scanf` | Direct output |
 
-> **⚠️ Important:** `scanf` cannot display prompts. Always use `printf` first:
-> ```cpp
-> printf("Enter a number: ");  // Display prompt
-> scanf("%d", &a);             // Read input
-> ```
+**⚠️ Important:** `scanf` cannot display prompts. Always use `printf` first:
+
+```cpp
+printf("Enter a number: ");  // Display prompt
+scanf("%d", &a);             // Read input
+```
 
 **Common Pitfalls:**
 
