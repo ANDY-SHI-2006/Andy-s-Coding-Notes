@@ -985,11 +985,11 @@ bool equal = fabs(a - 0.3) < EPSILON;
 
 Logical operators perform boolean operations and return `true` or `false`.
 
-| Operator | Name | Description | Example |
-|----------|------|-------------|---------|
-| `!` | Logical NOT | Inverts the boolean value | `!true` → `false` |
-| `&&` | Logical AND | True if both operands are true | `true && false` → `false` |
-| `||` | Logical OR | True if at least one operand is true | `true || false` → `true` |
+| Operator | Name        | Description                    | Example                   |                                      |       |     |                 |
+| -------- | ----------- | ------------------------------ | ------------------------- | ------------------------------------ | ----- | --- | --------------- |
+| `!`      | Logical NOT | Inverts the boolean value      | `!true` → `false`         |                                      |       |     |                 |
+| `&&`     | Logical AND | True if both operands are true | `true && false` → `false` |                                      |       |     |                 |
+| `        |             | `                              | Logical OR                | True if at least one operand is true | `true |     | false` → `true` |
 
 **Truth Table**
 
@@ -999,25 +999,6 @@ Logical operators perform boolean operations and return `true` or `false`.
 | true | false | false | false | true |
 | false | true | true | false | true |
 | false | false | true | false | false |
-
-**Common Use Cases**
-
-```cpp
-// Range checking
-if (age >= 18 && age <= 65) {
-    // Working age
-}
-
-// Multiple conditions
-if (isValid || isAdmin) {
-    // Allow access
-}
-
-// Negation
-if (!isEmpty) {
-    // Process if not empty
-}
-```
 
 ## 4.6 Bitwise Operators
 
