@@ -784,7 +784,7 @@ Operators can also be categorized by their **function or purpose**:
 
 ## 4.2 Arithmetic Operators
 
-### 4.2.1 Multiplication (*)
+### 4.2.1 Multiplication ( * )
 
 The multiplication operator computes the product of two operands.
 
@@ -793,7 +793,7 @@ int product = 5 * 3;     // 15
 double area = 4.5 * 2.0; // 9.0
 ```
 
-#### Key Points
+#### 4.2.1.1 Key Points
 
 - Works with both integers and floating-point numbers
 - If both operands are integers, result is integer
@@ -817,7 +817,7 @@ double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
 | `int / double` | `double` | Normal division |
 | `double / double` | `double` | Normal division |
 
-#### Integer Division Pitfalls
+#### 4.2.2.1 Integer Division Pitfalls
 
 ```cpp
 // Common mistake: expecting floating-point result from integer division
@@ -829,7 +829,7 @@ double result1 = (double)x / y;  // Cast one operand: 2.5
 double result2 = x / 2.0;        // Use floating-point literal: 2.5
 ```
 
-#### Division by Zero
+#### 4.2.2.2 Division by Zero
 
 - Integer division by zero → Runtime error/crash
 - Floating-point division by zero → Returns `inf` or `nan` (IEEE 754 behavior)
@@ -850,7 +850,7 @@ int t = 6 % 2;   // Result: 0 (divisible, no remainder)
 // double x = 7.5 % 2;  // Error! % requires integers
 ```
 
-#### Modulo with Negative Numbers
+#### 4.2.3.1 Modulo with Negative Numbers
 
 If either of the integer values is negative, the result of `a % b` is **system dependent** according to different C++ standards:
 
@@ -874,7 +874,7 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 -5 % -3;  // Result: -2 (guaranteed)
 ```
 
-#### Key Characteristics
+#### 4.2.3.2 Key Characteristics
 
 - The quotient `a / b` is truncated toward zero (fractional part is discarded)
 - The sign of the remainder follows the sign of the dividend (numerator)
@@ -895,7 +895,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | x^4 | No `^` or `**` | Unlike Python (`**`) or math notation |
 | a^2 | `a * a` | Use repeated multiplication |
 
-#### Method 1: Repeated Multiplication (for small exponents)
+#### 4.2.4.1 Method 1: Repeated Multiplication (for small exponents)
 
 ```cpp
 int square = a * a;           // a^2
@@ -903,7 +903,7 @@ int cube = a * a * a;         // a^3
 int fourth = a * a * a * a;   // a^4
 ```
 
-#### Method 2: `pow()` Function (for fractional/variable exponents)
+#### 4.2.4.2 Method 2: `pow()` Function (for fractional/variable exponents)
 
 ```cpp
 #include <cmath>
@@ -929,9 +929,9 @@ The `++` (increment) and `--` (decrement) operators increase or decrease a varia
 
 **Two Forms:**
 
-| Form | Syntax | Description |
-|------|--------|-------------|
-| **Prefix** | `++x` or `--x` | Increment/decrement first, then use the new value |
+| Form        | Syntax         | Description                                           |
+| ----------- | -------------- | ----------------------------------------------------- |
+| **Prefix**  | `++x` or `--x` | Increment/decrement first, then use the new value     |
 | **Postfix** | `x++` or `x--` | Use the current value first, then increment/decrement |
 
 **Standalone Usage:**
