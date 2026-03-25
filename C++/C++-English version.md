@@ -784,11 +784,7 @@ Operators can also be categorized by their **function or purpose**:
 
 ## 4.2 Arithmetic Operators
 
-### 4.2.1 Multiplication, Division, and Modulo (*, /, %)
-
-These operators perform basic arithmetic operations.
-
-#### 4.2.1.1 Multiplication (*)
+### 4.2.1 Multiplication (*)
 
 The multiplication operator computes the product of two operands.
 
@@ -797,13 +793,14 @@ int product = 5 * 3;     // 15
 double area = 4.5 * 2.0; // 9.0
 ```
 
-**Key Points:**
+#### Key Points
+
 - Works with both integers and floating-point numbers
 - If both operands are integers, result is integer
 - If either operand is floating-point, result is floating-point
 - Can overflow with large integers (wraps around for unsigned, undefined for signed)
 
-#### 4.2.1.2 Division (/)
+### 4.2.2 Division (/)
 
 The division operator computes the quotient of two operands.
 
@@ -820,7 +817,7 @@ double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
 | `int / double` | `double` | Normal division |
 | `double / double` | `double` | Normal division |
 
-**Integer Division Pitfalls:**
+#### Integer Division Pitfalls
 
 ```cpp
 // Common mistake: expecting floating-point result from integer division
@@ -832,11 +829,12 @@ double result1 = (double)x / y;  // Cast one operand: 2.5
 double result2 = x / 2.0;        // Use floating-point literal: 2.5
 ```
 
-**Division by Zero:**
+#### Division by Zero
+
 - Integer division by zero → Runtime error/crash
 - Floating-point division by zero → Returns `inf` or `nan` (IEEE 754 behavior)
 
-#### 4.2.1.3 Modulo (%) - Remainder
+### 4.2.3 Modulo (%) - Remainder
 
 The modulo operator returns the **remainder** of division.
 
@@ -852,7 +850,7 @@ int t = 6 % 2;   // Result: 0 (divisible, no remainder)
 // double x = 7.5 % 2;  // Error! % requires integers
 ```
 
-**Modulo with Negative Numbers**
+#### Modulo with Negative Numbers
 
 If either of the integer values is negative, the result of `a % b` is **system dependent** according to different C++ standards:
 
@@ -876,12 +874,13 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 -5 % -3;  // Result: -2 (guaranteed)
 ```
 
-**Key Characteristics**
+#### Key Characteristics
+
 - The quotient `a / b` is truncated toward zero (fractional part is discarded)
 - The sign of the remainder follows the sign of the dividend (numerator)
 - The identity `(a/b)*b + a%b == a` always holds
 
-#### 4.2.1.4 Exponentiation (Power)
+### 4.2.4 Exponentiation (Power)
 
 **Important:** C++ has **no operator** for exponentiation.
 
@@ -896,14 +895,16 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | x^4 | No `^` or `**` | Unlike Python (`**`) or math notation |
 | a^2 | `a * a` | Use repeated multiplication |
 
-**Method 1: Repeated Multiplication (for small exponents)**
+#### Method 1: Repeated Multiplication (for small exponents)
+
 ```cpp
 int square = a * a;           // a^2
 int cube = a * a * a;         // a^3
 int fourth = a * a * a * a;   // a^4
 ```
 
-**Method 2: `pow()` Function (for fractional/variable exponents)**
+#### Method 2: `pow()` Function (for fractional/variable exponents)
+
 ```cpp
 #include <cmath>
 
@@ -917,20 +918,6 @@ double result4 = pow(x, -1);     // 1/x
 |--------|-------|----------|
 | `a * a` | Fastest | Small fixed exponents: a^2, a^3 |
 | `pow(a, b)` | Slower | Variable/fractional: a^b, sqrt(a) |
-
-### 4.2.2 Addition and Subtraction (+, -)
-
-**Binary Addition (`+`)**
-```cpp
-int sum = 5 + 3;         // 8
-double total = 10.5 + 2.5;  // 13.0
-```
-
-**Binary Subtraction (`-`)**
-```cpp
-int diff = 10 - 4;       // 6
-double result = 5.5 - 2.0;  // 3.5
-```
 
 ## 4.3 Increment and Decrement Operators
 
