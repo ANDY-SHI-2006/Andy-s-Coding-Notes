@@ -784,44 +784,11 @@ Operators can also be categorized by their **function or purpose**:
 
 ## 4.2 Arithmetic Operators
 
-### 4.2.1 Unary Plus and Minus (+, -)
-
-Unary operators operate on a single operand.
-
-**Unary Plus (`+`)**
-
-The unary plus operator returns the value of its operand. It is rarely used explicitly since positive numbers are positive by default, but it can be used for clarity or symmetry with unary minus.
-
-```cpp
-int a = +5;      // Equivalent to: int a = 5;
-int b = +(-3);   // Result: -3
-```
-
-**Unary Minus (`-`)**
-
-The unary minus operator negates the value of its operand.
-
-```cpp
-int x = 5;
-int y = -x;      // Result: -5
-int z = -(-3);   // Result: 3
-```
-
-**Key Points:**
-- Unary `+` and `-` have higher precedence than multiplication/division
-- They are right-associative
-- Can be applied to numeric types (int, float, double, etc.)
-
-```cpp
-int a = 5;
-int b = -a * 2;  // Result: -10 (unary minus applied first: (-5) * 2)
-```
-
-### 4.2.2 Multiplication, Division, and Modulo (*, /, %)
+### 4.2.1 Multiplication, Division, and Modulo (*, /, %)
 
 These operators perform basic arithmetic operations.
 
-#### 4.2.2.1 Multiplication (*)
+#### 4.2.1.1 Multiplication (*)
 
 The multiplication operator computes the product of two operands.
 
@@ -836,7 +803,7 @@ double area = 4.5 * 2.0; // 9.0
 - If either operand is floating-point, result is floating-point
 - Can overflow with large integers (wraps around for unsigned, undefined for signed)
 
-#### 4.2.2.2 Division (/)
+#### 4.2.1.2 Division (/)
 
 The division operator computes the quotient of two operands.
 
@@ -869,7 +836,7 @@ double result2 = x / 2.0;        // Use floating-point literal: 2.5
 - Integer division by zero → Runtime error/crash
 - Floating-point division by zero → Returns `inf` or `nan` (IEEE 754 behavior)
 
-#### 4.2.2.3 Modulo (%) - Remainder
+#### 4.2.1.3 Modulo (%) - Remainder
 
 The modulo operator returns the **remainder** of division.
 
@@ -883,26 +850,6 @@ int t = 6 % 2;   // Result: 0 (divisible, no remainder)
 
 ```cpp
 // double x = 7.5 % 2;  // Error! % requires integers
-```
-
-**Common Use Cases:**
-
-```cpp
-// Check if a number is even
-if (n % 2 == 0) {
-    // n is even
-}
-
-// Check divisibility
-if (n % 3 == 0) {
-    // n is divisible by 3
-}
-
-// Wrap around (circular indexing)
-int index = (current + step) % array_size;
-
-// Extract last digit
-int lastDigit = number % 10;
 ```
 
 **Modulo with Negative Numbers**
@@ -934,7 +881,7 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 - The sign of the remainder follows the sign of the dividend (numerator)
 - The identity `(a/b)*b + a%b == a` always holds
 
-### 4.2.3 Addition and Subtraction (+, -)
+### 4.2.2 Addition and Subtraction (+, -)
 
 **Binary Addition (`+`)**
 ```cpp
