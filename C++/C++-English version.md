@@ -505,33 +505,76 @@ int main() {
 }
 ```
 
-## 3.1 Initialization
+---
+
+## 3.1 Variable Declaration
+
+### 3.1.1 Basic Declaration Syntax
+
+Declaring a variable allocates memory and specifies its type.
 
 | Syntax | Description |
 |--------|-------------|
 | `int a;` | Declare only (uninitialized) |
-| `int a = 5;` | Declare and initialize |
+| `int a = 5;` | Declare and initialize (copy initialization) |
 | `int a(5);` | Direct initialization |
-| `int a{5};` | Brace initialization (C++11) |
+| `int a{5};` | List initialization (C++11) |
 
 ```cpp
-double x1 = 1, y1 = 5;    // Initialized
+double x1 = 1, y1 = 5;    // Multiple declarations
 int a = 10, b;            // a initialized, b uninitialized
 
-// Multiple variables on one line
 double side_1, side_2, distance;  // All uninitialized
 ```
 
-**Note**: Using uninitialized variables leads to undefined behavior. Always initialize before use.
+> **Note**: Using uninitialized variables leads to undefined behavior. Always initialize before use.
 
-### 3.1.1 Direct Initialization
+### 3.1.2 Declaration vs Definition
 
-Direct initialization uses parentheses `()` to pass the initial value to the variable's constructor.
+| Concept | Declaration | Definition |
+|---------|-------------|------------|
+| **Meaning** | Announces a variable's name and type | Allocates memory and optionally initializes |
+| **Memory** | No memory allocated | Memory allocated |
+| **Example** | `extern int x;` | `int x = 5;` |
+
+For local variables inside functions, declaration and definition occur simultaneously.
+
+---
+
+## 3.2 Variable Initialization
+
+Initialization assigns an initial value to a variable at the time of declaration. C++ provides multiple initialization syntaxes, each with different semantics.
+
+### 3.2.1 Copy Initialization
+
+Uses the `=` operator to copy the value from the right-hand side.
+
+```cpp
+int a = 5;           // Copy initialization
+double b = 3.14;     // Copy initialization
+string s = "hello";  // Copy initialization
+```
+
+**Characteristics:**
+- Traditional, intuitive syntax
+- May involve implicit type conversions
+- For class types, this may invoke copy constructor
+- Can result in narrowing conversions without warning
+
+```cpp
+int x = 7.5;         // ⚠️ Compiles, but x = 7 (truncates decimal)
+short s = 100000;    // ⚠️ Compiles (may overflow)
+```
+
+### 3.2.2 Direct Initialization
+
+Uses parentheses `()` to pass the initial value to the variable's constructor.
 
 ```cpp
 int a(5);           // Direct initialization
 double b(3.14);     // Direct initialization
 string s("hello");  // Calls string constructor
+vector<int> v(5, 0); // 5 elements, all initialized to 0
 ```
 
 **Characteristics:**
@@ -539,9 +582,17 @@ string s("hello");  // Calls string constructor
 - For class types, this calls the appropriate constructor
 - Works for all types but has some edge cases (see below)
 
-### 3.1.2 Brace Initialization (List Initialization)
+**The "Most Vexing Parse" Problem:**
 
-Brace initialization uses curly braces `{}` to initialize variables. Introduced in **C++11**.
+```cpp
+// Direct initialization problem
+int a();        // ❌ Declares a function "a" that returns int!
+int b{};        // ✓ Correctly initializes b to 0
+```
+
+### 3.2.3 List Initialization (Brace Initialization)
+
+Uses curly braces `{}` to initialize variables. Introduced in **C++11**, also known as **uniform initialization**.
 
 ```cpp
 int a{5};           // Brace initialization
@@ -569,45 +620,34 @@ short b(100000); // ⚠️ Compiles (may overflow)
 short c{100000}; // ❌ Error! Value too large for short
 ```
 
-**Most Vexing Parse Avoidance:**
+### 3.2.4 Special Cases and Edge Cases
+
+**1. Zero Initialization (Empty Braces)**
 
 ```cpp
-// Direct initialization problem
-int a();        // ❌ Declares a function "a" that returns int!
-int b{};        // ✓ Correctly initializes b to 0
+int x{};        // x = 0
+double y{};     // y = 0.0
+string s{};     // s = "" (empty string)
+bool flag{};    // flag = false
 ```
 
-### 3.1.3 Comparison Table
-
-| Feature                    | Direct Init `()`         | Brace Init `{}`                            |
-| -------------------------- | ------------------------ | ------------------------------------------ |
-| **Syntax**                 | `int a(5);`              | `int a{5};`                                |
-| **C++ Version**            | All versions             | C++11 and later                            |
-| **Narrowing check**        | ❌ No (silent truncation) | ✅ Yes (compile error)                      |
-| **Most vexing parse**      | ⚠️ Can be misinterpreted | ✅ Never ambiguous                          |
-| **Container init**         | Limited                  | ✅ Full support (`vector<int>{1,2,3}`)      |
-| **Auto with single value** | `auto a(5)` → `int`      | `auto a{5}` → `std::initializer_list` (⚠️) |
-
-**Important Edge Cases:**
-
-**1. Auto with Single Value (Trap!)**
+**2. Auto with Single Value (Important Trap!)**
 
 | Syntax | Result Type | Meaning |
 |--------|-------------|---------|
 | `auto a(5)` | `int` | a is integer 5 |
-| `auto a{5}` | `std::initializer_list<int>` | a is an initializer list (contains 5), not int! |
+| `auto a{5}` | `std::initializer_list<int>` | a is an initializer list, not int! |
+| `auto a = 5` | `int` | a is integer 5 (copy init) |
 
 ```cpp
 auto x(5);  // x is int, value is 5
 auto y{5};  // y is std::initializer_list<int> with one element!
-
-// If you want int with braces, use copy initialization:
-auto z = 5;  // z is int
+auto z = 5;  // z is int (copy initialization)
 ```
 
 **Why this happens:** Brace initialization `{}` is designed to prefer matching `std::initializer_list` constructors. When `auto` meets `{}`, it deduces to initializer list type instead of single value.
 
-**2. Container Initialization**
+**3. Container Initialization**
 
 | Capability | Direct Init `()` | Brace Init `{}` |
 |------------|------------------|-----------------|
@@ -627,19 +667,30 @@ vector<int> v5{};          // ✓ empty container
 
 **Key Point:** Brace `{}` supports initializer list syntax and can directly fill containers with values inside braces. Parentheses `()` for containers usually only works for `(count, initial_value)` construction and cannot directly list multiple specific values.
 
-### 3.1.4 Recommendation
+### 3.2.5 Comparison and Recommendations
 
-**Modern C++ Style (C++11 and later):**
+**Comparison Table:**
+
+| Feature                    | Copy Init `=`            | Direct Init `()`         | Brace Init `{}`                            |
+| -------------------------- | ------------------------ | ------------------------ | ------------------------------------------ |
+| **Syntax**                 | `int a = 5;`             | `int a(5);`              | `int a{5};`                                |
+| **C++ Version**            | All versions             | All versions             | C++11 and later                            |
+| **Narrowing check**        | ❌ No                    | ❌ No                    | ✅ Yes (compile error)                      |
+| **Most vexing parse**      | ✅ No                    | ⚠️ Can be misinterpreted | ✅ Never ambiguous                          |
+| **Container init**         | Limited                  | Limited                  | ✅ Full support (`vector<int>{1,2,3}`)      |
+| **Auto with single value** | `auto a = 5` → `int`     | `auto a(5)` → `int`      | `auto a{5}` → `std::initializer_list` (⚠️) |
+
+**Recommendations (Modern C++ Style):**
 
 | Scenario | Recommended Syntax | Example |
 |----------|-------------------|---------|
 | **Basic types** | Brace initialization | `int x{5};` |
 | **Class types** | Brace initialization | `string s{"hi"};` |
 | **Containers/Arrays** | Brace initialization | `vector<int> v{1, 2, 3};` |
-| **With `auto`** | Direct initialization | `auto x = 5;` or `auto x(5);` |
+| **With `auto`** | Copy initialization | `auto x = 5;` |
 | **Zero initialization** | Empty braces | `int x{};` → 0 |
 
-**Key Takeaway:** Use **brace initialization `{}`** as your default choice. It provides better type safety by preventing accidental narrowing conversions. Use direct initialization `()` only when necessary (e.g., with `auto` type deduction).
+**Key Takeaway:** Use **brace initialization `{}`** as your default choice. It provides better type safety by preventing accidental narrowing conversions. Use copy initialization `=` when working with `auto` type deduction.
 
 ```cpp
 // Preferred modern C++ style
@@ -648,13 +699,12 @@ double pi{3.14159};              // Brace init
 string name{"Alice"};            // Brace init
 vector<int> scores{85, 90, 78};  // Brace init with list
 
-// Zero initialization
-int x{};        // x = 0
-double y{};     // y = 0.0
-string s{};     // s = "" (empty string)
+// With auto - use copy init
+auto length = 100;               // Copy init, deduced as int
+auto width{50};                  // ⚠️ initializer_list, avoid!
 ```
 
-## 3.2 Auto Type Deduction
+## 3.3 Type Deduction with auto
 
 `auto` lets the compiler deduce the variable type from the initializer.
 
