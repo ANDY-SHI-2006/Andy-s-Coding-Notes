@@ -2658,9 +2658,67 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 ### 6.2.4 Arrays and `scanf`
 
-> **Moved:** This content has been moved to [5.8.7 Arrays and Input](#587-arrays-and-input) for better organization. Please refer to that section for detailed information about using arrays with input operations.
+> **See also:** [5.8.7 Arrays and Input](#587-arrays-and-input) for array input fundamentals.
 
-**Quick Reference:**
+When reading array data with `scanf`, understanding how arrays work with addresses is essential.
+
+#### 6.2.4.1 Core Principle
+
+In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
+
+| Variable Type | Address Syntax | Example |
+|---------------|----------------|---------|
+| Regular variable | `&variable` | `scanf("%d", &age);` |
+| Array (entire array) | Array name only | `scanf("%s", name);` |
+| Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
+
+#### 6.2.4.2 Character Arrays (Strings)
+
+```cpp
+char name[50];
+scanf("%s", name);  // Correct: name itself is the address
+```
+
+**Common Error:** Adding `&` to array name
+
+```cpp
+char name[50];
+scanf("%s", &name);     // ❌ Wrong: &name is a "pointer to array", type mismatch
+scanf("%s", name);      // ✅ Correct: name is the address of first element
+```
+
+**Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
+
+#### 6.2.4.3 Numeric Arrays
+
+For numeric arrays, you typically need to read elements one by one:
+
+```cpp
+int numbers[5];
+
+// To fill the entire array, use a loop:
+for (int i = 0; i < 5; i++) {
+    scanf("%d", &numbers[i]);  // & required for individual elements
+}
+```
+
+#### 6.2.4.4 Safety Considerations
+
+**Buffer Overflow Protection:**
+
+`scanf` does not check array boundaries. Always specify maximum width for strings:
+
+```cpp
+char name[50];
+scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
+```
+
+| Array Size | Safe Format Specifier | Explanation |
+|------------|----------------------|-------------|
+| `char[50]` | `%49s` | 49 chars + 1 null terminator |
+| `char[100]` | `%99s` | 99 chars + 1 null terminator |
+
+#### 6.2.4.5 Summary Table
 
 | Data Type | `scanf` Usage | `&` Required? | Example |
 |-----------|---------------|---------------|---------|
