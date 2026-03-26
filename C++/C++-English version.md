@@ -4065,6 +4065,66 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
+### 9.1.4 Character Functions
+
+> **Header:** `#include <cctype>` (C++) or `#include <ctype.h>` (C)
+
+#### Character I/O
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `getchar()` | Reads next character from keyboard, returns its ASCII value | `c = getchar();` |
+| `putchar(c)` | Prints a character to screen | `putchar('a');` |
+
+```cpp
+// Print characters
+putchar('a');     // Output: a
+putchar('\n');    // Newline
+
+// Using ASCII values
+putchar(97);      // Output: a (ASCII 97)
+putchar(65);      // Output: A (ASCII 65)
+```
+
+#### Character Classification & Conversion
+
+| Function | Returns non-zero (true) if... |
+|----------|-------------------------------|
+| `isalpha(ch)` | ch is a letter (a-z, A-Z) |
+| `isdigit(ch)` | ch is a decimal digit (0-9) |
+| `isalnum(ch)` | ch is alphanumeric (letter or digit) |
+| `islower(ch)` | ch is lowercase letter |
+| `isupper(ch)` | ch is uppercase letter |
+| `isspace(ch)` | ch is whitespace (space, tab, newline, etc.) |
+| `isprint(ch)` | ch is printable (including space) |
+| `isgraph(ch)` | ch is printable (excluding space) |
+| `iscntrl(ch)` | ch is a control character (0-21, 127) |
+| `ispunct(ch)` | ch is punctuation (not space, letter, or digit) |
+| `isxdigit(ch)` | ch is hexadecimal digit (0-9, A-F, a-f) |
+
+#### Character Conversion
+
+| Function | Description |
+|----------|-------------|
+| `tolower(ch)` | Returns lowercase version of ch (if uppercase) |
+| `toupper(ch)` | Returns uppercase version of ch (if lowercase) |
+
+> **Note:** Character functions take an integer argument (character's ASCII value) and return an integer.
+
+```cpp
+#include <cctype>
+
+char ch = 'A';
+if (isupper(ch)) {
+    char lower = tolower(ch);  // Returns 'a'
+}
+
+// Check if digit
+if (isdigit('5')) {  // Returns true (non-zero)
+    // ch is a digit
+}
+```
+
 ---
 
 # 10 Object-Oriented Programming
