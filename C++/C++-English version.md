@@ -3953,7 +3953,9 @@ for (int i = 0; i < 5; i++) {
 
 ## 9.1 Mathematical Functions
 
-> **Header:** `#include <math.h>`
+> **Header:** `#include <cmath>` (C++ style) or `#include <math.h>` (C style)
+>
+> **Note:** In C++, `<cmath>` places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
 ### 9.1.1 Elementary Math Functions
 
@@ -3970,7 +3972,8 @@ for (int i = 0; i < 5; i++) {
 
 **Example:**
 ```cpp
-#include <math.h>
+#include <cmath>
+using namespace std;
 
 double a = sqrt(16.0);    // a = 4.0
 double b = pow(2.0, 3.0); // b = 8.0
@@ -4004,7 +4007,8 @@ deg = rad * 180 / PI;
 
 **Example:**
 ```cpp
-#include <math.h>
+#include <cmath>
+using namespace std;
 
 #define PI 3.141593
 
