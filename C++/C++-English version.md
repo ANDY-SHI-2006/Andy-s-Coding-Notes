@@ -895,7 +895,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | x^4 | No `^` or `**` | Unlike Python (`**`) or math notation |
 | a^2 | `a * a` | Use repeated multiplication |
 
-#### 4.2.4.1 Method 1: Repeated Multiplication (for small exponents)
+**Method 1: Repeated Multiplication (for small exponents)**
 
 ```cpp
 int square = a * a;           // a^2
@@ -903,7 +903,7 @@ int cube = a * a * a;         // a^3
 int fourth = a * a * a * a;   // a^4
 ```
 
-#### 4.2.4.2 Method 2: `pow()` Function (for fractional/variable exponents)
+**Method 2: `pow()` Function (for fractional/variable exponents)**
 
 ```cpp
 #include <cmath>
@@ -985,55 +985,205 @@ bool equal = fabs(a - 0.3) < EPSILON;
 
 Logical operators perform boolean operations and return `true` or `false`.
 
-**Logical NOT (`!`)**
+### 4.5.1 Logical NOT (`!`)
 
 | Attribute | Description |
 |-----------|-------------|
 | Name | Logical NOT |
 | Description | Inverts the boolean value |
-| Example | `!true` → `false` |
 
-**Logical AND (`&&`)**
+**Syntax:**
+```cpp
+!expression
+```
+
+**Example:**
+```cpp
+bool a = true;
+bool b = !a;      // b = false
+bool c = !false;  // c = true
+```
+
+### 4.5.2 Logical AND (`&&`)
 
 | Attribute | Description |
 |-----------|-------------|
 | Name | Logical AND |
 | Description | True if both operands are true |
-| Example | `true && false` → `false` |
 
-**Logical OR (`||`)**
+**Syntax:**
+```cpp
+expr1 && expr2
+```
 
-| Attribute   | Description                          |     |                 |
-| ----------- | ------------------------------------ | --- | --------------- |
-| Name        | Logical OR                           |     |                 |
-| Description | True if at least one operand is true |     |                 |
-| Example     | `true                                |     | false` → `true` |
+**Example:**
+```cpp
+bool a = true, b = false;
+bool c = a && b;  // c = false
+bool d = a && true;  // d = true
+```
 
-**Truth Table**
+### 4.5.3 Logical OR (`||`)
+
+| Attribute   | Description                          |
+| ----------- | ------------------------------------ |
+| Name        | Logical OR                           |
+| Description | True if at least one operand is true |
+
+**Syntax:**
+```cpp
+expr1 || expr2
+```
+
+**Example:**
+```cpp
+bool a = true, b = false;
+bool c = a || b;   // c = true
+bool d = false || false;  // d = false
+```
+
+### 4.5.4 Truth Table
 
 | A | B | !A | A && B | A \|\| B |
-|---|---|----|--------|--------|
+|---|---|----|--------|----------|
 | true | true | false | true | true |
 | true | false | false | false | true |
 | false | true | true | false | true |
 | false | false | true | false | false |
 
+**Example:**
+```cpp
+// Short-circuit evaluation
+int a = 0, b = 5;
+if (a != 0 && b / a > 2) {  // b/a is never evaluated, avoids division by zero
+    // ...
+}
+
+// Combining logical operators
+bool x = true, y = false, z = true;
+bool result = !(x && y) || z;  // result = true
+```
+
 ## 4.6 Bitwise Operators
 
 Bitwise operators perform operations on individual bits of integer values.
 
-| Operator | Name | Description | Example |
-|----------|------|-------------|---------|
-| `&` | Bitwise AND | 1 if both bits are 1 | `5 & 3` → `1` (0101 & 0011 = 0001) |
-| `|` | Bitwise OR | 1 if at least one bit is 1 | `5 | 3` → `7` (0101 | 0011 = 0111) |
-| `^` | Bitwise XOR | 1 if bits are different | `5 ^ 3` → `6` (0101 ^ 0011 = 0110) |
-| `~` | Bitwise NOT | Inverts all bits | `~5` → `-6` (inverts all bits including sign) |
-| `<<` | Left shift | Shifts bits left | `5 << 1` → `10` (0101 → 1010) |
-| `>>` | Right shift | Shifts bits right | `5 >> 1` → `2` (0101 → 0010) |
+### 4.6.1 Bitwise AND (`&`)
 
-**Practical Examples**
+| Attribute | Description |
+|-----------|-------------|
+| Name | Bitwise AND |
+| Description | 1 if both bits are 1 |
 
-**Checking if a number is even/odd using bitwise AND:**
+**Syntax:**
+```cpp
+expr1 & expr2
+```
+
+**Example:**
+```cpp
+int a = 5;   // 0101 in binary
+int b = 3;   // 0011 in binary
+int c = a & b;  // c = 1 (0001 in binary)
+```
+
+### 4.6.2 Bitwise OR (`|`)
+
+| Attribute   | Description                |
+| ----------- | -------------------------- |
+| Name        | Bitwise OR                 |
+| Description | 1 if at least one bit is 1 |
+
+**Syntax:**
+```cpp
+expr1 | expr2
+```
+
+**Example:**
+```cpp
+int a = 5;   // 0101 in binary
+int b = 3;   // 0011 in binary
+int c = a | b;  // c = 7 (0111 in binary)
+```
+
+### 4.6.3 Bitwise XOR (`^`)
+
+| Attribute | Description |
+|-----------|-------------|
+| Name | Bitwise XOR |
+| Description | 1 if bits are different |
+
+**Syntax:**
+```cpp
+expr1 ^ expr2
+```
+
+**Example:**
+```cpp
+int a = 5;   // 0101 in binary
+int b = 3;   // 0011 in binary
+int c = a ^ b;  // c = 6 (0110 in binary)
+```
+
+### 4.6.4 Bitwise NOT (`~`)
+
+| Attribute | Description |
+|-----------|-------------|
+| Name | Bitwise NOT |
+| Description | Inverts all bits |
+
+**Syntax:**
+```cpp
+~expr
+```
+
+**Example:**
+```cpp
+int a = 5;    // 0000 0101 in binary (32-bit: 0000...00000101)
+int b = ~a;   // b = -6 (1111...11111010 in two's complement)
+```
+
+### 4.6.5 Left Shift (`<<`)
+
+| Attribute   | Description                                        |
+| ----------- | -------------------------------------------------- |
+| Name        | Left shift                                         |
+| Description | Shifts bits left, equivalent to multiplying by 2^n |
+
+**Syntax:**
+```cpp
+expr << n
+```
+
+**Example:**
+```cpp
+int a = 5;       // 0101 in binary
+int b = a << 1;  // b = 10 (1010 in binary)
+int c = a << 2;  // c = 20 (0101 → 10100 in binary)
+```
+
+### 4.6.6 Right Shift (`>>`)
+
+| Attribute | Description |
+|-----------|-------------|
+| Name | Right shift |
+| Description | Shifts bits right, equivalent to dividing by 2^n |
+
+**Syntax:**
+```cpp
+expr >> n
+```
+
+**Example:**
+```cpp
+int a = 20;      // 10100 in binary
+int b = a >> 1;  // b = 10 (01010 in binary)
+int c = a >> 2;  // c = 5 (00101 in binary)
+```
+
+### 4.6.7 Practical Examples
+
+**Checking if a number is even or odd:**
 ```cpp
 // Check least significant bit
 if (num & 1) {
@@ -1046,25 +1196,29 @@ if (num & 1) {
 **Setting a specific bit:**
 ```cpp
 int flags = 0;
-flags = flags | (1 << 2);  // Set bit 2 (now flags = 4)
+flags = flags | (1 << 2);  // Set bit 2
+// flags is now 4 (0b0100)
 ```
 
 **Clearing a specific bit:**
 ```cpp
-flags = flags & ~(1 << 2);  // Clear bit 2
+int flags = 7;              // 0b0111
+flags = flags & ~(1 << 1);  // Clear bit 1
+// flags is now 5 (0b0101)
 ```
 
 **Toggling a specific bit:**
 ```cpp
-flags = flags ^ (1 << 2);  // Toggle bit 2
+int flags = 5;              // 0b0101
+flags = flags ^ (1 << 0);   // Toggle bit 0
+// flags is now 4 (0b0100)
 ```
 
-**Bit Flags Pattern**
-
+**Bit flags pattern:**
 ```cpp
-const int READ = 1 << 0;    // 0b0001 = 1
-const int WRITE = 1 << 1;   // 0b0010 = 2
-const int EXECUTE = 1 << 2; // 0b0100 = 4
+const int READ = 1 << 0;     // 0b0001 = 1
+const int WRITE = 1 << 1;    // 0b0010 = 2
+const int EXECUTE = 1 << 2;  // 0b0100 = 4
 
 int permissions = READ | WRITE;  // 0b0011 = 3
 
@@ -1076,19 +1230,6 @@ if (permissions & READ) {
 // Add execute permission
 permissions = permissions | EXECUTE;
 ```
-
-### 4.6.1 Division
-
-```cpp
-int a = 7 / 2;       // Result: 3 (integer division, truncates decimal)
-double b = 7 / 2;    // Result: 3.0 (still integer division!)
-double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
-```
-
-| Operation | Result | Note |
-|-----------|--------|------|
-| `int / int` | `int` | Decimal part discarded |
-| `double / int` | `double` | Normal division |
 
 ## 4.7 Assignment Operators
 
@@ -1126,15 +1267,62 @@ identifier operator= expression;
 | `*=` | `x *= 3;` | `x = x * 3;` |
 | `/=` | `x /= 3;` | `x = x / 3;` |
 | `%=` | `x %= 3;` | `x = x % 3;` |
+| `&=` | `x &= 3;` | `x = x & 3;` |
+| `\|=` | `x \|= 3;` | `x = x \| 3;` |
+| `^=` | `x ^= 3;` | `x = x ^ 3;` |
+| `<<=` | `x <<= 3;` | `x = x << 3;` |
+| `>>=` | `x >>= 3;` | `x = x >> 3;` |
 
 **Advantages:**
 - Shorter and more concise
 - May be more efficient (variable evaluated only once)
 - Commonly used in practice
 
+**Bitwise Compound Assignment Examples:**
+
+```cpp
+// Setting a bit (using OR)
+int flags = 0b0000;
+flags |= (1 << 2);      // Set bit 2: flags = 0b0100 (4)
+
+// Clearing a bit (using AND with NOT)
+flags = 0b0111;
+flags &= ~(1 << 1);     // Clear bit 1: flags = 0b0101 (5)
+
+// Toggling a bit (using XOR)
+flags = 0b0101;
+flags ^= (1 << 0);      // Toggle bit 0: flags = 0b0100 (4)
+
+// Shifting bits
+int value = 8;          // 0b1000
+value <<= 2;            // Left shift: value = 32 (0b100000)
+value >>= 3;            // Right shift: value = 4 (0b100)
+```
+
+**Practical Use Case - Permission Flags:**
+```cpp
+const int READ = 1 << 0;     // 0b0001 = 1
+const int WRITE = 1 << 1;    // 0b0010 = 2
+const int EXECUTE = 1 << 2;  // 0b0100 = 4
+
+int permissions = 0;
+permissions |= READ;         // Grant read permission
+permissions |= WRITE;        // Grant write permission
+
+// Check permission
+if (permissions & READ) {
+    // Has read access
+}
+
+// Revoke permission
+permissions &= ~WRITE;       // Remove write permission
+```
+
 ## 4.8 Ternary Conditional Operator
 
 The ternary conditional operator `?:` is the only ternary operator in C++. It provides a compact way to write simple if-else expressions.
+
+> **See also:** [8.2.5 The Conditional (Ternary) Operator](#825-the-conditional-ternary-operator) for usage in control flow context.
 
 ### 4.8.1 Syntax and Usage
 
@@ -1157,27 +1345,6 @@ if (a > b) {
     max = a;
 } else {
     max = b;
-}
-```
-
-### 4.8.2 Common Use Cases
-
-**Selecting between two values:**
-```cpp
-int absolute = (x < 0) ? -x : x;  // Absolute value
-char sign = (num >= 0) ? '+' : '-';  // Sign indicator
-```
-
-**Output formatting:**
-```cpp
-cout << "You have " << count << (count == 1 ? " message" : " messages") << endl;
-// Output: "You have 1 message" or "You have 5 messages"
-```
-
-**Function return:**
-```cpp
-int getMax(int a, int b) {
-    return (a > b) ? a : b;
 }
 ```
 
@@ -1222,10 +1389,10 @@ Cast operators are used to explicitly convert a value from one data type to anot
 
 ### 4.9.1 Usage Scenarios
 
-| Expression | Result | Explanation |
-|------------|--------|-------------|
+| Expression                 | Result                  | Explanation                       |
+| -------------------------- | ----------------------- | --------------------------------- |
 | `sum / count` (both `int`) | `3` (if sum=7, count=2) | Integer division, decimal dropped |
-| `(float)sum / count` | `3.5` | `sum` converted to float first |
+| `(float)sum / count`       | `3.5`                   | `sum` converted to float first    |
 
 ### 4.9.2 C-Style Cast
 
@@ -1287,110 +1454,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 double avg = static_cast<double>(sum) / count;
 ```
 
-## 4.10 Other Operators
-
-This section covers miscellaneous operators that don't fit into the categories above.
-
-### 4.10.1 Member Access Operators
-
-**Dot Operator (`.`)** - Access members of an object directly:
-```cpp
-struct Person {
-    string name;
-    int age;
-};
-
-Person p = {"Alice", 25};
-cout << p.name;  // Access name member: "Alice"
-cout << p.age;   // Access age member: 25
-```
-
-**Arrow Operator (`->`)** - Access members through a pointer:
-```cpp
-Person* ptr = &p;
-cout << ptr->name;  // Equivalent to (*ptr).name
-```
-
-### 4.10.2 Scope Resolution Operator (`::`)
-
-The scope resolution operator is used to access identifiers in different scopes.
-
-**Global scope access:**
-```cpp
-int x = 10;  // Global variable
-
-void func() {
-    int x = 5;  // Local variable
-    cout << x;      // Prints 5 (local)
-    cout << ::x;    // Prints 10 (global)
-}
-```
-
-**Namespace scope:**
-```cpp
-std::cout << "Hello";  // Access cout from std namespace
-```
-
-**Class scope (static members):**
-```cpp
-class MyClass {
-public:
-    static int count;
-};
-int MyClass::count = 0;  // Define static member outside class
-```
-
-### 4.10.3 Comma Operator (`,`)
-
-The comma operator evaluates expressions from left to right and returns the value of the rightmost expression.
-
-```cpp
-int a = (1, 2, 3);  // a = 3 (rightmost value)
-
-// Common use in for loops
-for (int i = 0, j = 10; i < j; i++, j--) {
-    // Multiple operations in loop control
-}
-```
-
-**Note:** The comma operator has the lowest precedence of all operators.
-
-### 4.10.4 sizeof Operator
-
-The `sizeof` operator returns the size of a type or variable in bytes.
-
-```cpp
-int arr[10];
-cout << sizeof(int);     // Size of int (typically 4)
-cout << sizeof(arr);     // Size of entire array: 40 (10 * 4)
-cout << sizeof(arr[0]);  // Size of one element: 4
-
-// Calculate array length
-int length = sizeof(arr) / sizeof(arr[0]);  // 10
-```
-
-**Key Points:**
-- `sizeof` is evaluated at compile time (except for C99 variable-length arrays)
-- When applied to an array, returns the total size of all elements
-- When applied to a pointer, returns the size of the pointer itself
-
-### 4.10.5 Pointer Operators
-
-**Address-of Operator (`&`)** - Returns the memory address of a variable:
-```cpp
-int x = 10;
-int* ptr = &x;  // ptr stores the address of x
-```
-
-**Dereference Operator (`*`)** - Accesses the value at a memory address:
-```cpp
-int y = *ptr;   // y = 10 (value at address stored in ptr)
-*ptr = 20;      // x is now 20
-```
-
-> See also: Chapter on Pointers for detailed coverage.
-
-### 4.10.6 Power (Exponentiation)
+## 4.10 Power (Exponentiation)
 
 **Important:** C++ has **no built-in operator** for exponentiation.
 
@@ -1500,7 +1564,6 @@ a = b;
 - Avoid mixing multiple assignment operators in one statement
 - Put spaces around assignment operators for clarity (they are evaluated last)
 
-> **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for style guidelines on whitespace around operators.
 
 ## 4.12 Spacing and Style Guidelines
 
@@ -1524,7 +1587,6 @@ int result = a*b + b/c*d;  // Clearer structure
 int result = a * b + b / c * d;  // Also valid, but less clear
 ```
 
-> **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for more details on whitespace usage.
 
 
 
@@ -1552,14 +1614,14 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 
 ### 5.1.2 Integer Ranges
 
-| Type | Size | Range |
-|------|------|-------|
-| `short` | 2 bytes | -32,768 to 32,767 |
-| `unsigned short` | 2 bytes | 0 to 65,535 |
-| `int` | 4 bytes | -2,147,483,648 to 2,147,483,647 |
-| `unsigned int` | 4 bytes | 0 to 4,294,967,295 |
-| `long` | 4-8 bytes | Platform dependent |
-| `long long` | 8 bytes | -9 quintillion to 9 quintillion |
+| Type             | Size      | Range                           |
+| ---------------- | --------- | ------------------------------- |
+| `short`          | 2 bytes   | -32,768 to 32,767               |
+| `unsigned short` | 2 bytes   | 0 to 65,535                     |
+| `int`            | 4 bytes   | -2,147,483,648 to 2,147,483,647 |
+| `unsigned int`   | 4 bytes   | 0 to 4,294,967,295              |
+| `long`           | 4-8 bytes | Platform dependent              |
+| `long long`      | 8 bytes   | -9 quintillion to 9 quintillion |
 
 ### 5.1.3 Floating-Point Precision
 
@@ -3265,6 +3327,574 @@ int result = printf("%10d\n", 5);
 
 # 8 Control Flow
 
+Control flow statements determine the order in which statements are executed in a program. This chapter covers conditional expressions, selection statements, loop structures, and jump statements.
+
+## 8.1 Conditional Expressions
+
+Conditional expressions evaluate to boolean values (`true` or `false`) and are used to make decisions in programs.
+
+### 8.1.1 Relational Operators
+
+Relational operators compare two values and return a boolean result.
+
+| Operator | Meaning | Example | Result |
+|----------|---------|---------|--------|
+| `<` | Less than | `5 < 10` | `true` |
+| `<=` | Less than or equal | `5 <= 5` | `true` |
+| `>` | Greater than | `10 > 5` | `true` |
+| `>=` | Greater than or equal | `5 >= 3` | `true` |
+| `==` | Equal to | `5 == 5` | `true` |
+| `!=` | Not equal to | `5 != 3` | `true` |
+
+**Important Note on Floating-Point Comparison:**
+
+Never use `==` to compare floating-point numbers directly due to precision errors:
+
+```cpp
+// WRONG - may fail due to precision issues
+if (x == 0.1) { }
+
+// CORRECT - use a small epsilon value
+const double EPSILON = 1e-9;
+if (fabs(x - 0.1) < EPSILON) { }
+```
+
+### 8.1.2 Logical Operators
+
+Logical operators combine boolean expressions.
+
+| Operator | Name | Description | Example |
+|----------|------|-------------|---------|
+| `!` | Logical NOT | Negates the expression | `!true` → `false` |
+| `&&` | Logical AND | True if both operands are true | `true && false` → `false` |
+| `||` | Logical OR | True if at least one operand is true | `true || false` → `true` |
+
+**Short-Circuit Evaluation:**
+
+- For `&&`: If the left operand is `false`, the right operand is **not evaluated**
+- For `||`: If the left operand is `true`, the right operand is **not evaluated**
+
+```cpp
+int a = 0, b = 5;
+
+// b is not accessed (division by zero avoided)
+if (a != 0 && b / a > 2) { }
+
+// Useful for null checking
+if (ptr != nullptr && ptr->value > 0) { }
+```
+
+**Common Pitfall - Assignment vs Comparison:**
+
+```cpp
+int x = 5;
+
+// WRONG: Assignment, not comparison (always true, x becomes 0)
+if (x = 0) { }
+
+// CORRECT: Comparison
+if (x == 0) { }
+```
+
+### 8.1.3 Operator Precedence
+
+When combining relational and logical operators, precedence matters:
+
+| Precedence | Operators |
+|------------|-----------|
+| Highest | `!` (logical NOT) |
+| | Relational: `<`, `<=`, `>`, `>=` |
+| | Equality: `==`, `!=` |
+| | Logical AND: `&&` |
+| Lowest | Logical OR: `||` |
+
+**Recommendation:** Use parentheses to make complex conditions clear:
+
+```cpp
+// Unclear - relies on precedence
+if (a < b && c < d || e < f) { }
+
+// Clear - explicit grouping
+if ((a < b && c < d) || e < f) { }
+```
+
+## 8.2 Selection Statements
+
+### 8.2.1 The if Statement
+
+The simplest form of selection:
+
+```cpp
+if (condition) {
+    // statements executed only if condition is true
+}
+```
+
+**Example:**
+
+```cpp
+int score = 85;
+if (score >= 60) {
+    cout << "Passed!" << endl;
+}
+```
+
+### 8.2.2 The if-else Statement
+
+Provides two alternative execution paths:
+
+```cpp
+if (condition) {
+    // statements if condition is true
+} else {
+    // statements if condition is false
+}
+```
+
+**Example:**
+
+```cpp
+int score = 55;
+if (score >= 60) {
+    cout << "Passed!" << endl;
+} else {
+    cout << "Failed!" << endl;
+}
+```
+
+### 8.2.3 The if-else-if Ladder
+
+For multiple mutually exclusive conditions:
+
+```cpp
+if (condition1) {
+    // statements for condition1
+} else if (condition2) {
+    // statements for condition2
+} else if (condition3) {
+    // statements for condition3
+} else {
+    // statements if none of the above
+}
+```
+
+**Example:**
+
+```cpp
+int score = 85;
+if (score >= 90) {
+    cout << "Grade: A" << endl;
+} else if (score >= 80) {
+    cout << "Grade: B" << endl;
+} else if (score >= 70) {
+    cout << "Grade: C" << endl;
+} else if (score >= 60) {
+    cout << "Grade: D" << endl;
+} else {
+    cout << "Grade: F" << endl;
+}
+```
+
+### 8.2.4 Nested if Statements
+
+if statements can be nested inside other if statements:
+
+```cpp
+if (condition1) {
+    if (condition2) {
+        // statements when both conditions are true
+    }
+}
+```
+
+**The Dangling else Problem:**
+
+An `else` always binds to the nearest unmatched `if`:
+
+```cpp
+if (a > 0)
+    if (b > 0)
+        cout << "Both positive" << endl;
+else  // This else binds to if(b > 0), NOT if(a > 0)!
+    cout << "a is not positive" << endl;
+
+// Use braces to avoid ambiguity:
+if (a > 0) {
+    if (b > 0) {
+        cout << "Both positive" << endl;
+    }
+} else {
+    cout << "a is not positive" << endl;
+}
+```
+
+**Best Practice:** Always use braces `{}` with if statements, even for single statements, to prevent errors and improve readability.
+
+### 8.2.5 The Conditional (Ternary) Operator
+
+A compact form for simple if-else. See also [4.8 Ternary Conditional Operator](#48-ternary-conditional-operator) for detailed syntax and precedence.
+
+**Syntax:**
+
+```cpp
+condition ? expression_if_true : expression_if_false
+```
+
+**Examples:**
+
+```cpp
+// Simple assignment
+int max = (a > b) ? a : b;
+
+// In output
+cout << (score >= 60 ? "Passed" : "Failed") << endl;
+
+// Nested ternary (use sparingly - can hurt readability)
+int sign = (x > 0) ? 1 : (x < 0) ? -1 : 0;
+```
+
+### 8.2.6 The switch Statement
+
+The `switch` statement selects one of many code blocks to execute:
+
+```cpp
+switch (expression) {
+    case constant1:
+        // statements
+        break;
+    case constant2:
+        // statements
+        break;
+    default:
+        // statements
+}
+```
+
+**Key Rules:**
+
+- The `expression` must be an integral type (`int`, `char`, `enum`, etc.)
+- `case` labels must be compile-time constants
+- `break` is required to exit the switch (otherwise fall-through occurs)
+- `default` case is optional but recommended
+
+**Example:**
+
+```cpp
+char grade = 'B';
+
+switch (grade) {
+    case 'A':
+        cout << "Excellent!" << endl;
+        break;
+    case 'B':
+        cout << "Good job!" << endl;
+        break;
+    case 'C':
+        cout << "Passed" << endl;
+        break;
+    case 'D':
+    case 'F':
+        cout << "Failed" << endl;
+        break;
+    default:
+        cout << "Invalid grade" << endl;
+}
+```
+
+**Fall-Through Behavior:**
+
+Without `break`, execution continues to the next case:
+
+```cpp
+int day = 3;
+switch (day) {
+    case 1:  // Monday
+    case 2:  // Tuesday
+    case 3:  // Wednesday
+    case 4:  // Thursday
+    case 5:  // Friday
+        cout << "Weekday" << endl;
+        break;
+    case 6:  // Saturday
+    case 7:  // Sunday
+        cout << "Weekend" << endl;
+        break;
+    default:
+        cout << "Invalid day" << endl;
+}
+// Output: Weekday
+```
+
+**When to use switch vs if-else:**
+
+| Use `switch` | Use `if-else` |
+|--------------|---------------|
+| Single variable tested | Complex conditions |
+| Integer or character values | Floating-point values |
+| Many discrete values | Ranges of values |
+| Equality checks only | Relational comparisons |
+
+## 8.3 Loop Structures
+
+Loops allow code to be executed repeatedly.
+
+### 8.3.1 The while Loop
+
+Tests condition before each iteration:
+
+```cpp
+while (condition) {
+    // statements executed while condition is true
+}
+```
+
+**Example:**
+
+```cpp
+int count = 0;
+while (count < 5) {
+    cout << count << " ";
+    count++;
+}
+// Output: 0 1 2 3 4
+```
+
+**Characteristics:**
+
+- Condition checked **before** each iteration
+- May execute zero times if condition is initially false
+- Loop variable must be initialized before the loop
+- Loop variable must be updated inside the loop
+
+### 8.3.2 The do-while Loop
+
+Tests condition after each iteration (guarantees at least one execution):
+
+```cpp
+do {
+    // statements executed at least once
+} while (condition);
+```
+
+**Example:**
+
+```cpp
+int num;
+do {
+    cout << "Enter a positive number: ";
+    cin >> num;
+} while (num <= 0);
+// User is prompted at least once
+```
+
+**Comparison:**
+
+| Aspect | `while` | `do-while` |
+|--------|---------|------------|
+| Condition check | Before iteration | After iteration |
+| Minimum executions | 0 | 1 |
+| Use case | When iteration might not be needed | When at least one iteration is required |
+
+### 8.3.3 The for Loop
+
+Compact loop with initialization, condition, and update in one line:
+
+```cpp
+for (initialization; condition; update) {
+    // statements
+}
+```
+
+**Execution order:**
+
+1. **Initialization** (once, at start)
+2. Check **condition** → if false, exit loop
+3. Execute **loop body**
+4. Execute **update**
+5. Go back to step 2
+
+**Example:**
+
+```cpp
+for (int i = 0; i < 5; i++) {
+    cout << i << " ";
+}
+// Output: 0 1 2 3 4
+```
+
+**Variations:**
+
+```cpp
+// Multiple variables
+for (int i = 0, j = 10; i < j; i++, j--) {
+    cout << i << "," << j << " ";
+}
+
+// Omit parts (rarely used)
+int i = 0;
+for (; i < 5; ) {
+    cout << i++ << " ";
+}
+
+// Infinite loop
+for (;;) {
+    // infinite loop - use break to exit
+}
+```
+
+**Range-based for loop (C++11):**
+
+For iterating over containers:
+
+```cpp
+vector<int> nums = {1, 2, 3, 4, 5};
+
+// By value (copy)
+for (int n : nums) {
+    cout << n << " ";
+}
+
+// By reference (modifies original)
+for (int& n : nums) {
+    n *= 2;  // Doubles each element
+}
+
+// By const reference (read-only, efficient)
+for (const int& n : nums) {
+    cout << n << " ";
+}
+```
+
+### 8.3.4 Nested Loops
+
+Loops can be nested inside other loops:
+
+```cpp
+// Print a multiplication table
+for (int i = 1; i <= 5; i++) {
+    for (int j = 1; j <= 5; j++) {
+        cout << i * j << "\t";
+    }
+    cout << endl;
+}
+```
+
+**Output:**
+
+```
+1       2       3       4       5
+2       4       6       8       10
+3       6       9       12      15
+4       8       12      16      20
+5       10      15      20      25
+```
+
+## 8.4 Jump Statements
+
+### 8.4.1 The break Statement
+
+`break` immediately exits the nearest enclosing loop or switch:
+
+```cpp
+// Exit loop early
+for (int i = 0; i < 10; i++) {
+    if (i == 5) {
+        break;  // Exit loop when i reaches 5
+    }
+    cout << i << " ";
+}
+// Output: 0 1 2 3 4
+```
+
+```cpp
+// Exit switch case (prevents fall-through)
+switch (choice) {
+    case 1:
+        cout << "Option 1" << endl;
+        break;  // Without break, execution would continue to case 2
+    case 2:
+        cout << "Option 2" << endl;
+        break;
+}
+```
+
+### 8.4.2 The continue Statement
+
+`continue` skips the rest of the current iteration and proceeds to the next:
+
+```cpp
+// Print only odd numbers
+for (int i = 0; i < 10; i++) {
+    if (i % 2 == 0) {
+        continue;  // Skip even numbers
+    }
+    cout << i << " ";
+}
+// Output: 1 3 5 7 9
+```
+
+**Comparison:**
+
+| Statement | Effect |
+|-----------|--------|
+| `break` | Exit the loop/switch immediately |
+| `continue` | Skip to next iteration of the loop |
+
+## 8.5 Loop Comparison and Selection
+
+| Loop Type | Best For | Key Characteristic |
+|-----------|----------|-------------------|
+| `while` | Unknown number of iterations, condition-driven | Condition checked first |
+| `do-while` | At least one iteration required | Condition checked last |
+| `for` | Known number of iterations, counting | Compact syntax with counter |
+| Range-for | Iterating over collections | Cleanest for containers |
+
+## 8.6 Debugging Tips for Control Flow
+
+### 8.6.1 Infinite Loops
+
+Common causes and solutions:
+
+```cpp
+// CAUSE: Missing update
+int i = 0;
+while (i < 10) {
+    cout << i << endl;
+    // Forgot i++!
+}
+
+// CAUSE: Wrong comparison
+for (int i = 10; i >= 0; i++) {  // i++ instead of i--
+    cout << i << endl;
+}
+
+// SOLUTION: Always verify loop termination condition
+```
+
+### 8.6.2 Off-by-One Errors
+
+```cpp
+// Wrong: prints 0-10 (11 numbers)
+for (int i = 0; i <= 10; i++) { }
+
+// Correct: prints 0-9 (10 numbers)
+for (int i = 0; i < 10; i++) { }
+```
+
+### 8.6.3 Debugging Techniques
+
+1. **Trace with cout:** Add output statements to track variable values
+
+```cpp
+for (int i = 0; i < 5; i++) {
+    cout << "DEBUG: i = " << i << endl;  // Check loop progress
+    // ... rest of code
+}
+```
+
+2. **Use a debugger:** Set breakpoints and watch variables
+
+3. **Verify boundary conditions:** Test with minimum, maximum, and edge cases
 
 ---
 
