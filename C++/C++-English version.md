@@ -2583,7 +2583,7 @@ The address operator `&` has the same precedence level as other unary operators.
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-#### 6.2.3.1 **1. Flags** (Optional)
+#### 1. Flags (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -2596,7 +2596,7 @@ int a, b;
 scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
 ```
 
-#### 6.2.3.2 **2. Width** (Optional)
+#### 2. Width (Optional)
 
 Specifies the **maximum** number of characters to read:
 
@@ -2612,7 +2612,7 @@ scanf("%9s", str);     // Read at most 9 chars + null terminator (prevents overf
 |-------|-------------|---------|
 | `n` | Maximum field width | `%3d` reads at most 3 digits |
 
-#### 6.2.3.3 **3. Length Modifier** (Optional)
+#### 3. Length Modifier (Optional)
 
 Specifies the size of the receiving variable. **Critical for correct memory access.**
 
@@ -2635,7 +2635,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 > **⚠️ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
 
-#### 6.2.3.4 **4. Conversion Specifiers** (Required)
+#### 4. Conversion Specifiers (Required)
 
 | Specifier | Type | Input Format | Example Input |
 |-----------|------|--------------|---------------|
@@ -2787,7 +2787,75 @@ scanf("%d", &a);             // Read input
 
 1. **No Precision Control**: `scanf` does not support `%.2f` (only `printf` does)
 2. **Whitespace as Separator**: `%d%d` accepts "1 2", "1\t2", or "1\n2"
-3. **Non-format Characters Must Match**: `scanf("(%d)", &x)` requires input "(42)", not just "42"
+3. **Non-format Characters Must Match**: Any non-format characters in the format string must be matched exactly in the input
+
+   `scanf` treats non-whitespace characters in the format string as **literal characters that must be matched exactly**. This is a common source of confusion.
+
+   **How it works:**
+   - Format specifiers (like `%d`, `%f`, `%s`) are placeholders for data
+   - All other characters (parentheses, commas, colons, etc.) are **literal match requirements**
+   - Input must contain these exact characters in the exact positions
+
+   **Example 1: Parentheses**
+   ```cpp
+   int x;
+   scanf("(%d)", &x);  // Format: (number)
+   ```
+   | Input | Result | Explanation |
+   |-------|--------|-------------|
+   | `(42)` | ✓ Success, x = 42 | Input matches format exactly |
+   | `42` | ✗ Failure | Missing opening parenthesis |
+   | `(42` | ✗ Failure | Missing closing parenthesis |
+   | `42)` | ✗ Failure | Missing opening parenthesis |
+
+   **Example 2: Mixed literal text and format specifiers**
+   ```cpp
+   int a, b;
+   scanf("a=%d,b=%d", &a, &b);  // Format: a=number,b=number
+   ```
+   | Input | Result | Explanation |
+   |-------|--------|-------------|
+   | `a=10,b=20` | ✓ Success, a=10, b=20 | Exact match |
+   | `10 20` | ✗ Failure | Missing "a=", ",b=" literals |
+   | `10,20` | ✗ Failure | Missing "a=" and ",b=" |
+   | `a = 10, b = 20` | ✗ Failure | Spaces not allowed (unless in format) |
+
+   **Example 3: Spaces in format string**
+   ```cpp
+   int a, b;
+   scanf("%d %d", &a, &b);  // Space matches any amount of whitespace
+   ```
+   | Input | Result | Explanation |
+   |-------|--------|-------------|
+   | `10 20` | ✓ Success | Single space matches single space |
+   | `10    20` | ✓ Success | Space in format matches any whitespace amount |
+   | `10\t20` | ✓ Success | Tab is also whitespace |
+   | `10\n20` | ✓ Success | Newline is also whitespace |
+
+   **Practical Implications:**
+
+   **✅ Good Practice: Use simple format strings**
+   ```cpp
+   int x, y;
+   scanf("%d %d", &x, &y);  // Just read two numbers, flexible spacing
+   ```
+
+   **⚠️ Caution: Complex format strings require exact input**
+   ```cpp
+   // This forces users to type in a very specific format
+   scanf("(%d,%d)", &x, &y);  // User MUST type: (10,20)
+   // If user types: 10,20 or (10, 20) or 10 20 → all fail!
+   ```
+
+   **🔧 Better approach: Prompt separately**
+   ```cpp
+   printf("Enter x: ");
+   scanf("%d", &x);  // Read just the number
+   printf("Enter y: ");
+   scanf("%d", &y);  // Read just the number
+   ```
+
+   > **Key Takeaway:** Keep `scanf` format strings simple. Don't embed complex literal text unless you have strict control over the input format.
 4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
 ### 6.2.7 Return Value of `scanf`
@@ -3117,7 +3185,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 **Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
 
-#### 7.2.3.1 **1. Flags** (Optional)
+#### 1. Flags (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -3127,7 +3195,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 | `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
 | `0` | Zero-pad (with width) | `%05d` → `00042` |
 
-#### 7.2.3.2 **2. Width** (Optional)
+#### 2. Width (Optional)
 
 Specifies the **minimum** number of characters to print.
 
@@ -3146,7 +3214,7 @@ Specifies the **minimum** number of characters to print.
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
 
-#### 7.2.3.3 **3. Precision** (`.precision`) - Optional
+#### 3. Precision (`.precision`) - Optional
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
@@ -3160,7 +3228,7 @@ Specifies the **minimum** number of characters to print.
 - The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
 - **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` → `"    3.14"`)
 
-#### 7.2.3.4 **4. Length Modifier** (Optional)
+#### 4. Length Modifier (Optional)
 
 | Modifier | Use With | C Type | Example |
 |----------|----------|--------|---------|
@@ -3174,7 +3242,7 @@ Specifies the **minimum** number of characters to print.
 | `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
 | `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
 
-#### 7.2.3.5 **5. Conversion Specifiers** (Required)
+#### 5. Conversion Specifiers (Required)
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
