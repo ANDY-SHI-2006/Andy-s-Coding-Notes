@@ -3959,6 +3959,14 @@ for (int i = 0; i < 5; i++) {
 
 ### 9.1.1 Elementary Math Functions
 
+> **Argument Types:** Math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
+>
+> ```cpp
+> int x = 9;
+> double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
+> int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
+> ```
+
 | Function | Description | Notes |
 |----------|-------------|-------|
 | `fabs(x)` | Absolute value | Returns `double` |
