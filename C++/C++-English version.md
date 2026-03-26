@@ -1527,22 +1527,6 @@ The following table lists all operators covered in this chapter from highest to 
 - Operators with the same precedence are evaluated according to their associativity (left-to-right or right-to-left).
 - Parentheses can always be used to override default precedence and improve readability.
 
-**Examples:**
-
-```cpp
-// Basic precedence
-int a = 5 + 3 * 2;       // Result: 11 (not 16), * has higher precedence than +
-int b = (5 + 3) * 2;     // Result: 16, parentheses override precedence
-int c = -5 + 3;          // Result: -2, unary - has higher precedence than binary +
-int d = -3 * 5;          // Result: -15, unary - evaluated before *
-int e = 8 / 4 / 2;       // Result: 1, left associativity: (8/4)/2
-float f = (float)5 / 2;  // Result: 2.5, cast has higher precedence
-
-// Expression grouping with same precedence (left-to-right associativity)
- a*b + b/c*d  // is evaluated as:  (a*b) + ((b/c)*d)
-// * and / have same precedence, grouped left to right
-```
-
 **Compound Assignment Example:**
 
 ```cpp
