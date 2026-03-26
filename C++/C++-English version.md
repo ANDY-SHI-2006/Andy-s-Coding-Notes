@@ -3977,6 +3977,19 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `exp(x)` | Computes e^x | e ≈ 2.718282 |
 | `log(x)` | Computes the natural logarithm of x (ln x) | Requires `x > 0` |
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
+| `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires `<cstdlib>` |
+
+**Important:** C++ has **no built-in operator** for exponentiation.
+
+> **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
+> ```cpp
+> int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
+> ```
+
+| Method | Speed | Use Case |
+|--------|-------|----------|
+| `a * a` | Fastest | Small fixed exponents: a², a³ |
+| `pow(a, b)` | Slower | Variable/fractional exponents |
 
 **Example:**
 ```cpp
