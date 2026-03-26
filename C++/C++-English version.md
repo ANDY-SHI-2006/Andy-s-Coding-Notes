@@ -2503,7 +2503,7 @@ The address operator `&` has the same precedence level as other unary operators.
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-#### **1. Flags** (Optional)
+#### 6.2.3.1 **1. Flags** (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -2516,7 +2516,7 @@ int a, b;
 scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
 ```
 
-#### **2. Width** (Optional)
+#### 6.2.3.2 **2. Width** (Optional)
 
 Specifies the **maximum** number of characters to read:
 
@@ -2532,7 +2532,7 @@ scanf("%9s", str);     // Read at most 9 chars + null terminator (prevents overf
 |-------|-------------|---------|
 | `n` | Maximum field width | `%3d` reads at most 3 digits |
 
-#### **3. Length Modifier** (Optional)
+#### 6.2.3.3 **3. Length Modifier** (Optional)
 
 Specifies the size of the receiving variable. **Critical for correct memory access.**
 
@@ -2555,7 +2555,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 > **⚠️ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
 
-#### **4. Conversion Specifiers** (Required)
+#### 6.2.3.4 **4. Conversion Specifiers** (Required)
 
 | Specifier | Type | Input Format | Example Input |
 |-----------|------|--------------|---------------|
@@ -2578,7 +2578,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 ### 6.2.4 Arrays and `scanf`
 
-#### Core Principle
+#### 6.2.4.1 Core Principle
 
 In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). Since `scanf` requires the **address** of variables, you can pass the array name directly **without** the `&` operator.
 
@@ -2588,7 +2588,7 @@ In C/C++, **the array name itself represents the address of the first element** 
 | Array (entire array) | Array name only | `scanf("%s", name);` |
 | Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
 
-#### Character Arrays (Strings)
+#### 6.2.4.2 Character Arrays (Strings)
 
 ```c
 char name[50];
@@ -2605,7 +2605,7 @@ scanf("%s", name);      // ✅ Correct: name is the address of first element
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
 
-#### Numeric Arrays
+#### 6.2.4.3 Numeric Arrays
 
 For numeric arrays, you typically need to read elements one by one:
 
@@ -2622,7 +2622,7 @@ for (int i = 0; i < 5; i++) {
 }
 ```
 
-#### Safety Considerations
+#### 6.2.4.4 Safety Considerations
 
 **Buffer Overflow Protection:**
 
@@ -2647,7 +2647,7 @@ char line[100];
 scanf("%[^\n]", line);  // Read until newline (but not including it)
 ```
 
-#### Summary Table
+#### 6.2.4.5 Summary Table
 
 | Data Type | `scanf` Usage | `&` Required? | Example |
 |-----------|---------------|---------------|---------|
@@ -2721,7 +2721,7 @@ scanf("%d", &a);             // Read input
 
 ### 6.2.7 Return Value of `scanf`
 
-#### Basic Definition
+#### 6.2.7.1 Basic Definition
 
 `scanf` returns an **`int`** value equal to **the number of successful conversions** (the number of input items successfully matched and assigned).
 
@@ -2729,7 +2729,7 @@ scanf("%d", &a);             // Read input
 int scanf(const char *format, ...);
 ```
 
-#### Return Value Meanings
+#### 6.2.7.2 Return Value Meanings
 
 | Return Value | Meaning |
 |-------------|---------|
@@ -2739,7 +2739,7 @@ int scanf(const char *format, ...);
 
 > **Note**: `EOF` is a macro, typically defined as `-1` in `<cstdio>`.
 
-#### Practical Code Examples
+#### 6.2.7.3 Practical Code Examples
 
 **Example 1: Normal successful read**
 ```c
@@ -2774,7 +2774,7 @@ int result = scanf("%d", &num);
 // result = EOF (-1)
 ```
 
-#### Practical Application Scenarios
+#### 6.2.7.4 Practical Application Scenarios
 
 **1. Loop reading until EOF**
 ```c
@@ -2802,14 +2802,14 @@ int count = scanf("%d %d %d", &a, &b, &c);
 // Determine how many numbers the user entered based on count value
 ```
 
-#### Common Pitfalls
+#### 6.2.7.5 Common Pitfalls
 
 | Pitfall | Problem | Solution |
 |---------|---------|----------|
 | Ignoring return value | `scanf("%d", &num);` without checking result | Use `if (scanf(...) != 1)` to handle errors |
 | Confusing EOF with 0 | `result == 0` means no match, `result == EOF` means end-of-file | Distinguish between these two cases |
 
-#### Comparison with `printf` Return Value
+#### 6.2.7.6 Comparison with `printf` Return Value
 
 | Function | Return Value Meaning |
 |----------|---------------------|
@@ -2821,7 +2821,7 @@ int n1 = printf("Hello\n");    // n1 = 6 (5 characters + newline)
 int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
 ```
 
-#### Underlying Mechanism
+#### 6.2.7.7 Underlying Mechanism
 
 `scanf` maintains an internal **scanning pointer** that parses the input stream from left to right:
 
@@ -3046,7 +3046,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 **Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
 
-#### **1. Flags** (Optional)
+#### 7.2.3.1 **1. Flags** (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -3056,7 +3056,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 | `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
 | `0` | Zero-pad (with width) | `%05d` → `00042` |
 
-#### **2. Width** (Optional)
+#### 7.2.3.2 **2. Width** (Optional)
 
 Specifies the **minimum** number of characters to print.
 
@@ -3075,7 +3075,7 @@ Specifies the **minimum** number of characters to print.
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
 
-#### **3. Precision** (`.precision`) - Optional
+#### 7.2.3.3 **3. Precision** (`.precision`) - Optional
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
@@ -3089,7 +3089,7 @@ Specifies the **minimum** number of characters to print.
 - The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
 - **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` → `"    3.14"`)
 
-#### **4. Length Modifier** (Optional)
+#### 7.2.3.4 **4. Length Modifier** (Optional)
 
 | Modifier | Use With | C Type | Example |
 |----------|----------|--------|---------|
@@ -3103,7 +3103,7 @@ Specifies the **minimum** number of characters to print.
 | `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
 | `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
 
-#### **5. Conversion Specifiers** (Required)
+#### 7.2.3.5 **5. Conversion Specifiers** (Required)
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
@@ -3236,7 +3236,7 @@ cout << "This is a very long message that "
 
 ### 7.2.8 Return Value of `printf`
 
-#### Basic Definition
+#### 7.2.8.1 Basic Definition
 
 `printf` returns an **`int`** value equal to **the number of characters successfully written** to the output stream.
 
@@ -3244,7 +3244,7 @@ cout << "This is a very long message that "
 int printf(const char *format, ...);
 ```
 
-#### Return Value Meanings
+#### 7.2.8.2 Return Value Meanings
 
 | Return Value | Meaning |
 |-------------|---------|
@@ -3254,7 +3254,7 @@ int printf(const char *format, ...);
 
 > **Note**: A negative return value indicates an output error (e.g., stream closed, disk full, I/O error).
 
-#### Practical Code Examples
+#### 7.2.8.3 Practical Code Examples
 
 **Example 1: Normal successful output**
 ```c
@@ -3279,7 +3279,7 @@ int result = printf("%10d\n", 5);
 // result = 11 (10 characters + 1 newline)
 ```
 
-#### Common Use Cases
+#### 7.2.8.4 Common Use Cases
 
 | Use Case | Example | Purpose |
 |----------|---------|---------|
