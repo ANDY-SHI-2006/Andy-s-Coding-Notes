@@ -2804,6 +2804,18 @@ scanf("%d", &a);             // Read input
 
 > **Tip**: Keep format strings simple; avoid embedding complex literal text.
 
+**Input Order:**
+```cpp
+scanf("x=%d, y=%d", &x, &y);  // Input must be: x=2, y=3
+// When typing, enter x first, then the value, then y and its value
+```
+
+| Format String | Example Input |
+|---------------|---------------|
+| `scanf("x=%d", &x)` | `x=2` |
+| `scanf("y=%d", &y)` | `y=3` |
+| `scanf("x=%d, y=%d", &x, &y)` | `x=2, y=3` |
+
 4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
 ### 6.2.7 Return Value of `scanf`
@@ -3982,9 +3994,9 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 **Important:** C++ has **no built-in operator** for exponentiation.
 
 > **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
-> ```cpp
-> int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
-> ```
+```cpp
+int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
+```
 
 | Method | Speed | Use Case |
 |--------|-------|----------|
