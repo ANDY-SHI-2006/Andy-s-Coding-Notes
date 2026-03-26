@@ -357,6 +357,8 @@ f = numerator / denominator;
 
 ### 2.3.3 Spacing in Expressions
 
+> **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for operator-specific spacing recommendations.
+
 | Style | Description | Example |
 |-------|-------------|---------|
 | **Spaces around all operators** | Some prefer spaces around every operator | `a * b + b / c * d` |
@@ -453,7 +455,7 @@ C++ distinguishes uppercase and lowercase letters.
 
 ### 2.4.2 Best Practices and Naming Conventions
 
-#### Common Naming Styles
+#### 2.4.2.1 Common Naming Styles
 
 | Style                            | Pattern            | Usage                              | Example                       |
 | -------------------------------- | ------------------ | ---------------------------------- | ----------------------------- |
@@ -463,7 +465,7 @@ C++ distinguishes uppercase and lowercase letters.
 | **ALL_CAPS**                     | `MY_CONSTANT`      | Constants, macros                  | `MAX_SIZE`, `PI`              |
 | **Hungarian notation**           | `iCount`, `pData`  | ❌ **Deprecated** in modern C++     | Not recommended               |
 
-#### Naming Conventions by Identifier Type
+#### 2.4.2.2 Naming Conventions by Identifier Type
 
 | Identifier Type | Convention | Example |
 |-----------------|------------|---------|
@@ -1551,6 +1553,8 @@ a = b;
 
 ## 4.12 Spacing and Style Guidelines
 
+> **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for general spacing guidelines.
+
 Spacing around operators is a **style issue**. Choose a style and use it consistently.
 
 | Style | Description | Example |
@@ -1614,30 +1618,6 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 | `float`       | 4 bytes    | ~7 digits     | ±3.4 × 10³⁸        |
 | `double`      | 8 bytes    | ~15 digits    | ±1.7 × 10³⁰⁸       |
 | `long double` | 8-16 bytes | ~18-21 digits | Platform dependent |
-
-### 5.1.4 Overflow and Underflow
-
-All numeric types have limited ranges. When computation results exceed these ranges, errors occur.
-
-**Integer Overflow:** Result exceeds the maximum value of the type.
-```cpp
-int max = 2147483647;    // Max value for 32-bit int
-int x = max + 1;         // Overflow! Result becomes negative
-```
-
-**Floating-Point Overflow:** Result is too large to store.
-```cpp
-float x = 2.5e30;
-float y = 1.0e30;
-float z = x * y;         // Should be 2.5e60, but exceeds float range
-```
-
-**Floating-Point Underflow:** Result is too small (too close to zero) to store.
-```cpp
-float x = 2.5e-30;
-float y = 1.0e30;
-float z = x / y;         // Should be 2.5e-60, but too small for float
-```
 
 ## 5.2 Boolean Type
 
@@ -1738,7 +1718,7 @@ char c = 'A';           // OK, single character
 
 char s1[] = "Hello";    // OK, string literal
 string s2 = "Hello";    // OK, C++ string
-// char e = "A";        // Error! Cannot assign string to char
+char e = "A";           // Error! Cannot assign string to char
 ```
 
 **Key Points**:
@@ -1753,8 +1733,8 @@ string s2 = "Hello";    // OK, C++ string
 
 ```cpp
 char c = 'A';       // OK
-// char d = 'AB';   // Error: too many characters
-// char e = "A";    // Error: double quotes are for strings
+char d = 'AB';   // Error: too many characters
+char e = "A";    // Error: double quotes are for strings
 ```
 
 ### 5.4.2 Character-Numeric Arithmetic
@@ -1818,11 +1798,11 @@ constexpr int d;        // ✗ Error! constexpr must be initialized
 
 **Comparison with regular variables:**
 
-| Variable Type | Initialization Required | Can Assign Later |
-|---------------|------------------------|------------------|
-| `int x;` | No | Yes |
-| `const int x;` | **Yes** | No |
-| `constexpr int x;` | **Yes** | No |
+| Variable Type      | Initialization Required | Can Assign Later |
+| ------------------ | ----------------------- | ---------------- |
+| `int x;`           | No                      | Yes              |
+| `const int x;`     | **Yes**                 | No               |
+| `constexpr int x;` | **Yes**                 | No               |
 
 ### 5.5.3 Redefinition Rules
 
