@@ -4069,7 +4069,7 @@ deg = rad * 180 / PI;
 
 > **Header:** `#include <cctype>` (C++) or `#include <ctype.h>` (C)
 
-### Character I/O
+### 9.2.1 Character I/O
 
 | Function | Description | Example |
 |----------|-------------|---------|
@@ -4086,7 +4086,7 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-### Character Classification & Conversion
+### 9.2.2 Character Classification & Conversion
 
 | Function | Returns non-zero (true) if... |
 |----------|-------------------------------|
@@ -4102,7 +4102,7 @@ putchar(65);      // Output: A (ASCII 65)
 | `ispunct(ch)` | ch is punctuation (not space, letter, or digit) |
 | `isxdigit(ch)` | ch is hexadecimal digit (0-9, A-F, a-f) |
 
-### Character Conversion
+### 9.2.3 Character Conversion
 
 | Function | Description |
 |----------|-------------|
