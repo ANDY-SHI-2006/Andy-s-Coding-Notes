@@ -3991,6 +3991,27 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
 | `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires `<cstdlib>` |
 
+**abs vs fabs:**
+
+| Function | Input Type | Return Type | Header |
+|----------|------------|-------------|--------|
+| `abs(x)` | `int` | `int` | `<cstdlib>` or `<stdlib.h>` |
+| `fabs(x)` | `double` | `double` | `<cmath>` or `<math.h>` |
+
+**Key Difference:**
+- `abs` is for **integers** only
+- `fabs` is for **floating-point** numbers
+
+```cpp
+#include <cstdlib>
+int a = abs(-5);      // Returns 5 (int)
+
+#include <cmath>
+double x = fabs(-5.5); // Returns 5.5 (double)
+```
+
+> **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
+
 **Important:** C++ has **no built-in operator** for exponentiation.
 
 > **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
@@ -4016,6 +4037,8 @@ double c = fabs(-5.5);    // c = 5.5
 ### 9.1.2 Trigonometric Functions
 
 > **Critical:** Arguments must be in **radians**, NOT degrees!
+>
+> **Argument Types:** Trig functions assume all arguments are `double` and return `double` values.
 
 | Function | Description |
 |----------|-------------|
