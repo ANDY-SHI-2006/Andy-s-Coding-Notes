@@ -4026,16 +4026,6 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | `a * a` | Fastest | Small fixed exponents: a², a³ |
 | `pow(a, b)` | Slower | Variable/fractional exponents |
 
-**Example:**
-```cpp
-#include <cmath>
-using namespace std;
-
-double a = sqrt(16.0);    // a = 4.0
-double b = pow(2.0, 3.0); // b = 8.0
-double c = fabs(-5.5);    // c = 5.5
-```
-
 ### 9.1.2 Trigonometric Functions
 
 > **Critical:** Arguments must be in **radians**, NOT degrees!
@@ -4052,6 +4042,10 @@ double c = fabs(-5.5);    // c = 5.5
 | `atan(x)` | Arctangent, returns [-π/2, π/2] |
 | `atan2(y, x)` | Arctangent of y/x, returns [-π, π] |
 
+> **Note:** `atan` always returns an angle in Quadrant I or IV (right half plane). `atan2` returns an angle that can be in **any quadrant**, depending on the signs of x and y.
+>
+> **Recommendation:** In many applications, `atan2(y, x)` is preferred over `atan(y/x)` because it handles all quadrants correctly and avoids division by zero when x = 0.
+
 **Degree-Radian Conversion:**
 ```cpp
 #define PI 3.141593
@@ -4061,19 +4055,6 @@ rad = deg * PI / 180;
 
 // Radians to degrees
 deg = rad * 180 / PI;
-```
-
-**Example:**
-```cpp
-#include <cmath>
-using namespace std;
-
-#define PI 3.141593
-
-// Compute sine of 30 degrees
-double theta = 30.0;
-double theta_rad = theta * PI / 180;
-double result = sin(theta_rad);  // result = 0.5
 ```
 
 ### 9.1.3 Hyperbolic Functions
