@@ -2774,88 +2774,36 @@ scanf("%d", &a);             // Read input
 
 **Common Pitfalls:**
 
-| Pitfall | Problem | Solution |
-|---------|---------|----------|
-| Missing `&` | `scanf("%d", a);` | Use `scanf("%d", &a);` |
-| Wrong float specifier | `scanf("%f", &d);` for `double` | Use `%lf` for `double` |
-| Buffer overflow | `scanf("%s", str);` with long input | Use `scanf("%99s", str);` with width |
-| `%c` reads whitespace | `scanf("%c", &c);` reads newline | Use `scanf(" %c", &c);` (space skips whitespace) |
-| `%s` stops at space | `"John Doe"` → only "John" read | Use `scanf("%[^\n]", str);` for whole line |
-| Format string mismatch | `scanf("a=%d", &a);` with input "10" | Input must match exactly: "a=10" |
+| Pitfall                | Problem                              | Solution                                         |
+| ---------------------- | ------------------------------------ | ------------------------------------------------ |
+| Missing `&`            | `scanf("%d", a);`                    | Use `scanf("%d", &a);`                           |
+| Wrong float specifier  | `scanf("%f", &d);` for `double`      | Use `%lf` for `double`                           |
+| Buffer overflow        | `scanf("%s", str);` with long input  | Use `scanf("%99s", str);` with width             |
+| `%c` reads whitespace  | `scanf("%c", &c);` reads newline     | Use `scanf(" %c", &c);` (space skips whitespace) |
+| `%s` stops at space    | `"John Doe"` → only "John" read      | Use `scanf("%[^\n]", str);` for whole line       |
+| Format string mismatch | `scanf("a=%d", &a);` with input "10" | Input must match exactly: "a=10"                 |
 
 **Important Notes:**
 
 1. **No Precision Control**: `scanf` does not support `%.2f` (only `printf` does)
 2. **Whitespace as Separator**: `%d%d` accepts "1 2", "1\t2", or "1\n2"
-3. **Non-format Characters Must Match**: Any non-format characters in the format string must be matched exactly in the input
+3. **Non-format Characters Must Match**: `scanf("(%d)", &x)` requires input "(42)", not just "42"
 
-   `scanf` treats non-whitespace characters in the format string as **literal characters that must be matched exactly**. This is a common source of confusion.
+   Non-format characters in the format string (like parentheses, commas, etc.) must be **matched exactly** in the input.
 
-   **How it works:**
-   - Format specifiers (like `%d`, `%f`, `%s`) are placeholders for data
-   - All other characters (parentheses, commas, colons, etc.) are **literal match requirements**
-   - Input must contain these exact characters in the exact positions
-
-   **Example 1: Parentheses**
    ```cpp
-   int x;
-   scanf("(%d)", &x);  // Format: (number)
-   ```
-   | Input | Result | Explanation |
-   |-------|--------|-------------|
-   | `(42)` | ✓ Success, x = 42 | Input matches format exactly |
-   | `42` | ✗ Failure | Missing opening parenthesis |
-   | `(42` | ✗ Failure | Missing closing parenthesis |
-   | `42)` | ✗ Failure | Missing opening parenthesis |
-
-   **Example 2: Mixed literal text and format specifiers**
-   ```cpp
-   int a, b;
-   scanf("a=%d,b=%d", &a, &b);  // Format: a=number,b=number
-   ```
-   | Input | Result | Explanation |
-   |-------|--------|-------------|
-   | `a=10,b=20` | ✓ Success, a=10, b=20 | Exact match |
-   | `10 20` | ✗ Failure | Missing "a=", ",b=" literals |
-   | `10,20` | ✗ Failure | Missing "a=" and ",b=" |
-   | `a = 10, b = 20` | ✗ Failure | Spaces not allowed (unless in format) |
-
-   **Example 3: Spaces in format string**
-   ```cpp
-   int a, b;
-   scanf("%d %d", &a, &b);  // Space matches any amount of whitespace
-   ```
-   | Input | Result | Explanation |
-   |-------|--------|-------------|
-   | `10 20` | ✓ Success | Single space matches single space |
-   | `10    20` | ✓ Success | Space in format matches any whitespace amount |
-   | `10\t20` | ✓ Success | Tab is also whitespace |
-   | `10\n20` | ✓ Success | Newline is also whitespace |
-
-   **Practical Implications:**
-
-   **✅ Good Practice: Use simple format strings**
-   ```cpp
-   int x, y;
-   scanf("%d %d", &x, &y);  // Just read two numbers, flexible spacing
+   scanf("(%d)", &x);           // Input must include parentheses: (42)
+   scanf("a=%d,b=%d", &a, &b);  // Input must be exactly: a=10,b=20
+   scanf("%d %d", &a, &b);      // Space matches any whitespace (space, tab, newline)
    ```
 
-   **⚠️ Caution: Complex format strings require exact input**
-   ```cpp
-   // This forces users to type in a very specific format
-   scanf("(%d,%d)", &x, &y);  // User MUST type: (10,20)
-   // If user types: 10,20 or (10, 20) or 10 20 → all fail!
-   ```
+| Format String | Matching Input | Non-matching Input |
+|---------------|----------------|--------------------|
+| `scanf("(%d)", &x)` | `(42)` | `42`, `(42`, `42)` |
+| `scanf("%d %d", &a, &b)` | `10 20`, `10\t20` | - |
 
-   **🔧 Better approach: Prompt separately**
-   ```cpp
-   printf("Enter x: ");
-   scanf("%d", &x);  // Read just the number
-   printf("Enter y: ");
-   scanf("%d", &y);  // Read just the number
-   ```
+> **Tip**: Keep format strings simple; avoid embedding complex literal text.
 
-   > **Key Takeaway:** Keep `scanf` format strings simple. Don't embed complex literal text unless you have strict control over the input format.
 4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
 ### 6.2.7 Return Value of `scanf`
