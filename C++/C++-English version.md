@@ -2350,6 +2350,86 @@ v.push_back(4);                   // Add element
 int val = v.at(10);               // Throws exception if out of bounds
 ```
 
+### 5.8.7 Arrays and Input
+
+> **See also:** [6.2.4 Arrays and `scanf`](#624-arrays-and-scanf) for C-style input details.
+
+When reading array data from input, the approach differs between C and C++ styles.
+
+#### 5.8.7.1 Core Principle
+
+In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
+
+| Variable Type | Address Syntax | Example |
+|---------------|----------------|---------|
+| Regular variable | `&variable` | `scanf("%d", &age);` |
+| Array (entire array) | Array name only | `scanf("%s", name);` |
+| Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
+
+#### 5.8.7.2 Character Arrays (Strings)
+
+```cpp
+char name[50];
+scanf("%s", name);  // Correct: name itself is the address
+```
+
+**Common Error:** Adding `&` to array name
+
+```cpp
+char name[50];
+scanf("%s", &name);     // ❌ Wrong: &name is a "pointer to array", type mismatch
+scanf("%s", name);      // ✅ Correct: name is the address of first element
+```
+
+**Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
+
+#### 5.8.7.3 Numeric Arrays
+
+For numeric arrays, you typically need to read elements one by one:
+
+```cpp
+int numbers[5];
+
+// To fill the entire array, use a loop:
+for (int i = 0; i < 5; i++) {
+    scanf("%d", &numbers[i]);  // & required for individual elements
+}
+```
+
+#### 5.8.7.4 Safety Considerations
+
+**Buffer Overflow Protection:**
+
+`scanf` does not check array boundaries. Always specify maximum width for strings:
+
+```cpp
+char name[50];
+scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
+```
+
+| Array Size | Safe Format Specifier | Explanation |
+|------------|----------------------|-------------|
+| `char[50]` | `%49s` | 49 chars + 1 null terminator |
+| `char[100]` | `%99s` | 99 chars + 1 null terminator |
+
+#### 5.8.7.5 C++ Style Input
+
+In modern C++, prefer using `std::cin` with `std::vector`:
+
+```cpp
+#include <iostream>
+#include <vector>
+
+std::vector<int> numbers(5);
+for (int i = 0; i < 5; i++) {
+    std::cin >> numbers[i];  // Safer and type-safe
+}
+
+// Or use std::getline for strings
+std::string name;
+std::getline(std::cin, name);  // Reads entire line including spaces
+```
+
 ## 5.9 Structure
 
 Structure stores a collection of heterogeneous data (different types) describing a common entity.
@@ -2578,76 +2658,9 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 ### 6.2.4 Arrays and `scanf`
 
-#### 6.2.4.1 Core Principle
+> **Moved:** This content has been moved to [5.8.7 Arrays and Input](#587-arrays-and-input) for better organization. Please refer to that section for detailed information about using arrays with input operations.
 
-In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). Since `scanf` requires the **address** of variables, you can pass the array name directly **without** the `&` operator.
-
-| Variable Type | Address Syntax | Example |
-|---------------|----------------|---------|
-| Regular variable | `&variable` | `scanf("%d", &age);` |
-| Array (entire array) | Array name only | `scanf("%s", name);` |
-| Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
-
-#### 6.2.4.2 Character Arrays (Strings)
-
-```c
-char name[50];
-scanf("%s", name);  // Correct: name itself is the address
-```
-
-**Common Error:** Adding `&` to array name
-
-```c
-char name[50];
-scanf("%s", &name);     // ❌ Wrong: &name is a "pointer to array", type mismatch
-scanf("%s", name);      // ✅ Correct: name is the address of first element
-```
-
-**Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
-
-#### 6.2.4.3 Numeric Arrays
-
-For numeric arrays, you typically need to read elements one by one:
-
-```c
-int numbers[5];
-
-// Read first element - array name is the address
-// Note: This only reads ONE integer into numbers[0]
-scanf("%d", numbers);        // Equivalent to &numbers[0]
-
-// To fill the entire array, use a loop:
-for (int i = 0; i < 5; i++) {
-    scanf("%d", &numbers[i]);  // & required for individual elements
-}
-```
-
-#### 6.2.4.4 Safety Considerations
-
-**Buffer Overflow Protection:**
-
-`scanf` does not check array boundaries. Always specify maximum width for strings:
-
-```c
-char name[50];
-scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
-```
-
-| Array Size | Safe Format Specifier | Explanation |
-|------------|----------------------|-------------|
-| `char[50]` | `%49s` | 49 chars + 1 null terminator |
-| `char[100]` | `%99s` | 99 chars + 1 null terminator |
-
-**Reading Lines with Spaces:**
-
-`%s` stops at whitespace. To read entire lines including spaces:
-
-```c
-char line[100];
-scanf("%[^\n]", line);  // Read until newline (but not including it)
-```
-
-#### 6.2.4.5 Summary Table
+**Quick Reference:**
 
 | Data Type | `scanf` Usage | `&` Required? | Example |
 |-----------|---------------|---------------|---------|
@@ -2658,7 +2671,7 @@ scanf("%[^\n]", line);  // Read until newline (but not including it)
 | Array element | specifier | Yes | `scanf("%d", &arr[i]);` |
 | Array (first element) | specifier | **No** | `scanf("%d", arr);` |
 
-**Key Takeaway:** Array names are addresses. Use them directly with `scanf`, but always protect against buffer overflow by specifying width limits.
+> **Key Takeaway:** Array names are addresses. Use them directly with `scanf`, but always protect against buffer overflow by specifying width limits.
 
 ### 6.2.5 Format Examples
 
