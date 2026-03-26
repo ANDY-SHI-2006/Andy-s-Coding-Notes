@@ -3957,26 +3957,26 @@ for (int i = 0; i < 5; i++) {
 >
 > **Note:** In C++, `<cmath>` places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
-### 9.1.1 Elementary Math Functions
+**Argument Types:** Math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
 
-> **Argument Types:** Math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
->
-> ```cpp
-> int x = 9;
-> double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
-> int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
-> ```
+```cpp
+int x = 9;
+double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
+int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
+```
+
+### 9.1.3 Elementary Math Functions
 
 | Function | Description | Notes |
 |----------|-------------|-------|
-| `fabs(x)` | Absolute value | Returns `double` |
-| `sqrt(x)` | Square root | Requires `x >= 0` |
-| `pow(x, y)` | Power (x^y) | Errors if `x=0, y<=0` or `x<0, y` not integer |
-| `ceil(x)` | Round up | `ceil(2.01) = 3` |
-| `floor(x)` | Round down | `floor(2.01) = 2` |
-| `exp(x)` | e^x | e ≈ 2.718282 |
-| `log(x)` | Natural log (ln) | Requires `x > 0` |
-| `log10(x)` | Common log (log₁₀) | Requires `x > 0` |
+| `fabs(x)` | Computes the absolute value of x | Returns `double` |
+| `sqrt(x)` | Computes the square root of x | Requires `x >= 0` |
+| `pow(x, y)` | Computes x raised to the power y (x^y) | **Domain Errors:** <br>• `x = 0` and `y <= 0` (undefined: 0^(-1)) <br>• `x < 0` and `y` is not an integer (e.g., (-2)^1.5 is not real) |
+| `ceil(x)` | Rounds x up to the nearest integer (toward +infinity) | `ceil(2.01) = 3`, `ceil(-2.01) = -2` |
+| `floor(x)` | Rounds x down to the nearest integer (toward -infinity) | `floor(2.01) = 2`, `floor(-2.01) = -3` |
+| `exp(x)` | Computes e^x | e ≈ 2.718282 |
+| `log(x)` | Computes the natural logarithm of x (ln x) | Requires `x > 0` |
+| `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
 
 **Example:**
 ```cpp
