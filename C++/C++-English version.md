@@ -3951,6 +3951,76 @@ for (int i = 0; i < 5; i++) {
 
 # 9 Functions
 
+## 9.1 Mathematical Functions
+
+> **Header:** `#include <math.h>`
+
+### 9.1.1 Elementary Math Functions
+
+| Function | Description | Notes |
+|----------|-------------|-------|
+| `fabs(x)` | Absolute value | Returns `double` |
+| `sqrt(x)` | Square root | Requires `x >= 0` |
+| `pow(x, y)` | Power (x^y) | Errors if `x=0, y<=0` or `x<0, y` not integer |
+| `ceil(x)` | Round up | `ceil(2.01) = 3` |
+| `floor(x)` | Round down | `floor(2.01) = 2` |
+| `exp(x)` | e^x | e ≈ 2.718282 |
+| `log(x)` | Natural log (ln) | Requires `x > 0` |
+| `log10(x)` | Common log (log₁₀) | Requires `x > 0` |
+
+**Example:**
+```cpp
+#include <math.h>
+
+double a = sqrt(16.0);    // a = 4.0
+double b = pow(2.0, 3.0); // b = 8.0
+double c = fabs(-5.5);    // c = 5.5
+```
+
+### 9.1.2 Trigonometric Functions
+
+> **Critical:** Arguments must be in **radians**, NOT degrees!
+
+| Function | Description |
+|----------|-------------|
+| `sin(x)` | Sine of x |
+| `cos(x)` | Cosine of x |
+| `tan(x)` | Tangent of x |
+| `asin(x)` | Arcsine, returns [-π/2, π/2] |
+| `acos(x)` | Arccosine, returns [0, π] |
+| `atan(x)` | Arctangent, returns [-π/2, π/2] |
+| `atan2(y, x)` | Arctangent of y/x, returns [-π, π] |
+
+**Degree-Radian Conversion:**
+```cpp
+#define PI 3.141593
+
+// Degrees to radians
+rad = deg * PI / 180;
+
+// Radians to degrees
+deg = rad * 180 / PI;
+```
+
+**Example:**
+```cpp
+#include <math.h>
+
+#define PI 3.141593
+
+// Compute sine of 30 degrees
+double theta = 30.0;
+double theta_rad = theta * PI / 180;
+double result = sin(theta_rad);  // result = 0.5
+```
+
+### 9.1.3 Hyperbolic Functions
+
+| Function | Description | Formula |
+|----------|-------------|---------|
+| `sinh(x)` | Hyperbolic sine | (e^x - e^(-x)) / 2 |
+| `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
+| `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
 ---
 
