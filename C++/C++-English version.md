@@ -3977,7 +3977,7 @@ double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
 int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 ```
 
-### 9.1.3 Elementary Math Functions
+### 9.1.1 Elementary Math Functions
 
 | Function | Description | Notes |
 |----------|-------------|-------|
@@ -3991,7 +3991,7 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
 | `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires `<cstdlib>` |
 
-### abs vs fabs
+#### 9.1.1.1 abs vs fabs
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
@@ -4012,7 +4012,7 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-### Power (Exponentiation)
+#### 9.1.1.2 Power (Exponentiation)
 
 > **Important:** C++ has **no built-in operator** for exponentiation.
 
@@ -4065,11 +4065,11 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
-### 9.1.4 Character Functions
+## 9.2 Character Functions
 
 > **Header:** `#include <cctype>` (C++) or `#include <ctype.h>` (C)
 
-#### Character I/O
+### Character I/O
 
 | Function | Description | Example |
 |----------|-------------|---------|
@@ -4086,7 +4086,7 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-#### Character Classification & Conversion
+### Character Classification & Conversion
 
 | Function | Returns non-zero (true) if... |
 |----------|-------------------------------|
@@ -4102,7 +4102,7 @@ putchar(65);      // Output: A (ASCII 65)
 | `ispunct(ch)` | ch is punctuation (not space, letter, or digit) |
 | `isxdigit(ch)` | ch is hexadecimal digit (0-9, A-F, a-f) |
 
-#### Character Conversion
+### Character Conversion
 
 | Function | Description |
 |----------|-------------|
