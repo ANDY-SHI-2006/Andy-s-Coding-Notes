@@ -3991,7 +3991,7 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
 | `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires `<cstdlib>` |
 
-**abs vs fabs:**
+### abs vs fabs
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
@@ -4012,7 +4012,9 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-**Important:** C++ has **no built-in operator** for exponentiation.
+### Power (Exponentiation)
+
+> **Important:** C++ has **no built-in operator** for exponentiation.
 
 > **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
 ```cpp
