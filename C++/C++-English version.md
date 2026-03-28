@@ -3717,6 +3717,27 @@ if (x > 0) {              // executed when condition is true
 - A compound statement can contain any number of statements (0, 1, or many)
 - Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
 
+#### Empty Statement
+
+An **empty statement** consists of just a semicolon `;` with no expression:
+
+```cpp
+;   // This is a valid empty statement
+```
+
+**Important:** The semicolon **cannot** be omitted — without it, the compiler will report an error:
+
+```cpp
+// Example: empty statement in if
+if (x < 0)
+    ;    // Empty statement — does nothing when x < 0
+// ^ Semicolon REQUIRED here!
+
+// Without semicolon: ERROR
+if (x < 0)
+    // Error: expected statement before next line
+```
+
 > **See also:** [2.3.4 Brace Styles](#234-brace-styles) for code formatting conventions on brace placement.
 
 #### 8.2.2 The if Statement
