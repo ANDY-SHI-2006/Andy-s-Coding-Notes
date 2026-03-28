@@ -3836,7 +3836,7 @@ int sign = (x > 0) ? 1 : (x < 0) ? -1 : 0;
 
 The `switch` statement selects one of many code blocks to execute.
 
-### How switch Works (The Essence)
+### The Switch Mechanism
 
 When a matching `case` is found, execution **jumps to that case** and continues **line by line** through subsequent statements, **ignoring other case labels**, until a `break` is encountered or the switch block ends.
 
