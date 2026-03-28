@@ -3638,6 +3638,37 @@ if ((a < b && c < d) || e < f) { }
 
 This section covers various forms of if statements and related constructs for conditional execution.
 
+### Compound Statements (Blocks)
+
+When using control statements like `if`, `while`, `for`, etc., if you need to execute **multiple statements** (not just one), you must wrap them in **curly braces `{}`** to form a **compound statement** (also called a **block**).
+
+**Single statement** (no braces needed):
+```cpp
+if (x > 0)
+    cout << "positive";  // only one statement
+```
+
+**Multiple statements** (requires braces to form a compound statement):
+```cpp
+if (x > 0) {              // executed when condition is true
+    cout << "positive";   // statement 1
+    x = 0;                // statement 2
+    count++;              // statement 3
+}                         // compound statement ends
+```
+
+**Key Points:**
+
+| Term | Meaning |
+|------|---------|
+| **compound statement** | A group of statements treated as a single unit |
+| **block** | Another name for compound statement |
+| **braces** | Refers to curly brackets `{}` |
+
+- In C++, anywhere that requires "one statement" can be replaced with a compound statement wrapped in `{}`
+- A compound statement can contain any number of statements (0, 1, or many)
+- Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
+
 #### 8.2.1 The if Statement
 
 ```cpp
@@ -3839,8 +3870,6 @@ if (count) { }         // Equivalent to: if (count != 0)
 ```
 
 ## 8.5 Loop Structures
-
-Loops allow code to be executed repeatedly.
 
 ### 8.5.1 The while Loop
 
