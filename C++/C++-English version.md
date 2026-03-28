@@ -472,11 +472,11 @@ if (condition){
 
 **Comparison:**
 
-| Aspect | Style 1 (Allman) | Style 2 (K&R) |
-|--------|------------------|---------------|
+| Aspect             | Style 1 (Allman)                                         | Style 2 (K&R)                             |
+| ------------------ | -------------------------------------------------------- | ----------------------------------------- |
 | **Visual clarity** | Braces align vertically, easier to spot block boundaries | More compact, common in many C++ projects |
-| **Line count** | Uses more vertical space | More compact vertically |
-| **Popularity** | Common in Microsoft/C# style | Common in C/C++ community (K&R tradition) |
+| **Line count**     | Uses more vertical space                                 | More compact vertically                   |
+| **Popularity**     | Common in Microsoft/C# style                             | Common in C/C++ community (K&R tradition) |
 
 > **See also:** [8.2.1 Compound Statements (Blocks)](#821-compound-statements-blocks) for the concept of blocks and their usage in control statements.
 
@@ -3687,6 +3687,13 @@ When using control statements like `if`, `while`, `for`, etc., if you need to ex
 if (x > 0)
     cout << "positive";  // only one statement
 ```
+
+> **⚠️ Warning:** Without `{}`, `if` only controls the **immediately following statement**. Indentation does not affect execution:
+> ```cpp
+> if (x > 0)
+>     cout << "A";    // Only this line belongs to if
+>     cout << "B";    // This ALWAYS executes (indentation ignored by compiler!)
+> ```
 
 **Multiple statements** (requires braces to form a compound statement):
 ```cpp
