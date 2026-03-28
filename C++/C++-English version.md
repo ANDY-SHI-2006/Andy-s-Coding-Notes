@@ -3591,26 +3591,13 @@ if ((a < b && c < d) || e < f) { }
 
 ### 8.2.1 The if Statement
 
-The simplest form of selection:
-
 ```cpp
 if (condition) {
     // statements executed only if condition is true
 }
 ```
 
-**Example:**
-
-```cpp
-int score = 85;
-if (score >= 60) {
-    cout << "Passed!" << endl;
-}
-```
-
 ### 8.2.2 The if-else Statement
-
-Provides two alternative execution paths:
 
 ```cpp
 if (condition) {
@@ -3620,20 +3607,7 @@ if (condition) {
 }
 ```
 
-**Example:**
-
-```cpp
-int score = 55;
-if (score >= 60) {
-    cout << "Passed!" << endl;
-} else {
-    cout << "Failed!" << endl;
-}
-```
-
 ### 8.2.3 The if-else-if Ladder
-
-For multiple mutually exclusive conditions:
 
 ```cpp
 if (condition1) {
@@ -3644,23 +3618,6 @@ if (condition1) {
     // statements for condition3
 } else {
     // statements if none of the above
-}
-```
-
-**Example:**
-
-```cpp
-int score = 85;
-if (score >= 90) {
-    cout << "Grade: A" << endl;
-} else if (score >= 80) {
-    cout << "Grade: B" << endl;
-} else if (score >= 70) {
-    cout << "Grade: C" << endl;
-} else if (score >= 60) {
-    cout << "Grade: D" << endl;
-} else {
-    cout << "Grade: F" << endl;
 }
 ```
 
@@ -3698,6 +3655,8 @@ if (a > 0) {
 ```
 
 **Best Practice:** Always use braces `{}` with if statements, even for single statements, to prevent errors and improve readability.
+
+> **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
 ### 8.2.5 The Conditional (Ternary) Operator
 
@@ -3802,6 +3761,37 @@ switch (day) {
 | Integer or character values | Floating-point values |
 | Many discrete values | Ranges of values |
 | Equality checks only | Relational comparisons |
+
+### 8.2.7 Using Values as Conditions
+
+In C++, a single value can be used directly as a condition without relational operators:
+
+```cpp
+int a = 5;
+if (a) {
+    count++;  // Executed because a is nonzero
+}
+```
+
+**Truth Value Rules:**
+
+| Value | Interpreted As | Example |
+|-------|---------------|---------|
+| Zero (`0`, `0.0`, `\0`) | `false` | `if (0)` → condition is false |
+| Nonzero (any non-zero value) | `true` | `if (5)` → condition is true |
+
+**Common Use Cases:**
+
+```cpp
+// Check if pointer is not null
+if (ptr) { }           // Equivalent to: if (ptr != nullptr)
+
+// Check if character is not null terminator
+if (ch) { }            // Equivalent to: if (ch != '\0')
+
+// Check if integer is nonzero
+if (count) { }         // Equivalent to: if (count != 0)
+```
 
 ## 8.3 Loop Structures
 
