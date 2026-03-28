@@ -357,7 +357,11 @@ f = numerator / denominator;
 
 ### 2.3.3 Spacing in Expressions
 
-> **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for operator-specific spacing recommendations.
+> **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for operator-specific spacing recommendations and [4.6 Operator Precedence](#46-operator-precedence) for the order of operations in expressions.
+
+#### 2.3.3.1 Basic Spacing Styles
+
+There are two common approaches to spacing around operators:
 
 | Style | Description | Example |
 |-------|-------------|---------|
@@ -367,18 +371,16 @@ f = numerator / denominator;
 **Recommendation:** Put spaces only around binary `+` and `-` because they are evaluated last, making the expression structure clearer.
 
 ```cpp
-// Preferred style
-int result = a*b + b/c*d;  // Clearer structure
+// Preferred style - highlights the expression structure
+int result = a*b + b/c*d;  // Clearer: products are grouped, then added
 
-// Alternative style (also valid)
-int result = a * b + b / c * d;  // More spaces, but consistent
+// Alternative style (also valid) - more spaces but consistent
+int result = a * b + b / c * d;
 ```
 
-> **See also:** [4.6 Operator Precedence](#46-operator-precedence) for the order of operations in expressions.
+#### 2.3.3.2 Spacing Rules for Multi-Character Operators
 
-**Important Spacing Rule:**
-
-Blank spaces can be used on either side of a relational operator, but blanks cannot be used to separate a two-character operator.
+**Important Rule:** Blank spaces can be used on either side of an operator, but blanks **cannot** be used to separate a multi-character operator.
 
 | Valid | Invalid | Reason |
 |-------|---------|--------|
@@ -388,13 +390,54 @@ Blank spaces can be used on either side of a relational operator, but blanks can
 | `a != b` | `a ! = b` | `!=` is a single operator, cannot be split |
 
 ```cpp
-// Correct spacing
-if (a == b) { }      // Valid: spaces around ==
-if (x <= 10) { }     // Valid: spaces around <=
+// Correct spacing - multi-character operators are intact
+if (a == b) { }      // Valid: == is together
+if (x <= 10) { }     // Valid: <= is together
 
-// Incorrect spacing
+// Incorrect spacing - splitting operators causes errors
 if (a = = b) { }     // ❌ Error: = = is two separate operators
 if (x < = 10) { }    // ❌ Error: < = is two separate operators
+```
+
+#### 2.3.3.3 Spacing with Relational and Logical Operators
+
+When combining relational and logical operators, use these spacing conventions for better readability:
+
+**No spaces around relational operators (`<`, `>`, `<=`, `>=`):**
+```cpp
+// Preferred - relational operators bind tightly to operands
+a<b && b<c
+
+// Not preferred
+a < b && b < c
+```
+
+**Spaces around logical operators (`&&`, `||`):**
+```cpp
+// Preferred - logical operators connect conditions clearly
+a<b && b<c
+
+// Not preferred - harder to read
+a<b&&b<c
+```
+
+**Rationale:**
+- Relational operators (`<`, `>`, `<=`, `>=`) bind tightly to their operands, reflecting that comparisons happen first
+- Logical operators (`&&`, `||`) connect separate conditions, so spacing makes the logical structure clearer
+- This convention makes expressions like `a<b && b<c` read naturally as "a is less than b, AND b is less than c"
+
+**Complete Example:**
+```cpp
+// Good readability - relational comparisons grouped, logical structure clear
+if (score>=60 && score<80) {
+    cout << "Grade: B" << endl;
+}
+// Reads as: "score is greater than or equal to 60, AND score is less than 80"
+
+// Alternative with more spaces (also acceptable)
+if (score >= 60 && score < 80) {
+    cout << "Grade: B" << endl;
+}
 ```
 
 ## 2.4 Identifier Naming
@@ -3409,9 +3452,9 @@ int result = printf("%10d\n", 5);
 
 ---
 
-# 8 Control Flow
+# 8 Conditional Execution
 
-## 8.1 Conditional Expressions
+## 8.1 Relational & Logical Operators
 
 ### 8.1.1 Relational Operators
 
@@ -3566,6 +3609,10 @@ if (isWeekend || isHoliday) {
 | `&&`                                 | Logical AND | True if both operands are true       | `true && false` → `false`                                |
 | ![[Pasted image 20260328141639.png]] | Logical OR  | True if at least one operand is true | true ![[Pasted image 20260328141649.png]] false → `true` |
 
+> **Key Points:**
+> - Logical operators can also be used within conditions.
+> - Logical operators compare conditions, not expressions.
+
 ### 8.1.3 Operator Precedence
 
 | Precedence | Operators                                        |
@@ -3587,9 +3634,11 @@ if (a < b && c < d || e < f) { }
 if ((a < b && c < d) || e < f) { }
 ```
 
-## 8.2 Selection Statements
+## 8.2 The if Statement Family
 
-### 8.2.1 The if Statement
+This section covers various forms of if statements and related constructs for conditional execution.
+
+#### 8.2.1 The if Statement
 
 ```cpp
 if (condition) {
@@ -3597,7 +3646,7 @@ if (condition) {
 }
 ```
 
-### 8.2.2 The if-else Statement
+#### 8.2.2 The if-else Statement
 
 ```cpp
 if (condition) {
@@ -3607,7 +3656,7 @@ if (condition) {
 }
 ```
 
-### 8.2.3 The if-else-if Ladder
+#### 8.2.3 The if-else-if Ladder
 
 ```cpp
 if (condition1) {
@@ -3621,7 +3670,7 @@ if (condition1) {
 }
 ```
 
-### 8.2.4 Nested if Statements
+#### 8.2.4 Nested if Statements
 
 if statements can be nested inside other if statements:
 
@@ -3658,7 +3707,7 @@ if (a > 0) {
 
 > **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
-### 8.2.5 The Conditional (Ternary) Operator
+#### 8.2.5 The Conditional (Ternary) Operator
 
 A compact form for simple if-else. See also [4.8 Ternary Conditional Operator](#48-ternary-conditional-operator) for detailed syntax and precedence.
 
@@ -3681,7 +3730,7 @@ cout << (score >= 60 ? "Passed" : "Failed") << endl;
 int sign = (x > 0) ? 1 : (x < 0) ? -1 : 0;
 ```
 
-### 8.2.6 The switch Statement
+## 8.3 The switch Statement
 
 The `switch` statement selects one of many code blocks to execute:
 
@@ -3698,38 +3747,14 @@ switch (expression) {
 }
 ```
 
-**Key Rules:**
+#### 8.3.1 Syntax Rules
 
 - The `expression` must be an integral type (`int`, `char`, `enum`, etc.)
 - `case` labels must be compile-time constants
 - `break` is required to exit the switch (otherwise fall-through occurs)
 - `default` case is optional but recommended
 
-**Example:**
-
-```cpp
-char grade = 'B';
-
-switch (grade) {
-    case 'A':
-        cout << "Excellent!" << endl;
-        break;
-    case 'B':
-        cout << "Good job!" << endl;
-        break;
-    case 'C':
-        cout << "Passed" << endl;
-        break;
-    case 'D':
-    case 'F':
-        cout << "Failed" << endl;
-        break;
-    default:
-        cout << "Invalid grade" << endl;
-}
-```
-
-**Fall-Through Behavior:**
+#### 8.3.2 Fall-Through Behavior
 
 Without `break`, execution continues to the next case:
 
@@ -3753,7 +3778,27 @@ switch (day) {
 // Output: Weekday
 ```
 
-**When to use switch vs if-else:**
+#### 8.3.3 Intentional Fall-Through
+
+Sometimes you may intentionally omit `break` to let multiple `case` labels share the same code block:
+
+```cpp
+switch (grade) {
+    case 'A':
+    case 'B':
+    case 'C':
+        cout << "Passed!" << endl;  // A, B, C all share this output
+        break;
+    case 'D':
+    case 'F':
+        cout << "Failed!" << endl;  // D, F share this output
+        break;
+}
+```
+
+> **Note:** This "fall-through" behavior is sometimes intentionally designed, but in most cases, it's a bug caused by forgetting to write `break`.
+
+#### 8.3.4 switch vs if-else
 
 | Use `switch` | Use `if-else` |
 |--------------|---------------|
@@ -3762,7 +3807,7 @@ switch (day) {
 | Many discrete values | Ranges of values |
 | Equality checks only | Relational comparisons |
 
-### 8.2.7 Using Values as Conditions
+## 8.4 Using Values as Conditions
 
 In C++, a single value can be used directly as a condition without relational operators:
 
@@ -3793,11 +3838,11 @@ if (ch) { }            // Equivalent to: if (ch != '\0')
 if (count) { }         // Equivalent to: if (count != 0)
 ```
 
-## 8.3 Loop Structures
+## 8.5 Loop Structures
 
 Loops allow code to be executed repeatedly.
 
-### 8.3.1 The while Loop
+### 8.5.1 The while Loop
 
 Tests condition before each iteration:
 
@@ -3825,7 +3870,7 @@ while (count < 5) {
 - Loop variable must be initialized before the loop
 - Loop variable must be updated inside the loop
 
-### 8.3.2 The do-while Loop
+### 8.5.2 The do-while Loop
 
 Tests condition after each iteration (guarantees at least one execution):
 
@@ -3854,7 +3899,7 @@ do {
 | Minimum executions | 0 | 1 |
 | Use case | When iteration might not be needed | When at least one iteration is required |
 
-### 8.3.3 The for Loop
+### 8.5.3 The for Loop
 
 Compact loop with initialization, condition, and update in one line:
 
@@ -3924,7 +3969,7 @@ for (const int& n : nums) {
 }
 ```
 
-### 8.3.4 Nested Loops
+### 8.5.4 Nested Loops
 
 Loops can be nested inside other loops:
 
@@ -3948,9 +3993,9 @@ for (int i = 1; i <= 5; i++) {
 5       10      15      20      25
 ```
 
-## 8.4 Jump Statements
+## 8.6 Jump Statements
 
-### 8.4.1 The break Statement
+### 8.6.1 The break Statement
 
 `break` immediately exits the nearest enclosing loop or switch:
 
@@ -3977,7 +4022,7 @@ switch (choice) {
 }
 ```
 
-### 8.4.2 The continue Statement
+### 8.6.2 The continue Statement
 
 `continue` skips the rest of the current iteration and proceeds to the next:
 
@@ -3999,7 +4044,7 @@ for (int i = 0; i < 10; i++) {
 | `break` | Exit the loop/switch immediately |
 | `continue` | Skip to next iteration of the loop |
 
-## 8.5 Loop Comparison and Selection
+## 8.7 Loop Comparison and Selection
 
 | Loop Type | Best For | Key Characteristic |
 |-----------|----------|-------------------|
@@ -4008,9 +4053,9 @@ for (int i = 0; i < 10; i++) {
 | `for` | Known number of iterations, counting | Compact syntax with counter |
 | Range-for | Iterating over collections | Cleanest for containers |
 
-## 8.6 Debugging Tips for Control Flow
+## 8.8 Debugging Tips for Control Flow
 
-### 8.6.1 Infinite Loops
+### 8.8.1 Infinite Loops
 
 Common causes and solutions:
 
@@ -4030,7 +4075,7 @@ for (int i = 10; i >= 0; i++) {  // i++ instead of i--
 // SOLUTION: Always verify loop termination condition
 ```
 
-### 8.6.2 Off-by-One Errors
+### 8.8.2 Off-by-One Errors
 
 ```cpp
 // Wrong: prints 0-10 (11 numbers)
@@ -4040,7 +4085,7 @@ for (int i = 0; i <= 10; i++) { }
 for (int i = 0; i < 10; i++) { }
 ```
 
-### 8.6.3 Debugging Techniques
+### 8.8.3 Debugging Techniques
 
 1. **Trace with cout:** Add output statements to track variable values
 
