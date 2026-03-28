@@ -376,6 +376,27 @@ int result = a * b + b / c * d;  // More spaces, but consistent
 
 > **See also:** [4.6 Operator Precedence](#46-operator-precedence) for the order of operations in expressions.
 
+**Important Spacing Rule:**
+
+Blank spaces can be used on either side of a relational operator, but blanks cannot be used to separate a two-character operator.
+
+| Valid | Invalid | Reason |
+|-------|---------|--------|
+| `a == b` | `a = = b` | `==` is a single operator, cannot be split |
+| `x <= 10` | `x < = 10` | `<=` is a single operator, cannot be split |
+| `y >= 0` | `y > = 0` | `>=` is a single operator, cannot be split |
+| `a != b` | `a ! = b` | `!=` is a single operator, cannot be split |
+
+```cpp
+// Correct spacing
+if (a == b) { }      // Valid: spaces around ==
+if (x <= 10) { }     // Valid: spaces around <=
+
+// Incorrect spacing
+if (a = = b) { }     // ❌ Error: = = is two separate operators
+if (x < = 10) { }    // ❌ Error: < = is two separate operators
+```
+
 ## 2.4 Identifier Naming
 
 ### 2.4.1 Mandatory Rules (Must Follow)
@@ -3390,24 +3411,57 @@ int result = printf("%10d\n", 5);
 
 # 8 Control Flow
 
-Control flow statements determine the order in which statements are executed in a program. This chapter covers conditional expressions, selection statements, loop structures, and jump statements.
-
 ## 8.1 Conditional Expressions
-
-Conditional expressions evaluate to boolean values (`true` or `false`) and are used to make decisions in programs.
 
 ### 8.1.1 Relational Operators
 
-Relational operators compare two values and return a boolean result.
+#### 8.1.1.1 Less Than (`<`)
 
-| Operator | Meaning | Example | Result |
-|----------|---------|---------|--------|
-| `<` | Less than | `5 < 10` | `true` |
-| `<=` | Less than or equal | `5 <= 5` | `true` |
-| `>` | Greater than | `10 > 5` | `true` |
-| `>=` | Greater than or equal | `5 >= 3` | `true` |
-| `==` | Equal to | `5 == 5` | `true` |
-| `!=` | Not equal to | `5 != 3` | `true` |
+Returns `true` if the left operand is less than the right operand.
+
+```cpp
+int a = 5, b = 10;
+bool result = a < b;     // true (5 is less than 10)
+bool result2 = b < a;    // false (10 is not less than 5)
+```
+
+#### 8.1.1.2 Less Than or Equal To (`<=`)
+
+Returns `true` if the left operand is less than or equal to the right operand.
+
+```cpp
+int x = 5, y = 5, z = 3;
+bool result1 = x <= y;   // true (5 equals 5)
+bool result2 = z <= x;   // true (3 is less than 5)
+```
+
+#### 8.1.1.3 Greater Than (`>`)
+
+Returns `true` if the left operand is greater than the right operand.
+
+```cpp
+int a = 10, b = 5;
+bool result = a > b;     // true (10 is greater than 5)
+```
+
+#### 8.1.1.4 Greater Than or Equal To (`>=`)
+
+Returns `true` if the left operand is greater than or equal to the right operand.
+
+```cpp
+int x = 5, y = 5;
+bool result = x >= y;    // true (5 equals 5)
+```
+
+#### 8.1.1.5 Equal To (`==`)
+
+Returns `true` if both operands are equal.
+
+```cpp
+int a = 5, b = 5, c = 3;
+bool result1 = a == b;   // true (5 equals 5)
+bool result2 = a == c;   // false (5 does not equal 3)
+```
 
 **Important Note on Floating-Point Comparison:**
 
@@ -3422,54 +3476,106 @@ const double EPSILON = 1e-9;
 if (fabs(x - 0.1) < EPSILON) { }
 ```
 
+#### 8.1.1.6 Not Equal To (`!=`)
+
+Returns `true` if the operands are not equal.
+
+```cpp
+int a = 5, b = 3;
+bool result = a != b;    // true (5 is not equal to 3)
+```
+
+#### 8.1.1.7 Summary of Relational Operators
+
+| Operator | Meaning | Example | Result |
+|----------|---------|---------|--------|
+| `<` | Less than | `5 < 10` | `true` |
+| `<=` | Less than or equal | `5 <= 5` | `true` |
+| `>` | Greater than | `10 > 5` | `true` |
+| `>=` | Greater than or equal | `5 >= 3` | `true` |
+| `==` | Equal to | `5 == 5` | `true` |
+| `!=` | Not equal to | `5 != 3` | `true` |
+
 ### 8.1.2 Logical Operators
 
 Logical operators combine boolean expressions.
 
-| Operator | Name | Description | Example |
-|----------|------|-------------|---------|
-| `!` | Logical NOT | Negates the expression | `!true` → `false` |
-| `&&` | Logical AND | True if both operands are true | `true && false` → `false` |
-| `||` | Logical OR | True if at least one operand is true | `true || false` → `true` |
+#### 8.1.2.1 Logical NOT (`!`)
 
-**Short-Circuit Evaluation:**
-
-- For `&&`: If the left operand is `false`, the right operand is **not evaluated**
-- For `||`: If the left operand is `true`, the right operand is **not evaluated**
+Negates a boolean expression. Returns `true` if the operand is `false`, and vice versa.
 
 ```cpp
-int a = 0, b = 5;
+bool flag = true;
+bool result = !flag;     // false
 
-// b is not accessed (division by zero avoided)
-if (a != 0 && b / a > 2) { }
-
-// Useful for null checking
-if (ptr != nullptr && ptr->value > 0) { }
+int x = 0;
+if (!x) { }             // true because x is 0 (falsy)
 ```
 
-**Common Pitfall - Assignment vs Comparison:**
+#### 8.1.2.2 Logical AND (`&&`)
+
+Returns `true` only if **both** operands are `true`.
 
 ```cpp
-int x = 5;
+int age = 25;
+bool hasID = true;
 
-// WRONG: Assignment, not comparison (always true, x becomes 0)
-if (x = 0) { }
-
-// CORRECT: Comparison
-if (x == 0) { }
+if (age >= 18 && hasID) {
+    // Both conditions must be true
+    cout << "Entry allowed" << endl;
+}
 ```
+
+**Truth Table for `&&`:**
+
+| A | B | A && B |
+|---|---|--------|
+| true | true | true |
+| true | false | false |
+| false | true | false |
+| false | false | false |
+
+#### 8.1.2.3 Logical OR (`||`)
+
+Returns `true` if **at least one** operand is `true`.
+
+```cpp
+bool isWeekend = true;
+bool isHoliday = false;
+
+if (isWeekend || isHoliday) {
+    // Either condition being true is sufficient
+    cout << "No work today" << endl;
+}
+```
+
+**Truth Table for `||`:**
+
+| A     | B     | A ![[Pasted image 20260328141407.png]] B |
+| ----- | ----- | ---------------------------------------- |
+| true  | true  | true                                     |
+| true  | false | true                                     |
+| false | true  | true                                     |
+| false | false | false                                    |
+
+#### 8.1.2.4 Summary of Logical Operators
+
+| Operator                             | Name        | Description                          | Example                                                  |
+| ------------------------------------ | ----------- | ------------------------------------ | -------------------------------------------------------- |
+| `!`                                  | Logical NOT | Negates the expression               | `!true` → `false`                                        |
+| `&&`                                 | Logical AND | True if both operands are true       | `true && false` → `false`                                |
+| ![[Pasted image 20260328141639.png]] | Logical OR  | True if at least one operand is true | true ![[Pasted image 20260328141649.png]] false → `true` |
 
 ### 8.1.3 Operator Precedence
 
-When combining relational and logical operators, precedence matters:
+| Precedence | Operators                                        |
+| ---------- | ------------------------------------------------ |
+| Highest    | `!` (logical NOT)                                |
+|            | Relational: `<`, `<=`, `>`, `>=`                 |
+|            | Equality: `==`, `!=`                             |
+|            | Logical AND: `&&`                                |
+| Lowest     | Logical OR: ![[Pasted image 20260328141744.png]] |
 
-| Precedence | Operators |
-|------------|-----------|
-| Highest | `!` (logical NOT) |
-| | Relational: `<`, `<=`, `>`, `>=` |
-| | Equality: `==`, `!=` |
-| | Logical AND: `&&` |
-| Lowest | Logical OR: `||` |
 
 **Recommendation:** Use parentheses to make complex conditions clear:
 
@@ -3971,7 +4077,7 @@ for (int i = 0; i < 5; i++) {
 >
 > **Note:** In C++, `<cmath>` places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
-### 9.1.1 <cmath> Functions
+### 9.1.1 `<cmath>` Functions
 
 **Argument Types:** These math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
 
@@ -4015,7 +4121,7 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-#### 9.1.1.2 Power (Exponentiation)
+#### 9.1.1.3 Power (Exponentiation)
 
 > **Important:** C++ has **no built-in operator** for exponentiation.
 
@@ -4029,7 +4135,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | `a * a` | Fastest | Small fixed exponents: a², a³ |
 | `pow(a, b)` | Slower | Variable/fractional exponents |
 
-### 9.1.2 Trigonometric Functions
+#### 9.1.1.4 Trigonometric Functions
 
 > **Critical:** Arguments must be in **radians**, NOT degrees!
 >
@@ -4060,7 +4166,7 @@ rad = deg * PI / 180;
 deg = rad * 180 / PI;
 ```
 
-### 9.1.3 Hyperbolic Functions
+#### 9.1.1.5 Hyperbolic Functions
 
 | Function | Description | Formula |
 |----------|-------------|---------|
@@ -4068,7 +4174,7 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
-### 9.1.2 <cstdlib> Functions
+### 9.1.2 `<cstdlib>` Functions
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
@@ -4101,14 +4207,39 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 > - `<cstdio>` — Character I/O functions (Section 9.2.1)
 > - `<cctype>` — Character classification & conversion (Section 9.2.2)
 
-### 9.2.1 <cstdio> Character I/O
+### 9.2.1 `<cstdio>` Character I/O
 
 > **Header:** `#include <cstdio>` (C++ style) or `#include <stdio.h>` (C style)
+
+C provides two approaches for character I/O:
+1. Using `printf`/`scanf` with `%c` format specifier
+2. Using dedicated character functions `getchar()` and `putchar()`
+
+#### 9.2.1.1 Using `printf` and `scanf` with `%c`
+
+The `%c` format specifier handles single characters:
+
+```cpp
+char ch;
+scanf("%c", &ch);   // Read a character
+printf("%c", ch);   // Print a character
+```
+
+**Important Notes:**
+
+- `scanf("%c", &ch)` reads **any** character including whitespace (spaces, tabs, newlines)
+- To skip whitespace before reading a character, add a space: `scanf(" %c", &ch)`
+
+#### 9.2.1.2 Using `getchar()` and `putchar()`
+
+These are dedicated character I/O functions:
 
 | Function | Description | Example |
 |----------|-------------|---------|
 | `getchar()` | Reads next character from keyboard, returns its ASCII value | `c = getchar();` |
 | `putchar(c)` | Prints a character to screen | `putchar('a');` |
+
+**Basic Examples:**
 
 ```cpp
 // Print characters
@@ -4120,47 +4251,103 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-### 9.2.2 <cctype> Character Classification & Conversion
+#### 9.2.1.3 Common Issues and Solutions
+
+**Issue 1: Input Buffer Residue**
+
+When mixing `scanf` (for numbers) with `getchar`, the newline character (`\n`) from previous input remains in the buffer:
+
+```cpp
+int num;
+char ch;
+scanf("%d", &num);    // Input: 42\n
+// \n is still in the buffer!
+ch = getchar();       // Reads '\n' instead of waiting for new input
+```
+
+**Solutions:**
+- **Windows:** Call `fflush(stdin)` to clear the buffer (Note: `fflush(stdin)` only works on Windows and is not standard C)
+- **Cross-platform:** Use `getchar()` once to consume the newline, or use `scanf(" %c", &ch)` with a leading space
+
+```cpp
+// Solution 1: fflush (Windows)
+scanf("%d", &num);
+fflush(stdin);        // Clear residual \n
+ch = getchar();       // Now reads fresh input
+
+// Solution 2: Leading space in scanf
+scanf(" %c", &ch);    // Skips all whitespace automatically
+```
+
+**Issue 2: Continuous Output with `putchar()`**
+
+Multiple `putchar` calls print characters sequentially on the same line until a newline is encountered:
+
+```cpp
+putchar('H');         // Output: H
+putchar('i');         // Output: Hi (same line)
+putchar('\n');        // Output: Hi\n (now moves to new line)
+putchar('!');         // Output on next line
+```
+
+> **Note:** This is expected behavior—characters accumulate until `\n` flushes the output or moves to a new line.
+
+### 9.2.2 `<cctype>` Character Classification & Conversion
 
 > **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
 
-#### Classification Functions
+#### 9.2.2.1 Classification Functions
 
-| Function | Returns non-zero (true) if... |
-|----------|-------------------------------|
-| `isalpha(ch)` | ch is a letter (a-z, A-Z) |
-| `isdigit(ch)` | ch is a decimal digit (0-9) |
-| `isalnum(ch)` | ch is alphanumeric (letter or digit) |
-| `islower(ch)` | ch is lowercase letter |
-| `isupper(ch)` | ch is uppercase letter |
-| `isspace(ch)` | ch is whitespace (space, tab, newline, etc.) |
-| `isprint(ch)` | ch is printable (including space) |
-| `isgraph(ch)` | ch is printable (excluding space) |
-| `iscntrl(ch)` | ch is a control character (0-21, 127) |
-| `ispunct(ch)` | ch is punctuation (not space, letter, or digit) |
-| `isxdigit(ch)` | ch is hexadecimal digit (0-9, A-F, a-f) |
+| Function       | Returns non-zero (true) if...                   |
+| -------------- | ----------------------------------------------- |
+| `isalpha(ch)`  | ch is a letter (a-z, A-Z)                       |
+| `isdigit(ch)`  | ch is a decimal digit (0-9)                     |
+| `isalnum(ch)`  | ch is alphanumeric (letter or digit)            |
+| `islower(ch)`  | ch is lowercase letter                          |
+| `isupper(ch)`  | ch is uppercase letter                          |
+| `isblank(ch)`  | ch is space or tab (' ' or '\t')                |
+| `isspace(ch)`  | ch is whitespace (space, tab, newline, etc.)    |
+| `isprint(ch)`  | ch is printable (including space)               |
+| `isgraph(ch)`  | ch is printable (excluding space)               |
+| `iscntrl(ch)`  | ch is a control character (0-21, 127)           |
+| `ispunct(ch)`  | ch is punctuation (not space, letter, or digit) |
+| `isxdigit(ch)` | ch is hexadecimal digit (0-9, A-F, a-f)         |
 
-#### Conversion Functions
+> **Note:** `isblank()` checks only space `' '` and tab `'\t'`, while `isspace()` checks all whitespace including newline `'\n'`, carriage return `'\r'`, form feed `'\f'`, and vertical tab `'\v'`.
+
+#### 9.2.2.2 Conversion Functions
 
 | Function | Description |
 |----------|-------------|
 | `tolower(ch)` | Returns lowercase version of ch (if uppercase) |
 | `toupper(ch)` | Returns uppercase version of ch (if lowercase) |
 
-> **Note:** Character functions take an integer argument (character's ASCII value) and return an integer.
+**Function Behavior:**
+
+Both functions convert letter case without modifying the original variable:
+
+| Input `ch` | `toupper(ch)` returns | `tolower(ch)` returns |
+|------------|----------------------|----------------------|
+| Lowercase `'a'`–`'z'` | Uppercase `'A'`–`'Z'` | Original (already lowercase) |
+| Uppercase `'A'`–`'Z'` | Original (already uppercase) | Lowercase `'a'`–`'z'` |
+| Non-letter (digit, symbol, etc.) | Original unchanged | Original unchanged |
+
+**Important Notes:**
+
+- **Original variable is NOT modified** — functions only return the converted value
+- To change the variable itself, you must reassign: `ch = toupper(ch);`
+
+**Examples:**
 
 ```cpp
-#include <cctype>
+char ch = 'a';
+char upper = toupper(ch);     // upper = 'A', ch is still 'a'
 
-char ch = 'A';
-if (isupper(ch)) {
-    char lower = tolower(ch);  // Returns 'a'
-}
+ch = toupper(ch);             // Now ch becomes 'A'
 
-// Check if digit
-if (isdigit('5')) {  // Returns true (non-zero)
-    // ch is a digit
-}
+// Non-letters are unchanged
+char sym = '5';
+char result = toupper(sym);   // result = '5' (unchanged)
 ```
 
 ---
