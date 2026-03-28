@@ -3717,7 +3717,7 @@ if (x > 0) {              // executed when condition is true
 - A compound statement can contain any number of statements (0, 1, or many)
 - Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
 
-#### Empty Statement
+##### 8.2.1.1 Empty Statement
 
 An **empty statement** consists of just a semicolon `;` with no expression:
 
