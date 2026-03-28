@@ -3638,7 +3638,7 @@ if ((a < b && c < d) || e < f) { }
 
 This section covers various forms of if statements and related constructs for conditional execution.
 
-### Compound Statements (Blocks)
+#### 8.2.1 Compound Statements (Blocks)
 
 When using control statements like `if`, `while`, `for`, etc., if you need to execute **multiple statements** (not just one), you must wrap them in **curly braces `{}`** to form a **compound statement** (also called a **block**).
 
@@ -3669,7 +3669,7 @@ if (x > 0) {              // executed when condition is true
 - A compound statement can contain any number of statements (0, 1, or many)
 - Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
 
-#### 8.2.1 The if Statement
+#### 8.2.2 The if Statement
 
 ```cpp
 if (condition) {
@@ -3677,7 +3677,7 @@ if (condition) {
 }
 ```
 
-#### 8.2.2 The if-else Statement
+#### 8.2.3 The if-else Statement
 
 ```cpp
 if (condition) {
@@ -3687,7 +3687,7 @@ if (condition) {
 }
 ```
 
-#### 8.2.3 The if-else-if Ladder
+#### 8.2.4 The if-else-if Ladder
 
 ```cpp
 if (condition1) {
@@ -3701,7 +3701,7 @@ if (condition1) {
 }
 ```
 
-#### 8.2.4 Nested if Statements
+#### 8.2.5 Nested if Statements
 
 if statements can be nested inside other if statements:
 
@@ -3738,7 +3738,7 @@ if (a > 0) {
 
 > **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
-#### 8.2.5 The Conditional (Ternary) Operator
+#### 8.2.6 The Conditional (Ternary) Operator
 
 A compact form for simple if-else. See also [4.8 Ternary Conditional Operator](#48-ternary-conditional-operator) for detailed syntax and precedence.
 
