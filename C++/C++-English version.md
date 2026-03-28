@@ -440,6 +440,46 @@ if (score >= 60 && score < 80) {
 }
 ```
 
+### 2.3.4 Brace Styles
+
+The placement of braces `{}` is a matter of coding style. Two common styles are widely used:
+
+| Style | Name | Description | Example |
+|-------|------|-------------|---------|
+| **Style 1** | Allman Style | Opening brace on its own line | `if (condition) \n { \n ... \n }` |
+| **Style 2** | K&R Style | Opening brace on the same line | `if (condition) { \n ... \n }` |
+
+**Style 1 (Allman Style) — Opening brace on a new line:**
+```cpp
+if (condition)
+{
+    statement 1;
+    statement 2;
+    ...
+    statement n;
+}
+```
+
+**Style 2 (K&R Style) — Opening brace on the same line:**
+```cpp
+if (condition){
+    statement 1;
+    statement 2;
+    ...
+    statement n;
+}
+```
+
+**Comparison:**
+
+| Aspect | Style 1 (Allman) | Style 2 (K&R) |
+|--------|------------------|---------------|
+| **Visual clarity** | Braces align vertically, easier to spot block boundaries | More compact, common in many C++ projects |
+| **Line count** | Uses more vertical space | More compact vertically |
+| **Popularity** | Common in Microsoft/C# style | Common in C/C++ community (K&R tradition) |
+
+> **See also:** [8.2.1 Compound Statements (Blocks)](#821-compound-statements-blocks) for the concept of blocks and their usage in control statements.
+
 ## 2.4 Identifier Naming
 
 ### 2.4.1 Mandatory Rules (Must Follow)
@@ -3668,6 +3708,8 @@ if (x > 0) {              // executed when condition is true
 - In C++, anywhere that requires "one statement" can be replaced with a compound statement wrapped in `{}`
 - A compound statement can contain any number of statements (0, 1, or many)
 - Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
+
+> **See also:** [2.3.4 Brace Styles](#234-brace-styles) for code formatting conventions on brace placement.
 
 #### 8.2.2 The if Statement
 
