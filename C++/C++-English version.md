@@ -3965,11 +3965,15 @@ for (int i = 0; i < 5; i++) {
 
 ## 9.1 Mathematical Functions
 
-> **Header:** `#include <cmath>` (C++ style) or `#include <math.h>` (C style)
+> **Header:** Most functions in this section require `#include <cmath>` (C++ style) or `#include <math.h>` (C style)
+>
+> **Exception:** Integer `abs()` requires `#include <cstdlib>` — see Section 9.1.2
 >
 > **Note:** In C++, `<cmath>` places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
-**Argument Types:** Math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
+### 9.1.1 <cmath> Functions
+
+**Argument Types:** These math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
 
 ```cpp
 int x = 9;
@@ -3977,7 +3981,7 @@ double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
 int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 ```
 
-### 9.1.1 Elementary Math Functions
+#### 9.1.1.1 Elementary Functions
 
 | Function | Description | Notes |
 |----------|-------------|-------|
@@ -3989,9 +3993,8 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `exp(x)` | Computes e^x | e ≈ 2.718282 |
 | `log(x)` | Computes the natural logarithm of x (ln x) | Requires `x > 0` |
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
-| `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires `<cstdlib>` |
 
-#### 9.1.1.1 abs vs fabs
+#### 9.1.1.2 fabs vs abs
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
@@ -4065,11 +4068,42 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
+### 9.1.2 <cstdlib> Functions
+
+> **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
+
+**Integer Absolute Value:**
+
+| Function | Description | Notes |
+|----------|-------------|-------|
+| `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires `<cstdlib>` |
+
+**Comparison with `fabs`:**
+
+| Function | Input Type | Return Type | Header |
+|----------|------------|-------------|--------|
+| `abs(x)` | `int` | `int` | `<cstdlib>` |
+| `fabs(x)` | `double` | `double` | `<cmath>` |
+
+```cpp
+#include <cstdlib>
+int a = abs(-5);      // Returns 5 (int)
+
+#include <cmath>
+double x = fabs(-5.5); // Returns 5.5 (double)
+```
+
+> **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
+
 ## 9.2 Character Functions
 
-> **Header:** `#include <cctype>` (C++) or `#include <ctype.h>` (C)
+> **Headers:** This section covers functions from two different headers:
+> - `<cstdio>` — Character I/O functions (Section 9.2.1)
+> - `<cctype>` — Character classification & conversion (Section 9.2.2)
 
-### 9.2.1 Character I/O
+### 9.2.1 <cstdio> Character I/O
+
+> **Header:** `#include <cstdio>` (C++ style) or `#include <stdio.h>` (C style)
 
 | Function | Description | Example |
 |----------|-------------|---------|
@@ -4086,7 +4120,11 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-### 9.2.2 Character Classification & Conversion
+### 9.2.2 <cctype> Character Classification & Conversion
+
+> **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
+
+#### Classification Functions
 
 | Function | Returns non-zero (true) if... |
 |----------|-------------------------------|
@@ -4102,7 +4140,7 @@ putchar(65);      // Output: A (ASCII 65)
 | `ispunct(ch)` | ch is punctuation (not space, letter, or digit) |
 | `isxdigit(ch)` | ch is hexadecimal digit (0-9, A-F, a-f) |
 
-### 9.2.3 Character Conversion
+#### Conversion Functions
 
 | Function | Description |
 |----------|-------------|
