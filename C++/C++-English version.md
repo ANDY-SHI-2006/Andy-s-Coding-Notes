@@ -3834,20 +3834,30 @@ int sign = (x > 0) ? 1 : (x < 0) ? -1 : 0;
 
 ## 8.3 The switch Statement
 
-The `switch` statement selects one of many code blocks to execute:
+The `switch` statement selects one of many code blocks to execute.
+
+### How switch Works (The Essence)
+
+When a matching `case` is found, execution **jumps to that case** and continues **line by line** through subsequent statements, **ignoring other case labels**, until a `break` is encountered or the switch block ends.
 
 ```cpp
-switch (expression) {
-    case constant1:
-        // statements
-        break;
-    case constant2:
-        // statements
-        break;
+int a = 1;
+switch (a) {
+    case 1:
+        cout << "Case 1" << endl;   // Executed (matches a=1)
+        // No break!
+    case 2:
+        cout << "Case 2" << endl;   // Also executed (falls through)
+        break;                       // Exit switch
     default:
-        // statements
+        cout << "Default" << endl;  // Not executed
 }
+// Output:
+// Case 1
+// Case 2
 ```
+
+**Key Insight:** `case` is just a **jump label** — it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
 
 #### 8.3.1 Syntax Rules
 
