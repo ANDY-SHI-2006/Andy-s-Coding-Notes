@@ -3836,7 +3836,7 @@ int sign = (x > 0) ? 1 : (x < 0) ? -1 : 0;
 
 The `switch` statement selects one of many code blocks to execute.
 
-### The Switch Mechanism
+#### 8.3.1 The Switch Mechanism
 
 When a matching `case` is found, execution **jumps to that case** and continues **line by line** through subsequent statements, **ignoring other case labels**, until a `break` is encountered or the switch block ends.
 
@@ -3859,14 +3859,14 @@ switch (a) {
 
 **Key Insight:** `case` is just a **jump label** — it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
 
-#### 8.3.1 Syntax Rules
+#### 8.3.2 Syntax Rules
 
 - The `expression` must be an integral type (`int`, `char`, `enum`, etc.)
 - `case` labels must be compile-time constants
 - `break` is required to exit the switch (otherwise fall-through occurs)
 - `default` case is optional but recommended
 
-#### 8.3.2 Fall-Through Behavior
+#### 8.3.3 Fall-Through Behavior
 
 Without `break`, execution continues to the next case:
 
@@ -3890,7 +3890,7 @@ switch (day) {
 // Output: Weekday
 ```
 
-#### 8.3.3 Intentional Fall-Through
+#### 8.3.4 Intentional Fall-Through
 
 Sometimes you may intentionally omit `break` to let multiple `case` labels share the same code block:
 
@@ -3910,7 +3910,7 @@ switch (grade) {
 
 > **Note:** This "fall-through" behavior is sometimes intentionally designed, but in most cases, it's a bug caused by forgetting to write `break`.
 
-#### 8.3.4 switch vs if-else
+#### 8.3.5 switch vs if-else
 
 | Use `switch` | Use `if-else` |
 |--------------|---------------|
