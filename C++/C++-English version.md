@@ -3689,6 +3689,7 @@ if (x > 0)
 ```
 
 > **⚠️ Warning:** Without `{}`, `if` only controls the **immediately following statement**. Indentation does not affect execution:
+>
 > ```cpp
 > if (x > 0)
 >     cout << "A";    // Only this line belongs to if
