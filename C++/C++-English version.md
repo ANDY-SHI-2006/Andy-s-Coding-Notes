@@ -3688,13 +3688,13 @@ if (x > 0)
     cout << "positive";  // only one statement
 ```
 
-> **⚠️ Warning:** Without `{}`, `if` only controls the **immediately following statement**. Indentation does not affect execution:
->
-> ```cpp
-> if (x > 0)
->     cout << "A";    // Only this line belongs to if
->     cout << "B";    // This ALWAYS executes (indentation ignored by compiler!)
-> ```
+> **⚠️ Warning:** Without `{}`, `if` only controls the **immediately following statement**. Indentation does not affect execution.
+
+```cpp
+if (x > 0)
+    cout << "A";    // Only this line belongs to if
+    cout << "B";    // This ALWAYS executes (indentation ignored by compiler!)
+```
 
 **Multiple statements** (requires braces to form a compound statement):
 ```cpp
