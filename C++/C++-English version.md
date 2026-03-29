@@ -4409,53 +4409,6 @@ for (int i = 0; i < 10; i++) {
 | `for` | Known number of iterations, counting | Compact syntax with counter |
 | Range-for | Iterating over collections | Cleanest for containers |
 
-## 8.8 Debugging Tips for Control Flow
-
-### 8.8.1 Infinite Loops
-
-Common causes and solutions:
-
-```cpp
-// CAUSE: Missing update
-int i = 0;
-while (i < 10) {
-    cout << i << endl;
-    // Forgot i++!
-}
-
-// CAUSE: Wrong comparison
-for (int i = 10; i >= 0; i++) {  // i++ instead of i--
-    cout << i << endl;
-}
-
-// SOLUTION: Always verify loop termination condition
-```
-
-### 8.8.2 Off-by-One Errors
-
-```cpp
-// Wrong: prints 0-10 (11 numbers)
-for (int i = 0; i <= 10; i++) { }
-
-// Correct: prints 0-9 (10 numbers)
-for (int i = 0; i < 10; i++) { }
-```
-
-### 8.8.3 Debugging Techniques
-
-1. **Trace with cout:** Add output statements to track variable values
-
-```cpp
-for (int i = 0; i < 5; i++) {
-    cout << "DEBUG: i = " << i << endl;  // Check loop progress
-    // ... rest of code
-}
-```
-
-2. **Use a debugger:** Set breakpoints and watch variables
-
-3. **Verify boundary conditions:** Test with minimum, maximum, and edge cases
-
 ---
 
 # 9 Functions
@@ -4500,7 +4453,7 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 
 **Key Difference:**
 - `abs` is for **integers** only
-- `fabs` is for **floating-point** numbers
+- `fabs` is for **floating-point** numbers (the **f** stands for **floating-point**)
 
 ```cpp
 #include <cstdlib>
