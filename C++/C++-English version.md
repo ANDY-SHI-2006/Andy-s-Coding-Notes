@@ -3913,6 +3913,29 @@ switch (expression) {  // Must be integer or character type
 }
 ```
 
+**Using `enum` with `switch`:**
+
+Enums are often used with switch statements for cleaner, more readable code:
+
+```cpp
+enum class Color { Red, Green, Blue };
+
+Color c = Color::Red;
+switch (c) {
+    case Color::Red:
+        cout << "Red" << endl;
+        break;
+    case Color::Green:
+        cout << "Green" << endl;
+        break;
+    case Color::Blue:
+        cout << "Blue" << endl;
+        break;
+}
+```
+
+> **Note:** When using `enum class` (C++11), you must use the scope operator (`Color::Red`) in case labels.
+
 ##### 8.3.2.2 Case Labels Must Be Compile-Time Constants
 
 `case` labels must be **compile-time constants** (not variables or expressions evaluated at runtime).
