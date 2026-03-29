@@ -3905,6 +3905,7 @@ switch (a) {
 
 - The `expression` must be an integral type (`int`, `char`, `enum`, etc.)
 - `case` labels must be compile-time constants
+- `case` labels must be unique — **an error occurs if two or more `case` labels have the same value**
 - `break` is required to exit the switch (otherwise fall-through occurs)
 - `default` case is optional but recommended
 
