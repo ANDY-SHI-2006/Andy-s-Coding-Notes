@@ -2687,6 +2687,70 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 2. **Excess input ignored**: Extra data beyond variables is discarded
 3. **Whitespace skipped**: Leading spaces/newlines are automatically skipped
 
+### 6.1.4 Operator Precedence with `cin`
+
+> **See also:** [7.1.2.9 Operator Precedence with `cout`](#71129-operator-precedence-with-cout) for the output equivalent.
+
+**Common Mistake:**
+
+```cpp
+int a, b;
+cin >> a == b;  // ❌ Compile error!
+```
+
+**Why it fails:**
+The stream extraction operator `>>` has **higher precedence** than the equality operator `==`. The expression is parsed as:
+
+```cpp
+(cin >> a) == b;  // Compares istream& with int - invalid!
+```
+
+**Solution:**
+Read first, then compare in a separate statement or use parentheses:
+
+```cpp
+// Correct approach 1: Separate statements
+cin >> a;
+if (a == b) { ... }
+
+// Correct approach 2: Read both then compare
+cin >> a >> b;
+if (a == b) { ... }
+```
+
+**More Examples:**
+
+```cpp
+int x, y;
+
+// Bitwise operators (low precedence)
+cin >> x & y;       // ❌ Wrong: (cin >> x) & y
+cin >> x;
+int result = x & y;  // ✅ Correct
+
+// Logical operators
+cin >> x && cin >> y;     // ❌ Wrong: ((cin >> x) && cin) >> y
+cin >> x >> y;            // ✅ Correct
+bool result = x && y;
+
+// Ternary operator
+cin >> x > 0 ? a : b;     // ❌ Wrong
+cin >> x;                 // ✅ Correct
+int val = (x > 0) ? a : b;
+```
+
+**Operator Precedence Quick Reference:**
+
+| Precedence | Operators | Description |
+|------------|-----------|-------------|
+| **Higher** | `>>` `<<` | Stream extraction/insertion |
+| **Lower** | `==` `!=` `<` `>` `<=` `>=` | Comparison operators |
+| **Lower** | `&` `^` `\|` | Bitwise operators |
+| **Lower** | `&&` `\|\|` | Logical operators |
+| **Lower** | `?:` | Ternary conditional |
+
+> **Best Practice:** When using `cin` with any comparison or logical operation, **read the values first, then perform the operation in a separate statement**.
+
 ## 6.2 `scanf` (C-style Input)
 
 Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
@@ -3290,6 +3354,8 @@ double truncate(double val, int prec) {
 ```
 
 ### 7.1.2.9 Operator Precedence with `cout`
+
+> **See also:** [6.1.4 Operator Precedence with `cin`](#614-operator-precedence-with-cin) for the input equivalent.
 
 **Common Mistake:**
 
