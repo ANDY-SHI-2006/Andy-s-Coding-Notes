@@ -3229,6 +3229,53 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 > **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
 
+#### 7.1.2.8 Truncating Floating-Point Output (No Rounding)
+
+**The Problem:**
+Both `setprecision` and `printf` **round** by default:
+
+```cpp
+cout << fixed << setprecision(2) << 3.149;  // Output: 3.15 (rounded!)
+printf("%.2f", 3.149);                       // Output: 3.15 (rounded!)
+```
+
+**Solution: Truncate Manually**
+
+If you want **truncation** (discard extra digits without rounding), use `floor()` or pre-calculate:
+
+```cpp
+#include <cmath>  // for floor()
+
+double value = 3.149;
+int precision = 2;
+
+// Method 1: Using floor()
+double truncated = floor(value * 100) / 100;  // 3.14
+cout << fixed << setprecision(2) << truncated; // Output: 3.14
+
+// Method 2: Cast to int (for 2 decimal places)
+double truncated2 = (int)(value * 100) / 100.0;  // 3.14
+
+// Method 3: General function
+double truncate(double val, int prec) {
+    double multiplier = pow(10, prec);
+    return floor(val * multiplier) / multiplier;
+}
+```
+
+**Comparison:**
+
+| Value | Rounded (default) | Truncated |
+|-------|-------------------|-----------|
+| 3.149 | 3.15 | 3.14 |
+| 2.999 | 3.00 | 2.99 |
+| -1.278 | -1.28 | -1.27 |
+
+> **Note:** For negative numbers, use `trunc()` (C++11) instead of `floor()` to truncate toward zero:
+> ```cpp
+> double truncated = trunc(value * 100) / 100;  // C++11
+> ```
+
 ## 7.2 `printf` (C-style Output)
 
 Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
@@ -3336,6 +3383,8 @@ Specifies the **minimum** number of characters to print.
 **Precision behavior:**
 - The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
 - **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` → `"    3.14"`)
+
+> **To truncate instead of round:** Pre-process the value (see [7.1.2.8](#71128-truncating-floating-point-output-no-rounding))
 
 #### 4. Length Modifier (Optional)
 
