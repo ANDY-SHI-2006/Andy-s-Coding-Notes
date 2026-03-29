@@ -327,31 +327,28 @@ bytelist = str_list.encode()   # b'[...]'
 strinfo2 = bytelist.decode()   # JSON string
 list2 = json.loads(strinfo2)   # Original list
 ```
-
 # 2. Socket Programming
 
-**Socket**: A technical means to implement network programming for data transmission. 
+## 2.1 Socket Basics
 
-- **UDP Socket**: Connectionless, data transmission is not secure, but has higher efficiency.
-- **TCP Socket**: Connection-oriented, data transmission is secure, stable, but relatively lower efficiency.
+**Socket** is a technical means to implement network programming for data transmission.
 
-## 2.1 Library Dependencies
+- **UDP Socket**: Connectionless, data transmission is unreliable, but efficiency is higher
+- **TCP Socket**: Connection-oriented, data transmission is secure and stable, but efficiency is relatively lower
 
-Python socket programming module: `import socket`
+Python socket programming module import:
+```python
+import socket
+```
 
-## 2.2 UDP Socket
+## 2.2 Socket API Core Parameters
 
-UDP socket is connectionless, with higher efficiency but no data transmission security guarantee.
-
-### 2.2.1 UDP Server Workflow
-
-#### 2.2.1.1 Create Socket
-
+Function signature for creating a Socket:
 ```python
 socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-**`address_family`** — address type:
+### address_family — Address Type
 
 | Value | Description |
 |-------|-------------|
@@ -360,7 +357,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.AF_UNIX` | Unix domain socket — IPC on the same machine (Linux/macOS only) |
 | `socket.AF_BLUETOOTH` | Bluetooth communication |
 
-**`socket_type`** — transport mode:
+### socket_type — Transmission Mode
 
 | Value | Description |
 |-------|-------------|
@@ -369,7 +366,9 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.SOCK_RAW` | Raw socket: direct network-layer access; requires admin privileges; used for custom protocols or packet capture |
 | `socket.SOCK_SEQPACKET` | Ordered, reliable, connection-oriented datagrams (rarely used) |
 
-**`proto`** (optional, default `0`) — protocol number; system auto-selects from the first two args. Only specify when using `SOCK_RAW`:
+### proto — Protocol Number (Optional)
+
+Default is `0`, the system automatically selects from the first two parameters. Only needed when using `SOCK_RAW`:
 
 | Value | Description |
 |-------|-------------|
@@ -377,298 +376,236 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.IPPROTO_UDP` (17) | UDP |
 | `socket.IPPROTO_ICMP` (1) | ICMP — used for `ping` |
 
-**`fileno`** (optional) — wraps an existing OS file descriptor into a socket object. Low-level system programming only; ignore in daily use.
+**`fileno`** (Optional): Wraps an existing OS file descriptor as a socket object. Only used for low-level system programming, can be ignored for daily use.
+
+## 2.3 UDP Socket
+
+UDP socket is connectionless, with high efficiency but no guarantee of data transmission security.
+
+### UDP Characteristics
+
+- **Possible Packet Loss**: No guarantee of data arrival
+- **Simple and Efficient**: Simple transmission process, easy to implement
+- **Datagram Transmission**: Data is transmitted in packets
+- **Connectionless**: When sending data, client IP, port and target IP/port must be included
+
+### UDP Server Complete Process
 
 ```python
 import socket
 
-# socket.AF_INET: IPv4    socket.SOCK_DGRAM: UDP
-server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # returns a socket object
-```
+# 1. Create UDP socket
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-#### 2.2.1.2 Bind IP and Port
-
-```python
-# bind takes a single tuple argument: (ip, port)
+# 2. Bind IP and port
 server.bind(('127.0.0.1', 8080))
+# Address options explanation:
+#   ('127.0.0.1', 8080)  - IPv4 loopback, local access only
+#   ('localhost', 8080)  - Hostname resolves to 127.0.0.1, for development only
+#   ('0.0.0.0', 8080)    - All network interfaces, allows external/LAN access
+#   ('', 8080)           - Empty string, equivalent to '0.0.0.0'
+#   ('192.168.1.10', 8080) - Bind to specific network interface
+
+# Special port value: port=0 lets system auto-assign available port
+# server.bind(('127.0.0.1', 0))
+# actual_port = server.getsockname()[1]
+
+# 3. Receive and send data (loop mode)
+while True:
+    # recvfrom() blocks until message arrives, returns (data_bytes, (client_ip, client_port))
+    info, addr = server.recvfrom(1024)  # 1024 = maximum bytes to receive per call
+
+    if info.decode() == 'exit':
+        break
+
+    print(f"Message: {info.decode()}")
+    print(f"From: {addr}")
+
+    # sendto must pass addr back
+    server.sendto("Reply from server".encode(), addr)
+
+# 4. Close socket
+server.close()
 ```
 
-**IPv4 Format** (`AF_INET`):
-```python
-socket.bind((host, port))
+**Key Binding Points:**
 
-# Address Options:
+| Syntax | Correct? | Explanation |
+|--------|----------|-------------|
+| `bind(('127.0.0.1', 8080))` | ✓ | Must use tuple |
+| `bind('127.0.0.1', 8080)` | ✗ | Missing parentheses |
 
-# server.bind(('127.0.0.1', 8080))    # IPv4 loopback (localhost) - local access only, most reliable
-# server.bind(('localhost', 8080))    # Hostname resolving to 127.0.0.1 - development only
-# server.bind(('0.0.0.0', 8080))      # All network interfaces - allow external/LAN access
-# server.bind(('', 8080))             # Empty string, same as '0.0.0.0' - shorthand for all interfaces
-# server.bind(('192.168.1.10', 8080)) # Specific IP - bind to specific network interface
-```
-
-**Special Port Value:**
-- `port=0` — Let OS assign an available port automatically
-  ```python
-  server.bind(('127.0.0.1', 0))
-  actual_port = server.getsockname()[1]  # Get the assigned port
-  ```
-- Port range: 0-65535 (0-1023 are well-known ports, require admin privileges on Unix)
-
-**IPv6 Format** (`AF_INET6`):
-```python
-socket.bind((host, port, flowinfo, scopeid))
-# Examples:
-# server.bind(('::1', 8080, 0, 0))   # IPv6 loopback (localhost)
-# server.bind(('::', 8080, 0, 0))    # All IPv6 interfaces (:: is IPv6's '0.0.0.0')
-```
-
-**Unix Domain Socket** (`AF_UNIX`):
-```python
-socket.bind(path)  # Example: server.bind('/tmp/my_socket')
-```
-
-**Key Points:**
-- **Must use tuple**: `bind(('127.0.0.1', 8080))` ✓, `bind('127.0.0.1', 8080)` ✗
 - **IPv6 loopback**: `'::1'` is equivalent to `'127.0.0.1'`
 - **IPv6 wildcard**: `'::'` is equivalent to `'0.0.0.0'`
 
-#### 2.2.1.3 Receive and Send
-
-```python
-# recvfrom() BLOCKS here until a message arrives
-# returns (data_bytes, (client_ip, client_port))
-info, addr = server.recvfrom(1024)   # 1024 = max bytes per receive
-print(f"Message: {info.decode()}")
-print(f"From: {addr}")
-
-server.sendto("Reply from server".encode(), addr)  # must pass addr back
-```
-
-#### 2.2.1.4 Close Socket
-
-```python
-server.close()
-```
-
-**Loop pattern (continuous receive):**
-```python
-while True:
-    info, addr = server.recvfrom(1024)
-    if info.decode() == 'exit':
-        break
-    server.sendto("Reply".encode(), addr)
-server.close()
-```
-
-### 2.2.2 UDP Client Workflow
-
-#### 2.2.2.1 Create Socket
+### UDP Client Complete Process
 
 ```python
 import socket
 
-# No bind needed for client
+# 1. Create UDP socket (client doesn't need to bind)
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-```
 
-#### 2.2.2.2 Send and Receive
-
-```python
-# sendto: 1st arg = data (bytes), 2nd arg = target (ip, port) tuple
-msg = input("Message: ")
-client.sendto(msg.encode(), ('127.0.0.1', 8080))
-
-info, addr = client.recvfrom(1024)
-print(f"Server reply: {info.decode()}")
-```
-
-#### 2.2.2.3 Close Socket
-
-```python
-client.close()
-```
-
-**Loop pattern (continuous send):**
-```python
+# 2. Send and receive data (loop mode)
 while True:
     msg = input("Message: ")
+
+    # sendto: 1st parameter=data(bytes), 2nd parameter=target(ip, port) tuple
     client.sendto(msg.encode(), ('127.0.0.1', 8080))
+
     if msg == 'exit':
         break
+
     info, addr = client.recvfrom(1024)
     print(f"Server reply: {info.decode()}")
+
+# 3. Close socket
 client.close()
 ```
 
-### 2.2.3 UDP Socket Characteristics
+### UDP Applicable Scenarios
 
-- **May experience data loss**
-- **Simple transmission process, easy to implement**
-- **Data transmitted in packets**
-- **High data transmission efficiency**
-- **Connectionless**: When sending data, the client's IP, port, and target IP/port must all be included in the packet.
+| Scenario | Reason |
+|----------|--------|
+| Video streaming, live broadcast, video chat | High real-time requirements, can tolerate some packet loss |
+| Network broadcast, mass sending | Need one-to-many transmission |
+| Gaming | Low latency requirement higher than reliability |
 
-## 2.3 TCP Socket
+## 2.4 TCP Socket
 
-TCP socket is connection-oriented, providing secure and stable data transmission with relatively lower efficiency.
+TCP socket is connection-oriented, providing secure and stable data transmission, but with relatively lower efficiency.
 
-### 2.3.1 Connection-Oriented Transmission Service
+### TCP Characteristics
 
-- Provides reliable data delivery: no loss, no disorder, no errors, no duplication during transmission
-- Has reliability guarantee mechanisms (automatically completed):
-  - Establish data connection before communication
-  - Acknowledgment response mechanism
-  - Normal disconnection after communication ends
+- **Reliable Transmission**: No loss, disorder, errors, or duplication
+- **Connection Mechanism**: Establish data connection before communication
+- **Acknowledgment**: Automatically confirm received data
+- **Normal Disconnection**: Properly disconnect after communication ends
 
-### 2.3.2 Three-Way Handshake (Establish Connection)
+### TCP Connection Establishment and Termination
 
-1. Client sends request packet to server requesting connection
-2. Server receives request and replies that connection is possible
-3. Client receives reply and sends packet again to establish connection
+#### Three-way Handshake (Establish Connection)
+
+1. Client sends request packet, requesting connection
+2. Server receives request and replies, indicating connection is possible
+3. Client receives reply, sends packet again to establish connection
 
 **Terminology:**
-- **SYN**: Synchronization bit. When SYN = 1, it indicates a connection request
-- **ACK**: Acknowledgment bit. ACK = 1 means acknowledgment is valid, ACK = 0 means invalid
-- **ack**: Acknowledgment number = sequence number sent by the other party + 1
+- **SYN**: Synchronize bit. SYN = 1 indicates connection request
+- **ACK**: Acknowledgment bit. ACK = 1 indicates acknowledgment is valid, ACK = 0 indicates invalid
+- **ack**: Acknowledgment number = sender's sequence number + 1
 - **seq**: Sequence number. Random, uncertain, non-fixed value
 
-### 2.3.3 Four-Way Handshake (Disconnect)
+#### Four-way Handshake (Disconnect)
 
-1. Active party sends packet requesting disconnection
-2. Passive party receives request and immediately replies, indicating preparation for disconnection
-3. Passive party is ready and sends packet again indicating disconnection is possible
-4. Active party receives confirmation and sends final packet to complete disconnection
+1. Active side sends packet requesting disconnection
+2. Passive side receives request and replies immediately, indicating preparation for disconnection
+3. Passive side sends packet again when ready, indicating disconnection is possible
+4. Active side receives acknowledgment and sends final packet to complete disconnection
 
 **Terminology:**
-- **FIN = 1**: Indicates request to disconnect
+- **FIN = 1**: Indicates disconnection request
 
-### 2.3.4 TCP Server Workflow
-
-#### 2.3.4.1 Create Socket
+### TCP Server Complete Process
 
 ```python
 import socket
 
-# SOCK_STREAM = TCP
+# 1. Create TCP socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-```
 
-#### 2.3.4.2 Bind Address
-
-```python
+# 2. Bind address
 server.bind(('127.0.0.1', 9090))
-```
 
-#### 2.3.4.3 Set Listening
+# 3. Set listening (maximum pending connections)
+server.listen(5)
 
-```python
-server.listen(5)  # max pending connections in queue
-```
-
-#### 2.3.4.4 Accept Connection
-
-```python
-# BLOCKS until a client connects (three-way handshake happens here)
+# 4. Accept connection (blocks until client connects, three-way handshake occurs here)
 # accept() returns (conn_object, (client_ip, client_port))
-# conn = connection object — all future send/recv use conn, NOT server
+# conn = connection object — all subsequent send/recv use conn, not server
 conn, addr = server.accept()
 print(f"Connected by {addr}")
-```
 
-#### 2.3.4.5 Send and Receive
-
-```python
-info = conn.recv(1024)           # recv() — no address needed (connection-oriented)
-print(f"Received: {info.decode()}")
-conn.send("Hello from server".encode())
-```
-
-#### 2.3.4.6 Close
-
-```python
-conn.close()     # close connection object (four-way handshake)
-server.close()   # close server socket
-```
-
-**Loop pattern + disconnect detection:**
-```python
+# 5. Send and receive data (loop mode)
 while True:
+    # recv() doesn't need address (connection-oriented)
     info = conn.recv(1024)
-    if info.decode() == '':      # client disconnected unexpectedly → recv returns empty string
+
+    # When client disconnects unexpectedly, recv returns empty string
+    if info.decode() == '':
         print("Client disconnected")
         break
-    if info.decode() == 'exit':  # client sent exit signal
+
+    if info.decode() == 'exit':  # Client sends exit signal
         break
+
+    print(f"Received: {info.decode()}")
     conn.send("Reply".encode())
-conn.close()
-server.close()
+
+# 6. Close connection (four-way handshake)
+conn.close()     # Close connection object
+server.close()   # Close server socket
 ```
 
-### 2.3.5 TCP Client Workflow
-
-#### 2.3.5.1 Create Socket
+### TCP Client Complete Process
 
 ```python
 import socket
 
+# 1. Create TCP socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-```
 
-#### 2.3.5.2 Connect to Server
-
-```python
-# connect() takes a single tuple: (server_ip, server_port)
-# three-way handshake triggers automatically
+# 2. Connect to server (automatically triggers three-way handshake)
 client.connect(('127.0.0.1', 9090))
-```
 
-#### 2.3.5.3 Send and Receive
-
-```python
-# No address needed — already connected
-msg = input("Message: ")
-client.send(msg.encode())   # send(): only one arg, data must be bytes
-data = client.recv(1024)
-print(f"Server reply: {data.decode()}")
-```
-
-#### 2.3.5.4 Close Socket
-
-```python
-client.close()   # four-way handshake triggers automatically
-```
-
-**Loop pattern + empty string guard:**
-```python
+# 3. Send and receive data (loop mode)
 while True:
     msg = input("Message: ")
-    if msg == '':               # ⚠ cannot send empty string — causes issues
+
+    # ⚠ Cannot send empty string, will cause issues
+    if msg == '':
         continue
-    client.send(msg.encode())
+
+    client.send(msg.encode())  # send() has only one parameter, data must be bytes
+
     if msg == 'exit':
         break
+
     data = client.recv(1024)
     print(f"Server reply: {data.decode()}")
+
+# 4. Close socket (automatically triggers four-way handshake)
 client.close()
 ```
 
-### 2.3.6 TCP Socket Details
+### TCP Notes and Applicable Scenarios
 
-- When one side exits in a TCP connection, if the other side is blocked in `recv`, `recv` will immediately return an empty string
-- If one side no longer exists and you still try to send data via `send`, it will raise `BrokenPipeError`
-- One server can be connected by multiple clients simultaneously
-- **`recv(n)` reads from a buffer** — reads at most n bytes; excess data stays in the buffer for the next `recv` call (no data loss, no error)
-- **Cannot send empty string** — `client.send("".encode())` causes issues; always validate input before sending
-- **TCP**: Suitable for scenarios requiring high accuracy and large data transmission:
-  - File transfer, data download, photo upload, website access
-  - Email sending/receiving
-  - Peer-to-peer data transmission: login, remote access, red packets, one-on-one chat
-- **UDP**: Suitable for scenarios with relatively low reliability requirements and free transmission:
-  - Video streaming: live streaming, video chat
-  - Broadcasting: network broadcast, mass messaging
-  - High real-time requirements: such as games
+**Important Details:**
 
-## 2.4 UDP vs TCP API Comparison
+| Situation | Explanation |
+|-----------|-------------|
+| When peer exits | If this side is blocked in `recv`, `recv` returns empty string immediately |
+| Sending when peer doesn't exist | Will raise `BrokenPipeError` |
+| `recv(n)` | Reads from buffer, maximum n bytes; excess data remains in buffer |
+| Empty string | `client.send("".encode())` will cause issues, must validate before sending |
+
+**TCP Applicable Scenarios:**
+
+- File transfer, data download, photo upload, website access
+- Email sending and receiving
+- Point-to-point data transmission: login, remote access, red packets, one-on-one chat
+
+**UDP vs TCP Scenario Comparison:**
+
+| Requirement | Recommended Protocol |
+|-------------|---------------------|
+| High accuracy, large data transmission | TCP |
+| Low reliability requirement, free transmission | UDP |
+| Video streaming, live broadcast, video chat | UDP |
+| Network broadcast, mass sending | UDP |
+| Gaming (high real-time) | UDP |
+
+## 2.5 UDP vs TCP API Comparison
 
 | Step | UDP | TCP |
 |------|-----|-----|
