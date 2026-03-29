@@ -3903,19 +3903,94 @@ switch (a) {
 
 #### 8.3.2 Syntax Rules
 
-- The `expression` must be an integral type (`int`, `char`, `enum`, etc.)
-- `case` labels must be compile-time constants (not variables)
-  ```cpp
-  int x = 5;
-  switch (n) {
-      case x:     // ❌ Error: x is a variable
-      case 5:     // ✅ OK: literal constant
-      case 'A':   // ✅ OK: character constant
-  }
-  ```
-- `case` labels must be unique — **an error occurs if two or more `case` labels have the same value**
-- `break` is required to exit the switch (otherwise fall-through occurs)
-- `default` case is optional but recommended
+##### 8.3.2.1 Controlling Expression
+
+The `switch` statement selects statements to execute based on a **controlling expression**, which must be an expression of **integral type** (`int`, `char`, `enum`, etc.).
+
+```cpp
+switch (expression) {  // Must be integer or character type
+    // case labels...
+}
+```
+
+##### 8.3.2.2 Case Labels Must Be Compile-Time Constants
+
+`case` labels must be **compile-time constants** (not variables or expressions evaluated at runtime).
+
+**Valid case labels:**
+
+| Type | Example | Valid |
+|------|---------|-------|
+| Integer literals | `5`, `100` | ✅ Yes |
+| Character literals | `'a'`, `'A'` | ✅ Yes |
+| Enum values | `Color::Red` | ✅ Yes |
+| `const int` constants | `const int MAX = 10;` | ✅ Yes (compile-time constant) |
+| Regular variables | `int x = 5;` | ❌ No |
+| Expressions | `x + 1` | ❌ No |
+
+**Example:**
+```cpp
+int x = 5;
+switch (n) {
+    case x:       // ❌ Error: x is a variable
+    case 5:       // ✅ OK: literal constant
+    case 'A':     // ✅ OK: character constant
+    case x + 1:   // ❌ Error: expression
+}
+```
+
+> **Why:** The compiler generates a **jump table** for switch statements, which requires all case values to be known at compile time.
+
+##### 8.3.2.3 Case Labels Must Be Unique
+
+`case` labels must be unique constants. **An error occurs if two or more case labels have the same value.**
+
+```cpp
+switch (n) {
+    case 1: ...
+    case 1: ...   // ❌ Error: duplicate case value
+    case 'A': ... // ASCII 65
+    case 65: ...  // ❌ Error: 'A' equals 65, duplicate value
+}
+```
+
+##### 8.3.2.4 The break Statement
+
+`break` is required to exit the switch block. Without `break`, execution **falls through** to the next case.
+
+```cpp
+switch (choice) {
+    case 1:
+        cout << "One" << endl;
+        break;      // ✅ Exit switch
+    case 2:
+        cout << "Two" << endl;
+        // No break! Execution continues to case 3
+    case 3:
+        cout << "Three" << endl;
+        break;
+}
+```
+
+##### 8.3.2.5 The default Label
+
+The **default** label provides statements to execute when no case matches. It is **optional** but recommended for handling unexpected values.
+
+```cpp
+switch (grade) {
+    case 'A':
+    case 'B':
+    case 'C':
+        cout << "Passed!" << endl;
+        break;
+    case 'D':
+    case 'F':
+        cout << "Failed!" << endl;
+        break;
+    default:           // Optional but recommended
+        cout << "Invalid grade" << endl;
+}
+```
 
 #### 8.3.3 Fall-Through Behavior
 
