@@ -3904,7 +3904,15 @@ switch (a) {
 #### 8.3.2 Syntax Rules
 
 - The `expression` must be an integral type (`int`, `char`, `enum`, etc.)
-- `case` labels must be compile-time constants
+- `case` labels must be compile-time constants (not variables)
+  ```cpp
+  int x = 5;
+  switch (n) {
+      case x:     // ❌ Error: x is a variable
+      case 5:     // ✅ OK: literal constant
+      case 'A':   // ✅ OK: character constant
+  }
+  ```
 - `case` labels must be unique — **an error occurs if two or more `case` labels have the same value**
 - `break` is required to exit the switch (otherwise fall-through occurs)
 - `default` case is optional but recommended
