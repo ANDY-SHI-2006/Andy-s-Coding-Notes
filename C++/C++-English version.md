@@ -31,7 +31,31 @@ There are two ways to include header files:
 > - `<stdio.h>` → C library, has `.h`
 > - `"myheader.h"` → Custom header, has `.h`
 
-### 1.1.3 Preprocessor Directives
+### 1.1.3 Common Header Files Reference
+
+| Header | Full Name | Meaning | Usage |
+|--------|-----------|---------|-------|
+| **`<iostream>`** | **i**nput **o**utput **stream** | 输入输出流 | `cin`, `cout`, `cerr`, `endl` |
+| **`<cstdio>`** | **C** **st**andard **i**nput **o**utput | C标准输入输出 | `printf`, `scanf`, `fopen` (C++ style) |
+| **`<stdio.h>`** | **st**andard **i**nput **o**utput **.h** | 标准输入输出头文件 | Same as `<cstdio>` but C style |
+| **`<cmath>`** | **C** **math** | C数学 | `sin`, `cos`, `sqrt`, `pow`, `fabs` |
+| **`<math.h>`** | **math** header | 数学头文件 | Same as `<cmath>` but C style |
+| **`<cstdlib>`** | **C** **st**andard **lib**rary | C标准库 | `abs`, `rand`, `exit`, `malloc` |
+| **`<stdlib.h>`** | **st**andard **lib**rary **.h** | 标准库头文件 | Same as `<cstdlib>` but C style |
+| **`<iomanip>`** | **i**nput **o**utput **manip**ulators | 输入输出操作符 | `setw`, `setprecision`, `fixed` |
+| **`<cctype>`** | **C** **c**haracter **type** | C字符类型 | `isalpha`, `isdigit`, `toupper` |
+| **`<ctype.h>`** | **c**haracter **type** **.h** | 字符类型头文件 | Same as `<cctype>` but C style |
+| **`<vector>`** | **vector** | 向量/动态数组 | `vector` container class |
+| **`<algorithm>`** | **algorithm** | 算法 | `sort`, `find`, `max`, `min` |
+| **`<numeric>`** | **numeric** | 数值计算 | `accumulate`, `inner_product` |
+| **`<type_traits>`** | **type traits** | 类型特征 | Type checking at compile time |
+
+**Naming Pattern:**
+- **C++ headers**: No `.h` extension (`<iostream>`, `<vector>`)
+- **C headers in C++**: Add `c` prefix, no `.h` (`<cstdio>` = C + stdio)
+- **Original C headers**: Have `.h` extension (`<stdio.h>`)
+
+### 1.1.4 Preprocessor Directives
 
 `#include` is a **preprocessor directive**, not a C++ statement:
 
