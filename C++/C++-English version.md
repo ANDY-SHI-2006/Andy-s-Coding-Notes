@@ -1489,6 +1489,27 @@ int x = 10 + ((y > 0) ? y : 0);
 ((flag) ? a : b) = 100;  // Assigns 100 to either a or b (C++ allows this)
 ```
 
+### 4.8.5 Associativity
+
+If there is more than one conditional operator in an expression, they are associated **from right to left**.
+
+```cpp
+// This expression:
+a ? b : c ? d : e
+
+// Is equivalent to (right-to-left associativity):
+a ? b : (c ? d : e)
+
+// NOT:
+(a ? b : c) ? d : e
+```
+
+**Example:**
+```cpp
+int result = 0 ? 1 : 0 ? 2 : 3;  // Evaluates as: 0 ? 1 : (0 ? 2 : 3)
+                                 // Result: 3
+```
+
 ## 4.9 Type Cast Operators
 
 Cast operators are used to explicitly convert a value from one data type to another.
