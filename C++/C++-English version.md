@@ -3977,6 +3977,19 @@ switch (n) {
 }
 ```
 
+**Same value from different sources also causes error:**
+
+```cpp
+const int MAX = 1;  // Compile-time constant
+
+switch (n) {
+    case 1: ...      // Value = 1
+    case MAX: ...    // ❌ Error: MAX expands to 1, duplicate value
+}
+```
+
+> **Key point:** The compiler checks the **final numeric value**, not how the case is written. If two case labels evaluate to the same constant value, it's an error.
+
 ##### 8.3.2.4 The break Statement
 
 `break` is required to exit the switch block. Without `break`, execution **falls through** to the next case.
