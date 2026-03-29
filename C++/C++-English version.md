@@ -2481,24 +2481,6 @@ Use `std::vector` for dynamic sizing instead.
 
 ### 5.8.9 Array vs `std::vector`
 
-For dynamic sizing and safer operations, prefer `std::vector`:
-
-| Feature | Array | `std::vector` |
-|---------|-------|---------------|
-| Size | Fixed at compile time | Dynamic (can grow/shrink) |
-| Bounds checking | No | Yes (with `at()`) |
-| Memory | Stack (usually) | Heap |
-| Pass to function | Decays to pointer | Maintains size info |
-| Modern C++ | C-style | Recommended |
-
-```cpp
-#include <vector>
-
-std::vector<int> v = {1, 2, 3};  // Dynamic array
-v.push_back(4);                   // Add element
-int val = v.at(10);               // Throws exception if out of bounds
-```
-
 #### Initialization Syntax Comparison
 
 | Container | `()` Direct Init | `{}` Brace Init | Notes |
@@ -3306,6 +3288,56 @@ double truncate(double val, int prec) {
 ```cpp
  double truncated = trunc(value * 100) / 100;  // C++11
 ```
+
+### 7.1.2.9 Operator Precedence with `cout`
+
+**Common Mistake:**
+
+```cpp
+cout << 1 == 1;  // ❌ Compile error!
+```
+
+**Why it fails:**
+The stream insertion operator `<<` has **higher precedence** than the equality operator `==`. The expression is parsed as:
+
+```cpp
+(cout << 1) == 1;  // Compares ostream& with int - invalid!
+```
+
+**Solution:**
+Use **parentheses** to ensure the comparison happens first:
+
+```cpp
+cout << (1 == 1);  // ✅ Outputs "1" (true)
+```
+
+**More Examples:**
+
+```cpp
+// Bitwise operators (low precedence)
+cout << a & b;       // ❌ Wrong: (cout << a) & b
+cout << (a & b);     // ✅ Correct
+
+// Logical operators
+cout << x == 5 && y == 10;    // ❌ Wrong: ((cout << x) == 5) && ...
+cout << (x == 5 && y == 10);  // ✅ Correct
+
+// Ternary operator
+cout << x > 0 ? "pos" : "neg";    // ❌ Wrong
+cout << (x > 0 ? "pos" : "neg");  // ✅ Correct
+```
+
+**Operator Precedence Quick Reference:**
+
+| Precedence | Operators | Description |
+|------------|-----------|-------------|
+| **Higher** | `<<` `>>` | Stream insertion/extraction |
+| **Lower** | `==` `!=` `<` `>` `<=` `>=` | Comparison operators |
+| **Lower** | `&` `^` `\|` | Bitwise operators |
+| **Lower** | `&&` `\|\|` | Logical operators |
+| **Lower** | `?:` | Ternary conditional |
+
+> **Best Practice:** When mixing `cout` with any comparison or logical operation, **always use parentheses** to make the intent explicit.
 
 ## 7.2 `printf` (C-style Output)
 
