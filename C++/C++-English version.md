@@ -33,22 +33,22 @@ There are two ways to include header files:
 
 ### 1.1.3 Common Header Files Reference
 
-| Header | Full Name | Meaning | Usage |
-|--------|-----------|---------|-------|
-| **`<iostream>`** | **i**nput **o**utput **stream** | 输入输出流 | `cin`, `cout`, `cerr`, `endl` |
-| **`<cstdio>`** | **C** **st**andard **i**nput **o**utput | C标准输入输出 | `printf`, `scanf`, `fopen` (C++ style) |
-| **`<stdio.h>`** | **st**andard **i**nput **o**utput **.h** | 标准输入输出头文件 | Same as `<cstdio>` but C style |
-| **`<cmath>`** | **C** **math** | C数学 | `sin`, `cos`, `sqrt`, `pow`, `fabs` |
-| **`<math.h>`** | **math** header | 数学头文件 | Same as `<cmath>` but C style |
-| **`<cstdlib>`** | **C** **st**andard **lib**rary | C标准库 | `abs`, `rand`, `exit`, `malloc` |
-| **`<stdlib.h>`** | **st**andard **lib**rary **.h** | 标准库头文件 | Same as `<cstdlib>` but C style |
-| **`<iomanip>`** | **i**nput **o**utput **manip**ulators | 输入输出操作符 | `setw`, `setprecision`, `fixed` |
-| **`<cctype>`** | **C** **c**haracter **type** | C字符类型 | `isalpha`, `isdigit`, `toupper` |
-| **`<ctype.h>`** | **c**haracter **type** **.h** | 字符类型头文件 | Same as `<cctype>` but C style |
-| **`<vector>`** | **vector** | 向量/动态数组 | `vector` container class |
-| **`<algorithm>`** | **algorithm** | 算法 | `sort`, `find`, `max`, `min` |
-| **`<numeric>`** | **numeric** | 数值计算 | `accumulate`, `inner_product` |
-| **`<type_traits>`** | **type traits** | 类型特征 | Type checking at compile time |
+| Header              | Full Name                                | Meaning   | Usage                                  |
+| ------------------- | ---------------------------------------- | --------- | -------------------------------------- |
+| **`<iostream>`**    | **i**nput **o**utput **stream**          | Standard Input/Output Stream | `cin`, `cout`, `cerr`, `endl`          |
+| **`<cstdio>`**      | **C** **st**andard **i**nput **o**utput  | C Standard Input/Output   | `printf`, `scanf`, `fopen` (C++ style) |
+| **`<stdio.h>`**     | **st**andard **i**nput **o**utput **.h** | Standard Input/Output Header | Same as `<cstdio>` but C style         |
+| **`<cmath>`**       | **C** **math**                           | C Math       | `sin`, `cos`, `sqrt`, `pow`, `fabs`    |
+| **`<math.h>`**      | **math** header                          | Math Header     | Same as `<cmath>` but C style          |
+| **`<cstdlib>`**     | **C** **st**andard **lib**rary           | C Standard Library      | `abs`, `rand`, `exit`, `malloc`        |
+| **`<stdlib.h>`**    | **st**andard **lib**rary **.h**          | Standard Library Header    | Same as `<cstdlib>` but C style        |
+| **`<iomanip>`**     | **i**nput **o**utput **manip**ulators    | Input/Output Manipulators   | `setw`, `setprecision`, `fixed`        |
+| **`<cctype>`**      | **C** **c**haracter **type**             | C Character Type     | `isalpha`, `isdigit`, `toupper`        |
+| **`<ctype.h>`**     | **c**haracter **type** **.h**            | Character Type Header   | Same as `<cctype>` but C style         |
+| **`<vector>`**      | **vector**                               | Dynamic Array (Vector)   | `vector` container class               |
+| **`<algorithm>`**   | **algorithm**                            | Algorithms        | `sort`, `find`, `max`, `min`           |
+| **`<numeric>`**     | **numeric**                              | Numeric Operations      | `accumulate`, `inner_product`          |
+| **`<type_traits>`** | **type traits**                          | Type Characteristics      | Type checking at compile time          |
 
 **Naming Pattern:**
 - **C++ headers**: No `.h` extension (`<iostream>`, `<vector>`)
