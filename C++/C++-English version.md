@@ -2767,10 +2767,10 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 | Modifier | Use With | C/C++ Type | Example |
 |----------|----------|------------|---------|
-| `hh` | `%d`, `%i`, `%o`, `%x` | `signed/unsigned char` | `scanf("%hhd", &c);` |
-| `h` | `%d`, `%i`, `%o`, `%x`, `%u` | `short` / `unsigned short` | `scanf("%hd", &s);` |
-| `l` | `%d`, `%i`, `%o`, `%x`, `%u` | `long` / `unsigned long` | `scanf("%ld", &l);` |
-| `ll` | `%d`, `%i`, `%o`, `%x` | `long long` / `unsigned long long` | `scanf("%lld", &ll);` |
+| `hh` | `%d`, `%i`, `%o`, `%x`, **`%u`** | `signed/unsigned char` | `scanf("%hhd", &c);` `scanf("%hhu", &uc);` |
+| `h` | `%d`, `%i`, `%o`, `%x`, `%u` | `short` / `unsigned short` | `scanf("%hd", &s);` `scanf("%hu", &us);` |
+| `l` | `%d`, `%i`, `%o`, `%x`, `%u` | `long` / `unsigned long` | `scanf("%ld", &l);` `scanf("%lu", &ul);` |
+| `ll` | `%d`, `%i`, `%o`, `%x`, **`%u`** | `long long` / `unsigned long long` | `scanf("%lld", &ll);` `scanf("%llu", &ull);` |
 | `L` | `%f`, `%e`, `%g` | `long double` | `scanf("%Lf", &ld);` |
 | `l` | `%c`, `%s` | `wchar_t` / `wchar_t*` (wide char) | `scanf("%lc", &wc);` |
 
@@ -3272,9 +3272,10 @@ double truncate(double val, int prec) {
 | -1.278 | -1.28 | -1.27 |
 
 > **Note:** For negative numbers, use `trunc()` (C++11) instead of `floor()` to truncate toward zero:
-> ```cpp
-> double truncated = trunc(value * 100) / 100;  // C++11
-> ```
+
+```cpp
+ double truncated = trunc(value * 100) / 100;  // C++11
+```
 
 ## 7.2 `printf` (C-style Output)
 
@@ -3388,17 +3389,17 @@ Specifies the **minimum** number of characters to print.
 
 #### 4. Length Modifier (Optional)
 
-| Modifier | Use With | C Type | Example |
-|----------|----------|--------|---------|
-| `hh` | `%d`, `%u`, `%o`, `%x` | `signed/unsigned char` | `%hhd` |
-| `h` | `%d`, `%i`, `%o`, `%x`, `%u` | `short` / `unsigned short` | `%hd`, `%hi`, `%hu` |
-| `l` | `%d`, `%i`, `%o`, `%x`, `%u` | `long` / `unsigned long` | `%ld`, `%li`, `%lu` |
-| `ll` | `%d`, `%u`, `%o`, `%x` | `long long` / `unsigned long long` | `%lld` |
-| `j` | `%d`, `%u`, `%o`, `%x` | `intmax_t` / `uintmax_t` | `%jd` |
-| `z` | `%d`, `%u`, `%o`, `%x` | `size_t` | `%zu` |
-| `t` | `%d`, `%u`, `%o`, `%x` | `ptrdiff_t` | `%td` |
-| `L` | `%f`, `%e`, `%g`, `%a` | `long double` | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
-| `l` | `%c`, `%s` | Wide char/string | `%lc`, `%ls` |
+| Modifier | Use With                     | C Type                             | Example                                                        |
+| -------- | ---------------------------- | ---------------------------------- | -------------------------------------------------------------- |
+| `hh`     | `%d`, `%u`, `%o`, `%x`       | `signed/unsigned char`             | `%hhd`                                                         |
+| `h`      | `%d`, `%i`, `%o`, `%x`, `%u` | `short` / `unsigned short`         | `%hd`, `%hi`, `%hu`                                            |
+| `l`      | `%d`, `%i`, `%o`, `%x`, `%u` | `long` / `unsigned long`           | `%ld`, `%li`, `%lu`                                            |
+| `ll`     | `%d`, `%u`, `%o`, `%x`       | `long long` / `unsigned long long` | `%lld`                                                         |
+| `j`      | `%d`, `%u`, `%o`, `%x`       | `intmax_t` / `uintmax_t`           | `%jd`                                                          |
+| `z`      | `%d`, `%u`, `%o`, `%x`       | `size_t`                           | `%zu`                                                          |
+| `t`      | `%d`, `%u`, `%o`, `%x`       | `ptrdiff_t`                        | `%td`                                                          |
+| `L`      | `%f`, `%e`, `%g`, `%a`       | `long double`                      | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
+| `l`      | `%c`, `%s`                   | Wide char/string                   | `%lc`, `%ls`                                                   |
 
 #### 5. Conversion Specifiers (Required)
 
