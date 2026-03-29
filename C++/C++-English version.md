@@ -2499,6 +2499,36 @@ v.push_back(4);                   // Add element
 int val = v.at(10);               // Throws exception if out of bounds
 ```
 
+#### Initialization Syntax Comparison
+
+| Container | `()` Direct Init | `{}` Brace Init | Notes |
+|-----------|------------------|-----------------|-------|
+| **`std::vector`** | ✅ `vector<int> v(5, 0)` | ✅ `vector<int> v{1, 2, 3}` | `()` can specify size + default value |
+| **C-style array** | ❌ Not supported | ✅ `int arr[] = {1, 2, 3}` | Must use braces; size fixed at compile time |
+| **`std::array`** | ❌ Not supported | ✅ `array<int, 3> arr{1, 2, 3}` | Size is template parameter, fixed at compile time |
+
+**Key Differences:**
+
+```cpp
+// vector - supports both
+vector<int> v1(5, 0);       // 5 elements, all 0 (size constructor)
+vector<int> v2{1, 2, 3};    // 3 elements: 1, 2, 3 (list initialization)
+
+// C-style array - {} only
+int arr1[] = {1, 2, 3};     // OK
+int arr2[3]{1, 2, 3};       // C++11 OK
+// int arr(3);              // ERROR! Not valid syntax
+
+// std::array - {} only, size in template
+array<int, 3> arr3{1, 2, 3};  // OK
+// array<int, 3> arr(1, 2, 3);  // ERROR! Cannot use ()
+```
+
+> **Rule of Thumb:**
+> - Use `()` for `vector` when you need **N copies of a value**
+> - Use `{}` for **list of specific values** (works for all containers)
+> - Arrays (`C-style` and `std::array`) **only support `{}`**
+
 ### 5.8.7 Arrays and Input
 
 > **See also:** [6.2.4 Arrays and `scanf`](#624-arrays-and-scanf) for C-style input details.
