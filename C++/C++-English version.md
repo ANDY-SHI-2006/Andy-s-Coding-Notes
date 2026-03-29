@@ -3832,6 +3832,27 @@ cout << (score >= 60 ? "Passed" : "Failed") << endl;
 int sign = (x > 0) ? 1 : (x < 0) ? -1 : 0;
 ```
 
+**Associativity:**
+
+If there is more than one conditional operator in an expression, they are associated **from right to left**.
+
+```cpp
+// This expression:
+a ? b : c ? d : e
+
+// Is equivalent to (right-to-left associativity):
+a ? b : (c ? d : e)
+
+// NOT:
+(a ? b : c) ? d : e
+```
+
+**Example:**
+```cpp
+int result = 0 ? 1 : 0 ? 2 : 3;  // Evaluates as: 0 ? 1 : (0 ? 2 : 3)
+                                 // Result: 3
+```
+
 ## 8.3 The switch Statement
 
 The `switch` statement selects one of many code blocks to execute.
