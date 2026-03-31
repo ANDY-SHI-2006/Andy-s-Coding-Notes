@@ -1724,9 +1724,6 @@ int result = a*b + b/c*d;  // Clearer structure
 int result = a * b + b / c * d;  // Also valid, but less clear
 ```
 
-
-
-
 ---
 
 # 5 Data Types
@@ -5239,6 +5236,618 @@ v.push_back(6);  // May invalidate all iterators!
 ```
 
 > **Warning:** Insertions (`push_back`, `insert`) may invalidate iterators when reallocation occurs. Use `reserve()` to prevent this when possible.
+
+## 11.2 String
+
+`std::string` is a class template that represents a sequence of characters. It provides a dynamic, resizable array of characters with many convenient member functions for string manipulation.
+
+### 11.2.1 Why Use string?
+
+**Problem with C-style strings (char arrays):**
+```cpp
+char str[20] = "hello";
+// - Fixed size, cannot grow
+// - strcpy, strcat are dangerous (buffer overflow)
+// - Manual memory management
+// - Cannot compare with ==, must use strcmp
+```
+
+**Solution with string:**
+```cpp
+string s = "hello";
+// - Dynamic size, grows automatically
+// - Safe operations with bounds checking
+// - Automatic memory management
+// - Compare with ==, concatenate with +
+```
+
+**Key Advantages:**
+
+| Feature | C-String (`char[]`) | `std::string` |
+|---------|---------------------|---------------|
+| **Size** | Fixed, must specify | Dynamic, automatic |
+| **Safety** | Buffer overflow risk | Safe, automatic bounds checking |
+| **Memory** | Manual management | Automatic (RAII) |
+| **Operations** | C functions (strcpy, strcat) | Rich member functions |
+| **Comparison** | strcmp function | ==, !=, < operators |
+| **Concatenation** | strcat (unsafe) | + operator |
+
+### 11.2.2 Header and Declaration
+
+```cpp
+#include <string>  // Required header
+
+using namespace std;  // Or use std::string explicitly
+
+// Declaration
+string s1;              // Empty string
+string s2 = "hello";    // Initialize with literal
+string s3("hello");     // Constructor syntax
+string s4{s2};          // Copy constructor (C++11)
+string s5(5, 'a');      // "aaaaa" (5 copies of 'a')
+```
+
+### 11.2.3 Common Operations
+
+| Operation | Description | Example | Result |
+|-----------|-------------|---------|--------|
+| `s.length()` / `s.size()` | Number of characters | `s = "hello"; s.length()` | `5` |
+| `s.empty()` | Check if empty | `s.empty()` | `true`/`false` |
+| `s.clear()` | Remove all characters | `s.clear()` | `""` |
+| `s.append(str)` | Append string | `s = "he"; s.append("llo")` | `"hello"` |
+| `s.substr(pos, len)` | Extract substring | `s = "hello"; s.substr(1, 3)` | `"ell"` |
+| `s.find(str)` | Find substring position | `s = "hello"; s.find("ll")` | `2` (or `string::npos` if not found) |
+| `s.replace(pos, len, str)` | Replace substring | `s = "hello"; s.replace(1, 2, "iii")` | `"hiiilo"` |
+| `s.insert(pos, str)` | Insert at position | `s = "helo"; s.insert(3, "l")` | `"hello"` |
+| `s.erase(pos, len)` | Remove characters | `s = "hello"; s.erase(1, 2)` | `"ho"` |
+| `s.compare(str)` | Compare strings | `s.compare("hello")` | `0` if equal |
+
+**Examples:**
+```cpp
+string s = "hello";
+
+cout << s.length() << endl;     // 5
+s.append(" world");              // "hello world"
+s.insert(5, ",");                // "hello, world"
+
+size_t pos = s.find("world");    // 7
+if (pos != string::npos) {
+    cout << "Found at: " << pos << endl;
+}
+
+s.replace(7, 5, "C++");          // "hello, C++"
+s.erase(5, 1);                   // "hello C++"
+```
+
+### 11.2.4 Element Access
+
+| Method | Description | Example | Notes |
+|--------|-------------|---------|-------|
+| `s[i]` | Subscript operator | `s[0]` | No bounds checking |
+| `s.at(i)` | Access with checking | `s.at(0)` | Throws `out_of_range` if invalid |
+| `s.front()` | First character | `s.front()` | Same as `s[0]` |
+| `s.back()` | Last character | `s.back()` | Same as `s[s.length()-1]` |
+| `s.c_str()` | C-style string | `const char* p = s.c_str()` | For C API compatibility |
+| `s.data()` | Character array | `const char* p = s.data()` | C++11: returns const char* |
+
+```cpp
+string s = "hello";
+
+cout << s[0] << endl;       // 'h' (no bounds check)
+cout << s.at(0) << endl;    // 'h' (bounds checked)
+cout << s.front() << endl;  // 'h'
+cout << s.back() << endl;   // 'o'
+
+// Convert to C-string for C API
+const char* cstr = s.c_str();
+printf("%s\n", cstr);       // "hello"
+```
+
+### 11.2.5 String Concatenation and Comparison
+
+**Concatenation with `+`:**
+```cpp
+string s1 = "hello";
+string s2 = "world";
+string s3 = s1 + " " + s2;   // "hello world"
+
+// Works with string literals too
+string s4 = "hi" + s1;       // "hihello"
+
+// Compound assignment
+s1 += "!";                   // "hello!"
+```
+
+**Comparison operators:**
+```cpp
+string s1 = "apple";
+string s2 = "banana";
+
+if (s1 == s2) { }     // false
+if (s1 != s2) { }     // true
+if (s1 < s2) { }      // true (lexicographic order)
+if (s1 <= s2) { }     // true
+
+// Compare with C-string
+if (s1 == "apple") { }  // true
+```
+
+### 11.2.6 Numeric Conversions
+
+| Function | Description | Example | Since |
+|----------|-------------|---------|-------|
+| `to_string(val)` | Convert number to string | `to_string(42)` → `"42"` | C++11 |
+| `stoi(str)` | String to int | `stoi("42")` → `42` | C++11 |
+| `stol(str)` | String to long | `stol("42")` → `42L` | C++11 |
+| `stoll(str)` | String to long long | `stoll("42")` | C++11 |
+| `stof(str)` | String to float | `stof("3.14")` | C++11 |
+| `stod(str)` | String to double | `stod("3.14")` | C++11 |
+| `stold(str)` | String to long double | | C++11 |
+
+```cpp
+// Number to string
+string s1 = to_string(42);      // "42"
+string s2 = to_string(3.14159); // "3.141590"
+
+// String to number
+int x = stoi("42");             // 42
+double d = stod("3.14");        // 3.14
+
+// With error checking
+size_t pos;
+int y = stoi("123abc", &pos);   // y = 123, pos = 3 (chars processed)
+```
+
+### 11.2.7 Iterating Over Strings
+
+```cpp
+string s = "hello";
+
+// Range-based for loop (C++11)
+for (char c : s) {
+    cout << c << " ";
+}
+
+// With index
+for (size_t i = 0; i < s.length(); i++) {
+    cout << s[i] << " ";
+}
+
+// Using iterators
+for (auto it = s.begin(); it != s.end(); ++it) {
+    cout << *it << " ";
+}
+
+// Modify during iteration (for loop)
+for (size_t i = 0; i < s.length(); i++) {
+    s[i] = toupper(s[i]);   // Convert to uppercase
+}
+```
+
+### 11.2.8 String vs Vector<char>
+
+`string` and `vector<char>` are similar but `string` has additional string-specific functionality:
+
+| Feature | `string` | `vector<char>` |
+|---------|----------|----------------|
+| **Purpose** | Text data | Generic character array |
+| **Concatenation** | `+` operator | No `+` operator |
+| **Comparison** | `==`, `<`, etc. | `==` checks contents, not standard `<` |
+| **C-string conversion** | `c_str()`, `data()` | Manual conversion |
+| **Null terminator** | Automatic | Not automatic |
+| **Stream I/O** | `>>`, `<<` | Not directly supported |
+
+> **Use `string`** for text processing. **Use `vector<char>`** only when you need a raw character array without string semantics.
+
+## 11.3 Algorithm
+
+The `<algorithm>` header provides a rich set of generic algorithms that work with iterators from any container.
+
+### 11.3.1 Header Overview
+
+```cpp
+#include <algorithm>  // Required header
+```
+
+These algorithms work with iterators, so they can be used with:
+- Arrays (`int arr[]`)
+- `vector`, `list`, `deque`, etc.
+- `string`
+- Any container with iterators
+
+### 11.3.2 Sorting Algorithms
+
+| Algorithm | Description | Example | Time Complexity |
+|-----------|-------------|---------|-----------------|
+| `sort(begin, end)` | Sort ascending | `sort(v.begin(), v.end())` | O(n log n) |
+| `sort(begin, end, comp)` | Sort with comparator | `sort(v.begin(), v.end(), greater<int>())` | O(n log n) |
+| `stable_sort(begin, end)` | Stable sort | `stable_sort(v.begin(), v.end())` | O(n log² n) or O(n log n) |
+| `partial_sort(begin, mid, end)` | Partial sort | `partial_sort(v.begin(), v.begin()+5, v.end())` | O(n log n) |
+| `nth_element(begin, nth, end)` | Partition at nth element | `nth_element(v.begin(), v.begin()+5, v.end())` | O(n) on average |
+
+**Examples:**
+```cpp
+vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+
+// Ascending sort
+sort(v.begin(), v.end());
+// v = {1, 1, 2, 3, 4, 5, 6, 9}
+
+// Descending sort
+sort(v.begin(), v.end(), greater<int>());
+// v = {9, 6, 5, 4, 3, 2, 1, 1}
+
+// Custom comparator (sort by absolute value)
+sort(v.begin(), v.end(), [](int a, int b) {
+    return abs(a) < abs(b);
+});
+
+// Sort first 5 elements only
+partial_sort(v.begin(), v.begin()+5, v.end());
+
+// Find median (middle element after partitioning)
+nth_element(v.begin(), v.begin() + v.size()/2, v.end());
+int median = v[v.size()/2];
+```
+
+### 11.3.3 Searching Algorithms
+
+| Algorithm | Description | Example | Time Complexity |
+|-----------|-------------|---------|-----------------|
+| `find(begin, end, val)` | Linear search | `find(v.begin(), v.end(), 5)` | O(n) |
+| `binary_search(begin, end, val)` | Binary search (sorted only) | `binary_search(v.begin(), v.end(), 5)` | O(log n) |
+| `lower_bound(begin, end, val)` | First element >= val | `lower_bound(v.begin(), v.end(), 5)` | O(log n) |
+| `upper_bound(begin, end, val)` | First element > val | `upper_bound(v.begin(), v.end(), 5)` | O(log n) |
+| `equal_range(begin, end, val)` | Range of elements == val | `equal_range(v.begin(), v.end(), 5)` | O(log n) |
+| `find_if(begin, end, pred)` | Find with predicate | `find_if(v.begin(), v.end(), isEven)` | O(n) |
+
+**Examples:**
+```cpp
+vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+// Linear search
+auto it = find(v.begin(), v.end(), 5);
+if (it != v.end()) {
+    cout << "Found at index: " << (it - v.begin()) << endl;
+}
+
+// Binary search (requires sorted range)
+bool exists = binary_search(v.begin(), v.end(), 5);  // true
+
+// Lower/Upper bound
+auto lb = lower_bound(v.begin(), v.end(), 5);  // Points to 5
+auto ub = upper_bound(v.begin(), v.end(), 5);  // Points to 6
+
+// Count occurrences
+int count = ub - lb;  // 1 (only one 5 in the vector)
+
+// Find first even number
+auto it2 = find_if(v.begin(), v.end(), [](int x) {
+    return x % 2 == 0;
+});
+// it2 points to 2
+```
+
+### 11.3.4 Min/Max Algorithms
+
+| Algorithm | Description | Example |
+|-----------|-------------|---------|
+| `min(a, b)` | Minimum of two values | `min(3, 5)` → `3` |
+| `max(a, b)` | Maximum of two values | `max(3, 5)` → `5` |
+| `min_element(begin, end)` | Iterator to minimum | `min_element(v.begin(), v.end())` |
+| `max_element(begin, end)` | Iterator to maximum | `max_element(v.begin(), v.end())` |
+| `minmax(a, b)` | Min and max as pair | `minmax(3, 5)` → `{3, 5}` |
+| `minmax_element(begin, end)` | Iterators to min and max | `minmax_element(v.begin(), v.end())` |
+| `clamp(val, min, max)` | Constrain value to range | `clamp(10, 0, 5)` → `5` (C++17) |
+
+**Examples:**
+```cpp
+vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+
+// Min/Max of two values
+int a = min(3, 5);  // 3
+int b = max(3, 5);  // 5
+
+// Min/Max element (returns iterator)
+auto minIt = min_element(v.begin(), v.end());
+cout << "Min: " << *minIt << " at index " << (minIt - v.begin()) << endl;
+// Min: 1 at index 1
+
+auto maxIt = max_element(v.begin(), v.end());
+cout << "Max: " << *maxIt << endl;  // Max: 9
+
+// Both min and max (single pass)
+auto [minIt2, maxIt2] = minmax_element(v.begin(), v.end());
+// C++17 structured binding
+
+// Clamp value to range (C++17)
+int x = clamp(10, 0, 5);   // 5 (constrained to max)
+int y = clamp(-5, 0, 5);   // 0 (constrained to min)
+int z = clamp(3, 0, 5);    // 3 (within range)
+```
+
+### 11.3.5 Modifying Algorithms
+
+| Algorithm | Description | Example | Notes |
+|-----------|-------------|---------|-------|
+| `copy(begin, end, dest)` | Copy range | `copy(v1.begin(), v1.end(), v2.begin())` | Destination must have enough space |
+| `copy_if(begin, end, dest, pred)` | Copy with condition | `copy_if(v.begin(), v.end(), dest, isEven)` | C++11 |
+| `fill(begin, end, val)` | Fill with value | `fill(v.begin(), v.end(), 0)` | |
+| `generate(begin, end, gen)` | Fill with generator | `generate(v.begin(), v.end(), rand)` | |
+| `replace(begin, end, old, new)` | Replace values | `replace(v.begin(), v.end(), 1, 99)` | |
+| `replace_if(begin, end, pred, new)` | Replace with condition | `replace_if(v.begin(), v.end(), isOdd, 0)` | |
+| `reverse(begin, end)` | Reverse order | `reverse(v.begin(), v.end())` | |
+| `rotate(begin, mid, end)` | Rotate elements | `rotate(v.begin(), v.begin()+3, v.end())` | |
+| `shuffle(begin, end, rng)` | Random shuffle | `shuffle(v.begin(), v.end(), rng)` | C++11 |
+| `unique(begin, end)` | Remove consecutive duplicates | `unique(v.begin(), v.end())` | Requires erase after |
+
+**Examples:**
+```cpp
+vector<int> v = {1, 2, 3, 4, 5};
+vector<int> dest(5);
+
+// Copy
+copy(v.begin(), v.end(), dest.begin());
+// dest = {1, 2, 3, 4, 5}
+
+// Copy only even numbers
+copy_if(v.begin(), v.end(), dest.begin(), [](int x) {
+    return x % 2 == 0;
+});
+// dest[0] = 2, dest[1] = 4, rest unspecified without resize
+
+// Fill
+fill(v.begin(), v.end(), 0);  // v = {0, 0, 0, 0, 0}
+
+// Generate
+int n = 0;
+generate(v.begin(), v.end(), [&n]() { return n++; });
+// v = {0, 1, 2, 3, 4}
+
+// Replace
+replace(v.begin(), v.end(), 3, 99);  // v = {0, 1, 2, 99, 4}
+
+// Reverse
+reverse(v.begin(), v.end());  // v = {4, 99, 2, 1, 0}
+
+// Remove-erase idiom (remove doesn't actually resize)
+v = {1, 2, 3, 2, 4, 2, 5};
+auto newEnd = remove(v.begin(), v.end(), 2);  // Moves non-2 elements forward
+v.erase(newEnd, v.end());  // Actually removes the trailing elements
+// v = {1, 3, 4, 5}
+
+// Remove consecutive duplicates
+v = {1, 1, 2, 2, 2, 3, 3};
+auto it = unique(v.begin(), v.end());  // Returns iterator to new end
+v.erase(it, v.end());
+// v = {1, 2, 3}
+```
+
+### 11.3.6 Numeric Algorithms (in <numeric>)
+
+| Algorithm | Description | Example | Since |
+|-----------|-------------|---------|-------|
+| `accumulate(begin, end, init)` | Sum/accumulate | `accumulate(v.begin(), v.end(), 0)` | C++11 |
+| `accumulate(begin, end, init, op)` | Custom accumulate | `accumulate(v.begin(), v.end(), 1, multiplies<int>())` | C++11 |
+| `inner_product(begin1, end1, begin2, init)` | Dot product | `inner_product(a.begin(), a.end(), b.begin(), 0)` | C++11 |
+| `partial_sum(begin, end, dest)` | Prefix sums | `partial_sum(v.begin(), v.end(), dest.begin())` | C++11 |
+| `adjacent_difference(begin, end, dest)` | Differences | `adjacent_difference(v.begin(), v.end(), dest.begin())` | C++11 |
+| `iota(begin, end, start)` | Fill with incrementing values | `iota(v.begin(), v.end(), 1)` | C++11 |
+
+**Examples:**
+```cpp
+#include <numeric>
+
+vector<int> v = {1, 2, 3, 4, 5};
+
+// Sum all elements
+int sum = accumulate(v.begin(), v.end(), 0);  // 15
+
+// Product of all elements
+int product = accumulate(v.begin(), v.end(), 1, multiplies<int>());  // 120
+
+// Dot product of two vectors
+vector<int> a = {1, 2, 3};
+vector<int> b = {4, 5, 6};
+int dot = inner_product(a.begin(), a.end(), b.begin(), 0);  // 32
+
+// Prefix sums
+vector<int> prefix(5);
+partial_sum(v.begin(), v.end(), prefix.begin());
+// prefix = {1, 3, 6, 10, 15}
+
+// Fill with 1, 2, 3, ...
+iota(v.begin(), v.end(), 1);  // v = {1, 2, 3, 4, 5}
+```
+
+### 11.3.7 Set Algorithms (for sorted ranges)
+
+| Algorithm | Description | Example | Notes |
+|-----------|-------------|---------|-------|
+| `includes(begin1, end1, begin2, end2)` | Check if set2 is subset of set1 | `includes(s1.begin(), s1.end(), s2.begin(), s2.end())` | Both sorted |
+| `set_union(begin1, end1, begin2, end2, dest)` | Union of two sets | `set_union(a.begin(), a.end(), b.begin(), b.end(), dest.begin())` | Both sorted |
+| `set_intersection(begin1, end1, begin2, end2, dest)` | Intersection | Similar to above | Both sorted |
+| `set_difference(begin1, end1, begin2, end2, dest)` | Difference (A - B) | Similar to above | Both sorted |
+| `set_symmetric_difference(begin1, end1, begin2, end2, dest)` | Symmetric difference | Similar to above | Both sorted |
+| `merge(begin1, end1, begin2, end2, dest)` | Merge two sorted ranges | `merge(a.begin(), a.end(), b.begin(), b.end(), dest.begin())` | Both sorted |
+
+**Examples:**
+```cpp
+vector<int> a = {1, 2, 3, 4, 5};
+vector<int> b = {4, 5, 6, 7, 8};
+vector<int> dest(10);
+
+// Union
+auto it = set_union(a.begin(), a.end(), b.begin(), b.end(), dest.begin());
+dest.resize(it - dest.begin());
+// dest = {1, 2, 3, 4, 5, 6, 7, 8}
+
+// Intersection
+it = set_intersection(a.begin(), a.end(), b.begin(), b.end(), dest.begin());
+dest.resize(it - dest.begin());
+// dest = {4, 5}
+
+// Difference (A - B)
+it = set_difference(a.begin(), a.end(), b.begin(), b.end(), dest.begin());
+dest.resize(it - dest.begin());
+// dest = {1, 2, 3}
+
+// Check subset
+bool isSubset = includes(a.begin(), a.end(), b.begin(), b.end());  // false
+```
+
+### 11.3.8 Comparison and Permutation
+
+| Algorithm | Description | Example |
+|-----------|-------------|---------|
+| `equal(begin1, end1, begin2)` | Check if ranges equal | `equal(v1.begin(), v1.end(), v2.begin())` |
+| `lexicographical_compare(begin1, end1, begin2, end2)` | Lexicographic compare | Like string comparison |
+| `is_permutation(begin1, end1, begin2)` | Check if permutation | `is_permutation(v1.begin(), v1.end(), v2.begin())` |
+| `next_permutation(begin, end)` | Next lexicographic permutation | `next_permutation(v.begin(), v.end())` |
+| `prev_permutation(begin, end)` | Previous permutation | `prev_permutation(v.begin(), v.end())` |
+
+**Examples:**
+```cpp
+vector<int> v = {1, 2, 3};
+
+// Generate all permutations
+sort(v.begin(), v.end());
+do {
+    for (int x : v) cout << x << " ";
+    cout << endl;
+} while (next_permutation(v.begin(), v.end()));
+// Output:
+// 1 2 3
+// 1 3 2
+// 2 1 3
+// 2 3 1
+// 3 1 2
+// 3 2 1
+
+// Check if two ranges are permutations
+vector<int> a = {1, 2, 3};
+vector<int> b = {3, 1, 2};
+bool isPerm = is_permutation(a.begin(), a.end(), b.begin());  // true
+```
+
+### 11.3.9 Partitioning Algorithms
+
+| Algorithm | Description | Example |
+|-----------|-------------|---------|
+| `partition(begin, end, pred)` | Partition by predicate | `partition(v.begin(), v.end(), isEven)` |
+| `stable_partition(begin, end, pred)` | Stable partition | Maintains relative order |
+| `is_partitioned(begin, end, pred)` | Check if partitioned | `is_partitioned(v.begin(), v.end(), isEven)` |
+| `partition_point(begin, end, pred)` | Find partition point | Iterator where predicate becomes false |
+
+**Examples:**
+```cpp
+vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+// Partition: evens first, odds second
+auto it = partition(v.begin(), v.end(), [](int x) {
+    return x % 2 == 0;
+});
+// v = {2, 4, 6, 8, 1, 3, 5, 7, 9} (order may vary)
+// it points to first odd element (1)
+
+// Stable partition maintains relative order
+v = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+stable_partition(v.begin(), v.end(), [](int x) {
+    return x % 2 == 0;
+});
+// v = {2, 4, 6, 8, 1, 3, 5, 7, 9} (evens and odds in original order)
+```
+
+### 11.3.10 Heap Algorithms
+
+| Algorithm | Description | Example |
+|-----------|-------------|---------|
+| `make_heap(begin, end)` | Create max-heap | `make_heap(v.begin(), v.end())` |
+| `push_heap(begin, end)` | Add element to heap | After push_back, call push_heap |
+| `pop_heap(begin, end)` | Move top to end | After pop_heap, pop_back |
+| `sort_heap(begin, end)` | Sort heap | `sort_heap(v.begin(), v.end())` |
+| `is_heap(begin, end)` | Check if heap | `is_heap(v.begin(), v.end())` |
+
+**Examples:**
+```cpp
+vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+
+// Create heap
+make_heap(v.begin(), v.end());
+// v is now a max-heap: largest element at v[0]
+
+// Access max
+int max = v.front();  // 9
+
+// Extract max
+pop_heap(v.begin(), v.end());  // Moves max to end
+v.pop_back();  // Removes max
+
+// Add new element
+v.push_back(10);
+push_heap(v.begin(), v.end());  // Restores heap property
+
+// Heap sort
+make_heap(v.begin(), v.end());
+sort_heap(v.begin(), v.end());  // Sorts in ascending order
+```
+
+### 11.3.11 Best Practices
+
+**1. Use iterators properly:**
+```cpp
+// Good: Works with any container
+sort(v.begin(), v.end());
+
+// Less flexible: Only works with vectors
+sort(v.data(), v.data() + v.size());
+```
+
+**2. Check return values:**
+```cpp
+auto it = find(v.begin(), v.end(), 42);
+if (it != v.end()) {
+    // Found
+} else {
+    // Not found
+}
+```
+
+**3. Use lambdas for custom behavior:**
+```cpp
+// Sort by absolute value descending
+sort(v.begin(), v.end(), [](int a, int b) {
+    return abs(a) > abs(b);
+});
+
+// Find first string with length > 5
+auto it = find_if(strings.begin(), strings.end(), [](const string& s) {
+    return s.length() > 5;
+});
+```
+
+**4. Use std::begin() and std::end() for arrays:**
+```cpp
+int arr[] = {3, 1, 4, 1, 5};
+sort(begin(arr), end(arr));  // C++11, works with raw arrays
+```
+
+**5. Reserve space before copying:**
+```cpp
+vector<int> dest;
+dest.reserve(src.size());  // Avoid reallocations
+copy(src.begin(), src.end(), back_inserter(dest));
+```
+
+**6. Use algorithms instead of manual loops:**
+```cpp
+// Instead of:
+int sum = 0;
+for (int x : v) sum += x;
+
+// Use:
+int sum = accumulate(v.begin(), v.end(), 0);
+```
 
 ---
 
