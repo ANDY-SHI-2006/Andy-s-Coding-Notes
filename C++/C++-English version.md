@@ -5271,6 +5271,10 @@ double sinc(double x) { ... }
 
 ### 8.3.3 Parameter Passing
 
+#### 8.3.3.1 Pass by Value
+
+By default, C++ passes arguments **by value**. This means the formal parameters receive a *copy* of the actual parameters. Any changes made to the formal parameters inside the function do **not** affect the original variables in the caller.
+
 **Example:**
 ```cpp
 void swap(int a, int b) {  // a, b are formal parameters
@@ -5286,9 +5290,58 @@ int main() {
 }
 ```
 
-**Coercion of Arguments:**
-- If actual parameter type differs from formal parameter, automatic conversion occurs
-- Example: passing `float` to `int` parameter truncates the value
+#### 8.3.3.2 Parameter Matching Rules
+
+When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
+- **Number**: The count of arguments must be equal
+- **Type**: Corresponding parameters must have compatible types
+- **Order**: Arguments are matched positionally from left to right
+
+#### 8.3.3.3 Implicit Type Conversion (Coercion)
+
+If the actual parameter type differs from the formal parameter type, C++ attempts an automatic type conversion (coercion).
+
+- **Narrowing conversions** may cause data loss:
+  - `float` → `int`: truncates decimal part (e.g., 3.7 becomes 3)
+  - `double` → `float`: may lose precision
+  - `int` → `char`: value may be truncated to fit
+- **Widening conversions** are generally safe:
+  - `int` → `double`
+  - `char` → `int`
+- **Warning**: Some conversions may produce unexpected results or compiler warnings
+
+**Example — Implicit Conversion (Not Recommended):**
+```cpp
+void printInt(int x) {
+    printf("%d\n", x);
+}
+
+int main() {
+    printInt(3.7);      // Passes double, converts to int: prints 3 (truncated!)
+    printInt('A');      // Passes char, converts to int: prints 65
+}
+```
+
+**Example — Explicit Conversion (Recommended):**
+```cpp
+void printInt(int x) {
+    printf("%d\n", x);
+}
+
+int main() {
+    printInt(static_cast<int>(3.7));   // Explicitly cast double to int: prints 3
+    printInt(static_cast<int>('A'));   // Explicitly cast char to int: prints 65
+
+    // C-style cast also works, but static_cast is preferred in C++
+    printInt((int)3.7);                // Same result, less safe syntax
+}
+```
+
+> **Best Practice:** Avoid relying on implicit conversions. Use explicit casts to document intended conversions and catch potential data loss at compile time.
+>
+> **See also:** [3.2.3 List Initialization (Brace Initialization)](#323-list-initialization-brace-initialization) for using `{}` to prevent narrowing conversions at compile time.
+>
+> **See also:** [4.9.3 C++ Style Casts](#493-c-style-casts) for syntax of `static_cast` and explicit conversion operators.
 
 ### 8.3.4 Return Statement
 
