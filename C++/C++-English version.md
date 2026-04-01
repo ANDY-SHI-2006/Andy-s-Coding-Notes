@@ -5247,7 +5247,7 @@ return_type function_name(parameter_declarations)
 return_type function_name(parameter_types);
 ```
 
-**Example:**
+**Example — Prototypes with Parameter Names (Recommended for Documentation):**
 ```cpp
 // Prototypes at top of file
 void printTable(double a, double b, int n);
@@ -5264,10 +5264,30 @@ void printTable(double a, double b, int n) { ... }
 double sinc(double x) { ... }
 ```
 
+**Example — Prototypes without Parameter Names (Also Valid):**
+```cpp
+// Parameter names are optional in prototypes
+void printTable(double, double, int);
+double sinc(double);
+
+int main() {
+    printTable(a, b, NUM_ROWS);
+    return 0;
+}
+```
+
 **Key Points:**
 - Prototype informs compiler about: function name, return type, parameter types
 - Parameter names in prototype are optional but recommended for documentation
 - Prototypes are typically placed after `#include` statements, before `main()`
+- **With prototypes, functions can be defined before *or* after `main()`**
+
+**Function Definition Placement:**
+
+| Scenario           | Where to place function definition |
+| ------------------ | ---------------------------------- |
+| **No prototype**   | Must be before `main()`            |
+| **With prototype** | Can be before *or* after `main()`  |
 
 ### 8.3.3 Parameter Passing
 
