@@ -176,48 +176,73 @@ Arg 2: world
 
 ## 2.1 Program Example
 
-This is a complete example program that demonstrates good coding standards and conventions:
+This complete example demonstrates all code standardization guidelines from this chapter:
 
 ```cpp
-/*--------------------------------------*/
-/* Program lecture1_1                   */
-/*                                      */
-/* This program computes the            */
-/* distance between two points.         */
-/*--------------------------------------*/
+/*------------------------------------------------------------*/
+/* Program: sinc_table.c                                      */
+/*                                                            */
+/* This program computes and prints a table of sinc(x)        */
+/* values over a user-specified interval [a, b].              */
+/*------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <math.h>
 
+#define PI 3.141593
+
+/*------------------------------------------------------------*/
+/* This function evaluates the sinc function.                 */
+/* Sinc(x) = sin(PI*x) / (PI*x) for x != 0, 1 for x = 0       */
+/*------------------------------------------------------------*/
+double sinc(double x)
+{
+    if (fabs(x) < 0.0001)
+        return 1.0;
+    else
+        return sin(PI * x) / (PI * x);
+}
+
+/*------------------------------------------------------------*/
 int main(void)
 {
-    // Declare and initialize variables.
-    double x1=1, y1=5, x2=4, y2=7,
-           side_1, side_2, distance;
+    /* Declare variables. */
+    int k;
+    double a, b, x_incr, new_x;
 
-    /* Compute sides of a right triangle. */
-    side_1 = x2 - x1;
-    side_2 = y2 - y1;
-    distance = sqrt(side_1*side_1 + side_2*side_2);
+    /* Get interval endpoints from the user. */
+    printf("Enter endpoints a and b (a<b): \n");
+    scanf("%lf %lf", &a, &b);
+    x_incr = (b - a) / 20;
 
-    /* Print distance. */
-    printf("The distance between the two points is "
-           "%5.2f \n", distance);
+    /* Compute and print table of sinc(x) values. */
+    printf("x and sinc(x) \n");
+    for (k = 0; k <= 20; k++)
+    {
+        new_x = a + k * x_incr;
+        printf("%f %f \n", new_x, sinc(new_x));
+    }
 
     /* Exit program. */
     return 0;
 }
-/*--------------------------------------*/
+/*------------------------------------------------------------*/
 ```
 
-**Key features demonstrated:**
-- Header comments with program description
-- Consistent indentation (4 spaces)
-- Descriptive variable names (`side_1`, `distance`)
-- Comments explaining each section
-- String splitting across lines in printf
-- Proper program termination with return
+**Key Features Demonstrated:**
 
+| Guideline | How It's Applied |
+|-----------|------------------|
+| **Header Comments** (2.2.1) | Program description with title, purpose, and author |
+| **Function Comments** (2.2.3) | Each function preceded by descriptive comment block |
+| **Step Comments** (2.2.3) | Each step in `main()` documented: declarations, input, computation, output |
+| **Separator Lines** (2.2.3) | `/*------------------*/` blocks separate components |
+| **Blank Lines** (2.3.1) | Empty lines separate declaration, input, computation sections |
+| **Indentation** (2.3.2) | Consistent 4-space indentation inside braces |
+| **Line Splitting** (2.3.2) | Long expressions avoided; clear statement per line |
+| **Naming** (2.4.2) | Descriptive names: `x_incr` not `dx`, `new_x` not `x1` |
+| **No Hungarian** (2.4.2) | Clean names without type prefixes |
+| **No Keywords** (2.4.1) | No reserved words used as identifiers |
 ## 2.2 Comments
 
 ### 2.2.1 Comment Types
@@ -259,10 +284,31 @@ return 0;
 /*---------------------------------------------*/
 ```
 
-**Function Comments:**
-Comments should also be included within the function to further describe the purpose of the function and to document the steps.
 
-> **See also:** [8.3 Programmer-Defined Functions](#83-programmer-defined-functions) for function organization with separator lines.
+**Function Comments:**
+Functions should be preceded by a descriptive comment explaining their purpose:
+```cpp
+/* This function evaluates the sinc function. */
+```
+
+Inside the function, use comments to document each step:
+```cpp
+/* Declare variables. */
+int k;
+double a, b, x_incr, new_x;
+
+/* Get interval endpoints from the user. */
+printf("Enter endpoints a and b (a<b): 
+");
+scanf("%lf %lf", &a, &b);
+
+/* Compute and print table of sinc(x) values. */
+printf("x and sinc(x) 
+");
+
+/* Exit program. */
+return 0;
+```
 
 ## 2.3 White Space
 
@@ -5133,11 +5179,41 @@ char result = toupper(sym);   // result = '5' (unchanged)
 ```
 
 
+
 **Function Organization:**
-Comments should be included within the function to describe its purpose and document the steps. A comment line with dashes (`---`) separates a programmer-defined function from the `main` function and from other programmer-defined functions.
+Use comment blocks with dashes to separate functions visually:
+```cpp
+/*------------------------------------------------------------*/
+/* This function evaluates the sinc function.                 */
+double sinc(double x)
+{
+    if (fabs(x) < 0.0001)
+        return 1.0;
+    else
+        return sin(PI*x)/(PI*x);
+}
+/*------------------------------------------------------------*/
+```
+
+In `main()`, document each step with inline comments:
+```cpp
+int main(void)
+{
+    /* Declare variables. */
+    int k;
+    double a, b;
+
+    /* Get interval endpoints from the user. */
+    printf("Enter endpoints: 
+");
+
+    /* Compute and print table of values. */
+    /* Exit program. */
+    return 0;
+}
+```
 
 > **See also:** [2.2.3 Program Structure Comments](#223-program-structure-comments) for comment style guidelines.
-
 ## 8.3 Programmer-Defined Functions
 
 ### 8.3.1 Function Definition
