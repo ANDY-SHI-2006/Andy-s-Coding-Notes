@@ -5323,6 +5323,8 @@ void printMessage() {
 }
 ```
 
+> **Note:** In a `void` function, the `return` statement does not contain an expression. It can be written as `return;` or can be omitted entirely. When omitted, the function automatically returns when execution reaches the closing brace `}`.
+
 ### 8.3.5 Storage Class and Scope
 
 **Local Variables:**
