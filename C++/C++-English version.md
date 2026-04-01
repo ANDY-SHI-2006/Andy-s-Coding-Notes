@@ -5151,6 +5151,7 @@ return_type function_name(parameter_declarations)
 1. **Return Type**: Type of value returned (`void` if none)
 2. **Function Name**: Identifier for the function
 3. **Parameters**: Input values (can be empty)
+   - If no parameters: can write `void` explicitly or leave empty: `void func(void)` or `void func()`
 4. **Function Body**: Statements enclosed in braces
 
 **Important Rules:**
