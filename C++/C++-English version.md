@@ -2664,20 +2664,28 @@ s2.gender = 'f';       // Modify field
 
 ---
 
-# 6 Data Input
+# 6 Input and Output
 
-## 6.1 `cin`
+C++ provides multiple ways to handle input and output operations. This chapter covers both modern C++ stream-based I/O and traditional C-style I/O functions.
+
+## 6.1 C++ Stream I/O
+
+Modern C++ uses the `<iostream>` library for input and output operations. Streams provide type-safe, extensible, and object-oriented I/O.
+
+
+### 6.1.1 Input with `cin`
+---
 
 Console input using `cin` (character input).
 
-### 6.1.1 Basic Syntax
+### 6.1.1.1 Basic Syntax
 
 ```cpp
 cin >> variable;           // Read single variable
 cin >> a >> b >> c;        // Chain input, separated by whitespace
 ```
 
-### 6.1.2 Input Separators
+### 6.1.1.2 Input Separators
 
 `cin` treats **whitespace** (space, tab, newline) as separators:
 
@@ -2687,13 +2695,13 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 | `1\n2 3\n4` | ✓ | Same (newlines = spaces) |
 | `1234 56.78` with `char c1,c2; int a; float b;` | ✓ | c1='1', c2='2', a=34, b=56.78 |
 
-### 6.1.3 Key Behaviors
+### 6.1.1.3 Key Behaviors
 
 1. **Type-aware extraction**: `cin` extracts bytes according to variable type
 2. **Excess input ignored**: Extra data beyond variables is discarded
 3. **Whitespace skipped**: Leading spaces/newlines are automatically skipped
 
-### 6.1.4 Operator Precedence with `cin`
+### 6.1.1.4 Operator Precedence with `cin`
 
 > **See also:** [7.1.2.9 Operator Precedence with `cout`](#71129-operator-precedence-with-cout) for the output equivalent.
 
@@ -2757,7 +2765,311 @@ int val = (x > 0) ? a : b;
 
 > **Best Practice:** When using `cin` with any comparison or logical operation, **read the values first, then perform the operation in a separate statement**.
 
-## 6.2 `scanf` (C-style Input)
+### 6.1.2 Output with `cout`
+
+Console output using `cout` (character output).
+
+### 6.1.2.1 Newline Control
+
+Both create a new line, but with a key difference:
+
+| Syntax | Effect                      | Usage                           |
+| ------ | --------------------------- | ------------------------------- |
+| `endl` | New line + **flush buffer** | When you need immediate output  |
+| `'\n'` | New line only               | General use, better performance |
+
+```cpp
+cout << "Hello" << endl;    // Flushes buffer
+cout << "Hello" << '\n';    // Just newline, faster
+```
+
+**Note**: Frequent use of `endl` can slow down the program. Use `'\n'` unless you need to force output immediately.
+
+### 6.1.2.2 Output Formatting
+
+#### 6.1.2.2.1 Header Dependency
+
+```cpp
+#include <iomanip>
+```
+
+#### 6.1.2.2.2 Core Mechanism
+
+C++ has three floating-point output formats:
+
+| Format | Description | Example (12345.6789) |
+|--------|-------------|----------------------|
+| **Default** | Automatic, may use scientific notation | `12345.7` or `1.23457e+04` |
+| `fixed` | Fixed-point notation | `12345.678900` |
+| `scientific` | Scientific notation | `1.234568e+04` |
+
+#### 6.1.2.2.3 setprecision(n) Meaning
+
+`setprecision(n)` behavior depends on the current format:
+
+- **Default**: `n` significant digits
+- `fixed`/`scientific`: `n` digits after decimal point
+
+#### 6.1.2.2.4 Detailed Comparison and Examples
+
+```cpp
+double pi = 3.1415926535;
+double big = 12345678.9;
+
+// 1. Default format
+cout << setprecision(4);
+cout << pi << endl;    // 3.142 (4 significant digits)
+cout << big << endl;   // 1.235e+07 (scientific notation)
+
+// 2. Fixed format
+cout << fixed << setprecision(4);
+cout << pi << endl;    // 3.1416 (4 digits after decimal)
+cout << big << endl;   // 12345678.9000
+
+// 3. Scientific format
+cout << scientific << setprecision(4);
+cout << 123.456 << endl;  // 1.2346e+02
+```
+
+#### 6.1.2.2.5 State Persistence
+
+`fixed` and `setprecision` persist until explicitly changed.
+
+```cpp
+cout << fixed << setprecision(2);
+cout << 1.234 << endl;  // 1.23
+cout << 5.678 << endl;  // 5.68 (format still active!)
+```
+
+#### 6.1.2.2.6 Reset to Default
+
+```cpp
+// C++11 method
+cout << defaultfloat << setprecision(6);
+
+// Pre-C++11 method
+cout.unsetf(ios::fixed | ios::scientific);
+cout << setprecision(6);
+```
+
+#### 6.1.2.2.7 cout Formatting for double Values
+
+> See also: [1.4.3.4 Power - cout Formatting for double Values](#1434-power-exponentiation)
+
+**The Issue:**
+```cpp
+cout << pow(5, 2);      // Output: 25 (not 25.0!)
+cout << 25.0;           // Output: 25 (not 25.0!)
+```
+
+`pow()` **does** return `double` (25.0), but `cout` has **default formatting rules** for floating-point numbers.
+
+| Format Flag | Effect | Default |
+|-------------|--------|---------|
+| `ios::fixed` | Fixed decimal places | Not set |
+| `ios::scientific` | Scientific notation | Not set |
+| `ios::showpoint` | **Force show decimal point** | **Not set** |
+
+**Default Behavior:**
+- When `showpoint` is not set and the decimal part is `.0`, `cout` **omits the decimal point**
+- This is a design choice in C++ to make output cleaner
+
+**Memory vs Display:**
+
+```
+Memory (IEEE 754):  [01000011 01100100 0000...] = 25.0 (double)
+       ↓
+   cout formatting
+       ↓
+Display:            "25" (default, omits .0)
+```
+
+**How to Force Display of Decimal:**
+
+```cpp
+#include <iomanip>  // Required for formatting
+
+// Method 1: Force showpoint
+cout << showpoint << 25.0;              // Output: 25.0000
+
+// Method 2: Fixed precision
+cout << fixed << setprecision(2) << 25.0;  // Output: 25.00
+
+// Method 3: Scientific notation
+cout << scientific << 25.0;             // Output: 2.500000e+01
+```
+
+**Verification:**
+
+```cpp
+auto result = pow(5, 2);  // auto deduces: double
+cout << typeid(result).name();  // Confirm: it's double!
+```
+
+> **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
+
+#### 6.1.2.2.8 Truncating Floating-Point Output (No Rounding)
+
+**The Problem:**
+Both `setprecision` and `printf` **round** by default:
+
+```cpp
+cout << fixed << setprecision(2) << 3.149;  // Output: 3.15 (rounded!)
+printf("%.2f", 3.149);                       // Output: 3.15 (rounded!)
+```
+
+**Solution: Truncate Manually**
+
+If you want **truncation** (discard extra digits without rounding), use `floor()` or pre-calculate:
+
+```cpp
+#include <cmath>  // for floor()
+
+double value = 3.149;
+int precision = 2;
+
+// Method 1: Using floor()
+double truncated = floor(value * 100) / 100;  // 3.14
+cout << fixed << setprecision(2) << truncated; // Output: 3.14
+
+// Method 2: Cast to int (for 2 decimal places)
+double truncated2 = (int)(value * 100) / 100.0;  // 3.14
+
+// Method 3: General function
+double truncate(double val, int prec) {
+    double multiplier = pow(10, prec);
+    return floor(val * multiplier) / multiplier;
+}
+```
+
+**Comparison:**
+
+| Value | Rounded (default) | Truncated |
+|-------|-------------------|-----------|
+| 3.149 | 3.15 | 3.14 |
+| 2.999 | 3.00 | 2.99 |
+| -1.278 | -1.28 | -1.27 |
+
+> **Note:** For negative numbers, use `trunc()` (C++11) instead of `floor()` to truncate toward zero:
+
+```cpp
+ double truncated = trunc(value * 100) / 100;  // C++11
+```
+
+### 6.1.2.2.9 Operator Precedence with `cout`
+
+> **See also:** [6.1.4 Operator Precedence with `cin`](#614-operator-precedence-with-cin) for the input equivalent.
+
+**Common Mistake:**
+
+```cpp
+cout << 1 == 1;  // ❌ Compile error!
+```
+
+**Why it fails:**
+The stream insertion operator `<<` has **higher precedence** than the equality operator `==`. The expression is parsed as:
+
+```cpp
+(cout << 1) == 1;  // Compares ostream& with int - invalid!
+```
+
+**Solution:**
+Use **parentheses** to ensure the comparison happens first:
+
+```cpp
+cout << (1 == 1);  // ✅ Outputs "1" (true)
+```
+
+**More Examples:**
+
+```cpp
+// Bitwise operators (low precedence)
+cout << a & b;       // ❌ Wrong: (cout << a) & b
+cout << (a & b);     // ✅ Correct
+
+// Logical operators
+cout << x == 5 && y == 10;    // ❌ Wrong: ((cout << x) == 5) && ...
+cout << (x == 5 && y == 10);  // ✅ Correct
+
+// Ternary operator
+cout << x > 0 ? "pos" : "neg";    // ❌ Wrong
+cout << (x > 0 ? "pos" : "neg");  // ✅ Correct
+```
+
+**Operator Precedence Quick Reference:**
+
+| Precedence | Operators | Description |
+|------------|-----------|-------------|
+| **Higher** | `<<` `>>` | Stream insertion/extraction |
+| **Lower** | `==` `!=` `<` `>` `<=` `>=` | Comparison operators |
+| **Lower** | `&` `^` `\|` | Bitwise operators |
+| **Lower** | `&&` `\|\|` | Logical operators |
+| **Lower** | `?:` | Ternary conditional |
+
+> **Best Practice:** When mixing `cout` with any comparison or logical operation, **always use parentheses** to make the intent explicit.
+
+### 6.1.3 String Streams
+
+String streams from <sstream> allow you to treat strings as streams, enabling convenient parsing and formatting.
+
+**Header:** `#include <sstream>`
+
+**Input String Stream:** Parse data from a string
+```cpp
+string data = "123 45.6 Hello";
+istringstream iss(data);
+
+int i;
+double d;
+string s;
+iss >> i >> d >> s;  // i=123, d=45.6, s="Hello"
+```
+
+**Output String Stream:** Build strings efficiently
+```cpp
+ostringstream oss;
+oss << "Name: " << name << ", Age: " << age;
+string result = oss.str();
+```
+
+**Use Cases:**
+- Converting between types and strings
+- Parsing complex input line by line
+- Building formatted strings
+### 6.1.4 I/O Manipulators
+
+**Header:** `#include <iomanip>`
+
+| Manipulator | Description | Example |
+|-------------|-------------|---------|
+| `setw(n)` | Set field width | `cout << setw(10) << x;` |
+| `setprecision(n)` | Set decimal precision | `cout << setprecision(3) << d;` |
+| `fixed` | Fixed-point notation | `cout << fixed << d;` |
+| `scientific` | Scientific notation | `cout << scientific << d;` |
+| `setfill(c)` | Fill character | `cout << setfill('0') << setw(5) << x;` |
+| `left` / `right` | Alignment | `cout << left << setw(10) << x;` |
+| `boolalpha` | Print true/false | `cout << boolalpha << flag;` |
+| `endl` | Newline + flush | `cout << "Hello" << endl;` |
+
+**Example:**
+```cpp
+double pi = 3.1415926535;
+cout << fixed << setprecision(2) << pi;  // 3.14
+
+cout << setw(10) << left << "Name" << setw(5) << "Score" << endl;
+// Name      Score
+```
+
+---
+
+
+---
+
+## 6.2 C-style I/O
+
+C-style I/O functions from <cstdio> provide fast, format-based input/output operations. While less type-safe than C++ streams, they are useful for specific formatting needs and performance-critical code.
+
+### 6.2.1 Input with `scanf` (C-style Input)
 
 Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
 
@@ -2766,7 +3078,7 @@ Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
 scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 ```
 
-### 6.2.1 Header Style: C vs C++
+#### 6.2.1.1 Header Style: C vs C++
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
@@ -2777,7 +3089,7 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-### 6.2.2 Basic Usage
+#### 6.2.1.2 Basic Usage
 
 `scanf` requires the **address** of variables to store input values. The `&` operator returns the memory address of a variable.
 
@@ -2802,7 +3114,7 @@ The address operator `&` has the same precedence level as other unary operators.
 !~x      // First: ~x (bitwise NOT), then: ! (logical NOT)
 ```
 
-### 6.2.3 Format Specifier Syntax
+#### 6.2.1.3 Format Specifier Syntax
 
 ```
 %[flags][width][length]specifier
@@ -2814,7 +3126,7 @@ The address operator `&` has the same precedence level as other unary operators.
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-#### 1. Flags (Optional)
+##### 1. Flags (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -2827,7 +3139,7 @@ int a, b;
 scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
 ```
 
-#### 2. Width (Optional)
+##### 2. Width (Optional)
 
 Specifies the **maximum** number of characters to read:
 
@@ -2843,7 +3155,7 @@ scanf("%9s", str);     // Read at most 9 chars + null terminator (prevents overf
 |-------|-------------|---------|
 | `n` | Maximum field width | `%3d` reads at most 3 digits |
 
-#### 3. Length Modifier (Optional)
+##### 3. Length Modifier (Optional)
 
 Specifies the size of the receiving variable. **Critical for correct memory access.**
 
@@ -2866,7 +3178,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 > **⚠️ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
 
-#### 4. Conversion Specifiers (Required)
+##### 4. Conversion Specifiers (Required)
 
 | Specifier | Type | Input Format | Example Input |
 |-----------|------|--------------|---------------|
@@ -2887,7 +3199,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 | `%[chars]` | `char[]` | Read only specified characters | `%[abc]` reads "abcb" from "abcba" |
 | `%[^chars]` | `char[]` | Read until specified character | `%[^,]` reads "hello" from "hello,world" |
 
-### 6.2.3.1 Length Modifier and Type Matching Rules
+#### 6.2.1.3.1 Length Modifier and Type Matching Rules
 
 The relationship between Length Modifier, Conversion Specifier, and actual variable type must **match exactly** to avoid memory corruption.
 
@@ -2917,7 +3229,7 @@ scanf("%hd", &s);  // ✅ CORRECT: %hd matches short (2 bytes)
 
 > **Warning:** Mismatched specifiers cause undefined behavior. The data written may extend beyond the variable's memory boundary, corrupting adjacent data.
 
-### 6.2.3.2 Special Behavior of `%c` for Character Input
+#### 6.2.1.3.2 Special Behavior of `%c` for Character Input
 
 The `%c` specifier has unique behavior regarding whitespace handling:
 
@@ -2944,13 +3256,38 @@ scanf(" %c", &c);  // If input is "  a", c will be 'a' (leading spaces skipped)
 
 > **Tip:** Use ` %c` (with leading space) when you want to ignore whitespace between inputs, and `%c` when you need to capture whitespace characters exactly.
 
-### 6.2.4 Arrays and `scanf`
+
+#### 6.2.1.3.3 Whitespace in Format Strings
+
+**Any whitespace character in the format string matches any amount of whitespace in the input.**
+
+```cpp
+scanf("%d %d", &a, &b);      // Space matches any whitespace (space, tab, newline)
+```
+
+**Behavior:**
+
+| Format Pattern | Input | Result |
+|----------------|-------|--------|
+| `"%d %d"` | `10 20` | a=10, b=20 |
+| `"%d %d"` | `10\t20` | a=10, b=20 (tab also matches) |
+| `"%d %d"` | `10\n20` | a=10, b=20 (newline also matches) |
+| `"%d %d"` | `10   20` | a=10, b=20 (multiple spaces match) |
+
+**Key Points:**
+- Single space in format string → matches **any amount** of whitespace in input
+- `%d`, `%f`, `%s` automatically skip leading whitespace before reading
+- `%c` is the exception: it reads exactly one character, including whitespace
+
+> **Tip:** The space between `%d %d` is optional for most specifiers (they auto-skip whitespace), but including it improves readability.
+
+#### 6.2.1.4 Arrays and `scanf`
 
 > **See also:** [5.8.7 Arrays and Input](#587-arrays-and-input) for array input fundamentals.
 
 When reading array data with `scanf`, understanding how arrays work with addresses is essential.
 
-#### 6.2.4.1 Core Principle
+##### 6.2.1.4.1 Core Principle
 
 In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
 
@@ -2960,7 +3297,7 @@ In C/C++, **the array name itself represents the address of the first element** 
 | Array (entire array) | Array name only | `scanf("%s", name);` |
 | Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
 
-#### 6.2.4.2 Character Arrays (Strings)
+##### 6.2.1.4.2 Character Arrays (Strings)
 
 ```cpp
 char name[50];
@@ -2977,7 +3314,7 @@ scanf("%s", name);      // ✅ Correct: name is the address of first element
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
 
-#### 6.2.4.3 Numeric Arrays
+##### 6.2.1.4.3 Numeric Arrays
 
 For numeric arrays, you typically need to read elements one by one:
 
@@ -2990,7 +3327,7 @@ for (int i = 0; i < 5; i++) {
 }
 ```
 
-#### 6.2.4.4 Safety Considerations
+##### 6.2.1.4.4 Safety Considerations
 
 **Buffer Overflow Protection:**
 
@@ -3006,7 +3343,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 | `char[50]` | `%49s` | 49 chars + 1 null terminator |
 | `char[100]` | `%99s` | 99 chars + 1 null terminator |
 
-#### 6.2.4.5 Summary Table
+##### 6.2.1.4.5 Summary Table
 
 | Data Type | `scanf` Usage | `&` Required? | Example |
 |-----------|---------------|---------------|---------|
@@ -3019,7 +3356,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 
 > **Key Takeaway:** Array names are addresses. Use them directly with `scanf`, but always protect against buffer overflow by specifying width limits.
 
-### 6.2.5 Format Examples
+#### 6.2.1.5 Format Examples
 
 | Variable Type | `scanf` Specifier | Example |
 |---------------|-------------------|---------|
@@ -3034,7 +3371,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 | `char` | `%c` | `scanf("%c", &c);` |
 | `char[]` | `%s` | `scanf("%s", str);` |
 
-### 6.2.6 Key Differences and Common Pitfalls
+#### 6.2.1.6 Key Differences and Common Pitfalls
 
 **vs `cin`:**
 
@@ -3106,9 +3443,9 @@ scanf("x=%d, y=%d", &x, &y);  // Input must be: x=2, y=3
 
 4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
-### 6.2.7 Return Value of `scanf`
+#### 6.2.1.7 Return Value of `scanf`
 
-#### 6.2.7.1 Basic Definition
+##### 6.2.1.7.1 Basic Definition
 
 `scanf` returns an **`int`** value equal to **the number of successful conversions** (the number of input items successfully matched and assigned).
 
@@ -3116,7 +3453,7 @@ scanf("x=%d, y=%d", &x, &y);  // Input must be: x=2, y=3
 int scanf(const char *format, ...);
 ```
 
-#### 6.2.7.2 Return Value Meanings
+##### 6.2.1.7.2 Return Value Meanings
 
 | Return Value | Meaning |
 |-------------|---------|
@@ -3126,7 +3463,7 @@ int scanf(const char *format, ...);
 
 > **Note**: `EOF` is a macro, typically defined as `-1` in `<cstdio>`.
 
-#### 6.2.7.3 Practical Code Examples
+##### 6.2.1.7.3 Practical Code Examples
 
 **Example 1: Normal successful read**
 ```c
@@ -3161,7 +3498,7 @@ int result = scanf("%d", &num);
 // result = EOF (-1)
 ```
 
-#### 6.2.7.4 Practical Application Scenarios
+##### 6.2.1.7.4 Practical Application Scenarios
 
 **1. Loop reading until EOF**
 ```c
@@ -3189,14 +3526,7 @@ int count = scanf("%d %d %d", &a, &b, &c);
 // Determine how many numbers the user entered based on count value
 ```
 
-#### 6.2.7.5 Common Pitfalls
-
-| Pitfall | Problem | Solution |
-|---------|---------|----------|
-| Ignoring return value | `scanf("%d", &num);` without checking result | Use `if (scanf(...) != 1)` to handle errors |
-| Confusing EOF with 0 | `result == 0` means no match, `result == EOF` means end-of-file | Distinguish between these two cases |
-
-#### 6.2.7.6 Comparison with `printf` Return Value
+##### 6.2.1.7.6 Comparison with `printf` Return Value
 
 | Function | Return Value Meaning |
 |----------|---------------------|
@@ -3208,7 +3538,7 @@ int n1 = printf("Hello\n");    // n1 = 6 (5 characters + newline)
 int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
 ```
 
-#### 6.2.7.7 Underlying Mechanism
+##### 6.2.1.7.7 Underlying Mechanism
 
 `scanf` maintains an internal **scanning pointer** that parses the input stream from left to right:
 
@@ -3219,323 +3549,7 @@ int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
 
 The return value is the **final value of this internal counter**, reflecting the "actual work completed".
 
-## 6.3 C++ Streams
-
-C++ provides a stream-based I/O library through the `<iostream>`, `<fstream>`, and `<sstream>` headers.
-
-### 6.3.1 Header Files
-
-| Header | Purpose |
-|--------|---------|
-| `<iostream>` | Standard input/output streams (cin, cout) |
-| `<fstream>` | File streams (ifstream, ofstream) |
-| `<sstream>` | String streams (istringstream, ostringstream) |
-| `<iomanip>` | I/O manipulators (formatting) |
-
-### 6.3.2 String Streams
-
-**Input String Stream:** Parse data from a string
-```cpp
-#include <sstream>
-
-string data = "123 45.6 Hello";
-istringstream iss(data);
-
-int i;
-double d;
-string s;
-iss >> i >> d >> s;  // i=123, d=45.6, s="Hello"
-```
-
-**Output String Stream:** Build strings efficiently
-```cpp
-ostringstream oss;
-oss << "Name: " << name << ", Age: " << age;
-string result = oss.str();
-```
-
-**Use Cases:**
-- Converting between types and strings
-- Parsing complex input line by line
-- Building formatted strings
-
-### 6.3.3 File Input Streams
-
-**Reading from File:**
-```cpp
-#include <fstream>
-
-ifstream inFile("input.txt");
-if (!inFile) {
-    cerr << "Cannot open file!" << endl;
-    return 1;
-}
-
-// Read word by word
-string word;
-while (inFile >> word) {
-    cout << word << endl;
-}
-
-// Read line by line
-string line;
-while (getline(inFile, line)) {
-    cout << line << endl;
-}
-
-inFile.close();
-```
-
-**Important:** Always check if file opened successfully before reading.
-
----
-
-# 7 Data Output
-
-## 7.1 `cout`
-
-Console output using `cout` (character output).
-
-### 7.1.1 Newline Control
-
-Both create a new line, but with a key difference:
-
-| Syntax | Effect                      | Usage                           |
-| ------ | --------------------------- | ------------------------------- |
-| `endl` | New line + **flush buffer** | When you need immediate output  |
-| `'\n'` | New line only               | General use, better performance |
-
-```cpp
-cout << "Hello" << endl;    // Flushes buffer
-cout << "Hello" << '\n';    // Just newline, faster
-```
-
-**Note**: Frequent use of `endl` can slow down the program. Use `'\n'` unless you need to force output immediately.
-
-### 7.1.2 Output Formatting
-
-#### 7.1.2.1 Header Dependency
-
-```cpp
-#include <iomanip>
-```
-
-#### 7.1.2.2 Core Mechanism
-
-C++ has three floating-point output formats:
-
-| Format | Description | Example (12345.6789) |
-|--------|-------------|----------------------|
-| **Default** | Automatic, may use scientific notation | `12345.7` or `1.23457e+04` |
-| `fixed` | Fixed-point notation | `12345.678900` |
-| `scientific` | Scientific notation | `1.234568e+04` |
-
-#### 7.1.2.3 setprecision(n) Meaning
-
-`setprecision(n)` behavior depends on the current format:
-
-- **Default**: `n` significant digits
-- `fixed`/`scientific`: `n` digits after decimal point
-
-#### 7.1.2.4 Detailed Comparison and Examples
-
-```cpp
-double pi = 3.1415926535;
-double big = 12345678.9;
-
-// 1. Default format
-cout << setprecision(4);
-cout << pi << endl;    // 3.142 (4 significant digits)
-cout << big << endl;   // 1.235e+07 (scientific notation)
-
-// 2. Fixed format
-cout << fixed << setprecision(4);
-cout << pi << endl;    // 3.1416 (4 digits after decimal)
-cout << big << endl;   // 12345678.9000
-
-// 3. Scientific format
-cout << scientific << setprecision(4);
-cout << 123.456 << endl;  // 1.2346e+02
-```
-
-#### 7.1.2.5 State Persistence
-
-`fixed` and `setprecision` persist until explicitly changed.
-
-```cpp
-cout << fixed << setprecision(2);
-cout << 1.234 << endl;  // 1.23
-cout << 5.678 << endl;  // 5.68 (format still active!)
-```
-
-#### 7.1.2.6 Reset to Default
-
-```cpp
-// C++11 method
-cout << defaultfloat << setprecision(6);
-
-// Pre-C++11 method
-cout.unsetf(ios::fixed | ios::scientific);
-cout << setprecision(6);
-```
-
-#### 7.1.2.7 cout Formatting for double Values
-
-> See also: [1.4.3.4 Power - cout Formatting for double Values](#1434-power-exponentiation)
-
-**The Issue:**
-```cpp
-cout << pow(5, 2);      // Output: 25 (not 25.0!)
-cout << 25.0;           // Output: 25 (not 25.0!)
-```
-
-`pow()` **does** return `double` (25.0), but `cout` has **default formatting rules** for floating-point numbers.
-
-| Format Flag | Effect | Default |
-|-------------|--------|---------|
-| `ios::fixed` | Fixed decimal places | Not set |
-| `ios::scientific` | Scientific notation | Not set |
-| `ios::showpoint` | **Force show decimal point** | **Not set** |
-
-**Default Behavior:**
-- When `showpoint` is not set and the decimal part is `.0`, `cout` **omits the decimal point**
-- This is a design choice in C++ to make output cleaner
-
-**Memory vs Display:**
-
-```
-Memory (IEEE 754):  [01000011 01100100 0000...] = 25.0 (double)
-       ↓
-   cout formatting
-       ↓
-Display:            "25" (default, omits .0)
-```
-
-**How to Force Display of Decimal:**
-
-```cpp
-#include <iomanip>  // Required for formatting
-
-// Method 1: Force showpoint
-cout << showpoint << 25.0;              // Output: 25.0000
-
-// Method 2: Fixed precision
-cout << fixed << setprecision(2) << 25.0;  // Output: 25.00
-
-// Method 3: Scientific notation
-cout << scientific << 25.0;             // Output: 2.500000e+01
-```
-
-**Verification:**
-
-```cpp
-auto result = pow(5, 2);  // auto deduces: double
-cout << typeid(result).name();  // Confirm: it's double!
-```
-
-> **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
-
-#### 7.1.2.8 Truncating Floating-Point Output (No Rounding)
-
-**The Problem:**
-Both `setprecision` and `printf` **round** by default:
-
-```cpp
-cout << fixed << setprecision(2) << 3.149;  // Output: 3.15 (rounded!)
-printf("%.2f", 3.149);                       // Output: 3.15 (rounded!)
-```
-
-**Solution: Truncate Manually**
-
-If you want **truncation** (discard extra digits without rounding), use `floor()` or pre-calculate:
-
-```cpp
-#include <cmath>  // for floor()
-
-double value = 3.149;
-int precision = 2;
-
-// Method 1: Using floor()
-double truncated = floor(value * 100) / 100;  // 3.14
-cout << fixed << setprecision(2) << truncated; // Output: 3.14
-
-// Method 2: Cast to int (for 2 decimal places)
-double truncated2 = (int)(value * 100) / 100.0;  // 3.14
-
-// Method 3: General function
-double truncate(double val, int prec) {
-    double multiplier = pow(10, prec);
-    return floor(val * multiplier) / multiplier;
-}
-```
-
-**Comparison:**
-
-| Value | Rounded (default) | Truncated |
-|-------|-------------------|-----------|
-| 3.149 | 3.15 | 3.14 |
-| 2.999 | 3.00 | 2.99 |
-| -1.278 | -1.28 | -1.27 |
-
-> **Note:** For negative numbers, use `trunc()` (C++11) instead of `floor()` to truncate toward zero:
-
-```cpp
- double truncated = trunc(value * 100) / 100;  // C++11
-```
-
-### 7.1.2.9 Operator Precedence with `cout`
-
-> **See also:** [6.1.4 Operator Precedence with `cin`](#614-operator-precedence-with-cin) for the input equivalent.
-
-**Common Mistake:**
-
-```cpp
-cout << 1 == 1;  // ❌ Compile error!
-```
-
-**Why it fails:**
-The stream insertion operator `<<` has **higher precedence** than the equality operator `==`. The expression is parsed as:
-
-```cpp
-(cout << 1) == 1;  // Compares ostream& with int - invalid!
-```
-
-**Solution:**
-Use **parentheses** to ensure the comparison happens first:
-
-```cpp
-cout << (1 == 1);  // ✅ Outputs "1" (true)
-```
-
-**More Examples:**
-
-```cpp
-// Bitwise operators (low precedence)
-cout << a & b;       // ❌ Wrong: (cout << a) & b
-cout << (a & b);     // ✅ Correct
-
-// Logical operators
-cout << x == 5 && y == 10;    // ❌ Wrong: ((cout << x) == 5) && ...
-cout << (x == 5 && y == 10);  // ✅ Correct
-
-// Ternary operator
-cout << x > 0 ? "pos" : "neg";    // ❌ Wrong
-cout << (x > 0 ? "pos" : "neg");  // ✅ Correct
-```
-
-**Operator Precedence Quick Reference:**
-
-| Precedence | Operators | Description |
-|------------|-----------|-------------|
-| **Higher** | `<<` `>>` | Stream insertion/extraction |
-| **Lower** | `==` `!=` `<` `>` `<=` `>=` | Comparison operators |
-| **Lower** | `&` `^` `\|` | Bitwise operators |
-| **Lower** | `&&` `\|\|` | Logical operators |
-| **Lower** | `?:` | Ternary conditional |
-
-> **Best Practice:** When mixing `cout` with any comparison or logical operation, **always use parentheses** to make the intent explicit.
-
-## 7.2 `printf` (C-style Output)
+### 6.2.2 Output with `printf` (C-style Output)
 
 Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
 
@@ -3544,7 +3558,7 @@ Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
 printf("control string", arg1, arg2, ...);
 ```
 
-### 7.2.1 Header Style: C vs C++
+#### 6.2.2.1 Header Style: C vs C++
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
@@ -3555,7 +3569,7 @@ printf("control string", arg1, arg2, ...);
 
 **Performance**: Generally faster than `cout` for large data output, but less type-safe.
 
-### 7.2.2 Basic Usage
+#### 6.2.2.2 Basic Usage
 
 **Control String Structure:**
 
@@ -3590,7 +3604,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 > **See also:** [2.2.2.3.1 Splitting printf Statements](#222231-splitting-printf-statements) for line continuation techniques.
 
-### 7.2.3 Format Specifier Syntax
+#### 6.2.2.3 Format Specifier Syntax
 
 ```
 %[flags][width][.precision][length]specifier
@@ -3600,7 +3614,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 **Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
 
-#### 1. Flags (Optional)
+##### 1. Flags (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -3610,7 +3624,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 | `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
 | `0` | Zero-pad (with width) | `%05d` → `00042` |
 
-#### 2. Width (Optional)
+##### 2. Width (Optional)
 
 Specifies the **minimum** number of characters to print.
 
@@ -3629,7 +3643,7 @@ Specifies the **minimum** number of characters to print.
 | `n` | Minimum field width | `%10d` → `        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
 
-#### 3. Precision (`.precision`) - Optional
+##### 3. Precision (`.precision`) - Optional
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
@@ -3645,7 +3659,7 @@ Specifies the **minimum** number of characters to print.
 
 > **To truncate instead of round:** Pre-process the value (see [7.1.2.8](#71128-truncating-floating-point-output-no-rounding))
 
-#### 4. Length Modifier (Optional)
+##### 4. Length Modifier (Optional)
 
 | Modifier | Use With                     | C Type                             | Example                                                        |
 | -------- | ---------------------------- | ---------------------------------- | -------------------------------------------------------------- |
@@ -3659,7 +3673,38 @@ Specifies the **minimum** number of characters to print.
 | `L`      | `%f`, `%e`, `%g`, `%a`       | `long double`                      | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
 | `l`      | `%c`, `%s`                   | Wide char/string                   | `%lc`, `%ls`                                                   |
 
-#### 5. Conversion Specifiers (Required)
+#### 6.2.2.3.5 Length Modifier and Type Matching Rules
+
+The relationship between Length Modifier, Conversion Specifier, and actual variable type must **match exactly** to avoid undefined behavior.
+
+**Key Principle:** `Length Modifier` + `Conversion Specifier` must match the actual variable type
+
+**Common Bug Example:** Using `%d` with a `long long` variable causes only 4 bytes to be read from an 8-byte variable, resulting in incorrect output:
+
+```cpp
+long long ll = 8589934592LL;  // 2^33
+printf("%d\n", ll);   // ❌ WRONG: %d expects int (4 bytes), but ll is long long (8 bytes)
+printf("%lld\n", ll); // ✅ CORRECT: %lld matches long long (8 bytes)
+```
+
+**Common Combinations Table:**
+
+| Length Modifier | Conversion Specifier | C++ Type | Size |
+|-----------------|----------------------|----------|------|
+| (none) | `%d` / `%i` | `int` | 4 bytes |
+| `h` | `%hd` / `%hi` | `short` | 2 bytes |
+| `hh` | `%hhd` | `signed char` | 1 byte |
+| `l` | `%ld` / `%li` | `long` | 4/8 bytes |
+| `ll` | `%lld` | `long long` | 8 bytes |
+| `h` | `%hu` | `unsigned short` | 2 bytes |
+| `hh` | `%hhu` | `unsigned char` | 1 byte |
+| `l` | `%lu` | `unsigned long` | 4/8 bytes |
+| `ll` | `%llu` | `unsigned long long` | 8 bytes |
+| `L` | `%Lf` / `%Le` / `%Lg` | `long double` | 8+ bytes |
+
+> **Warning:** Mismatched specifiers cause undefined behavior. The data read may be incorrect, or the program may read wrong number of bytes from the argument stack, potentially causing crashes or data corruption.
+
+##### 6. Conversion Specifiers (Required)
 
 | Specifier | Type | Output | Example |
 |-----------|------|--------|---------|
@@ -3688,7 +3733,7 @@ Specifies the **minimum** number of characters to print.
 - `long` → use `%li` or `%ld`
 - `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
-### 7.2.4 Format Examples
+#### 6.2.2.4 Format Examples
 
 **Integer Examples (value = -145):**
 
@@ -3712,7 +3757,7 @@ Specifies the **minimum** number of characters to print.
 | `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
 | `%g` | `157.893` | Auto-select shorter format, rounded |
 
-### 7.2.5 Escape Sequences
+#### 6.2.2.5 Escape Sequences
 
 The backslash (`\`) is an **escape character** that gives special meaning to the following character.
 
@@ -3736,7 +3781,7 @@ printf("\"The End.\"\n");     // Output: "The End." (with newline)
 printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 ```
 
-### 7.2.6 Splitting Long printf Statements
+#### 6.2.2.6 Splitting Long printf Statements
 
 When printf statements become too long for a single line, use these techniques to split them while maintaining readability.
 
@@ -3780,7 +3825,7 @@ cout << "This is a very long message that "
 
 > **See also:** [2.3.2.3.1 Splitting printf Statements](#22231-splitting-printf-statements) for line continuation techniques.
 
-### 7.2.7 Key Differences from `cout`
+#### 6.2.2.7 Key Differences from `cout`
 
 | Feature | `printf` | `cout` |
 |---------|----------|--------|
@@ -3790,9 +3835,9 @@ cout << "This is a very long message that "
 
 > **Note:** Use `printf` for formatted output in performance-critical code, but prefer `cout` for type safety in modern C++.
 
-### 7.2.8 Return Value of `printf`
+#### 6.2.2.8 Return Value of `printf`
 
-#### 7.2.8.1 Basic Definition
+##### 6.2.2.8.1 Basic Definition
 
 `printf` returns an **`int`** value equal to **the number of characters successfully written** to the output stream.
 
@@ -3800,7 +3845,7 @@ cout << "This is a very long message that "
 int printf(const char *format, ...);
 ```
 
-#### 7.2.8.2 Return Value Meanings
+##### 6.2.2.8.2 Return Value Meanings
 
 | Return Value | Meaning |
 |-------------|---------|
@@ -3810,7 +3855,7 @@ int printf(const char *format, ...);
 
 > **Note**: A negative return value indicates an output error (e.g., stream closed, disk full, I/O error).
 
-#### 7.2.8.3 Practical Code Examples
+##### 6.2.2.8.3 Practical Code Examples
 
 **Example 1: Normal successful output**
 ```c
@@ -3835,7 +3880,7 @@ int result = printf("%10d\n", 5);
 // result = 11 (10 characters + 1 newline)
 ```
 
-#### 7.2.8.4 Common Use Cases
+##### 6.2.2.8.4 Common Use Cases
 
 | Use Case | Example | Purpose |
 |----------|---------|---------|
@@ -3843,7 +3888,45 @@ int result = printf("%10d\n", 5);
 | **Character counting** | `int len = printf(...)` | Know how many chars were printed |
 | **Formatted string length** | `snprintf` with `NULL` | Calculate required buffer size |
 
-## 7.3 File Output Streams
+
+---
+
+## 6.3 File I/O
+
+File streams from <fstream> provide facilities for reading from and writing to files.
+
+### 6.3.1 File Input (ifstream)
+
+**Reading from File:**
+```cpp
+#include <fstream>
+
+ifstream inFile("input.txt");
+if (!inFile) {
+    cerr << "Cannot open file!" << endl;
+    return 1;
+}
+
+// Read word by word
+string word;
+while (inFile >> word) {
+    cout << word << endl;
+}
+
+// Read line by line
+string line;
+while (getline(inFile, line)) {
+    cout << line << endl;
+}
+
+inFile.close();
+```
+
+**Important:** Always check if file opened successfully before reading.
+
+---
+
+### 6.3.2 File Output (ofstream)
 
 **Writing to File:**
 ```cpp
@@ -3868,37 +3951,11 @@ outFile << "New line appended" << endl;
 outFile.close();
 ```
 
-## 7.4 I/O Manipulators
+# 7 Conditional Execution
 
-**Header:** `#include <iomanip>`
+## 7.1 Relational & Logical Operators
 
-| Manipulator | Description | Example |
-|-------------|-------------|---------|
-| `setw(n)` | Set field width | `cout << setw(10) << x;` |
-| `setprecision(n)` | Set decimal precision | `cout << setprecision(3) << d;` |
-| `fixed` | Fixed-point notation | `cout << fixed << d;` |
-| `scientific` | Scientific notation | `cout << scientific << d;` |
-| `setfill(c)` | Fill character | `cout << setfill('0') << setw(5) << x;` |
-| `left` / `right` | Alignment | `cout << left << setw(10) << x;` |
-| `boolalpha` | Print true/false | `cout << boolalpha << flag;` |
-| `endl` | Newline + flush | `cout << "Hello" << endl;` |
-
-**Example:**
-```cpp
-double pi = 3.1415926535;
-cout << fixed << setprecision(2) << pi;  // 3.14
-
-cout << setw(10) << left << "Name" << setw(5) << "Score" << endl;
-// Name      Score
-```
-
----
-
-# 8 Conditional Execution
-
-## 8.1 Relational & Logical Operators
-
-### 8.1.1 Relational Operators
+### 7.1.1 Relational Operators
 
 #### 8.1.1.1 Less Than (`<`)
 
@@ -3981,7 +4038,7 @@ bool result = a != b;    // true (5 is not equal to 3)
 | `==` | Equal to | `5 == 5` | `true` |
 | `!=` | Not equal to | `5 != 3` | `true` |
 
-### 8.1.2 Logical Operators
+### 7.1.2 Logical Operators
 
 Logical operators combine boolean expressions.
 
@@ -4055,7 +4112,7 @@ if (isWeekend || isHoliday) {
 > - Logical operators can also be used within conditions.
 > - Logical operators compare conditions, not expressions.
 
-### 8.1.3 Operator Precedence
+### 7.1.3 Operator Precedence
 
 | Precedence | Operators                                        |
 | ---------- | ------------------------------------------------ |
@@ -4076,7 +4133,7 @@ if (a < b && c < d || e < f) { }
 if ((a < b && c < d) || e < f) { }
 ```
 
-## 8.2 The if Statement Family
+## 7.2 The if Statement Family
 
 This section covers various forms of if statements and related constructs for conditional execution.
 
@@ -4255,7 +4312,7 @@ int result = 0 ? 1 : 0 ? 2 : 3;  // Evaluates as: 0 ? 1 : (0 ? 2 : 3)
                                  // Result: 3
 ```
 
-## 8.3 The switch Statement
+## 7.3 The switch Statement
 
 The `switch` statement selects one of many code blocks to execute.
 
@@ -4462,7 +4519,7 @@ switch (grade) {
 | Many discrete values | Ranges of values |
 | Equality checks only | Relational comparisons |
 
-## 8.4 Using Values as Conditions
+## 7.4 Using Values as Conditions
 
 In C++, a single value can be used directly as a condition without relational operators:
 
@@ -4493,9 +4550,9 @@ if (ch) { }            // Equivalent to: if (ch != '\0')
 if (count) { }         // Equivalent to: if (count != 0)
 ```
 
-## 8.5 Loop Structures
+## 7.5 Loop Structures
 
-### 8.5.1 The while Loop
+### 7.5.1 The while Loop
 
 Tests condition before each iteration:
 
@@ -4523,7 +4580,7 @@ while (count < 5) {
 - Loop variable must be initialized before the loop
 - Loop variable must be updated inside the loop
 
-### 8.5.2 The do-while Loop
+### 7.5.2 The do-while Loop
 
 Tests condition after each iteration (guarantees at least one execution):
 
@@ -4552,7 +4609,7 @@ do {
 | Minimum executions | 0 | 1 |
 | Use case | When iteration might not be needed | When at least one iteration is required |
 
-### 8.5.3 The for Loop
+### 7.5.3 The for Loop
 
 Compact loop with initialization, condition, and update in one line.
 
@@ -4706,7 +4763,7 @@ for (auto n : nums) {
 
 > **Best Practice:** Use range-based for loops for simple iteration - cleaner and less error-prone. Default to `const auto&` for read-only access, use `auto&` when modifying.
 
-### 8.5.4 Nested Loops
+### 7.5.4 Nested Loops
 
 Loops can be nested inside other loops:
 
@@ -4730,9 +4787,9 @@ for (int i = 1; i <= 5; i++) {
 5       10      15      20      25
 ```
 
-## 8.6 Jump Statements
+## 7.6 Jump Statements
 
-### 8.6.1 The break Statement
+### 7.6.1 The break Statement
 
 `break` immediately exits the nearest enclosing loop or switch:
 
@@ -4759,7 +4816,7 @@ switch (choice) {
 }
 ```
 
-### 8.6.2 The continue Statement
+### 7.6.2 The continue Statement
 
 `continue` skips the rest of the current iteration and proceeds to the next:
 
@@ -4781,7 +4838,7 @@ for (int i = 0; i < 10; i++) {
 | `break` | Exit the loop/switch immediately |
 | `continue` | Skip to next iteration of the loop |
 
-## 8.7 Loop Comparison and Selection
+## 7.7 Loop Comparison and Selection
 
 | Loop Type | Best For | Key Characteristic |
 |-----------|----------|-------------------|
@@ -4792,9 +4849,9 @@ for (int i = 0; i < 10; i++) {
 
 ---
 
-# 9 Functions
+# 8 Functions
 
-## 9.1 Mathematical Functions
+## 8.1 Mathematical Functions
 
 > **Header:** Most functions in this section require `#include <cmath>` (C++ style) or `#include <math.h>` (C style)
 >
@@ -4802,7 +4859,7 @@ for (int i = 0; i < 10; i++) {
 >
 > **Note:** In C++, `<cmath>` places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
-### 9.1.1 `<cmath>` Functions
+### 8.1.1 `<cmath>` Functions
 
 **Argument Types:** These math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
 
@@ -4899,7 +4956,7 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
-### 9.1.2 `<cstdlib>` Functions
+### 8.1.2 `<cstdlib>` Functions
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
@@ -4926,13 +4983,13 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-## 9.2 Character Functions
+## 8.2 Character Functions
 
 > **Headers:** This section covers functions from two different headers:
 > - `<cstdio>` — Character I/O functions (Section 9.2.1)
 > - `<cctype>` — Character classification & conversion (Section 9.2.2)
 
-### 9.2.1 `<cstdio>` Character I/O
+### 8.2.1 `<cstdio>` Character I/O
 
 > **Header:** `#include <cstdio>` (C++ style) or `#include <stdio.h>` (C style)
 
@@ -5017,7 +5074,7 @@ putchar('!');         // Output on next line
 
 > **Note:** This is expected behavior—characters accumulate until `\n` flushes the output or moves to a new line.
 
-### 9.2.2 `<cctype>` Character Classification & Conversion
+### 8.2.2 `<cctype>` Character Classification & Conversion
 
 > **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
 
@@ -5077,9 +5134,9 @@ char result = toupper(sym);   // result = '5' (unchanged)
 
 ---
 
-## 9.3 Programmer-Defined Functions
+## 8.3 Programmer-Defined Functions
 
-### 9.3.1 Function Basics
+### 8.3.1 Function Basics
 
 **Why Use Functions?**
 - Break complex problems into smaller, manageable modules
@@ -5092,7 +5149,7 @@ char result = toupper(sym);   // result = '5' (unchanged)
 - **Reusability**: Modules can be reused across programs
 - **Abstraction**: Use modules as "black boxes" without worrying about internal details
 
-### 9.3.2 Function Definition
+### 8.3.2 Function Definition
 
 **General Form:**
 ```cpp
@@ -5124,7 +5181,7 @@ double sinc(double x)
 - Functions cannot be nested (one function cannot be defined inside another)
 - Function must be completely defined before another function begins
 
-### 9.3.3 Function Prototype
+### 8.3.3 Function Prototype
 
 **Purpose:** Declare function before use, allowing functions to be defined in any order.
 
@@ -5155,7 +5212,7 @@ double sinc(double x) { ... }
 - Parameter names in prototype are optional but recommended for documentation
 - Prototypes are typically placed after `#include` statements, before `main()`
 
-### 9.3.4 Parameter Passing
+### 8.3.4 Parameter Passing
 
 **Pass by Value (Default in C/C++):**
 - A **copy** of each argument's value is passed to the function
@@ -5188,7 +5245,7 @@ int main() {
 - If actual parameter type differs from formal parameter, automatic conversion occurs
 - Example: passing `float` to `int` parameter truncates the value
 
-### 9.3.5 Return Statement
+### 8.3.5 Return Statement
 
 **Syntax:**
 ```cpp
@@ -5209,7 +5266,7 @@ void printMessage() {
 }
 ```
 
-### 9.3.6 Storage Class and Scope
+### 8.3.6 Storage Class and Scope
 
 **Local Variables:**
 - Defined within a function
@@ -5239,11 +5296,11 @@ void func2() {
 
 > **Best Practice:** Avoid global variables whenever possible. Use parameters instead.
 
-## 9.4 Random Numbers
+## 8.4 Random Numbers
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
-### 9.4.1 Generating Random Integers
+### 8.4.1 Generating Random Integers
 
 **Basic Usage:**
 ```cpp
@@ -5257,7 +5314,7 @@ srand(seed_value);  // Initialize random number generator
 
 > **Important:** Without `srand()`, `rand()` generates the same sequence each run.
 
-### 9.4.2 Random Numbers in Specified Range
+### 8.4.2 Random Numbers in Specified Range
 
 **Integer Range [0, n-1]:**
 ```cpp
@@ -5278,7 +5335,7 @@ double rand_float(double a, double b) {
 }
 ```
 
-### 9.4.3 Complete Example
+### 8.4.3 Complete Example
 
 ```cpp
 #include <cstdio>
@@ -5300,18 +5357,18 @@ int main() {
 }
 ```
 
-## 9.5 Macros
+## 8.5 Macros
 
 **Preprocessor Directive:** Macros are processed before compilation.
 
-### 9.5.1 Simple Macros (Symbolic Constants)
+### 8.5.1 Simple Macros (Symbolic Constants)
 
 ```cpp
 #define PI 3.141593
 #define MAX_SIZE 100
 ```
 
-### 9.5.2 Parameterized Macros
+### 8.5.2 Parameterized Macros
 
 **Syntax:**
 ```cpp
@@ -5326,7 +5383,7 @@ int main() {
 double celsius = degreesC(fahrenheit);
 ```
 
-### 9.5.3 Important: Use Parentheses!
+### 8.5.3 Important: Use Parentheses!
 
 **Incorrect:**
 ```cpp
@@ -5349,7 +5406,7 @@ double celsius = degreesC(fahrenheit);
 #define area_tri(base, height) (0.5*(base)*(height))
 ```
 
-### 9.5.4 Macros vs Functions
+### 8.5.4 Macros vs Functions
 
 | Feature | Macros | Functions |
 |---------|--------|-----------|
@@ -5363,9 +5420,9 @@ double celsius = degreesC(fahrenheit);
 
 ---
 
-# 10 Object-Oriented Programming
+# 9 Object-Oriented Programming
 
-### 10.1 Classes and Objects
+### 9.1 Classes and Objects
 
 **Class vs Structure:**
 - Class is a user-defined data type that encapsulates data and functions
@@ -5396,7 +5453,7 @@ BankAcct ba1(1234, 500.50);  // Object creation with constructor
 BankAcct ba2(9999, 1001.40);
 ```
 
-### 10.2 Encapsulation and Access Specifiers
+### 9.2 Encapsulation and Access Specifiers
 
 **Access Levels:**
 
@@ -5417,7 +5474,7 @@ ba1.deposit(1000);      // Call public method
 // ba1.balance = 1000;  // Error: private member
 ```
 
-### 10.3 Constructors and Destructors
+### 9.3 Constructors and Destructors
 
 **Constructor:**
 - Special method called automatically when object is created
@@ -5450,7 +5507,7 @@ public:
 };
 ```
 
-### 10.4 The `this` Pointer
+### 9.4 The `this` Pointer
 
 **Purpose:** Pointer to the current object
 
@@ -5472,7 +5529,7 @@ public:
 };
 ```
 
-### 10.5 Inheritance
+### 9.5 Inheritance
 
 **Concept:** Derive a new class from an existing class
 - **Base Class / Parent Class / Super Class**: Original class
@@ -5503,7 +5560,7 @@ public:
 - Use inheritance for "is-a" relationship (SavingAccount is-a BankAccount)
 - Use composition for "has-a" relationship
 
-### 10.6 Template Classes
+### 9.6 Template Classes
 
 **Purpose:** Write generic code that works with any data type
 
@@ -5538,7 +5595,7 @@ class Pair {
 };
 ```
 
-### 10.7 Pass by Value vs Reference
+### 9.7 Pass by Value vs Reference
 
 **Pass by Value (Default):**
 - Copy of object is passed
@@ -5556,15 +5613,15 @@ void transfer(BankAcct& from, BankAcct& to, double amt) {
 
 ---
 
-# 11 STL
+# 10 STL
 
 The Standard Template Library (STL) provides a collection of template classes and functions for common data structures and algorithms. `vector` is the most commonly used STL container.
 
-## 11.1 Vector
+## 10.1 Vector
 
 `vector` is a **dynamic array** that can grow or shrink in size automatically. Unlike fixed-size arrays, vectors handle memory management internally and provide a rich set of operations.
 
-### 11.1.1 Why Use Vector?
+### 10.1.1 Why Use Vector?
 
 **Problem with fixed-size arrays:**
 ```cpp
@@ -5589,7 +5646,7 @@ v.push_back(20);  // Automatically manages memory
 | **Operations** | Limited (raw pointer) | Rich set of built-in methods |
 | **Flexibility** | Cannot resize | Can resize, insert, delete |
 
-### 11.1.2 Header and Declaration
+### 10.1.2 Header and Declaration
 
 ```cpp
 #include <vector>  // Required header
@@ -5603,7 +5660,7 @@ vector<string> v3;           // Empty vector of strings
 vector<vector<int>> matrix;  // 2D vector (vector of vectors)
 ```
 
-### 11.1.3 Initialization
+### 10.1.3 Initialization
 
 **1. Empty vector:**
 ```cpp
@@ -5645,7 +5702,7 @@ vector<int> v(arr, arr + 5);  // Copy from array
 
 > **Note:** Prefer list initialization `{}` for clarity when initializing with specific values.
 
-### 11.1.4 Common Operations
+### 10.1.4 Common Operations
 
 | Operation | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -5672,7 +5729,7 @@ if (!v.empty()) {
 }
 ```
 
-### 11.1.5 Element Access
+### 10.1.5 Element Access
 
 | Method | Description | Example | Notes |
 |--------|-------------|---------|-------|
@@ -5701,7 +5758,7 @@ try {
 
 > **Recommendation:** Use `at()` when you need bounds checking (safety), use `[]` when you are certain about indices (performance).
 
-### 11.1.6 Size and Capacity
+### 10.1.6 Size and Capacity
 
 | Method | Description | Example |
 |--------|-------------|---------|
@@ -5730,7 +5787,7 @@ v.resize(10, 99); // Size: 10, new elements are 99
 
 > **Note:** When `size()` exceeds `capacity()`, vector automatically reallocates memory (usually doubling capacity). This invalidates iterators and references.
 
-### 11.1.7 Iterators
+### 10.1.7 Iterators
 
 Iterators provide a uniform way to traverse containers.
 
@@ -5772,7 +5829,7 @@ for (size_t i = 0; i < v.size(); i++) {
 
 > **Best Practice:** Use range-based for loops (`for (auto& elem : v)`) for simple iteration - cleaner and less error-prone.
 
-### 11.1.8 Algorithms with Vector
+### 10.1.8 Algorithms with Vector
 
 STL algorithms work seamlessly with vectors via iterators.
 
@@ -5814,7 +5871,7 @@ int count1 = count(v.begin(), v.end(), 1);
 v.erase(remove(v.begin(), v.end(), 1), v.end());  // Remove all 1s
 ```
 
-### 11.1.9 Vector vs Array
+### 10.1.9 Vector vs Array
 
 | Feature | Array (`int arr[]`) | Vector (`vector<int>`) |
 |---------|---------------------|------------------------|
@@ -5840,7 +5897,7 @@ v.erase(remove(v.begin(), v.end(), 1), v.end());  // Remove all 1s
 - Safety and convenience are priorities
 - Using STL algorithms
 
-### 11.1.10 Best Practices
+### 10.1.10 Best Practices
 
 **1. Prefer `emplace_back` over `push_back` (C++11):**
 ```cpp
@@ -5893,11 +5950,11 @@ v.push_back(6);  // May invalidate all iterators!
 
 > **Warning:** Insertions (`push_back`, `insert`) may invalidate iterators when reallocation occurs. Use `reserve()` to prevent this when possible.
 
-## 11.2 String
+## 10.2 String
 
 `std::string` is a class template that represents a sequence of characters. It provides a dynamic, resizable array of characters with many convenient member functions for string manipulation.
 
-### 11.2.1 Why Use string?
+### 10.2.1 Why Use string?
 
 **Problem with C-style strings (char arrays):**
 ```cpp
@@ -5928,7 +5985,7 @@ string s = "hello";
 | **Comparison** | strcmp function | ==, !=, < operators |
 | **Concatenation** | strcat (unsafe) | + operator |
 
-### 11.2.2 Header and Declaration
+### 10.2.2 Header and Declaration
 
 ```cpp
 #include <string>  // Required header
@@ -5943,7 +6000,7 @@ string s4{s2};          // Copy constructor (C++11)
 string s5(5, 'a');      // "aaaaa" (5 copies of 'a')
 ```
 
-### 11.2.3 Common Operations
+### 10.2.3 Common Operations
 
 | Operation | Description | Example | Result |
 |-----------|-------------|---------|--------|
@@ -5975,7 +6032,7 @@ s.replace(7, 5, "C++");          // "hello, C++"
 s.erase(5, 1);                   // "hello C++"
 ```
 
-### 11.2.4 Element Access
+### 10.2.4 Element Access
 
 | Method | Description | Example | Notes |
 |--------|-------------|---------|-------|
@@ -5999,7 +6056,7 @@ const char* cstr = s.c_str();
 printf("%s\n", cstr);       // "hello"
 ```
 
-### 11.2.5 String Concatenation and Comparison
+### 10.2.5 String Concatenation and Comparison
 
 **Concatenation with `+`:**
 ```cpp
@@ -6028,7 +6085,7 @@ if (s1 <= s2) { }     // true
 if (s1 == "apple") { }  // true
 ```
 
-### 11.2.6 Numeric Conversions
+### 10.2.6 Numeric Conversions
 
 | Function | Description | Example | Since |
 |----------|-------------|---------|-------|
@@ -6054,7 +6111,7 @@ size_t pos;
 int y = stoi("123abc", &pos);   // y = 123, pos = 3 (chars processed)
 ```
 
-### 11.2.7 Iterating Over Strings
+### 10.2.7 Iterating Over Strings
 
 ```cpp
 string s = "hello";
@@ -6080,7 +6137,7 @@ for (size_t i = 0; i < s.length(); i++) {
 }
 ```
 
-### 11.2.8 String vs Vector<char>
+### 10.2.8 String vs Vector<char>
 
 `string` and `vector<char>` are similar but `string` has additional string-specific functionality:
 
@@ -6095,11 +6152,11 @@ for (size_t i = 0; i < s.length(); i++) {
 
 > **Use `string`** for text processing. **Use `vector<char>`** only when you need a raw character array without string semantics.
 
-## 11.3 Algorithm
+## 10.3 Algorithm
 
 The `<algorithm>` header provides a rich set of generic algorithms that work with iterators from any container.
 
-### 11.3.1 Header Overview
+### 10.3.1 Header Overview
 
 ```cpp
 #include <algorithm>  // Required header
@@ -6111,7 +6168,7 @@ These algorithms work with iterators, so they can be used with:
 - `string`
 - Any container with iterators
 
-### 11.3.2 Sorting Algorithms
+### 10.3.2 Sorting Algorithms
 
 | Algorithm | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -6146,7 +6203,7 @@ nth_element(v.begin(), v.begin() + v.size()/2, v.end());
 int median = v[v.size()/2];
 ```
 
-### 11.3.3 Searching Algorithms
+### 10.3.3 Searching Algorithms
 
 | Algorithm | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -6184,7 +6241,7 @@ auto it2 = find_if(v.begin(), v.end(), [](int x) {
 // it2 points to 2
 ```
 
-### 11.3.4 Min/Max Algorithms
+### 10.3.4 Min/Max Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -6222,7 +6279,7 @@ int y = clamp(-5, 0, 5);   // 0 (constrained to min)
 int z = clamp(3, 0, 5);    // 3 (within range)
 ```
 
-### 11.3.5 Modifying Algorithms
+### 10.3.5 Modifying Algorithms
 
 | Algorithm | Description | Example | Notes |
 |-----------|-------------|---------|-------|
@@ -6279,7 +6336,7 @@ v.erase(it, v.end());
 // v = {1, 2, 3}
 ```
 
-### 11.3.6 Numeric Algorithms (in <numeric>)
+### 10.3.6 Numeric Algorithms (in <numeric>)
 
 | Algorithm | Description | Example | Since |
 |-----------|-------------|---------|-------|
@@ -6316,7 +6373,7 @@ partial_sum(v.begin(), v.end(), prefix.begin());
 iota(v.begin(), v.end(), 1);  // v = {1, 2, 3, 4, 5}
 ```
 
-### 11.3.7 Set Algorithms (for sorted ranges)
+### 10.3.7 Set Algorithms (for sorted ranges)
 
 | Algorithm | Description | Example | Notes |
 |-----------|-------------|---------|-------|
@@ -6352,7 +6409,7 @@ dest.resize(it - dest.begin());
 bool isSubset = includes(a.begin(), a.end(), b.begin(), b.end());  // false
 ```
 
-### 11.3.8 Comparison and Permutation
+### 10.3.8 Comparison and Permutation
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -6386,7 +6443,7 @@ vector<int> b = {3, 1, 2};
 bool isPerm = is_permutation(a.begin(), a.end(), b.begin());  // true
 ```
 
-### 11.3.9 Partitioning Algorithms
+### 10.3.9 Partitioning Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -6414,7 +6471,7 @@ stable_partition(v.begin(), v.end(), [](int x) {
 // v = {2, 4, 6, 8, 1, 3, 5, 7, 9} (evens and odds in original order)
 ```
 
-### 11.3.10 Heap Algorithms
+### 10.3.10 Heap Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -6448,7 +6505,7 @@ make_heap(v.begin(), v.end());
 sort_heap(v.begin(), v.end());  // Sorts in ascending order
 ```
 
-### 11.3.11 Best Practices
+### 10.3.11 Best Practices
 
 **1. Use iterators properly:**
 ```cpp
@@ -6507,11 +6564,11 @@ int sum = accumulate(v.begin(), v.end(), 0);
 
 ---
 
-# 12 Advanced Topics
+# 11 Advanced Topics
 
-## 12.1 Pointers Advanced
+## 11.1 Pointers Advanced
 
-### 12.1.1 Pointer and const
+### 11.1.1 Pointer and const
 
 | Declaration | Meaning | Can modify pointed value? | Can change pointer? |
 |-------------|---------|---------------------------|---------------------|
@@ -6524,7 +6581,7 @@ const int* p = &a;  // Cannot modify *p, but can change p
 int* const q = &b;  // Can modify *q, but cannot change q
 ```
 
-### 12.1.2 Pointers and Arrays
+### 11.1.2 Pointers and Arrays
 
 - Array name is a constant pointer to first element
 - `arr[i]` is equivalent to `*(arr + i)`
@@ -6548,7 +6605,7 @@ p--;      // Moves to previous integer
 p + 3;    // Points to element 3 positions ahead
 ```
 
-### 12.1.3 Pointer to Structure
+### 11.1.3 Pointer to Structure
 
 ```cpp
 struct Person {
@@ -6564,9 +6621,9 @@ cout << (*ptr).age;   // 25
 cout << ptr->age;     // 25 (arrow operator)
 ```
 
-## 12.2 Dynamic Memory Management
+## 11.2 Dynamic Memory Management
 
-### 12.2.1 new Operator
+### 11.2.1 new Operator
 
 ```cpp
 // Single element
@@ -6583,7 +6640,7 @@ Person* p = new Person;
 p->age = 25;
 ```
 
-### 12.2.2 delete Operator
+### 11.2.2 delete Operator
 
 ```cpp
 // Single element
@@ -6594,7 +6651,7 @@ p = nullptr;  // Good practice
 delete[] arr;
 ```
 
-### 12.2.3 Memory Leak
+### 11.2.3 Memory Leak
 
 - Occurs when allocated memory is not freed
 - Only pointer storing address is lost
@@ -6609,7 +6666,7 @@ int main() {
 
 > **Best Practice:** Always pair `new` with `delete`, and set pointer to `nullptr` after deletion.
 
-## 12.3 References
+## 11.3 References
 
 **Concept:** Alternative name (alias) for a variable
 
@@ -6625,7 +6682,7 @@ intRef++;         // x is now 457
 - Cannot be null
 - Cannot be rebound to another variable
 
-### 12.3.1 Pass by Reference
+### 11.3.1 Pass by Reference
 
 ```cpp
 void swap(int& a, int& b) {  // Pass by reference
