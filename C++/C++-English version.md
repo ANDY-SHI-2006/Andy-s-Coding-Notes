@@ -259,6 +259,11 @@ return 0;
 /*---------------------------------------------*/
 ```
 
+**Function Comments:**
+Comments should also be included within the function to further describe the purpose of the function and to document the steps.
+
+> **See also:** [8.3 Programmer-Defined Functions](#83-programmer-defined-functions) for function organization with separator lines.
+
 ## 2.3 White Space
 
 **White space** (blank lines and indentation) makes programs more **readable**, easier to **modify**, and provides a **consistent style**.
@@ -2674,7 +2679,6 @@ Modern C++ uses the `<iostream>` library for input and output operations. Stream
 
 
 ### 6.1.1 Input with `cin`
----
 
 Console input using `cin` (character input).
 
@@ -3060,10 +3064,8 @@ cout << setw(10) << left << "Name" << setw(5) << "Score" << endl;
 // Name      Score
 ```
 
----
 
 
----
 
 ## 6.2 C-style I/O
 
@@ -3889,7 +3891,6 @@ int result = printf("%10d\n", 5);
 | **Formatted string length** | `snprintf` with `NULL` | Calculate required buffer size |
 
 
----
 
 ## 6.3 File I/O
 
@@ -3924,7 +3925,6 @@ inFile.close();
 
 **Important:** Always check if file opened successfully before reading.
 
----
 
 ### 6.3.2 File Output (ofstream)
 
@@ -5132,7 +5132,11 @@ char sym = '5';
 char result = toupper(sym);   // result = '5' (unchanged)
 ```
 
----
+
+**Function Organization:**
+Comments should be included within the function to describe its purpose and document the steps. A comment line with dashes (`---`) separates a programmer-defined function from the `main` function and from other programmer-defined functions.
+
+> **See also:** [2.2.3 Program Structure Comments](#223-program-structure-comments) for comment style guidelines.
 
 ## 8.3 Programmer-Defined Functions
 
