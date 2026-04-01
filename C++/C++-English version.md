@@ -2566,7 +2566,7 @@ array<int, 3> arr3{1, 2, 3};  // OK
 > - Use `{}` for **list of specific values** (works for all containers)
 > - Arrays (`C-style` and `std::array`) **only support `{}`**
 
-### 5.8.7 Arrays and Input
+### 5.8.10 Arrays and Input
 
 > **See also:** [6.2.4 Arrays and `scanf`](#624-arrays-and-scanf) for C-style input details.
 
