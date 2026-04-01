@@ -1851,6 +1851,15 @@ double c = 2.5;     // OK: 2.5 is double by default
 long double d = 2.5L;  // OK: 2.5L is long double
 ```
 
+**Scientific Notation:** C++ supports scientific notation for floating-point literals: `1e-9` is valid (meaning $1 \times 10^{-9}$)
+
+| Notation | Value                      | Example              |
+| -------- | -------------------------- | -------------------- |
+| `1e3`    | $1 \times 10^3 = 1000$     | `double x = 1e3;`    |
+| `1e-3`   | $1 \times 10^{-3} = 0.001$ | `double y = 1e-3;`   |
+| `1.5e2`  | $1.5 \times 10^2 = 150$    | `double z = 1.5e2;`  |
+| `1e-9`   | $1 \times 10^{-9}$         | `double eps = 1e-9;` |
+
 ## 5.4 Character and String Literals
 
 | Syntax | Type | Example | Storage |
@@ -2878,6 +2887,63 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 | `%[chars]` | `char[]` | Read only specified characters | `%[abc]` reads "abcb" from "abcba" |
 | `%[^chars]` | `char[]` | Read until specified character | `%[^,]` reads "hello" from "hello,world" |
 
+### 6.2.3.1 Length Modifier and Type Matching Rules
+
+The relationship between Length Modifier, Conversion Specifier, and actual variable type must **match exactly** to avoid memory corruption.
+
+**Key Principle:** `Length Modifier` + `Conversion Specifier` must match the actual variable type
+
+**Common Bug Example:** Using `%d` with a `short` variable causes a 4-byte write into a 2-byte memory space, resulting in buffer overflow:
+
+```cpp
+short s;
+scanf("%d", &s);   // ❌ WRONG: %d expects int (4 bytes), but s is short (2 bytes)
+scanf("%hd", &s);  // ✅ CORRECT: %hd matches short (2 bytes)
+```
+
+**Common Combinations Table:**
+
+| Length Modifier | Conversion Specifier | C++ Type | Size |
+|-----------------|----------------------|----------|------|
+| (none) | `%d` | `int` | 4 bytes |
+| `h` | `%hd` | `short` | 2 bytes |
+| `hh` | `%hhd` | `signed char` | 1 byte |
+| `l` | `%ld` | `long` | 4/8 bytes |
+| `ll` | `%lld` | `long long` | 8 bytes |
+| `h` | `%hu` | `unsigned short` | 2 bytes |
+| `hh` | `%hhu` | `unsigned char` | 1 byte |
+| `l` | `%lf` | `double` | 8 bytes |
+| `L` | `%Lf` | `long double` | 8+ bytes |
+
+> **Warning:** Mismatched specifiers cause undefined behavior. The data written may extend beyond the variable's memory boundary, corrupting adjacent data.
+
+### 6.2.3.2 Special Behavior of `%c` for Character Input
+
+The `%c` specifier has unique behavior regarding whitespace handling:
+
+**`scanf("%c", &c)`** — Reads the next character, **including whitespace** (spaces, `\n`, `\t`)
+
+```cpp
+char c;
+scanf("%c", &c);  // If input is " a", c will be ' ' (space)
+```
+
+**`scanf(" %c", &c)`** — The leading space tells scanf to **skip all leading whitespace first**, then read the character
+
+```cpp
+char c;
+scanf(" %c", &c);  // If input is "  a", c will be 'a' (leading spaces skipped)
+```
+
+**Comparison:**
+
+| Format | Whitespace Handling | Example Input | Result |
+|--------|---------------------|---------------|--------|
+| `%c` | Reads any character including whitespace | ` a` | `c = ' '` |
+| ` %c` | Skips leading whitespace, then reads | ` a` | `c = 'a'` |
+
+> **Tip:** Use ` %c` (with leading space) when you want to ignore whitespace between inputs, and `%c` when you need to capture whitespace characters exactly.
+
 ### 6.2.4 Arrays and `scanf`
 
 > **See also:** [5.8.7 Arrays and Input](#587-arrays-and-input) for array input fundamentals.
@@ -3153,7 +3219,74 @@ int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
 
 The return value is the **final value of this internal counter**, reflecting the "actual work completed".
 
+## 6.3 C++ Streams
 
+C++ provides a stream-based I/O library through the `<iostream>`, `<fstream>`, and `<sstream>` headers.
+
+### 6.3.1 Header Files
+
+| Header | Purpose |
+|--------|---------|
+| `<iostream>` | Standard input/output streams (cin, cout) |
+| `<fstream>` | File streams (ifstream, ofstream) |
+| `<sstream>` | String streams (istringstream, ostringstream) |
+| `<iomanip>` | I/O manipulators (formatting) |
+
+### 6.3.2 String Streams
+
+**Input String Stream:** Parse data from a string
+```cpp
+#include <sstream>
+
+string data = "123 45.6 Hello";
+istringstream iss(data);
+
+int i;
+double d;
+string s;
+iss >> i >> d >> s;  // i=123, d=45.6, s="Hello"
+```
+
+**Output String Stream:** Build strings efficiently
+```cpp
+ostringstream oss;
+oss << "Name: " << name << ", Age: " << age;
+string result = oss.str();
+```
+
+**Use Cases:**
+- Converting between types and strings
+- Parsing complex input line by line
+- Building formatted strings
+
+### 6.3.3 File Input Streams
+
+**Reading from File:**
+```cpp
+#include <fstream>
+
+ifstream inFile("input.txt");
+if (!inFile) {
+    cerr << "Cannot open file!" << endl;
+    return 1;
+}
+
+// Read word by word
+string word;
+while (inFile >> word) {
+    cout << word << endl;
+}
+
+// Read line by line
+string line;
+while (getline(inFile, line)) {
+    cout << line << endl;
+}
+
+inFile.close();
+```
+
+**Important:** Always check if file opened successfully before reading.
 
 ---
 
@@ -3709,6 +3842,55 @@ int result = printf("%10d\n", 5);
 | **Error checking** | `if (printf(...) < 0)` | Detect output failures |
 | **Character counting** | `int len = printf(...)` | Know how many chars were printed |
 | **Formatted string length** | `snprintf` with `NULL` | Calculate required buffer size |
+
+## 7.3 File Output Streams
+
+**Writing to File:**
+```cpp
+#include <fstream>
+
+ofstream outFile("output.txt");
+if (!outFile) {
+    cerr << "Cannot create file!" << endl;
+    return 1;
+}
+
+outFile << "Hello World" << endl;
+outFile << "Line 2: " << 42 << endl;
+
+outFile.close();
+```
+
+**Appending to File:**
+```cpp
+ofstream outFile("output.txt", ios::app);  // Append mode
+outFile << "New line appended" << endl;
+outFile.close();
+```
+
+## 7.4 I/O Manipulators
+
+**Header:** `#include <iomanip>`
+
+| Manipulator | Description | Example |
+|-------------|-------------|---------|
+| `setw(n)` | Set field width | `cout << setw(10) << x;` |
+| `setprecision(n)` | Set decimal precision | `cout << setprecision(3) << d;` |
+| `fixed` | Fixed-point notation | `cout << fixed << d;` |
+| `scientific` | Scientific notation | `cout << scientific << d;` |
+| `setfill(c)` | Fill character | `cout << setfill('0') << setw(5) << x;` |
+| `left` / `right` | Alignment | `cout << left << setw(10) << x;` |
+| `boolalpha` | Print true/false | `cout << boolalpha << flag;` |
+| `endl` | Newline + flush | `cout << "Hello" << endl;` |
+
+**Example:**
+```cpp
+double pi = 3.1415926535;
+cout << fixed << setprecision(2) << pi;  // 3.14
+
+cout << setw(10) << left << "Name" << setw(5) << "Score" << endl;
+// Name      Score
+```
 
 ---
 
@@ -4895,8 +5077,482 @@ char result = toupper(sym);   // result = '5' (unchanged)
 
 ---
 
+## 9.3 Programmer-Defined Functions
+
+### 9.3.1 Function Basics
+
+**Why Use Functions?**
+- Break complex problems into smaller, manageable modules
+- Each module has a specific purpose
+- Easier to write, test, and maintain
+- Code reusability - tested modules can be used in new programs
+
+**Key Concepts:**
+- **Divide and Conquer**: Breaking a problem into modules
+- **Reusability**: Modules can be reused across programs
+- **Abstraction**: Use modules as "black boxes" without worrying about internal details
+
+### 9.3.2 Function Definition
+
+**General Form:**
+```cpp
+return_type function_name(parameter_declarations)
+{
+    declarations;
+    statements;
+}
+```
+
+**Components:**
+1. **Return Type**: Type of value returned (`void` if none)
+2. **Function Name**: Identifier for the function
+3. **Parameters**: Input values (can be empty)
+4. **Function Body**: Statements enclosed in braces
+
+**Example - Sinc Function:**
+```cpp
+double sinc(double x)
+{
+    if (fabs(x) < 0.001)
+        return 1.0;
+    else
+        return sin(PI*x)/(PI*x);
+}
+```
+
+**Important Rules:**
+- Functions cannot be nested (one function cannot be defined inside another)
+- Function must be completely defined before another function begins
+
+### 9.3.3 Function Prototype
+
+**Purpose:** Declare function before use, allowing functions to be defined in any order.
+
+**Syntax:**
+```cpp
+return_type function_name(parameter_types);
+```
+
+**Example:**
+```cpp
+// Prototypes at top of file
+void printTable(double a, double b, int n);
+double sinc(double x);
+
+int main() {
+    // Can call functions here
+    printTable(a, b, NUM_ROWS);
+    return 0;
+}
+
+// Function definitions after main
+void printTable(double a, double b, int n) { ... }
+double sinc(double x) { ... }
+```
+
+**Key Points:**
+- Prototype informs compiler about: function name, return type, parameter types
+- Parameter names in prototype are optional but recommended for documentation
+- Prototypes are typically placed after `#include` statements, before `main()`
+
+### 9.3.4 Parameter Passing
+
+**Pass by Value (Default in C/C++):**
+- A **copy** of each argument's value is passed to the function
+- Changes to parameters inside function do NOT affect original variables
+
+**Formal vs Actual Parameters:**
+
+| Aspect | Formal Parameters | Actual Parameters |
+|--------|-------------------|-------------------|
+| Location | In function definition | In function call |
+| Role | Receive values | Provide values |
+| Scope | Local to function | Defined in calling code |
+
+**Example:**
+```cpp
+void swap(int a, int b) {  // a, b are formal parameters
+    int temp = a;
+    a = b;
+    b = temp;  // Changes only affect local copies
+}
+
+int main() {
+    int x = 5, y = 7;
+    swap(x, y);  // x, y are actual parameters
+    // x is still 5, y is still 7 (no change!)
+}
+```
+
+**Coercion of Arguments:**
+- If actual parameter type differs from formal parameter, automatic conversion occurs
+- Example: passing `float` to `int` parameter truncates the value
+
+### 9.3.5 Return Statement
+
+**Syntax:**
+```cpp
+return expression;  // For non-void functions
+return;             // For void functions (optional)
+```
+
+**Key Points:**
+- Expression type should match return type (or be convertible)
+- `return` terminates function execution immediately
+- A function can have multiple `return` statements
+
+**Void Functions:**
+```cpp
+void printMessage() {
+    printf("Hello\n");
+    return;  // Optional for void functions
+}
+```
+
+### 9.3.6 Storage Class and Scope
+
+**Local Variables:**
+- Defined within a function
+- Only accessible inside that function
+- Created when function starts, destroyed when function completes
+- Include: formal parameters and variables declared in function body
+
+**Global Variables:**
+- Defined outside all functions
+- Accessible by any function in the program
+- Retain value throughout program execution
+- Use `extern` keyword to reference in other files (if needed)
+
+**Example:**
+```cpp
+int count = 0;  // Global variable
+
+void func1() {
+    extern int count;  // Optional: declares we're using global count
+    count++;
+}
+
+void func2() {
+    count++;  // Also accesses global count
+}
+```
+
+> **Best Practice:** Avoid global variables whenever possible. Use parameters instead.
+
+## 9.4 Random Numbers
+
+> **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
+
+### 9.4.1 Generating Random Integers
+
+**Basic Usage:**
+```cpp
+int r = rand();  // Returns integer between 0 and RAND_MAX (typically 32767)
+```
+
+**Setting the Seed:**
+```cpp
+srand(seed_value);  // Initialize random number generator
+```
+
+> **Important:** Without `srand()`, `rand()` generates the same sequence each run.
+
+### 9.4.2 Random Numbers in Specified Range
+
+**Integer Range [0, n-1]:**
+```cpp
+int x = rand() % n;  // 0 to n-1
+```
+
+**Integer Range [a, b]:**
+```cpp
+int rand_int(int a, int b) {
+    return rand() % (b - a + 1) + a;
+}
+```
+
+**Floating-Point Range [a, b]:**
+```cpp
+double rand_float(double a, double b) {
+    return ((double)rand() / RAND_MAX) * (b - a) + a;
+}
+```
+
+### 9.4.3 Complete Example
+
+```cpp
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+
+int main() {
+    unsigned int seed;
+    printf("Enter a positive integer seed value: ");
+    scanf("%u", &seed);
+    srand(seed);
+    
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", rand());
+    }
+    printf("\n");
+    
+    return 0;
+}
+```
+
+## 9.5 Macros
+
+**Preprocessor Directive:** Macros are processed before compilation.
+
+### 9.5.1 Simple Macros (Symbolic Constants)
+
+```cpp
+#define PI 3.141593
+#define MAX_SIZE 100
+```
+
+### 9.5.2 Parameterized Macros
+
+**Syntax:**
+```cpp
+#define macro_name(parameters) macro_text
+```
+
+**Example - Temperature Conversion:**
+```cpp
+#define degreesC(temp) (((temp) - 32) * (5.0/9.0))
+
+// Usage:
+double celsius = degreesC(fahrenheit);
+```
+
+### 9.5.3 Important: Use Parentheses!
+
+**Incorrect:**
+```cpp
+#define degreesF(x) x*(9.0/5.0) + 32
+// degreesF(temp+10) becomes: temp+10*(9.0/5.0) + 32  // Wrong!
+```
+
+**Correct:**
+```cpp
+#define degreesF(x) ((x)*(9.0/5.0) + 32)
+// degreesF(temp+10) becomes: ((temp+10)*(9.0/5.0) + 32)  // Correct!
+```
+
+**Rule:** Always put parentheses around:
+1. Each individual parameter
+2. The complete macro text
+
+**Example - Triangle Area:**
+```cpp
+#define area_tri(base, height) (0.5*(base)*(height))
+```
+
+### 9.5.4 Macros vs Functions
+
+| Feature | Macros | Functions |
+|---------|--------|-----------|
+| Processing | Preprocessor text substitution | Compiled code |
+| Type checking | None | Yes |
+| Execution | Inline (no call overhead) | Function call overhead |
+| Debuggability | Harder | Easier |
+| Side effects | Can occur (due to multiple evaluations) | Controlled |
+
+> **Best Practice:** Prefer functions over macros when possible. Use macros only for simple, performance-critical operations.
+
+---
+
 # 10 Object-Oriented Programming
 
+### 10.1 Classes and Objects
+
+**Class vs Structure:**
+- Class is a user-defined data type that encapsulates data and functions
+- Similar to structure declaration and structure variable in C
+- Variables of a class are called **objects**
+
+**Key Terminology:**
+- **Attributes/Member Data**: Data members of a class
+- **Methods/Member Functions**: Functions that manipulate data in an object
+
+**Example - Bank Account:**
+```cpp
+class BankAcct {
+private:
+    int acctNum;
+    double balance;
+
+public:
+    BankAcct(int num, double amt);  // Constructor
+    void deposit(double amount);
+    int withdraw(double amount);
+};
+```
+
+**Creating Objects:**
+```cpp
+BankAcct ba1(1234, 500.50);  // Object creation with constructor
+BankAcct ba2(9999, 1001.40);
+```
+
+### 10.2 Encapsulation and Access Specifiers
+
+**Access Levels:**
+
+| Specifier | Access | Usage |
+|-----------|--------|-------|
+| `public` | Accessible by anyone | Public interface |
+| `private` | Accessible only within class | Internal data members |
+| `protected` | Accessible within class and derived classes | For inheritance |
+
+**Encapsulation Benefits:**
+- Group data and associated processes into a single package
+- Hide internal details from outside
+- Protect data from unauthorized modification
+
+**Dot Operator:**
+```cpp
+ba1.deposit(1000);      // Call public method
+// ba1.balance = 1000;  // Error: private member
+```
+
+### 10.3 Constructors and Destructors
+
+**Constructor:**
+- Special method called automatically when object is created
+- Same name as class, no return type
+- Can have multiple constructors (overloading)
+
+**Types:**
+1. **Default Constructor**: Takes no parameters
+2. **Parameterized Constructor**: Takes parameters
+
+```cpp
+class BankAcct {
+public:
+    BankAcct();                          // Default
+    BankAcct(int num);                   // One parameter
+    BankAcct(int num, double amt);       // Two parameters
+};
+```
+
+**Destructor:**
+- Called automatically when object goes out of scope
+- Same name as class with `~` prefix, no return type
+- Used for cleanup (e.g., releasing resources)
+
+```cpp
+class Simple {
+public:
+    Simple() { cout << "Alive!" << endl; }
+    ~Simple() { cout << "Dead!" << endl; }
+};
+```
+
+### 10.4 The `this` Pointer
+
+**Purpose:** Pointer to the current object
+
+**Usage:**
+1. Resolve ambiguity when parameter names match attribute names
+2. Return current object
+
+```cpp
+class BankAcct {
+private:
+    int acctNum;
+    double balance;
+
+public:
+    BankAcct(int acctNum, double balance) {
+        this->acctNum = acctNum;      // Disambiguate
+        this->balance = balance;
+    }
+};
+```
+
+### 10.5 Inheritance
+
+**Concept:** Derive a new class from an existing class
+- **Base Class / Parent Class / Super Class**: Original class
+- **Derived Class / Child Class / Sub Class**: New class
+
+**Syntax:**
+```cpp
+class SavingAcct : public BankAcct {
+private:
+    double rate;
+
+public:
+    SavingAcct(int num, double amt, double r)
+        : BankAcct(num, amt), rate(r) {}
+
+    void payInterest() {
+        balance += balance * rate;  // Inherited member
+    }
+};
+```
+
+**Benefits:**
+- Code reusability
+- Extensibility
+- Maintainability
+
+**"is-a" vs "has-a":**
+- Use inheritance for "is-a" relationship (SavingAccount is-a BankAccount)
+- Use composition for "has-a" relationship
+
+### 10.6 Template Classes
+
+**Purpose:** Write generic code that works with any data type
+
+**Syntax:**
+```cpp
+template <typename T>
+class Pair {
+private:
+    T first;
+    T second;
+
+public:
+    Pair(T a, T b) : first(a), second(b) {}
+    T getFirst() const { return first; }
+    T getSecond() const { return second; }
+};
+```
+
+**Usage:**
+```cpp
+Pair<int> intPair(1, 2);
+Pair<double> doublePair(1.5, 2.5);
+Pair<string> stringPair("Hello", "World");
+```
+
+**Multiple Type Parameters:**
+```cpp
+template <typename T1, typename T2>
+class Pair {
+    T1 first;
+    T2 second;
+};
+```
+
+### 10.7 Pass by Value vs Reference
+
+**Pass by Value (Default):**
+- Copy of object is passed
+- Modifications don't affect original
+
+**Pass by Reference:**
+```cpp
+void transfer(BankAcct& from, BankAcct& to, double amt) {
+    from.withdraw(amt);
+    to.deposit(amt);
+}
+```
+
+> **Recommendation:** Pass large objects by reference to avoid copying
 
 ---
 
@@ -5852,5 +6508,138 @@ int sum = accumulate(v.begin(), v.end(), 0);
 ---
 
 # 12 Advanced Topics
+
+## 12.1 Pointers Advanced
+
+### 12.1.1 Pointer and const
+
+| Declaration | Meaning | Can modify pointed value? | Can change pointer? |
+|-------------|---------|---------------------------|---------------------|
+| `const int* p` | Pointer to constant | No | Yes |
+| `int* const p` | Constant pointer | Yes | No |
+| `const int* const p` | Constant pointer to constant | No | No |
+
+```cpp
+const int* p = &a;  // Cannot modify *p, but can change p
+int* const q = &b;  // Can modify *q, but cannot change q
+```
+
+### 12.1.2 Pointers and Arrays
+
+- Array name is a constant pointer to first element
+- `arr[i]` is equivalent to `*(arr + i)`
+
+```cpp
+int arr[5] = {1, 2, 3, 4, 5};
+int* ptr = arr;  // Same as &arr[0]
+
+// Equivalent access methods:
+cout << arr[2];     // 3
+cout << *(arr + 2); // 3
+cout << ptr[2];     // 3
+cout << *(ptr + 2); // 3
+```
+
+**Pointer Arithmetic:**
+```cpp
+int* p = arr;
+p++;      // Moves to next integer (adds sizeof(int))
+p--;      // Moves to previous integer
+p + 3;    // Points to element 3 positions ahead
+```
+
+### 12.1.3 Pointer to Structure
+
+```cpp
+struct Person {
+    string name;
+    int age;
+};
+
+Person p = {"John", 25};
+Person* ptr = &p;
+
+// Access members:
+cout << (*ptr).age;   // 25
+cout << ptr->age;     // 25 (arrow operator)
+```
+
+## 12.2 Dynamic Memory Management
+
+### 12.2.1 new Operator
+
+```cpp
+// Single element
+int* p = new int;       // Allocates memory for one int
+*p = 123;
+
+// Array
+int size;
+cin >> size;
+int* arr = new int[size];  // Runtime size
+
+// Structure
+Person* p = new Person;
+p->age = 25;
+```
+
+### 12.2.2 delete Operator
+
+```cpp
+// Single element
+delete p;
+p = nullptr;  // Good practice
+
+// Array
+delete[] arr;
+```
+
+### 12.2.3 Memory Leak
+
+- Occurs when allocated memory is not freed
+- Only pointer storing address is lost
+
+```cpp
+int main() {
+    int* q = new int;  // Allocate
+    q = p;             // Lost address of new memory!
+    // Memory leak: cannot free original allocation
+}
+```
+
+> **Best Practice:** Always pair `new` with `delete`, and set pointer to `nullptr` after deletion.
+
+## 12.3 References
+
+**Concept:** Alternative name (alias) for a variable
+
+```cpp
+int x = 456;
+int& intRef = x;  // intRef is an alias for x
+
+intRef++;         // x is now 457
+```
+
+**Characteristics:**
+- Must be initialized when declared
+- Cannot be null
+- Cannot be rebound to another variable
+
+### 12.3.1 Pass by Reference
+
+```cpp
+void swap(int& a, int& b) {  // Pass by reference
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+int main() {
+    int x = 5, y = 7;
+    swap(x, y);  // x and y are actually swapped
+}
+```
+
+> **Recommendation:** Use references instead of pointers when possible - safer and cleaner syntax.
 
 
