@@ -282,8 +282,6 @@ Comments are often used to mark the beginning and end of sections:
 return 0;
 
 /*---------------------------------------------*/
-```
-
 
 **Function Comments:**
 Functions should be preceded by a descriptive comment explaining their purpose:
@@ -298,22 +296,22 @@ int k;
 double a, b, x_incr, new_x;
 
 /* Get interval endpoints from the user. */
-printf("Enter endpoints a and b (a<b): 
-");
+printf("Enter endpoints a and b (a<b): \n");
 scanf("%lf %lf", &a, &b);
 
 /* Compute and print table of sinc(x) values. */
-printf("x and sinc(x) 
-");
+printf("x and sinc(x) \n");
 
 /* Exit program. */
 return 0;
 ```
 
+> **See also:** [8.3 Programmer-Defined Functions](#83-programmer-defined-functions) for complete function organization examples.
+
+
 ## 2.3 White Space
 
 **White space** (blank lines and indentation) makes programs more **readable**, easier to **modify**, and provides a **consistent style**.
-
 | Type            | Purpose                       | Example                   |
 | --------------- | ----------------------------- | ------------------------- |
 | **Blank lines** | Separate different components | Between function sections |
@@ -5180,6 +5178,8 @@ char result = toupper(sym);   // result = '5' (unchanged)
 
 
 
+## 8.3 Programmer-Defined Functions
+
 **Function Organization:**
 Use comment blocks with dashes to separate functions visually:
 ```cpp
@@ -5214,7 +5214,6 @@ int main(void)
 ```
 
 > **See also:** [2.2.3 Program Structure Comments](#223-program-structure-comments) for comment style guidelines.
-## 8.3 Programmer-Defined Functions
 
 ### 8.3.1 Function Definition
 
