@@ -3010,7 +3010,7 @@ cout << (x > 0 ? "pos" : "neg");  // ✅ Correct
 
 ### 6.1.3 String Streams
 
-String streams from <sstream> allow you to treat strings as streams, enabling convenient parsing and formatting.
+String streams from `<sstream>` allow you to treat strings as streams, enabling convenient parsing and formatting.
 
 **Header:** `#include <sstream>`
 
@@ -3067,7 +3067,7 @@ cout << setw(10) << left << "Name" << setw(5) << "Score" << endl;
 
 ## 6.2 C-style I/O
 
-C-style I/O functions from <cstdio> provide fast, format-based input/output operations. While less type-safe than C++ streams, they are useful for specific formatting needs and performance-critical code.
+C-style I/O functions from `<cstdio>` provide fast, format-based input/output operations. While less type-safe than C++ streams, they are useful for specific formatting needs and performance-critical code.
 
 ### 6.2.1 Input with `scanf` (C-style Input)
 
@@ -3893,7 +3893,7 @@ int result = printf("%10d\n", 5);
 
 ## 6.3 File I/O
 
-File streams from <fstream> provide facilities for reading from and writing to files.
+File streams from `<fstream>` provide facilities for reading from and writing to files.
 
 ### 6.3.1 File Input (ifstream)
 
@@ -5135,19 +5135,6 @@ char result = toupper(sym);   // result = '5' (unchanged)
 ---
 
 ## 8.3 Programmer-Defined Functions
-
-### 8.3.1 Function Basics
-
-**Why Use Functions?**
-- Break complex problems into smaller, manageable modules
-- Each module has a specific purpose
-- Easier to write, test, and maintain
-- Code reusability - tested modules can be used in new programs
-
-**Key Concepts:**
-- **Divide and Conquer**: Breaking a problem into modules
-- **Reusability**: Modules can be reused across programs
-- **Abstraction**: Use modules as "black boxes" without worrying about internal details
 
 ### 8.3.2 Function Definition
 
