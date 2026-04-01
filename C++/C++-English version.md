@@ -1478,7 +1478,7 @@ if (a > b) {
 }
 ```
 
-### 4.8.3 Nested Ternary Operators
+### 4.8.2 Nested Ternary Operators
 
 Ternary operators can be nested, but this should be done with caution as it reduces readability.
 
@@ -1492,7 +1492,7 @@ char grade = (score >= 90) ? 'A' :
 
 > **Caution:** Deeply nested ternary operators make code hard to read. For complex conditions, use `if-else` statements instead.
 
-### 4.8.4 Type Compatibility
+### 4.8.3 Type Compatibility
 
 Both expressions must be compatible types (or implicitly convertible).
 
@@ -1513,7 +1513,7 @@ int x = 10 + ((y > 0) ? y : 0);
 ((flag) ? a : b) = 100;  // Assigns 100 to either a or b (C++ allows this)
 ```
 
-### 4.8.5 Associativity
+### 4.8.4 Associativity
 
 If there is more than one conditional operator in an expression, they are associated **from right to left**.
 
@@ -2956,7 +2956,7 @@ double truncate(double val, int prec) {
  double truncated = trunc(value * 100) / 100;  // C++11
 ```
 
-### 6.1.2.2.9 Operator Precedence with `cout`
+### 6.1.2.3 Operator Precedence with `cout`
 
 > **See also:** [6.1.4 Operator Precedence with `cin`](#614-operator-precedence-with-cin) for the input equivalent.
 
@@ -3526,7 +3526,7 @@ int count = scanf("%d %d %d", &a, &b, &c);
 // Determine how many numbers the user entered based on count value
 ```
 
-##### 6.2.1.7.6 Comparison with `printf` Return Value
+##### 6.2.1.7.5 Comparison with `printf` Return Value
 
 | Function | Return Value Meaning |
 |----------|---------------------|
@@ -3538,7 +3538,7 @@ int n1 = printf("Hello\n");    // n1 = 6 (5 characters + newline)
 int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
 ```
 
-##### 6.2.1.7.7 Underlying Mechanism
+##### 6.2.1.7.6 Underlying Mechanism
 
 `scanf` maintains an internal **scanning pointer** that parses the input stream from left to right:
 
@@ -4869,7 +4869,7 @@ double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
 int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 ```
 
-#### 9.1.1.1 Elementary Functions
+### 9.1.1.1 Elementary Functions
 
 | Function | Description | Notes |
 |----------|-------------|-------|
@@ -4882,7 +4882,7 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `log(x)` | Computes the natural logarithm of x (ln x) | Requires `x > 0` |
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
 
-#### 9.1.1.2 fabs vs abs
+### 9.1.1.2 fabs vs abs
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
@@ -4903,7 +4903,7 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-#### 9.1.1.3 Power (Exponentiation)
+### 9.1.1.3 Power (Exponentiation)
 
 > **Important:** C++ has **no built-in operator** for exponentiation.
 
@@ -4917,7 +4917,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | `a * a` | Fastest | Small fixed exponents: a², a³ |
 | `pow(a, b)` | Slower | Variable/fractional exponents |
 
-#### 9.1.1.4 Trigonometric Functions
+### 9.1.1.4 Trigonometric Functions
 
 > **Critical:** Arguments must be in **radians**, NOT degrees!
 >
@@ -4948,7 +4948,7 @@ rad = deg * PI / 180;
 deg = rad * 180 / PI;
 ```
 
-#### 9.1.1.5 Hyperbolic Functions
+### 9.1.1.5 Hyperbolic Functions
 
 | Function | Description | Formula |
 |----------|-------------|---------|
@@ -4997,7 +4997,7 @@ C provides two approaches for character I/O:
 1. Using `printf`/`scanf` with `%c` format specifier
 2. Using dedicated character functions `getchar()` and `putchar()`
 
-#### 9.2.1.1 Using `printf` and `scanf` with `%c`
+### 9.2.1.1 Using `printf` and `scanf` with `%c`
 
 The `%c` format specifier handles single characters:
 
@@ -5012,7 +5012,7 @@ printf("%c", ch);   // Print a character
 - `scanf("%c", &ch)` reads **any** character including whitespace (spaces, tabs, newlines)
 - To skip whitespace before reading a character, add a space: `scanf(" %c", &ch)`
 
-#### 9.2.1.2 Using `getchar()` and `putchar()`
+### 9.2.1.2 Using `getchar()` and `putchar()`
 
 These are dedicated character I/O functions:
 
@@ -5033,7 +5033,7 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-#### 9.2.1.3 Common Issues and Solutions
+### 9.2.1.3 Common Issues and Solutions
 
 **Issue 1: Input Buffer Residue**
 
@@ -5078,7 +5078,7 @@ putchar('!');         // Output on next line
 
 > **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
 
-#### 9.2.2.1 Classification Functions
+### 9.2.2.1 Classification Functions
 
 | Function       | Returns non-zero (true) if...                   |
 | -------------- | ----------------------------------------------- |
@@ -5097,7 +5097,7 @@ putchar('!');         // Output on next line
 
 > **Note:** `isblank()` checks only space `' '` and tab `'\t'`, while `isspace()` checks all whitespace including newline `'\n'`, carriage return `'\r'`, form feed `'\f'`, and vertical tab `'\v'`.
 
-#### 9.2.2.2 Conversion Functions
+### 9.2.2.2 Conversion Functions
 
 | Function | Description |
 |----------|-------------|
@@ -5136,7 +5136,7 @@ char result = toupper(sym);   // result = '5' (unchanged)
 
 ## 8.3 Programmer-Defined Functions
 
-### 8.3.2 Function Definition
+### 8.3.1 Function Definition
 
 **General Form:**
 ```cpp
@@ -5153,22 +5153,11 @@ return_type function_name(parameter_declarations)
 3. **Parameters**: Input values (can be empty)
 4. **Function Body**: Statements enclosed in braces
 
-**Example - Sinc Function:**
-```cpp
-double sinc(double x)
-{
-    if (fabs(x) < 0.001)
-        return 1.0;
-    else
-        return sin(PI*x)/(PI*x);
-}
-```
-
 **Important Rules:**
 - Functions cannot be nested (one function cannot be defined inside another)
 - Function must be completely defined before another function begins
 
-### 8.3.3 Function Prototype
+### 8.3.2 Function Prototype
 
 **Purpose:** Declare function before use, allowing functions to be defined in any order.
 
@@ -5199,7 +5188,7 @@ double sinc(double x) { ... }
 - Parameter names in prototype are optional but recommended for documentation
 - Prototypes are typically placed after `#include` statements, before `main()`
 
-### 8.3.4 Parameter Passing
+### 8.3.3 Parameter Passing
 
 **Pass by Value (Default in C/C++):**
 - A **copy** of each argument's value is passed to the function
@@ -5232,7 +5221,7 @@ int main() {
 - If actual parameter type differs from formal parameter, automatic conversion occurs
 - Example: passing `float` to `int` parameter truncates the value
 
-### 8.3.5 Return Statement
+### 8.3.4 Return Statement
 
 **Syntax:**
 ```cpp
@@ -5253,7 +5242,7 @@ void printMessage() {
 }
 ```
 
-### 8.3.6 Storage Class and Scope
+### 8.3.5 Storage Class and Scope
 
 **Local Variables:**
 - Defined within a function
@@ -5409,7 +5398,7 @@ double celsius = degreesC(fahrenheit);
 
 # 9 Object-Oriented Programming
 
-### 9.1 Classes and Objects
+## 9.1 Classes and Objects
 
 **Class vs Structure:**
 - Class is a user-defined data type that encapsulates data and functions
@@ -5440,7 +5429,7 @@ BankAcct ba1(1234, 500.50);  // Object creation with constructor
 BankAcct ba2(9999, 1001.40);
 ```
 
-### 9.2 Encapsulation and Access Specifiers
+## 9.2 Encapsulation and Access Specifiers
 
 **Access Levels:**
 
@@ -5461,7 +5450,7 @@ ba1.deposit(1000);      // Call public method
 // ba1.balance = 1000;  // Error: private member
 ```
 
-### 9.3 Constructors and Destructors
+## 9.3 Constructors and Destructors
 
 **Constructor:**
 - Special method called automatically when object is created
@@ -5494,7 +5483,7 @@ public:
 };
 ```
 
-### 9.4 The `this` Pointer
+## 9.4 The `this` Pointer
 
 **Purpose:** Pointer to the current object
 
@@ -5516,7 +5505,7 @@ public:
 };
 ```
 
-### 9.5 Inheritance
+## 9.5 Inheritance
 
 **Concept:** Derive a new class from an existing class
 - **Base Class / Parent Class / Super Class**: Original class
@@ -5547,7 +5536,7 @@ public:
 - Use inheritance for "is-a" relationship (SavingAccount is-a BankAccount)
 - Use composition for "has-a" relationship
 
-### 9.6 Template Classes
+## 9.6 Template Classes
 
 **Purpose:** Write generic code that works with any data type
 
@@ -5582,7 +5571,7 @@ class Pair {
 };
 ```
 
-### 9.7 Pass by Value vs Reference
+## 9.7 Pass by Value vs Reference
 
 **Pass by Value (Default):**
 - Copy of object is passed
