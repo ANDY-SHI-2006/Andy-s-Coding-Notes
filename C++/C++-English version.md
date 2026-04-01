@@ -551,7 +551,7 @@ if (condition){
 | **Line count**     | Uses more vertical space                                 | More compact vertically                   |
 | **Popularity**     | Common in Microsoft/C# style                             | Common in C/C++ community (K&R tradition) |
 
-> **See also:** [8.2.1 Compound Statements (Blocks)](#821-compound-statements-blocks) for the concept of blocks and their usage in control statements.
+> **See also:** [8.2.1 Compound Statements (Blocks)](#721-compound-statements-blocks) for the concept of blocks and their usage in control statements.
 
 ## 2.4 Identifier Naming
 
@@ -4181,7 +4181,7 @@ if ((a < b && c < d) || e < f) { }
 
 This section covers various forms of if statements and related constructs for conditional execution.
 
-#### 8.2.1 Compound Statements (Blocks)
+### 7.2.1 Compound Statements (Blocks)
 
 When using control statements like `if`, `while`, `for`, etc., if you need to execute **multiple statements** (not just one), you must wrap them in **curly braces `{}`** to form a **compound statement** (also called a **block**).
 
@@ -4220,7 +4220,7 @@ if (x > 0) {              // executed when condition is true
 - A compound statement can contain any number of statements (0, 1, or many)
 - Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
 
-##### 8.2.1.1 Empty Statement
+#### 7.2.1.1 Empty Statement
 
 An **empty statement** consists of just a semicolon `;` with no expression:
 
@@ -4243,7 +4243,7 @@ if (x < 0)
 
 > **See also:** [2.3.4 Brace Styles](#234-brace-styles) for code formatting conventions on brace placement.
 
-#### 8.2.2 The if Statement
+### 7.2.2 The if Statement
 
 ```cpp
 if (condition) {
@@ -4251,7 +4251,7 @@ if (condition) {
 }
 ```
 
-#### 8.2.3 The if-else Statement
+### 7.2.3 The if-else Statement
 
 ```cpp
 if (condition) {
@@ -4261,7 +4261,7 @@ if (condition) {
 }
 ```
 
-#### 8.2.4 The if-else-if Ladder
+### 7.2.4 The if-else-if Ladder
 
 ```cpp
 if (condition1) {
@@ -4275,7 +4275,7 @@ if (condition1) {
 }
 ```
 
-#### 8.2.5 Nested if Statements
+### 7.2.5 Nested if Statements
 
 if statements can be nested inside other if statements:
 
@@ -4312,7 +4312,7 @@ if (a > 0) {
 
 > **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
-#### 8.2.6 The Conditional (Ternary) Operator
+### 7.2.6 The Conditional (Ternary) Operator
 
 A compact form for simple if-else. See also [4.8 Ternary Conditional Operator](#48-ternary-conditional-operator) for detailed syntax and precedence.
 
@@ -4360,7 +4360,7 @@ int result = 0 ? 1 : 0 ? 2 : 3;  // Evaluates as: 0 ? 1 : (0 ? 2 : 3)
 
 The `switch` statement selects one of many code blocks to execute.
 
-#### 8.3.1 The Switch Mechanism
+### 7.3.1 The Switch Mechanism
 
 When a matching `case` is found, execution **jumps to that case** and continues **line by line** through subsequent statements, **ignoring other case labels**, until a `break` is encountered or the switch block ends.
 
@@ -4383,9 +4383,9 @@ switch (a) {
 
 **Key Insight:** `case` is just a **jump label** — it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
 
-#### 8.3.2 Syntax Rules
+### 7.3.2 Syntax Rules
 
-##### 8.3.2.1 Controlling Expression
+#### 7.3.2.1 Controlling Expression
 
 The `switch` statement selects statements to execute based on a **controlling expression**, which must be an expression of **integral type** (`int`, `char`, `enum`, etc.).
 
@@ -4418,7 +4418,7 @@ switch (c) {
 
 > **Note:** When using `enum class` (C++11), you must use the scope operator (`Color::Red`) in case labels.
 
-##### 8.3.2.2 Case Labels Must Be Compile-Time Constants
+#### 7.3.2.2 Case Labels Must Be Compile-Time Constants
 
 `case` labels must be **compile-time constants** (not variables or expressions evaluated at runtime).
 
@@ -4446,7 +4446,7 @@ switch (n) {
 
 > **Why:** The compiler generates a **jump table** for switch statements, which requires all case values to be known at compile time.
 
-##### 8.3.2.3 Case Labels Must Be Unique
+#### 7.3.2.3 Case Labels Must Be Unique
 
 `case` labels must be unique constants. **An error occurs if two or more case labels have the same value.**
 
@@ -4472,7 +4472,7 @@ switch (n) {
 
 > **Key point:** The compiler checks the **final numeric value**, not how the case is written. If two case labels evaluate to the same constant value, it's an error.
 
-##### 8.3.2.4 The break Statement
+#### 7.3.2.4 The break Statement
 
 `break` is required to exit the switch block. Without `break`, execution **falls through** to the next case.
 
@@ -4490,7 +4490,7 @@ switch (choice) {
 }
 ```
 
-##### 8.3.2.5 The default Label
+#### 7.3.2.5 The default Label
 
 The **default** label provides statements to execute when no case matches. It is **optional** but recommended for handling unexpected values.
 
@@ -4510,7 +4510,7 @@ switch (grade) {
 }
 ```
 
-#### 8.3.3 Fall-Through Behavior
+### 7.3.3 Fall-Through Behavior
 
 Without `break`, execution continues to the next case:
 
@@ -4534,7 +4534,7 @@ switch (day) {
 // Output: Weekday
 ```
 
-#### 8.3.4 Intentional Fall-Through
+### 7.3.4 Intentional Fall-Through
 
 Sometimes you may intentionally omit `break` to let multiple `case` labels share the same code block:
 
@@ -4554,7 +4554,7 @@ switch (grade) {
 
 > **Note:** This "fall-through" behavior is sometimes intentionally designed, but in most cases, it's a bug caused by forgetting to write `break`.
 
-#### 8.3.5 switch vs if-else
+### 7.3.5 switch vs if-else
 
 | Use `switch` | Use `if-else` |
 |--------------|---------------|
@@ -5270,18 +5270,6 @@ double sinc(double x) { ... }
 - Prototypes are typically placed after `#include` statements, before `main()`
 
 ### 8.3.3 Parameter Passing
-
-**Pass by Value (Default in C/C++):**
-- A **copy** of each argument's value is passed to the function
-- Changes to parameters inside function do NOT affect original variables
-
-**Formal vs Actual Parameters:**
-
-| Aspect | Formal Parameters | Actual Parameters |
-|--------|-------------------|-------------------|
-| Location | In function definition | In function call |
-| Role | Receive values | Provide values |
-| Scope | Local to function | Defined in calling code |
 
 **Example:**
 ```cpp
