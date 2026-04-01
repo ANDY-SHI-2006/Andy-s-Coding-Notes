@@ -2572,7 +2572,7 @@ array<int, 3> arr3{1, 2, 3};  // OK
 
 When reading array data from input, the approach differs between C and C++ styles.
 
-#### 5.8.7.1 Core Principle
+#### 5.8.10.1 Core Principle
 
 In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
 
@@ -2582,7 +2582,7 @@ In C/C++, **the array name itself represents the address of the first element** 
 | Array (entire array) | Array name only | `scanf("%s", name);` |
 | Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
 
-#### 5.8.7.2 Character Arrays (Strings)
+#### 5.8.10.2 Character Arrays (Strings)
 
 ```cpp
 char name[50];
@@ -2599,7 +2599,7 @@ scanf("%s", name);      // ✅ Correct: name is the address of first element
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
 
-#### 5.8.7.3 Numeric Arrays
+#### 5.8.10.3 Numeric Arrays
 
 For numeric arrays, you typically need to read elements one by one:
 
@@ -2612,7 +2612,7 @@ for (int i = 0; i < 5; i++) {
 }
 ```
 
-#### 5.8.7.4 Safety Considerations
+#### 5.8.10.4 Safety Considerations
 
 **Buffer Overflow Protection:**
 
@@ -2628,7 +2628,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 | `char[50]` | `%49s` | 49 chars + 1 null terminator |
 | `char[100]` | `%99s` | 99 chars + 1 null terminator |
 
-#### 5.8.7.5 C++ Style Input
+#### 5.8.10.5 C++ Style Input
 
 In modern C++, prefer using `std::cin` with `std::vector`:
 
@@ -4913,7 +4913,7 @@ double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
 int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 ```
 
-### 9.1.1.1 Elementary Functions
+### 8.1.1.1 Elementary Functions
 
 | Function | Description | Notes |
 |----------|-------------|-------|
@@ -4926,7 +4926,7 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `log(x)` | Computes the natural logarithm of x (ln x) | Requires `x > 0` |
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
 
-### 9.1.1.2 fabs vs abs
+### 8.1.1.2 fabs vs abs
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
@@ -4947,7 +4947,7 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-### 9.1.1.3 Power (Exponentiation)
+### 8.1.1.3 Power (Exponentiation)
 
 > **Important:** C++ has **no built-in operator** for exponentiation.
 
@@ -4961,7 +4961,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | `a * a` | Fastest | Small fixed exponents: a², a³ |
 | `pow(a, b)` | Slower | Variable/fractional exponents |
 
-### 9.1.1.4 Trigonometric Functions
+### 8.1.1.4 Trigonometric Functions
 
 > **Critical:** Arguments must be in **radians**, NOT degrees!
 >
@@ -4992,7 +4992,7 @@ rad = deg * PI / 180;
 deg = rad * 180 / PI;
 ```
 
-### 9.1.1.5 Hyperbolic Functions
+### 8.1.1.5 Hyperbolic Functions
 
 | Function | Description | Formula |
 |----------|-------------|---------|
@@ -5041,7 +5041,7 @@ C provides two approaches for character I/O:
 1. Using `printf`/`scanf` with `%c` format specifier
 2. Using dedicated character functions `getchar()` and `putchar()`
 
-### 9.2.1.1 Using `printf` and `scanf` with `%c`
+### 8.2.1.1 Using `printf` and `scanf` with `%c`
 
 The `%c` format specifier handles single characters:
 
@@ -5056,7 +5056,7 @@ printf("%c", ch);   // Print a character
 - `scanf("%c", &ch)` reads **any** character including whitespace (spaces, tabs, newlines)
 - To skip whitespace before reading a character, add a space: `scanf(" %c", &ch)`
 
-### 9.2.1.2 Using `getchar()` and `putchar()`
+### 8.2.1.2 Using `getchar()` and `putchar()`
 
 These are dedicated character I/O functions:
 
@@ -5077,7 +5077,7 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-### 9.2.1.3 Common Issues and Solutions
+### 8.2.1.3 Common Issues and Solutions
 
 **Issue 1: Input Buffer Residue**
 
@@ -5122,7 +5122,7 @@ putchar('!');         // Output on next line
 
 > **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
 
-### 9.2.2.1 Classification Functions
+### 8.2.2.1 Classification Functions
 
 | Function       | Returns non-zero (true) if...                   |
 | -------------- | ----------------------------------------------- |
@@ -5141,7 +5141,7 @@ putchar('!');         // Output on next line
 
 > **Note:** `isblank()` checks only space `' '` and tab `'\t'`, while `isspace()` checks all whitespace including newline `'\n'`, carriage return `'\r'`, form feed `'\f'`, and vertical tab `'\v'`.
 
-### 9.2.2.2 Conversion Functions
+### 8.2.2.2 Conversion Functions
 
 | Function | Description |
 |----------|-------------|
