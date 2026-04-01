@@ -5155,6 +5155,7 @@ return_type function_name(parameter_declarations)
 
 **Important Rules:**
 - Functions cannot be nested (one function cannot be defined inside another)
+  > **Note:** Unlike Python and some other languages, C++ does not support nested functions (defining a function inside another function). Nested functions are the foundation of closures and decorators in Python.
 - Function must be completely defined before another function begins
 
 ### 8.3.2 Function Prototype
