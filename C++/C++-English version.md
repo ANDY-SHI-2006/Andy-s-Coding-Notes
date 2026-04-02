@@ -5600,9 +5600,13 @@ int main() {
 
 **Purpose:** Declare a variable that is defined in another file (or elsewhere in the same file).
 
+**Key Points:**
+- `extern` is used **within functions** to reference global variables
+- `extern` is **optional** in the original definition of a global variable (outside all functions)
+
 **Key Distinction:**
-- **Definition**: Creates the variable, allocates storage (only once)
-- **Declaration**: Tells compiler the variable exists elsewhere (can be multiple)
+- **Definition**: Creates the variable, allocates storage (only once, outside functions)
+- **Declaration**: Tells compiler the variable exists elsewhere (can be multiple, typically inside functions)
 
 **Single File Usage** (optional but explicit):
 ```cpp
