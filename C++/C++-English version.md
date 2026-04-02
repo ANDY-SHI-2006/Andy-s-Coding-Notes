@@ -5578,11 +5578,16 @@ void func() {
 
 > **Note:** Since **C++11**, `auto` is primarily used for **automatic type deduction** (`auto x = 10;`). The old storage class usage (`auto int x = 10;`) is valid but **obsolete**.
 
-#### 8.2.5.3 Static Storage (`static`)
+#### 8.2.5.3 The `static` Storage Class
 
-The `static` keyword has **different meanings** depending on context.
+The `static` keyword changes **linkage** (visibility across files) or **lifetime** (how long the variable exists), depending on context:
 
-**1. Static Local Variables:**
+| Context | Effect of `static` |
+|---------|-------------------|
+| **Local variable** | Extends lifetime to program duration (value persists between calls) |
+| **Global variable** | Restricts linkage to current file only (internal linkage) |
+
+##### Static Local Variables
 
 Retain value between function calls, initialized only once.
 
@@ -5594,6 +5599,7 @@ Retain value between function calls, initialized only once.
 | **Destruction**    | Function exit            | Program termination          |
 | **Value Retained** | No (recreated each call) | Yes (persists between calls) |
 | **Scope**          | Function/block only      | Function/block only          |
+| **Lifetime**       | Function/block only      | Program duration             |
 
 **Example - Comparison:**
 
@@ -5602,14 +5608,16 @@ Retain value between function calls, initialized only once.
 void auto_counter() {
     int count = 0;        // Created fresh each call
     count++;
-    printf("Auto: %d", count);  // Always prints: 1
+    printf("Auto: %d
+", count);  // Always prints: 1
 }
 
 // Static local variable  
 void static_counter() {
     static int count = 0; // Initialized once, persists
     count++;
-    printf("Static: %d", count); // Prints: 1, 2, 3...
+    printf("Static: %d
+", count); // Prints: 1, 2, 3...
 }
 
 int main() {
@@ -5627,9 +5635,21 @@ int main() {
 
 **Use cases:** Function call counting, state persistence, memoization.
 
-**2. Static Global Variables:**
+##### Static Global Variables
 
-Limited to **current file only** (internal linkage):
+Restrict a global variable to the **current file only** (internal linkage).
+
+**Static Global vs Regular Global:**
+
+| Feature | Regular Global | Static Global |
+|---------|---------------|---------------|
+| **Linkage** | External (accessible from other files) | Internal (file-only) |
+| **Lifetime** | Program duration | Program duration |
+| **Scope** | Program-wide | File-only |
+| **Declaration** | `int value = 100;` | `static int value = 100;` |
+| **Access from other files** | Yes (via `extern`) | No (linker error) |
+
+**Example:**
 
 ```cpp
 // File: helper.cpp
@@ -5642,6 +5662,21 @@ void incrementInternal() {
 // File: main.cpp
 extern int internalCounter;  // ERROR: cannot access static global
 ```
+
+**Use cases:** Encapsulation, hiding implementation details, preventing name collisions in large projects.
+
+##### Summary: Two Meanings of `static`
+
+The `static` keyword has **opposite effects** depending on where it is used:
+
+| Usage | Effect | Purpose |
+|-------|--------|---------|
+| `static` inside function | **Extends** lifetime (longer) | Keep value between calls |
+| `static` outside function | **Restricts** visibility (smaller) | Hide from other files |
+
+**Mnemonic:**
+- On locals: "static = **stay**" (value stays alive)
+- On globals: "static = **stay here**" (stay in this file)
 
 #### 8.2.5.4 External Storage (`extern`)
 
