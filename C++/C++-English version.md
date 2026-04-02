@@ -5547,33 +5547,150 @@ void printMessage() {
 
 ### 8.2.5 Storage Class and Scope
 
-**Local Variables:**
-- Defined within a function
-- Only accessible inside that function
-- Created when function starts, destroyed when function completes
-- Include: formal parameters and variables declared in function body
+Storage class determines the **lifetime** (how long the variable exists) and **scope** (where the variable can be accessed) of a variable.
 
-**Global Variables:**
-- Defined outside all functions
+#### 8.2.5.1 Local Variables (Automatic Storage)
+
+**Characteristics:**
+- Defined within a function or block
+- Only accessible inside that function/block
+- Created when function starts, destroyed when function completes
+- Default storage class: `auto` (rarely written explicitly)
+
+```cpp
+void func() {
+    int x = 10;        // Local variable (auto by default)
+    auto int y = 20;   // Same as above, auto is optional
+    // x and y only exist inside func()
+}
+```
+
+**Formal parameters are also local:**
+```cpp
+void add(int a, int b) {  // a and b are local
+    int sum = a + b;      // sum is also local
+}
+```
+
+#### 8.2.5.2 Global Variables (External Storage)
+
+**Characteristics:**
+- Defined outside all functions (typically at top of file)
 - Accessible by any function in the program
 - Retain value throughout program execution
-- Use `extern` keyword to reference in other files (if needed)
+- Default storage class: `extern`
 
-**Example:**
 ```cpp
 int count = 0;  // Global variable
 
-void func1() {
-    extern int count;  // Optional: declares we're using global count
-    count++;
+void increment() {
+    count++;    // Access global count
 }
 
-void func2() {
-    count++;  // Also accesses global count
+int main() {
+    increment();
+    count++;    // Can also access here
+    return 0;
 }
 ```
 
 > **Best Practice:** Avoid global variables whenever possible. Use parameters instead.
+
+#### 8.2.5.3 The `extern` Keyword
+
+**Purpose:** Declare a variable that is defined in another file (or elsewhere in the same file).
+
+**Key Distinction:**
+- **Definition**: Creates the variable, allocates storage (only once)
+- **Declaration**: Tells compiler the variable exists elsewhere (can be multiple)
+
+**Single File Usage** (optional but explicit):
+```cpp
+int count = 0;  // Definition (global)
+
+void func1() {
+    extern int count;  // Declaration: "count is defined elsewhere"
+    count++;           // Use the global count
+}
+
+void func2() {
+    count++;           // Can also use global without extern keyword
+}
+```
+
+**Multi-File Usage** (essential):
+
+*File: globals.cpp*
+```cpp
+int sharedValue = 100;     // Definition (only one definition allowed)
+float sharedArray[10];     // Definition
+```
+
+*File: main.cpp*
+```cpp
+extern int sharedValue;    // Declaration: defined in another file
+extern float sharedArray[]; // Declaration: array defined elsewhere
+
+int main() {
+    printf("%d
+", sharedValue);  // Uses global from globals.cpp
+    return 0;
+}
+```
+
+**Common Pattern with Headers:**
+
+*File: globals.h* (header file)
+```cpp
+extern int sharedValue;    // Declaration only
+```
+
+*File: globals.cpp*
+```cpp
+#include "globals.h"
+int sharedValue = 100;     // Definition
+```
+
+*File: main.cpp*
+```cpp
+#include "globals.h"       // Gets the extern declaration
+// Can now use sharedValue
+```
+
+**Summary Table:**
+
+| Keyword | Purpose | Storage Duration | Scope |
+|---------|---------|------------------|-------|
+| `auto` | Local variables (default, rarely used) | Function/block | Local |
+| `extern` | Declare global from another file | Program | Global |
+| `static` | Local: retain value between calls; Global: file-only access | Program | Local or File |
+| `register` | Hint to store in CPU register (modern compilers ignore) | Function/block | Local |
+
+#### 8.2.5.4 Scope Rules Summary
+
+| Variable Type | Where Defined | Where Accessible |
+|---------------|---------------|------------------|
+| **Local** | Inside function | Only within that function |
+| **Global** | Outside functions | Any function in the program |
+| **Static Local** | Inside function with `static` | Only within function, but value persists |
+| **Parameter** | Function parameter list | Only within that function |
+
+**Scope Resolution:**
+- Inner scope can access outer scope variables
+- Inner scope can hide outer scope variables with same name
+
+```cpp
+int x = 10;  // Global
+
+void func() {
+    int x = 20;  // Local x hides global x
+    printf("%d
+", x);  // Prints 20 (local)
+    
+    // To access global x when hidden:
+    ::x = 30;  // C++: use scope resolution operator
+}
+```
 
 # 9 Object-Oriented Programming
 
