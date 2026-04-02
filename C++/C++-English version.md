@@ -5549,39 +5549,38 @@ void printMessage() {
 
 Storage class determines the **lifetime** (how long the variable exists) and **scope** (where the variable can be accessed) of a variable.
 
-#### 8.2.5.1 Local Variables (Automatic Storage)
+#### 8.2.5.1 The `auto` Storage Class (Automatic)
 
 **Characteristics:**
-- Defined within a function or block
-- Only accessible inside that function/block
-- Created when function starts, destroyed when function completes
-- Default storage class: `auto` (rarely written explicitly)
+- Default storage class for **local variables** (inside functions or blocks)
+- Variable is created when entering the block, destroyed when exiting
+- Rarely written explicitly in modern C++
 
 ```cpp
 void func() {
-    int x = 10;        // Local variable (auto by default)
-    auto int y = 20;   // Same as above, auto is optional
+    int x = 10;        // auto by default
+    auto int y = 20;   // Same as above, auto is optional/redundant
     // x and y only exist inside func()
 }
 ```
 
-**Formal parameters are also local:**
+**Formal parameters are also auto:**
 ```cpp
-void add(int a, int b) {  // a and b are local
-    int sum = a + b;      // sum is also local
+void add(int a, int b) {  // a and b are auto (local)
+    int sum = a + b;      // sum is also auto
 }
 ```
 
-#### 8.2.5.2 Global Variables (External Storage)
+#### 8.2.5.2 The `extern` Storage Class (External)
 
 **Characteristics:**
-- Defined outside all functions (typically at top of file)
-- Accessible by any function in the program
-- Retain value throughout program execution
-- Default storage class: `extern`
+- Default storage class for **global variables** (defined outside all functions)
+- Variable exists for the entire program duration
+- Accessible from any function in the program
+- Used to share variables across multiple files
 
 ```cpp
-int count = 0;  // Global variable
+int count = 0;  // Global variable (extern by default)
 
 void increment() {
     count++;    // Access global count
@@ -5596,7 +5595,7 @@ int main() {
 
 > **Best Practice:** Avoid global variables whenever possible. Use parameters instead.
 
-#### 8.2.5.3 The `extern` Keyword
+**The `extern` Keyword:**
 
 **Purpose:** Declare a variable that is defined in another file (or elsewhere in the same file).
 
@@ -5661,23 +5660,106 @@ int sharedValue = 100;     // Definition
 // Can now use sharedValue
 ```
 
-**Summary Table:**
+#### 8.2.5.3 The `static` Storage Class
 
-| Keyword | Purpose | Storage Duration | Scope |
-|---------|---------|------------------|-------|
-| `auto` | Local variables (default, rarely used) | Function/block | Local |
-| `extern` | Declare global from another file | Program | Global |
-| `static` | Local: retain value between calls; Global: file-only access | Program | Local or File |
-| `register` | Hint to store in CPU register (modern compilers ignore) | Function/block | Local |
+The `static` keyword has **different meanings** depending on where it is used.
 
-#### 8.2.5.4 Scope Rules Summary
+**1. Static Local Variables:**
 
-| Variable Type | Where Defined | Where Accessible |
-|---------------|---------------|------------------|
-| **Local** | Inside function | Only within that function |
-| **Global** | Outside functions | Any function in the program |
-| **Static Local** | Inside function with `static` | Only within function, but value persists |
-| **Parameter** | Function parameter list | Only within that function |
+- Retain their value between function calls
+- Initialized only once (on first call)
+- Scope remains local to the function
+
+```cpp
+void counter() {
+    static int count = 0;  // Initialized only once
+    count++;
+    printf("Count: %d
+", count);
+}
+
+int main() {
+    counter();  // Prints: Count: 1
+    counter();  // Prints: Count: 2
+    counter();  // Prints: Count: 3
+    return 0;
+}
+```
+
+**Use cases:**
+- Counting how many times a function is called
+- Maintaining state between calls
+- Cache/memoization
+
+**2. Static Global Variables:**
+
+- Limited to the **current file only** (internal linkage)
+- Cannot be accessed from other files via `extern`
+- Hidden from other translation units
+
+```cpp
+// File: helper.cpp
+static int internalCounter = 0;  // Only visible in this file
+
+void incrementInternal() {
+    internalCounter++;
+}
+
+// File: main.cpp
+extern int internalCounter;  // ERROR: cannot access static global
+```
+
+**Use cases:**
+- File-private variables (encapsulation)
+- Preventing name collisions across files
+- Implementation details that should not be exposed
+
+#### 8.2.5.4 The `register` Storage Class
+
+**Purpose:** Hint to the compiler that the variable will be heavily used and should be stored in a **CPU register** for faster access.
+
+```cpp
+void process() {
+    register int i;  // Hint: store i in a register
+    for (i = 0; i < 1000000; i++) {
+        // Heavy computation
+    }
+}
+```
+
+**Important Notes:**
+- **Modern compilers ignore this hint** (they optimize better than humans)
+- Still valid syntax but has no effect in most modern compilers
+- Cannot take the address of a register variable (`&i` is illegal)
+- Rarely used in contemporary C++ code
+
+#### 8.2.5.5 Storage Classes Comparison
+
+| Storage Class | Keyword | Scope | Lifetime | Default Initialization | Use Case |
+|--------------|---------|-------|----------|------------------------|----------|
+| **Automatic** | `auto` (default) | Local (block/function) | Function/block duration | Garbage value | Local variables |
+| **External** | `extern` | Global (program-wide) | Program duration | Zero | Global variables, cross-file sharing |
+| **Static** | `static` | Local (function) or File | Program duration | Zero | Persistent local state, file-private globals |
+| **Register** | `register` | Local | Function/block duration | Garbage value | (Obsolete) Performance hint |
+
+**Key Differences Summary:**
+
+| Feature | auto | extern | static (local) | static (global) |
+|---------|------|--------|----------------|-----------------|
+| Scope | Block | Program | Function | File |
+| Lifetime | Block | Program | Program | Program |
+| Retains value? | No | Yes | Yes | Yes |
+| Accessible from other files? | No | Yes | No | No |
+
+#### 8.2.5.6 Scope Rules Summary
+
+| Variable Type | Where Defined | Where Accessible | Lifetime |
+|---------------|---------------|------------------|----------|
+| **Local (auto)** | Inside function/block | Only within that block | Block duration |
+| **Global (extern)** | Outside functions | Any function in program | Program duration |
+| **Static Local** | Inside function with `static` | Only within function | Program duration |
+| **Static Global** | Outside functions with `static` | Only within same file | Program duration |
+| **Parameter** | Function parameter list | Only within that function | Function duration |
 
 **Scope Resolution:**
 - Inner scope can access outer scope variables
@@ -5696,6 +5778,16 @@ void func() {
 }
 ```
 
+**Visibility Across Files:**
+```cpp
+// File1.cpp
+int globalVar = 10;           // extern by default - visible everywhere
+static int filePrivate = 20;  // static - only visible in this file
+
+// File2.cpp  
+extern int globalVar;         // OK: can access globalVar
+extern int filePrivate;       // ERROR: filePrivate is static in File1
+```
 # 9 Object-Oriented Programming
 
 ## 9.1 Classes and Objects
