@@ -5714,6 +5714,28 @@ int main() {
 
 **Key Point:** Functions have external linkage by default, so they can be shared across files just like global variables with `extern`.
 
+**Note:** Function prototypes are inherently external. You do not need to write `extern` before function declarations:
+
+```cpp
+// These are equivalent (the first is standard, second is redundant)
+void foo();           // Standard function prototype
+extern void foo();    // Redundant - functions are external by default
+```
+
+**Restricting Function Visibility with `static`:**
+
+If you want to prevent a function from being called by other files, use `static`:
+
+```cpp
+// File: helper.cpp
+static void internalFunc() { }  // Only visible in this file
+
+// File: main.cpp
+void internalFunc();  // ERROR: cannot find definition
+```
+
+Functions declared `static` have **internal linkage** - they can only be called within the same translation unit (source file).
+
 > **Best Practice:** Avoid global variables. Prefer passing parameters. Use `extern` only when necessary.
 
 #### 8.2.5.5 Thread Storage (`thread_local`)
