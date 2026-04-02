@@ -5684,21 +5684,35 @@ int sharedValue = 100;         // Definition
 
 **Functions Also Have External Linkage:**
 
-Function names also have external storage class by default, allowing them to be called from any function. Function prototypes declared outside any function are also external references.
+Like global variables, function names have external storage class by default. This enables calling functions defined in other files.
 
+**Cross-File Example:**
+
+*File: math_utils.cpp*
 ```cpp
-// Function defined here
-void helper() {
-    printf("Helper called
-");
+int add(int a, int b) {        // Definition
+    return a + b;
 }
 
-void caller() {
-    helper();  // Can call without extern - functions have external linkage
+int multiply(int a, int b) {   // Definition
+    return a * b;
 }
 ```
 
-This is why function prototypes can be placed at the top of a file and used by all functions below.
+*File: main.cpp*
+```cpp
+// Declarations (prototypes) - tell compiler functions exist elsewhere
+int add(int a, int b);
+int multiply(int a, int b);
+
+int main() {
+    int sum = add(5, 3);           // Calls function from math_utils.cpp
+    int product = multiply(4, 7);  // Calls function from math_utils.cpp
+    return 0;
+}
+```
+
+**Key Point:** Functions have external linkage by default, so they can be shared across files just like global variables with `extern`.
 
 > **Best Practice:** Avoid global variables. Prefer passing parameters. Use `extern` only when necessary.
 
