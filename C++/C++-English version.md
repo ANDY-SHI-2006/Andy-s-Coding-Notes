@@ -5289,6 +5289,51 @@ int main() {
 | **No prototype**   | Must be before `main()`            |
 | **With prototype** | Can be before *or* after `main()`  |
 
+> **Best Practice:** Always Write Function Prototypes
+
+To develop good programming habits, it is **recommended** (not strictly required by the compiler) to write a prototype for every function. Even if a function is defined before it is called, providing a prototype is still considered good practice.
+
+This practice provides several benefits:
+
+1. **Compilation Flexibility**: Whether you place the function definition before or after `main()`, the code will compile successfully.
+2. **Clear Code Structure**: When prototypes are centralized at the beginning of the file or in header files, the code structure becomes clearer and easier to maintain.
+3. **Documentation**: Prototypes serve as a quick reference for what functions are available and their signatures.
+4. **Header File Organization**: In larger projects, prototypes are typically placed in header files (`.h` or `.hpp`), making it easy to share function declarations across multiple source files.
+
+**Recommended Structure:**
+
+```cpp
+// Header section: #include directives
+#include <iostream>
+using namespace std;
+
+// Function prototypes section (all functions declared here)
+void functionA(int x, double y);
+int functionB(const string& str);
+bool functionC();
+
+int main() {
+    // Main logic - can call any function above
+    functionA(10, 3.14);
+    return 0;
+}
+
+// Function definitions after main()
+void functionA(int x, double y) {
+    // implementation
+}
+
+int functionB(const string& str) {
+    // implementation
+    return 0;
+}
+
+bool functionC() {
+    // implementation
+    return true;
+}
+```
+
 ### 8.3.3 Parameter Passing
 
 #### 8.3.3.1 Pass by Value
