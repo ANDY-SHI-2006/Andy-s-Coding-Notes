@@ -5281,6 +5281,7 @@ int main() {
 - Parameter names in prototype are optional but recommended for documentation
 - Prototypes are typically placed after `#include` statements, before `main()`
 - **With prototypes, functions can be defined before *or* after `main()`**
+- **Standard library header files** (e.g., `<stdio.h>`, `<math.h>`) contain the prototypes for library functions (e.g., `printf`, `sqrt`). Without them, you would have to write those prototypes manually.
 
 **Function Definition Placement:**
 
