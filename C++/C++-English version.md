@@ -5588,12 +5588,12 @@ Retain value between function calls, initialized only once.
 
 **Static vs Auto Local Variables:**
 
-| Feature | `auto` (Regular Local) | `static` Local |
-|---------|------------------------|----------------|
-| **Initialization** | Every function call | Only on first call |
-| **Destruction** | Function exit | Program termination |
+| Feature            | `auto` (Regular Local)   | `static` Local               |
+| ------------------ | ------------------------ | ---------------------------- |
+| **Initialization** | Every function call      | Only on first call           |
+| **Destruction**    | Function exit            | Program termination          |
 | **Value Retained** | No (recreated each call) | Yes (persists between calls) |
-| **Scope** | Function/block only | Function/block only |
+| **Scope**          | Function/block only      | Function/block only          |
 
 **Example - Comparison:**
 
@@ -5681,6 +5681,24 @@ int sharedValue = 100;         // Definition
 // main.cpp
 #include "globals.h"           // Gets declaration
 ```
+
+**Functions Also Have External Linkage:**
+
+Function names also have external storage class by default, allowing them to be called from any function. Function prototypes declared outside any function are also external references.
+
+```cpp
+// Function defined here
+void helper() {
+    printf("Helper called
+");
+}
+
+void caller() {
+    helper();  // Can call without extern - functions have external linkage
+}
+```
+
+This is why function prototypes can be placed at the top of a file and used by all functions below.
 
 > **Best Practice:** Avoid global variables. Prefer passing parameters. Use `extern` only when necessary.
 
