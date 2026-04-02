@@ -16,6 +16,7 @@ There are two ways to include header files:
 | `< >`  | System directories first             | Standard library (e.g., `vector`, `string`) |
 | `" "`  | Current directory first, then system | Custom headers                              |
 
+> **Key Concept:** The `#include` directive is performed by the **preprocessor**. It is essentially a **pure text substitution** (copy-and-paste) — the entire content of the header file is inserted into the source file at the location of the `#include` statement before actual compilation begins.
 ### 1.1.2 Header File Extensions
 
 | Type                           | Extension              | Example                              | Note                        |
@@ -5601,16 +5602,14 @@ Retain value between function calls, initialized only once.
 void auto_counter() {
     int count = 0;        // Created fresh each call
     count++;
-    printf("Auto: %d
-", count);  // Always prints: 1
+    printf("Auto: %d", count);  // Always prints: 1
 }
 
 // Static local variable  
 void static_counter() {
     static int count = 0; // Initialized once, persists
     count++;
-    printf("Static: %d
-", count); // Prints: 1, 2, 3...
+    printf("Static: %d", count); // Prints: 1, 2, 3...
 }
 
 int main() {
@@ -5628,7 +5627,6 @@ int main() {
 
 **Use cases:** Function call counting, state persistence, memoization.
 
-**2. Static Global Variables:**
 **2. Static Global Variables:**
 
 Limited to **current file only** (internal linkage):
