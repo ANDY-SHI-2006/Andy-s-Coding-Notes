@@ -82,6 +82,66 @@ int main() {
 | `#ifdef` | Conditional compilation | `#ifdef DEBUG` |
 | `#pragma` | Compiler-specific directive | `#pragma once` |
 
+#### 1.1.4.1 Macros
+
+**Preprocessor Directive:** Macros are processed before compilation.
+
+**Simple Macros (Symbolic Constants):**
+
+```cpp
+#define PI 3.141593
+#define MAX_SIZE 100
+```
+
+**Parameterized Macros:**
+
+```cpp
+#define macro_name(parameters) macro_text
+```
+
+Example - Temperature Conversion:
+```cpp
+#define degreesC(temp) (((temp) - 32) * (5.0/9.0))
+
+// Usage:
+double celsius = degreesC(fahrenheit);
+```
+
+**Important: Use Parentheses!**
+
+Incorrect:
+```cpp
+#define degreesF(x) x*(9.0/5.0) + 32
+// degreesF(temp+10) becomes: temp+10*(9.0/5.0) + 32  // Wrong!
+```
+
+Correct:
+```cpp
+#define degreesF(x) ((x)*(9.0/5.0) + 32)
+// degreesF(temp+10) becomes: ((temp+10)*(9.0/5.0) + 32)  // Correct!
+```
+
+**Rule:** Always put parentheses around:
+1. Each individual parameter
+2. The complete macro text
+
+Example - Triangle Area:
+```cpp
+#define area_tri(base, height) (0.5*(base)*(height))
+```
+
+**Macros vs Functions:**
+
+| Feature | Macros | Functions |
+|---------|--------|-----------|
+| Processing | Preprocessor text substitution | Compiled code |
+| Type checking | None | Yes |
+| Execution | Inline (no call overhead) | Function call overhead |
+| Debuggability | Harder | Easier |
+| Side effects | Can occur (due to multiple evaluations) | Controlled |
+
+> **Best Practice:** Prefer functions over macros when possible. Use macros only for simple, performance-critical operations.
+
 ## 1.2 Using std Namespace
 
 There are two ways to use standard library features:
@@ -5027,13 +5087,72 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-## 8.2 Character Functions
+#### 8.1.2.1 Random Numbers
+
+> **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
+
+**Generating Random Integers:**
+
+```cpp
+int r = rand();  // Returns integer between 0 and RAND_MAX (typically 32767)
+```
+
+**Setting the Seed:**
+```cpp
+srand(seed_value);  // Initialize random number generator
+```
+
+> **Important:** Without `srand()`, `rand()` generates the same sequence each run.
+
+**Integer Range [0, n-1]:**
+```cpp
+int x = rand() % n;  // 0 to n-1
+```
+
+**Integer Range [a, b]:**
+```cpp
+int rand_int(int a, int b) {
+    return rand() % (b - a + 1) + a;
+}
+```
+
+**Floating-Point Range [a, b]:**
+```cpp
+double rand_float(double a, double b) {
+    return ((double)rand() / RAND_MAX) * (b - a) + a;
+}
+```
+
+**Complete Example:**
+
+```cpp
+#include <cstdio>
+#include <cstdlib>
+#include <cctime>
+
+int main() {
+    unsigned int seed;
+    printf("Enter a positive integer seed value: ");
+    scanf("%u", &seed);
+    srand(seed);
+    
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", rand());
+    }
+    printf("
+");
+    
+    return 0;
+}
+```
+
+### 8.1.3 Character Functions
 
 > **Headers:** This section covers functions from two different headers:
 > - `<cstdio>` — Character I/O functions (Section 9.2.1)
 > - `<cctype>` — Character classification & conversion (Section 9.2.2)
 
-### 8.2.1 `<cstdio>` Character I/O
+### 8.1.3.1 `<cstdio>` Character I/O
 
 > **Header:** `#include <cstdio>` (C++ style) or `#include <stdio.h>` (C style)
 
@@ -5041,7 +5160,7 @@ C provides two approaches for character I/O:
 1. Using `printf`/`scanf` with `%c` format specifier
 2. Using dedicated character functions `getchar()` and `putchar()`
 
-### 8.2.1.1 Using `printf` and `scanf` with `%c`
+### 8.1.3.1.1 Using `printf` and `scanf` with `%c`
 
 The `%c` format specifier handles single characters:
 
@@ -5056,7 +5175,7 @@ printf("%c", ch);   // Print a character
 - `scanf("%c", &ch)` reads **any** character including whitespace (spaces, tabs, newlines)
 - To skip whitespace before reading a character, add a space: `scanf(" %c", &ch)`
 
-### 8.2.1.2 Using `getchar()` and `putchar()`
+### 8.1.3.1.2 Using `getchar()` and `putchar()`
 
 These are dedicated character I/O functions:
 
@@ -5077,7 +5196,7 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-### 8.2.1.3 Common Issues and Solutions
+### 8.1.3.1.3 Common Issues and Solutions
 
 **Issue 1: Input Buffer Residue**
 
@@ -5118,11 +5237,11 @@ putchar('!');         // Output on next line
 
 > **Note:** This is expected behavior—characters accumulate until `\n` flushes the output or moves to a new line.
 
-### 8.2.2 `<cctype>` Character Classification & Conversion
+### 8.1.3.2 `<cctype>` Character Classification & Conversion
 
 > **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
 
-### 8.2.2.1 Classification Functions
+### 8.1.3.2.1 Classification Functions
 
 | Function       | Returns non-zero (true) if...                   |
 | -------------- | ----------------------------------------------- |
@@ -5141,7 +5260,7 @@ putchar('!');         // Output on next line
 
 > **Note:** `isblank()` checks only space `' '` and tab `'\t'`, while `isspace()` checks all whitespace including newline `'\n'`, carriage return `'\r'`, form feed `'\f'`, and vertical tab `'\v'`.
 
-### 8.2.2.2 Conversion Functions
+### 8.1.3.2.2 Conversion Functions
 
 | Function | Description |
 |----------|-------------|
@@ -5178,7 +5297,7 @@ char result = toupper(sym);   // result = '5' (unchanged)
 
 
 
-## 8.3 Programmer-Defined Functions
+## 8.2 Programmer-Defined Functions
 
 **Function Organization:**
 Use comment blocks with dashes to separate functions visually:
@@ -5215,7 +5334,7 @@ int main(void)
 
 > **See also:** [2.2.3 Program Structure Comments](#223-program-structure-comments) for comment style guidelines.
 
-### 8.3.1 Function Definition
+### 8.2.1 Function Definition
 
 **General Form:**
 ```cpp
@@ -5238,7 +5357,7 @@ return_type function_name(parameter_declarations)
   > **Note:** Unlike Python and some other languages, C++ does not support nested functions (defining a function inside another function). Nested functions are the foundation of closures and decorators in Python.
 - Function must be completely defined before another function begins
 
-### 8.3.2 Function Prototype
+### 8.2.2 Function Prototype
 
 **Purpose:** Declare function before use, allowing functions to be defined in any order.
 
@@ -5319,9 +5438,9 @@ void functionA(int x, double y) { /* ... */ }
 int functionB(const string& str) { /* ... */ }
 ```
 
-### 8.3.3 Parameter Passing
+### 8.2.3 Parameter Passing
 
-#### 8.3.3.1 Pass by Value
+#### 8.2.3.1 Pass by Value
 
 By default, C++ passes arguments **by value**. This means the formal parameters receive a *copy* of the actual parameters. Any changes made to the formal parameters inside the function do **not** affect the original variables in the caller.
 
@@ -5340,14 +5459,14 @@ int main() {
 }
 ```
 
-#### 8.3.3.2 Parameter Matching Rules
+#### 8.2.3.2 Parameter Matching Rules
 
 When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
 - **Number**: The count of arguments must be equal
 - **Type**: Corresponding parameters must have compatible types
 - **Order**: Arguments are matched positionally from left to right
 
-#### 8.3.3.3 Implicit Type Conversion (Coercion)
+#### 8.2.3.3 Implicit Type Conversion (Coercion)
 
 If the actual parameter type differs from the formal parameter type, C++ attempts an automatic type conversion (coercion).
 
@@ -5393,7 +5512,7 @@ int main() {
 >
 > **See also:** [4.9.3 C++ Style Casts](#493-c-style-casts) for syntax of `static_cast` and explicit conversion operators.
 
-### 8.3.4 Return Statement
+### 8.2.4 Return Statement
 
 **Syntax:**
 ```cpp
@@ -5416,7 +5535,7 @@ void printMessage() {
 
 > **Note:** In a `void` function, the `return` statement does not contain an expression. It can be written as `return;` or can be omitted entirely. When omitted, the function automatically returns when execution reaches the closing brace `}`.
 
-### 8.3.5 Storage Class and Scope
+### 8.2.5 Storage Class and Scope
 
 **Local Variables:**
 - Defined within a function
@@ -5445,130 +5564,6 @@ void func2() {
 ```
 
 > **Best Practice:** Avoid global variables whenever possible. Use parameters instead.
-
-## 8.4 Random Numbers
-
-> **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
-
-### 8.4.1 Generating Random Integers
-
-**Basic Usage:**
-```cpp
-int r = rand();  // Returns integer between 0 and RAND_MAX (typically 32767)
-```
-
-**Setting the Seed:**
-```cpp
-srand(seed_value);  // Initialize random number generator
-```
-
-> **Important:** Without `srand()`, `rand()` generates the same sequence each run.
-
-### 8.4.2 Random Numbers in Specified Range
-
-**Integer Range [0, n-1]:**
-```cpp
-int x = rand() % n;  // 0 to n-1
-```
-
-**Integer Range [a, b]:**
-```cpp
-int rand_int(int a, int b) {
-    return rand() % (b - a + 1) + a;
-}
-```
-
-**Floating-Point Range [a, b]:**
-```cpp
-double rand_float(double a, double b) {
-    return ((double)rand() / RAND_MAX) * (b - a) + a;
-}
-```
-
-### 8.4.3 Complete Example
-
-```cpp
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-
-int main() {
-    unsigned int seed;
-    printf("Enter a positive integer seed value: ");
-    scanf("%u", &seed);
-    srand(seed);
-    
-    for (int i = 0; i < 10; i++) {
-        printf("%d ", rand());
-    }
-    printf("\n");
-    
-    return 0;
-}
-```
-
-## 8.5 Macros
-
-**Preprocessor Directive:** Macros are processed before compilation.
-
-### 8.5.1 Simple Macros (Symbolic Constants)
-
-```cpp
-#define PI 3.141593
-#define MAX_SIZE 100
-```
-
-### 8.5.2 Parameterized Macros
-
-**Syntax:**
-```cpp
-#define macro_name(parameters) macro_text
-```
-
-**Example - Temperature Conversion:**
-```cpp
-#define degreesC(temp) (((temp) - 32) * (5.0/9.0))
-
-// Usage:
-double celsius = degreesC(fahrenheit);
-```
-
-### 8.5.3 Important: Use Parentheses!
-
-**Incorrect:**
-```cpp
-#define degreesF(x) x*(9.0/5.0) + 32
-// degreesF(temp+10) becomes: temp+10*(9.0/5.0) + 32  // Wrong!
-```
-
-**Correct:**
-```cpp
-#define degreesF(x) ((x)*(9.0/5.0) + 32)
-// degreesF(temp+10) becomes: ((temp+10)*(9.0/5.0) + 32)  // Correct!
-```
-
-**Rule:** Always put parentheses around:
-1. Each individual parameter
-2. The complete macro text
-
-**Example - Triangle Area:**
-```cpp
-#define area_tri(base, height) (0.5*(base)*(height))
-```
-
-### 8.5.4 Macros vs Functions
-
-| Feature | Macros | Functions |
-|---------|--------|-----------|
-| Processing | Preprocessor text substitution | Compiled code |
-| Type checking | None | Yes |
-| Execution | Inline (no call overhead) | Function call overhead |
-| Debuggability | Harder | Easier |
-| Side effects | Can occur (due to multiple evaluations) | Controlled |
-
-> **Best Practice:** Prefer functions over macros when possible. Use macros only for simple, performance-critical operations.
-
----
 
 # 9 Object-Oriented Programming
 
