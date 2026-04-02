@@ -5597,6 +5597,15 @@ int main() {
 
 > **Best Practice:** Avoid global variables whenever possible. Use parameters instead.
 
+**Why Avoid Global Variables?**
+
+| Issue | Explanation |
+|-------|-------------|
+| **Hidden Dependencies** | Functions secretly use external variables, making code harder to read and understand |
+| **Hard to Debug** | Any part of the program can modify it; when errors occur, it's difficult to trace who changed it |
+| **Not Reusable** | Functions depend on specific global variables, making them unusable in other projects |
+| **Naming Conflicts** | Large projects are prone to name collisions |
+
 **The `extern` Keyword:**
 
 **Purpose:** Declare a variable that is defined in another file (or elsewhere in the same file).
