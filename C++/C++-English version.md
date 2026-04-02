@@ -5571,6 +5571,8 @@ void add(int a, int b) {  // a and b are auto (local)
 }
 ```
 
+> **Note:** Since **C++11**, the `auto` keyword has a new meaning—**automatic type deduction**. When you write `auto x = 10;` today, the compiler deduces that `x` is an `int`. The old usage (`auto int x = 10;` as a storage class specifier) is still valid but **rarely used** in modern C++.
+
 #### 8.2.5.2 The `extern` Storage Class (External)
 
 **Characteristics:**
