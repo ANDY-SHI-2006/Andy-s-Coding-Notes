@@ -5359,84 +5359,94 @@ return_type function_name(parameter_declarations)
 
 ### 8.2.2 Function Prototype
 
-**Purpose:** Declare function before use, allowing functions to be defined in any order.
+#### 8.2.2.1 The Problem: Declaration Order
 
-**Syntax:**
-```cpp
-return_type function_name(parameter_types);
-```
+**Without prototypes**, functions must be defined *before* they are called:
 
-**Example — Prototypes with Parameter Names (Recommended for Documentation):**
 ```cpp
-// Prototypes at top of file
-void printTable(double a, double b, int n);
-double sinc(double x);
+// This works: defined before main
+void foo() { ... }
 
 int main() {
-    // Can call functions here
-    printTable(a, b, NUM_ROWS);
-    return 0;
+    foo();  // OK
 }
 
-// Function definitions after main
-void printTable(double a, double b, int n) { ... }
-double sinc(double x) { ... }
+// This fails: defined after main
+int main() {
+    bar();  // Error: bar() not declared!
+}
+void bar() { ... }
 ```
 
-**Example — Prototypes without Parameter Names (Also Valid):**
+**With prototypes**, functions can be defined *anywhere*:
+
 ```cpp
-// Parameter names are optional in prototypes
+void bar();  // Prototype declares bar() exists
+
+int main() {
+    bar();  // OK: compiler knows bar() from prototype
+}
+
+void bar() { ... }  // Definition can be after main
+```
+
+#### 8.2.2.2 Syntax
+
+**Basic Form:**
+```cpp
+return_type function_name(parameter_list);
+```
+
+**With Parameter Names** (recommended for documentation):
+```cpp
+void printTable(double start, double end, int rows);
+double sinc(double x);
+```
+
+**Without Parameter Names** (also valid):
+```cpp
 void printTable(double, double, int);
 double sinc(double);
-
-int main() {
-    printTable(a, b, NUM_ROWS);
-    return 0;
-}
 ```
 
-**Key Points:**
-- Prototype informs compiler about: function name, return type, parameter types
-- Parameter names in prototype are optional but recommended for documentation
-- Prototypes are typically placed after `#include` statements, before `main()`
-- **With prototypes, functions can be defined before *or* after `main()`**
-- **Standard library header files** (e.g., `<stdio.h>`, `<math.h>`) contain the prototypes for library functions (e.g., `printf`, `sqrt`). Without them, you would have to write those prototypes manually.
+#### 8.2.2.3 Where to Place Prototypes
 
-**Function Definition Placement:**
+| Location | Usage |
+|----------|-------|
+| **Top of file** | Before `main()`, so all functions can use it |
+| **Header files** | For sharing across multiple source files |
 
-| Scenario           | Where to place function definition |
-| ------------------ | ---------------------------------- |
-| **No prototype**   | Must be before `main()`            |
-| **With prototype** | Can be before *or* after `main()`  |
+**Standard library headers** (e.g., `<cmath>`, `<cstdio>`) contain prototypes for library functions. Without `#include`, you'd need to write them manually.
 
-> **Best Practice:** Always Write Function Prototypes
+#### 8.2.2.4 Best Practice
 
-It is **recommended** (not strictly required by the compiler) to write a prototype for every function.
-
-**Why:**
-- **Compilation Flexibility**: Function definitions can be placed before or after `main()`.
-- **Clear Structure**: Centralized prototypes make code easier to read and maintain.
-- **Documentation**: Prototypes serve as a quick reference for available functions.
+| Scenario | Recommendation |
+|----------|----------------|
+| **Single file** | Place all prototypes after `#include`, before `main()` |
+| **Multiple files** | Put prototypes in `.h` header file, `#include` where needed |
+| **Always?** | Yes—even if function is defined before use, prototypes improve clarity |
 
 **Typical Layout:**
-
 ```cpp
 #include <iostream>
 using namespace std;
 
-// Prototypes
+// Function prototypes
 void functionA(int x, double y);
 int functionB(const string& str);
 
 int main() {
+    // Main logic
     functionA(10, 3.14);
     return 0;
 }
 
-// Definitions
+// Function definitions
 void functionA(int x, double y) { /* ... */ }
 int functionB(const string& str) { /* ... */ }
 ```
+
+**Summary:** Prototypes decouple "declaration" from "definition", giving you freedom to organize code logically.
 
 ### 8.2.3 Parameter Passing
 
