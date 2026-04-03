@@ -5773,6 +5773,21 @@ Functions declared `static` have **internal linkage** - they can only be called 
 
 > **Best Practice:** Avoid global variables. Prefer passing parameters. Use `extern` only when necessary.
 
+**Why Parameters Are Better Than Global Variables:**
+
+Function prototypes clearly show dependencies:
+```cpp
+void process(int data, double factor);  // Dependencies are explicit and visible
+```
+
+Global variables create hidden dependencies:
+```cpp
+void process();  // Dependencies are hidden - must read function body to find them
+// Inside process(): uses globalVar1, globalVar2, etc.
+```
+
+Parameters make data flow explicit and self-documenting. Global variables make code harder to understand, test, and maintain.
+
 #### 8.2.5.5 Thread Storage (`thread_local`)
 
 **C++11 feature:** Each thread gets its own independent copy.
