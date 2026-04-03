@@ -5542,6 +5542,30 @@ int main() {
 
 They are not simple opposites. `*` is only the "inverse" of `&` when used as an operator in expressions (e.g., `*(&x)` equals `x`).
 
+**Pointer Types Must Match the Data:**
+
+The type in a pointer declaration indicates what type of data the pointer points to:
+
+| Pointer Type | Data Size | `*p` reads/writes | `p+1` skips |
+|--------------|-----------|-------------------|-------------|
+| `char *p` | 1 byte | 1 byte | 1 byte |
+| `int *p` | 4 bytes | 4 bytes | 4 bytes |
+| `long long *p` | 8 bytes | 8 bytes | 8 bytes |
+| `double *p` | 8 bytes | 8 bytes | 8 bytes |
+
+**Why the type matters:**
+- `int *a` means "`*a` will read/write 4 bytes as an int"
+- `long long *a` means "`*a` will read/write 8 bytes as a long long"
+- `a + 1` skips forward by the size of the pointed-to type
+
+**Type mismatch is dangerous:**
+```cpp
+int x = 10;
+long long *p = &x;  // Wrong! Pointer type does not match variable type
+*p = 100;            // Danger: writes 8 bytes to a 4-byte variable
+                     // This overwrites adjacent memory!
+```
+
 #### 8.2.3.3 Parameter Matching Rules
 
 When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
