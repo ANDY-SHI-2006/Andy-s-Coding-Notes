@@ -4078,7 +4078,7 @@ outFile.close();
 
 ### 7.1.1 Relational Operators
 
-#### 8.1.1.1 Less Than (`<`)
+#### 7.1.1.1 Less Than (`<`)
 
 Returns `true` if the left operand is less than the right operand.
 
@@ -4088,7 +4088,7 @@ bool result = a < b;     // true (5 is less than 10)
 bool result2 = b < a;    // false (10 is not less than 5)
 ```
 
-#### 8.1.1.2 Less Than or Equal To (`<=`)
+#### 7.1.1.2 Less Than or Equal To (`<=`)
 
 Returns `true` if the left operand is less than or equal to the right operand.
 
@@ -4098,7 +4098,7 @@ bool result1 = x <= y;   // true (5 equals 5)
 bool result2 = z <= x;   // true (3 is less than 5)
 ```
 
-#### 8.1.1.3 Greater Than (`>`)
+#### 7.1.1.3 Greater Than (`>`)
 
 Returns `true` if the left operand is greater than the right operand.
 
@@ -4107,7 +4107,7 @@ int a = 10, b = 5;
 bool result = a > b;     // true (10 is greater than 5)
 ```
 
-#### 8.1.1.4 Greater Than or Equal To (`>=`)
+#### 7.1.1.4 Greater Than or Equal To (`>=`)
 
 Returns `true` if the left operand is greater than or equal to the right operand.
 
@@ -4116,7 +4116,7 @@ int x = 5, y = 5;
 bool result = x >= y;    // true (5 equals 5)
 ```
 
-#### 8.1.1.5 Equal To (`==`)
+#### 7.1.1.5 Equal To (`==`)
 
 Returns `true` if both operands are equal.
 
@@ -4139,7 +4139,7 @@ const double EPSILON = 1e-9;
 if (fabs(x - 0.1) < EPSILON) { }
 ```
 
-#### 8.1.1.6 Not Equal To (`!=`)
+#### 7.1.1.6 Not Equal To (`!=`)
 
 Returns `true` if the operands are not equal.
 
@@ -4148,7 +4148,7 @@ int a = 5, b = 3;
 bool result = a != b;    // true (5 is not equal to 3)
 ```
 
-#### 8.1.1.7 Summary of Relational Operators
+#### 7.1.1.7 Summary of Relational Operators
 
 | Operator | Meaning | Example | Result |
 |----------|---------|---------|--------|
@@ -4163,7 +4163,7 @@ bool result = a != b;    // true (5 is not equal to 3)
 
 Logical operators combine boolean expressions.
 
-#### 8.1.2.1 Logical NOT (`!`)
+#### 7.1.2.1 Logical NOT (`!`)
 
 Negates a boolean expression. Returns `true` if the operand is `false`, and vice versa.
 
@@ -4175,7 +4175,7 @@ int x = 0;
 if (!x) { }             // true because x is 0 (falsy)
 ```
 
-#### 8.1.2.2 Logical AND (`&&`)
+#### 7.1.2.2 Logical AND (`&&`)
 
 Returns `true` only if **both** operands are `true`.
 
@@ -4198,7 +4198,7 @@ if (age >= 18 && hasID) {
 | false | true | false |
 | false | false | false |
 
-#### 8.1.2.3 Logical OR (`||`)
+#### 7.1.2.3 Logical OR (`||`)
 
 Returns `true` if **at least one** operand is `true`.
 
@@ -4221,7 +4221,7 @@ if (isWeekend || isHoliday) {
 | false | true  | true                                     |
 | false | false | false                                    |
 
-#### 8.1.2.4 Summary of Logical Operators
+#### 7.1.2.4 Summary of Logical Operators
 
 | Operator                             | Name        | Description                          | Example                                                  |
 | ------------------------------------ | ----------- | ------------------------------------ | -------------------------------------------------------- |
@@ -4734,7 +4734,7 @@ do {
 
 Compact loop with initialization, condition, and update in one line.
 
-#### 8.5.3.1 Basic Syntax and Execution Order
+#### 7.5.3.1 Basic Syntax and Execution Order
 
 ```cpp
 for (initialization; condition; update) {
@@ -4759,7 +4759,7 @@ for (int i = 0; i < 5; i++) {
 // Output: 0 1 2 3 4
 ```
 
-#### 8.5.3.2 Initialization Options
+#### 7.5.3.2 Initialization Options
 
 **The initialization part is optional.** Three approaches:
 
@@ -4799,7 +4799,7 @@ for (int i = 0, j = 10; i < j; i++, j--) {
 
 > **Best Practice:** Always define the variable inside the for loop when possible. This limits variable scope, reduces naming conflicts, and prevents accidental modifications.
 
-#### 8.5.3.3 Special Loop Patterns
+#### 7.5.3.3 Special Loop Patterns
 
 **Omitting Parts:**
 
@@ -4820,7 +4820,7 @@ for (;;) {             // all parts omitted, equivalent to while(true)
 }
 ```
 
-#### 8.5.3.4 Range-based for Loop (C++11)
+#### 7.5.3.4 Range-based for Loop (C++11)
 
 For iterating over containers without explicit index.
 
@@ -5081,6 +5081,8 @@ deg = rad * 180 / PI;
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
+#### 8.1.2.1 abs
+
 **Integer Absolute Value:**
 
 | Function | Description | Notes |
@@ -5104,7 +5106,7 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-#### 8.1.2.1 Random Numbers
+#### 8.1.2.2 Random Numbers
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
@@ -5488,19 +5490,31 @@ int main() {
 
 #### 8.2.3.2 Pass by Pointer (Address)
 
-To allow a function to modify the caller's variables, use **pointers** to pass the **memory addresses** instead of values.
+##### 8.2.3.2.1 The Problem: Why Pointers Are Needed
 
-**Why Pointers Are Needed:**
+Functions face two fundamental limitations that pointers solve:
 
-- Functions can only **return one value**
-- Call-by-value cannot modify the original variables
-- By passing **addresses**, the function can access and modify the original memory locations
+- **Single return value**: Functions can only `return` one value, but sometimes we need to modify multiple external variables
+- **Call-by-value limitation**: Passing arguments by value only sends copies; modifications inside the function do not affect the original variables
 
-**Example — Correct Swap Using Pointers:**
+By passing **memory addresses** instead of values, the function gains direct access to the caller's original variables.
+
+##### 8.2.3.2.2 The Core Concept: Passing Addresses
+
+Instead of passing a copy of the variable's value, we pass the **address** where the variable is stored. The function receives this address, navigates to that memory location, and modifies the value directly.
+
+##### 8.2.3.2.3 The Two Essential Operators
+
+| Operator | Name | Purpose | Example |
+|----------|------|---------|---------|
+| `&` | Address-of | Get the memory address of a variable | `&x` returns address of x (e.g., `0x7fff5e...`) |
+| `*` | Dereference/Indirection | Access or modify the value at an address | `*ptr` reads/writes the value at ptr's address |
+
+##### 8.2.3.2.4 How It Works: Step-by-Step Example
 
 ```cpp
 void swap(int *a, int *b) {  // Pointers to int
-    int hold = *a;   // *a dereferences pointer to get value
+    int hold = *a;   // *a dereferences pointer to get the value at that address
     *a = *b;         // Store b's value at a's address
     *b = hold;       // Store hold at b's address
 }
@@ -5512,37 +5526,35 @@ int main() {
 }
 ```
 
-**Key Concepts:**
+**Execution breakdown:**
+1. `swap(&x, &y)` passes the **addresses** of x and y
+2. Parameters `a` and `b` are **pointers** storing these addresses
+3. `*a` and `*b` **dereference** to access the actual memory locations
+4. Assignments like `*a = *b` modify values at the original addresses
 
-| Operator | Name | Purpose | Example |
-|----------|------|---------|---------|
-| `&` | Address-of | Get the memory address of a variable | `&x` returns address of x |
-| `*` | Dereference/Indirection | Access value at an address | `*ptr` gets value at ptr's address |
+##### 8.2.3.2.5 Critical Clarification: The Dual Meanings of `*`
 
-**How It Works:**
+The `*` symbol has **two distinct meanings** depending on context:
 
-1. `swap(&x, &y)` passes the **addresses** of x and y (e.g., 0x7fff...)
-2. Parameters `a` and `b` are **pointers** that store these addresses
-3. `*a` and `*b` **dereference** the pointers to access the actual memory locations
-4. Assignments like `*a = *b` modify the values at the original addresses
+| Context | Meaning | Example |
+|---------|---------|---------|
+| In declarations | "This is a pointer variable" | `int *a` declares `a` as a pointer-to-int |
+| In expressions | "Dereference" (access value at address) | `*a = 10` writes 10 to the address stored in `a` |
 
-**Comparison:**
-
-| Approach | Function Signature | Call | Can Modify Original? |
-|----------|-------------------|------|---------------------|
-| Pass by Value | `void swap(int a, int b)` | `swap(x, y)` | ❌ No (works on copies) |
-| Pass by Pointer | `void swap(int *a, int *b)` | `swap(&x, &y)` | ✅ Yes (modifies at address) |
-
-**Note:** `*` and `&` Are Not Opposites
-
+**Important:** `&` and `*` are **not simple opposites**:
 - `&` always means "address-of" (get the address of a variable)
-- `*` has two different meanings:
-  - In declarations: "this is a pointer" (e.g., `int *a`)
-  - In expressions: "dereference" (go to the address and access the value)
+- `*` is only the "inverse" of `&` when used as an operator in expressions (e.g., `*(&x)` equals `x`)
 
-They are not simple opposites. `*` is only the "inverse" of `&` when used as an operator in expressions (e.g., `*(&x)` equals `x`).
+##### 8.2.3.2.6 Comparison: Pass by Value vs. Pass by Pointer
 
-**Pointer Types Must Match the Data:**
+| Approach | Function Signature | Function Call | Can Modify Original? |
+|----------|-------------------|---------------|---------------------|
+| Pass by Value | `void swap(int a, int b)` | `swap(x, y)` | No (works on copies) |
+| Pass by Pointer | `void swap(int *a, int *b)` | `swap(&x, &y)` | Yes (modifies at address) |
+
+##### 8.2.3.2.7 Important Rules and Best Practices
+
+**Pointer Types Must Match the Data**
 
 The type in a pointer declaration indicates what type of data the pointer points to:
 
@@ -5556,7 +5568,6 @@ The type in a pointer declaration indicates what type of data the pointer points
 **Why the type matters:**
 - `int *a` means "`*a` will read/write 4 bytes as an int"
 - `long long *a` means "`*a` will read/write 8 bytes as a long long"
-- `a + 1` skips forward by the size of the pointed-to type
 
 **Type mismatch is dangerous:**
 ```cpp
@@ -5566,7 +5577,7 @@ long long *p = &x;  // Wrong! Pointer type does not match variable type
                      // This overwrites adjacent memory!
 ```
 
-**Pointer Declaration Style:**
+**Pointer Declaration Style**
 
 Both `int *p` and `int* p` are valid and equivalent:
 
@@ -5590,7 +5601,6 @@ int* q;
 ```
 
 > **Note:** The `*` only binds to the variable immediately following it, not to the entire type declaration.
-
 #### 8.2.3.3 Parameter Matching Rules
 
 When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
@@ -5708,7 +5718,7 @@ The `static` keyword changes **linkage** (visibility across files) or **lifetime
 | **Local variable** | Extends lifetime to program duration (value persists between calls) |
 | **Global variable** | Restricts linkage to current file only (internal linkage) |
 
-##### Static Local Variables
+##### 8.2.5.3.1 Static Local Variables
 
 Retain value between function calls, initialized only once.
 
@@ -5756,7 +5766,7 @@ int main() {
 
 **Use cases:** Function call counting, state persistence, memoization.
 
-##### Static Global Variables
+##### 8.2.5.3.2 Static Global Variables
 
 Restrict a global variable to the **current file only** (internal linkage).
 
@@ -5786,7 +5796,7 @@ extern int internalCounter;  // ERROR: cannot access static global
 
 **Use cases:** Encapsulation, hiding implementation details, preventing name collisions in large projects.
 
-##### Summary: Two Meanings of `static`
+##### 8.2.5.3.3 Summary: Two Meanings of `static`
 
 The `static` keyword has **opposite effects** depending on where it is used:
 
