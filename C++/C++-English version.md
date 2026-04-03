@@ -5566,6 +5566,31 @@ long long *p = &x;  // Wrong! Pointer type does not match variable type
                      // This overwrites adjacent memory!
 ```
 
+**Pointer Declaration Style:**
+
+Both `int *p` and `int* p` are valid and equivalent:
+
+```cpp
+int *p;   // C-style: emphasizes that *p is an int
+int* p;   // C++-style: emphasizes that p is a pointer-to-int
+```
+
+**Caution with Multiple Declarations:**
+
+```cpp
+int* p, q;   // Only p is pointer! q is regular int
+int *p, *q;  // Both are pointers
+```
+
+**Recommendation:** Declare one pointer per line for clarity:
+
+```cpp
+int* p;
+int* q;
+```
+
+> **Note:** The `*` only binds to the variable immediately following it, not to the entire type declaration.
+
 #### 8.2.3.3 Parameter Matching Rules
 
 When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
