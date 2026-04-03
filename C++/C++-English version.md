@@ -5533,6 +5533,15 @@ int main() {
 | Pass by Value | `void swap(int a, int b)` | `swap(x, y)` | ❌ No (works on copies) |
 | Pass by Pointer | `void swap(int *a, int *b)` | `swap(&x, &y)` | ✅ Yes (modifies at address) |
 
+**Note:** `*` and `&` Are Not Opposites
+
+- `&` always means "address-of" (get the address of a variable)
+- `*` has two different meanings:
+  - In declarations: "this is a pointer" (e.g., `int *a`)
+  - In expressions: "dereference" (go to the address and access the value)
+
+They are not simple opposites. `*` is only the "inverse" of `&` when used as an operator in expressions (e.g., `*(&x)` equals `x`).
+
 #### 8.2.3.3 Parameter Matching Rules
 
 When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
