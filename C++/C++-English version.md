@@ -3212,6 +3212,22 @@ scanf("%i", year);   // ❌ WRONG - scanf receives the value, not the address
 scanf("%i", &year);  // ✅ CORRECT - scanf receives the address
 ```
 
+**Why `scanf` Requires `&`:**
+
+C/C++ uses **call-by-value** for function parameters by default. When you call `scanf("%i", year)` without `&`:
+1. The **value** of `year` is copied to `scanf`'s parameter
+2. `scanf` can only modify its local copy
+3. The original `year` variable remains unchanged
+
+By using `&year`, you pass the **memory address** where `year` is stored. This allows `scanf` to write the input value directly to that location, effectively modifying the original variable.
+
+```cpp
+int year;
+scanf("%i", &year);  // scanf receives address 0x7fff...
+                     // writes input value to that address
+                     // year now contains the input value
+```
+
 > **Important:** For arrays (like `char name[50]`), the array name itself represents the address, so `&` is not needed.
 
 The address operator `&` has the same precedence level as other unary operators. If multiple unary operators appear in the same statement, they are **associated from right to left**.
@@ -3813,25 +3829,25 @@ printf("%lld\n", ll); // ✅ CORRECT: %lld matches long long (8 bytes)
 
 ##### 6. Conversion Specifiers (Required)
 
-| Specifier | Type | Output | Example |
-|-----------|------|--------|---------|
-| **Integer Types** ||||
-| `%d` / `%i` | `int` | Signed decimal | `123`, `-456` |
-| `%u` | `unsigned int` | Unsigned decimal | `789` |
-| `%o` | `unsigned int` | Octal | `377` |
-| `%x` / `%X` | `unsigned int` | Hexadecimal | `ff` / `FF` |
-| **Floating-Point Types** ||||
-| `%f` / `%F` | `double` | Fixed-point (floating-point form) | `3.141500` |
-| `%e` / `%E` | `double` | Exponential form (e.g., `2.3e+02` / `2.3E+02`) | `3.141500e+00` |
-| `%g` / `%G` | `double` | Shorter of `%f` or `%e`/`%E` | `%g` uses `%e`, `%G` uses `%E` |
-| `%a` / `%A` | `double` | Hexadecimal floating-point | `0x1.921fb5p+1` |
-| **Character/String Types** ||||
-| `%c` | `int` | Single character | `A` |
-| `%s` | `char*` | String | `Hello` |
-| **Other** ||||
-| `%p` | `void*` | Pointer address | `0x7ffeeb2b3a5c` |
-| `%n` | `int*` | Count chars printed so far | (stores count) |
-| `%%` | - | Literal `%` | `%` |
+| Specifier                  | Type           | Output                                         | Example                        |
+| -------------------------- | -------------- | ---------------------------------------------- | ------------------------------ |
+| **Integer Types**          |                |                                                |                                |
+| `%d` / `%i`                | `int`          | Signed decimal                                 | `123`, `-456`                  |
+| `%u`                       | `unsigned int` | Unsigned decimal                               | `789`                          |
+| `%o`                       | `unsigned int` | Octal                                          | `377`                          |
+| `%x` / `%X`                | `unsigned int` | Hexadecimal                                    | `ff` / `FF`                    |
+| **Floating-Point Types**   |                |                                                |                                |
+| `%f` / `%F`                | `double`       | Fixed-point (floating-point form)              | `3.141500`                     |
+| `%e` / `%E`                | `double`       | Exponential form (e.g., `2.3e+02` / `2.3E+02`) | `3.141500e+00`                 |
+| `%g` / `%G`                | `double`       | Shorter of `%f` or `%e`/`%E`                   | `%g` uses `%e`, `%G` uses `%E` |
+| `%a` / `%A`                | `double`       | Hexadecimal floating-point                     | `0x1.921fb5p+1`                |
+| **Character/String Types** |                |                                                |                                |
+| `%c`                       | `int`          | Single character                               | `A`                            |
+| `%s`                       | `char*`        | String                                         | `Hello`                        |
+| **Other**                  |                |                                                |                                |
+| `%p`                       | `void*`        | Pointer address                                | `0x7ffeeb2b3a5c`               |
+| `%n`                       | `int*`         | Count chars printed so far                     | (stores count)                 |
+| `%%`                       | -              | Literal `%`                                    | `%`                            |
 
 > **Note:** `%d` and `%i` are equivalent for output (both print signed decimal integers).
 
@@ -5470,14 +5486,61 @@ int main() {
 }
 ```
 
-#### 8.2.3.2 Parameter Matching Rules
+#### 8.2.3.2 Pass by Pointer (Address)
+
+To allow a function to modify the caller's variables, use **pointers** to pass the **memory addresses** instead of values.
+
+**Why Pointers Are Needed:**
+
+- Functions can only **return one value**
+- Call-by-value cannot modify the original variables
+- By passing **addresses**, the function can access and modify the original memory locations
+
+**Example — Correct Swap Using Pointers:**
+
+```cpp
+void swap(int *a, int *b) {  // Pointers to int
+    int hold = *a;   // *a dereferences pointer to get value
+    *a = *b;         // Store b's value at a's address
+    *b = hold;       // Store hold at b's address
+}
+
+int main() {
+    int x = 5, y = 7;
+    swap(&x, &y);  // Pass addresses using & operator
+    // Now x = 7, y = 5 (successfully swapped!)
+}
+```
+
+**Key Concepts:**
+
+| Operator | Name | Purpose | Example |
+|----------|------|---------|---------|
+| `&` | Address-of | Get the memory address of a variable | `&x` returns address of x |
+| `*` | Dereference/Indirection | Access value at an address | `*ptr` gets value at ptr's address |
+
+**How It Works:**
+
+1. `swap(&x, &y)` passes the **addresses** of x and y (e.g., 0x7fff...)
+2. Parameters `a` and `b` are **pointers** that store these addresses
+3. `*a` and `*b` **dereference** the pointers to access the actual memory locations
+4. Assignments like `*a = *b` modify the values at the original addresses
+
+**Comparison:**
+
+| Approach | Function Signature | Call | Can Modify Original? |
+|----------|-------------------|------|---------------------|
+| Pass by Value | `void swap(int a, int b)` | `swap(x, y)` | ❌ No (works on copies) |
+| Pass by Pointer | `void swap(int *a, int *b)` | `swap(&x, &y)` | ✅ Yes (modifies at address) |
+
+#### 8.2.3.3 Parameter Matching Rules
 
 When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
 - **Number**: The count of arguments must be equal
 - **Type**: Corresponding parameters must have compatible types
 - **Order**: Arguments are matched positionally from left to right
 
-#### 8.2.3.3 Implicit Type Conversion (Coercion)
+#### 8.2.3.4 Implicit Type Conversion (Coercion)
 
 If the actual parameter type differs from the formal parameter type, C++ attempts an automatic type conversion (coercion).
 
@@ -6573,7 +6636,7 @@ for (size_t i = 0; i < s.length(); i++) {
 }
 ```
 
-### 10.2.8 String vs Vector<char>
+### 10.2.8 String vs Vector`<char>`
 
 `string` and `vector<char>` are similar but `string` has additional string-specific functionality:
 
@@ -6772,7 +6835,7 @@ v.erase(it, v.end());
 // v = {1, 2, 3}
 ```
 
-### 10.3.6 Numeric Algorithms (in <numeric>)
+### 10.3.6 Numeric Algorithms (in `<numeric>`)
 
 | Algorithm | Description | Example | Since |
 |-----------|-------------|---------|-------|
