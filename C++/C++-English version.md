@@ -5116,12 +5116,29 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 int r = rand();  // Returns integer between 0 and RAND_MAX (typically 32767)
 ```
 
+**Generate and Print Random Numbers:**
+
+```cpp
+printf("random numbers: %i %i", rand(), rand());
+// First run:  41 18467
+// Second run: 41 18467 (same sequence)
+```
+
+> `rand()` produces a **pseudo-random sequence** — without changing the seed, values repeat on each program run.
+
 **Setting the Seed:**
 ```cpp
 srand(seed_value);  // Initialize random number generator
 ```
 
 > **Important:** Without `srand()`, `rand()` generates the same sequence each run.
+>
+> `srand()` only affects subsequent `rand()` calls:
+> ```cpp
+> rand();        // Uses default seed 1
+> srand(100);    // Resets seed
+> rand();        // Uses new seed 100
+> ```
 
 **Integer Range [0, n-1]:**
 ```cpp
