@@ -1,237 +1,556 @@
 # 1 Program Structure
 
-## 1.1 Include Header
+## 1.1 The Translation Unit Model
 
-### 1.1.1 Include Syntax
+### 1.1.1 From Source to Executable
 
-There are two ways to include header files:
+C++ program construction follows a three-stage model:
 
-```cpp
-#include <iostream>      // For standard library headers
-#include "myheader.h"    // For custom headers
-```
-
-| Syntax | Search Order                         | Usage                                       |
-| ------ | ------------------------------------ | ------------------------------------------- |
-| `< >`  | System directories first             | Standard library (e.g., `vector`, `string`) |
-| `" "`  | Current directory first, then system | Custom headers                              |
-
-> **Key Concept:** The `#include` directive is performed by the **preprocessor**. It is essentially a **pure text substitution** (copy-and-paste) — the entire content of the header file is inserted into the source file at the location of the `#include` statement before actual compilation begins.
-### 1.1.2 Header File Extensions
-
-| Type                           | Extension              | Example                              | Note                        |
-| ------------------------------ | ---------------------- | ------------------------------------ | --------------------------- |
-| C++ Standard Library           | **No** `.h`            | `<iostream>`, `<vector>`, `<string>` | Modern C++ style            |
-| C Standard Library             | **Has** `.h`           | `<stdio.h>`, `<stdlib.h>`            | Original C style            |
-| C Standard Library (C++ style) | **No** `.h`            | `<cstdio>`, `<cstdlib>`              | Add `c` prefix, remove `.h` |
-| Custom headers                 | **Has** `.h` or `.hpp` | `"myheader.h"`, `"myclass.hpp"`      | User-defined                |
-
-> **Quick Reference:**
-> - `<iostream>` → C++ standard library, no `.h`
-> - `<cstdio>` → C library in C++ style, no `.h`
-> - `<stdio.h>` → C library, has `.h`
-> - `"myheader.h"` → Custom header, has `.h`
-
-### 1.1.3 Common Header Files Reference
-
-| Header              | Full Name                                | Meaning   | Usage                                  |
-| ------------------- | ---------------------------------------- | --------- | -------------------------------------- |
-| **`<iostream>`**    | **i**nput **o**utput **stream**          | Standard Input/Output Stream | `cin`, `cout`, `cerr`, `endl`          |
-| **`<cstdio>`**      | **C** **st**andard **i**nput **o**utput  | C Standard Input/Output   | `printf`, `scanf`, `fopen` (C++ style) |
-| **`<stdio.h>`**     | **st**andard **i**nput **o**utput **.h** | Standard Input/Output Header | Same as `<cstdio>` but C style         |
-| **`<cmath>`**       | **C** **math**                           | C Math       | `sin`, `cos`, `sqrt`, `pow`, `fabs`    |
-| **`<math.h>`**      | **math** header                          | Math Header     | Same as `<cmath>` but C style          |
-| **`<cstdlib>`**     | **C** **st**andard **lib**rary           | C Standard Library      | `abs`, `rand`, `exit`, `malloc`        |
-| **`<stdlib.h>`**    | **st**andard **lib**rary **.h**          | Standard Library Header    | Same as `<cstdlib>` but C style        |
-| **`<iomanip>`**     | **i**nput **o**utput **manip**ulators    | Input/Output Manipulators   | `setw`, `setprecision`, `fixed`        |
-| **`<cctype>`**      | **C** **c**haracter **type**             | C Character Type     | `isalpha`, `isdigit`, `toupper`        |
-| **`<ctype.h>`**     | **c**haracter **type** **.h**            | Character Type Header   | Same as `<cctype>` but C style         |
-| **`<vector>`**      | **vector**                               | Dynamic Array (Vector)   | `vector` container class               |
-| **`<algorithm>`**   | **algorithm**                            | Algorithms        | `sort`, `find`, `max`, `min`           |
-| **`<numeric>`**     | **numeric**                              | Numeric Operations      | `accumulate`, `inner_product`          |
-| **`<type_traits>`** | **type traits**                          | Type Characteristics      | Type checking at compile time          |
-
-**Naming Pattern:**
-- **C++ headers**: No `.h` extension (`<iostream>`, `<vector>`)
-- **C headers in C++**: Add `c` prefix, no `.h` (`<cstdio>` = C + stdio)
-- **Original C headers**: Have `.h` extension (`<stdio.h>`)
-
-### 1.1.4 Preprocessor Directives
-
-`#include` is a **preprocessor directive**, not a C++ statement:
-
-|                    | Preprocessor Directive                  | C++ Statement      |
-| ------------------ | --------------------------------------- | ------------------ |
-| **Nature**         | Preprocessing instruction               | Executable code    |
-| **When processed** | Before compilation                      | During compilation |
-| **Syntax**         | No `;` required                         | `;` required       |
-| **Function**       | Text substitution (insert file content) | Perform operations |
+| Stage | Tool | Input | Output | What Happens |
+|-------|------|-------|--------|--------------|
+| **Preprocessing** | Preprocessor (cpp) | `.cpp` source + headers | Translation unit | Handles `#include`, `#define`, conditional compilation |
+| **Compilation** | Compiler (g++, clang++) | Translation unit | Object file (`.o`/`.obj`) | Generates machine code, checks syntax/types |
+| **Linking** | Linker (ld) | Object files + libraries | Executable | Resolves symbols, combines into single program |
 
 ```cpp
-#include <iostream>   // Preprocessor: copy iostream content here (no ;)
+// main.cpp
+#include <iostream>      // Preprocessor: textually inserts iostream content
+#define MAX 100          // Preprocessor: replaces all MAX with 100
+
 int main() {
-    cout << "Hi";     // C++ statement: needs ;
-    return 0;         // C++ statement: needs ;
+    std::cout << MAX;    // Compiler sees: std::cout << 100;
+    return 0;
 }
 ```
 
-**Other Preprocessor Directives** (also no `;`):
+### 1.1.2 Translation Units and the One Definition Rule
 
-| Directive | Purpose | Example |
-|-----------|---------|---------|
-| `#define` | Macro definition | `#define PI 3.14` |
-| `#ifdef` | Conditional compilation | `#ifdef DEBUG` |
-| `#pragma` | Compiler-specific directive | `#pragma once` |
+Each `.cpp` source file (after preprocessing) becomes a **translation unit**.
 
-#### 1.1.4.1 Macros
+**Key Concept:**
+- Each translation unit is compiled independently
+- The linker combines all translation units into one program
+- Definitions (functions, global variables) can appear in only ONE translation unit
 
-**Preprocessor Directive:** Macros are processed before compilation.
+```cpp
+// file1.cpp
+int global = 10;          // Definition (memory allocated)
 
-**Simple Macros (Symbolic Constants):**
+// file2.cpp
+extern int global;        // Declaration (no memory, refers to file1's definition)
+// int global = 20;       // ERROR! Redefinition violates ODR
+```
+
+> **One Definition Rule (ODR):** Each variable/function/class can be defined only once across all translation units. Multiple declarations are allowed.
+
+## 1.2 The Preprocessor
+
+The preprocessor runs before compilation, performing text substitution and conditional inclusion.
+
+### 1.2.1 #include: Header Inclusion Mechanics
+
+`#include` performs **textual substitution** — the entire header file content is inserted at the directive location.
+
+```cpp
+#include <iostream>   // Searches system include paths
+#include "myheader.h" // Searches project directory first, then system paths
+```
+
+#### 1.2.1.1 Search Path: `< >` vs `" "`
+
+| Syntax | Search Order | Use Case |
+|--------|--------------|----------|
+| `<header>` | System directories only | Standard library headers (`<iostream>`, `<vector>`) |
+| `"header"` | Current directory → project paths → system directories | Custom/project headers (`"utils.h"`, `"config.h"`) |
+
+**System paths (typical):**
+- Linux: `/usr/include`, `/usr/local/include`
+- Windows (MinGW): `C:\MinGW\include`
+- macOS: `/Applications/Xcode.app/Contents/Developer/Platforms/...`
+
+#### 1.2.1.2 Header File Extensions
+
+| Extension | Convention | Typical Content |
+|-----------|------------|-----------------|
+| `.h` | C headers, some C++ legacy | C standard library, OS APIs |
+| `.hpp` / `.hh` / `.h++` | C++ specific | Templates, classes, C++ features |
+
+> **Best Practice:** Use `.hpp` for C++ headers to distinguish from C headers.
+
+#### 1.2.1.3 Include Guards
+
+Prevent multiple inclusions of the same header (which would cause redefinition errors).
+
+**Method 1: Traditional Include Guards**
+```cpp
+// myheader.hpp
+#ifndef MYHEADER_HPP
+#define MYHEADER_HPP
+
+// Header content here
+class MyClass { ... };
+
+#endif // MYHEADER_HPP
+```
+
+**Method 2: #pragma once (non-standard but widely supported)**
+```cpp
+// myheader.hpp
+#pragma once
+
+// Header content here
+class MyClass { ... };
+```
+
+| Approach | Portability | Performance | Notes |
+|----------|-------------|-------------|-------|
+| `#ifndef` guards | 100% standard | File must be opened and read | Name collision possible if names not unique |
+| `#pragma once` | Most compilers | Faster (compiler remembers files) | Not ISO C++ standard, but universally supported |
+
+### 1.2.2 Macro Definitions (#define)
+
+Macros are **text substitutions** performed by the preprocessor.
+
+#### 1.2.2.1 Object-like Macros (Constants)
 
 ```cpp
 #define PI 3.141593
 #define MAX_SIZE 100
+
+// Usage
+double area = PI * radius * radius;  // Compiler sees: 3.141593 * radius * radius
+int arr[MAX_SIZE];                    // Compiler sees: int arr[100];
 ```
 
-**Parameterized Macros:**
+> **Modern Alternative:** Use `const` variables or `constexpr` instead of macros when possible:
+> ```cpp
+> constexpr double PI = 3.141593;  // Type-safe, respects scope
+> ```
+
+#### 1.2.2.2 Function-like Macros
 
 ```cpp
-#define macro_name(parameters) macro_text
+#define SQUARE(x) ((x) * (x))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+// Usage
+int y = SQUARE(5);      // Expands to: ((5) * (5)) = 25
+int m = MAX(x, y);      // Expands to: ((x) > (y) ? (x) : (y))
 ```
 
-Example - Temperature Conversion:
-```cpp
-#define degreesC(temp) (((temp) - 32) * (5.0/9.0))
+#### 1.2.2.3 Macro Expansion Rules and Pitfalls
 
-// Usage:
-double celsius = degreesC(fahrenheit);
+**Critical Rule: Parenthesize Everything**
+
+```cpp
+// WRONG - Missing parentheses
+#define SQUARE(x) x * x
+
+SQUARE(a + b);          // Expands to: a + b * a + b  (wrong!)
+// Should be: (a + b) * (a + b)
+
+// CORRECT
+#define SQUARE(x) ((x) * (x))
+
+// WRONG - Missing outer parentheses
+#define DOUBLE(x) (x) + (x)
+
+DOUBLE(5) * 3;          // Expands to: (5) + (5) * 3 = 20  (wrong!)
+// Should be: ((5) + (5)) * 3 = 30
+
+// CORRECT
+#define DOUBLE(x) ((x) + (x))
 ```
 
-**Important: Use Parentheses!**
+**Common Pitfall: Multiple Evaluation**
 
-Incorrect:
 ```cpp
-#define degreesF(x) x*(9.0/5.0) + 32
-// degreesF(temp+10) becomes: temp+10*(9.0/5.0) + 32  // Wrong!
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+int x = 5;
+int m = MAX(x++, 10);   // Expands to: ((x++) > (10) ? (x++) : (10))
+// x gets incremented TWICE!
 ```
 
-Correct:
+**Best Practice:** Use inline functions instead of function-like macros in modern C++:
 ```cpp
-#define degreesF(x) ((x)*(9.0/5.0) + 32)
-// degreesF(temp+10) becomes: ((temp+10)*(9.0/5.0) + 32)  // Correct!
+inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-safe
 ```
 
-**Rule:** Always put parentheses around:
-1. Each individual parameter
-2. The complete macro text
+### 1.2.3 Conditional Compilation
 
-Example - Triangle Area:
+Compile different code based on conditions evaluated at preprocessing time.
+
+#### 1.2.3.1 #ifdef, #ifndef, #if defined()
+
 ```cpp
-#define area_tri(base, height) (0.5*(base)*(height))
+#ifdef DEBUG
+    std::cout << "Debug: x = " << x << std::endl;
+#endif
+
+#ifndef VERSION
+    #define VERSION "1.0"
+#endif
+
+// Equivalent to #ifdef/#ifndef using defined()
+#if defined(DEBUG)
+    // debug code
+#endif
+
+#if !defined(NDEBUG)
+    // debug code (if NDEBUG not defined)
+#endif
 ```
 
-**Macros vs Functions:**
-
-| Feature | Macros | Functions |
-|---------|--------|-----------|
-| Processing | Preprocessor text substitution | Compiled code |
-| Type checking | None | Yes |
-| Execution | Inline (no call overhead) | Function call overhead |
-| Debuggability | Harder | Easier |
-| Side effects | Can occur (due to multiple evaluations) | Controlled |
-
-> **Best Practice:** Prefer functions over macros when possible. Use macros only for simple, performance-critical operations.
-
-## 1.2 Using std Namespace
-
-There are two ways to use standard library features:
-
-**Method 1:** Add `std::` prefix
+#### 1.2.3.2 Platform Detection
 
 ```cpp
-#include <iostream>
+#if defined(_WIN32)
+    // Windows (32-bit and 64-bit)
+    #include <windows.h>
+#elif defined(__APPLE__)
+    // macOS
+    #include <TargetConditionals.h>
+    #if TARGET_OS_MAC
+        // macOS specific
+    #endif
+#elif defined(__linux__)
+    // Linux
+    #include <unistd.h>
+#elif defined(__unix__)
+    // Unix (generic)
+#endif
+```
 
-int main() {
-    std::cout << "Hello" << std::endl;
-    return 0;
+**Common Platform Macros:**
+
+| Macro | Platform |
+|-------|----------|
+| `_WIN32` | Windows (both 32 and 64-bit) |
+| `_WIN64` | Windows 64-bit only |
+| `__APPLE__` | macOS, iOS |
+| `__linux__` | Linux |
+| `__unix__` | Unix (Linux, macOS, BSD) |
+| `__FreeBSD__` | FreeBSD |
+| `__ANDROID__` | Android |
+
+#### 1.2.3.3 Debug vs Release Builds
+
+```cpp
+#ifdef DEBUG
+    #define LOG(msg) std::cout << "[DEBUG] " << msg << std::endl
+    #define ASSERT(cond) if(!(cond)) { std::cerr << "Assertion failed"; exit(1); }
+#else
+    #define LOG(msg)    // Empty - no overhead in release
+    #define ASSERT(cond) // Empty
+#endif
+
+// Usage
+LOG("Entering function foo");
+ASSERT(ptr != nullptr);
+```
+
+**Compilation with debug flag:**
+```bash
+g++ -DDEBUG main.cpp -o program   # Defines DEBUG macro
+```
+
+### 1.2.4 Predefined Macros
+
+The preprocessor provides macros with compile-time information.
+
+#### 1.2.4.1 Standard Macros
+
+| Macro | Description | Example Value |
+|-------|-------------|---------------|
+| `__FILE__` | Current source file name | `"main.cpp"` |
+| `__LINE__` | Current line number | `42` |
+| `__func__` | Current function name | `"main"` |
+| `__DATE__` | Compilation date | `"Apr 4 2026"` |
+| `__TIME__` | Compilation time | `"15:30:00"` |
+| `__cplusplus` | C++ standard version | `202002L` (C++20) |
+
+```cpp
+void log_error(const char* msg) {
+    std::cerr << "Error in " << __FILE__ << ":" << __LINE__
+              << " (" << __func__ << "): " << msg << std::endl;
 }
 ```
 
-**Method 2:** Use `using namespace std;`
+#### 1.2.4.2 Compiler/Platform Identification
+
+| Macro | Meaning |
+|-------|---------|
+| `__GNUC__` | GCC compiler version (major) |
+| `__clang__` | Clang compiler |
+| `_MSC_VER` | Microsoft Visual C++ version |
+| `__STDC__` | Standard C compliance |
 
 ```cpp
-#include <iostream>
-using namespace std;
+#if __cplusplus >= 202002L
+    // C++20 or later
+    using std::format;
+#elif __cplusplus >= 201703L
+    // C++17
+    // Use fmt library or printf
+#else
+    #error "C++17 or later required"
+#endif
+```
 
+### 1.2.5 Other Directives
+
+#### 1.2.5.1 #undef - Remove Macro Definition
+
+```cpp
+#define MAX_SIZE 100
+// ... code using MAX_SIZE ...
+#undef MAX_SIZE
+// MAX_SIZE no longer defined
+#define MAX_SIZE 200  // Can redefine with new value
+```
+
+#### 1.2.5.2 #line - Change Line Number (for code generators)
+
+```cpp
+#line 100 "generated.cpp"  // Subsequent lines appear to start at 100 in generated.cpp
+// This is useful when C++ code is generated by another tool (e.g., parser generator)
+// Error messages will reference the generated file name and line
+```
+
+#### 1.2.5.3 #pragma - Compiler-Specific Directives
+
+```cpp
+#pragma once              // Include guard (non-standard but universal)
+
+#pragma pack(push, 1)     // Disable struct padding (MSVC/GCC/Clang)
+struct PackedStruct {     // Members packed with no gaps
+    char c;
+    int i;                // Normally 3 bytes padding, now packed
+};
+#pragma pack(pop)         // Restore default packing
+
+#pragma warning(disable: 4996)  // MSVC: Disable specific warning
+```
+
+#### 1.2.5.4 #error and #warning
+
+```cpp
+#ifndef __cplusplus
+    #error "This file requires C++ compiler"
+#endif
+
+#if sizeof(long) != 8
+    #warning "long is not 64-bit on this platform"
+#endif
+```
+
+## 1.3 Program Entry Point: main()
+
+Every C++ program has exactly one entry point: the `main()` function.
+
+### 1.3.1 Return Value and Exit Status
+
+```cpp
 int main() {
-    cout << "Hello" << endl;
-    return 0;
+    // ... program logic ...
+    return 0;  // 0 = success, non-zero = error
 }
 ```
 
-## 1.3 Main Function
+| Declaration | Standard | Usage |
+|-------------|----------|-------|
+| `int main()` | ✅ Standard | **Always use this** |
+| `void main()` | ❌ Non-standard | Avoid (not portable) |
 
-### 1.3.1 Function Declarations
+**Exit status meanings:**
 
-| Declaration   | Standard       | Return Value                    | Usage                |
-| ------------- | -------------- | ------------------------------- | -------------------- |
-| `int main()`  | ✅ Standard     | `0` = success, non-zero = error | **Always use this**  |
-| `void main()` | ❌ Non-standard | None                            | Avoid (not portable) |
+| Return Value | Convention |
+|--------------|------------|
+| `0` | Success |
+| `1` | General error |
+| `2` | Misuse of command-line |
+| `126` | Command not executable |
+| `127` | Command not found |
 
-```cpp
-// Standard form
-int main() {
-    return 0;  // Indicates successful execution
-}
-```
+> In C++, `return 0;` is implicit if omitted at the end of `main()`:
+> ```cpp
+> int main() { }  // Implicitly returns 0
+> ```
 
-> **Warning**: `void main()` works on some old compilers (e.g., Turbo C++), but is **not valid C++**. Always use `int main()` for portable code.
-
-### 1.3.2 Return Value
-
-The `return 0;` statement ends program execution and returns control to the operating system.
-
-| Return Value | Meaning |
-|--------------|---------|
-| `0` | Program executed successfully |
-| Non-zero | Error occurred (specific value indicates error type) |
-
-### 1.3.3 Parameter Forms
-
-**`int main()` vs `int main(void)`:**
-
-| Declaration | C++ | C Language | Usage |
-|-------------|-----|------------|-------|
-| `int main()` | ✅ No parameters | ⚠️ Old style, may accept any parameters | Standard C++ |
-| `int main(void)` | ✅ No parameters | ✅ Explicitly states no parameters | Explicit no-args |
-| `int main(int argc, char* argv[])` | ✅ Command-line args | ✅ Command-line args | Receive program arguments |
-
-> **Conclusion**: In C++, `int main()` and `int main(void)` are identical. Write `int main()` as it is the most standard form in C++.
-
-### 1.3.4 Command-line Arguments
+### 1.3.2 Command-line Arguments (argc/argv)
 
 ```cpp
 int main(int argc, char* argv[]) {
-    // argc = argument count (including program name)
-    // argv = argument vector (array of strings)
-
-    for (int i = 0; i < argc; i++) {
-        cout << "Arg " << i << ": " << argv[i] << endl;
+    // argc: argument count (includes program name)
+    // argv: argument vector (array of C-strings)
+    
+    std::cout << "Program: " << argv[0] << std::endl;
+    
+    for (int i = 1; i < argc; i++) {
+        std::cout << "Arg " << i << ": " << argv[i] << std::endl;
     }
+    
     return 0;
 }
 ```
 
-Running: `./program hello world`
-
+**Example execution:**
+```bash
+$ ./program -f input.txt -v
+Program: ./program
+Arg 1: -f
+Arg 2: input.txt
+Arg 3: -v
 ```
-Arg 0: ./program
-Arg 1: hello
-Arg 2: world
+
+**Parameter forms (all equivalent in C++):**
+
+| Declaration | Meaning |
+|-------------|---------|
+| `int main()` | No command-line arguments |
+| `int main(void)` | No arguments (C-compatible explicit form) |
+| `int main(int argc, char* argv[])` | Arguments as array |
+| `int main(int argc, char** argv)` | Arguments as pointer to pointer |
+
+### 1.3.3 Environment Variables
+
+On some platforms, `main()` can receive environment variables via a third parameter:
+
+```cpp
+int main(int argc, char* argv[], char* envp[]) {
+    // envp: array of "KEY=value" strings, terminated by nullptr
+    
+    for (int i = 0; envp[i] != nullptr; i++) {
+        std::cout << envp[i] << std::endl;
+    }
+    
+    return 0;
+}
 ```
 
----
+**Portable alternative (preferred):**
+```cpp
+#include <cstdlib>
+
+int main() {
+    const char* path = std::getenv("PATH");
+    if (path) {
+        std::cout << "PATH: " << path << std::endl;
+    }
+    
+    std::setenv("MY_VAR", "value", 1);  // Set environment variable (POSIX)
+    
+    return 0;
+}
+```
+
+## 1.4 Namespaces
+
+Namespaces prevent name collisions by creating scope boundaries.
+
+### 1.4.1 Namespace Fundamentals
+
+```cpp
+namespace math {
+    const double PI = 3.14159;
+    double square(double x) { return x * x; }
+}
+
+namespace physics {
+    const double PI = 3.1415926535;  // Different PI, no conflict
+    double energy(double m) { return m * 299792458 * 299792458; }
+}
+
+// Usage with scope resolution
+double a = math::PI;
+double b = physics::PI;
+```
+
+### 1.4.2 using-declaration vs using-directive
+
+**using-declaration:** Bring specific name into scope
+```cpp
+using std::cout;      // Only cout is accessible without std::
+using std::endl;
+
+cout << "Hello" << endl;  // OK
+// cin >> x;              // Error: cin not declared
+```
+
+**using-directive:** Bring all names from namespace
+```cpp
+using namespace std;  // All std names accessible
+
+cout << "Hello" << endl;  // OK
+cin >> x;                  // OK
+```
+
+### 1.4.3 Best Practices: Avoid in Headers
+
+```cpp
+// BAD: In a header file
+#pragma once
+using namespace std;  // ❌ Pollutes all files that include this!
+
+// GOOD: Fully qualify in headers
+#pragma once
+#include <string>
+
+class MyClass {
+    std::string name;  // ✅ Explicit qualification
+};
+```
+
+**Best Practice Summary:**
+- Never use `using namespace` in header files
+- Prefer `using-declaration` (specific names) over `using-directive` (entire namespace)
+- In `.cpp` files, `using namespace std;` is acceptable for small programs
+
+## 1.5 Common Header Files Reference
+
+### 1.5.1 C Standard Library Headers (<cxxx>)
+
+| C++ Header | C Equivalent | Purpose |
+|------------|--------------|---------|
+| `<cstdio>` | `<stdio.h>` | C-style I/O (printf, scanf) |
+| `<cstdlib>` | `<stdlib.h>` | General utilities (rand, exit, malloc) |
+| `<cmath>` | `<math.h>` | Mathematical functions (sin, cos, sqrt) |
+| `<cstring>` | `<string.h>` | C-style string functions (strcpy, strlen) |
+| `<ctime>` | `<time.h>` | Date and time functions |
+| `<cctype>` | `<ctype.h>` | Character classification (isdigit, toupper) |
+
+### 1.5.2 C++ Standard Library Headers
+
+| Header | Primary Content |
+|--------|-----------------|
+| `<iostream>` | Standard I/O streams (cin, cout, cerr) |
+| `<fstream>` | File stream I/O (ifstream, ofstream) |
+| `<sstream>` | String stream I/O (stringstream) |
+| `<string>` | std::string class |
+| `<vector>` | std::vector container |
+| `<array>` | std::array (fixed-size array) |
+| `<map>` | std::map, std::unordered_map |
+| `<algorithm>` | Algorithms (sort, find, transform) |
+| `<numeric>` | Numeric algorithms (accumulate) |
+| `<memory>` | Smart pointers (unique_ptr, shared_ptr) |
+| `<thread>` | Threading support |
+| `<mutex>` | Mutual exclusion primitives |
+
+### 1.5.3 Header Selection Guide
+
+**For I/O:**
+- Use `<iostream>` for C++ streams (preferred)
+- Use `<cstdio>` only when interfacing with C code
+
+**For strings:**
+- Use `<string>` for `std::string` (always preferred)
+- Use `<cstring>` only for C-string manipulation
+
+**For containers:**
+- Use `<vector>` for dynamic arrays
+- Use `<array>` for fixed-size arrays
+- Use `<map>` or `<unordered_map>` for key-value storage
 
 # 2 Code Standardization
 
@@ -5234,13 +5553,129 @@ double rand_float(double a, double b) {
 
 // Usage: rand_float(0.0, 1.0) gives 0.0 to 1.0
 ```
-### 8.1.3 Character Functions
+### 8.1.3 `<random>` Functions
+
+> **Header:** `#include <random>` (C++11 and later)
+
+The `<random>` library provides a modern, type-safe way to generate random numbers. Unlike `rand()`, it separates the **random number engine** (source of randomness) from the **distribution** (how values are mapped to a range).
+
+#### 8.1.3.1 Basic Concepts
+
+**1. Engine — generates raw random bits**
+
+| Class | Description |
+|-------|-------------|
+| `std::random_device` | Hardware-based (or implementation-provided) non-deterministic random source, typically used for seeding |
+| `std::mt19937` | 32-bit Mersenne Twister engine; long period, good statistical properties |
+| `std::mt19937_64` | 64-bit version of Mersenne Twister |
+
+```cpp
+std::random_device rd;        // Non-deterministic source
+std::mt19937 gen(rd());       // Seed the engine
+```
+
+> **Note:** If `std::random_device` is unavailable (rare, mostly embedded systems), use `std::chrono::steady_clock::now().time_since_epoch().count()` as a seed instead.
+
+**2. Distribution — maps raw bits to desired range and probability**
+
+Distribution objects are independent of the engine. You pass the engine to the distribution's `operator()` each time you want a number.
+
+#### 8.1.3.2 Common Distributions
+
+| Distribution | Use Case | Example |
+|--------------|----------|---------|
+| `std::uniform_int_distribution<int>` | Equal probability for each integer in [a, b] | Dice roll, lottery |
+| `std::uniform_real_distribution<double>` | Equal probability for each real in [a, b) | 0.0–1.0 random float |
+| `std::normal_distribution<double>` | Bell curve (Gaussian) | Noise, natural variation |
+
+**Integer Range [a, b] (inclusive):**
+```cpp
+std::uniform_int_distribution<> dis(1, 6);  // Closed interval [1, 6]
+int x = dis(gen);  // Like rolling a die
+```
+
+**Floating-Point Range [a, b):**
+```cpp
+std::uniform_real_distribution<> dis(0.0, 1.0);
+double r = dis(gen);  // 0.0 <= r < 1.0
+```
+
+**Normal Distribution:**
+```cpp
+std::normal_distribution<> dis(0.0, 1.0);  // mean = 0, stddev = 1
+double r = dis(gen);
+```
+
+#### 8.1.3.3 Complete Examples
+
+**Example 1: Rolling a die 10 times**
+```cpp
+#include <iostream>
+#include <random>
+
+int main() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(1, 6);
+
+    for (int i = 0; i < 10; ++i) {
+        std::cout << dis(gen) << ' ';
+    }
+    std::cout << std::endl;
+    return 0;
+}
+```
+
+**Example 2: Seeding with time (alternative when `random_device` is unavailable)**
+```cpp
+#include <random>
+#include <chrono>
+
+auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
+std::mt19937 gen(static_cast<unsigned>(seed));
+```
+
+#### 8.1.3.4 `rand()` vs `<random>`
+
+| Feature | `rand()` / `srand()` | `<random>` (Modern) |
+|---------|----------------------|---------------------|
+| **Uniformity** | `rand() % n` introduces bias | Mathematically guaranteed uniform |
+| **Maximum value** | Limited to `RAND_MAX` (often 32767) | No practical limit |
+| **Period** | Short | Very long (e.g., `mt19937` has period 2^19937−1) |
+| **Distribution types** | Only crude uniform integers | Uniform, normal, exponential, Poisson, etc. |
+| **Type safety** | Single function returns `int` | Template classes distinguish `int` vs `double` |
+
+> **Recommendation:** Always use `<random>` for new C++ code. Only use `rand()` when required by legacy APIs or specific course constraints.
+
+#### 8.1.3.5 Common Pitfall
+
+**Do not recreate the engine inside a loop:**
+```cpp
+// Wrong: engine is re-seeded every iteration
+for (int i = 0; i < 10; ++i) {
+    std::mt19937 gen(std::random_device{}());
+    std::cout << std::uniform_int_distribution<>(1, 6)(gen) << ' ';
+}
+```
+
+**Correct: create the engine once, reuse it:**
+```cpp
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<> dis(1, 6);
+
+for (int i = 0; i < 10; ++i) {
+    std::cout << dis(gen) << ' ';
+}
+```
+
+### 8.1.4 Character Functions
 
 > **Headers:** This section covers functions from two different headers:
 > - `<cstdio>` — Character I/O functions (Section 9.2.1)
 > - `<cctype>` — Character classification & conversion (Section 9.2.2)
 
-### 8.1.3.1 `<cstdio>` Character I/O
+### 8.1.4.1 `<cstdio>` Character I/O
 
 > **Header:** `#include <cstdio>` (C++ style) or `#include <stdio.h>` (C style)
 
@@ -5248,7 +5683,7 @@ C provides two approaches for character I/O:
 1. Using `printf`/`scanf` with `%c` format specifier
 2. Using dedicated character functions `getchar()` and `putchar()`
 
-### 8.1.3.1.1 Using `printf` and `scanf` with `%c`
+### 8.1.4.1.1 Using `printf` and `scanf` with `%c`
 
 The `%c` format specifier handles single characters:
 
@@ -5263,7 +5698,7 @@ printf("%c", ch);   // Print a character
 - `scanf("%c", &ch)` reads **any** character including whitespace (spaces, tabs, newlines)
 - To skip whitespace before reading a character, add a space: `scanf(" %c", &ch)`
 
-### 8.1.3.1.2 Using `getchar()` and `putchar()`
+### 8.1.4.1.2 Using `getchar()` and `putchar()`
 
 These are dedicated character I/O functions:
 
@@ -5284,7 +5719,7 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-### 8.1.3.1.3 Common Issues and Solutions
+### 8.1.4.1.3 Common Issues and Solutions
 
 **Issue 1: Input Buffer Residue**
 
@@ -5325,11 +5760,11 @@ putchar('!');         // Output on next line
 
 > **Note:** This is expected behavior—characters accumulate until `\n` flushes the output or moves to a new line.
 
-### 8.1.3.2 `<cctype>` Character Classification & Conversion
+### 8.1.4.2 `<cctype>` Character Classification & Conversion
 
 > **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
 
-### 8.1.3.2.1 Classification Functions
+### 8.1.4.2.1 Classification Functions
 
 | Function       | Returns non-zero (true) if...                   |
 | -------------- | ----------------------------------------------- |
@@ -5348,7 +5783,7 @@ putchar('!');         // Output on next line
 
 > **Note:** `isblank()` checks only space `' '` and tab `'\t'`, while `isspace()` checks all whitespace including newline `'\n'`, carriage return `'\r'`, form feed `'\f'`, and vertical tab `'\v'`.
 
-### 8.1.3.2.2 Conversion Functions
+### 8.1.4.2.2 Conversion Functions
 
 | Function | Description |
 |----------|-------------|
