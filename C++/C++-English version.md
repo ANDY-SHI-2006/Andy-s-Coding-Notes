@@ -47,7 +47,7 @@ extern int global;        // Declaration (no memory, refers to file1's definitio
 
 The preprocessor runs before compilation, performing text substitution and conditional inclusion.
 
-### 1.2.1 #include: Header Inclusion Mechanics
+### 1.2.1 `#include`: Header Inclusion Mechanics
 
 `#include` performs **textual substitution** — the entire header file content is inserted at the directive location.
 
@@ -123,9 +123,11 @@ int arr[MAX_SIZE];                    // Compiler sees: int arr[100];
 ```
 
 > **Modern Alternative:** Use `const` variables or `constexpr` instead of macros when possible:
-> ```cpp
-> constexpr double PI = 3.141593;  // Type-safe, respects scope
-> ```
+
+```cpp
+ constexpr double PI = 3.141593;  // Type-safe, respects scope 
+```
+ 
 
 #### 1.2.2.2 Function-like Macros
 
@@ -181,7 +183,7 @@ inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-
 
 Compile different code based on conditions evaluated at preprocessing time.
 
-#### 1.2.3.1 #ifdef, #ifndef, #if defined()
+#### 1.2.3.1 `#ifdef`, `#ifndef`, `#if` defined()
 
 ```cpp
 #ifdef DEBUG
@@ -300,7 +302,7 @@ void log_error(const char* msg) {
 
 ### 1.2.5 Other Directives
 
-#### 1.2.5.1 #undef - Remove Macro Definition
+#### 1.2.5.1 `#undef` - Remove Macro Definition
 
 ```cpp
 #define MAX_SIZE 100
@@ -310,7 +312,7 @@ void log_error(const char* msg) {
 #define MAX_SIZE 200  // Can redefine with new value
 ```
 
-#### 1.2.5.2 #line - Change Line Number (for code generators)
+#### 1.2.5.2 `#line` - Change Line Number (for code generators)
 
 ```cpp
 #line 100 "generated.cpp"  // Subsequent lines appear to start at 100 in generated.cpp
@@ -318,7 +320,7 @@ void log_error(const char* msg) {
 // Error messages will reference the generated file name and line
 ```
 
-#### 1.2.5.3 #pragma - Compiler-Specific Directives
+#### 1.2.5.3 `#pragma` - Compiler-Specific Directives
 
 ```cpp
 #pragma once              // Include guard (non-standard but universal)
@@ -333,7 +335,7 @@ struct PackedStruct {     // Members packed with no gaps
 #pragma warning(disable: 4996)  // MSVC: Disable specific warning
 ```
 
-#### 1.2.5.4 #error and #warning
+#### 1.2.5.4 `#error` and `#warning`
 
 ```cpp
 #ifndef __cplusplus
@@ -374,9 +376,10 @@ int main() {
 | `127` | Command not found |
 
 > In C++, `return 0;` is implicit if omitted at the end of `main()`:
-> ```cpp
-> int main() { }  // Implicitly returns 0
-> ```
+
+```cpp
+int main() { }  // Implicitly returns 0
+```
 
 ### 1.3.2 Command-line Arguments (argc/argv)
 
@@ -509,7 +512,7 @@ class MyClass {
 
 ## 1.5 Common Header Files Reference
 
-### 1.5.1 C Standard Library Headers (<cxxx>)
+### 1.5.1 C Standard Library Headers (`<cxxx>`)
 
 | C++ Header | C Equivalent | Purpose |
 |------------|--------------|---------|

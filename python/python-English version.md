@@ -356,12 +356,12 @@ new_list1 = sorted(list1, reverse=True)   # [99, 25, 11, 3, 0, -1]
 new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 ```
 
-| Feature | `sorted()` | `.sort()` |
-|---------|-----------|-----------|
-| Returns | New list | `None` (modifies original) |
-| Original list | Unchanged | Modified in-place |
-| Works on | Any iterable | Only lists |
-| Recommended | 鉁?Yes | 鉂?No |
+| Feature       | `sorted()`   | `.sort()`                  |
+| ------------- | ------------ | -------------------------- |
+| Returns       | New list     | `None` (modifies original) |
+| Original list | Unchanged    | Modified in-place          |
+| Works on      | Any iterable | Only lists                 |
+| Recommended   | 鉁?Yes        | 鉂?No                       |
 
 ## 4.4 Mutable and Immutable Types
 
