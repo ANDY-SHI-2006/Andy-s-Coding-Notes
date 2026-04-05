@@ -325,11 +325,80 @@ inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-
 
 > **Key Point:** Each `.cpp` file gets its own copy of the macro through `#include`; macros are not "shared" like functions, they are "copied and pasted" by the preprocessor.
 
-### 1.2.3 Conditional Compilation
+### 1.2.3 Predefined Macros
+
+The preprocessor provides macros with compile-time information.
+
+#### 1.2.3.1 Standard Macros
+
+| Macro | Description | Example Value |
+|-------|-------------|---------------|
+| `__FILE__` | Current source file name | `"main.cpp"` |
+| `__LINE__` | Current line number | `42` |
+| `__func__` | Current function name | `"main"` |
+| `__DATE__` | Compilation date | `"Apr 4 2026"` |
+| `__TIME__` | Compilation time | `"15:30:00"` |
+| `__cplusplus` | C++ standard version | `202002L` (C++20) |
+
+```cpp
+void log_error(const char* msg) {
+    std::cerr << "Error in " << __FILE__ << ":" << __LINE__
+              << " (" << __func__ << "): " << msg << std::endl;
+}
+```
+
+**Using `__cplusplus` for version-specific code:**
+
+```cpp
+#if __cplusplus >= 202002L
+    // C++20 or later
+    using std::format;
+#elif __cplusplus >= 201703L
+    // C++17
+    // Use fmt library or printf
+#else
+    #error "C++17 or later required"
+#endif
+```
+
+#### 1.2.3.2 Compiler/Platform Identification
+
+| Macro | Meaning |
+|-------|---------|
+| `__GNUC__` | GCC compiler version (major) |
+| `__clang__` | Clang compiler |
+| `_MSC_VER` | Microsoft Visual C++ version |
+| `__STDC__` | Standard C compliance |
+
+**Detecting compiler for platform-specific code:**
+
+```cpp
+#if defined(__GNUC__) && !defined(__clang__)
+    // GCC specific code
+    #pragma GCC optimize("O3")
+#elif defined(__clang__)
+    // Clang specific code
+    #pragma clang optimize on
+#elif defined(_MSC_VER)
+    // Microsoft Visual C++ specific code
+    #pragma warning(disable: 4996)
+#endif
+```
+### 1.2.4 `#undef` - Remove Macro Definition
+
+```cpp
+#define MAX_SIZE 100
+// ... code using MAX_SIZE ...
+#undef MAX_SIZE
+// MAX_SIZE no longer defined
+#define MAX_SIZE 200  // Can redefine with new value
+```
+
+### 1.2.5 Conditional Compilation
 
 Compile different code based on conditions evaluated at preprocessing time.
 
-#### 1.2.3.1 `#ifdef`, `#ifndef`, `#if` defined()
+#### 1.2.5.1 `#ifdef`, `#ifndef`, `#if` defined()
 
 ```cpp
 #ifdef DEBUG
@@ -350,7 +419,7 @@ Compile different code based on conditions evaluated at preprocessing time.
 #endif
 ```
 
-#### 1.2.3.2 Platform Detection
+#### 1.2.5.2 Platform Detection
 
 ```cpp
 #if defined(_WIN32)
@@ -382,7 +451,7 @@ Compile different code based on conditions evaluated at preprocessing time.
 | `__FreeBSD__` | FreeBSD |
 | `__ANDROID__` | Android |
 
-#### 1.2.3.3 Debug vs Release Builds
+#### 1.2.5.3 Debug vs Release Builds
 
 ```cpp
 #ifdef DEBUG
@@ -403,62 +472,9 @@ ASSERT(ptr != nullptr);
 g++ -DDEBUG main.cpp -o program   # Defines DEBUG macro
 ```
 
-### 1.2.4 Predefined Macros
+### 1.2.6 Other Directives
 
-The preprocessor provides macros with compile-time information.
-
-#### 1.2.4.1 Standard Macros
-
-| Macro | Description | Example Value |
-|-------|-------------|---------------|
-| `__FILE__` | Current source file name | `"main.cpp"` |
-| `__LINE__` | Current line number | `42` |
-| `__func__` | Current function name | `"main"` |
-| `__DATE__` | Compilation date | `"Apr 4 2026"` |
-| `__TIME__` | Compilation time | `"15:30:00"` |
-| `__cplusplus` | C++ standard version | `202002L` (C++20) |
-
-```cpp
-void log_error(const char* msg) {
-    std::cerr << "Error in " << __FILE__ << ":" << __LINE__
-              << " (" << __func__ << "): " << msg << std::endl;
-}
-```
-
-#### 1.2.4.2 Compiler/Platform Identification
-
-| Macro | Meaning |
-|-------|---------|
-| `__GNUC__` | GCC compiler version (major) |
-| `__clang__` | Clang compiler |
-| `_MSC_VER` | Microsoft Visual C++ version |
-| `__STDC__` | Standard C compliance |
-
-```cpp
-#if __cplusplus >= 202002L
-    // C++20 or later
-    using std::format;
-#elif __cplusplus >= 201703L
-    // C++17
-    // Use fmt library or printf
-#else
-    #error "C++17 or later required"
-#endif
-```
-
-### 1.2.5 Other Directives
-
-#### 1.2.5.1 `#undef` - Remove Macro Definition
-
-```cpp
-#define MAX_SIZE 100
-// ... code using MAX_SIZE ...
-#undef MAX_SIZE
-// MAX_SIZE no longer defined
-#define MAX_SIZE 200  // Can redefine with new value
-```
-
-#### 1.2.5.2 `#line` - Change Line Number (for code generators)
+#### 1.2.6.1 `#line` - Change Line Number (for code generators)
 
 ```cpp
 #line 100 "generated.cpp"  // Subsequent lines appear to start at 100 in generated.cpp
@@ -466,7 +482,7 @@ void log_error(const char* msg) {
 // Error messages will reference the generated file name and line
 ```
 
-#### 1.2.5.3 `#pragma` - Compiler-Specific Directives
+#### 1.2.6.2 `#pragma` - Compiler-Specific Directives
 
 ```cpp
 #pragma once              // Include guard (non-standard but universal)
@@ -481,7 +497,7 @@ struct PackedStruct {     // Members packed with no gaps
 #pragma warning(disable: 4996)  // MSVC: Disable specific warning
 ```
 
-#### 1.2.5.4 `#error` and `#warning`
+#### 1.2.6.3 `#error` and `#warning`
 
 ```cpp
 #ifndef __cplusplus
