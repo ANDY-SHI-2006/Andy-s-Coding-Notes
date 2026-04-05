@@ -325,6 +325,58 @@ inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-
 
 > **Key Point:** Each `.cpp` file gets its own copy of the macro through `#include`; macros are not "shared" like functions, they are "copied and pasted" by the preprocessor.
 
+#### 1.2.2.6 Macro Operators (Advanced)
+
+The preprocessor provides two special operators for use in macros: `#` (stringification) and `##` (token pasting).
+
+##### The `#` Operator (Stringification)
+
+Converts a macro parameter into a string literal.
+
+```cpp
+#define STRINGIFY(x) #x
+
+std::cout << STRINGIFY(Hello World);  // Expands to: "Hello World"
+std::cout << STRINGIFY(123 + 456);    // Expands to: "123 + 456"
+```
+
+**Use case:** Debug logging with variable names
+```cpp
+#define DEBUG_VAR(var) std::cout << #var " = " << var << std::endl
+
+int count = 42;
+DEBUG_VAR(count);  // Output: count = 42
+```
+
+##### The `##` Operator (Token Pasting)
+
+Concatenates two tokens into a single token.
+```cpp
+#define CONCAT(a, b) a##b
+
+int xy = 10;
+std::cout << CONCAT(x, y);  // Expands to: xy (the variable)
+```
+
+**Use case:** Generating variable or function names programmatically
+```cpp
+#define DECLARE_VARIABLE(type, name) type var_##name
+
+DECLARE_VARIABLE(int, count);   // Expands to: int var_count
+DECLARE_VARIABLE(double, pi);   // Expands to: double var_pi
+```
+
+##### Combining Both Operators
+
+```cpp
+#define MAKE_FUNCTION(name) void func_##name() { std::cout << #name " called\n"; }
+
+MAKE_FUNCTION(init);    // Expands to: void func_init() { std::cout << "init called\n"; }
+MAKE_FUNCTION(cleanup); // Expands to: void func_cleanup() { std::cout << "cleanup called\n"; }
+```
+
+> **Note:** These operators are advanced features. Modern C++ often prefers templates and constexpr functions over macro operators for type safety.
+
 ### 1.2.3 Predefined Macros
 
 The preprocessor provides macros with compile-time information.
