@@ -329,7 +329,7 @@ inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-
 
 The preprocessor provides two special operators for use in macros: `#` (stringification) and `##` (token pasting).
 
-##### The `#` Operator (Stringification)
+##### 1.2.2.6.1 The `#` Operator (Stringification)
 
 Converts a macro parameter into a string literal.
 
@@ -348,7 +348,7 @@ int count = 42;
 DEBUG_VAR(count);  // Output: count = 42
 ```
 
-##### The `##` Operator (Token Pasting)
+##### 1.2.2.6.2 The `##` Operator (Token Pasting)
 
 Concatenates two tokens into a single token.
 ```cpp
@@ -366,7 +366,7 @@ DECLARE_VARIABLE(int, count);   // Expands to: int var_count
 DECLARE_VARIABLE(double, pi);   // Expands to: double var_pi
 ```
 
-##### Combining Both Operators
+##### 1.2.2.6.3 Combining Both Operators
 
 ```cpp
 #define MAKE_FUNCTION(name) void func_##name() { std::cout << #name " called\n"; }
