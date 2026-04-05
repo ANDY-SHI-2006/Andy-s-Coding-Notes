@@ -79,9 +79,34 @@ The preprocessor runs before compilation, performing text substitution and condi
 
 #### 1.2.1.3 Include Guards
 
-Prevent multiple inclusions of the same header (which would cause redefinition errors).
+Include Guards prevent multiple inclusions of the same header file. Without them, including a header multiple times would cause **redefinition errors**.
 
-**Method 1: Traditional Include Guards**
+##### 1.2.1.3.1 The Problem: Multiple Inclusions
+
+Consider this scenario:
+
+```cpp
+// utils.hpp
+class Helper { ... };
+
+// a.hpp
+#include "utils.hpp"    // Helper class defined here
+
+// b.hpp  
+#include "utils.hpp"    // Helper class defined again
+
+// main.cpp
+#include "a.hpp"        // Helper defined (via utils.hpp)
+#include "b.hpp"        // Helper defined AGAIN (via utils.hpp)
+// ERROR: redefinition of 'class Helper'
+```
+
+When `main.cpp` includes both `a.hpp` and `b.hpp`, `utils.hpp` gets processed twice. Since C++ does not allow multiple definitions of the same class, this results in a compilation error.
+
+##### 1.2.1.3.2 Traditional Include Guards (`#ifndef`)
+
+The classic approach uses preprocessor directives to ensure the header content is processed only once:
+
 ```cpp
 // myheader.hpp
 #ifndef MYHEADER_HPP
@@ -93,7 +118,24 @@ class MyClass { ... };
 #endif // MYHEADER_HPP
 ```
 
-**Method 2: #pragma once (non-standard but widely supported)**
+**How it works:**
+
+| Step | First Inclusion | Second Inclusion |
+|------|-----------------|------------------|
+| 1 | `#ifndef MYHEADER_HPP` checks if macro is defined | Same check |
+| 2 | Macro NOT defined → condition is TRUE | Macro IS defined → condition is FALSE |
+| 3 | `#define MYHEADER_HPP` creates the macro | Entire block is skipped |
+| 4 | Header content is processed | Nothing happens |
+
+**Naming Convention:**
+- Use uppercase filename + `_HPP` suffix
+- Example: `math_utils.hpp` → `MATH_UTILS_HPP`
+- Ensure uniqueness to avoid name collisions
+
+##### 1.2.1.3.3 `#pragma once`
+
+A modern, simpler alternative:
+
 ```cpp
 // myheader.hpp
 #pragma once
@@ -102,14 +144,47 @@ class MyClass { ... };
 class MyClass { ... };
 ```
 
-| Approach | Portability | Performance | Notes |
-|----------|-------------|-------------|-------|
-| `#ifndef` guards | 100% standard | File must be opened and read | Name collision possible if names not unique |
-| `#pragma once` | Most compilers | Faster (compiler remembers files) | Not ISO C++ standard, but universally supported |
+**How it works:**
+The compiler internally records which files have been included. When encountering the same file again, it skips processing entirely.
+
+##### 1.2.1.3.4 Comparison
+
+| Aspect | `#ifndef` Guards | `#pragma once` |
+|--------|------------------|----------------|
+| **Portability** | 100% ISO C++ standard | Supported by all major compilers (GCC, Clang, MSVC), but not in standard |
+| **Performance** | Slower (file must be opened to check macro) | Faster (compiler remembers included files) |
+| **Boilerplate** | 3 lines of code | 1 line of code |
+| **Potential Issues** | Name collision if macros not unique | None |
+| **Use Case** | Maximum compatibility | Modern projects |
+
+##### 1.2.1.3.5 Recommendation
+
+- **For new projects:** Use `#pragma once` (cleaner, faster)
+- **For maximum portability:** Use `#ifndef` guards
+- **Consistency matters:** Pick one approach and use it throughout your project
 
 ### 1.2.2 Macro Definitions (#define)
 
-Macros are **text substitutions** performed by the preprocessor.
+**The Essence of Macros: Text Substitution**
+
+The preprocessor performs **pure text substitution** — it literally replaces the macro name with its defined text, without any type checking, syntax analysis, or semantic understanding.
+
+```cpp
+#define PI 3.14159
+#define SQUARE(x) x * x
+
+// Before preprocessing (what you write)
+double area = PI * SQUARE(r);
+
+// After preprocessing (what the compiler sees)
+double area = 3.14159 * r * r;
+```
+
+**Key Implications:**
+- **No type safety**: The preprocessor does not know or care about C++ types
+- **No scope**: Macros are not variables; they exist from `#define` to `#undef` or end of file
+- **No memory**: Macros do not allocate storage; they are replaced before compilation
+- **Simple but dangerous**: Text substitution can produce unexpected results if not careful (see pitfalls below)
 
 #### 1.2.2.1 Object-like Macros (Constants)
 
@@ -140,7 +215,45 @@ int y = SQUARE(5);      // Expands to: ((5) * (5)) = 25
 int m = MAX(x, y);      // Expands to: ((x) > (y) ? (x) : (y))
 ```
 
-#### 1.2.2.3 Macro Expansion Rules and Pitfalls
+#### 1.2.2.3 Multi-line Macros
+
+If a macro definition spans multiple lines, a backslash (`\`) must be placed at the end of each line (except the last) to indicate line continuation.
+
+```cpp
+// A multi-line macro using backslash continuation
+#define PRINT_RECTANGLE(width, height)    \
+    for (int i = 0; i < height; i++) {    \
+        for (int j = 0; j < width; j++) { \
+            std::cout << "*";             \
+        }                                  \
+        std::cout << std::endl;           \
+    }
+```
+
+**Important Rules:**
+- The backslash must be the **last character** on the line (no spaces or comments after it)
+- The backslash escapes the newline, so the preprocessor sees it as one continuous line
+- Indentation after the backslash is for readability only
+
+**Common Mistake:**
+
+The backslash `\` must be the **very last character** on the line. If there is a space after it, the line continuation breaks:
+
+```cpp
+// WRONG - Space after backslash
+#define BAD_MACRO(x) x + \   
+    1
+```
+
+**Why it fails:** The preprocessor sees `\[space]` — the `\` only escapes the space, not the newline. The macro ends at line 1, and line 2 becomes invalid standalone code.
+
+```cpp
+// CORRECT - No characters after \
+#define GOOD_MACRO(x) x + \
+    1
+```
+
+#### 1.2.2.4 Macro Expansion Rules and Pitfalls
 
 **Critical Rule: Parenthesize Everything**
 
@@ -178,6 +291,39 @@ int m = MAX(x++, 10);   // Expands to: ((x++) > (10) ? (x++) : (10))
 ```cpp
 inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-safe
 ```
+
+#### 1.2.2.5 Macros vs Functions: Summary
+
+**Advantages of Macros over Functions:**
+
+| Aspect | Macro | Function |
+|--------|-------|----------|
+| **Definition** | Single line with `#define`, no separation needed | Declaration in header, definition in source file |
+| **Compilation** | Text replacement during preprocessing | Generates function call instructions |
+| **Linking** | No linking overhead (already expanded) | Requires symbol resolution |
+| **Execution** | No runtime overhead (inlined by default) | Jump, execute, return |
+| **Type checking** | None (text substitution) | Full type checking |
+
+**Cross-File Usage of Macros:**
+
+- **Cannot use across files directly:** Macros defined in a `.cpp` file are only visible within that file
+- **Can use across files via header:** Place macro definitions in a header file (`.hpp`), then `#include` it in each source file that needs it
+
+```cpp
+// math_utils.hpp
+#ifndef MATH_UTILS_HPP
+#define MATH_UTILS_HPP
+#define SQUARE(x) ((x) * (x))  // Shared via header
+#endif
+
+// file1.cpp
+#include "math_utils.hpp"  // SQUARE available here
+
+// file2.cpp  
+#include "math_utils.hpp"  // SQUARE available here too
+```
+
+> **Key Point:** Each `.cpp` file gets its own copy of the macro through `#include`; macros are not "shared" like functions, they are "copied and pasted" by the preprocessor.
 
 ### 1.2.3 Conditional Compilation
 
