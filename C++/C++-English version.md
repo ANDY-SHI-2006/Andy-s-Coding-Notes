@@ -14,7 +14,7 @@ C++ program construction follows a three-stage model:
 
 ```cpp
 // main.cpp
-#include `<iostream>`      // Preprocessor: textually inserts iostream content
+#include <iostream>      // Preprocessor: textually inserts iostream content
 #define MAX 100          // Preprocessor: replaces all MAX with 100
 
 int main() {
@@ -538,9 +538,9 @@ In C++, each component typically consists of two files:
 **Example Structure:**
 ```
 project/
-âââ math_utils.hpp    // Declarations
-âââ math_utils.cpp    // Implementations
-âââ main.cpp          // Uses math_utils
+├── math_utils.hpp    // Declarations
+├── math_utils.cpp    // Implementations
+└── main.cpp          // Uses math_utils
 ```
 
 ### 1.4.2 What Goes Where
@@ -612,7 +612,7 @@ double calculateArea(double radius) {
 
 **main.cpp:**
 ```cpp
-#include `<iostream>`
+#include <iostream>
 #include "math_utils.hpp"
 
 int main() {
