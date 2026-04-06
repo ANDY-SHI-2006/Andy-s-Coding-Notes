@@ -84,6 +84,53 @@ double area = 3.14159 * ((r) * (r));
 
 The preprocessor is covered in detail in Chapter 2.
 
+### 1.1.4 Common Header Files Reference
+
+This section provides a quick reference for commonly used C++ standard library headers.
+
+#### 1.1.4.1 C Standard Library Headers (`<cxxx>`)
+
+| C++ Header | C Equivalent | Purpose |
+|------------|--------------|---------|
+| `<cstdio>` | `<stdio.h>` | C-style I/O (printf, scanf) |
+| `<cstdlib>` | `<stdlib.h>` | General utilities (rand, exit, malloc) |
+| `<cmath>` | `<math.h>` | Mathematical functions (sin, cos, sqrt) |
+| `<cstring>` | `<string.h>` | C-style string functions (strcpy, strlen) |
+| `<ctime>` | `<time.h>` | Date and time functions |
+| `<cctype>` | `<ctype.h>` | Character classification (isdigit, toupper) |
+
+#### 1.1.4.2 C++ Standard Library Headers
+
+| Header | Primary Content |
+|--------|-----------------|
+| `<iostream>` | Standard I/O streams (cin, cout, cerr) |
+| `<fstream>` | File stream I/O (ifstream, ofstream) |
+| `<sstream>` | String stream I/O (stringstream) |
+| `<string>` | std::string class |
+| `<vector>` | std::vector container |
+| `<array>` | std::array (fixed-size array) |
+| `<map>` | std::map, std::unordered_map |
+| `<algorithm>` | Algorithms (sort, find, transform) |
+| `<numeric>` | Numeric algorithms (accumulate) |
+| `<memory>` | Smart pointers (unique_ptr, shared_ptr) |
+| `<thread>` | Threading support |
+| `<mutex>` | Mutual exclusion primitives |
+
+#### 1.1.4.3 Header Selection Guide
+
+**For I/O:**
+- Use `<iostream>` for C++ streams (preferred)
+- Use `<cstdio>` only when interfacing with C code
+
+**For strings:**
+- Use `<string>` for `std::string` (always preferred)
+- Use `<cstring>` only for C-string manipulation
+
+**For containers:**
+- Use `<vector>` for dynamic arrays
+- Use `<array>` for fixed-size arrays
+- Use `<map>` or `<unordered_map>` for key-value storage
+
 ## 1.2 The Preprocessor
 
 The preprocessor runs before compilation, performing text substitution and conditional inclusion.
@@ -764,51 +811,6 @@ class MyClass {
 - Never use `using namespace` in header files
 - Prefer `using-declaration` (specific names) over `using-directive` (entire namespace)
 - In `.cpp` files, `using namespace std;` is acceptable for small programs
-
-## 1.5 Common Header Files Reference
-
-### 1.5.1 C Standard Library Headers (`<cxxx>`)
-
-| C++ Header | C Equivalent | Purpose |
-|------------|--------------|---------|
-| `<cstdio>` | `<stdio.h>` | C-style I/O (printf, scanf) |
-| `<cstdlib>` | `<stdlib.h>` | General utilities (rand, exit, malloc) |
-| `<cmath>` | `<math.h>` | Mathematical functions (sin, cos, sqrt) |
-| `<cstring>` | `<string.h>` | C-style string functions (strcpy, strlen) |
-| `<ctime>` | `<time.h>` | Date and time functions |
-| `<cctype>` | `<ctype.h>` | Character classification (isdigit, toupper) |
-
-### 1.5.2 C++ Standard Library Headers
-
-| Header | Primary Content |
-|--------|-----------------|
-| `<iostream>` | Standard I/O streams (cin, cout, cerr) |
-| `<fstream>` | File stream I/O (ifstream, ofstream) |
-| `<sstream>` | String stream I/O (stringstream) |
-| `<string>` | std::string class |
-| `<vector>` | std::vector container |
-| `<array>` | std::array (fixed-size array) |
-| `<map>` | std::map, std::unordered_map |
-| `<algorithm>` | Algorithms (sort, find, transform) |
-| `<numeric>` | Numeric algorithms (accumulate) |
-| `<memory>` | Smart pointers (unique_ptr, shared_ptr) |
-| `<thread>` | Threading support |
-| `<mutex>` | Mutual exclusion primitives |
-
-### 1.5.3 Header Selection Guide
-
-**For I/O:**
-- Use `<iostream>` for C++ streams (preferred)
-- Use `<cstdio>` only when interfacing with C code
-
-**For strings:**
-- Use `<string>` for `std::string` (always preferred)
-- Use `<cstring>` only for C-string manipulation
-
-**For containers:**
-- Use `<vector>` for dynamic arrays
-- Use `<array>` for fixed-size arrays
-- Use `<map>` or `<unordered_map>` for key-value storage
 
 # 2 Code Standardization
 
