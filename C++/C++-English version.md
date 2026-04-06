@@ -211,6 +211,17 @@ You don't manually pass `argc` when running the program. The operating system ha
 | `int main(int argc, char* argv[])` | Arguments as array |
 | `int main(int argc, char** argv)` | Arguments as pointer to pointer |
 
+**Important:** `argc` and `argv` must appear together. You cannot have just one:
+
+| Declaration | Valid? |
+|-------------|--------|
+| `int main(int argc, char* argv[])` | ✅ Valid (both present) |
+| `int main()` | ✅ Valid (neither present) |
+| `int main(int argc)` | ❌ Invalid (only argc) |
+| `int main(char* argv[])` | ❌ Invalid (only argv) |
+
+> **Rule:** The command-line argument interface is fixed by the C++ standard — either both parameters, or neither.
+
 ### 1.2.3 Environment Variables
 
 On some platforms, `main()` can receive environment variables via a third parameter:
