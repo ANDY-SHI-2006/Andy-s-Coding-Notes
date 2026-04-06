@@ -420,7 +420,80 @@ double a = math::PI;
 double b = physics::PI;
 ```
 
-### 1.3.2 using-declaration vs using-directive
+**The Global Namespace Qualifier (`::`)**
+
+Prefixing a name with `::` refers to the **global namespace**, bypassing any local or nested names with the same identifier:
+
+```cpp
+int value = 10;
+
+namespace outer {
+    int value = 20;
+
+    void demo() {
+        int value = 30;
+        cout << value;      // 30 (local)
+        cout << outer::value; // 20 (namespace)
+        cout << ::value;    // 10 (global)
+    }
+}
+```
+
+### 1.3.2 Nested Namespaces
+
+Namespaces can be nested to organize code hierarchically.
+
+**Traditional C++98/11 Style:**
+```cpp
+namespace graphics {
+    namespace rendering {
+        void draw() { }
+    }
+}
+```
+
+**C++17 Inline Nested Syntax:**
+```cpp
+namespace graphics::rendering {
+    void draw() { }
+}
+
+// Usage
+graphics::rendering::draw();
+```
+
+### 1.3.3 Namespace Aliases
+
+Long or deeply nested namespace names can be shortened with aliases:
+
+```cpp
+namespace graphics::rendering::opengl {
+    void init() { }
+}
+
+// Create an alias
+namespace gl = graphics::rendering::opengl;
+
+gl::init();  // Equivalent to graphics::rendering::opengl::init()
+```
+
+### 1.3.4 Unnamed Namespaces
+
+An **unnamed namespace** (anonymous namespace) restricts visibility to the current translation unit (source file). It is the modern C++ replacement for `static` at global scope.
+
+```cpp
+namespace {
+    int internal_counter = 0;  // Only visible in this file
+
+    void helper() {           // Only visible in this file
+        ++internal_counter;
+    }
+}
+```
+
+> **Comparison:** `static int x;` and `namespace { int x; }` achieve the same internal linkage effect, but unnamed namespaces are preferred in modern C++.
+
+### 1.3.5 using-declaration vs using-directive
 
 **using-declaration:** Bring specific name into scope
 ```cpp
@@ -439,7 +512,7 @@ cout << "Hello" << endl;  // OK
 cin >> x;                  // OK
 ```
 
-### 1.3.3 Best Practices: Avoid in Headers
+### 1.3.6 Best Practices
 
 ```cpp
 // BAD: In a header file
@@ -456,8 +529,10 @@ class MyClass {
 ```
 
 **Best Practice Summary:**
-- Never use `using namespace` in header files
-- Prefer `using-declaration` (specific names) over `using-directive` (entire namespace)
+- **Never** use `using namespace` in header files (`.h`/`.hpp`)
+- **Prefer** `using-declaration` (specific names) over `using-directive` (entire namespace)
+- **Limit** `using namespace` to the narrowest scope possible (e.g., inside a function or `.cpp` file)
+- **Prefer** `namespace alias` over deeply nested `using namespace` for readability
 - In `.cpp` files, `using namespace std;` is acceptable for small programs
 
 ## 1.4 Source File Organization
