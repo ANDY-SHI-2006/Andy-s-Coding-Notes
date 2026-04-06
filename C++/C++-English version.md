@@ -90,8 +90,6 @@ This section provides a comprehensive reference for C and C++ standard library h
 
 > **General Rule:** Prefer C++ headers for new code. Use `<cxxx>` headers only when interfacing with C code.
 
----
-
 #### 1.1.4.1 Headers by Category
 
 Headers are organized by functionality. Within each category, C++ headers are listed first, followed by C compatibility headers (marked with C).
@@ -241,8 +239,6 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<concepts>` | C++20 | Template constraints |
 | `<coroutine>` | C++20 | Coroutine support |
 
----
-
 #### 1.1.4.2 Quick Selection Guide
 
 **By Task:**
@@ -261,7 +257,6 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | **Random numbers** | `<random>` (C++) or `<cstdlib>` (C, deprecated) |
 | **Error handling** | `<exception>`, `<stdexcept>` |
 
----
 ## 1.2 Program Entry Point: main()
 
 Every C++ program has exactly one entry point: the `main()` function.
@@ -668,26 +663,77 @@ The preprocessor runs before compilation, performing text substitution and condi
 
 ## 2.1 `#include`: Header Inclusion Mechanics
 
-`#include` performs **textual substitution** â?the entire header file content is inserted at the directive location.
+`#include` performs **textual substitution** — the entire header file content is inserted at the directive location.
 
 ```cpp
-#include `<iostream>`   // Searches system include paths
+#include <iostream>   // Searches system include paths
 #include "myheader.h" // Searches project directory first, then system paths
 ```
 
-### 2.1.1 Search Path: < > vs `" "`
+### 2.1.1 Search Path: `< >` vs `" "`
 
 | Syntax | Search Order | Use Case |
 |--------|--------------|----------|
-| <header> | System directories only | Standard library headers (`<iostream>`, <vector>) |
-| `"header"` | Current directory â?project paths â?system directories | Custom/project headers (`"utils.h"`, `"config.h"`) |
+| `<header>` | System directories only | Standard library headers (`<iostream>`, `<vector>`) |
+| `"header"` | Current directory → project paths → system directories | Custom/project headers (`"utils.h"`, `"config.h"`) |
+
+**Key Differences in Detail:**
+
+```cpp
+#include <iostream>     // Standard C++ header - system paths only
+#include "myclass.hpp"  // Project header - local directory first
+#include <cmath>        // Standard C++ math header
+#include "math_helper.h" // Custom math utilities - local first
+```
 
 **System paths (typical):**
 - Linux: `/usr/include`, `/usr/local/include`
 - Windows (MinGW): `C:\MinGW\include`
 - macOS: `/Applications/Xcode.app/Contents/Developer/Platforms/...`
 
-### 2.1.2 Header File Extensions
+> **Note:** While `"header"` searches more locations, `<header>` is semantically correct for standard library headers. Use `<>` for system/standard headers and `""` for your own headers.
+
+### 2.1.2 C vs C++ Headers: `<cstdio>` vs `<stdio.h>`
+
+C++ provides two ways to include C standard library headers:
+
+| Style | Example | Namespace | Recommendation |
+|-------|---------|-----------|----------------|
+| C-style | `#include <stdio.h>` | Global namespace | Legacy/C compatibility |
+| C++-style | `#include <cstdio>` | `std::` namespace (implementation may also put in global) | **Preferred in C++** |
+
+**Complete Mapping Table:**
+
+| C Header | C++ Equivalent | Content |
+|----------|----------------|---------|
+| `<stdio.h>` | `<cstdio>` | File I/O (`printf`, `scanf`, `FILE`) |
+| `<stdlib.h>` | `<cstdlib>` | General utilities (`malloc`, `free`, `rand`, `exit`) |
+| `<string.h>` | `<cstring>` | C-string manipulation (`strcpy`, `strlen`, `strcmp`) |
+| `<ctype.h>` | `<cctype>` | Character classification (`isdigit`, `isalpha`, `toupper`) |
+| `<math.h>` | `<cmath>` | Mathematical functions (`sin`, `cos`, `sqrt`, `pow`) |
+| `<time.h>` | `<ctime>` | Time functions (`time`, `clock`, `strftime`) |
+| `<assert.h>` | `<cassert>` | Runtime assertions (`assert`) |
+| `<errno.h>` | `<cerrno>` | Error numbers (`errno`) |
+| `<limits.h>` | `<climits>` | Integer type limits (`INT_MAX`, `LONG_MIN`) |
+| `<float.h>` | `<cfloat>` | Floating-point limits (`FLT_MAX`, `DBL_EPSILON`) |
+| `<stddef.h>` | `<cstddef>` | Common definitions (`size_t`, `NULL`, `nullptr_t`) |
+
+**Key Differences:**
+
+```cpp
+#include <stdio.h>    // C-style: puts names in global namespace
+printf("Hello\n");     // Works directly
+
+#include <cstdio>     // C++-style: puts names in std:: namespace
+std::printf("Hello\n"); // Preferred: explicit namespace
+// or
+using namespace std;
+printf("Hello\n");    // Also works (but 'using namespace std' is discouraged in headers)
+```
+
+> **Best Practice:** Always use C++-style headers (`<cxxx>`) in new C++ code. They properly place names in the `std::` namespace, avoiding namespace pollution and following C++ conventions.
+
+### 2.1.3 Header File Extensions
 
 | Extension | Convention | Typical Content |
 |-----------|------------|-----------------|
@@ -696,11 +742,11 @@ The preprocessor runs before compilation, performing text substitution and condi
 
 > **Best Practice:** Use `.hpp` for C++ headers to distinguish from C headers.
 
-### 2.1.3 Include Guards
+### 2.1.4 Include Guards
 
 Include Guards prevent multiple inclusions of the same header file. Without them, including a header multiple times would cause **redefinition errors**.
 
-#### 2.1.3.1 The Problem: Multiple Inclusions
+#### 2.1.4.1 The Problem: Multiple Inclusions
 
 Consider this scenario:
 
@@ -722,7 +768,7 @@ class Helper { ... };
 
 When `main.cpp` includes both `a.hpp` and `b.hpp`, `utils.hpp` gets processed twice. Since C++ does not allow multiple definitions of the same class, this results in a compilation error.
 
-#### 2.1.3.2 Traditional Include Guards (`#ifndef`)
+#### 2.1.4.2 Traditional Include Guards (`#ifndef`)
 
 The classic approach uses preprocessor directives to ensure the header content is processed only once:
 
@@ -742,16 +788,16 @@ class MyClass { ... };
 | Step | First Inclusion | Second Inclusion |
 |------|-----------------|------------------|
 | 1 | `#ifndef MYHEADER_HPP` checks if macro is defined | Same check |
-| 2 | Macro NOT defined â?condition is TRUE | Macro IS defined â?condition is FALSE |
+| 2 | Macro NOT defined → condition is TRUE | Macro IS defined → condition is FALSE |
 | 3 | `#define MYHEADER_HPP` creates the macro | Entire block is skipped |
 | 4 | Header content is processed | Nothing happens |
 
 **Naming Convention:**
 - Use uppercase filename + `_HPP` suffix
-- Example: `math_utils.hpp` â?`MATH_UTILS_HPP`
+- Example: `math_utils.hpp` → `MATH_UTILS_HPP`
 - Ensure uniqueness to avoid name collisions
 
-#### 2.1.3.3 `#pragma once`
+#### 2.1.4.3 `#pragma once`
 
 A modern, simpler alternative:
 
@@ -766,7 +812,7 @@ class MyClass { ... };
 **How it works:**
 The compiler internally records which files have been included. When encountering the same file again, it skips processing entirely.
 
-#### 2.1.3.4 Comparison
+#### 2.1.4.4 Comparison
 
 | Aspect | `#ifndef` Guards | `#pragma once` |
 |--------|------------------|----------------|
@@ -776,7 +822,7 @@ The compiler internally records which files have been included. When encounterin
 | **Potential Issues** | Name collision if macros not unique | None |
 | **Use Case** | Maximum compatibility | Modern projects |
 
-#### 2.1.3.5 Recommendation
+#### 2.1.4.5 Recommendation
 
 - **For new projects:** Use `#pragma once` (cleaner, faster)
 - **For maximum portability:** Use `#ifndef` guards
