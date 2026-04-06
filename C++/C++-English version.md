@@ -96,7 +96,7 @@ This section provides a comprehensive reference for C and C++ standard library h
 
 Headers are organized by functionality. Within each category, C++ headers are listed first, followed by C compatibility headers (marked with C).
 
-##### **Input/Output**
+##### 1.1.4.1.1 Input/Output
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -107,7 +107,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<ios>` | C++ | Base I/O classes and stream flags |
 | `<cstdio>` | C | C-style I/O (`printf`, `scanf`, `FILE`) |
 
-##### **Containers (Sequence)**
+##### 1.1.4.1.2 Containers (Sequence)
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -117,7 +117,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<list>` | C++ | Doubly-linked list |
 | `<forward_list>` | C++ | Singly-linked list (memory-efficient) |
 
-##### **Containers (Associative)**
+##### 1.1.4.1.3 Containers (Associative)
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -126,7 +126,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<unordered_set>` | C++ | Hash-based unique elements (O(1)) |
 | `<unordered_map>` | C++ | Hash-based key-value pairs (O(1)) |
 
-##### **Container Adapters**
+##### 1.1.4.1.4 Container Adapters
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -134,7 +134,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<queue>` | C++ | FIFO (First-In-First-Out) |
 | `<priority_queue>` | C++ | Max-heap (largest element first) |
 
-##### **Strings**
+##### 1.1.4.1.5 Strings
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -143,7 +143,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<cstring>` | C | C-string manipulation (`strcpy`, `strlen`) |
 | `<cctype>` | C | Character classification (`isdigit`, `toupper`) |
 
-##### **Algorithms and Ranges**
+##### 1.1.4.1.6 Algorithms and Ranges
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -152,14 +152,14 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<iterator>` | C++ | Iterator utilities |
 | `<ranges>` | C++ | (C++20) Range-based algorithms |
 
-##### **Memory Management**
+##### 1.1.4.1.7 Memory Management
 
 | Header | Language | Content |
 |--------|----------|---------|
 | `<memory>` | C++ | Smart pointers (`unique_ptr`, `shared_ptr`, `weak_ptr`) |
 | `<scoped_allocator>` | C++ | Nested container allocators |
 
-##### **Function Objects and Utilities**
+##### 1.1.4.1.8 Function Objects and Utilities
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -171,7 +171,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<any>` | C++ | (C++17) Type-erased container |
 | `<cstdlib>` | C | General utilities (`rand`, `exit`, `malloc`) |
 
-##### **Multithreading and Concurrency**
+##### 1.1.4.1.9 Multithreading and Concurrency
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -182,7 +182,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<future>` | C++ | Asynchronous operations (`async`, `promise`) |
 | `<atomic>` | C++ | Lock-free atomic operations |
 
-##### **Time and Random Numbers**
+##### 1.1.4.1.10 Time and Random Numbers
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -190,7 +190,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<random>` | C++ | High-quality random number generators |
 | `<ctime>` | C | C-style time functions |
 
-##### **Type Support and Metaprogramming**
+##### 1.1.4.1.11 Type Support and Metaprogramming
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -199,7 +199,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<typeindex>` | C++ | Hash support for `type_info` |
 | `<cstddef>` | C | Common definitions (`size_t`, `nullptr_t`) |
 
-##### **Exceptions and Error Handling**
+##### 1.1.4.1.12 Exceptions and Error Handling
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -209,7 +209,7 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<cerrno>` | C | Error numbers (`errno`) |
 | `<cassert>` | C | Runtime assertions |
 
-##### **Mathematics**
+##### 1.1.4.1.13 Mathematics
 
 | Header | Language | Content |
 |--------|----------|---------|
@@ -217,14 +217,14 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | `<climits>` | C | Integer type limits (`INT_MAX`, `LONG_MIN`) |
 | `<cfloat>` | C | Floating-point limits (`FLT_MAX`, `DBL_EPSILON`) |
 
-##### **File System and Regex**
+##### 1.1.4.1.14 File System and Regex
 
 | Header | Language | Content |
 |--------|----------|---------|
 | `<filesystem>` | C++ | (C++17) File and directory operations |
 | `<regex>` | C++ | Regular expression matching |
 
-##### **C++17/20 Modern Features**
+##### 1.1.4.1.15 C++17/20 Modern Features
 
 | Header | Standard | Content |
 |--------|----------|---------|
