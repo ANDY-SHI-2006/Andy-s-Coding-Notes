@@ -131,6 +131,169 @@ This section provides a quick reference for commonly used C++ standard library h
 - Use `<array>` for fixed-size arrays
 - Use `<map>` or `<unordered_map>` for key-value storage
 
+## 1.2 Program Entry Point: main()
+
+Every C++ program has exactly one entry point: the `main()` function.
+
+### 1.2.1 Return Value and Exit Status
+
+```cpp
+int main() {
+    // ... program logic ...
+    return 0;  // 0 = success, non-zero = error
+}
+```
+
+| Declaration | Standard | Usage |
+|-------------|----------|-------|
+| `int main()` | ✅ Standard | **Always use this** |
+| `void main()` | ❌ Non-standard | Avoid (not portable) |
+
+**Exit status meanings:**
+
+| Return Value | Convention |
+|--------------|------------|
+| `0` | Success |
+| `1` | General error |
+| `2` | Misuse of command-line |
+| `126` | Command not executable |
+| `127` | Command not found |
+
+> In C++, `return 0;` is implicit if omitted at the end of `main()`:
+
+```cpp
+int main() { }  // Implicitly returns 0
+```
+
+### 1.2.2 Command-line Arguments (argc/argv)
+
+```cpp
+int main(int argc, char* argv[]) {
+    // argc: argument count (includes program name)
+    // argv: argument vector (array of C-strings)
+    
+    std::cout << "Program: " << argv[0] << std::endl;
+    
+    for (int i = 1; i < argc; i++) {
+        std::cout << "Arg " << i << ": " << argv[i] << std::endl;
+    }
+    
+    return 0;
+}
+```
+
+**Example execution:**
+```bash
+$ ./program -f input.txt -v
+Program: ./program
+Arg 1: -f
+Arg 2: input.txt
+Arg 3: -v
+```
+
+**Parameter forms (all equivalent in C++):**
+
+| Declaration | Meaning |
+|-------------|---------|
+| `int main()` | No command-line arguments |
+| `int main(void)` | No arguments (C-compatible explicit form) |
+| `int main(int argc, char* argv[])` | Arguments as array |
+| `int main(int argc, char** argv)` | Arguments as pointer to pointer |
+
+### 1.2.3 Environment Variables
+
+On some platforms, `main()` can receive environment variables via a third parameter:
+
+```cpp
+int main(int argc, char* argv[], char* envp[]) {
+    // envp: array of "KEY=value" strings, terminated by nullptr
+    
+    for (int i = 0; envp[i] != nullptr; i++) {
+        std::cout << envp[i] << std::endl;
+    }
+    
+    return 0;
+}
+```
+
+**Portable alternative (preferred):**
+```cpp
+#include <cstdlib>
+
+int main() {
+    const char* path = std::getenv("PATH");
+    if (path) {
+        std::cout << "PATH: " << path << std::endl;
+    }
+    
+    std::setenv("MY_VAR", "value", 1);  // Set environment variable (POSIX)
+    
+    return 0;
+}
+```
+
+## 1.3 Namespaces
+
+Namespaces prevent name collisions by creating scope boundaries.
+
+### 1.3.1 Namespace Fundamentals
+
+```cpp
+namespace math {
+    const double PI = 3.14159;
+    double square(double x) { return x * x; }
+}
+
+namespace physics {
+    const double PI = 3.1415926535;  // Different PI, no conflict
+    double energy(double m) { return m * 299792458 * 299792458; }
+}
+
+// Usage with scope resolution
+double a = math::PI;
+double b = physics::PI;
+```
+
+### 1.3.2 using-declaration vs using-directive
+
+**using-declaration:** Bring specific name into scope
+```cpp
+using std::cout;      // Only cout is accessible without std::
+using std::endl;
+
+cout << "Hello" << endl;  // OK
+// cin >> x;              // Error: cin not declared
+```
+
+**using-directive:** Bring all names from namespace
+```cpp
+using namespace std;  // All std names accessible
+
+cout << "Hello" << endl;  // OK
+cin >> x;                  // OK
+```
+
+### 1.3.3 Best Practices: Avoid in Headers
+
+```cpp
+// BAD: In a header file
+#pragma once
+using namespace std;  // ❌ Pollutes all files that include this!
+
+// GOOD: Fully qualify in headers
+#pragma once
+#include <string>
+
+class MyClass {
+    std::string name;  // ✅ Explicit qualification
+};
+```
+
+**Best Practice Summary:**
+- Never use `using namespace` in header files
+- Prefer `using-declaration` (specific names) over `using-directive` (entire namespace)
+- In `.cpp` files, `using namespace std;` is acceptable for small programs
+
 # 2 The Preprocessor
 
 The preprocessor runs before compilation, performing text substitution and conditional inclusion.
@@ -649,172 +812,9 @@ struct PackedStruct {     // Members packed with no gaps
 #endif
 ```
 
-## 1.2 Program Entry Point: main()
+# 3 Code Standardization
 
-Every C++ program has exactly one entry point: the `main()` function.
-
-### 1.2.1 Return Value and Exit Status
-
-```cpp
-int main() {
-    // ... program logic ...
-    return 0;  // 0 = success, non-zero = error
-}
-```
-
-| Declaration | Standard | Usage |
-|-------------|----------|-------|
-| `int main()` | ✅ Standard | **Always use this** |
-| `void main()` | ❌ Non-standard | Avoid (not portable) |
-
-**Exit status meanings:**
-
-| Return Value | Convention |
-|--------------|------------|
-| `0` | Success |
-| `1` | General error |
-| `2` | Misuse of command-line |
-| `126` | Command not executable |
-| `127` | Command not found |
-
-> In C++, `return 0;` is implicit if omitted at the end of `main()`:
-
-```cpp
-int main() { }  // Implicitly returns 0
-```
-
-### 1.2.2 Command-line Arguments (argc/argv)
-
-```cpp
-int main(int argc, char* argv[]) {
-    // argc: argument count (includes program name)
-    // argv: argument vector (array of C-strings)
-    
-    std::cout << "Program: " << argv[0] << std::endl;
-    
-    for (int i = 1; i < argc; i++) {
-        std::cout << "Arg " << i << ": " << argv[i] << std::endl;
-    }
-    
-    return 0;
-}
-```
-
-**Example execution:**
-```bash
-$ ./program -f input.txt -v
-Program: ./program
-Arg 1: -f
-Arg 2: input.txt
-Arg 3: -v
-```
-
-**Parameter forms (all equivalent in C++):**
-
-| Declaration | Meaning |
-|-------------|---------|
-| `int main()` | No command-line arguments |
-| `int main(void)` | No arguments (C-compatible explicit form) |
-| `int main(int argc, char* argv[])` | Arguments as array |
-| `int main(int argc, char** argv)` | Arguments as pointer to pointer |
-
-### 1.2.3 Environment Variables
-
-On some platforms, `main()` can receive environment variables via a third parameter:
-
-```cpp
-int main(int argc, char* argv[], char* envp[]) {
-    // envp: array of "KEY=value" strings, terminated by nullptr
-    
-    for (int i = 0; envp[i] != nullptr; i++) {
-        std::cout << envp[i] << std::endl;
-    }
-    
-    return 0;
-}
-```
-
-**Portable alternative (preferred):**
-```cpp
-#include <cstdlib>
-
-int main() {
-    const char* path = std::getenv("PATH");
-    if (path) {
-        std::cout << "PATH: " << path << std::endl;
-    }
-    
-    std::setenv("MY_VAR", "value", 1);  // Set environment variable (POSIX)
-    
-    return 0;
-}
-```
-
-## 1.3 Namespaces
-
-Namespaces prevent name collisions by creating scope boundaries.
-
-### 1.3.1 Namespace Fundamentals
-
-```cpp
-namespace math {
-    const double PI = 3.14159;
-    double square(double x) { return x * x; }
-}
-
-namespace physics {
-    const double PI = 3.1415926535;  // Different PI, no conflict
-    double energy(double m) { return m * 299792458 * 299792458; }
-}
-
-// Usage with scope resolution
-double a = math::PI;
-double b = physics::PI;
-```
-
-### 1.3.2 using-declaration vs using-directive
-
-**using-declaration:** Bring specific name into scope
-```cpp
-using std::cout;      // Only cout is accessible without std::
-using std::endl;
-
-cout << "Hello" << endl;  // OK
-// cin >> x;              // Error: cin not declared
-```
-
-**using-directive:** Bring all names from namespace
-```cpp
-using namespace std;  // All std names accessible
-
-cout << "Hello" << endl;  // OK
-cin >> x;                  // OK
-```
-
-### 1.3.3 Best Practices: Avoid in Headers
-
-```cpp
-// BAD: In a header file
-#pragma once
-using namespace std;  // ❌ Pollutes all files that include this!
-
-// GOOD: Fully qualify in headers
-#pragma once
-#include <string>
-
-class MyClass {
-    std::string name;  // ✅ Explicit qualification
-};
-```
-
-**Best Practice Summary:**
-- Never use `using namespace` in header files
-- Prefer `using-declaration` (specific names) over `using-directive` (entire namespace)
-- In `.cpp` files, `using namespace std;` is acceptable for small programs
-
-# 2 Code Standardization
-
-## 2.1 Program Example
+## 3.1 Program Example
 
 This complete example demonstrates all code standardization guidelines from this chapter:
 
@@ -883,9 +883,9 @@ int main(void)
 | **Naming** (2.4.2) | Descriptive names: `x_incr` not `dx`, `new_x` not `x1` |
 | **No Hungarian** (2.4.2) | Clean names without type prefixes |
 | **No Keywords** (2.4.1) | No reserved words used as identifiers |
-## 2.2 Comments
+## 3.2 Comments
 
-### 2.2.1 Comment Types
+### 3.2.1 Comment Types
 
 | Type | Syntax | Usage | Example |
 |------|--------|-------|---------|
@@ -906,14 +906,14 @@ int b = 20;
 /* Multi-line comments can also be on one line */ int c = 30;
 ```
 
-### 2.2.2 Important Notes
+### 3.2.2 Important Notes
 
 | Note | Description |
 |------|-------------|
 | Nesting | Multi-line comments cannot be nested (`/* /* */ */` will cause errors) |
 | Debugging | Use `//` to temporarily disable a line of code during debugging |
 
-### 2.2.3 Program Structure Comments
+### 3.2.3 Program Structure Comments
 
 Comments are often used to mark the beginning and end of sections:
 
@@ -949,7 +949,7 @@ return 0;
 > **See also:** [8.3 Programmer-Defined Functions](#83-programmer-defined-functions) for complete function organization examples.
 
 
-## 2.3 White Space
+## 3.3 White Space
 
 **White space** (blank lines and indentation) makes programs more **readable**, easier to **modify**, and provides a **consistent style**.
 | Type            | Purpose                       | Example                   |
@@ -957,7 +957,7 @@ return 0;
 | **Blank lines** | Separate different components | Between function sections |
 | **Indentation** | Show program structure        | Inside `{ }` blocks       |
 
-### 2.3.1 Blank Lines
+### 3.3.1 Blank Lines
 
 Blank lines separate logical sections to improve readability:
 
@@ -976,7 +976,7 @@ int main() {
 }
 ```
 
-### 2.3.2 Indentation and Line Splitting
+### 3.3.2 Indentation and Line Splitting
 
 #### 2.3.2.1 Basic Indentation Rule
 
@@ -1068,7 +1068,7 @@ f = numerator / denominator;
 - Use intermediate variables for complex sub-expressions
 - Ensure variables are floating-point type for correct division
 
-### 2.3.3 Spacing in Expressions
+### 3.3.3 Spacing in Expressions
 
 > **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for operator-specific spacing recommendations and [4.6 Operator Precedence](#46-operator-precedence) for the order of operations in expressions.
 
@@ -1153,7 +1153,7 @@ if (score >= 60 && score < 80) {
 }
 ```
 
-### 2.3.4 Brace Styles
+### 3.3.4 Brace Styles
 
 The placement of braces `{}` is a matter of coding style. Two common styles are widely used:
 
@@ -1193,9 +1193,9 @@ if (condition){
 
 > **See also:** [8.2.1 Compound Statements (Blocks)](#721-compound-statements-blocks) for the concept of blocks and their usage in control statements.
 
-## 2.4 Identifier Naming
+## 3.4 Identifier Naming
 
-### 2.4.1 Mandatory Rules (Must Follow)
+### 3.4.1 Mandatory Rules (Must Follow)
 
 These rules are enforced by the compiler. Violations result in compilation errors.
 
@@ -1270,7 +1270,7 @@ C++ distinguishes uppercase and lowercase letters.
 | Double underscore (`__*`) | `__internal` | Anywhere |
 | Underscore + uppercase (`_[A-Z]*`) | `_GlobalVar` | Global namespace |
 
-### 2.4.2 Best Practices and Naming Conventions
+### 3.4.2 Best Practices and Naming Conventions
 
 #### 2.4.2.1 Common Naming Styles
 
@@ -1301,9 +1301,9 @@ C++ distinguishes uppercase and lowercase letters.
 
 ---
 
-# 3 Definitions, Declarations and Statements
+# 4 Definitions, Declarations and Statements
 
-## 3.1 The Core Concepts: Declaration vs Definition
+## 4.1 The Core Concepts: Declaration vs Definition
 
 Understanding the distinction between **declaration** and **definition** is fundamental to C++.
 
@@ -1327,7 +1327,7 @@ void func() { ... }        // Function definition (implementation)
 
 > **See also:** [8.2.5.4 External Storage (`extern`)](#8254-external-storage-extern) for cross-file variable sharing using `extern`.
 
-### 3.1.1 When to Use Each
+### 4.1.1 When to Use Each
 
 **Use Definition when:**
 - Creating a variable that needs storage
@@ -1339,7 +1339,7 @@ void func() { ... }        // Function definition (implementation)
 - Creating function prototypes (forward declarations)
 - Avoiding circular dependencies in headers
 
-### 3.1.2 The One Definition Rule (ODR)
+### 4.1.2 The One Definition Rule (ODR)
 
 C++ enforces the **One Definition Rule**: each variable and function can be defined **only once** across the entire program. Multiple declarations are allowed, but multiple definitions cause linker errors.
 
@@ -1352,11 +1352,11 @@ int shared = 100;          // ❌ ERROR! Redefinition (ODR violation)
 extern int shared;         // ✅ OK! Declaration only
 ```
 
-## 3.2 Variable Definition
+## 4.2 Variable Definition
 
 Variable definitions create actual variables with allocated memory.
 
-### 3.2.1 Basic Definition Syntax
+### 4.2.1 Basic Definition Syntax
 
 | Syntax | Description |
 |--------|-------------|
@@ -1374,7 +1374,7 @@ double side_1, side_2, distance;  // All uninitialized
 
 > **Note:** Using uninitialized variables leads to undefined behavior. Always initialize before use.
 
-### 3.2.2 Multiple Definitions
+### 4.2.2 Multiple Definitions
 
 Multiple variables can be defined in a single statement:
 
@@ -1384,7 +1384,7 @@ int x, y, z;                  // All uninitialized (avoid this!)
 int m = 1, n;                 // Mixed (m initialized, n uninitialized)
 ```
 
-### 3.2.3 Definition with Initialization
+### 4.2.3 Definition with Initialization
 
 Initialization assigns an initial value at the time of definition. C++ provides three initialization syntaxes:
 
@@ -1465,7 +1465,7 @@ string s{};      // s = "" (empty string)
 bool flag{};     // flag = false
 ```
 
-### 3.2.4 Comparison and Recommendations
+### 4.2.4 Comparison and Recommendations
 
 | Feature | Copy Init `=` | Direct Init `()` | Brace Init `{}` |
 |---------|---------------|------------------|-----------------|
@@ -1484,11 +1484,11 @@ bool flag{};     // flag = false
 | **Zero initialization** | `int x{};` |
 | **With `auto`** | `auto x = 5;` (avoid `auto x{5}`) |
 
-## 3.3 Statements
+## 4.3 Statements
 
 **Statements** are commands that perform actions. Unlike definitions, statements do not create new variables (though they may modify existing ones).
 
-### 3.3.1 Statement Types
+### 4.3.1 Statement Types
 
 | Type | Purpose | Example |
 |------|---------|---------|
@@ -1498,7 +1498,7 @@ bool flag{};     // flag = false
 | **Control statement** | Alter program flow | `if`, `for`, `while` |
 | **Return statement** | Exit function | `return 0;` |
 
-### 3.3.2 Declaration Statements vs Definition Statements
+### 4.3.2 Declaration Statements vs Definition Statements
 
 In function bodies, "declaration statements" are technically **definition statements** (they allocate memory):
 
@@ -1526,7 +1526,7 @@ int main() {
 }
 ```
 
-## 3.4 Type Deduction with auto
+## 4.4 Type Deduction with auto
 
 `auto` lets the compiler deduce the variable type from the initializer.
 
@@ -1572,11 +1572,11 @@ auto func = [](int x) { return x * 2; };
 ```
 
 > **Important:** `auto` requires initialization. `auto x;` is an error.
-# 4 Operators
+# 5 Operators
 
 Operators in C++ are symbols that perform operations on operands.
 
-## 4.1 Classification of Operators
+## 5.1 Classification of Operators
 
 **By Operand Count**
 
@@ -1612,9 +1612,9 @@ Operators can also be categorized by their **function or purpose**:
 | **Scope** | `::` | Scope resolution |
 | **Other** | `,` `sizeof` `typeid` `new` `delete` | Comma, size query, memory management |
 
-## 4.2 Arithmetic Operators
+## 5.2 Arithmetic Operators
 
-### 4.2.1 Multiplication ( * )
+### 5.2.1 Multiplication ( * )
 
 The multiplication operator computes the product of two operands.
 
@@ -1630,7 +1630,7 @@ double area = 4.5 * 2.0; // 9.0
 - If either operand is floating-point, result is floating-point
 - Can overflow with large integers (wraps around for unsigned, undefined for signed)
 
-### 4.2.2 Division (/)
+### 5.2.2 Division (/)
 
 The division operator computes the quotient of two operands.
 
@@ -1664,7 +1664,7 @@ double result2 = x / 2.0;        // Use floating-point literal: 2.5
 - Integer division by zero → Runtime error/crash
 - Floating-point division by zero → Returns `inf` or `nan` (IEEE 754 behavior)
 
-### 4.2.3 Modulo (%) - Remainder
+### 5.2.3 Modulo (%) - Remainder
 
 The modulo operator returns the **remainder** of division.
 
@@ -1710,7 +1710,7 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 - The sign of the remainder follows the sign of the dividend (numerator)
 - The identity `(a/b)*b + a%b == a` always holds
 
-### 4.2.4 Exponentiation (Power)
+### 5.2.4 Exponentiation (Power)
 
 **Important:** C++ has **no operator** for exponentiation.
 
@@ -1749,23 +1749,23 @@ double result4 = pow(x, -1);     // 1/x
 | `a * a` | Fastest | Small fixed exponents: a^2, a^3 |
 | `pow(a, b)` | Slower | Variable/fractional: a^b, sqrt(a) |
 
-## 4.3 Increment and Decrement Operators
+## 5.3 Increment and Decrement Operators
 
 The `++` (increment) and `--` (decrement) operators increase or decrease a variable by 1.
 
-### 4.3.1 Restrictions
+### 5.3.1 Restrictions
 
 - Can only be used with **variables** (not constants or expressions)
 - Example: `++count` is valid, but `++5` or `++(a+b)` is invalid
 
-### 4.3.2 Two Forms
+### 5.3.2 Two Forms
 
 | Form        | Syntax         | Description                                           |
 | ----------- | -------------- | ----------------------------------------------------- |
 | **Prefix**  | `++x` or `--x` | Increment/decrement first, then use the new value     |
 | **Postfix** | `x++` or `x--` | Use the current value first, then increment/decrement |
 
-### 4.3.3 Standalone Usage
+### 5.3.3 Standalone Usage
 
 When used alone (not in an expression), both forms are equivalent:
 ```cpp
@@ -1774,7 +1774,7 @@ x++;    // Equivalent to: x = x + 1;
 y--;    // Equivalent to: y = y - 1;
 ```
 
-### 4.3.4 Usage in Expressions
+### 5.3.4 Usage in Expressions
 
 | Expression | Equivalent To | Result (if x=5, y=3) |
 |------------|---------------|----------------------|
@@ -1785,7 +1785,7 @@ y--;    // Equivalent to: y = y - 1;
 > - Prefix: modify first, then use
 > - Postfix: use first, then modify
 
-## 4.4 Relational Operators
+## 5.4 Relational Operators
 
 Relational operators compare two values and return a boolean result (`true` or `false`).
 
@@ -1798,7 +1798,7 @@ Relational operators compare two values and return a boolean result (`true` or `
 | `<=` | Less than or equal | `5 <= 5` | `true` |
 | `>=` | Greater than or equal | `5 >= 3` | `true` |
 
-### 4.4.1 Floating-Point Comparison
+### 5.4.1 Floating-Point Comparison
 
 Direct equality comparison with floating-point numbers can be problematic due to precision errors.
 
@@ -1811,11 +1811,11 @@ const double EPSILON = 1e-9;
 bool equal = fabs(a - 0.3) < EPSILON;
 ```
 
-## 4.5 Logical Operators
+## 5.5 Logical Operators
 
 Logical operators perform boolean operations and return `true` or `false`.
 
-### 4.5.1 Logical NOT (`!`)
+### 5.5.1 Logical NOT (`!`)
 
 | Attribute | Description |
 |-----------|-------------|
@@ -1834,7 +1834,7 @@ bool b = !a;      // b = false
 bool c = !false;  // c = true
 ```
 
-### 4.5.2 Logical AND (`&&`)
+### 5.5.2 Logical AND (`&&`)
 
 | Attribute | Description |
 |-----------|-------------|
@@ -1853,7 +1853,7 @@ bool c = a && b;  // c = false
 bool d = a && true;  // d = true
 ```
 
-### 4.5.3 Logical OR (`||`)
+### 5.5.3 Logical OR (`||`)
 
 | Attribute   | Description                          |
 | ----------- | ------------------------------------ |
@@ -1872,7 +1872,7 @@ bool c = a || b;   // c = true
 bool d = false || false;  // d = false
 ```
 
-### 4.5.4 Truth Table
+### 5.5.4 Truth Table
 
 | A | B | !A | A && B | A \|\| B |
 |---|---|----|--------|----------|
@@ -1894,11 +1894,11 @@ bool x = true, y = false, z = true;
 bool result = !(x && y) || z;  // result = true
 ```
 
-## 4.6 Bitwise Operators
+## 5.6 Bitwise Operators
 
 Bitwise operators perform operations on individual bits of integer values.
 
-### 4.6.1 Bitwise AND (`&`)
+### 5.6.1 Bitwise AND (`&`)
 
 | Attribute | Description |
 |-----------|-------------|
@@ -1917,7 +1917,7 @@ int b = 3;   // 0011 in binary
 int c = a & b;  // c = 1 (0001 in binary)
 ```
 
-### 4.6.2 Bitwise OR (`|`)
+### 5.6.2 Bitwise OR (`|`)
 
 | Attribute   | Description                |
 | ----------- | -------------------------- |
@@ -1936,7 +1936,7 @@ int b = 3;   // 0011 in binary
 int c = a | b;  // c = 7 (0111 in binary)
 ```
 
-### 4.6.3 Bitwise XOR (`^`)
+### 5.6.3 Bitwise XOR (`^`)
 
 | Attribute | Description |
 |-----------|-------------|
@@ -1955,7 +1955,7 @@ int b = 3;   // 0011 in binary
 int c = a ^ b;  // c = 6 (0110 in binary)
 ```
 
-### 4.6.4 Bitwise NOT (`~`)
+### 5.6.4 Bitwise NOT (`~`)
 
 | Attribute | Description |
 |-----------|-------------|
@@ -1973,7 +1973,7 @@ int a = 5;    // 0000 0101 in binary (32-bit: 0000...00000101)
 int b = ~a;   // b = -6 (1111...11111010 in two's complement)
 ```
 
-### 4.6.5 Left Shift (`<<`)
+### 5.6.5 Left Shift (`<<`)
 
 | Attribute   | Description                                        |
 | ----------- | -------------------------------------------------- |
@@ -1992,7 +1992,7 @@ int b = a << 1;  // b = 10 (1010 in binary)
 int c = a << 2;  // c = 20 (0101 → 10100 in binary)
 ```
 
-### 4.6.6 Right Shift (`>>`)
+### 5.6.6 Right Shift (`>>`)
 
 | Attribute | Description |
 |-----------|-------------|
@@ -2011,7 +2011,7 @@ int b = a >> 1;  // b = 10 (01010 in binary)
 int c = a >> 2;  // c = 5 (00101 in binary)
 ```
 
-### 4.6.7 Practical Examples
+### 5.6.7 Practical Examples
 
 **Checking if a number is even or odd:**
 ```cpp
@@ -2061,9 +2061,9 @@ if (permissions & READ) {
 permissions = permissions | EXECUTE;
 ```
 
-## 4.7 Assignment Operators
+## 5.7 Assignment Operators
 
-### 4.7.1 Simple Assignment
+### 5.7.1 Simple Assignment
 
 The assignment operator `=` assigns a value to a variable.
 
@@ -2080,7 +2080,7 @@ y = z;  // y = 0
 x = y;  // x = 0
 ```
 
-### 4.7.2 Compound Assignment
+### 5.7.2 Compound Assignment
 
 C/C++ allows simple assignment statements to be abbreviated using compound assignment operators.
 
@@ -2148,13 +2148,13 @@ if (permissions & READ) {
 permissions &= ~WRITE;       // Remove write permission
 ```
 
-## 4.8 Ternary Conditional Operator
+## 5.8 Ternary Conditional Operator
 
 The ternary conditional operator `?:` is the only ternary operator in C++. It provides a compact way to write simple if-else expressions.
 
 > **See also:** [8.2.5 The Conditional (Ternary) Operator](#825-the-conditional-ternary-operator) for usage in control flow context.
 
-### 4.8.1 Syntax and Usage
+### 5.8.1 Syntax and Usage
 
 **Syntax:**
 ```cpp
@@ -2178,7 +2178,7 @@ if (a > b) {
 }
 ```
 
-### 4.8.2 Nested Ternary Operators
+### 5.8.2 Nested Ternary Operators
 
 Ternary operators can be nested, but this should be done with caution as it reduces readability.
 
@@ -2192,7 +2192,7 @@ char grade = (score >= 90) ? 'A' :
 
 > **Caution:** Deeply nested ternary operators make code hard to read. For complex conditions, use `if-else` statements instead.
 
-### 4.8.3 Type Compatibility
+### 5.8.3 Type Compatibility
 
 Both expressions must be compatible types (or implicitly convertible).
 
@@ -2213,7 +2213,7 @@ int x = 10 + ((y > 0) ? y : 0);
 ((flag) ? a : b) = 100;  // Assigns 100 to either a or b (C++ allows this)
 ```
 
-### 4.8.4 Associativity
+### 5.8.4 Associativity
 
 If there is more than one conditional operator in an expression, they are associated **from right to left**.
 
@@ -2234,18 +2234,18 @@ int result = 0 ? 1 : 0 ? 2 : 3;  // Evaluates as: 0 ? 1 : (0 ? 2 : 3)
                                  // Result: 3
 ```
 
-## 4.9 Type Cast Operators
+## 5.9 Type Cast Operators
 
 Cast operators are used to explicitly convert a value from one data type to another.
 
-### 4.9.1 Usage Scenarios
+### 5.9.1 Usage Scenarios
 
 | Expression                 | Result                  | Explanation                       |
 | -------------------------- | ----------------------- | --------------------------------- |
 | `sum / count` (both `int`) | `3` (if sum=7, count=2) | Integer division, decimal dropped |
 | `(float)sum / count`       | `3.5`                   | `sum` converted to float first    |
 
-### 4.9.2 C-Style Cast
+### 5.9.2 C-Style Cast
 
 ```cpp
 float average = (float)sum / count;  // C-style cast
@@ -2279,7 +2279,7 @@ float avg = (float)sum / 2;  // Uses 7.0 for this calculation only
 
 > See also: [Power (Exponentiation)](#1434-power-exponentiation)
 
-### 4.9.3 C++ Style Casts
+### 5.9.3 C++ Style Casts
 
 C++ provides four type cast operators for safer, more explicit conversions:
 
@@ -2305,7 +2305,7 @@ C++ provides four type cast operators for safer, more explicit conversions:
 double avg = static_cast<double>(sum) / count;
 ```
 
-## 4.10 Power (Exponentiation)
+## 5.10 Power (Exponentiation)
 
 **Important:** C++ has **no built-in operator** for exponentiation.
 
@@ -2339,7 +2339,7 @@ double result = pow(x, 4);  // x⁴
 | `a * a` | ⚡ Fastest | Small fixed exponents: `a²`, `a³` |
 | `pow(a, b)` | 🐢 Slower | Variable/fractional exponents |
 
-## 4.11 Operator Precedence and Associativity
+## 5.11 Operator Precedence and Associativity
 
 The following table lists all operators covered in this chapter from highest to lowest precedence.
 
@@ -2400,7 +2400,7 @@ a = b;
 - Put spaces around assignment operators for clarity (they are evaluated last)
 
 
-## 4.12 Spacing and Style Guidelines
+## 5.12 Spacing and Style Guidelines
 
 > **See also:** [2.3.3 Spacing in Expressions](#233-spacing-in-expressions) for general spacing guidelines.
 
@@ -2426,9 +2426,9 @@ int result = a * b + b / c * d;  // Also valid, but less clear
 
 ---
 
-# 5 Data Types
+# 6 Data Types
 
-## 5.1 Numeric Types
+## 6.1 Numeric Types
 
 Numeric data types are divided into two categories:
 
@@ -2437,7 +2437,7 @@ Numeric data types are divided into two categories:
 | **Integers**       | `short`, `int`, `long`           | Whole numbers without decimals |
 | **Floating-point** | `float`, `double`, `long double` | Numbers with decimal points    |
 
-### 5.1.1 Signed and Unsigned Modifiers
+### 6.1.1 Signed and Unsigned Modifiers
 
 The `signed` and `unsigned` modifiers can only be used with **integer types** (`short`, `int`, `long`, `long long`). They **cannot** be used with floating-point types (`float`, `double`, `long double`).
 
@@ -2446,7 +2446,7 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 | `signed` | Allows negative values (default for most integers) | `signed int x = -10;` |
 | `unsigned` | Only non-negative values (0 and positive), doubles positive range | `unsigned int y = 10;` |
 
-### 5.1.2 Integer Ranges
+### 6.1.2 Integer Ranges
 
 | Type             | Size      | Range                           |
 | ---------------- | --------- | ------------------------------- |
@@ -2457,7 +2457,7 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 | `long`           | 4-8 bytes | Platform dependent              |
 | `long long`      | 8 bytes   | -9 quintillion to 9 quintillion |
 
-### 5.1.3 Floating-Point Precision
+### 6.1.3 Floating-Point Precision
 
 | Type          | Size       | Precision     | Typical Range      |
 | ------------- | ---------- | ------------- | ------------------ |
@@ -2465,7 +2465,7 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 | `double`      | 8 bytes    | ~15 digits    | ±1.7 × 10³⁰⁸       |
 | `long double` | 8-16 bytes | ~18-21 digits | Platform dependent |
 
-## 5.2 Boolean Type
+## 6.2 Boolean Type
 
 The `bool` type represents logical values with only two possible states: `true` or `false`.
 
@@ -2476,7 +2476,7 @@ bool hasError = false;
 
 **Memory Size**: Typically 1 byte (implementation-defined, but always at least 1 byte).
 
-### 5.2.1 Boolean Output with `cout`
+### 6.2.1 Boolean Output with `cout`
 
 By default, `cout` displays `bool` values as integers:
 
@@ -2500,7 +2500,7 @@ cout << noboolalpha << flag << endl; // Output: 1
 
 **Why the default is integer?** For backward compatibility with C, which uses integers (1/0) to represent boolean logic.
 
-### 5.2.2 Boolean Output with `printf`
+### 6.2.2 Boolean Output with `printf`
 
 `printf` has **no built-in conversion specifier** for `bool` to display "true"/"false". By default, it treats `bool` as `int` (1/0).
 
@@ -2532,7 +2532,7 @@ printf("Ready: %s\n", BOOL_STR(ready));  // Output: Ready: true
 | `cout` default | `1` / `0` | `cout << flag` |
 | `cout` with `boolalpha` | `true` / `false` | `cout << boolalpha << flag` |
 
-## 5.3 Floating-Point Values
+## 6.3 Floating-Point Values
 
 By default, a floating-point constant like `2.3` is treated as a **`double`** constant.
 
@@ -2560,7 +2560,7 @@ long double d = 2.5L;  // OK: 2.5L is long double
 | `1.5e2`  | $1.5 \times 10^2 = 150$    | `double z = 1.5e2;`  |
 | `1e-9`   | $1 \times 10^{-9}$         | `double eps = 1e-9;` |
 
-## 5.4 Character and String Literals
+## 6.4 Character and String Literals
 
 | Syntax | Type | Example | Storage |
 |--------|------|---------|---------|
@@ -2580,7 +2580,7 @@ char e = "A";           // Error! Cannot assign string to char
 - `'\n'` is a `char` (newline character)
 - `"\n"` is a string containing newline + null terminator
 
-### 5.4.1 Character Constants
+### 6.4.1 Character Constants
 
 - Enclosed in **single quotes**: `'A'`, `'b'`, `'3'`
 - Only **one character** allowed
@@ -2592,7 +2592,7 @@ char d = 'AB';   // Error: too many characters
 char e = "A";    // Error: double quotes are for strings
 ```
 
-### 5.4.2 Character-Numeric Arithmetic
+### 6.4.2 Character-Numeric Arithmetic
 
 Characters can be used directly in arithmetic operations with numbers because characters are stored in memory as their ASCII values (binary integers).
 
@@ -2606,11 +2606,11 @@ int diff = 'D' - 'A';   // 68 - 65 = 3
 
 **Key Concept**: `char` is essentially a small integer (1 byte) storing the ASCII code value of the character.
 
-## 5.5 Symbolic Constants
+## 6.5 Symbolic Constants
 
 The directive can appear anywhere in a C++ program.
 
-### 5.5.1 Defining Constants
+### 6.5.1 Defining Constants
 
 | Method              | Syntax                           | Description                                      |
 | ------------------- | -------------------------------- | ------------------------------------------------ |
@@ -2634,7 +2634,7 @@ constexpr int MAX_SIZE = 100;
 
 **Note:**  `#define PI 3.14159` - Preprocessor directives do not end with a semicolon
 
-### 5.5.2 Constants Must Be Initialized
+### 6.5.2 Constants Must Be Initialized
 
 Constants (`const` and `constexpr`) **must be initialized** at the time of declaration.
 
@@ -2659,7 +2659,7 @@ constexpr int d;        // ✗ Error! constexpr must be initialized
 | `const int x;`     | **Yes**                 | No               |
 | `constexpr int x;` | **Yes**                 | No               |
 
-### 5.5.3 Redefinition Rules
+### 6.5.3 Redefinition Rules
 
 **Same scope**: Cannot redefine with the same name
 ```cpp
@@ -2688,21 +2688,21 @@ int main() {
 #define PI 3.14159      // Now valid
 ```
 
-### 5.5.4 Recommendation
+### 6.5.4 Recommendation
 
 - **Prefer `const` or `constexpr`** over `#define` in C++
 - `const`/`constexpr` have type checking and scope rules
 - `constexpr` is more strict: value must be computable at compile time
 
-## 5.6 Type Conversion
+## 6.6 Type Conversion
 
-### 5.6.1 Type Promotion Hierarchy
+### 6.6.1 Type Promotion Hierarchy
 
 ```
 char → short → int → long → long long → float → double → long double
 ```
 
-### 5.6.2 Operation Type Conversion
+### 6.6.2 Operation Type Conversion
 
 When operands have different types, C++ automatically converts the "narrower" type to the "wider" type.
 
@@ -2720,7 +2720,7 @@ double b = 2.5;
 auto c = a + b;     // Result: 7.5 (type: double)
 ```
 
-### 5.6.3 Common Pitfall
+### 6.6.3 Common Pitfall
 
 ```cpp
 double x = 5 / 2;       // Result: 2.0 (integer division first!)
@@ -2729,7 +2729,7 @@ double y = 5.0 / 2;     // Result: 2.5 (correct)
 
 **Key Point**: Operations between integers produce integer results. Use at least one floating-point number for decimal results.
 
-### 5.6.4 Assignment Type Conversion
+### 6.6.4 Assignment Type Conversion
 
 | Direction | Result | Example |
 |-----------|--------|---------|
@@ -2755,11 +2755,11 @@ int a = 3.9f;           // a = 3 (not 4!)
 int b = -2.7f;          // b = -2
 ```
 
-## 5.7 Enumeration
+## 6.7 Enumeration
 
 Enumeration allows the programmer to declare a **new data type** which takes specific values only.
 
-### 5.7.1 Basic Syntax
+### 6.7.1 Basic Syntax
 
 **Declaration:**
 ```cpp
@@ -2797,7 +2797,7 @@ enum Status { OK = 200, NotFound = 404, Error };
 
 > **Note:** Enumerators must be separated by **commas** `,`. A trailing comma after the last enumerator is optional but recommended for cleaner diffs.
 
-### 5.7.2 Restrictions
+### 6.7.2 Restrictions
 
 **Type Safety Rules:**
 
@@ -2807,7 +2807,7 @@ enum Status { OK = 200, NotFound = 404, Error };
 | Increment/decrement | `c2++;` | `++` not defined for enum types |
 | Implicit conversion | `int x = c1;` (C++98) | Must use explicit `static_cast<int>(c1)` |
 
-### 5.7.3 Underlying Type and Value Constraints
+### 6.7.3 Underlying Type and Value Constraints
 
 **Value Constraints:**
 Enum constants must be compile-time integer constants. Floating-point and string values are not allowed.
@@ -2841,7 +2841,7 @@ enum Color : short { Red, Green, Blue };  // Traditional enum with short
 | `long`, `long long` | 8 bytes | Large values (e.g., `1LL << 63`) |
 | `unsigned int` | 4 bytes | Bit flags (recommended) |
 
-### 5.7.4 Usage
+### 6.7.4 Usage
 
 **In `switch`:**
 ```cpp
@@ -2852,7 +2852,7 @@ switch (myColor) {
 }
 ```
 
-### 5.7.5 Conversions
+### 6.7.5 Conversions
 
 | Direction | Conversion | Syntax | Notes |
 |-----------|------------|--------|-------|
@@ -2872,7 +2872,7 @@ Color c = Color(1);       // OK: explicit int→enum (c = Yellow)
 // Color c = 1;           // Error: cannot convert 'int' to 'Color' implicitly
 ```
 
-### 5.7.6 `enum class` (C++11)
+### 6.7.6 `enum class` (C++11)
 
 | Feature | `enum` | `enum class` |
 |---------|--------|--------------|
@@ -2888,7 +2888,7 @@ Color c = Color::Red;     // Must use scope operator
 // int i = c;             // Error: no implicit conversion to int
 ```
 
-### 5.7.7 Forward Declaration
+### 6.7.7 Forward Declaration
 
 Enums can be forward-declared to reduce header dependencies:
 
@@ -2899,7 +2899,7 @@ enum Status : unsigned char; // OK (traditional enum)
 // enum Color;               // Error: type not specified
 ```
 
-### 5.7.8 Type Traits and Utilities (C++11/C++23)
+### 6.7.8 Type Traits and Utilities (C++11/C++23)
 
 | Feature                | Version | Purpose                          | Syntax                         |
 | ---------------------- | ------- | -------------------------------- | ------------------------------ |
@@ -2924,7 +2924,7 @@ auto val2 = static_cast<std::underlying_type_t<Color>>(c);
 
 > **Summary**: `underlying_type` tells you what integer type an enum uses (e.g., `unsigned char` vs `int`). `to_underlying` converts an enum value to that integer type without writing a long `static_cast`. These are mainly used in template/generic code; you won't need them in everyday programming.
 
-### 5.7.9 Bit Flags Pattern
+### 6.7.9 Bit Flags Pattern
 
 | Technique | Description | Example |
 |-----------|-------------|---------|
@@ -2954,7 +2954,7 @@ Permission p = Permission::Read | Permission::Write;
 - `std::bitset<N>` - Fixed-size bitset
 - `std::vector<bool>` - Dynamic bit-packed array
 
-### 5.7.10 Best Practices
+### 6.7.10 Best Practices
 
 | Practice | Recommendation |
 |----------|---------------|
@@ -2964,11 +2964,11 @@ Permission p = Permission::Read | Permission::Write;
 | Avoid `operator++` | Not defined for enums; use explicit assignment |
 | Use `std::to_underlying` | C++23 for safe conversion to integer |
 
-## 5.8 Array
+## 6.8 Array
 
 Array stores a set of values with the same data type under a single identifier, allowing efficient management of multiple related values.
 
-### 5.8.1 Benefits of Using Arrays
+### 6.8.1 Benefits of Using Arrays
 
 Without arrays, managing 100 temperature readings would require 100 separate variables:
 ```cpp
@@ -2982,7 +2982,7 @@ temp[0] = 25.5;    // First reading
 temp[99] = 28.3;   // Last reading (index 99, not 100!)
 ```
 
-### 5.8.2 Declaration
+### 6.8.2 Declaration
 
 ```cpp
 type name[size];   // size: number of elements (must be constant)
@@ -3004,7 +3004,7 @@ double t[4];       // 4 doubles (indices 0-3)
 
 > **Note:** Array size must be specified in declaration using **either a constant in brackets** or **an initialization sequence in braces**. Essentially, this tells the system how much memory space to allocate for the array.
 
-### 5.8.3 Memory Layout
+### 6.8.3 Memory Layout
 
 Arrays store elements in contiguous memory locations:
 
@@ -3019,7 +3019,7 @@ int s[6] = {5, 0, -1, 2, 15, 2};
 
 > Each `int` typically occupies 4 bytes, so addresses are 4 bytes apart.
 
-### 5.8.4 Initialization
+### 6.8.4 Initialization
 
 **1. With explicit size:**
 ```cpp
@@ -3084,7 +3084,7 @@ for (int i = 2; i < 10; i++) {
 > - `{ }` initialization happens at compile time or program start
 > - Loop/`cin` initialization happens during program execution
 
-### 5.8.5 Accessing and Modifying Elements
+### 6.8.5 Accessing and Modifying Elements
 
 ```cpp
 int s[5] = {10, 20, 30, 40, 50};
@@ -3103,7 +3103,7 @@ int val = s[i];      // 40
 s[i + 1] = 999;      // s[4] = 999
 ```
 
-### 5.8.6 Arrays and Functions
+### 6.8.6 Arrays and Functions
 
 Arrays are passed by reference (not by value):
 
@@ -3131,7 +3131,7 @@ int main() {
 | Size information    | Must pass `size` separately - function cannot determine array size from parameter alone |
 | Why pass size?      | `arr[]` decays to pointer, losing size info                                             |
 
-### 5.8.7 Multidimensional Arrays
+### 6.8.7 Multidimensional Arrays
 
 Arrays of arrays (matrices, grids, tables):
 
@@ -3155,7 +3155,7 @@ for (int i = 0; i < 3; i++) {       // rows
 }
 ```
 
-### 5.8.8 Cautions
+### 6.8.8 Cautions
 
 **Cannot Return Array from Function**
 ```cpp
@@ -3185,7 +3185,7 @@ int s[n];  // ⚠️ Works in some compilers, but NOT standard C++
 ```
 Use `std::vector` for dynamic sizing instead.
 
-### 5.8.9 Array vs `std::vector`
+### 6.8.9 Array vs `std::vector`
 
 #### Initialization Syntax Comparison
 
@@ -3217,7 +3217,7 @@ array<int, 3> arr3{1, 2, 3};  // OK
 > - Use `{}` for **list of specific values** (works for all containers)
 > - Arrays (`C-style` and `std::array`) **only support `{}`**
 
-### 5.8.10 Arrays and Input
+### 6.8.10 Arrays and Input
 
 > **See also:** [6.2.4 Arrays and `scanf`](#624-arrays-and-scanf) for C-style input details.
 
@@ -3297,7 +3297,7 @@ std::string name;
 std::getline(std::cin, name);  // Reads entire line including spaces
 ```
 
-## 5.9 Structure
+## 6.9 Structure
 
 Structure stores a collection of heterogeneous data (different types) describing a common entity.
 
@@ -3319,7 +3319,7 @@ struct Random {
 };
 ```
 
-### 5.9.1 Declaration
+### 6.9.1 Declaration
 
 ```cpp
 struct Person {
@@ -3338,7 +3338,7 @@ struct Person s2;    // C: need 'struct' keyword
 | Elements | Indexed (s[0], s[1]) | Named members (s.age, s.name) |
 | Purpose | Collection of same items | Describing a complex entity |
 
-### 5.9.2 Initialization and Usage
+### 6.9.2 Initialization and Usage
 
 **Declare and Initialize**
 ```cpp
@@ -3364,27 +3364,27 @@ s2.gender = 'f';       // Modify field
 
 ---
 
-# 6 Input and Output
+# 7 Input and Output
 
 C++ provides multiple ways to handle input and output operations. This chapter covers both modern C++ stream-based I/O and traditional C-style I/O functions.
 
-## 6.1 C++ Stream I/O
+## 7.1 C++ Stream I/O
 
 Modern C++ uses the `<iostream>` library for input and output operations. Streams provide type-safe, extensible, and object-oriented I/O.
 
 
-### 6.1.1 Input with `cin`
+### 7.1.1 Input with `cin`
 
 Console input using `cin` (character input).
 
-### 6.1.1.1 Basic Syntax
+### 7.1.1.1 Basic Syntax
 
 ```cpp
 cin >> variable;           // Read single variable
 cin >> a >> b >> c;        // Chain input, separated by whitespace
 ```
 
-### 6.1.1.2 Input Separators
+### 7.1.1.2 Input Separators
 
 `cin` treats **whitespace** (space, tab, newline) as separators:
 
@@ -3394,13 +3394,13 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 | `1\n2 3\n4` | ✓ | Same (newlines = spaces) |
 | `1234 56.78` with `char c1,c2; int a; float b;` | ✓ | c1='1', c2='2', a=34, b=56.78 |
 
-### 6.1.1.3 Key Behaviors
+### 7.1.1.3 Key Behaviors
 
 1. **Type-aware extraction**: `cin` extracts bytes according to variable type
 2. **Excess input ignored**: Extra data beyond variables is discarded
 3. **Whitespace skipped**: Leading spaces/newlines are automatically skipped
 
-### 6.1.1.4 Operator Precedence with `cin`
+### 7.1.1.4 Operator Precedence with `cin`
 
 > **See also:** [7.1.2.9 Operator Precedence with `cout`](#71129-operator-precedence-with-cout) for the output equivalent.
 
@@ -3464,11 +3464,11 @@ int val = (x > 0) ? a : b;
 
 > **Best Practice:** When using `cin` with any comparison or logical operation, **read the values first, then perform the operation in a separate statement**.
 
-### 6.1.2 Output with `cout`
+### 7.1.2 Output with `cout`
 
 Console output using `cout` (character output).
 
-### 6.1.2.1 Newline Control
+### 7.1.2.1 Newline Control
 
 Both create a new line, but with a key difference:
 
@@ -3484,7 +3484,7 @@ cout << "Hello" << '\n';    // Just newline, faster
 
 **Note**: Frequent use of `endl` can slow down the program. Use `'\n'` unless you need to force output immediately.
 
-### 6.1.2.2 Output Formatting
+### 7.1.2.2 Output Formatting
 
 #### 6.1.2.2.1 Header Dependency
 
@@ -3655,7 +3655,7 @@ double truncate(double val, int prec) {
  double truncated = trunc(value * 100) / 100;  // C++11
 ```
 
-### 6.1.2.3 Operator Precedence with `cout`
+### 7.1.2.3 Operator Precedence with `cout`
 
 > **See also:** [6.1.4 Operator Precedence with `cin`](#614-operator-precedence-with-cin) for the input equivalent.
 
@@ -3707,7 +3707,7 @@ cout << (x > 0 ? "pos" : "neg");  // ✅ Correct
 
 > **Best Practice:** When mixing `cout` with any comparison or logical operation, **always use parentheses** to make the intent explicit.
 
-### 6.1.3 String Streams
+### 7.1.3 String Streams
 
 String streams from `<sstream>` allow you to treat strings as streams, enabling convenient parsing and formatting.
 
@@ -3735,7 +3735,7 @@ string result = oss.str();
 - Converting between types and strings
 - Parsing complex input line by line
 - Building formatted strings
-### 6.1.4 I/O Manipulators
+### 7.1.4 I/O Manipulators
 
 **Header:** `#include <iomanip>`
 
@@ -3762,11 +3762,11 @@ cout << setw(10) << left << "Name" << setw(5) << "Score" << endl;
 
 
 
-## 6.2 C-style I/O
+## 7.2 C-style I/O
 
 C-style I/O functions from `<cstdio>` provide fast, format-based input/output operations. While less type-safe than C++ streams, they are useful for specific formatting needs and performance-critical code.
 
-### 6.2.1 Input with `scanf` (C-style Input)
+### 7.2.1 Input with `scanf` (C-style Input)
 
 Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
 
@@ -4262,7 +4262,7 @@ int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
 
 The return value is the **final value of this internal counter**, reflecting the "actual work completed".
 
-### 6.2.2 Output with `printf` (C-style Output)
+### 7.2.2 Output with `printf` (C-style Output)
 
 Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
 
@@ -4603,11 +4603,11 @@ int result = printf("%10d\n", 5);
 
 
 
-## 6.3 File I/O
+## 7.3 File I/O
 
 File streams from `<fstream>` provide facilities for reading from and writing to files.
 
-### 6.3.1 File Input (ifstream)
+### 7.3.1 File Input (ifstream)
 
 **Reading from File:**
 ```cpp
@@ -4637,7 +4637,7 @@ inFile.close();
 **Important:** Always check if file opened successfully before reading.
 
 
-### 6.3.2 File Output (ofstream)
+### 7.3.2 File Output (ofstream)
 
 **Writing to File:**
 ```cpp
@@ -4662,11 +4662,11 @@ outFile << "New line appended" << endl;
 outFile.close();
 ```
 
-# 7 Conditional Execution
+# 8 Conditional Execution
 
-## 7.1 Relational & Logical Operators
+## 8.1 Relational & Logical Operators
 
-### 7.1.1 Relational Operators
+### 8.1.1 Relational Operators
 
 #### 7.1.1.1 Less Than (`<`)
 
@@ -4749,7 +4749,7 @@ bool result = a != b;    // true (5 is not equal to 3)
 | `==` | Equal to | `5 == 5` | `true` |
 | `!=` | Not equal to | `5 != 3` | `true` |
 
-### 7.1.2 Logical Operators
+### 8.1.2 Logical Operators
 
 Logical operators combine boolean expressions.
 
@@ -4823,7 +4823,7 @@ if (isWeekend || isHoliday) {
 > - Logical operators can also be used within conditions.
 > - Logical operators compare conditions, not expressions.
 
-### 7.1.3 Operator Precedence
+### 8.1.3 Operator Precedence
 
 | Precedence | Operators                                        |
 | ---------- | ------------------------------------------------ |
@@ -4844,11 +4844,11 @@ if (a < b && c < d || e < f) { }
 if ((a < b && c < d) || e < f) { }
 ```
 
-## 7.2 The if Statement Family
+## 8.2 The if Statement Family
 
 This section covers various forms of if statements and related constructs for conditional execution.
 
-### 7.2.1 Compound Statements (Blocks)
+### 8.2.1 Compound Statements (Blocks)
 
 When using control statements like `if`, `while`, `for`, etc., if you need to execute **multiple statements** (not just one), you must wrap them in **curly braces `{}`** to form a **compound statement** (also called a **block**).
 
@@ -4910,7 +4910,7 @@ if (x < 0)
 
 > **See also:** [2.3.4 Brace Styles](#234-brace-styles) for code formatting conventions on brace placement.
 
-### 7.2.2 The if Statement
+### 8.2.2 The if Statement
 
 ```cpp
 if (condition) {
@@ -4918,7 +4918,7 @@ if (condition) {
 }
 ```
 
-### 7.2.3 The if-else Statement
+### 8.2.3 The if-else Statement
 
 ```cpp
 if (condition) {
@@ -4928,7 +4928,7 @@ if (condition) {
 }
 ```
 
-### 7.2.4 The if-else-if Ladder
+### 8.2.4 The if-else-if Ladder
 
 ```cpp
 if (condition1) {
@@ -4942,7 +4942,7 @@ if (condition1) {
 }
 ```
 
-### 7.2.5 Nested if Statements
+### 8.2.5 Nested if Statements
 
 if statements can be nested inside other if statements:
 
@@ -4979,7 +4979,7 @@ if (a > 0) {
 
 > **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
-### 7.2.6 The Conditional (Ternary) Operator
+### 8.2.6 The Conditional (Ternary) Operator
 
 A compact form for simple if-else. See also [4.8 Ternary Conditional Operator](#48-ternary-conditional-operator) for detailed syntax and precedence.
 
@@ -5023,11 +5023,11 @@ int result = 0 ? 1 : 0 ? 2 : 3;  // Evaluates as: 0 ? 1 : (0 ? 2 : 3)
                                  // Result: 3
 ```
 
-## 7.3 The switch Statement
+## 8.3 The switch Statement
 
 The `switch` statement selects one of many code blocks to execute.
 
-### 7.3.1 The Switch Mechanism
+### 8.3.1 The Switch Mechanism
 
 When a matching `case` is found, execution **jumps to that case** and continues **line by line** through subsequent statements, **ignoring other case labels**, until a `break` is encountered or the switch block ends.
 
@@ -5050,7 +5050,7 @@ switch (a) {
 
 **Key Insight:** `case` is just a **jump label** — it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
 
-### 7.3.2 Syntax Rules
+### 8.3.2 Syntax Rules
 
 #### 7.3.2.1 Controlling Expression
 
@@ -5177,7 +5177,7 @@ switch (grade) {
 }
 ```
 
-### 7.3.3 Fall-Through Behavior
+### 8.3.3 Fall-Through Behavior
 
 Without `break`, execution continues to the next case:
 
@@ -5201,7 +5201,7 @@ switch (day) {
 // Output: Weekday
 ```
 
-### 7.3.4 Intentional Fall-Through
+### 8.3.4 Intentional Fall-Through
 
 Sometimes you may intentionally omit `break` to let multiple `case` labels share the same code block:
 
@@ -5221,7 +5221,7 @@ switch (grade) {
 
 > **Note:** This "fall-through" behavior is sometimes intentionally designed, but in most cases, it's a bug caused by forgetting to write `break`.
 
-### 7.3.5 switch vs if-else
+### 8.3.5 switch vs if-else
 
 | Use `switch` | Use `if-else` |
 |--------------|---------------|
@@ -5230,7 +5230,7 @@ switch (grade) {
 | Many discrete values | Ranges of values |
 | Equality checks only | Relational comparisons |
 
-## 7.4 Using Values as Conditions
+## 8.4 Using Values as Conditions
 
 In C++, a single value can be used directly as a condition without relational operators:
 
@@ -5261,9 +5261,9 @@ if (ch) { }            // Equivalent to: if (ch != '\0')
 if (count) { }         // Equivalent to: if (count != 0)
 ```
 
-## 7.5 Loop Structures
+## 8.5 Loop Structures
 
-### 7.5.1 The while Loop
+### 8.5.1 The while Loop
 
 Tests condition before each iteration:
 
@@ -5291,7 +5291,7 @@ while (count < 5) {
 - Loop variable must be initialized before the loop
 - Loop variable must be updated inside the loop
 
-### 7.5.2 The do-while Loop
+### 8.5.2 The do-while Loop
 
 Tests condition after each iteration (guarantees at least one execution):
 
@@ -5320,7 +5320,7 @@ do {
 | Minimum executions | 0 | 1 |
 | Use case | When iteration might not be needed | When at least one iteration is required |
 
-### 7.5.3 The for Loop
+### 8.5.3 The for Loop
 
 Compact loop with initialization, condition, and update in one line.
 
@@ -5474,7 +5474,7 @@ for (auto n : nums) {
 
 > **Best Practice:** Use range-based for loops for simple iteration - cleaner and less error-prone. Default to `const auto&` for read-only access, use `auto&` when modifying.
 
-### 7.5.4 Nested Loops
+### 8.5.4 Nested Loops
 
 Loops can be nested inside other loops:
 
@@ -5498,9 +5498,9 @@ for (int i = 1; i <= 5; i++) {
 5       10      15      20      25
 ```
 
-## 7.6 Jump Statements
+## 8.6 Jump Statements
 
-### 7.6.1 The break Statement
+### 8.6.1 The break Statement
 
 `break` immediately exits the nearest enclosing loop or switch:
 
@@ -5527,7 +5527,7 @@ switch (choice) {
 }
 ```
 
-### 7.6.2 The continue Statement
+### 8.6.2 The continue Statement
 
 `continue` skips the rest of the current iteration and proceeds to the next:
 
@@ -5549,7 +5549,7 @@ for (int i = 0; i < 10; i++) {
 | `break` | Exit the loop/switch immediately |
 | `continue` | Skip to next iteration of the loop |
 
-## 7.7 Loop Comparison and Selection
+## 8.7 Loop Comparison and Selection
 
 | Loop Type | Best For | Key Characteristic |
 |-----------|----------|-------------------|
@@ -5560,9 +5560,9 @@ for (int i = 0; i < 10; i++) {
 
 ---
 
-# 8 Functions
+# 9 Functions
 
-## 8.1 Mathematical Functions
+## 9.1 Mathematical Functions
 
 > **Header:** Most functions in this section require `#include <cmath>` (C++ style) or `#include <math.h>` (C style)
 >
@@ -5570,7 +5570,7 @@ for (int i = 0; i < 10; i++) {
 >
 > **Note:** In C++, `<cmath>` places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
-### 8.1.1 `<cmath>` Functions
+### 9.1.1 `<cmath>` Functions
 
 **Argument Types:** These math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
 
@@ -5580,7 +5580,7 @@ double a = sqrt(x);   // x auto-converted to 9.0, a = 3.0
 int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 ```
 
-### 8.1.1.1 Elementary Functions
+### 9.1.1.1 Elementary Functions
 
 | Function | Description | Notes |
 |----------|-------------|-------|
@@ -5593,7 +5593,7 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 | `log(x)` | Computes the natural logarithm of x (ln x) | Requires `x > 0` |
 | `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
 
-### 8.1.1.2 fabs vs abs
+### 9.1.1.2 fabs vs abs
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
@@ -5614,7 +5614,7 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-### 8.1.1.3 Power (Exponentiation)
+### 9.1.1.3 Power (Exponentiation)
 
 > **Important:** C++ has **no built-in operator** for exponentiation.
 
@@ -5628,7 +5628,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | `a * a` | Fastest | Small fixed exponents: a², a³ |
 | `pow(a, b)` | Slower | Variable/fractional exponents |
 
-### 8.1.1.4 Trigonometric Functions
+### 9.1.1.4 Trigonometric Functions
 
 > **Critical:** Arguments must be in **radians**, NOT degrees!
 >
@@ -5659,7 +5659,7 @@ rad = deg * PI / 180;
 deg = rad * 180 / PI;
 ```
 
-### 8.1.1.5 Hyperbolic Functions
+### 9.1.1.5 Hyperbolic Functions
 
 | Function | Description | Formula |
 |----------|-------------|---------|
@@ -5667,7 +5667,7 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
-### 8.1.2 `<cstdlib>` Functions
+### 9.1.2 `<cstdlib>` Functions
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
@@ -5813,7 +5813,7 @@ double rand_float(double a, double b) {
 
 // Usage: rand_float(0.0, 1.0) gives 0.0 to 1.0
 ```
-### 8.1.3 `<random>` Functions
+### 9.1.3 `<random>` Functions
 
 > **Header:** `#include <random>` (C++11 and later)
 
@@ -5929,13 +5929,13 @@ for (int i = 0; i < 10; ++i) {
 }
 ```
 
-### 8.1.4 Character Functions
+### 9.1.4 Character Functions
 
 > **Headers:** This section covers functions from two different headers:
 > - `<cstdio>` — Character I/O functions (Section 9.2.1)
 > - `<cctype>` — Character classification & conversion (Section 9.2.2)
 
-### 8.1.4.1 `<cstdio>` Character I/O
+### 9.1.4.1 `<cstdio>` Character I/O
 
 > **Header:** `#include <cstdio>` (C++ style) or `#include <stdio.h>` (C style)
 
@@ -5943,7 +5943,7 @@ C provides two approaches for character I/O:
 1. Using `printf`/`scanf` with `%c` format specifier
 2. Using dedicated character functions `getchar()` and `putchar()`
 
-### 8.1.4.1.1 Using `printf` and `scanf` with `%c`
+### 9.1.4.1.1 Using `printf` and `scanf` with `%c`
 
 The `%c` format specifier handles single characters:
 
@@ -5958,7 +5958,7 @@ printf("%c", ch);   // Print a character
 - `scanf("%c", &ch)` reads **any** character including whitespace (spaces, tabs, newlines)
 - To skip whitespace before reading a character, add a space: `scanf(" %c", &ch)`
 
-### 8.1.4.1.2 Using `getchar()` and `putchar()`
+### 9.1.4.1.2 Using `getchar()` and `putchar()`
 
 These are dedicated character I/O functions:
 
@@ -5979,7 +5979,7 @@ putchar(97);      // Output: a (ASCII 97)
 putchar(65);      // Output: A (ASCII 65)
 ```
 
-### 8.1.4.1.3 Common Issues and Solutions
+### 9.1.4.1.3 Common Issues and Solutions
 
 **Issue 1: Input Buffer Residue**
 
@@ -6020,11 +6020,11 @@ putchar('!');         // Output on next line
 
 > **Note:** This is expected behavior—characters accumulate until `\n` flushes the output or moves to a new line.
 
-### 8.1.4.2 `<cctype>` Character Classification & Conversion
+### 9.1.4.2 `<cctype>` Character Classification & Conversion
 
 > **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
 
-### 8.1.4.2.1 Classification Functions
+### 9.1.4.2.1 Classification Functions
 
 | Function       | Returns non-zero (true) if...                   |
 | -------------- | ----------------------------------------------- |
@@ -6043,7 +6043,7 @@ putchar('!');         // Output on next line
 
 > **Note:** `isblank()` checks only space `' '` and tab `'\t'`, while `isspace()` checks all whitespace including newline `'\n'`, carriage return `'\r'`, form feed `'\f'`, and vertical tab `'\v'`.
 
-### 8.1.4.2.2 Conversion Functions
+### 9.1.4.2.2 Conversion Functions
 
 | Function | Description |
 |----------|-------------|
@@ -6080,7 +6080,7 @@ char result = toupper(sym);   // result = '5' (unchanged)
 
 
 
-## 8.2 Programmer-Defined Functions
+## 9.2 Programmer-Defined Functions
 
 **Function Organization:**
 Use comment blocks with dashes to separate functions visually:
@@ -6117,7 +6117,7 @@ int main(void)
 
 > **See also:** [2.2.3 Program Structure Comments](#223-program-structure-comments) for comment style guidelines.
 
-### 8.2.1 Function Definition
+### 9.2.1 Function Definition
 
 **General Form:**
 ```cpp
@@ -6140,7 +6140,7 @@ return_type function_name(parameter_declarations)
   > **Note:** Unlike Python and some other languages, C++ does not support nested functions (defining a function inside another function). Nested functions are the foundation of closures and decorators in Python.
 - Function must be completely defined before another function begins
 
-### 8.2.2 Function Prototype
+### 9.2.2 Function Prototype
 
 #### 8.2.2.1 The Problem: Declaration Order
 
@@ -6231,7 +6231,7 @@ int functionB(const string& str) { /* ... */ }
 
 **Summary:** Prototypes decouple "declaration" from "definition", giving you freedom to organize code logically.
 
-### 8.2.3 Parameter Passing
+### 9.2.3 Parameter Passing
 
 #### 8.2.3.1 Pass by Value
 
@@ -6418,7 +6418,7 @@ int main() {
 >
 > **See also:** [4.9.3 C++ Style Casts](#493-c-style-casts) for syntax of `static_cast` and explicit conversion operators.
 
-### 8.2.4 Return Statement
+### 9.2.4 Return Statement
 
 **Syntax:**
 ```cpp
@@ -6441,7 +6441,7 @@ void printMessage() {
 
 > **Note:** In a `void` function, the `return` statement does not contain an expression. It can be written as `return;` or can be omitted entirely. When omitted, the function automatically returns when execution reaches the closing brace `}`.
 
-### 8.2.5 Storage Class and Scope
+### 9.2.5 Storage Class and Scope
 
 Storage class determines the **lifetime** (how long the variable exists) and **scope** (where the variable can be accessed) of a variable.
 
@@ -6752,9 +6752,9 @@ void func() {
     printf("%d\n", ::x); // Prints 10 (global)
 }
 ```
-# 9 Object-Oriented Programming
+# 10 Object-Oriented Programming
 
-## 9.1 Classes and Objects
+## 10.1 Classes and Objects
 
 **Class vs Structure:**
 - Class is a user-defined data type that encapsulates data and functions
@@ -6785,7 +6785,7 @@ BankAcct ba1(1234, 500.50);  // Object creation with constructor
 BankAcct ba2(9999, 1001.40);
 ```
 
-## 9.2 Encapsulation and Access Specifiers
+## 10.2 Encapsulation and Access Specifiers
 
 **Access Levels:**
 
@@ -6806,7 +6806,7 @@ ba1.deposit(1000);      // Call public method
 // ba1.balance = 1000;  // Error: private member
 ```
 
-## 9.3 Constructors and Destructors
+## 10.3 Constructors and Destructors
 
 **Constructor:**
 - Special method called automatically when object is created
@@ -6839,7 +6839,7 @@ public:
 };
 ```
 
-## 9.4 The `this` Pointer
+## 10.4 The `this` Pointer
 
 **Purpose:** Pointer to the current object
 
@@ -6861,7 +6861,7 @@ public:
 };
 ```
 
-## 9.5 Inheritance
+## 10.5 Inheritance
 
 **Concept:** Derive a new class from an existing class
 - **Base Class / Parent Class / Super Class**: Original class
@@ -6892,7 +6892,7 @@ public:
 - Use inheritance for "is-a" relationship (SavingAccount is-a BankAccount)
 - Use composition for "has-a" relationship
 
-## 9.6 Template Classes
+## 10.6 Template Classes
 
 **Purpose:** Write generic code that works with any data type
 
@@ -6927,7 +6927,7 @@ class Pair {
 };
 ```
 
-## 9.7 Pass by Value vs Reference
+## 10.7 Pass by Value vs Reference
 
 **Pass by Value (Default):**
 - Copy of object is passed
@@ -6945,15 +6945,15 @@ void transfer(BankAcct& from, BankAcct& to, double amt) {
 
 ---
 
-# 10 STL
+# 11 STL
 
 The Standard Template Library (STL) provides a collection of template classes and functions for common data structures and algorithms. `vector` is the most commonly used STL container.
 
-## 10.1 Vector
+## 11.1 Vector
 
 `vector` is a **dynamic array** that can grow or shrink in size automatically. Unlike fixed-size arrays, vectors handle memory management internally and provide a rich set of operations.
 
-### 10.1.1 Why Use Vector?
+### 11.1.1 Why Use Vector?
 
 **Problem with fixed-size arrays:**
 ```cpp
@@ -6978,7 +6978,7 @@ v.push_back(20);  // Automatically manages memory
 | **Operations** | Limited (raw pointer) | Rich set of built-in methods |
 | **Flexibility** | Cannot resize | Can resize, insert, delete |
 
-### 10.1.2 Header and Declaration
+### 11.1.2 Header and Declaration
 
 ```cpp
 #include <vector>  // Required header
@@ -6992,7 +6992,7 @@ vector<string> v3;           // Empty vector of strings
 vector<vector<int>> matrix;  // 2D vector (vector of vectors)
 ```
 
-### 10.1.3 Initialization
+### 11.1.3 Initialization
 
 **1. Empty vector:**
 ```cpp
@@ -7034,7 +7034,7 @@ vector<int> v(arr, arr + 5);  // Copy from array
 
 > **Note:** Prefer list initialization `{}` for clarity when initializing with specific values.
 
-### 10.1.4 Common Operations
+### 11.1.4 Common Operations
 
 | Operation | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -7061,7 +7061,7 @@ if (!v.empty()) {
 }
 ```
 
-### 10.1.5 Element Access
+### 11.1.5 Element Access
 
 | Method | Description | Example | Notes |
 |--------|-------------|---------|-------|
@@ -7090,7 +7090,7 @@ try {
 
 > **Recommendation:** Use `at()` when you need bounds checking (safety), use `[]` when you are certain about indices (performance).
 
-### 10.1.6 Size and Capacity
+### 11.1.6 Size and Capacity
 
 | Method | Description | Example |
 |--------|-------------|---------|
@@ -7119,7 +7119,7 @@ v.resize(10, 99); // Size: 10, new elements are 99
 
 > **Note:** When `size()` exceeds `capacity()`, vector automatically reallocates memory (usually doubling capacity). This invalidates iterators and references.
 
-### 10.1.7 Iterators
+### 11.1.7 Iterators
 
 Iterators provide a uniform way to traverse containers.
 
@@ -7161,7 +7161,7 @@ for (size_t i = 0; i < v.size(); i++) {
 
 > **Best Practice:** Use range-based for loops (`for (auto& elem : v)`) for simple iteration - cleaner and less error-prone.
 
-### 10.1.8 Algorithms with Vector
+### 11.1.8 Algorithms with Vector
 
 STL algorithms work seamlessly with vectors via iterators.
 
@@ -7203,7 +7203,7 @@ int count1 = count(v.begin(), v.end(), 1);
 v.erase(remove(v.begin(), v.end(), 1), v.end());  // Remove all 1s
 ```
 
-### 10.1.9 Vector vs Array
+### 11.1.9 Vector vs Array
 
 | Feature | Array (`int arr[]`) | Vector (`vector<int>`) |
 |---------|---------------------|------------------------|
@@ -7229,7 +7229,7 @@ v.erase(remove(v.begin(), v.end(), 1), v.end());  // Remove all 1s
 - Safety and convenience are priorities
 - Using STL algorithms
 
-### 10.1.10 Best Practices
+### 11.1.10 Best Practices
 
 **1. Prefer `emplace_back` over `push_back` (C++11):**
 ```cpp
@@ -7282,11 +7282,11 @@ v.push_back(6);  // May invalidate all iterators!
 
 > **Warning:** Insertions (`push_back`, `insert`) may invalidate iterators when reallocation occurs. Use `reserve()` to prevent this when possible.
 
-## 10.2 String
+## 11.2 String
 
 `std::string` is a class template that represents a sequence of characters. It provides a dynamic, resizable array of characters with many convenient member functions for string manipulation.
 
-### 10.2.1 Why Use string?
+### 11.2.1 Why Use string?
 
 **Problem with C-style strings (char arrays):**
 ```cpp
@@ -7317,7 +7317,7 @@ string s = "hello";
 | **Comparison** | strcmp function | ==, !=, < operators |
 | **Concatenation** | strcat (unsafe) | + operator |
 
-### 10.2.2 Header and Declaration
+### 11.2.2 Header and Declaration
 
 ```cpp
 #include <string>  // Required header
@@ -7332,7 +7332,7 @@ string s4{s2};          // Copy constructor (C++11)
 string s5(5, 'a');      // "aaaaa" (5 copies of 'a')
 ```
 
-### 10.2.3 Common Operations
+### 11.2.3 Common Operations
 
 | Operation | Description | Example | Result |
 |-----------|-------------|---------|--------|
@@ -7364,7 +7364,7 @@ s.replace(7, 5, "C++");          // "hello, C++"
 s.erase(5, 1);                   // "hello C++"
 ```
 
-### 10.2.4 Element Access
+### 11.2.4 Element Access
 
 | Method | Description | Example | Notes |
 |--------|-------------|---------|-------|
@@ -7388,7 +7388,7 @@ const char* cstr = s.c_str();
 printf("%s\n", cstr);       // "hello"
 ```
 
-### 10.2.5 String Concatenation and Comparison
+### 11.2.5 String Concatenation and Comparison
 
 **Concatenation with `+`:**
 ```cpp
@@ -7417,7 +7417,7 @@ if (s1 <= s2) { }     // true
 if (s1 == "apple") { }  // true
 ```
 
-### 10.2.6 Numeric Conversions
+### 11.2.6 Numeric Conversions
 
 | Function | Description | Example | Since |
 |----------|-------------|---------|-------|
@@ -7443,7 +7443,7 @@ size_t pos;
 int y = stoi("123abc", &pos);   // y = 123, pos = 3 (chars processed)
 ```
 
-### 10.2.7 Iterating Over Strings
+### 11.2.7 Iterating Over Strings
 
 ```cpp
 string s = "hello";
@@ -7469,7 +7469,7 @@ for (size_t i = 0; i < s.length(); i++) {
 }
 ```
 
-### 10.2.8 String vs Vector`<char>`
+### 11.2.8 String vs Vector`<char>`
 
 `string` and `vector<char>` are similar but `string` has additional string-specific functionality:
 
@@ -7484,11 +7484,11 @@ for (size_t i = 0; i < s.length(); i++) {
 
 > **Use `string`** for text processing. **Use `vector<char>`** only when you need a raw character array without string semantics.
 
-## 10.3 Algorithm
+## 11.3 Algorithm
 
 The `<algorithm>` header provides a rich set of generic algorithms that work with iterators from any container.
 
-### 10.3.1 Header Overview
+### 11.3.1 Header Overview
 
 ```cpp
 #include <algorithm>  // Required header
@@ -7500,7 +7500,7 @@ These algorithms work with iterators, so they can be used with:
 - `string`
 - Any container with iterators
 
-### 10.3.2 Sorting Algorithms
+### 11.3.2 Sorting Algorithms
 
 | Algorithm | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -7535,7 +7535,7 @@ nth_element(v.begin(), v.begin() + v.size()/2, v.end());
 int median = v[v.size()/2];
 ```
 
-### 10.3.3 Searching Algorithms
+### 11.3.3 Searching Algorithms
 
 | Algorithm | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -7573,7 +7573,7 @@ auto it2 = find_if(v.begin(), v.end(), [](int x) {
 // it2 points to 2
 ```
 
-### 10.3.4 Min/Max Algorithms
+### 11.3.4 Min/Max Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -7611,7 +7611,7 @@ int y = clamp(-5, 0, 5);   // 0 (constrained to min)
 int z = clamp(3, 0, 5);    // 3 (within range)
 ```
 
-### 10.3.5 Modifying Algorithms
+### 11.3.5 Modifying Algorithms
 
 | Algorithm | Description | Example | Notes |
 |-----------|-------------|---------|-------|
@@ -7668,7 +7668,7 @@ v.erase(it, v.end());
 // v = {1, 2, 3}
 ```
 
-### 10.3.6 Numeric Algorithms (in `<numeric>`)
+### 11.3.6 Numeric Algorithms (in `<numeric>`)
 
 | Algorithm | Description | Example | Since |
 |-----------|-------------|---------|-------|
@@ -7705,7 +7705,7 @@ partial_sum(v.begin(), v.end(), prefix.begin());
 iota(v.begin(), v.end(), 1);  // v = {1, 2, 3, 4, 5}
 ```
 
-### 10.3.7 Set Algorithms (for sorted ranges)
+### 11.3.7 Set Algorithms (for sorted ranges)
 
 | Algorithm | Description | Example | Notes |
 |-----------|-------------|---------|-------|
@@ -7741,7 +7741,7 @@ dest.resize(it - dest.begin());
 bool isSubset = includes(a.begin(), a.end(), b.begin(), b.end());  // false
 ```
 
-### 10.3.8 Comparison and Permutation
+### 11.3.8 Comparison and Permutation
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -7775,7 +7775,7 @@ vector<int> b = {3, 1, 2};
 bool isPerm = is_permutation(a.begin(), a.end(), b.begin());  // true
 ```
 
-### 10.3.9 Partitioning Algorithms
+### 11.3.9 Partitioning Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -7803,7 +7803,7 @@ stable_partition(v.begin(), v.end(), [](int x) {
 // v = {2, 4, 6, 8, 1, 3, 5, 7, 9} (evens and odds in original order)
 ```
 
-### 10.3.10 Heap Algorithms
+### 11.3.10 Heap Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -7837,7 +7837,7 @@ make_heap(v.begin(), v.end());
 sort_heap(v.begin(), v.end());  // Sorts in ascending order
 ```
 
-### 10.3.11 Best Practices
+### 11.3.11 Best Practices
 
 **1. Use iterators properly:**
 ```cpp
@@ -7896,11 +7896,11 @@ int sum = accumulate(v.begin(), v.end(), 0);
 
 ---
 
-# 11 Advanced Topics
+# 12 Advanced Topics
 
-## 11.1 Pointers Advanced
+## 12.1 Pointers Advanced
 
-### 11.1.1 Pointer and const
+### 12.1.1 Pointer and const
 
 | Declaration | Meaning | Can modify pointed value? | Can change pointer? |
 |-------------|---------|---------------------------|---------------------|
@@ -7913,7 +7913,7 @@ const int* p = &a;  // Cannot modify *p, but can change p
 int* const q = &b;  // Can modify *q, but cannot change q
 ```
 
-### 11.1.2 Pointers and Arrays
+### 12.1.2 Pointers and Arrays
 
 - Array name is a constant pointer to first element
 - `arr[i]` is equivalent to `*(arr + i)`
@@ -7937,7 +7937,7 @@ p--;      // Moves to previous integer
 p + 3;    // Points to element 3 positions ahead
 ```
 
-### 11.1.3 Pointer to Structure
+### 12.1.3 Pointer to Structure
 
 ```cpp
 struct Person {
@@ -7953,9 +7953,9 @@ cout << (*ptr).age;   // 25
 cout << ptr->age;     // 25 (arrow operator)
 ```
 
-## 11.2 Dynamic Memory Management
+## 12.2 Dynamic Memory Management
 
-### 11.2.1 new Operator
+### 12.2.1 new Operator
 
 ```cpp
 // Single element
@@ -7972,7 +7972,7 @@ Person* p = new Person;
 p->age = 25;
 ```
 
-### 11.2.2 delete Operator
+### 12.2.2 delete Operator
 
 ```cpp
 // Single element
@@ -7983,7 +7983,7 @@ p = nullptr;  // Good practice
 delete[] arr;
 ```
 
-### 11.2.3 Memory Leak
+### 12.2.3 Memory Leak
 
 - Occurs when allocated memory is not freed
 - Only pointer storing address is lost
@@ -7998,7 +7998,7 @@ int main() {
 
 > **Best Practice:** Always pair `new` with `delete`, and set pointer to `nullptr` after deletion.
 
-## 11.3 References
+## 12.3 References
 
 **Concept:** Alternative name (alias) for a variable
 
@@ -8014,7 +8014,7 @@ intRef++;         // x is now 457
 - Cannot be null
 - Cannot be rebound to another variable
 
-### 11.3.1 Pass by Reference
+### 12.3.1 Pass by Reference
 
 ```cpp
 void swap(int& a, int& b) {  // Pass by reference
