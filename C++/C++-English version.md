@@ -978,7 +978,7 @@ int main() {
 
 ### 3.3.2 Indentation and Line Splitting
 
-#### 2.3.2.1 Basic Indentation Rule
+#### 3.3.2.1 Basic Indentation Rule
 
 Code inside braces `{}` must be indented to show hierarchy.
 
@@ -993,15 +993,15 @@ int main() {          // Level 0: No indent
 }                     // Level 0: No indent
 ```
 
-#### 2.3.2.2 Line Continuation
+#### 3.3.2.2 Line Continuation
 
 Indenting of the second line indicates that it is a **continuation of the previous line**.
 
-#### 2.3.2.3 Splitting Long Statements
+#### 3.3.2.3 Splitting Long Statements
 
 If a statement is too long, split it over two lines at a point that preserves readability.
 
-##### 2.3.2.3.1 Splitting printf Statements
+##### 3.3.2.3.1 Splitting printf Statements
 
 **Method 1: Split after comma**
 
@@ -1043,7 +1043,7 @@ cout << "This is a very long message that "
      << endl;
 ```
 
-#### 2.3.2.4 Splitting Long Expressions
+#### 3.3.2.4 Splitting Long Expressions
 
 Break long expressions into multiple statements for readability.
 
@@ -1072,7 +1072,7 @@ f = numerator / denominator;
 
 > **See also:** [4.12 Spacing and Style Guidelines](#412-spacing-and-style-guidelines) for operator-specific spacing recommendations and [4.6 Operator Precedence](#46-operator-precedence) for the order of operations in expressions.
 
-#### 2.3.3.1 Basic Spacing Styles
+#### 3.3.3.1 Basic Spacing Styles
 
 There are two common approaches to spacing around operators:
 
@@ -1091,7 +1091,7 @@ int result = a*b + b/c*d;  // Clearer: products are grouped, then added
 int result = a * b + b / c * d;
 ```
 
-#### 2.3.3.2 Spacing Rules for Multi-Character Operators
+#### 3.3.3.2 Spacing Rules for Multi-Character Operators
 
 **Important Rule:** Blank spaces can be used on either side of an operator, but blanks **cannot** be used to separate a multi-character operator.
 
@@ -1112,7 +1112,7 @@ if (a = = b) { }     // ❌ Error: = = is two separate operators
 if (x < = 10) { }    // ❌ Error: < = is two separate operators
 ```
 
-#### 2.3.3.3 Spacing with Relational and Logical Operators
+#### 3.3.3.3 Spacing with Relational and Logical Operators
 
 When combining relational and logical operators, use these spacing conventions for better readability:
 
@@ -1199,7 +1199,7 @@ if (condition){
 
 These rules are enforced by the compiler. Violations result in compilation errors.
 
-#### 2.4.1.1 Characters
+#### 3.4.1.1 Characters
 
 **Legal Characters**
 
@@ -1230,7 +1230,7 @@ These rules are enforced by the compiler. Violations result in compilation error
 
 > **Core Principle**: Only `[a-zA-Z0-9_]` are allowed. When in doubt, stick to letters, digits, and underscores.
 
-#### 2.4.1.2 Case Sensitivity
+#### 3.4.1.2 Case Sensitivity
 
 C++ distinguishes uppercase and lowercase letters.
 
@@ -1240,7 +1240,7 @@ C++ distinguishes uppercase and lowercase letters.
 | `myVariable` vs `MYVARIABLE` | ❌ Different |
 | `count` vs `Count` | ❌ Different |
 
-#### 2.4.1.3 Reserved Words
+#### 3.4.1.3 Reserved Words
 
 **C++ Keywords (Prohibited):**
 
@@ -1272,7 +1272,7 @@ C++ distinguishes uppercase and lowercase letters.
 
 ### 3.4.2 Best Practices and Naming Conventions
 
-#### 2.4.2.1 Common Naming Styles
+#### 3.4.2.1 Common Naming Styles
 
 | Style                            | Pattern            | Usage                              | Example                       |
 | -------------------------------- | ------------------ | ---------------------------------- | ----------------------------- |
@@ -1282,7 +1282,7 @@ C++ distinguishes uppercase and lowercase letters.
 | **ALL_CAPS**                     | `MY_CONSTANT`      | Constants, macros                  | `MAX_SIZE`, `PI`              |
 | **Hungarian notation**           | `iCount`, `pData`  | ❌ **Deprecated** in modern C++     | Not recommended               |
 
-#### 2.4.2.2 Naming Conventions by Identifier Type
+#### 3.4.2.2 Naming Conventions by Identifier Type
 
 | Identifier Type | Convention | Example |
 |-----------------|------------|---------|
@@ -1388,7 +1388,7 @@ int m = 1, n;                 // Mixed (m initialized, n uninitialized)
 
 Initialization assigns an initial value at the time of definition. C++ provides three initialization syntaxes:
 
-#### 3.2.3.1 Copy Initialization
+#### 4.2.3.1 Copy Initialization
 
 Uses the `=` operator to copy the value.
 
@@ -1409,7 +1409,7 @@ int x = 7.5;         // ⚠️ Compiles, but x = 7 (truncates decimal)
 short s = 100000;    // ⚠️ Compiles (may overflow, undefined behavior)
 ```
 
-#### 3.2.3.2 Direct Initialization
+#### 4.2.3.2 Direct Initialization
 
 Uses parentheses `()` to pass arguments to constructors.
 
@@ -1427,7 +1427,7 @@ int a();        // ❌ Declares a function "a" that returns int!
 int b{};        // ✅ Correctly initializes b to 0
 ```
 
-#### 3.2.3.3 List Initialization (Brace Initialization)
+#### 4.2.3.3 List Initialization (Brace Initialization)
 
 Uses curly braces `{}`. Introduced in **C++11**, also known as **uniform initialization**.
 
@@ -1456,7 +1456,7 @@ short a(100000); // ⚠️ Compiles (may overflow)
 short b{100000}; // ❌ Error! Value too large
 ```
 
-#### 3.2.3.4 Zero Initialization (Empty Braces)
+#### 4.2.3.4 Zero Initialization (Empty Braces)
 
 ```cpp
 int x{};         // x = 0
@@ -1623,7 +1623,7 @@ int product = 5 * 3;     // 15
 double area = 4.5 * 2.0; // 9.0
 ```
 
-#### 4.2.1.1 Key Points
+#### 5.2.1.1 Key Points
 
 - Works with both integers and floating-point numbers
 - If both operands are integers, result is integer
@@ -1647,7 +1647,7 @@ double c = 7.0 / 2;  // Result: 3.5 (floating-point division)
 | `int / double` | `double` | Normal division |
 | `double / double` | `double` | Normal division |
 
-#### 4.2.2.1 Integer Division Pitfalls
+#### 5.2.2.1 Integer Division Pitfalls
 
 ```cpp
 // Common mistake: expecting floating-point result from integer division
@@ -1659,7 +1659,7 @@ double result1 = (double)x / y;  // Cast one operand: 2.5
 double result2 = x / 2.0;        // Use floating-point literal: 2.5
 ```
 
-#### 4.2.2.2 Division by Zero
+#### 5.2.2.2 Division by Zero
 
 - Integer division by zero → Runtime error/crash
 - Floating-point division by zero → Returns `inf` or `nan` (IEEE 754 behavior)
@@ -1680,7 +1680,7 @@ int t = 6 % 2;   // Result: 0 (divisible, no remainder)
 // double x = 7.5 % 2;  // Error! % requires integers
 ```
 
-#### 4.2.3.1 Modulo with Negative Numbers
+#### 5.2.3.1 Modulo with Negative Numbers
 
 If either of the integer values is negative, the result of `a % b` is **system dependent** according to different C++ standards:
 
@@ -1704,7 +1704,7 @@ Since C++11, the standard uniformly specifies **truncation toward zero** for int
 -5 % -3;  // Result: -2 (guaranteed)
 ```
 
-#### 4.2.3.2 Key Characteristics
+#### 5.2.3.2 Key Characteristics
 
 - The quotient `a / b` is truncated toward zero (fractional part is discarded)
 - The sign of the remainder follows the sign of the dividend (numerator)
@@ -3223,7 +3223,7 @@ array<int, 3> arr3{1, 2, 3};  // OK
 
 When reading array data from input, the approach differs between C and C++ styles.
 
-#### 5.8.10.1 Core Principle
+#### 6.8.10.1 Core Principle
 
 In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
 
@@ -3233,7 +3233,7 @@ In C/C++, **the array name itself represents the address of the first element** 
 | Array (entire array) | Array name only | `scanf("%s", name);` |
 | Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
 
-#### 5.8.10.2 Character Arrays (Strings)
+#### 6.8.10.2 Character Arrays (Strings)
 
 ```cpp
 char name[50];
@@ -3250,7 +3250,7 @@ scanf("%s", name);      // ✅ Correct: name is the address of first element
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
 
-#### 5.8.10.3 Numeric Arrays
+#### 6.8.10.3 Numeric Arrays
 
 For numeric arrays, you typically need to read elements one by one:
 
@@ -3263,7 +3263,7 @@ for (int i = 0; i < 5; i++) {
 }
 ```
 
-#### 5.8.10.4 Safety Considerations
+#### 6.8.10.4 Safety Considerations
 
 **Buffer Overflow Protection:**
 
@@ -3279,7 +3279,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 | `char[50]` | `%49s` | 49 chars + 1 null terminator |
 | `char[100]` | `%99s` | 99 chars + 1 null terminator |
 
-#### 5.8.10.5 C++ Style Input
+#### 6.8.10.5 C++ Style Input
 
 In modern C++, prefer using `std::cin` with `std::vector`:
 
@@ -3486,13 +3486,13 @@ cout << "Hello" << '\n';    // Just newline, faster
 
 ### 7.1.2.2 Output Formatting
 
-#### 6.1.2.2.1 Header Dependency
+#### 7.1.2.2.1 Header Dependency
 
 ```cpp
 #include <iomanip>
 ```
 
-#### 6.1.2.2.2 Core Mechanism
+#### 7.1.2.2.2 Core Mechanism
 
 C++ has three floating-point output formats:
 
@@ -3502,14 +3502,14 @@ C++ has three floating-point output formats:
 | `fixed` | Fixed-point notation | `12345.678900` |
 | `scientific` | Scientific notation | `1.234568e+04` |
 
-#### 6.1.2.2.3 setprecision(n) Meaning
+#### 7.1.2.2.3 setprecision(n) Meaning
 
 `setprecision(n)` behavior depends on the current format:
 
 - **Default**: `n` significant digits
 - `fixed`/`scientific`: `n` digits after decimal point
 
-#### 6.1.2.2.4 Detailed Comparison and Examples
+#### 7.1.2.2.4 Detailed Comparison and Examples
 
 ```cpp
 double pi = 3.1415926535;
@@ -3530,7 +3530,7 @@ cout << scientific << setprecision(4);
 cout << 123.456 << endl;  // 1.2346e+02
 ```
 
-#### 6.1.2.2.5 State Persistence
+#### 7.1.2.2.5 State Persistence
 
 `fixed` and `setprecision` persist until explicitly changed.
 
@@ -3540,7 +3540,7 @@ cout << 1.234 << endl;  // 1.23
 cout << 5.678 << endl;  // 5.68 (format still active!)
 ```
 
-#### 6.1.2.2.6 Reset to Default
+#### 7.1.2.2.6 Reset to Default
 
 ```cpp
 // C++11 method
@@ -3551,7 +3551,7 @@ cout.unsetf(ios::fixed | ios::scientific);
 cout << setprecision(6);
 ```
 
-#### 6.1.2.2.7 cout Formatting for double Values
+#### 7.1.2.2.7 cout Formatting for double Values
 
 > See also: [1.4.3.4 Power - cout Formatting for double Values](#1434-power-exponentiation)
 
@@ -3607,7 +3607,7 @@ cout << typeid(result).name();  // Confirm: it's double!
 
 > **Key Takeaway:** The type **is** `double`, but `cout` displays it without `.0` by default. This is formatting, not a type error!
 
-#### 6.1.2.2.8 Truncating Floating-Point Output (No Rounding)
+#### 7.1.2.2.8 Truncating Floating-Point Output (No Rounding)
 
 **The Problem:**
 Both `setprecision` and `printf` **round** by default:
@@ -3775,7 +3775,7 @@ Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
 scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 ```
 
-#### 6.2.1.1 Header Style: C vs C++
+#### 7.2.1.1 Header Style: C vs C++
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
@@ -3786,7 +3786,7 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
-#### 6.2.1.2 Basic Usage
+#### 7.2.1.2 Basic Usage
 
 `scanf` requires the **address** of variables to store input values. The `&` operator returns the memory address of a variable.
 
@@ -3827,7 +3827,7 @@ The address operator `&` has the same precedence level as other unary operators.
 !~x      // First: ~x (bitwise NOT), then: ! (logical NOT)
 ```
 
-#### 6.2.1.3 Format Specifier Syntax
+#### 7.2.1.3 Format Specifier Syntax
 
 ```
 %[flags][width][length]specifier
@@ -3912,7 +3912,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 | `%[chars]` | `char[]` | Read only specified characters | `%[abc]` reads "abcb" from "abcba" |
 | `%[^chars]` | `char[]` | Read until specified character | `%[^,]` reads "hello" from "hello,world" |
 
-#### 6.2.1.3.1 Length Modifier and Type Matching Rules
+#### 7.2.1.3.1 Length Modifier and Type Matching Rules
 
 The relationship between Length Modifier, Conversion Specifier, and actual variable type must **match exactly** to avoid memory corruption.
 
@@ -3942,7 +3942,7 @@ scanf("%hd", &s);  // ✅ CORRECT: %hd matches short (2 bytes)
 
 > **Warning:** Mismatched specifiers cause undefined behavior. The data written may extend beyond the variable's memory boundary, corrupting adjacent data.
 
-#### 6.2.1.3.2 Special Behavior of `%c` for Character Input
+#### 7.2.1.3.2 Special Behavior of `%c` for Character Input
 
 The `%c` specifier has unique behavior regarding whitespace handling:
 
@@ -3970,7 +3970,7 @@ scanf(" %c", &c);  // If input is "  a", c will be 'a' (leading spaces skipped)
 > **Tip:** Use ` %c` (with leading space) when you want to ignore whitespace between inputs, and `%c` when you need to capture whitespace characters exactly.
 
 
-#### 6.2.1.3.3 Whitespace in Format Strings
+#### 7.2.1.3.3 Whitespace in Format Strings
 
 **Any whitespace character in the format string matches any amount of whitespace in the input.**
 
@@ -3994,13 +3994,13 @@ scanf("%d %d", &a, &b);      // Space matches any whitespace (space, tab, newlin
 
 > **Tip:** The space between `%d %d` is optional for most specifiers (they auto-skip whitespace), but including it improves readability.
 
-#### 6.2.1.4 Arrays and `scanf`
+#### 7.2.1.4 Arrays and `scanf`
 
 > **See also:** [5.8.7 Arrays and Input](#587-arrays-and-input) for array input fundamentals.
 
 When reading array data with `scanf`, understanding how arrays work with addresses is essential.
 
-##### 6.2.1.4.1 Core Principle
+##### 7.2.1.4.1 Core Principle
 
 In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
 
@@ -4010,7 +4010,7 @@ In C/C++, **the array name itself represents the address of the first element** 
 | Array (entire array) | Array name only | `scanf("%s", name);` |
 | Array element | `&array[index]` | `scanf("%d", &arr[0]);` |
 
-##### 6.2.1.4.2 Character Arrays (Strings)
+##### 7.2.1.4.2 Character Arrays (Strings)
 
 ```cpp
 char name[50];
@@ -4027,7 +4027,7 @@ scanf("%s", name);      // ✅ Correct: name is the address of first element
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
 
-##### 6.2.1.4.3 Numeric Arrays
+##### 7.2.1.4.3 Numeric Arrays
 
 For numeric arrays, you typically need to read elements one by one:
 
@@ -4040,7 +4040,7 @@ for (int i = 0; i < 5; i++) {
 }
 ```
 
-##### 6.2.1.4.4 Safety Considerations
+##### 7.2.1.4.4 Safety Considerations
 
 **Buffer Overflow Protection:**
 
@@ -4056,7 +4056,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 | `char[50]` | `%49s` | 49 chars + 1 null terminator |
 | `char[100]` | `%99s` | 99 chars + 1 null terminator |
 
-##### 6.2.1.4.5 Summary Table
+##### 7.2.1.4.5 Summary Table
 
 | Data Type | `scanf` Usage | `&` Required? | Example |
 |-----------|---------------|---------------|---------|
@@ -4069,7 +4069,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 
 > **Key Takeaway:** Array names are addresses. Use them directly with `scanf`, but always protect against buffer overflow by specifying width limits.
 
-#### 6.2.1.5 Format Examples
+#### 7.2.1.5 Format Examples
 
 | Variable Type | `scanf` Specifier | Example |
 |---------------|-------------------|---------|
@@ -4084,7 +4084,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 | `char` | `%c` | `scanf("%c", &c);` |
 | `char[]` | `%s` | `scanf("%s", str);` |
 
-#### 6.2.1.6 Key Differences and Common Pitfalls
+#### 7.2.1.6 Key Differences and Common Pitfalls
 
 **vs `cin`:**
 
@@ -4156,9 +4156,9 @@ scanf("x=%d, y=%d", &x, &y);  // Input must be: x=2, y=3
 
 4. **Type Mismatch = Undefined Behavior**: `scanf("%f", &int_var)` causes garbage values
 
-#### 6.2.1.7 Return Value of `scanf`
+#### 7.2.1.7 Return Value of `scanf`
 
-##### 6.2.1.7.1 Basic Definition
+##### 7.2.1.7.1 Basic Definition
 
 `scanf` returns an **`int`** value equal to **the number of successful conversions** (the number of input items successfully matched and assigned).
 
@@ -4166,7 +4166,7 @@ scanf("x=%d, y=%d", &x, &y);  // Input must be: x=2, y=3
 int scanf(const char *format, ...);
 ```
 
-##### 6.2.1.7.2 Return Value Meanings
+##### 7.2.1.7.2 Return Value Meanings
 
 | Return Value | Meaning |
 |-------------|---------|
@@ -4176,7 +4176,7 @@ int scanf(const char *format, ...);
 
 > **Note**: `EOF` is a macro, typically defined as `-1` in `<cstdio>`.
 
-##### 6.2.1.7.3 Practical Code Examples
+##### 7.2.1.7.3 Practical Code Examples
 
 **Example 1: Normal successful read**
 ```c
@@ -4211,7 +4211,7 @@ int result = scanf("%d", &num);
 // result = EOF (-1)
 ```
 
-##### 6.2.1.7.4 Practical Application Scenarios
+##### 7.2.1.7.4 Practical Application Scenarios
 
 **1. Loop reading until EOF**
 ```c
@@ -4239,7 +4239,7 @@ int count = scanf("%d %d %d", &a, &b, &c);
 // Determine how many numbers the user entered based on count value
 ```
 
-##### 6.2.1.7.5 Comparison with `printf` Return Value
+##### 7.2.1.7.5 Comparison with `printf` Return Value
 
 | Function | Return Value Meaning |
 |----------|---------------------|
@@ -4251,7 +4251,7 @@ int n1 = printf("Hello\n");    // n1 = 6 (5 characters + newline)
 int n2 = scanf("%d", &num);    // n2 = number of successfully read data items
 ```
 
-##### 6.2.1.7.6 Underlying Mechanism
+##### 7.2.1.7.6 Underlying Mechanism
 
 `scanf` maintains an internal **scanning pointer** that parses the input stream from left to right:
 
@@ -4271,7 +4271,7 @@ Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
 printf("control string", arg1, arg2, ...);
 ```
 
-#### 6.2.2.1 Header Style: C vs C++
+#### 7.2.2.1 Header Style: C vs C++
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
@@ -4282,7 +4282,7 @@ printf("control string", arg1, arg2, ...);
 
 **Performance**: Generally faster than `cout` for large data output, but less type-safe.
 
-#### 6.2.2.2 Basic Usage
+#### 7.2.2.2 Basic Usage
 
 **Control String Structure:**
 
@@ -4317,7 +4317,7 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 > **See also:** [2.2.2.3.1 Splitting printf Statements](#222231-splitting-printf-statements) for line continuation techniques.
 
-#### 6.2.2.3 Format Specifier Syntax
+#### 7.2.2.3 Format Specifier Syntax
 
 ```
 %[flags][width][.precision][length]specifier
@@ -4386,7 +4386,7 @@ Specifies the **minimum** number of characters to print.
 | `L`      | `%f`, `%e`, `%g`, `%a`       | `long double`                      | `%Lf`, `%Le`, `%Lg` (lowercase/uppercase: `%LF`, `%LE`, `%LG`) |
 | `l`      | `%c`, `%s`                   | Wide char/string                   | `%lc`, `%ls`                                                   |
 
-#### 6.2.2.3.5 Length Modifier and Type Matching Rules
+#### 7.2.2.3.5 Length Modifier and Type Matching Rules
 
 The relationship between Length Modifier, Conversion Specifier, and actual variable type must **match exactly** to avoid undefined behavior.
 
@@ -4417,7 +4417,7 @@ printf("%lld\n", ll); // ✅ CORRECT: %lld matches long long (8 bytes)
 
 > **Warning:** Mismatched specifiers cause undefined behavior. The data read may be incorrect, or the program may read wrong number of bytes from the argument stack, potentially causing crashes or data corruption.
 
-##### 6. Conversion Specifiers (Required)
+##### 7. Conversion Specifiers (Required)
 
 | Specifier                  | Type           | Output                                         | Example                        |
 | -------------------------- | -------------- | ---------------------------------------------- | ------------------------------ |
@@ -4446,7 +4446,7 @@ printf("%lld\n", ll); // ✅ CORRECT: %lld matches long long (8 bytes)
 - `long` → use `%li` or `%ld`
 - `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
-#### 6.2.2.4 Format Examples
+#### 7.2.2.4 Format Examples
 
 **Integer Examples (value = -145):**
 
@@ -4470,7 +4470,7 @@ printf("%lld\n", ll); // ✅ CORRECT: %lld matches long long (8 bytes)
 | `%.3E` | `1.579E+02` | Exponential, uppercase E, 3 decimal places, rounded |
 | `%g` | `157.893` | Auto-select shorter format, rounded |
 
-#### 6.2.2.5 Escape Sequences
+#### 7.2.2.5 Escape Sequences
 
 The backslash (`\`) is an **escape character** that gives special meaning to the following character.
 
@@ -4494,7 +4494,7 @@ printf("\"The End.\"\n");     // Output: "The End." (with newline)
 printf("Path: C:\\Users\\John\n");  // Output: Path: C:\Users\John
 ```
 
-#### 6.2.2.6 Splitting Long printf Statements
+#### 7.2.2.6 Splitting Long printf Statements
 
 When printf statements become too long for a single line, use these techniques to split them while maintaining readability.
 
@@ -4538,7 +4538,7 @@ cout << "This is a very long message that "
 
 > **See also:** [2.3.2.3.1 Splitting printf Statements](#22231-splitting-printf-statements) for line continuation techniques.
 
-#### 6.2.2.7 Key Differences from `cout`
+#### 7.2.2.7 Key Differences from `cout`
 
 | Feature | `printf` | `cout` |
 |---------|----------|--------|
@@ -4548,9 +4548,9 @@ cout << "This is a very long message that "
 
 > **Note:** Use `printf` for formatted output in performance-critical code, but prefer `cout` for type safety in modern C++.
 
-#### 6.2.2.8 Return Value of `printf`
+#### 7.2.2.8 Return Value of `printf`
 
-##### 6.2.2.8.1 Basic Definition
+##### 7.2.2.8.1 Basic Definition
 
 `printf` returns an **`int`** value equal to **the number of characters successfully written** to the output stream.
 
@@ -4558,7 +4558,7 @@ cout << "This is a very long message that "
 int printf(const char *format, ...);
 ```
 
-##### 6.2.2.8.2 Return Value Meanings
+##### 7.2.2.8.2 Return Value Meanings
 
 | Return Value | Meaning |
 |-------------|---------|
@@ -4568,7 +4568,7 @@ int printf(const char *format, ...);
 
 > **Note**: A negative return value indicates an output error (e.g., stream closed, disk full, I/O error).
 
-##### 6.2.2.8.3 Practical Code Examples
+##### 7.2.2.8.3 Practical Code Examples
 
 **Example 1: Normal successful output**
 ```c
@@ -4593,7 +4593,7 @@ int result = printf("%10d\n", 5);
 // result = 11 (10 characters + 1 newline)
 ```
 
-##### 6.2.2.8.4 Common Use Cases
+##### 7.2.2.8.4 Common Use Cases
 
 | Use Case | Example | Purpose |
 |----------|---------|---------|
@@ -4668,7 +4668,7 @@ outFile.close();
 
 ### 8.1.1 Relational Operators
 
-#### 7.1.1.1 Less Than (`<`)
+#### 8.1.1.1 Less Than (`<`)
 
 Returns `true` if the left operand is less than the right operand.
 
@@ -4678,7 +4678,7 @@ bool result = a < b;     // true (5 is less than 10)
 bool result2 = b < a;    // false (10 is not less than 5)
 ```
 
-#### 7.1.1.2 Less Than or Equal To (`<=`)
+#### 8.1.1.2 Less Than or Equal To (`<=`)
 
 Returns `true` if the left operand is less than or equal to the right operand.
 
@@ -4688,7 +4688,7 @@ bool result1 = x <= y;   // true (5 equals 5)
 bool result2 = z <= x;   // true (3 is less than 5)
 ```
 
-#### 7.1.1.3 Greater Than (`>`)
+#### 8.1.1.3 Greater Than (`>`)
 
 Returns `true` if the left operand is greater than the right operand.
 
@@ -4697,7 +4697,7 @@ int a = 10, b = 5;
 bool result = a > b;     // true (10 is greater than 5)
 ```
 
-#### 7.1.1.4 Greater Than or Equal To (`>=`)
+#### 8.1.1.4 Greater Than or Equal To (`>=`)
 
 Returns `true` if the left operand is greater than or equal to the right operand.
 
@@ -4706,7 +4706,7 @@ int x = 5, y = 5;
 bool result = x >= y;    // true (5 equals 5)
 ```
 
-#### 7.1.1.5 Equal To (`==`)
+#### 8.1.1.5 Equal To (`==`)
 
 Returns `true` if both operands are equal.
 
@@ -4729,7 +4729,7 @@ const double EPSILON = 1e-9;
 if (fabs(x - 0.1) < EPSILON) { }
 ```
 
-#### 7.1.1.6 Not Equal To (`!=`)
+#### 8.1.1.6 Not Equal To (`!=`)
 
 Returns `true` if the operands are not equal.
 
@@ -4738,7 +4738,7 @@ int a = 5, b = 3;
 bool result = a != b;    // true (5 is not equal to 3)
 ```
 
-#### 7.1.1.7 Summary of Relational Operators
+#### 8.1.1.7 Summary of Relational Operators
 
 | Operator | Meaning | Example | Result |
 |----------|---------|---------|--------|
@@ -4753,7 +4753,7 @@ bool result = a != b;    // true (5 is not equal to 3)
 
 Logical operators combine boolean expressions.
 
-#### 7.1.2.1 Logical NOT (`!`)
+#### 8.1.2.1 Logical NOT (`!`)
 
 Negates a boolean expression. Returns `true` if the operand is `false`, and vice versa.
 
@@ -4765,7 +4765,7 @@ int x = 0;
 if (!x) { }             // true because x is 0 (falsy)
 ```
 
-#### 7.1.2.2 Logical AND (`&&`)
+#### 8.1.2.2 Logical AND (`&&`)
 
 Returns `true` only if **both** operands are `true`.
 
@@ -4788,7 +4788,7 @@ if (age >= 18 && hasID) {
 | false | true | false |
 | false | false | false |
 
-#### 7.1.2.3 Logical OR (`||`)
+#### 8.1.2.3 Logical OR (`||`)
 
 Returns `true` if **at least one** operand is `true`.
 
@@ -4811,7 +4811,7 @@ if (isWeekend || isHoliday) {
 | false | true  | true                                     |
 | false | false | false                                    |
 
-#### 7.1.2.4 Summary of Logical Operators
+#### 8.1.2.4 Summary of Logical Operators
 
 | Operator                             | Name        | Description                          | Example                                                  |
 | ------------------------------------ | ----------- | ------------------------------------ | -------------------------------------------------------- |
@@ -4887,7 +4887,7 @@ if (x > 0) {              // executed when condition is true
 - A compound statement can contain any number of statements (0, 1, or many)
 - Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
 
-#### 7.2.1.1 Empty Statement
+#### 8.2.1.1 Empty Statement
 
 An **empty statement** consists of just a semicolon `;` with no expression:
 
@@ -5052,7 +5052,7 @@ switch (a) {
 
 ### 8.3.2 Syntax Rules
 
-#### 7.3.2.1 Controlling Expression
+#### 8.3.2.1 Controlling Expression
 
 The `switch` statement selects statements to execute based on a **controlling expression**, which must be an expression of **integral type** (`int`, `char`, `enum`, etc.).
 
@@ -5085,7 +5085,7 @@ switch (c) {
 
 > **Note:** When using `enum class` (C++11), you must use the scope operator (`Color::Red`) in case labels.
 
-#### 7.3.2.2 Case Labels Must Be Compile-Time Constants
+#### 8.3.2.2 Case Labels Must Be Compile-Time Constants
 
 `case` labels must be **compile-time constants** (not variables or expressions evaluated at runtime).
 
@@ -5113,7 +5113,7 @@ switch (n) {
 
 > **Why:** The compiler generates a **jump table** for switch statements, which requires all case values to be known at compile time.
 
-#### 7.3.2.3 Case Labels Must Be Unique
+#### 8.3.2.3 Case Labels Must Be Unique
 
 `case` labels must be unique constants. **An error occurs if two or more case labels have the same value.**
 
@@ -5139,7 +5139,7 @@ switch (n) {
 
 > **Key point:** The compiler checks the **final numeric value**, not how the case is written. If two case labels evaluate to the same constant value, it's an error.
 
-#### 7.3.2.4 The break Statement
+#### 8.3.2.4 The break Statement
 
 `break` is required to exit the switch block. Without `break`, execution **falls through** to the next case.
 
@@ -5157,7 +5157,7 @@ switch (choice) {
 }
 ```
 
-#### 7.3.2.5 The default Label
+#### 8.3.2.5 The default Label
 
 The **default** label provides statements to execute when no case matches. It is **optional** but recommended for handling unexpected values.
 
@@ -5324,7 +5324,7 @@ do {
 
 Compact loop with initialization, condition, and update in one line.
 
-#### 7.5.3.1 Basic Syntax and Execution Order
+#### 8.5.3.1 Basic Syntax and Execution Order
 
 ```cpp
 for (initialization; condition; update) {
@@ -5349,7 +5349,7 @@ for (int i = 0; i < 5; i++) {
 // Output: 0 1 2 3 4
 ```
 
-#### 7.5.3.2 Initialization Options
+#### 8.5.3.2 Initialization Options
 
 **The initialization part is optional.** Three approaches:
 
@@ -5389,7 +5389,7 @@ for (int i = 0, j = 10; i < j; i++, j--) {
 
 > **Best Practice:** Always define the variable inside the for loop when possible. This limits variable scope, reduces naming conflicts, and prevents accidental modifications.
 
-#### 7.5.3.3 Special Loop Patterns
+#### 8.5.3.3 Special Loop Patterns
 
 **Omitting Parts:**
 
@@ -5410,7 +5410,7 @@ for (;;) {             // all parts omitted, equivalent to while(true)
 }
 ```
 
-#### 7.5.3.4 Range-based for Loop (C++11)
+#### 8.5.3.4 Range-based for Loop (C++11)
 
 For iterating over containers without explicit index.
 
@@ -5671,7 +5671,7 @@ deg = rad * 180 / PI;
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
-#### 8.1.2.1 abs
+#### 9.1.2.1 abs
 
 **Integer Absolute Value:**
 
@@ -5696,9 +5696,9 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 > **Tip:** Use `abs` for integers and `fabs` for doubles. Mixing them may cause unexpected type conversion or precision loss.
 
-#### 8.1.2.2 Random Numbers
+#### 9.1.2.2 Random Numbers
 
-##### 8.1.2.2.1 Basic Usage
+##### 9.1.2.2.1 Basic Usage
 
 > **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
 
@@ -5714,7 +5714,7 @@ printf("random numbers: %i %i\n", rand(), rand());
 // Output: 41 18467
 ```
 
-##### 8.1.2.2.2 The Problem: Pseudo-Random Sequence
+##### 9.1.2.2.2 The Problem: Pseudo-Random Sequence
 
 The sequence generated by `rand()` is **deterministic**. It starts from a default **seed** value of `1` and produces the same sequence every time the program runs.
 
@@ -5725,7 +5725,7 @@ The sequence generated by `rand()` is **deterministic**. It starts from a defaul
 
 This is called a **pseudo-random** sequence because it appears random but is mathematically reproducible.
 
-##### 8.1.2.2.3 Solution: Seeding with srand()
+##### 9.1.2.2.3 Solution: Seeding with srand()
 
 To get different sequences on each run, you must **seed** the random number generator with a different starting value.
 
@@ -5756,7 +5756,7 @@ int main() {
 }
 ```
 
-##### 8.1.2.2.4 Important Notes on Seeding
+##### 9.1.2.2.4 Important Notes on Seeding
 
 **1. srand() Only Affects Subsequent Calls**
 ```cpp
@@ -5787,7 +5787,7 @@ srand(42);  // Fixed seed makes debugging easier
 // Change to time(NULL) when releasing
 ```
 
-##### 8.1.2.2.5 Generating Numbers in Specific Ranges
+##### 9.1.2.2.5 Generating Numbers in Specific Ranges
 
 **Integer Range [0, n-1]:**
 ```cpp
@@ -5819,7 +5819,7 @@ double rand_float(double a, double b) {
 
 The `<random>` library provides a modern, type-safe way to generate random numbers. Unlike `rand()`, it separates the **random number engine** (source of randomness) from the **distribution** (how values are mapped to a range).
 
-#### 8.1.3.1 Basic Concepts
+#### 9.1.3.1 Basic Concepts
 
 **1. Engine — generates raw random bits**
 
@@ -5840,7 +5840,7 @@ std::mt19937 gen(rd());       // Seed the engine
 
 Distribution objects are independent of the engine. You pass the engine to the distribution's `operator()` each time you want a number.
 
-#### 8.1.3.2 Common Distributions
+#### 9.1.3.2 Common Distributions
 
 | Distribution | Use Case | Example |
 |--------------|----------|---------|
@@ -5866,7 +5866,7 @@ std::normal_distribution<> dis(0.0, 1.0);  // mean = 0, stddev = 1
 double r = dis(gen);
 ```
 
-#### 8.1.3.3 Complete Examples
+#### 9.1.3.3 Complete Examples
 
 **Example 1: Rolling a die 10 times**
 ```cpp
@@ -5895,7 +5895,7 @@ auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
 std::mt19937 gen(static_cast<unsigned>(seed));
 ```
 
-#### 8.1.3.4 `rand()` vs `<random>`
+#### 9.1.3.4 `rand()` vs `<random>`
 
 | Feature | `rand()` / `srand()` | `<random>` (Modern) |
 |---------|----------------------|---------------------|
@@ -5907,7 +5907,7 @@ std::mt19937 gen(static_cast<unsigned>(seed));
 
 > **Recommendation:** Always use `<random>` for new C++ code. Only use `rand()` when required by legacy APIs or specific course constraints.
 
-#### 8.1.3.5 Common Pitfall
+#### 9.1.3.5 Common Pitfall
 
 **Do not recreate the engine inside a loop:**
 ```cpp
@@ -6142,7 +6142,7 @@ return_type function_name(parameter_declarations)
 
 ### 9.2.2 Function Prototype
 
-#### 8.2.2.1 The Problem: Declaration Order
+#### 9.2.2.1 The Problem: Declaration Order
 
 **Without prototypes**, functions must be defined *before* they are called:
 
@@ -6173,7 +6173,7 @@ int main() {
 void bar() { ... }  // Definition can be after main
 ```
 
-#### 8.2.2.2 Syntax
+#### 9.2.2.2 Syntax
 
 **Basic Form:**
 ```cpp
@@ -6192,7 +6192,7 @@ void printTable(double, double, int);
 double sinc(double);
 ```
 
-#### 8.2.2.3 Where to Place Prototypes
+#### 9.2.2.3 Where to Place Prototypes
 
 | Location | Usage |
 |----------|-------|
@@ -6201,7 +6201,7 @@ double sinc(double);
 
 **Standard library headers** (e.g., `<cmath>`, `<cstdio>`) contain prototypes for library functions. Without `#include`, you'd need to write them manually.
 
-#### 8.2.2.4 Best Practice
+#### 9.2.2.4 Best Practice
 
 | Scenario | Recommendation |
 |----------|----------------|
@@ -6233,7 +6233,7 @@ int functionB(const string& str) { /* ... */ }
 
 ### 9.2.3 Parameter Passing
 
-#### 8.2.3.1 Pass by Value
+#### 9.2.3.1 Pass by Value
 
 By default, C++ passes arguments **by value**. This means the formal parameters receive a *copy* of the actual parameters. Any changes made to the formal parameters inside the function do **not** affect the original variables in the caller.
 
@@ -6252,9 +6252,9 @@ int main() {
 }
 ```
 
-#### 8.2.3.2 Pass by Pointer (Address)
+#### 9.2.3.2 Pass by Pointer (Address)
 
-##### 8.2.3.2.1 The Problem: Why Pointers Are Needed
+##### 9.2.3.2.1 The Problem: Why Pointers Are Needed
 
 Functions face two fundamental limitations that pointers solve:
 
@@ -6263,18 +6263,18 @@ Functions face two fundamental limitations that pointers solve:
 
 By passing **memory addresses** instead of values, the function gains direct access to the caller's original variables.
 
-##### 8.2.3.2.2 The Core Concept: Passing Addresses
+##### 9.2.3.2.2 The Core Concept: Passing Addresses
 
 Instead of passing a copy of the variable's value, we pass the **address** where the variable is stored. The function receives this address, navigates to that memory location, and modifies the value directly.
 
-##### 8.2.3.2.3 The Two Essential Operators
+##### 9.2.3.2.3 The Two Essential Operators
 
 | Operator | Name | Purpose | Example |
 |----------|------|---------|---------|
 | `&` | Address-of | Get the memory address of a variable | `&x` returns address of x (e.g., `0x7fff5e...`) |
 | `*` | Dereference/Indirection | Access or modify the value at an address | `*ptr` reads/writes the value at ptr's address |
 
-##### 8.2.3.2.4 How It Works: Step-by-Step Example
+##### 9.2.3.2.4 How It Works: Step-by-Step Example
 
 ```cpp
 void swap(int *a, int *b) {  // Pointers to int
@@ -6296,7 +6296,7 @@ int main() {
 3. `*a` and `*b` **dereference** to access the actual memory locations
 4. Assignments like `*a = *b` modify values at the original addresses
 
-##### 8.2.3.2.5 Critical Clarification: The Dual Meanings of `*`
+##### 9.2.3.2.5 Critical Clarification: The Dual Meanings of `*`
 
 The `*` symbol has **two distinct meanings** depending on context:
 
@@ -6309,14 +6309,14 @@ The `*` symbol has **two distinct meanings** depending on context:
 - `&` always means "address-of" (get the address of a variable)
 - `*` is only the "inverse" of `&` when used as an operator in expressions (e.g., `*(&x)` equals `x`)
 
-##### 8.2.3.2.6 Comparison: Pass by Value vs. Pass by Pointer
+##### 9.2.3.2.6 Comparison: Pass by Value vs. Pass by Pointer
 
 | Approach | Function Signature | Function Call | Can Modify Original? |
 |----------|-------------------|---------------|---------------------|
 | Pass by Value | `void swap(int a, int b)` | `swap(x, y)` | No (works on copies) |
 | Pass by Pointer | `void swap(int *a, int *b)` | `swap(&x, &y)` | Yes (modifies at address) |
 
-##### 8.2.3.2.7 Important Rules and Best Practices
+##### 9.2.3.2.7 Important Rules and Best Practices
 
 **Pointer Types Must Match the Data**
 
@@ -6365,14 +6365,14 @@ int* q;
 ```
 
 > **Note:** The `*` only binds to the variable immediately following it, not to the entire type declaration.
-#### 8.2.3.3 Parameter Matching Rules
+#### 9.2.3.3 Parameter Matching Rules
 
 When a function has multiple parameters (e.g., `printTable`), the formal parameters and actual parameters must match in:
 - **Number**: The count of arguments must be equal
 - **Type**: Corresponding parameters must have compatible types
 - **Order**: Arguments are matched positionally from left to right
 
-#### 8.2.3.4 Implicit Type Conversion (Coercion)
+#### 9.2.3.4 Implicit Type Conversion (Coercion)
 
 If the actual parameter type differs from the formal parameter type, C++ attempts an automatic type conversion (coercion).
 
@@ -6445,7 +6445,7 @@ void printMessage() {
 
 Storage class determines the **lifetime** (how long the variable exists) and **scope** (where the variable can be accessed) of a variable.
 
-#### 8.2.5.1 Overview
+#### 9.2.5.1 Overview
 
 C++ provides four storage classes that control variable lifetime and visibility:
 
@@ -6456,7 +6456,7 @@ C++ provides four storage classes that control variable lifetime and visibility:
 | **External**  | `extern`         | Global (program-wide)    | Program duration | Cross-file sharing             |
 | **Thread**    | `thread_local`   | Thread-local             | Thread duration  | Thread-specific data           |
 
-#### 8.2.5.2 Automatic Storage (`auto`)
+#### 9.2.5.2 Automatic Storage (`auto`)
 
 **Characteristics:**
 - Default storage class for **local variables** (inside functions or blocks)
@@ -6473,7 +6473,7 @@ void func() {
 
 > **Note:** Since **C++11**, `auto` is primarily used for **automatic type deduction** (`auto x = 10;`). The old storage class usage (`auto int x = 10;`) is valid but **obsolete**.
 
-#### 8.2.5.3 The `static` Storage Class
+#### 9.2.5.3 The `static` Storage Class
 
 The `static` keyword changes **linkage** (visibility across files) or **lifetime** (how long the variable exists), depending on context:
 
@@ -6482,7 +6482,7 @@ The `static` keyword changes **linkage** (visibility across files) or **lifetime
 | **Local variable** | Extends lifetime to program duration (value persists between calls) |
 | **Global variable** | Restricts linkage to current file only (internal linkage) |
 
-##### 8.2.5.3.1 Static Local Variables
+##### 9.2.5.3.1 Static Local Variables
 
 Retain value between function calls, initialized only once.
 
@@ -6530,7 +6530,7 @@ int main() {
 
 **Use cases:** Function call counting, state persistence, memoization.
 
-##### 8.2.5.3.2 Static Global Variables
+##### 9.2.5.3.2 Static Global Variables
 
 Restrict a global variable to the **current file only** (internal linkage).
 
@@ -6560,7 +6560,7 @@ extern int internalCounter;  // ERROR: cannot access static global
 
 **Use cases:** Encapsulation, hiding implementation details, preventing name collisions in large projects.
 
-##### 8.2.5.3.3 Summary: Two Meanings of `static`
+##### 9.2.5.3.3 Summary: Two Meanings of `static`
 
 The `static` keyword has **opposite effects** depending on where it is used:
 
@@ -6573,7 +6573,7 @@ The `static` keyword has **opposite effects** depending on where it is used:
 - On locals: "static = **stay**" (value stays alive)
 - On globals: "static = **stay here**" (stay in this file)
 
-#### 8.2.5.4 External Storage (`extern`)
+#### 9.2.5.4 External Storage (`extern`)
 
 `extern` enables **cross-file sharing** of global variables.
 
@@ -6684,7 +6684,7 @@ void process();  // Dependencies are hidden - must read function body to find th
 
 Parameters make data flow explicit and self-documenting. Global variables make code harder to understand, test, and maintain.
 
-#### 8.2.5.5 Thread Storage (`thread_local`)
+#### 9.2.5.5 Thread Storage (`thread_local`)
 
 **C++11 feature:** Each thread gets its own independent copy.
 
@@ -6702,7 +6702,7 @@ void threadFunc() {
 
 **Use cases:** Thread-specific caches, per-thread random number generators.
 
-#### 8.2.5.6 Mutable Storage (`mutable`)
+#### 9.2.5.6 Mutable Storage (`mutable`)
 
 Allows modification in `const` member functions (for logical constness):
 
@@ -6718,7 +6718,7 @@ public:
 };
 ```
 
-#### 8.2.5.7 Obsolete: `register`
+#### 9.2.5.7 Obsolete: `register`
 
 **Deprecated in C++11, removed in C++17.**
 
@@ -6731,7 +6731,7 @@ void process() {
 
 Modern compilers optimize automatically. Do not use.
 
-#### 8.2.5.8 Scope Rules Summary
+#### 9.2.5.8 Scope Rules Summary
 
 | Variable Type | Where Defined | Where Accessible | Lifetime |
 |---------------|---------------|------------------|----------|
