@@ -86,9 +86,11 @@ The preprocessor is covered in detail in [Chapter 2](#2-the-preprocessor).
 
 ### 1.1.4 Common Header Files Reference
 
-This section provides a comprehensive reference for C and C++ standard library headers. The C++ standard library includes a C compatibility layer (<cxxx> headers) and C++-specific headers.
+This section provides a comprehensive reference for C and C++ standard library headers. The C++ standard library includes a C compatibility layer (`<cxxx>` headers) and C++-specific headers.
 
-> **General Rule:** Prefer C++ headers for new code. Use <cxxx> headers only when interfacing with C code.
+> **General Rule:** Prefer C++ headers for new code. Use `<cxxx>` headers only when interfacing with C code.
+
+---
 
 #### 1.1.4.1 Headers by Category
 
@@ -96,150 +98,150 @@ Headers are organized by functionality. Within each category, C++ headers are li
 
 ##### **Input/Output**
 
-| Header     | Language | Content                                         |
-| ---------- | -------- | ----------------------------------------------- |
-| `<iostream>` | C++      | Standard I/O streams (cin, cout, cerr, clog)    |
-| <fstream>  | C++      | File stream I/O (ifstream, ofstream)            |
-| <sstream>  | C++      | String-based I/O (istringstream, ostringstream) |
-| <iomanip>  | C++      | Output formatting (setw, setprecision, ixed)   |
-| <ios>      | C++      | Base I/O classes and stream flags               |
-| <cstdio>   | C        | C-style I/O (printf, scanf, FILE)               |
+| Header | Language | Content |
+|--------|----------|---------|
+| `<iostream>` | C++ | Standard I/O streams (`cin`, `cout`, `cerr`, `clog`) |
+| `<fstream>` | C++ | File stream I/O (`ifstream`, `ofstream`) |
+| `<sstream>` | C++ | String-based I/O (`istringstream`, `ostringstream`) |
+| `<iomanip>` | C++ | Output formatting (`setw`, `setprecision`, `fixed`) |
+| `<ios>` | C++ | Base I/O classes and stream flags |
+| `<cstdio>` | C | C-style I/O (`printf`, `scanf`, `FILE`) |
 
 ##### **Containers (Sequence)**
 
-| Header         | Language | Content                               |
-| -------------- | -------- | ------------------------------------- |
-| <vector>       | C++      | Dynamic array - **default choice**    |
-| <array>        | C++      | Fixed-size array (stack allocation)   |
-| <deque>        | C++      | Double-ended queue                    |
-| <list>         | C++      | Doubly-linked list                    |
-| <forward_list> | C++      | Singly-linked list (memory-efficient) |
+| Header | Language | Content |
+|--------|----------|---------|
+| `<vector>` | C++ | Dynamic array - **default choice** |
+| `<array>` | C++ | Fixed-size array (stack allocation) |
+| `<deque>` | C++ | Double-ended queue |
+| `<list>` | C++ | Doubly-linked list |
+| `<forward_list>` | C++ | Singly-linked list (memory-efficient) |
 
 ##### **Containers (Associative)**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <set> | C++ | Ordered unique elements (tree-based) |
-| <map> | C++ | Ordered key-value pairs (tree-based) |
-| <unordered_set> | C++ | Hash-based unique elements (O(1)) |
-| <unordered_map> | C++ | Hash-based key-value pairs (O(1)) |
+| `<set>` | C++ | Ordered unique elements (tree-based) |
+| `<map>` | C++ | Ordered key-value pairs (tree-based) |
+| `<unordered_set>` | C++ | Hash-based unique elements (O(1)) |
+| `<unordered_map>` | C++ | Hash-based key-value pairs (O(1)) |
 
 ##### **Container Adapters**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <stack> | C++ | LIFO (Last-In-First-Out) |
-| <queue> | C++ | FIFO (First-In-First-Out) |
-| <priority_queue> | C++ | Max-heap (largest element first) |
+| `<stack>` | C++ | LIFO (Last-In-First-Out) |
+| `<queue>` | C++ | FIFO (First-In-First-Out) |
+| `<priority_queue>` | C++ | Max-heap (largest element first) |
 
 ##### **Strings**
 
-| Header        | Language | Content                                     |
-| ------------- | -------- | ------------------------------------------- |
-| <string>      | C++      | Dynamic string class                        |
-| <string_view> | C++      | (C++17) Non-owning string view              |
-| <cstring>     | C        | C-string manipulation (strcpy, strlen)      |
-| <cctype>      | C        | Character classification (isdigit, 	oupper) |
+| Header | Language | Content |
+|--------|----------|---------|
+| `<string>` | C++ | Dynamic string class |
+| `<string_view>` | C++ | (C++17) Non-owning string view |
+| `<cstring>` | C | C-string manipulation (`strcpy`, `strlen`) |
+| `<cctype>` | C | Character classification (`isdigit`, `toupper`) |
 
 ##### **Algorithms and Ranges**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <algorithm> | C++ | Sorting, searching, transforming |
-| <numeric> | C++ | Numeric operations (ccumulate, inner_product) |
-| <iterator> | C++ | Iterator utilities |
-| <ranges> | C++ | (C++20) Range-based algorithms |
+| `<algorithm>` | C++ | Sorting, searching, transforming |
+| `<numeric>` | C++ | Numeric operations (`accumulate`, `inner_product`) |
+| `<iterator>` | C++ | Iterator utilities |
+| `<ranges>` | C++ | (C++20) Range-based algorithms |
 
 ##### **Memory Management**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <memory> | C++ | Smart pointers (unique_ptr, shared_ptr, weak_ptr) |
-| <scoped_allocator> | C++ | Nested container allocators |
+| `<memory>` | C++ | Smart pointers (`unique_ptr`, `shared_ptr`, `weak_ptr`) |
+| `<scoped_allocator>` | C++ | Nested container allocators |
 
 ##### **Function Objects and Utilities**
 
-| Header             | Language | Content                          |
-| ------------------ | -------- | -------------------------------- |
-| <functional>       | C++      | Function objects, ind, lambdas  |
-| <utility>          | C++      | pair, 	uple, move, swap, orward |
-| <initializer_list> | C++      | Brace initialization support     |
-| <optional>         | C++      | (C++17) Nullable values          |
-| <variant>          | C++      | (C++17) Type-safe union          |
-| <any>              | C++      | (C++17) Type-erased container    |
-| <cstdlib>          | C        | General utilities (              |
-and, exit, malloc) |
+| Header | Language | Content |
+|--------|----------|---------|
+| `<functional>` | C++ | Function objects, `bind`, lambdas |
+| `<utility>` | C++ | `pair`, `tuple`, `move`, `swap`, `forward` |
+| `<initializer_list>` | C++ | Brace initialization support |
+| `<optional>` | C++ | (C++17) Nullable values |
+| `<variant>` | C++ | (C++17) Type-safe union |
+| `<any>` | C++ | (C++17) Type-erased container |
+| `<cstdlib>` | C | General utilities (`rand`, `exit`, `malloc`) |
 
 ##### **Multithreading and Concurrency**
 
-| Header               | Language | Content                                  |
-| -------------------- | -------- | ---------------------------------------- |
-| <thread>             | C++      | Thread creation and management           |
-| <mutex>              | C++      | Mutual exclusion primitives              |
-| <shared_mutex>       | C++      | (C++17) Reader-writer locks              |
-| <condition_variable> | C++      | Thread synchronization                   |
-| <future>             | C++      | Asynchronous operations (sync, promise) |
-| <atomic>             | C++      | Lock-free atomic operations              |
+| Header | Language | Content |
+|--------|----------|---------|
+| `<thread>` | C++ | Thread creation and management |
+| `<mutex>` | C++ | Mutual exclusion primitives |
+| `<shared_mutex>` | C++ | (C++17) Reader-writer locks |
+| `<condition_variable>` | C++ | Thread synchronization |
+| `<future>` | C++ | Asynchronous operations (`async`, `promise`) |
+| `<atomic>` | C++ | Lock-free atomic operations |
 
 ##### **Time and Random Numbers**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <chrono> | C++ | Time measurements and durations |
-| <random> | C++ | High-quality random number generators |
-| <ctime> | C | C-style time functions |
+| `<chrono>` | C++ | Time measurements and durations |
+| `<random>` | C++ | High-quality random number generators |
+| `<ctime>` | C | C-style time functions |
 
 ##### **Type Support and Metaprogramming**
 
-| Header        | Language | Content                         |
-| ------------- | -------- | ------------------------------- |
-| <type_traits> | C++      | Compile-time type introspection |
-| <typeinfo>    | C++      | Runtime type information (RTTI) |
-| <typeindex>   | C++      | Hash support for 	ype_info      |
-| <cstddef>     | C        | Common definitions (size_t,     |
-ullptr_t) |
+| Header | Language | Content |
+|--------|----------|---------|
+| `<type_traits>` | C++ | Compile-time type introspection |
+| `<typeinfo>` | C++ | Runtime type information (RTTI) |
+| `<typeindex>` | C++ | Hash support for `type_info` |
+| `<cstddef>` | C | Common definitions (`size_t`, `nullptr_t`) |
 
 ##### **Exceptions and Error Handling**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <exception> | C++ | Base exception classes |
-| <stdexcept> | C++ | Standard exception types |
-| <system_error> | C++ | System error codes and categories |
-| <cerrno> | C | Error numbers (errno) |
-| <cassert> | C | Runtime assertions |
+| `<exception>` | C++ | Base exception classes |
+| `<stdexcept>` | C++ | Standard exception types |
+| `<system_error>` | C++ | System error codes and categories |
+| `<cerrno>` | C | Error numbers (`errno`) |
+| `<cassert>` | C | Runtime assertions |
 
 ##### **Mathematics**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <cmath> | C | Mathematical functions (sin, cos, sqrt, pow) |
-| <climits> | C | Integer type limits (INT_MAX, LONG_MIN) |
-| <cfloat> | C | Floating-point limits (FLT_MAX, DBL_EPSILON) |
+| `<cmath>` | C | Mathematical functions (`sin`, `cos`, `sqrt`, `pow`) |
+| `<climits>` | C | Integer type limits (`INT_MAX`, `LONG_MIN`) |
+| `<cfloat>` | C | Floating-point limits (`FLT_MAX`, `DBL_EPSILON`) |
 
 ##### **File System and Regex**
 
 | Header | Language | Content |
 |--------|----------|---------|
-| <filesystem> | C++ | (C++17) File and directory operations |
-| <regex> | C++ | Regular expression matching |
+| `<filesystem>` | C++ | (C++17) File and directory operations |
+| `<regex>` | C++ | Regular expression matching |
 
 ##### **C++17/20 Modern Features**
 
 | Header | Standard | Content |
 |--------|----------|---------|
-| <string_view> | C++17 | Non-owning string reference |
-| <optional> | C++17 | Nullable value wrapper |
-| <variant> | C++17 | Type-safe union |
-| <any> | C++17 | Type-erased value container |
-| <filesystem> | C++17 | File system operations |
-| <shared_mutex> | C++17 | Reader-writer locks |
-| <charconv> | C++17 | Fast numeric conversion |
-| <span> | C++20 | Non-owning array view |
-| <format> | C++20 | String formatting |
-| <ranges> | C++20 | Range-based algorithms |
-| <concepts> | C++20 | Template constraints |
-| <coroutine> | C++20 | Coroutine support |
+| `<string_view>` | C++17 | Non-owning string reference |
+| `<optional>` | C++17 | Nullable value wrapper |
+| `<variant>` | C++17 | Type-safe union |
+| `<any>` | C++17 | Type-erased value container |
+| `<filesystem>` | C++17 | File system operations |
+| `<shared_mutex>` | C++17 | Reader-writer locks |
+| `<charconv>` | C++17 | Fast numeric conversion |
+| `<span>` | C++20 | Non-owning array view |
+| `<format>` | C++20 | String formatting |
+| `<ranges>` | C++20 | Range-based algorithms |
+| `<concepts>` | C++20 | Template constraints |
+| `<coroutine>` | C++20 | Coroutine support |
+
+---
 
 #### 1.1.4.2 Quick Selection Guide
 
@@ -247,19 +249,19 @@ ullptr_t) |
 
 | Task | Recommended Headers |
 |------|---------------------|
-| **Console I/O** | `<iostream>` + <iomanip> (C++) or <cstdio> (C) |
-| **File I/O** | <fstream> (C++) or <cstdio> (C) |
-| **String storage** | <string> (C++) or <cstring> (C) |
-| **Dynamic array** | <vector> (C++) |
-| **Key-value storage** | <unordered_map> (fast) or <map> (ordered) |
-| **Sorting/Searching** | <algorithm> |
-| **Memory management** | <memory> (smart pointers) |
-| **Multithreading** | <thread>, <mutex>, <future> |
-| **Time operations** | <chrono> |
-| **Random numbers** | <random> (C++) or <cstdlib> (C, deprecated) |
-| **Error handling** | <exception>, <stdexcept> |
+| **Console I/O** | `<iostream>` + `<iomanip>` (C++) or `<cstdio>` (C) |
+| **File I/O** | `<fstream>` (C++) or `<cstdio>` (C) |
+| **String storage** | `<string>` (C++) or `<cstring>` (C) |
+| **Dynamic array** | `<vector>` (C++) |
+| **Key-value storage** | `<unordered_map>` (fast) or `<map>` (ordered) |
+| **Sorting/Searching** | `<algorithm>` |
+| **Memory management** | `<memory>` (smart pointers) |
+| **Multithreading** | `<thread>`, `<mutex>`, `<future>` |
+| **Time operations** | `<chrono>` |
+| **Random numbers** | `<random>` (C++) or `<cstdlib>` (C, deprecated) |
+| **Error handling** | `<exception>`, `<stdexcept>` |
 
-## 1.2 Program Entry Point: main()
+---
 ## 1.2 Program Entry Point: main()
 
 Every C++ program has exactly one entry point: the `main()` function.
