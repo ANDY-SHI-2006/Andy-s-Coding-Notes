@@ -649,11 +649,11 @@ struct PackedStruct {     // Members packed with no gaps
 #endif
 ```
 
-## 1.3 Program Entry Point: main()
+## 1.2 Program Entry Point: main()
 
 Every C++ program has exactly one entry point: the `main()` function.
 
-### 1.3.1 Return Value and Exit Status
+### 1.2.1 Return Value and Exit Status
 
 ```cpp
 int main() {
@@ -683,7 +683,7 @@ int main() {
 int main() { }  // Implicitly returns 0
 ```
 
-### 1.3.2 Command-line Arguments (argc/argv)
+### 1.2.2 Command-line Arguments (argc/argv)
 
 ```cpp
 int main(int argc, char* argv[]) {
@@ -718,7 +718,7 @@ Arg 3: -v
 | `int main(int argc, char* argv[])` | Arguments as array |
 | `int main(int argc, char** argv)` | Arguments as pointer to pointer |
 
-### 1.3.3 Environment Variables
+### 1.2.3 Environment Variables
 
 On some platforms, `main()` can receive environment variables via a third parameter:
 
@@ -750,11 +750,11 @@ int main() {
 }
 ```
 
-## 1.4 Namespaces
+## 1.3 Namespaces
 
 Namespaces prevent name collisions by creating scope boundaries.
 
-### 1.4.1 Namespace Fundamentals
+### 1.3.1 Namespace Fundamentals
 
 ```cpp
 namespace math {
@@ -772,7 +772,7 @@ double a = math::PI;
 double b = physics::PI;
 ```
 
-### 1.4.2 using-declaration vs using-directive
+### 1.3.2 using-declaration vs using-directive
 
 **using-declaration:** Bring specific name into scope
 ```cpp
@@ -791,7 +791,7 @@ cout << "Hello" << endl;  // OK
 cin >> x;                  // OK
 ```
 
-### 1.4.3 Best Practices: Avoid in Headers
+### 1.3.3 Best Practices: Avoid in Headers
 
 ```cpp
 // BAD: In a header file
