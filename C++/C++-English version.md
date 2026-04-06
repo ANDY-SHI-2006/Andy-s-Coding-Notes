@@ -14,7 +14,7 @@ C++ program construction follows a three-stage model:
 
 ```cpp
 // main.cpp
-#include <iostream>      // Preprocessor: textually inserts iostream content
+#include `<iostream>`      // Preprocessor: textually inserts iostream content
 #define MAX 100          // Preprocessor: replaces all MAX with 100
 
 int main() {
@@ -61,13 +61,13 @@ Before the compiler processes your code, the **preprocessor** performs an initia
 
 ```
 Source File (.cpp)
-       ↓
+       â?
 Preprocessor handles #include, #define, #if, etc.
-       ↓
+       â?
 Modified Source (translation unit)
-       ↓
+       â?
 Compiler generates object code
-       ↓
+       â?
 Linker combines object files into executable
 ```
 
@@ -90,32 +90,30 @@ This section provides a comprehensive reference for C and C++ standard library h
 
 > **General Rule:** Prefer C++ headers for new code. Use <cxxx> headers only when interfacing with C code.
 
----
-
 #### 1.1.4.1 Headers by Category
 
 Headers are organized by functionality. Within each category, C++ headers are listed first, followed by C compatibility headers (marked with C).
 
 ##### **Input/Output**
 
-| Header | Language | Content |
-|--------|----------|---------|
-| <iostream> | C++ | Standard I/O streams (cin, cout, cerr, clog) |
-| <fstream> | C++ | File stream I/O (ifstream, ofstream) |
-| <sstream> | C++ | String-based I/O (istringstream, ostringstream) |
-| <iomanip> | C++ | Output formatting (setw, setprecision, ixed) |
-| <ios> | C++ | Base I/O classes and stream flags |
-| <cstdio> | C | C-style I/O (printf, scanf, FILE) |
+| Header     | Language | Content                                         |
+| ---------- | -------- | ----------------------------------------------- |
+| `<iostream>` | C++      | Standard I/O streams (cin, cout, cerr, clog)    |
+| <fstream>  | C++      | File stream I/O (ifstream, ofstream)            |
+| <sstream>  | C++      | String-based I/O (istringstream, ostringstream) |
+| <iomanip>  | C++      | Output formatting (setw, setprecision, ixed)   |
+| <ios>      | C++      | Base I/O classes and stream flags               |
+| <cstdio>   | C        | C-style I/O (printf, scanf, FILE)               |
 
 ##### **Containers (Sequence)**
 
-| Header | Language | Content |
-|--------|----------|---------|
-| <vector> | C++ | Dynamic array - **default choice** |
-| <array> | C++ | Fixed-size array (stack allocation) |
-| <deque> | C++ | Double-ended queue |
-| <list> | C++ | Doubly-linked list |
-| <forward_list> | C++ | Singly-linked list (memory-efficient) |
+| Header         | Language | Content                               |
+| -------------- | -------- | ------------------------------------- |
+| <vector>       | C++      | Dynamic array - **default choice**    |
+| <array>        | C++      | Fixed-size array (stack allocation)   |
+| <deque>        | C++      | Double-ended queue                    |
+| <list>         | C++      | Doubly-linked list                    |
+| <forward_list> | C++      | Singly-linked list (memory-efficient) |
 
 ##### **Containers (Associative)**
 
@@ -136,12 +134,12 @@ Headers are organized by functionality. Within each category, C++ headers are li
 
 ##### **Strings**
 
-| Header | Language | Content |
-|--------|----------|---------|
-| <string> | C++ | Dynamic string class |
-| <string_view> | C++ | (C++17) Non-owning string view |
-| <cstring> | C | C-string manipulation (strcpy, strlen) |
-| <cctype> | C | Character classification (isdigit, 	oupper) |
+| Header        | Language | Content                                     |
+| ------------- | -------- | ------------------------------------------- |
+| <string>      | C++      | Dynamic string class                        |
+| <string_view> | C++      | (C++17) Non-owning string view              |
+| <cstring>     | C        | C-string manipulation (strcpy, strlen)      |
+| <cctype>      | C        | Character classification (isdigit, 	oupper) |
 
 ##### **Algorithms and Ranges**
 
@@ -161,27 +159,27 @@ Headers are organized by functionality. Within each category, C++ headers are li
 
 ##### **Function Objects and Utilities**
 
-| Header | Language | Content |
-|--------|----------|---------|
-| <functional> | C++ | Function objects, ind, lambdas |
-| <utility> | C++ | pair, 	uple, move, swap, orward |
-| <initializer_list> | C++ | Brace initialization support |
-| <optional> | C++ | (C++17) Nullable values |
-| <variant> | C++ | (C++17) Type-safe union |
-| <any> | C++ | (C++17) Type-erased container |
-| <cstdlib> | C | General utilities (
+| Header             | Language | Content                          |
+| ------------------ | -------- | -------------------------------- |
+| <functional>       | C++      | Function objects, ind, lambdas  |
+| <utility>          | C++      | pair, 	uple, move, swap, orward |
+| <initializer_list> | C++      | Brace initialization support     |
+| <optional>         | C++      | (C++17) Nullable values          |
+| <variant>          | C++      | (C++17) Type-safe union          |
+| <any>              | C++      | (C++17) Type-erased container    |
+| <cstdlib>          | C        | General utilities (              |
 and, exit, malloc) |
 
 ##### **Multithreading and Concurrency**
 
-| Header | Language | Content |
-|--------|----------|---------|
-| <thread> | C++ | Thread creation and management |
-| <mutex> | C++ | Mutual exclusion primitives |
-| <shared_mutex> | C++ | (C++17) Reader-writer locks |
-| <condition_variable> | C++ | Thread synchronization |
-| <future> | C++ | Asynchronous operations (sync, promise) |
-| <atomic> | C++ | Lock-free atomic operations |
+| Header               | Language | Content                                  |
+| -------------------- | -------- | ---------------------------------------- |
+| <thread>             | C++      | Thread creation and management           |
+| <mutex>              | C++      | Mutual exclusion primitives              |
+| <shared_mutex>       | C++      | (C++17) Reader-writer locks              |
+| <condition_variable> | C++      | Thread synchronization                   |
+| <future>             | C++      | Asynchronous operations (sync, promise) |
+| <atomic>             | C++      | Lock-free atomic operations              |
 
 ##### **Time and Random Numbers**
 
@@ -193,12 +191,12 @@ and, exit, malloc) |
 
 ##### **Type Support and Metaprogramming**
 
-| Header | Language | Content |
-|--------|----------|---------|
-| <type_traits> | C++ | Compile-time type introspection |
-| <typeinfo> | C++ | Runtime type information (RTTI) |
-| <typeindex> | C++ | Hash support for 	ype_info |
-| <cstddef> | C | Common definitions (size_t, 
+| Header        | Language | Content                         |
+| ------------- | -------- | ------------------------------- |
+| <type_traits> | C++      | Compile-time type introspection |
+| <typeinfo>    | C++      | Runtime type information (RTTI) |
+| <typeindex>   | C++      | Hash support for 	ype_info      |
+| <cstddef>     | C        | Common definitions (size_t,     |
 ullptr_t) |
 
 ##### **Exceptions and Error Handling**
@@ -243,15 +241,13 @@ ullptr_t) |
 | <concepts> | C++20 | Template constraints |
 | <coroutine> | C++20 | Coroutine support |
 
----
-
 #### 1.1.4.2 Quick Selection Guide
 
 **By Task:**
 
 | Task | Recommended Headers |
 |------|---------------------|
-| **Console I/O** | <iostream> + <iomanip> (C++) or <cstdio> (C) |
+| **Console I/O** | `<iostream>` + <iomanip> (C++) or <cstdio> (C) |
 | **File I/O** | <fstream> (C++) or <cstdio> (C) |
 | **String storage** | <string> (C++) or <cstring> (C) |
 | **Dynamic array** | <vector> (C++) |
@@ -262,8 +258,6 @@ ullptr_t) |
 | **Time operations** | <chrono> |
 | **Random numbers** | <random> (C++) or <cstdlib> (C, deprecated) |
 | **Error handling** | <exception>, <stdexcept> |
-
----
 
 ## 1.2 Program Entry Point: main()
 ## 1.2 Program Entry Point: main()
@@ -281,8 +275,8 @@ int main() {
 
 | Declaration | Standard | Usage |
 |-------------|----------|-------|
-| `int main()` | ✅ Standard | **Always use this** |
-| `void main()` | ❌ Non-standard | Avoid (not portable) |
+| `int main()` | â?Standard | **Always use this** |
+| `void main()` | â?Non-standard | Avoid (not portable) |
 
 **Exit status meanings:**
 
@@ -350,12 +344,12 @@ You don't manually pass `argc` when running the program. The operating system ha
 
 | Declaration | Valid? |
 |-------------|--------|
-| `int main(int argc, char* argv[])` | ✅ Valid (both present) |
-| `int main()` | ✅ Valid (neither present) |
-| `int main(int argc)` | ❌ Invalid (only argc) |
-| `int main(char* argv[])` | ❌ Invalid (only argv) |
+| `int main(int argc, char* argv[])` | â?Valid (both present) |
+| `int main()` | â?Valid (neither present) |
+| `int main(int argc)` | â?Invalid (only argc) |
+| `int main(char* argv[])` | â?Invalid (only argv) |
 
-> **Rule:** The command-line argument interface is fixed by the C++ standard — either both parameters, or neither.
+> **Rule:** The command-line argument interface is fixed by the C++ standard â?either both parameters, or neither.
 
 ### 1.2.3 Environment Variables
 
@@ -508,14 +502,14 @@ cin >> x;                  // OK
 ```cpp
 // BAD: In a header file
 #pragma once
-using namespace std;  // ❌ Pollutes all files that include this!
+using namespace std;  // â?Pollutes all files that include this!
 
 // GOOD: Fully qualify in headers
 #pragma once
 #include <string>
 
 class MyClass {
-    std::string name;  // ✅ Explicit qualification
+    std::string name;  // â?Explicit qualification
 };
 ```
 
@@ -547,9 +541,9 @@ In C++, each component typically consists of two files:
 **Example Structure:**
 ```
 project/
-├── math_utils.hpp    // Declarations
-├── math_utils.cpp    // Implementations
-└── main.cpp          // Uses math_utils
+âââ math_utils.hpp    // Declarations
+âââ math_utils.cpp    // Implementations
+âââ main.cpp          // Uses math_utils
 ```
 
 ### 1.4.2 What Goes Where
@@ -621,7 +615,7 @@ double calculateArea(double radius) {
 
 **main.cpp:**
 ```cpp
-#include <iostream>
+#include `<iostream>`
 #include "math_utils.hpp"
 
 int main() {
@@ -649,19 +643,19 @@ g++ math_utils.cpp main.cpp -o program
 The complete journey from source code to executable:
 
 ```
-math.hpp ──┐
-            │
-math.cpp ───┼──> Compile ──> math.o ──┐
-            │                          │
-main.cpp ───┘                          ├──> Link ──> program
-                                       │
+math.hpp âââ?
+            â?
+math.cpp ââââ¼ââ> Compile ââ> math.o âââ?
+            â?                         â?
+main.cpp ââââ?                         âââ> Link ââ> program
+                                       â?
                                     main.o
 ```
 
 **Key Points:**
 - Each `.cpp` file is compiled independently into an `.o` (object) file
 - The linker combines all object files into the final executable
-- Headers are not compiled directly — they are included into `.cpp` files
+- Headers are not compiled directly â?they are included into `.cpp` files
 - Changing a header requires recompiling all files that include it
 
 > **Note:** Understanding this structure helps explain why we need `#include` (Chapter 2) and why the One Definition Rule (Section 1.1.2) exists.
@@ -672,19 +666,19 @@ The preprocessor runs before compilation, performing text substitution and condi
 
 ## 2.1 `#include`: Header Inclusion Mechanics
 
-`#include` performs **textual substitution** — the entire header file content is inserted at the directive location.
+`#include` performs **textual substitution** â?the entire header file content is inserted at the directive location.
 
 ```cpp
-#include <iostream>   // Searches system include paths
+#include `<iostream>`   // Searches system include paths
 #include "myheader.h" // Searches project directory first, then system paths
 ```
 
-### 2.1.1 Search Path: `< >` vs `" "`
+### 2.1.1 Search Path: < > vs `" "`
 
 | Syntax | Search Order | Use Case |
 |--------|--------------|----------|
-| `<header>` | System directories only | Standard library headers (`<iostream>`, `<vector>`) |
-| `"header"` | Current directory → project paths → system directories | Custom/project headers (`"utils.h"`, `"config.h"`) |
+| <header> | System directories only | Standard library headers (`<iostream>`, <vector>) |
+| `"header"` | Current directory â?project paths â?system directories | Custom/project headers (`"utils.h"`, `"config.h"`) |
 
 **System paths (typical):**
 - Linux: `/usr/include`, `/usr/local/include`
@@ -746,13 +740,13 @@ class MyClass { ... };
 | Step | First Inclusion | Second Inclusion |
 |------|-----------------|------------------|
 | 1 | `#ifndef MYHEADER_HPP` checks if macro is defined | Same check |
-| 2 | Macro NOT defined → condition is TRUE | Macro IS defined → condition is FALSE |
+| 2 | Macro NOT defined â?condition is TRUE | Macro IS defined â?condition is FALSE |
 | 3 | `#define MYHEADER_HPP` creates the macro | Entire block is skipped |
 | 4 | Header content is processed | Nothing happens |
 
 **Naming Convention:**
 - Use uppercase filename + `_HPP` suffix
-- Example: `math_utils.hpp` → `MATH_UTILS_HPP`
+- Example: `math_utils.hpp` â?`MATH_UTILS_HPP`
 - Ensure uniqueness to avoid name collisions
 
 #### 2.1.3.3 `#pragma once`
@@ -790,7 +784,7 @@ The compiler internally records which files have been included. When encounterin
 
 **The Essence of Macros: Text Substitution**
 
-The preprocessor performs **pure text substitution** — it literally replaces the macro name with its defined text, without any type checking, syntax analysis, or semantic understanding.
+The preprocessor performs **pure text substitution** â?it literally replaces the macro name with its defined text, without any type checking, syntax analysis, or semantic understanding.
 
 ```cpp
 #define PI 3.14159
@@ -868,7 +862,7 @@ The backslash `\` must be the **very last character** on the line. If there is a
     1
 ```
 
-**Why it fails:** The preprocessor sees `\[space]` — the `\` only escapes the space, not the newline. The macro ends at line 1, and line 2 becomes invalid standalone code.
+**Why it fails:** The preprocessor sees `\[space]` â?the `\` only escapes the space, not the newline. The macro ends at line 1, and line 2 becomes invalid standalone code.
 
 ```cpp
 // CORRECT - No characters after \
@@ -1419,7 +1413,7 @@ cout << "This is a very long message that "
 
 Break long expressions into multiple statements for readability.
 
-**Example:** Computing f = (x³ - 2x² + x - 6.3) / (x² + 0.05005x - 3.14)
+**Example:** Computing f = (xÂ³ - 2xÂ² + x - 6.3) / (xÂ² + 0.05005x - 3.14)
 
 ```cpp
 // Bad: Hard to read
@@ -1470,7 +1464,7 @@ int result = a * b + b / c * d;
 | Valid | Invalid | Reason |
 |-------|---------|--------|
 | `a == b` | `a = = b` | `==` is a single operator, cannot be split |
-| `x <= 10` | `x < = 10` | `<=` is a single operator, cannot be split |
+| `x <= 10` | `x < = 10` | <=` is a single operator, cannot be split |
 | `y >= 0` | `y > = 0` | `>=` is a single operator, cannot be split |
 | `a != b` | `a ! = b` | `!=` is a single operator, cannot be split |
 
@@ -1480,15 +1474,15 @@ if (a == b) { }      // Valid: == is together
 if (x <= 10) { }     // Valid: <= is together
 
 // Incorrect spacing - splitting operators causes errors
-if (a = = b) { }     // ❌ Error: = = is two separate operators
-if (x < = 10) { }    // ❌ Error: < = is two separate operators
+if (a = = b) { }     // â?Error: = = is two separate operators
+if (x < = 10) { }    // â?Error: < = is two separate operators
 ```
 
 #### 3.3.3.3 Spacing with Relational and Logical Operators
 
 When combining relational and logical operators, use these spacing conventions for better readability:
 
-**No spaces around relational operators (`<`, `>`, `<=`, `>=`):**
+**No spaces around relational operators (<`, `>, <=`, `>=`):**
 ```cpp
 // Preferred - relational operators bind tightly to operands
 a<b && b<c
@@ -1507,7 +1501,7 @@ a<b&&b<c
 ```
 
 **Rationale:**
-- Relational operators (`<`, `>`, `<=`, `>=`) bind tightly to their operands, reflecting that comparisons happen first
+- Relational operators (<`, `>, <=`, `>=`) bind tightly to their operands, reflecting that comparisons happen first
 - Logical operators (`&&`, `||`) connect separate conditions, so spacing makes the logical structure clearer
 - This convention makes expressions like `a<b && b<c` read naturally as "a is less than b, AND b is less than c"
 
@@ -1534,7 +1528,7 @@ The placement of braces `{}` is a matter of coding style. Two common styles are 
 | **Style 1** | Allman Style | Opening brace on its own line | `if (condition) \n { \n ... \n }` |
 | **Style 2** | K&R Style | Opening brace on the same line | `if (condition) { \n ... \n }` |
 
-**Style 1 (Allman Style) — Opening brace on a new line:**
+**Style 1 (Allman Style) â?Opening brace on a new line:**
 ```cpp
 if (condition)
 {
@@ -1545,7 +1539,7 @@ if (condition)
 }
 ```
 
-**Style 2 (K&R Style) — Opening brace on the same line:**
+**Style 2 (K&R Style) â?Opening brace on the same line:**
 ```cpp
 if (condition){
     statement 1;
@@ -1582,7 +1576,7 @@ These rules are enforced by the compiler. Violations result in compilation error
 
 **Examples:**
 
-| ✅ Valid | ❌ Invalid | Why Invalid |
+| â?Valid | â?Invalid | Why Invalid |
 |----------|-----------|-------------|
 | `distance` | `1x` | Starts with digit |
 | `x_1` | `my name` | Contains space |
@@ -1596,7 +1590,7 @@ These rules are enforced by the compiler. Violations result in compilation error
 | **Punctuation** | `,` `.` `;` `:` `'` `"` | Separators, member access, statements |
 | **Brackets** | `()` `[]` `{}` | Function calls, arrays, code blocks |
 | **Arithmetic** | `+` `-` `*` `/` | Math operations |
-| **Comparison** | `<` `>` `=` `!` | Boolean expressions |
+| **Comparison** | <` `> `=` `!` | Boolean expressions |
 | **Logic/Bitwise** | `&` `|` `^` `~` | Logical and bitwise operations |
 | **Others** | `?` `#` `\` `$` | Ternary, preprocessor, escape |
 
@@ -1608,9 +1602,9 @@ C++ distinguishes uppercase and lowercase letters.
 
 | Identifiers | Are they the same? |
 |-------------|-------------------|
-| `myVariable` vs `myvariable` | ❌ Different |
-| `myVariable` vs `MYVARIABLE` | ❌ Different |
-| `count` vs `Count` | ❌ Different |
+| `myVariable` vs `myvariable` | â?Different |
+| `myVariable` vs `MYVARIABLE` | â?Different |
+| `count` vs `Count` | â?Different |
 
 #### 3.4.1.3 Reserved Words
 
@@ -1652,7 +1646,7 @@ C++ distinguishes uppercase and lowercase letters.
 | **Upper camelCase / PascalCase** | `MyClassName`      | Classes, structs, enums            | `StudentInfo`, `MyClass`      |
 | **Snake_case**                   | `my_variable_name` | Variables, constants (alternative) | `student_name`, `total_score` |
 | **ALL_CAPS**                     | `MY_CONSTANT`      | Constants, macros                  | `MAX_SIZE`, `PI`              |
-| **Hungarian notation**           | `iCount`, `pData`  | ❌ **Deprecated** in modern C++     | Not recommended               |
+| **Hungarian notation**           | `iCount`, `pData`  | â?**Deprecated** in modern C++     | Not recommended               |
 
 #### 3.4.2.2 Naming Conventions by Identifier Type
 
@@ -1669,7 +1663,7 @@ C++ distinguishes uppercase and lowercase letters.
 - Use **descriptive names**: `studentCount` is better than `sc` or `n`
 - Avoid single-letter names except for loop counters (`i`, `j`, `k`)
 - Be consistent with one style throughout your project
-- **Follow your team's existing conventions** — consistency is more important than any single style
+- **Follow your team's existing conventions** â?consistency is more important than any single style
 
 ---
 
@@ -1720,8 +1714,8 @@ C++ enforces the **One Definition Rule**: each variable and function can be defi
 int shared = 100;          // Definition
 
 // file2.cpp
-int shared = 100;          // ❌ ERROR! Redefinition (ODR violation)
-extern int shared;         // ✅ OK! Declaration only
+int shared = 100;          // â?ERROR! Redefinition (ODR violation)
+extern int shared;         // â?OK! Declaration only
 ```
 
 ## 4.2 Variable Definition
@@ -1777,8 +1771,8 @@ string s = "hello";  // Copy initialization
 - **No narrowing check** - can lose data silently
 
 ```cpp
-int x = 7.5;         // ⚠️ Compiles, but x = 7 (truncates decimal)
-short s = 100000;    // ⚠️ Compiles (may overflow, undefined behavior)
+int x = 7.5;         // â ï¸ Compiles, but x = 7 (truncates decimal)
+short s = 100000;    // â ï¸ Compiles (may overflow, undefined behavior)
 ```
 
 #### 4.2.3.2 Direct Initialization
@@ -1795,8 +1789,8 @@ vector<int> v(5, 0); // 5 elements, all initialized to 0
 **The "Most Vexing Parse" Problem:**
 
 ```cpp
-int a();        // ❌ Declares a function "a" that returns int!
-int b{};        // ✅ Correctly initializes b to 0
+int a();        // â?Declares a function "a" that returns int!
+int b{};        // â?Correctly initializes b to 0
 ```
 
 #### 4.2.3.3 List Initialization (Brace Initialization)
@@ -1821,11 +1815,11 @@ vector<int> v{1, 2, 3};  // Initialize container with list
 **Narrowing Prevention:**
 
 ```cpp
-int x(7.5);      // ⚠️ Compiles, but x = 7 (truncates)
-int y{7.5};      // ❌ Error! Cannot convert double to int
+int x(7.5);      // â ï¸ Compiles, but x = 7 (truncates)
+int y{7.5};      // â?Error! Cannot convert double to int
 
-short a(100000); // ⚠️ Compiles (may overflow)
-short b{100000}; // ❌ Error! Value too large
+short a(100000); // â ï¸ Compiles (may overflow)
+short b{100000}; // â?Error! Value too large
 ```
 
 #### 4.2.3.4 Zero Initialization (Empty Braces)
@@ -1842,9 +1836,9 @@ bool flag{};     // flag = false
 | Feature | Copy Init `=` | Direct Init `()` | Brace Init `{}` |
 |---------|---------------|------------------|-----------------|
 | **Syntax** | `int a = 5;` | `int a(5);` | `int a{5};` |
-| **Narrowing check** | ❌ No | ❌ No | ✅ Yes |
-| **Most vexing parse** | ✅ No | ⚠️ Possible | ✅ Never |
-| **Container init** | Limited | Limited | ✅ Full support |
+| **Narrowing check** | â?No | â?No | â?Yes |
+| **Most vexing parse** | â?No | â ï¸ Possible | â?Never |
+| **Container init** | Limited | Limited | â?Full support |
 
 **Recommendations:**
 
@@ -1890,11 +1884,11 @@ int main() {
 
 ```cpp
 int main() {
-    x = 5;           // ❌ ERROR! x not yet defined
+    x = 5;           // â?ERROR! x not yet defined
     int x;
     
     int y;
-    y = 10;          // ✅ OK: definition before statement
+    y = 10;          // â?OK: definition before statement
 }
 ```
 
@@ -1920,12 +1914,12 @@ auto s = "hello";  // const char*
 | `auto* x = expr` | Pointer type | Explicit pointer |
 | `const auto x = expr` | const value | Explicit const |
 
-**⚠️ Important Trap with Brace Init:**
+**â ï¸ Important Trap with Brace Init:**
 
 ```cpp
-auto x{5};         // ⚠️ std::initializer_list<int>, NOT int!
-auto y = 5;        // ✅ int (correct)
-auto z(5);         // ✅ int
+auto x{5};         // â ï¸ std::initializer_list<int>, NOT int!
+auto y = 5;        // â?int (correct)
+auto z(5);         // â?int
 ```
 
 **Recommendation:** Always use `auto` with copy initialization (`=`), not brace initialization.
@@ -1957,7 +1951,7 @@ Operators can be classified based on the **number of operands** they require:
 | Classification       | Number of Operands | Examples                                                                                                      |
 | -------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------- |
 | **Unary Operators**  | 1                  | `++` (increment), `--` (decrement), `!` (logical NOT), `~` (bitwise NOT), `*` (dereference), `&` (address-of) |
-| **Binary Operators** | 2                  | `+`, `-`, `*`, `/`, `%`, `==`, `!=`, `<`, `>`, `&&`, `\|\|`, `=`, etc.                                        |
+| **Binary Operators** | 2                  | `+`, `-`, `*`, `/`, `%`, `==`, `!=`, <`, `>, `&&`, `\|\|`, `=`, etc.                                        |
 | **Ternary Operator** | 3                  | `?:` (conditional operator)                                                                                   |
 
 **Note:** Some symbols can act as both unary and binary operators depending on context:
@@ -1973,14 +1967,14 @@ Operators can also be categorized by their **function or purpose**:
 | Category | Operators | Description |
 |----------|-----------|-------------|
 | **Arithmetic** | `+` `-` `*` `/` `%` | Mathematical calculations |
-| **Relational** | `==` `!=` `<` `>` `<=` `>=` | Compare values, return boolean |
+| **Relational** | `==` `!=` <` `> <=` `>=` | Compare values, return boolean |
 | **Logical** | `&&` `\|\|` `!` | Boolean logic operations |
-| **Bitwise** | `&` `\|` `^` `~` `<<` `>>` | Operations on individual bits |
+| **Bitwise** | `&` `\|` `^` `~` <<` `>> | Operations on individual bits |
 | **Assignment** | `=` `+=` `-=` `*=` `/=` `%=` etc. | Assign values to variables |
 | **Increment/Decrement** | `++` `--` | Increase or decrease by 1 |
 | **Conditional** | `?:` | Ternary conditional operator |
-| **Member Access** | `.` `->` | Access class/struct members |
-| **Pointer** | `*` `&` `->` `[]` | Dereference, address-of, indexing |
+| **Member Access** | `.` `-> | Access class/struct members |
+| **Pointer** | `*` `&` `-> `[]` | Dereference, address-of, indexing |
 | **Scope** | `::` | Scope resolution |
 | **Other** | `,` `sizeof` `typeid` `new` `delete` | Comma, size query, memory management |
 
@@ -2033,8 +2027,8 @@ double result2 = x / 2.0;        // Use floating-point literal: 2.5
 
 #### 5.2.2.2 Division by Zero
 
-- Integer division by zero → Runtime error/crash
-- Floating-point division by zero → Returns `inf` or `nan` (IEEE 754 behavior)
+- Integer division by zero â?Runtime error/crash
+- Floating-point division by zero â?Returns `inf` or `nan` (IEEE 754 behavior)
 
 ### 5.2.3 Modulo (%) - Remainder
 
@@ -2165,9 +2159,9 @@ Relational operators compare two values and return a boolean result (`true` or `
 |----------|------|---------|--------|
 | `==` | Equal to | `5 == 5` | `true` |
 | `!=` | Not equal to | `5 != 3` | `true` |
-| `<` | Less than | `3 < 5` | `true` |
-| `>` | Greater than | `5 > 3` | `true` |
-| `<=` | Less than or equal | `5 <= 5` | `true` |
+| <` | Less than | `3 < 5` | `true` |
+| `> | Greater than | `5 > 3` | `true` |
+| <=` | Less than or equal | `5 <= 5` | `true` |
 | `>=` | Greater than or equal | `5 >= 3` | `true` |
 
 ### 5.4.1 Floating-Point Comparison
@@ -2345,7 +2339,7 @@ int a = 5;    // 0000 0101 in binary (32-bit: 0000...00000101)
 int b = ~a;   // b = -6 (1111...11111010 in two's complement)
 ```
 
-### 5.6.5 Left Shift (`<<`)
+### 5.6.5 Left Shift (<<`)
 
 | Attribute   | Description                                        |
 | ----------- | -------------------------------------------------- |
@@ -2361,10 +2355,10 @@ expr << n
 ```cpp
 int a = 5;       // 0101 in binary
 int b = a << 1;  // b = 10 (1010 in binary)
-int c = a << 2;  // c = 20 (0101 → 10100 in binary)
+int c = a << 2;  // c = 20 (0101 â?10100 in binary)
 ```
 
-### 5.6.6 Right Shift (`>>`)
+### 5.6.6 Right Shift (`>>)
 
 | Attribute | Description |
 |-----------|-------------|
@@ -2472,7 +2466,7 @@ identifier operator= expression;
 | `&=` | `x &= 3;` | `x = x & 3;` |
 | `\|=` | `x \|= 3;` | `x = x \| 3;` |
 | `^=` | `x ^= 3;` | `x = x ^ 3;` |
-| `<<=` | `x <<= 3;` | `x = x << 3;` |
+| <<=` | `x <<= 3;` | `x = x << 3;` |
 | `>>=` | `x >>= 3;` | `x = x >> 3;` |
 
 **Advantages:**
@@ -2666,8 +2660,8 @@ C++ provides four type cast operators for safer, more explicit conversions:
 
 | Characteristic | `static_cast` | `dynamic_cast` | `const_cast` | `reinterpret_cast` |
 |----------------|---------------|----------------|--------------|---------------------|
-| **Safety** | ✅ Safe | ✅ Safe (runtime checked) | ⚠️ Use with caution | ❌ Dangerous |
-| **Compile-time check** | ✅ Yes | Partial | ✅ Yes | ❌ No |
+| **Safety** | â?Safe | â?Safe (runtime checked) | â ï¸ Use with caution | â?Dangerous |
+| **Compile-time check** | â?Yes | Partial | â?Yes | â?No |
 | **Common usage** | Basic type conversions | Class inheritance conversions | Add/remove const | Low-level operations |
 
 **Recommendation:** Prefer `static_cast` over C-style cast in C++.
@@ -2681,7 +2675,7 @@ double avg = static_cast<double>(sum) / count;
 
 **Important:** C++ has **no built-in operator** for exponentiation.
 
-> ⚠️ **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
+> â ï¸ **Warning:** The `^` symbol is the **bitwise XOR operator**, not exponentiation!
 
 ```cpp
 int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
@@ -2689,27 +2683,27 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 
 | Expression | C++ | Note |
 |------------|-----|------|
-| x⁴ | ❌ No `^` or `**` | Unlike Python (`**`) or math notation |
-| a² | `a * a` | Use repeated multiplication for small exponents |
-| aⁿ | `pow(a, n)` | Use `<cmath>` library for variable exponents |
+| xâ?| â?No `^` or `**` | Unlike Python (`**`) or math notation |
+| aÂ² | `a * a` | Use repeated multiplication for small exponents |
+| aâ?| `pow(a, n)` | Use <cmath> library for variable exponents |
 
 **Method 1: Repeated Multiplication**
 ```cpp
-int square = a * a;           // a²
-int cube = a * a * a;         // a³
-int fourth = a * a * a * a;   // a⁴
+int square = a * a;           // aÂ²
+int cube = a * a * a;         // aÂ³
+int fourth = a * a * a * a;   // aâ?
 ```
 
 **Method 2: `pow()` Function**
 ```cpp
 #include <cmath>
-double result = pow(x, 4);  // x⁴
+double result = pow(x, 4);  // xâ?
 ```
 
 | Method | Speed | Use Case |
 |--------|-------|----------|
-| `a * a` | ⚡ Fastest | Small fixed exponents: `a²`, `a³` |
-| `pow(a, b)` | 🐢 Slower | Variable/fractional exponents |
+| `a * a` | â?Fastest | Small fixed exponents: `aÂ²`, `aÂ³` |
+| `pow(a, b)` | ð¢ Slower | Variable/fractional exponents |
 
 ## 5.11 Operator Precedence and Associativity
 
@@ -2718,14 +2712,14 @@ The following table lists all operators covered in this chapter from highest to 
 | Precedence | Operator | Description | Associativity |
 |------------|----------|-------------|---------------|
 | 1 | `::` | Scope resolution | Left to right |
-| 2 | `()` `[]` `->` `.` | Parentheses, subscript, member access | Left to right |
+| 2 | `()` `[]` `-> `.` | Parentheses, subscript, member access | Left to right |
 | 3 | `++` `--` (postfix) | Postfix increment/decrement | Left to right |
 | 4 | `++` `--` (prefix) `+` `-` `!` `~` `*` `&` `(type)` `sizeof` | Prefix unary operators | Right to left |
 | 5 | `.*` `->*` | Pointer-to-member | Left to right |
 | 6 | `*` `/` `%` | Multiplication, division, modulo | Left to right |
 | 7 | `+` `-` | Addition, subtraction | Left to right |
-| 8 | `<<` `>>` | Bitwise shift | Left to right |
-| 9 | `<` `<=` `>` `>=` | Relational operators | Left to right |
+| 8 | <<` `>> | Bitwise shift | Left to right |
+| 9 | <` <=` `> `>=` | Relational operators | Left to right |
 | 10 | `==` `!=` | Equality operators | Left to right |
 | 11 | `&` | Bitwise AND | Left to right |
 | 12 | `^` | Bitwise XOR | Left to right |
@@ -2733,7 +2727,7 @@ The following table lists all operators covered in this chapter from highest to 
 | 14 | `&&` | Logical AND | Left to right |
 | 15 | `\|\|` | Logical OR | Left to right |
 | 16 | `?:` | Ternary conditional | Right to left |
-| 17 | `=` `+=` `-=` `*=` `/=` `%=` `&=` `^=` `\|=` `<<=` `>>=` | Assignment operators | Right to left |
+| 17 | `=` `+=` `-=` `*=` `/=` `%=` `&=` `^=` `\|=` <<=` `>>=` | Assignment operators | Right to left |
 | 18 | `,` | Comma operator | Left to right |
 
 **Key Rules:**
@@ -2742,7 +2736,7 @@ The following table lists all operators covered in this chapter from highest to 
 - **Unary operators** (prefix `++`, `--`, `+`, `-`, `!`, `~`, etc.) are evaluated before arithmetic operators.
 - **Arithmetic operators** follow the standard order: `*`, `/`, `%` before `+`, `-`.
 - **Bitwise operators** are evaluated after arithmetic but before logical operators.
-- **Relational operators** (`<`, `<=`, `>`, `>=`) are evaluated before equality operators (`==`, `!=`).
+- **Relational operators** (<`, <=`, `>, `>=`) are evaluated before equality operators (`==`, `!=`).
 - **Logical AND (`&&`)** has higher precedence than **Logical OR (`||`)**.
 - **Ternary conditional (`?:`)** is evaluated after logical operators.
 - **Assignment operators** have the lowest precedence (except comma) and associate right-to-left.
@@ -2833,8 +2827,8 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 
 | Type          | Size       | Precision     | Typical Range      |
 | ------------- | ---------- | ------------- | ------------------ |
-| `float`       | 4 bytes    | ~7 digits     | ±3.4 × 10³⁸        |
-| `double`      | 8 bytes    | ~15 digits    | ±1.7 × 10³⁰⁸       |
+| `float`       | 4 bytes    | ~7 digits     | Â±3.4 Ã 10Â³â?       |
+| `double`      | 8 bytes    | ~15 digits    | Â±1.7 Ã 10Â³â°â¸       |
 | `long double` | 8-16 bytes | ~18-21 digits | Platform dependent |
 
 ## 6.2 Boolean Type
@@ -3011,11 +3005,11 @@ constexpr int MAX_SIZE = 100;
 Constants (`const` and `constexpr`) **must be initialized** at the time of declaration.
 
 ```cpp
-const int a = 10;       // ✓ Correct: initialized immediately
-const int b;            // ✗ Error! const variable must be initialized
+const int a = 10;       // â?Correct: initialized immediately
+const int b;            // â?Error! const variable must be initialized
 
-constexpr int c = 20;   // ✓ Correct: initialized at compile time
-constexpr int d;        // ✗ Error! constexpr must be initialized
+constexpr int c = 20;   // â?Correct: initialized at compile time
+constexpr int d;        // â?Error! constexpr must be initialized
 ```
 
 **Why?**
@@ -3071,7 +3065,7 @@ int main() {
 ### 6.6.1 Type Promotion Hierarchy
 
 ```
-char → short → int → long → long long → float → double → long double
+char â?short â?int â?long â?long long â?float â?double â?long double
 ```
 
 ### 6.6.2 Operation Type Conversion
@@ -3105,16 +3099,16 @@ double y = 5.0 / 2;     // Result: 2.5 (correct)
 
 | Direction | Result | Example |
 |-----------|--------|---------|
-| Narrow → Wide | ✅ Safe (implicit) | `double d = 3.14f;` |
-| Wide → Narrow | ⚠️ Warning, data loss | `float f = 3.14;` // double→float |
-| Float → Integer | ⚠️ Truncates decimal | `int i = 3.9;` // i = 3 |
+| Narrow â?Wide | â?Safe (implicit) | `double d = 3.14f;` |
+| Wide â?Narrow | â ï¸ Warning, data loss | `float f = 3.14;` // doubleâfloat |
+| Float â?Integer | â ï¸ Truncates decimal | `int i = 3.9;` // i = 3 |
 
 ```cpp
-// Safe: small → large
+// Safe: small â?large
 float f = 3.14f;
 double d = f;           // OK
 
-// Unsafe: large → small (avoid)
+// Unsafe: large â?small (avoid)
 double e = 3.141592653589793;
 float g = e;            // Precision lost!
 
@@ -3122,7 +3116,7 @@ float g = e;            // Precision lost!
 float x = 3.14;         // Warning: 3.14 is double
 float y = 3.14f;        // OK: 3.14f is float
 
-// Float → Integer: truncates, not rounds!
+// Float â?Integer: truncates, not rounds!
 int a = 3.9f;           // a = 3 (not 4!)
 int b = -2.7f;          // b = -2
 ```
@@ -3228,19 +3222,19 @@ switch (myColor) {
 
 | Direction | Conversion | Syntax | Notes |
 |-----------|------------|--------|-------|
-| Enum → Integer | Implicit | `int i = c;` | Allowed in traditional `enum` |
-| Integer → Enum | Explicit | `Color c = Color(1);` | Must cast |
+| Enum â?Integer | Implicit | `int i = c;` | Allowed in traditional `enum` |
+| Integer â?Enum | Explicit | `Color c = Color(1);` | Must cast |
 
 **Why these rules?**
 
 | Direction | Design Rationale |
 |-----------|-----------------|
-| Enum → Integer (implicit) | Convenient for getting the numeric value for calculations or storage |
-| Integer → Enum (explicit) | Prevents accidental assignment; the integer may not correspond to a valid enumerator |
+| Enum â?Integer (implicit) | Convenient for getting the numeric value for calculations or storage |
+| Integer â?Enum (explicit) | Prevents accidental assignment; the integer may not correspond to a valid enumerator |
 
 ```cpp
-int i = Yellow;           // OK: implicit enum→int (i = 1)
-Color c = Color(1);       // OK: explicit int→enum (c = Yellow)
+int i = Yellow;           // OK: implicit enumâint (i = 1)
+Color c = Color(1);       // OK: explicit intâenum (c = Yellow)
 // Color c = 1;           // Error: cannot convert 'int' to 'Color' implicitly
 ```
 
@@ -3249,7 +3243,7 @@ Color c = Color(1);       // OK: explicit int→enum (c = Yellow)
 | Feature | `enum` | `enum class` |
 |---------|--------|--------------|
 | Scope | Global | Scoped (`Color::Red`) |
-| Implicit int conversion | ✅ Yes | ❌ No |
+| Implicit int conversion | â?Yes | â?No |
 | Type safety | Weak | Strong |
 | Underlying type | Compiler-dependent | `int` by default |
 | Access | Direct | Require scope operator (`::`) |
@@ -3275,7 +3269,7 @@ enum Status : unsigned char; // OK (traditional enum)
 
 | Feature                | Version | Purpose                          | Syntax                         |
 | ---------------------- | ------- | -------------------------------- | ------------------------------ |
-| `std::underlying_type` | C++11   | Get underlying integer type      | `std::underlying_type_t<Enum>` |
+| `std::underlying_type` | C++11   | Get underlying integer type      | `std::underlying_type_t<Enum> |
 | `std::to_underlying`   | C++23   | Convert enum to underlying value | `std::to_underlying(e)`        |
 
 ```cpp
@@ -3323,8 +3317,8 @@ Permission p = Permission::Read | Permission::Write;
 ```
 
 **Built-in alternatives:**
-- `std::bitset<N>` - Fixed-size bitset
-- `std::vector<bool>` - Dynamic bit-packed array
+- `std::bitset<N> - Fixed-size bitset
+- `std::vector<bool> - Dynamic bit-packed array
 
 ### 6.7.10 Best Practices
 
@@ -3405,14 +3399,14 @@ int s[] = {5, 0, -1, 2, 15, 2};  // Compiler infers size = 6
 char v[] = {'a', 'e', 'i'};       // Size = 3
 ```
 
-**3. Partial initialization → remaining elements are 0:**
+**3. Partial initialization â?remaining elements are 0:**
 ```cpp
 int s[100] = {0};     // All 100 elements initialized to 0
 int t[5] = {1, 2};    // t[0]=1, t[1]=2, t[2]=0, t[3]=0, t[4]=0
 int u[5] = {};        // All elements = 0 (C++11+)
 ```
 
-**4. No initialization → elements contain garbage values:**
+**4. No initialization â?elements contain garbage values:**
 ```cpp
 int s[5];   // s[0] through s[4] contain undefined (garbage) values
 ```
@@ -3531,7 +3525,7 @@ for (int i = 0; i < 3; i++) {       // rows
 
 **Cannot Return Array from Function**
 ```cpp
-int[10] func();  // ❌ Error: cannot return array directly
+int[10] func();  // â?Error: cannot return array directly
 ```
 Use pointer or `std::vector` instead.
 
@@ -3539,21 +3533,21 @@ Use pointer or `std::vector` instead.
 ```cpp
 int ia[5] = {1,2,3,4,5};
 int ib[5];
-ib = ia;  // ❌ Error: cannot assign one array to another
+ib = ia;  // â?Error: cannot assign one array to another
 ```
 Use loop or `memcpy` instead.
 
 **Out of Bounds Access = Undefined Behavior**
 ```cpp
 int s[6];
-s[10] = 5;  // ❌ Runtime error: out of bounds access
+s[10] = 5;  // â?Runtime error: out of bounds access
 // May cause segmentation fault or silent memory corruption
 ```
 
 **Variable Length Arrays (VLAs) Not Standard**
 ```cpp
 int n = 5;
-int s[n];  // ⚠️ Works in some compilers, but NOT standard C++
+int s[n];  // â ï¸ Works in some compilers, but NOT standard C++
 ```
 Use `std::vector` for dynamic sizing instead.
 
@@ -3563,9 +3557,9 @@ Use `std::vector` for dynamic sizing instead.
 
 | Container | `()` Direct Init | `{}` Brace Init | Notes |
 |-----------|------------------|-----------------|-------|
-| **`std::vector`** | ✅ `vector<int> v(5, 0)` | ✅ `vector<int> v{1, 2, 3}` | `()` can specify size + default value |
-| **C-style array** | ❌ Not supported | ✅ `int arr[] = {1, 2, 3}` | Must use braces; size fixed at compile time |
-| **`std::array`** | ❌ Not supported | ✅ `array<int, 3> arr{1, 2, 3}` | Size is template parameter, fixed at compile time |
+| **`std::vector`** | â?`vector<int> v(5, 0)` | â?`vector<int> v{1, 2, 3}` | `()` can specify size + default value |
+| **C-style array** | â?Not supported | â?`int arr[] = {1, 2, 3}` | Must use braces; size fixed at compile time |
+| **`std::array`** | â?Not supported | â?`array<int, 3> arr{1, 2, 3}` | Size is template parameter, fixed at compile time |
 
 **Key Differences:**
 
@@ -3597,7 +3591,7 @@ When reading array data from input, the approach differs between C and C++ style
 
 #### 6.8.10.1 Core Principle
 
-In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
+In C/C++, **the array name itself represents the address of the first element** (`name` â?`&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
 
 | Variable Type | Address Syntax | Example |
 |---------------|----------------|---------|
@@ -3616,8 +3610,8 @@ scanf("%s", name);  // Correct: name itself is the address
 
 ```cpp
 char name[50];
-scanf("%s", &name);     // ❌ Wrong: &name is a "pointer to array", type mismatch
-scanf("%s", name);      // ✅ Correct: name is the address of first element
+scanf("%s", &name);     // â?Wrong: &name is a "pointer to array", type mismatch
+scanf("%s", name);      // â?Correct: name is the address of first element
 ```
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
@@ -3656,7 +3650,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 In modern C++, prefer using `std::cin` with `std::vector`:
 
 ```cpp
-#include <iostream>
+#include `<iostream>`
 #include <vector>
 
 std::vector<int> numbers(5);
@@ -3762,9 +3756,9 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 
 | Input Format | Valid? | Variables receive |
 |-------------|--------|-------------------|
-| `1 2 3 4` | ✓ | a=1, b=2, c=3, d=4 |
-| `1\n2 3\n4` | ✓ | Same (newlines = spaces) |
-| `1234 56.78` with `char c1,c2; int a; float b;` | ✓ | c1='1', c2='2', a=34, b=56.78 |
+| `1 2 3 4` | â?| a=1, b=2, c=3, d=4 |
+| `1\n2 3\n4` | â?| Same (newlines = spaces) |
+| `1234 56.78` with `char c1,c2; int a; float b;` | â?| c1='1', c2='2', a=34, b=56.78 |
 
 ### 7.1.1.3 Key Behaviors
 
@@ -3780,11 +3774,11 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 
 ```cpp
 int a, b;
-cin >> a == b;  // ❌ Compile error!
+cin >> a == b;  // â?Compile error!
 ```
 
 **Why it fails:**
-The stream extraction operator `>>` has **higher precedence** than the equality operator `==`. The expression is parsed as:
+The stream extraction operator `>> has **higher precedence** than the equality operator `==`. The expression is parsed as:
 
 ```cpp
 (cin >> a) == b;  // Compares istream& with int - invalid!
@@ -3809,18 +3803,18 @@ if (a == b) { ... }
 int x, y;
 
 // Bitwise operators (low precedence)
-cin >> x & y;       // ❌ Wrong: (cin >> x) & y
+cin >> x & y;       // â?Wrong: (cin >> x) & y
 cin >> x;
-int result = x & y;  // ✅ Correct
+int result = x & y;  // â?Correct
 
 // Logical operators
-cin >> x && cin >> y;     // ❌ Wrong: ((cin >> x) && cin) >> y
-cin >> x >> y;            // ✅ Correct
+cin >> x && cin >> y;     // â?Wrong: ((cin >> x) && cin) >> y
+cin >> x >> y;            // â?Correct
 bool result = x && y;
 
 // Ternary operator
-cin >> x > 0 ? a : b;     // ❌ Wrong
-cin >> x;                 // ✅ Correct
+cin >> x > 0 ? a : b;     // â?Wrong
+cin >> x;                 // â?Correct
 int val = (x > 0) ? a : b;
 ```
 
@@ -3828,8 +3822,8 @@ int val = (x > 0) ? a : b;
 
 | Precedence | Operators | Description |
 |------------|-----------|-------------|
-| **Higher** | `>>` `<<` | Stream extraction/insertion |
-| **Lower** | `==` `!=` `<` `>` `<=` `>=` | Comparison operators |
+| **Higher** | `>> <<` | Stream extraction/insertion |
+| **Lower** | `==` `!=` <` `> <=` `>=` | Comparison operators |
 | **Lower** | `&` `^` `\|` | Bitwise operators |
 | **Lower** | `&&` `\|\|` | Logical operators |
 | **Lower** | `?:` | Ternary conditional |
@@ -3949,9 +3943,9 @@ cout << 25.0;           // Output: 25 (not 25.0!)
 
 ```
 Memory (IEEE 754):  [01000011 01100100 0000...] = 25.0 (double)
-       ↓
+       â?
    cout formatting
-       ↓
+       â?
 Display:            "25" (default, omits .0)
 ```
 
@@ -4034,11 +4028,11 @@ double truncate(double val, int prec) {
 **Common Mistake:**
 
 ```cpp
-cout << 1 == 1;  // ❌ Compile error!
+cout << 1 == 1;  // â?Compile error!
 ```
 
 **Why it fails:**
-The stream insertion operator `<<` has **higher precedence** than the equality operator `==`. The expression is parsed as:
+The stream insertion operator <<` has **higher precedence** than the equality operator `==`. The expression is parsed as:
 
 ```cpp
 (cout << 1) == 1;  // Compares ostream& with int - invalid!
@@ -4048,31 +4042,31 @@ The stream insertion operator `<<` has **higher precedence** than the equality o
 Use **parentheses** to ensure the comparison happens first:
 
 ```cpp
-cout << (1 == 1);  // ✅ Outputs "1" (true)
+cout << (1 == 1);  // â?Outputs "1" (true)
 ```
 
 **More Examples:**
 
 ```cpp
 // Bitwise operators (low precedence)
-cout << a & b;       // ❌ Wrong: (cout << a) & b
-cout << (a & b);     // ✅ Correct
+cout << a & b;       // â?Wrong: (cout << a) & b
+cout << (a & b);     // â?Correct
 
 // Logical operators
-cout << x == 5 && y == 10;    // ❌ Wrong: ((cout << x) == 5) && ...
-cout << (x == 5 && y == 10);  // ✅ Correct
+cout << x == 5 && y == 10;    // â?Wrong: ((cout << x) == 5) && ...
+cout << (x == 5 && y == 10);  // â?Correct
 
 // Ternary operator
-cout << x > 0 ? "pos" : "neg";    // ❌ Wrong
-cout << (x > 0 ? "pos" : "neg");  // ✅ Correct
+cout << x > 0 ? "pos" : "neg";    // â?Wrong
+cout << (x > 0 ? "pos" : "neg");  // â?Correct
 ```
 
 **Operator Precedence Quick Reference:**
 
 | Precedence | Operators | Description |
 |------------|-----------|-------------|
-| **Higher** | `<<` `>>` | Stream insertion/extraction |
-| **Lower** | `==` `!=` `<` `>` `<=` `>=` | Comparison operators |
+| **Higher** | <<` `>> | Stream insertion/extraction |
+| **Lower** | `==` `!=` <` `> <=` `>=` | Comparison operators |
 | **Lower** | `&` `^` `\|` | Bitwise operators |
 | **Lower** | `&&` `\|\|` | Logical operators |
 | **Lower** | `?:` | Ternary conditional |
@@ -4081,9 +4075,9 @@ cout << (x > 0 ? "pos" : "neg");  // ✅ Correct
 
 ### 7.1.3 String Streams
 
-String streams from `<sstream>` allow you to treat strings as streams, enabling convenient parsing and formatting.
+String streams from <sstream> allow you to treat strings as streams, enabling convenient parsing and formatting.
 
-**Header:** `#include <sstream>`
+**Header:** `#include <sstream>
 
 **Input String Stream:** Parse data from a string
 ```cpp
@@ -4109,7 +4103,7 @@ string result = oss.str();
 - Building formatted strings
 ### 7.1.4 I/O Manipulators
 
-**Header:** `#include <iomanip>`
+**Header:** `#include <iomanip>
 
 | Manipulator | Description | Example |
 |-------------|-------------|---------|
@@ -4136,11 +4130,11 @@ cout << setw(10) << left << "Name" << setw(5) << "Score" << endl;
 
 ## 7.2 C-style I/O
 
-C-style I/O functions from `<cstdio>` provide fast, format-based input/output operations. While less type-safe than C++ streams, they are useful for specific formatting needs and performance-critical code.
+C-style I/O functions from <cstdio> provide fast, format-based input/output operations. While less type-safe than C++ streams, they are useful for specific formatting needs and performance-critical code.
 
 ### 7.2.1 Input with `scanf` (C-style Input)
 
-Format-based input function from C. Requires header `<cstdio>` or `<stdio.h>`.
+Format-based input function from C. Requires header <cstdio> or <stdio.h>.
 
 ```cpp
 #include <cstdio>
@@ -4151,10 +4145,10 @@ scanf("control string", &var1, &var2, ...);  // Note the & (address-of operator)
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
-| **C-style** | `#include <stdio.h>` | C / C++ | Global namespace |
-| **C++-style** | `#include <cstdio>` | C++ only | `std::` namespace (may also be in global) |
+| **C-style** | `#include <stdio.h> | C / C++ | Global namespace |
+| **C++-style** | `#include <cstdio> | C++ only | `std::` namespace (may also be in global) |
 
-> **Note**: In C++ code, prefer `<cstdio>` over `<stdio.h>`. Both work, but `<cstdio>` is more idiomatic.
+> **Note**: In C++ code, prefer <cstdio> over <stdio.h>. Both work, but <cstdio> is more idiomatic.
 
 **Performance**: Generally faster than `cin`/`cout` for large data I/O, but less type-safe.
 
@@ -4170,8 +4164,8 @@ scanf("%i", &year);  // &year = address of year variable
 **Common Error:** Forgetting `&` is one of the most frequent mistakes in C++:
 
 ```cpp
-scanf("%i", year);   // ❌ WRONG - scanf receives the value, not the address
-scanf("%i", &year);  // ✅ CORRECT - scanf receives the address
+scanf("%i", year);   // â?WRONG - scanf receives the value, not the address
+scanf("%i", &year);  // â?CORRECT - scanf receives the address
 ```
 
 **Why `scanf` Requires `&`:**
@@ -4203,11 +4197,11 @@ The address operator `&` has the same precedence level as other unary operators.
 
 ```
 %[flags][width][length]specifier
-     ↑      ↑       ↑       ↑
+     â?     â?      â?      â?
  Optional Optional Optional Required
 ```
 
-**Order**: `flags` → `width` → `length` → `specifier` (left to right)
+**Order**: `flags` â?`width` â?`length` â?`specifier` (left to right)
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
@@ -4221,7 +4215,7 @@ The address operator `&` has the same precedence level as other unary operators.
 
 ```cpp
 int a, b;
-scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 → a=10, b=30 (20 is skipped)
+scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 â?a=10, b=30 (20 is skipped)
 ```
 
 ##### 2. Width (Optional)
@@ -4230,7 +4224,7 @@ Specifies the **maximum** number of characters to read:
 
 ```cpp
 int a;
-scanf("%3d", &a);      // Input: "12345" → reads "123", a=123, "45" left in buffer
+scanf("%3d", &a);      // Input: "12345" â?reads "123", a=123, "45" left in buffer
 
 char str[10];
 scanf("%9s", str);     // Read at most 9 chars + null terminator (prevents overflow)
@@ -4261,7 +4255,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 | `double` | `%f` (auto-promoted) | **`%lf`** (REQUIRED) |
 | `long double` | `%Lf` | `%Lf` |
 
-> **⚠️ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
+> **â ï¸ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
 
 ##### 4. Conversion Specifiers (Required)
 
@@ -4294,8 +4288,8 @@ The relationship between Length Modifier, Conversion Specifier, and actual varia
 
 ```cpp
 short s;
-scanf("%d", &s);   // ❌ WRONG: %d expects int (4 bytes), but s is short (2 bytes)
-scanf("%hd", &s);  // ✅ CORRECT: %hd matches short (2 bytes)
+scanf("%d", &s);   // â?WRONG: %d expects int (4 bytes), but s is short (2 bytes)
+scanf("%hd", &s);  // â?CORRECT: %hd matches short (2 bytes)
 ```
 
 **Common Combinations Table:**
@@ -4318,14 +4312,14 @@ scanf("%hd", &s);  // ✅ CORRECT: %hd matches short (2 bytes)
 
 The `%c` specifier has unique behavior regarding whitespace handling:
 
-**`scanf("%c", &c)`** — Reads the next character, **including whitespace** (spaces, `\n`, `\t`)
+**`scanf("%c", &c)`** â?Reads the next character, **including whitespace** (spaces, `\n`, `\t`)
 
 ```cpp
 char c;
 scanf("%c", &c);  // If input is " a", c will be ' ' (space)
 ```
 
-**`scanf(" %c", &c)`** — The leading space tells scanf to **skip all leading whitespace first**, then read the character
+**`scanf(" %c", &c)`** â?The leading space tells scanf to **skip all leading whitespace first**, then read the character
 
 ```cpp
 char c;
@@ -4360,7 +4354,7 @@ scanf("%d %d", &a, &b);      // Space matches any whitespace (space, tab, newlin
 | `"%d %d"` | `10   20` | a=10, b=20 (multiple spaces match) |
 
 **Key Points:**
-- Single space in format string → matches **any amount** of whitespace in input
+- Single space in format string â?matches **any amount** of whitespace in input
 - `%d`, `%f`, `%s` automatically skip leading whitespace before reading
 - `%c` is the exception: it reads exactly one character, including whitespace
 
@@ -4374,7 +4368,7 @@ When reading array data with `scanf`, understanding how arrays work with address
 
 ##### 7.2.1.4.1 Core Principle
 
-In C/C++, **the array name itself represents the address of the first element** (`name` ≡ `&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
+In C/C++, **the array name itself represents the address of the first element** (`name` â?`&name[0]`). When using `scanf`, which requires the **address** of variables, you pass the array name directly **without** the `&` operator.
 
 | Variable Type | Address Syntax | Example |
 |---------------|----------------|---------|
@@ -4393,8 +4387,8 @@ scanf("%s", name);  // Correct: name itself is the address
 
 ```cpp
 char name[50];
-scanf("%s", &name);     // ❌ Wrong: &name is a "pointer to array", type mismatch
-scanf("%s", name);      // ✅ Correct: name is the address of first element
+scanf("%s", &name);     // â?Wrong: &name is a "pointer to array", type mismatch
+scanf("%s", name);      // â?Correct: name is the address of first element
 ```
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
@@ -4475,7 +4469,7 @@ scanf("%49s", name);  // Read at most 49 chars, leave room for '\0'
 | Prompt message | Cannot display | Can display |
 | Usage pattern | `printf` first, then `scanf` | Direct output |
 
-**⚠️ Important:** `scanf` cannot display prompts. Always use `printf` first:
+**â ï¸ Important:** `scanf` cannot display prompts. Always use `printf` first:
 
 ```cpp
 printf("Enter a number: ");  // Display prompt
@@ -4490,7 +4484,7 @@ scanf("%d", &a);             // Read input
 | Wrong float specifier  | `scanf("%f", &d);` for `double`      | Use `%lf` for `double`                           |
 | Buffer overflow        | `scanf("%s", str);` with long input  | Use `scanf("%99s", str);` with width             |
 | `%c` reads whitespace  | `scanf("%c", &c);` reads newline     | Use `scanf(" %c", &c);` (space skips whitespace) |
-| `%s` stops at space    | `"John Doe"` → only "John" read      | Use `scanf("%[^\n]", str);` for whole line       |
+| `%s` stops at space    | `"John Doe"` â?only "John" read      | Use `scanf("%[^\n]", str);` for whole line       |
 | Format string mismatch | `scanf("a=%d", &a);` with input "10" | Input must match exactly: "a=10"                 |
 
 **Important Notes:**
@@ -4544,9 +4538,9 @@ int scanf(const char *format, ...);
 |-------------|---------|
 | **Positive integer** | Number of successfully converted data items |
 | **0** | Input exists but no conversion was successful (input didn't match format) |
-| **EOF** | End-of-file reached (usually `-1`, defined in `<cstdio>`), or read error occurred |
+| **EOF** | End-of-file reached (usually `-1`, defined in <cstdio>), or read error occurred |
 
-> **Note**: `EOF` is a macro, typically defined as `-1` in `<cstdio>`.
+> **Note**: `EOF` is a macro, typically defined as `-1` in <cstdio>.
 
 ##### 7.2.1.7.3 Practical Code Examples
 
@@ -4563,8 +4557,8 @@ int result = scanf("%d %d", &a, &b);
 int num;
 char ch;
 int result = scanf("%d %c", &num, &ch);
-// Input: 42 X  → result = 2
-// Input: 42 (Enter) → result = 1 (only integer read, newline stays in buffer)
+// Input: 42 X  â?result = 2
+// Input: 42 (Enter) â?result = 1 (only integer read, newline stays in buffer)
 ```
 
 **Example 3: Conversion failure**
@@ -4636,7 +4630,7 @@ The return value is the **final value of this internal counter**, reflecting the
 
 ### 7.2.2 Output with `printf` (C-style Output)
 
-Format-based output function from C. Requires header `<cstdio>` or `<stdio.h>`.
+Format-based output function from C. Requires header <cstdio> or <stdio.h>.
 
 ```cpp
 #include <cstdio>
@@ -4647,10 +4641,10 @@ printf("control string", arg1, arg2, ...);
 
 | Style | Header | Usage | Namespace |
 |-------|--------|-------|-----------|
-| **C-style** | `#include <stdio.h>` | C / C++ | Global namespace |
-| **C++-style** | `#include <cstdio>` | C++ only | `std::` namespace (may also be in global) |
+| **C-style** | `#include <stdio.h> | C / C++ | Global namespace |
+| **C++-style** | `#include <cstdio> | C++ only | `std::` namespace (may also be in global) |
 
-> **Note**: In C++ code, prefer `<cstdio>` over `<stdio.h>`. Both work, but `<cstdio>` is more idiomatic.
+> **Note**: In C++ code, prefer <cstdio> over <stdio.h>. Both work, but <cstdio> is more idiomatic.
 
 **Performance**: Generally faster than `cout` for large data output, but less type-safe.
 
@@ -4693,21 +4687,21 @@ printf("Results: x = %5.2f, y = %5.2f, z = %5.2f\n", x, y, z + 3);
 
 ```
 %[flags][width][.precision][length]specifier
-     ↑      ↑       ↑         ↑       ↑
+     â?     â?      â?        â?      â?
  Optional Optional Optional  Optional Required
 ```
 
-**Order**: `flags` → `width` → `.precision` → `length` → `specifier` (left to right)
+**Order**: `flags` â?`width` â?`.precision` â?`length` â?`specifier` (left to right)
 
 ##### 1. Flags (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
-| `-` | Left-justify (default: right) | `%-10d` → `"42        "` |
-| `+` | Show sign for positive | `%+d` → `+42` |
-| ` ` (space) | Space before positive numbers | `% d` → ` 42` |
-| `#` | Alternate form (`0x`, `0` prefix) | `%#x` → `0xff` |
-| `0` | Zero-pad (with width) | `%05d` → `00042` |
+| `-` | Left-justify (default: right) | `%-10d` â?`"42        "` |
+| `+` | Show sign for positive | `%+d` â?`+42` |
+| ` ` (space) | Space before positive numbers | `% d` â?` 42` |
+| `#` | Alternate form (`0x`, `0` prefix) | `%#x` â?`0xff` |
+| `0` | Zero-pad (with width) | `%05d` â?`00042` |
 
 ##### 2. Width (Optional)
 
@@ -4715,8 +4709,8 @@ Specifies the **minimum** number of characters to print.
 
 | Behavior | Meaning | Example |
 |----------|---------|---------|
-| **Right-aligned by default** | Numbers aligned right, padded with spaces on the left | `%8d` with `42` → `"      42"` (6 spaces + 42) |
-| **Auto-expands if needed** | If the number is too long, field width increases to fit; never truncated | `%4d` with `-145` → `"-145"` (exactly 4 chars) |
+| **Right-aligned by default** | Numbers aligned right, padded with spaces on the left | `%8d` with `42` â?`"      42"` (6 spaces + 42) |
+| **Auto-expands if needed** | If the number is too long, field width increases to fit; never truncated | `%4d` with `-145` â?`"-145"` (exactly 4 chars) |
 
 **Key points:**
 - `%8d` = **at least** 8 characters; if shorter, pad with spaces on the left; if longer, auto-expand
@@ -4725,22 +4719,22 @@ Specifies the **minimum** number of characters to print.
 
 | Width | Description | Example |
 |-------|-------------|---------|
-| `n` | Minimum field width | `%10d` → `        42` |
+| `n` | Minimum field width | `%10d` â?`        42` |
 | `*` | Width from argument list | `printf("%*d", 10, 42);` |
 
 ##### 3. Precision (`.precision`) - Optional
 
 | Precision | For Type | Effect | Example |
 |-----------|----------|--------|---------|
-| `.n` | `%f`, `%e` | n decimal places (default is 6) | `%.2f` → `3.14` |
-| `.n` | `%g` | n significant digits | `%.3g` → `3.14` |
-| `.n` | `%s` | Max n characters | `%.3s` → `"Hel"` |
-| `.n` | `%d` | Minimum n digits (pad with 0) | `%.5d` → `00042` |
+| `.n` | `%f`, `%e` | n decimal places (default is 6) | `%.2f` â?`3.14` |
+| `.n` | `%g` | n significant digits | `%.3g` â?`3.14` |
+| `.n` | `%s` | Max n characters | `%.3s` â?`"Hel"` |
+| `.n` | `%d` | Minimum n digits (pad with 0) | `%.5d` â?`00042` |
 | `.*` | any | Precision from argument | `printf("%.*f", 2, 3.14159);` |
 
 **Precision behavior:**
-- The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` → `14.52`)
-- **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` → `"    3.14"`)
+- The decimal portion is **rounded** to the specified precision (`14.51678` with `%.2f` â?`14.52`)
+- **Width + Precision** can be used together (e.g., `%8.2f` with `3.14159` â?`"    3.14"`)
 
 > **To truncate instead of round:** Pre-process the value (see [7.1.2.8](#71128-truncating-floating-point-output-no-rounding))
 
@@ -4768,8 +4762,8 @@ The relationship between Length Modifier, Conversion Specifier, and actual varia
 
 ```cpp
 long long ll = 8589934592LL;  // 2^33
-printf("%d\n", ll);   // ❌ WRONG: %d expects int (4 bytes), but ll is long long (8 bytes)
-printf("%lld\n", ll); // ✅ CORRECT: %lld matches long long (8 bytes)
+printf("%d\n", ll);   // â?WRONG: %d expects int (4 bytes), but ll is long long (8 bytes)
+printf("%lld\n", ll); // â?CORRECT: %lld matches long long (8 bytes)
 ```
 
 **Common Combinations Table:**
@@ -4814,9 +4808,9 @@ printf("%lld\n", ll); // ✅ CORRECT: %lld matches long long (8 bytes)
 > **Note:** `%d` and `%i` are equivalent for output (both print signed decimal integers).
 
 **Selecting the right specifier:**
-- `short` or `int` → use `%i` (integer) or `%d` (decimal)
-- `long` → use `%li` or `%ld`
-- `float` or `double` → use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
+- `short` or `int` â?use `%i` (integer) or `%d` (decimal)
+- `long` â?use `%li` or `%ld`
+- `float` or `double` â?use `%f` (fixed-point), `%e`/`%E` (exponential), or `%g`/`%G` (auto-select shortest)
 
 #### 7.2.2.4 Format Examples
 
@@ -4977,7 +4971,7 @@ int result = printf("%10d\n", 5);
 
 ## 7.3 File I/O
 
-File streams from `<fstream>` provide facilities for reading from and writing to files.
+File streams from <fstream> provide facilities for reading from and writing to files.
 
 ### 7.3.1 File Input (ifstream)
 
@@ -5040,7 +5034,7 @@ outFile.close();
 
 ### 8.1.1 Relational Operators
 
-#### 8.1.1.1 Less Than (`<`)
+#### 8.1.1.1 Less Than (<`)
 
 Returns `true` if the left operand is less than the right operand.
 
@@ -5050,7 +5044,7 @@ bool result = a < b;     // true (5 is less than 10)
 bool result2 = b < a;    // false (10 is not less than 5)
 ```
 
-#### 8.1.1.2 Less Than or Equal To (`<=`)
+#### 8.1.1.2 Less Than or Equal To (<=`)
 
 Returns `true` if the left operand is less than or equal to the right operand.
 
@@ -5060,7 +5054,7 @@ bool result1 = x <= y;   // true (5 equals 5)
 bool result2 = z <= x;   // true (3 is less than 5)
 ```
 
-#### 8.1.1.3 Greater Than (`>`)
+#### 8.1.1.3 Greater Than (`>)
 
 Returns `true` if the left operand is greater than the right operand.
 
@@ -5114,9 +5108,9 @@ bool result = a != b;    // true (5 is not equal to 3)
 
 | Operator | Meaning | Example | Result |
 |----------|---------|---------|--------|
-| `<` | Less than | `5 < 10` | `true` |
-| `<=` | Less than or equal | `5 <= 5` | `true` |
-| `>` | Greater than | `10 > 5` | `true` |
+| <` | Less than | `5 < 10` | `true` |
+| <=` | Less than or equal | `5 <= 5` | `true` |
+| `> | Greater than | `10 > 5` | `true` |
 | `>=` | Greater than or equal | `5 >= 3` | `true` |
 | `==` | Equal to | `5 == 5` | `true` |
 | `!=` | Not equal to | `5 != 3` | `true` |
@@ -5187,9 +5181,9 @@ if (isWeekend || isHoliday) {
 
 | Operator                             | Name        | Description                          | Example                                                  |
 | ------------------------------------ | ----------- | ------------------------------------ | -------------------------------------------------------- |
-| `!`                                  | Logical NOT | Negates the expression               | `!true` → `false`                                        |
-| `&&`                                 | Logical AND | True if both operands are true       | `true && false` → `false`                                |
-| ![[Pasted image 20260328141639.png]] | Logical OR  | True if at least one operand is true | true ![[Pasted image 20260328141649.png]] false → `true` |
+| `!`                                  | Logical NOT | Negates the expression               | `!true` â?`false`                                        |
+| `&&`                                 | Logical AND | True if both operands are true       | `true && false` â?`false`                                |
+| ![[Pasted image 20260328141639.png]] | Logical OR  | True if at least one operand is true | true ![[Pasted image 20260328141649.png]] false â?`true` |
 
 > **Key Points:**
 > - Logical operators can also be used within conditions.
@@ -5200,7 +5194,7 @@ if (isWeekend || isHoliday) {
 | Precedence | Operators                                        |
 | ---------- | ------------------------------------------------ |
 | Highest    | `!` (logical NOT)                                |
-|            | Relational: `<`, `<=`, `>`, `>=`                 |
+|            | Relational: <`, <=`, `>, `>=`                 |
 |            | Equality: `==`, `!=`                             |
 |            | Logical AND: `&&`                                |
 | Lowest     | Logical OR: ![[Pasted image 20260328141744.png]] |
@@ -5230,7 +5224,7 @@ if (x > 0)
     cout << "positive";  // only one statement
 ```
 
-> **⚠️ Warning:** Without `{}`, `if` only controls the **immediately following statement**. Indentation does not affect execution.
+> **â ï¸ Warning:** Without `{}`, `if` only controls the **immediately following statement**. Indentation does not affect execution.
 
 ```cpp
 if (x > 0)
@@ -5257,7 +5251,7 @@ if (x > 0) {              // executed when condition is true
 
 - In C++, anywhere that requires "one statement" can be replaced with a compound statement wrapped in `{}`
 - A compound statement can contain any number of statements (0, 1, or many)
-- Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
+- Braces define the **scope** of variables â?variables defined inside the braces are not accessible outside
 
 #### 8.2.1.1 Empty Statement
 
@@ -5267,12 +5261,12 @@ An **empty statement** consists of just a semicolon `;` with no expression:
 ;   // This is a valid empty statement
 ```
 
-**Important:** The semicolon **cannot** be omitted — without it, the compiler will report an error:
+**Important:** The semicolon **cannot** be omitted â?without it, the compiler will report an error:
 
 ```cpp
 // Example: empty statement in if
 if (x < 0)
-    ;    // Empty statement — does nothing when x < 0
+    ;    // Empty statement â?does nothing when x < 0
 // ^ Semicolon REQUIRED here!
 
 // Without semicolon: ERROR
@@ -5349,7 +5343,7 @@ if (a > 0) {
 
 **Best Practice:** Always use braces `{}` with if statements, even for single statements, to prevent errors and improve readability.
 
-> **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
+> **Note:** `{}` serves as the **code block delimiter** â?it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
 ### 8.2.6 The Conditional (Ternary) Operator
 
@@ -5420,7 +5414,7 @@ switch (a) {
 // Case 2
 ```
 
-**Key Insight:** `case` is just a **jump label** — it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
+**Key Insight:** `case` is just a **jump label** â?it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
 
 ### 8.3.2 Syntax Rules
 
@@ -5465,21 +5459,21 @@ switch (c) {
 
 | Type | Example | Valid |
 |------|---------|-------|
-| Integer literals | `5`, `100` | ✅ Yes |
-| Character literals | `'a'`, `'A'` | ✅ Yes |
-| Enum values | `Color::Red` | ✅ Yes |
-| `const int` constants | `const int MAX = 10;` | ✅ Yes (compile-time constant) |
-| Regular variables | `int x = 5;` | ❌ No |
-| Expressions | `x + 1` | ❌ No |
+| Integer literals | `5`, `100` | â?Yes |
+| Character literals | `'a'`, `'A'` | â?Yes |
+| Enum values | `Color::Red` | â?Yes |
+| `const int` constants | `const int MAX = 10;` | â?Yes (compile-time constant) |
+| Regular variables | `int x = 5;` | â?No |
+| Expressions | `x + 1` | â?No |
 
 **Example:**
 ```cpp
 int x = 5;
 switch (n) {
-    case x:       // ❌ Error: x is a variable
-    case 5:       // ✅ OK: literal constant
-    case 'A':     // ✅ OK: character constant
-    case x + 1:   // ❌ Error: expression
+    case x:       // â?Error: x is a variable
+    case 5:       // â?OK: literal constant
+    case 'A':     // â?OK: character constant
+    case x + 1:   // â?Error: expression
 }
 ```
 
@@ -5492,9 +5486,9 @@ switch (n) {
 ```cpp
 switch (n) {
     case 1: ...
-    case 1: ...   // ❌ Error: duplicate case value
+    case 1: ...   // â?Error: duplicate case value
     case 'A': ... // ASCII 65
-    case 65: ...  // ❌ Error: 'A' equals 65, duplicate value
+    case 65: ...  // â?Error: 'A' equals 65, duplicate value
 }
 ```
 
@@ -5505,7 +5499,7 @@ const int MAX = 1;  // Compile-time constant
 
 switch (n) {
     case 1: ...      // Value = 1
-    case MAX: ...    // ❌ Error: MAX expands to 1, duplicate value
+    case MAX: ...    // â?Error: MAX expands to 1, duplicate value
 }
 ```
 
@@ -5519,7 +5513,7 @@ switch (n) {
 switch (choice) {
     case 1:
         cout << "One" << endl;
-        break;      // ✅ Exit switch
+        break;      // â?Exit switch
     case 2:
         cout << "Two" << endl;
         // No break! Execution continues to case 3
@@ -5617,8 +5611,8 @@ if (a) {
 
 | Value | Interpreted As | Example |
 |-------|---------------|---------|
-| Zero (`0`, `0.0`, `\0`) | `false` | `if (0)` → condition is false |
-| Nonzero (any non-zero value) | `true` | `if (5)` → condition is true |
+| Zero (`0`, `0.0`, `\0`) | `false` | `if (0)` â?condition is false |
+| Nonzero (any non-zero value) | `true` | `if (5)` â?condition is true |
 
 **Common Use Cases:**
 
@@ -5707,7 +5701,7 @@ for (initialization; condition; update) {
 **Execution order:**
 
 1. **Initialization** (once, at start)
-2. Check **condition** → if false, exit loop
+2. Check **condition** â?if false, exit loop
 3. Execute **loop body**
 4. Execute **update**
 5. Go back to step 2
@@ -5936,13 +5930,13 @@ for (int i = 0; i < 10; i++) {
 
 ## 9.1 Mathematical Functions
 
-> **Header:** Most functions in this section require `#include <cmath>` (C++ style) or `#include <math.h>` (C style)
+> **Header:** Most functions in this section require `#include <cmath> (C++ style) or `#include <math.h> (C style)
 >
-> **Exception:** Integer `abs()` requires `#include <cstdlib>` — see Section 9.1.2
+> **Exception:** Integer `abs()` requires `#include <cstdlib> â?see Section 9.1.2
 >
-> **Note:** In C++, `<cmath>` places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
+> **Note:** In C++, <cmath> places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
-### 9.1.1 `<cmath>` Functions
+### 9.1.1 <cmath> Functions
 
 **Argument Types:** These math functions accept `double` arguments. Other types (`int`, `float`) are automatically converted to `double`. Return type is always `double`.
 
@@ -5958,19 +5952,19 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 |----------|-------------|-------|
 | `fabs(x)` | Computes the absolute value of x | Returns `double` |
 | `sqrt(x)` | Computes the square root of x | Requires `x >= 0` |
-| `pow(x, y)` | Computes x raised to the power y (x^y) | **Domain Errors:** <br>• `x = 0` and `y <= 0` (undefined: 0^(-1)) <br>• `x < 0` and `y` is not an integer (e.g., (-2)^1.5 is not real) |
+| `pow(x, y)` | Computes x raised to the power y (x^y) | **Domain Errors:** <br>â?`x = 0` and `y <= 0` (undefined: 0^(-1)) <br>â?`x < 0` and `y` is not an integer (e.g., (-2)^1.5 is not real) |
 | `ceil(x)` | Rounds x up to the nearest integer (toward +infinity) | `ceil(2.01) = 3`, `ceil(-2.01) = -2` |
 | `floor(x)` | Rounds x down to the nearest integer (toward -infinity) | `floor(2.01) = 2`, `floor(-2.01) = -3` |
-| `exp(x)` | Computes e^x | e ≈ 2.718282 |
+| `exp(x)` | Computes e^x | e â?2.718282 |
 | `log(x)` | Computes the natural logarithm of x (ln x) | Requires `x > 0` |
-| `log10(x)` | Computes the common logarithm of x (log₁₀ x) | Requires `x > 0` |
+| `log10(x)` | Computes the common logarithm of x (logââ x) | Requires `x > 0` |
 
 ### 9.1.1.2 fabs vs abs
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
-| `abs(x)` | `int` | `int` | `<cstdlib>` or `<stdlib.h>` |
-| `fabs(x)` | `double` | `double` | `<cmath>` or `<math.h>` |
+| `abs(x)` | `int` | `int` | <cstdlib> or <stdlib.h> |
+| `fabs(x)` | `double` | `double` | <cmath> or <math.h> |
 
 **Key Difference:**
 - `abs` is for **integers** only
@@ -5997,7 +5991,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 
 | Method | Speed | Use Case |
 |--------|-------|----------|
-| `a * a` | Fastest | Small fixed exponents: a², a³ |
+| `a * a` | Fastest | Small fixed exponents: aÂ², aÂ³ |
 | `pow(a, b)` | Slower | Variable/fractional exponents |
 
 ### 9.1.1.4 Trigonometric Functions
@@ -6011,10 +6005,10 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | `sin(x)` | Sine of x |
 | `cos(x)` | Cosine of x |
 | `tan(x)` | Tangent of x |
-| `asin(x)` | Arcsine, returns [-π/2, π/2] |
-| `acos(x)` | Arccosine, returns [0, π] |
-| `atan(x)` | Arctangent, returns [-π/2, π/2] |
-| `atan2(y, x)` | Arctangent of y/x, returns [-π, π] |
+| `asin(x)` | Arcsine, returns [-Ï/2, Ï/2] |
+| `acos(x)` | Arccosine, returns [0, Ï] |
+| `atan(x)` | Arctangent, returns [-Ï/2, Ï/2] |
+| `atan2(y, x)` | Arctangent of y/x, returns [-Ï, Ï] |
 
 > **Note:** `atan` always returns an angle in Quadrant I or IV (right half plane). `atan2` returns an angle that can be in **any quadrant**, depending on the signs of x and y.
 >
@@ -6039,9 +6033,9 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
-### 9.1.2 `<cstdlib>` Functions
+### 9.1.2 <cstdlib> Functions
 
-> **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
+> **Header:** `#include <cstdlib> (C++ style) or `#include <stdlib.h> (C style)
 
 #### 9.1.2.1 abs
 
@@ -6049,14 +6043,14 @@ deg = rad * 180 / PI;
 
 | Function | Description | Notes |
 |----------|-------------|-------|
-| `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires `<cstdlib>` |
+| `abs(x)` | Computes the absolute value of an integer x | Returns `int`, requires <cstdlib> |
 
 **Comparison with `fabs`:**
 
 | Function | Input Type | Return Type | Header |
 |----------|------------|-------------|--------|
-| `abs(x)` | `int` | `int` | `<cstdlib>` |
-| `fabs(x)` | `double` | `double` | `<cmath>` |
+| `abs(x)` | `int` | `int` | <cstdlib> |
+| `fabs(x)` | `double` | `double` | <cmath> |
 
 ```cpp
 #include <cstdlib>
@@ -6072,7 +6066,7 @@ double x = fabs(-5.5); // Returns 5.5 (double)
 
 ##### 9.1.2.2.1 Basic Usage
 
-> **Header:** `#include <cstdlib>` (C++ style) or `#include <stdlib.h>` (C style)
+> **Header:** `#include <cstdlib> (C++ style) or `#include <stdlib.h> (C style)
 
 The `rand()` function generates pseudo-random integers:
 
@@ -6166,7 +6160,7 @@ srand(42);  // Fixed seed makes debugging easier
 int x = rand() % n;  // 0 to n-1 (e.g., rand() % 10 gives 0-9)
 ```
 
-> **Note:** This method has slight bias for large ranges. For cryptographic or statistical applications, use `<random>` library (C++11).
+> **Note:** This method has slight bias for large ranges. For cryptographic or statistical applications, use <random> library (C++11).
 
 **Integer Range [a, b]:**
 ```cpp
@@ -6185,15 +6179,15 @@ double rand_float(double a, double b) {
 
 // Usage: rand_float(0.0, 1.0) gives 0.0 to 1.0
 ```
-### 9.1.3 `<random>` Functions
+### 9.1.3 <random> Functions
 
-> **Header:** `#include <random>` (C++11 and later)
+> **Header:** `#include <random> (C++11 and later)
 
-The `<random>` library provides a modern, type-safe way to generate random numbers. Unlike `rand()`, it separates the **random number engine** (source of randomness) from the **distribution** (how values are mapped to a range).
+The <random> library provides a modern, type-safe way to generate random numbers. Unlike `rand()`, it separates the **random number engine** (source of randomness) from the **distribution** (how values are mapped to a range).
 
 #### 9.1.3.1 Basic Concepts
 
-**1. Engine — generates raw random bits**
+**1. Engine â?generates raw random bits**
 
 | Class | Description |
 |-------|-------------|
@@ -6208,7 +6202,7 @@ std::mt19937 gen(rd());       // Seed the engine
 
 > **Note:** If `std::random_device` is unavailable (rare, mostly embedded systems), use `std::chrono::steady_clock::now().time_since_epoch().count()` as a seed instead.
 
-**2. Distribution — maps raw bits to desired range and probability**
+**2. Distribution â?maps raw bits to desired range and probability**
 
 Distribution objects are independent of the engine. You pass the engine to the distribution's `operator()` each time you want a number.
 
@@ -6216,9 +6210,9 @@ Distribution objects are independent of the engine. You pass the engine to the d
 
 | Distribution | Use Case | Example |
 |--------------|----------|---------|
-| `std::uniform_int_distribution<int>` | Equal probability for each integer in [a, b] | Dice roll, lottery |
-| `std::uniform_real_distribution<double>` | Equal probability for each real in [a, b) | 0.0–1.0 random float |
-| `std::normal_distribution<double>` | Bell curve (Gaussian) | Noise, natural variation |
+| `std::uniform_int_distribution<int> | Equal probability for each integer in [a, b] | Dice roll, lottery |
+| `std::uniform_real_distribution<double> | Equal probability for each real in [a, b) | 0.0â?.0 random float |
+| `std::normal_distribution<double> | Bell curve (Gaussian) | Noise, natural variation |
 
 **Integer Range [a, b] (inclusive):**
 ```cpp
@@ -6242,7 +6236,7 @@ double r = dis(gen);
 
 **Example 1: Rolling a die 10 times**
 ```cpp
-#include <iostream>
+#include `<iostream>`
 #include <random>
 
 int main() {
@@ -6267,17 +6261,17 @@ auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
 std::mt19937 gen(static_cast<unsigned>(seed));
 ```
 
-#### 9.1.3.4 `rand()` vs `<random>`
+#### 9.1.3.4 `rand()` vs <random>
 
-| Feature | `rand()` / `srand()` | `<random>` (Modern) |
+| Feature | `rand()` / `srand()` | <random> (Modern) |
 |---------|----------------------|---------------------|
 | **Uniformity** | `rand() % n` introduces bias | Mathematically guaranteed uniform |
 | **Maximum value** | Limited to `RAND_MAX` (often 32767) | No practical limit |
-| **Period** | Short | Very long (e.g., `mt19937` has period 2^19937−1) |
+| **Period** | Short | Very long (e.g., `mt19937` has period 2^19937â?) |
 | **Distribution types** | Only crude uniform integers | Uniform, normal, exponential, Poisson, etc. |
 | **Type safety** | Single function returns `int` | Template classes distinguish `int` vs `double` |
 
-> **Recommendation:** Always use `<random>` for new C++ code. Only use `rand()` when required by legacy APIs or specific course constraints.
+> **Recommendation:** Always use <random> for new C++ code. Only use `rand()` when required by legacy APIs or specific course constraints.
 
 #### 9.1.3.5 Common Pitfall
 
@@ -6304,12 +6298,12 @@ for (int i = 0; i < 10; ++i) {
 ### 9.1.4 Character Functions
 
 > **Headers:** This section covers functions from two different headers:
-> - `<cstdio>` — Character I/O functions (Section 9.2.1)
-> - `<cctype>` — Character classification & conversion (Section 9.2.2)
+> - <cstdio> â?Character I/O functions (Section 9.2.1)
+> - <cctype> â?Character classification & conversion (Section 9.2.2)
 
-### 9.1.4.1 `<cstdio>` Character I/O
+### 9.1.4.1 <cstdio> Character I/O
 
-> **Header:** `#include <cstdio>` (C++ style) or `#include <stdio.h>` (C style)
+> **Header:** `#include <cstdio> (C++ style) or `#include <stdio.h> (C style)
 
 C provides two approaches for character I/O:
 1. Using `printf`/`scanf` with `%c` format specifier
@@ -6390,11 +6384,11 @@ putchar('\n');        // Output: Hi\n (now moves to new line)
 putchar('!');         // Output on next line
 ```
 
-> **Note:** This is expected behavior—characters accumulate until `\n` flushes the output or moves to a new line.
+> **Note:** This is expected behaviorâcharacters accumulate until `\n` flushes the output or moves to a new line.
 
-### 9.1.4.2 `<cctype>` Character Classification & Conversion
+### 9.1.4.2 <cctype> Character Classification & Conversion
 
-> **Header:** `#include <cctype>` (C++ style) or `#include <ctype.h>` (C style)
+> **Header:** `#include <cctype> (C++ style) or `#include <ctype.h> (C style)
 
 ### 9.1.4.2.1 Classification Functions
 
@@ -6428,13 +6422,13 @@ Both functions convert letter case without modifying the original variable:
 
 | Input `ch` | `toupper(ch)` returns | `tolower(ch)` returns |
 |------------|----------------------|----------------------|
-| Lowercase `'a'`–`'z'` | Uppercase `'A'`–`'Z'` | Original (already lowercase) |
-| Uppercase `'A'`–`'Z'` | Original (already uppercase) | Lowercase `'a'`–`'z'` |
+| Lowercase `'a'`â`'z'` | Uppercase `'A'`â`'Z'` | Original (already lowercase) |
+| Uppercase `'A'`â`'Z'` | Original (already uppercase) | Lowercase `'a'`â`'z'` |
 | Non-letter (digit, symbol, etc.) | Original unchanged | Original unchanged |
 
 **Important Notes:**
 
-- **Original variable is NOT modified** — functions only return the converted value
+- **Original variable is NOT modified** â?functions only return the converted value
 - To change the variable itself, you must reassign: `ch = toupper(ch);`
 
 **Examples:**
@@ -6571,7 +6565,7 @@ double sinc(double);
 | **Top of file** | Before `main()`, so all functions can use it |
 | **Header files** | For sharing across multiple source files |
 
-**Standard library headers** (e.g., `<cmath>`, `<cstdio>`) contain prototypes for library functions. Without `#include`, you'd need to write them manually.
+**Standard library headers** (e.g., <cmath>, <cstdio>) contain prototypes for library functions. Without `#include`, you'd need to write them manually.
 
 #### 9.2.2.4 Best Practice
 
@@ -6579,11 +6573,11 @@ double sinc(double);
 |----------|----------------|
 | **Single file** | Place all prototypes after `#include`, before `main()` |
 | **Multiple files** | Put prototypes in `.h` header file, `#include` where needed |
-| **Always?** | Yes—even if function is defined before use, prototypes improve clarity |
+| **Always?** | Yesâeven if function is defined before use, prototypes improve clarity |
 
 **Typical Layout:**
 ```cpp
-#include <iostream>
+#include `<iostream>`
 using namespace std;
 
 // Function prototypes
@@ -6749,15 +6743,15 @@ When a function has multiple parameters (e.g., `printTable`), the formal paramet
 If the actual parameter type differs from the formal parameter type, C++ attempts an automatic type conversion (coercion).
 
 - **Narrowing conversions** may cause data loss:
-  - `float` → `int`: truncates decimal part (e.g., 3.7 becomes 3)
-  - `double` → `float`: may lose precision
-  - `int` → `char`: value may be truncated to fit
+  - `float` â?`int`: truncates decimal part (e.g., 3.7 becomes 3)
+  - `double` â?`float`: may lose precision
+  - `int` â?`char`: value may be truncated to fit
 - **Widening conversions** are generally safe:
-  - `int` → `double`
-  - `char` → `int`
+  - `int` â?`double`
+  - `char` â?`int`
 - **Warning**: Some conversions may produce unexpected results or compiler warnings
 
-**Example — Implicit Conversion (Not Recommended):**
+**Example â?Implicit Conversion (Not Recommended):**
 ```cpp
 void printInt(int x) {
     printf("%d\n", x);
@@ -6769,7 +6763,7 @@ int main() {
 }
 ```
 
-**Example — Explicit Conversion (Recommended):**
+**Example â?Explicit Conversion (Recommended):**
 ```cpp
 void printInt(int x) {
     printf("%d\n", x);
@@ -7577,7 +7571,7 @@ v.erase(remove(v.begin(), v.end(), 1), v.end());  // Remove all 1s
 
 ### 11.1.9 Vector vs Array
 
-| Feature | Array (`int arr[]`) | Vector (`vector<int>`) |
+| Feature | Array (`int arr[]`) | Vector (`vector<int>) |
 |---------|---------------------|------------------------|
 | **Size** | Fixed at compile time | Dynamic at runtime |
 | **Memory** | Stack (usually) | Heap |
@@ -7793,9 +7787,9 @@ if (s1 == "apple") { }  // true
 
 | Function | Description | Example | Since |
 |----------|-------------|---------|-------|
-| `to_string(val)` | Convert number to string | `to_string(42)` → `"42"` | C++11 |
-| `stoi(str)` | String to int | `stoi("42")` → `42` | C++11 |
-| `stol(str)` | String to long | `stol("42")` → `42L` | C++11 |
+| `to_string(val)` | Convert number to string | `to_string(42)` â?`"42"` | C++11 |
+| `stoi(str)` | String to int | `stoi("42")` â?`42` | C++11 |
+| `stol(str)` | String to long | `stol("42")` â?`42L` | C++11 |
 | `stoll(str)` | String to long long | `stoll("42")` | C++11 |
 | `stof(str)` | String to float | `stof("3.14")` | C++11 |
 | `stod(str)` | String to double | `stod("3.14")` | C++11 |
@@ -7841,24 +7835,24 @@ for (size_t i = 0; i < s.length(); i++) {
 }
 ```
 
-### 11.2.8 String vs Vector`<char>`
+### 11.2.8 String vs Vector<char>
 
-`string` and `vector<char>` are similar but `string` has additional string-specific functionality:
+`string` and `vector<char> are similar but `string` has additional string-specific functionality:
 
-| Feature | `string` | `vector<char>` |
+| Feature | `string` | `vector<char> |
 |---------|----------|----------------|
 | **Purpose** | Text data | Generic character array |
 | **Concatenation** | `+` operator | No `+` operator |
-| **Comparison** | `==`, `<`, etc. | `==` checks contents, not standard `<` |
+| **Comparison** | `==`, <`, etc. | `==` checks contents, not standard <` |
 | **C-string conversion** | `c_str()`, `data()` | Manual conversion |
 | **Null terminator** | Automatic | Not automatic |
-| **Stream I/O** | `>>`, `<<` | Not directly supported |
+| **Stream I/O** | `>>, <<` | Not directly supported |
 
-> **Use `string`** for text processing. **Use `vector<char>`** only when you need a raw character array without string semantics.
+> **Use `string`** for text processing. **Use `vector<char>** only when you need a raw character array without string semantics.
 
 ## 11.3 Algorithm
 
-The `<algorithm>` header provides a rich set of generic algorithms that work with iterators from any container.
+The <algorithm> header provides a rich set of generic algorithms that work with iterators from any container.
 
 ### 11.3.1 Header Overview
 
@@ -7878,7 +7872,7 @@ These algorithms work with iterators, so they can be used with:
 |-----------|-------------|---------|-----------------|
 | `sort(begin, end)` | Sort ascending | `sort(v.begin(), v.end())` | O(n log n) |
 | `sort(begin, end, comp)` | Sort with comparator | `sort(v.begin(), v.end(), greater<int>())` | O(n log n) |
-| `stable_sort(begin, end)` | Stable sort | `stable_sort(v.begin(), v.end())` | O(n log² n) or O(n log n) |
+| `stable_sort(begin, end)` | Stable sort | `stable_sort(v.begin(), v.end())` | O(n logÂ² n) or O(n log n) |
 | `partial_sort(begin, mid, end)` | Partial sort | `partial_sort(v.begin(), v.begin()+5, v.end())` | O(n log n) |
 | `nth_element(begin, nth, end)` | Partition at nth element | `nth_element(v.begin(), v.begin()+5, v.end())` | O(n) on average |
 
@@ -7949,13 +7943,13 @@ auto it2 = find_if(v.begin(), v.end(), [](int x) {
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
-| `min(a, b)` | Minimum of two values | `min(3, 5)` → `3` |
-| `max(a, b)` | Maximum of two values | `max(3, 5)` → `5` |
+| `min(a, b)` | Minimum of two values | `min(3, 5)` â?`3` |
+| `max(a, b)` | Maximum of two values | `max(3, 5)` â?`5` |
 | `min_element(begin, end)` | Iterator to minimum | `min_element(v.begin(), v.end())` |
 | `max_element(begin, end)` | Iterator to maximum | `max_element(v.begin(), v.end())` |
-| `minmax(a, b)` | Min and max as pair | `minmax(3, 5)` → `{3, 5}` |
+| `minmax(a, b)` | Min and max as pair | `minmax(3, 5)` â?`{3, 5}` |
 | `minmax_element(begin, end)` | Iterators to min and max | `minmax_element(v.begin(), v.end())` |
-| `clamp(val, min, max)` | Constrain value to range | `clamp(10, 0, 5)` → `5` (C++17) |
+| `clamp(val, min, max)` | Constrain value to range | `clamp(10, 0, 5)` â?`5` (C++17) |
 
 **Examples:**
 ```cpp
@@ -8040,7 +8034,7 @@ v.erase(it, v.end());
 // v = {1, 2, 3}
 ```
 
-### 11.3.6 Numeric Algorithms (in `<numeric>`)
+### 11.3.6 Numeric Algorithms (in <numeric>)
 
 | Algorithm | Description | Example | Since |
 |-----------|-------------|---------|-------|
