@@ -97,7 +97,12 @@ This section provides a quick reference for commonly used C++ standard library h
 | `<cmath>` | `<math.h>` | Mathematical functions (sin, cos, sqrt) |
 | `<cstring>` | `<string.h>` | C-style string functions (strcpy, strlen) |
 | `<ctime>` | `<time.h>` | Date and time functions |
-| `<cctype>` | `<ctype.h>` | Character classification (isdigit, toupper) |
+| `<cctype>` | `<ctype.h>` | Character classification (isdigit, isalpha, toupper, tolower) |
+| `<cstddef>` | `<stddef.h>` | Common definitions (size_t, nullptr_t, ptrdiff_t) |
+| `<climits>` | `<limits.h>` | Integer type limits (INT_MAX, LONG_MIN, etc.) |
+| `<cfloat>` | `<float.h>` | Floating-point limits (FLT_MAX, DBL_EPSILON, etc.) |
+| `<cerrno>` | `<errno.h>` | Error numbers (errno, EDOM, ERANGE) |
+| `<cassert>` | `<assert.h>` | Runtime assertions (assert macro) |
 
 #### 1.1.4.2 C++ Standard Library Headers
 
@@ -115,6 +120,160 @@ This section provides a quick reference for commonly used C++ standard library h
 | `<memory>` | Smart pointers (unique_ptr, shared_ptr) |
 | `<thread>` | Threading support |
 | `<mutex>` | Mutual exclusion primitives |
+
+#### 1.1.4.2 C++ Standard Library Headers by Category
+
+**Sequence Containers**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<vector>` | `std::vector` - Dynamic array | Default choice for sequential storage |
+| `<array>` | `std::array` - Fixed-size array | Stack allocation with fixed compile-time size |
+| `<deque>` | `std::deque` - Double-ended queue | Fast insertion/removal at both ends |
+| `<list>` | `std::list` - Doubly-linked list | Frequent insertion/removal in middle |
+| `<forward_list>` | `std::forward_list` - Singly-linked list | Memory-constrained scenarios |
+
+**Associative Containers**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<set>` | `std::set`, `std::multiset` | Ordered unique elements (tree-based) |
+| `<map>` | `std::map`, `std::multimap` | Ordered key-value pairs (tree-based) |
+| `<unordered_set>` | `std::unordered_set` | Unique elements (hash-based, O(1)) |
+| `<unordered_map>` | `std::unordered_map` | Key-value pairs (hash-based, O(1)) |
+
+**Container Adapters**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<stack>` | `std::stack` | LIFO (Last-In-First-Out) structure |
+| `<queue>` | `std::queue` | FIFO (First-In-First-Out) structure |
+| `<priority_queue>` | `std::priority_queue` | Max-heap; access largest element first |
+
+**Strings**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<string>` | `std::string`, `std::wstring` | Dynamic string storage |
+| `<string_view>` | `std::string_view` | (C++17) Non-owning string view |
+
+**Input/Output**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<iostream>` | `cin`, `cout`, `cerr`, `clog` | Standard console I/O |
+| `<fstream>` | `ifstream`, `ofstream`, `fstream` | File I/O |
+| `<sstream>` | `istringstream`, `ostringstream` | String-based I/O |
+| `<iomanip>` | `setw`, `setprecision`, `fixed` | Output formatting |
+| `<ios>` | Base I/O classes | Stream flags and constants |
+
+**Algorithms and Iterators**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<algorithm>` | `sort`, `find`, `transform`, `copy` | Data manipulation |
+| `<numeric>` | `accumulate`, `inner_product`, `iota` | Numeric operations |
+| `<iterator>` | Iterator utilities | Iterator operations |
+| `<ranges>` | Range library | (C++20) Range-based algorithms |
+
+**Memory Management**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<memory>` | Smart pointers (`unique_ptr`, `shared_ptr`) | Automatic memory management |
+
+**Function Objects and Utilities**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<functional>` | `function`, `bind`, lambdas | Callbacks, function objects |
+| `<utility>` | `pair`, `tuple`, `move`, `swap` | Utility functions |
+| `<initializer_list>` | `initializer_list` | Brace initialization |
+| `<optional>` | `optional` | (C++17) Nullable values |
+| `<variant>` | `variant` | (C++17) Type-safe union |
+| `<any>` | `any` | (C++17) Type-erased container |
+
+**Multithreading**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<thread>` | `thread`, `this_thread` | Thread creation |
+| `<mutex>` | `mutex`, `lock_guard`, `unique_lock` | Mutual exclusion |
+| `<shared_mutex>` | `shared_mutex` | (C++17) Reader-writer locks |
+| `<condition_variable>` | `condition_variable` | Thread synchronization |
+| `<future>` | `future`, `promise`, `async` | Asynchronous operations |
+| `<atomic>` | `atomic` | Lock-free programming |
+
+**Time and Random Numbers**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<chrono>` | `duration`, `time_point`, clocks | Time measurements |
+| `<random>` | `random_device`, `mt19937` | High-quality random numbers |
+
+**Type Support**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<type_traits>` | `is_integral`, `enable_if` | Compile-time type info |
+| `<typeinfo>` | `type_info`, `typeid` | Runtime type information |
+
+**Exceptions**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<exception>` | `exception`, `bad_alloc` | Base exception classes |
+| `<stdexcept>` | `runtime_error`, `logic_error` | Standard exception types |
+| `<system_error>` | `error_code` | System error codes |
+
+**File System and Regex**
+
+| Header | Content | Use When |
+|--------|---------|----------|
+| `<filesystem>` | `path`, `directory_iterator` | (C++17) File operations |
+| `<regex>` | `regex`, `smatch` | Regular expressions |
+
+**C++20 Features**
+
+| Header | Content |
+|--------|---------|
+| `<span>` | Non-owning array view |
+| `<format>` | String formatting |
+| `<concepts>` | Template constraints |
+| `<coroutine>` | Coroutine support |
+
+#### 1.1.4.3 Header Selection Guide by Task
+
+**Need to store data?**
+- Sequential, dynamic: `<vector>`
+- Sequential, fixed: `<array>`
+- Fast insert at ends: `<deque>`
+- Fast insert in middle: `<list>`
+- Key-value (ordered): `<map>`
+- Key-value (fast): `<unordered_map>`
+- Unique values: `<set>` or `<unordered_set>`
+- LIFO/FIFO: `<stack>` / `<queue>`
+
+**Need I/O?**
+- Console: `<iostream>` + `<iomanip>`
+- Files: `<fstream>`
+- String parsing: `<sstream>`
+
+**Need to process data?**
+- Sorting/searching: `<algorithm>`
+- Numeric operations: `<numeric>`
+- Random numbers: `<random>`
+
+**Need concurrency?**
+- Threads: `<thread>`
+- Synchronization: `<mutex>`, `<condition_variable>`
+- Async: `<future>`
+
+**Need utilities?**
+- Strings: `<string>`, `<string_view>`
+- Time: `<chrono>`
+- Type info: `<type_traits>`
+- Error handling: `<exception>`, `<stdexcept>`
 
 ## 1.2 Program Entry Point: main()
 
