@@ -82,7 +82,7 @@ Linker combines object files into executable
 double area = 3.14159 * ((r) * (r));
 ```
 
-The preprocessor is covered in detail in Chapter 2.
+The preprocessor is covered in detail in [Chapter 2](#2-the-preprocessor).
 
 ### 1.1.4 Common Header Files Reference
 
@@ -115,21 +115,6 @@ This section provides a quick reference for commonly used C++ standard library h
 | `<memory>` | Smart pointers (unique_ptr, shared_ptr) |
 | `<thread>` | Threading support |
 | `<mutex>` | Mutual exclusion primitives |
-
-#### 1.1.4.3 Header Selection Guide
-
-**For I/O:**
-- Use `<iostream>` for C++ streams (preferred)
-- Use `<cstdio>` only when interfacing with C code
-
-**For strings:**
-- Use `<string>` for `std::string` (always preferred)
-- Use `<cstring>` only for C-string manipulation
-
-**For containers:**
-- Use `<vector>` for dynamic arrays
-- Use `<array>` for fixed-size arrays
-- Use `<map>` or `<unordered_map>` for key-value storage
 
 ## 1.2 Program Entry Point: main()
 
