@@ -131,11 +131,11 @@ This section provides a quick reference for commonly used C++ standard library h
 - Use `<array>` for fixed-size arrays
 - Use `<map>` or `<unordered_map>` for key-value storage
 
-## 1.2 The Preprocessor
+# 2 The Preprocessor
 
 The preprocessor runs before compilation, performing text substitution and conditional inclusion.
 
-### 1.2.1 `#include`: Header Inclusion Mechanics
+## 2.1 `#include`: Header Inclusion Mechanics
 
 `#include` performs **textual substitution** — the entire header file content is inserted at the directive location.
 
@@ -144,7 +144,7 @@ The preprocessor runs before compilation, performing text substitution and condi
 #include "myheader.h" // Searches project directory first, then system paths
 ```
 
-#### 1.2.1.1 Search Path: `< >` vs `" "`
+### 2.1.1 Search Path: `< >` vs `" "`
 
 | Syntax | Search Order | Use Case |
 |--------|--------------|----------|
@@ -156,7 +156,7 @@ The preprocessor runs before compilation, performing text substitution and condi
 - Windows (MinGW): `C:\MinGW\include`
 - macOS: `/Applications/Xcode.app/Contents/Developer/Platforms/...`
 
-#### 1.2.1.2 Header File Extensions
+### 2.1.2 Header File Extensions
 
 | Extension | Convention | Typical Content |
 |-----------|------------|-----------------|
@@ -165,11 +165,11 @@ The preprocessor runs before compilation, performing text substitution and condi
 
 > **Best Practice:** Use `.hpp` for C++ headers to distinguish from C headers.
 
-#### 1.2.1.3 Include Guards
+### 2.1.3 Include Guards
 
 Include Guards prevent multiple inclusions of the same header file. Without them, including a header multiple times would cause **redefinition errors**.
 
-##### 1.2.1.3.1 The Problem: Multiple Inclusions
+#### 2.1.3.1 The Problem: Multiple Inclusions
 
 Consider this scenario:
 
@@ -191,7 +191,7 @@ class Helper { ... };
 
 When `main.cpp` includes both `a.hpp` and `b.hpp`, `utils.hpp` gets processed twice. Since C++ does not allow multiple definitions of the same class, this results in a compilation error.
 
-##### 1.2.1.3.2 Traditional Include Guards (`#ifndef`)
+#### 2.1.3.2 Traditional Include Guards (`#ifndef`)
 
 The classic approach uses preprocessor directives to ensure the header content is processed only once:
 
@@ -220,7 +220,7 @@ class MyClass { ... };
 - Example: `math_utils.hpp` → `MATH_UTILS_HPP`
 - Ensure uniqueness to avoid name collisions
 
-##### 1.2.1.3.3 `#pragma once`
+#### 2.1.3.3 `#pragma once`
 
 A modern, simpler alternative:
 
@@ -235,7 +235,7 @@ class MyClass { ... };
 **How it works:**
 The compiler internally records which files have been included. When encountering the same file again, it skips processing entirely.
 
-##### 1.2.1.3.4 Comparison
+#### 2.1.3.4 Comparison
 
 | Aspect | `#ifndef` Guards | `#pragma once` |
 |--------|------------------|----------------|
@@ -245,13 +245,13 @@ The compiler internally records which files have been included. When encounterin
 | **Potential Issues** | Name collision if macros not unique | None |
 | **Use Case** | Maximum compatibility | Modern projects |
 
-##### 1.2.1.3.5 Recommendation
+#### 2.1.3.5 Recommendation
 
 - **For new projects:** Use `#pragma once` (cleaner, faster)
 - **For maximum portability:** Use `#ifndef` guards
 - **Consistency matters:** Pick one approach and use it throughout your project
 
-### 1.2.2 Macro Definitions (#define)
+## 2.2 Macro Definitions (#define)
 
 **The Essence of Macros: Text Substitution**
 
@@ -274,7 +274,7 @@ double area = 3.14159 * r * r;
 - **No memory**: Macros do not allocate storage; they are replaced before compilation
 - **Simple but dangerous**: Text substitution can produce unexpected results if not careful (see pitfalls below)
 
-#### 1.2.2.1 Object-like Macros (Constants)
+### 2.2.1 Object-like Macros (Constants)
 
 ```cpp
 #define PI 3.141593
@@ -292,7 +292,7 @@ int arr[MAX_SIZE];                    // Compiler sees: int arr[100];
 ```
  
 
-#### 1.2.2.2 Function-like Macros
+### 2.2.2 Function-like Macros
 
 ```cpp
 #define SQUARE(x) ((x) * (x))
@@ -303,7 +303,7 @@ int y = SQUARE(5);      // Expands to: ((5) * (5)) = 25
 int m = MAX(x, y);      // Expands to: ((x) > (y) ? (x) : (y))
 ```
 
-#### 1.2.2.3 Multi-line Macros
+### 2.2.3 Multi-line Macros
 
 If a macro definition spans multiple lines, a backslash (`\`) must be placed at the end of each line (except the last) to indicate line continuation.
 
@@ -341,7 +341,7 @@ The backslash `\` must be the **very last character** on the line. If there is a
     1
 ```
 
-#### 1.2.2.4 Macro Expansion Rules and Pitfalls
+### 2.2.4 Macro Expansion Rules and Pitfalls
 
 **Critical Rule: Parenthesize Everything**
 
@@ -380,7 +380,7 @@ int m = MAX(x++, 10);   // Expands to: ((x++) > (10) ? (x++) : (10))
 inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-safe
 ```
 
-#### 1.2.2.5 Macros vs Functions: Summary
+### 2.2.5 Macros vs Functions: Summary
 
 **Advantages of Macros over Functions:**
 
@@ -413,11 +413,11 @@ inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-
 
 > **Key Point:** Each `.cpp` file gets its own copy of the macro through `#include`; macros are not "shared" like functions, they are "copied and pasted" by the preprocessor.
 
-#### 1.2.2.6 Macro Operators (Advanced)
+### 2.2.6 Macro Operators (Advanced)
 
 The preprocessor provides two special operators for use in macros: `#` (stringification) and `##` (token pasting).
 
-##### 1.2.2.6.1 The `#` Operator (Stringification)
+#### 2.2.6.1 The `#` Operator (Stringification)
 
 Converts a macro parameter into a string literal.
 
@@ -436,7 +436,7 @@ int count = 42;
 DEBUG_VAR(count);  // Output: count = 42
 ```
 
-##### 1.2.2.6.2 The `##` Operator (Token Pasting)
+#### 2.2.6.2 The `##` Operator (Token Pasting)
 
 Concatenates two tokens into a single token.
 ```cpp
@@ -454,7 +454,7 @@ DECLARE_VARIABLE(int, count);   // Expands to: int var_count
 DECLARE_VARIABLE(double, pi);   // Expands to: double var_pi
 ```
 
-##### 1.2.2.6.3 Combining Both Operators
+#### 2.2.6.3 Combining Both Operators
 
 ```cpp
 #define MAKE_FUNCTION(name) void func_##name() { std::cout << #name " called\n"; }
@@ -465,11 +465,11 @@ MAKE_FUNCTION(cleanup); // Expands to: void func_cleanup() { std::cout << "clean
 
 > **Note:** These operators are advanced features. Modern C++ often prefers templates and constexpr functions over macro operators for type safety.
 
-### 1.2.3 Predefined Macros
+## 2.3 Predefined Macros
 
 The preprocessor provides macros with compile-time information.
 
-#### 1.2.3.1 Standard Macros
+### 2.3.1 Standard Macros
 
 | Macro | Description | Example Value |
 |-------|-------------|---------------|
@@ -501,7 +501,7 @@ void log_error(const char* msg) {
 #endif
 ```
 
-#### 1.2.3.2 Compiler/Platform Identification
+### 2.3.2 Compiler/Platform Identification
 
 | Macro | Meaning |
 |-------|---------|
@@ -524,7 +524,7 @@ void log_error(const char* msg) {
     #pragma warning(disable: 4996)
 #endif
 ```
-### 1.2.4 `#undef` - Remove Macro Definition
+## 2.4 `#undef` - Remove Macro Definition
 
 ```cpp
 #define MAX_SIZE 100
@@ -534,11 +534,11 @@ void log_error(const char* msg) {
 #define MAX_SIZE 200  // Can redefine with new value
 ```
 
-### 1.2.5 Conditional Compilation
+## 2.5 Conditional Compilation
 
 Compile different code based on conditions evaluated at preprocessing time.
 
-#### 1.2.5.1 `#ifdef`, `#ifndef`, `#if` defined()
+### 2.5.1 `#ifdef`, `#ifndef`, `#if` defined()
 
 ```cpp
 #ifdef DEBUG
@@ -559,7 +559,7 @@ Compile different code based on conditions evaluated at preprocessing time.
 #endif
 ```
 
-#### 1.2.5.2 Platform Detection
+### 2.5.2 Platform Detection
 
 ```cpp
 #if defined(_WIN32)
@@ -591,7 +591,7 @@ Compile different code based on conditions evaluated at preprocessing time.
 | `__FreeBSD__` | FreeBSD |
 | `__ANDROID__` | Android |
 
-#### 1.2.5.3 Debug vs Release Builds
+### 2.5.3 Debug vs Release Builds
 
 ```cpp
 #ifdef DEBUG
@@ -612,9 +612,9 @@ ASSERT(ptr != nullptr);
 g++ -DDEBUG main.cpp -o program   # Defines DEBUG macro
 ```
 
-### 1.2.6 Other Directives
+## 2.6 Other Directives
 
-#### 1.2.6.1 `#line` - Change Line Number (for code generators)
+### 2.6.1 `#line` - Change Line Number (for code generators)
 
 ```cpp
 #line 100 "generated.cpp"  // Subsequent lines appear to start at 100 in generated.cpp
@@ -622,7 +622,7 @@ g++ -DDEBUG main.cpp -o program   # Defines DEBUG macro
 // Error messages will reference the generated file name and line
 ```
 
-#### 1.2.6.2 `#pragma` - Compiler-Specific Directives
+### 2.6.2 `#pragma` - Compiler-Specific Directives
 
 ```cpp
 #pragma once              // Include guard (non-standard but universal)
@@ -637,7 +637,7 @@ struct PackedStruct {     // Members packed with no gaps
 #pragma warning(disable: 4996)  // MSVC: Disable specific warning
 ```
 
-#### 1.2.6.3 `#error` and `#warning`
+### 2.6.3 `#error` and `#warning`
 
 ```cpp
 #ifndef __cplusplus
