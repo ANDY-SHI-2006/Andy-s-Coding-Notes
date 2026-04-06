@@ -640,19 +640,19 @@ g++ math_utils.cpp main.cpp -o program
 The complete journey from source code to executable:
 
 ```
-math.hpp âââ?
-            â?
-math.cpp ââââ¼ââ> Compile ââ> math.o âââ?
-            â?                         â?
-main.cpp ââââ?                         âââ> Link ââ> program
-                                       â?
-                                    main.o
+math.hpp ------+
+               |
+math.cpp ------+--> Compile --> math.o ---+
+               |                          |
+main.cpp ------+                          +--> Link --> program
+                                          |
+                                       main.o
 ```
 
 **Key Points:**
 - Each `.cpp` file is compiled independently into an `.o` (object) file
 - The linker combines all object files into the final executable
-- Headers are not compiled directly â?they are included into `.cpp` files
+- Headers are not compiled directly — they are included into `.cpp` files
 - Changing a header requires recompiling all files that include it
 
 > **Note:** Understanding this structure helps explain why we need `#include` (Chapter 2) and why the One Definition Rule (Section 1.1.2) exists.
