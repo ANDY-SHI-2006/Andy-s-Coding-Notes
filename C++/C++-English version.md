@@ -43,6 +43,47 @@ extern int global;        // Declaration (no memory, refers to file1's definitio
 
 > **One Definition Rule (ODR):** Each variable/function/class can be defined only once across all translation units. Multiple declarations are allowed.
 
+### 1.1.3 Preprocessor Overview
+
+Before the compiler processes your code, the **preprocessor** performs an initial pass to handle directives. These are commands that begin with `#` and instruct the preprocessor to modify the source code before compilation.
+
+**Key Directives:**
+
+| Directive | Purpose |
+|-----------|---------|
+| `#include` | Insert the contents of another file |
+| `#define` | Define a macro (text substitution) |
+| `#undef` | Remove a macro definition |
+| `#if` / `#ifdef` / `#ifndef` | Conditional compilation |
+| `#pragma` | Compiler-specific instructions |
+
+**Processing Flow:**
+
+```
+Source File (.cpp)
+       ↓
+Preprocessor handles #include, #define, #if, etc.
+       ↓
+Modified Source (translation unit)
+       ↓
+Compiler generates object code
+       ↓
+Linker combines object files into executable
+```
+
+> **Key Point:** The preprocessor knows nothing about C++ syntax, types, or scope. It performs pure text substitution.
+
+**Example:**
+```cpp
+#define PI 3.14159
+#define SQUARE(x) ((x) * (x))
+
+// After preprocessing, the compiler sees:
+double area = 3.14159 * ((r) * (r));
+```
+
+The preprocessor is covered in detail in Chapter 2.
+
 ## 1.2 The Preprocessor
 
 The preprocessor runs before compilation, performing text substitution and conditional inclusion.
