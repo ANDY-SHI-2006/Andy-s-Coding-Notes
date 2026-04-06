@@ -191,6 +191,17 @@ Arg 2: input.txt
 Arg 3: -v
 ```
 
+**How `argc` and `argv` are passed:**
+
+You don't manually pass `argc` when running the program. The operating system handles this automatically:
+
+1. **Shell parses your input**: Splits `./program -f input.txt -v` by spaces
+2. **OS launches the program**: Passes the argument count and array to the program
+3. **C++ runtime receives**: Sets `argc=4`, `argv=["./program", "-f", "input.txt", "-v"]`
+4. **Your `main()` is called**: With these values already populated
+
+> **Key Point:** `argc` is calculated by the OS/Shell, not by you. The C++ runtime passes it to `main()` when the program starts.
+
 **Parameter forms (all equivalent in C++):**
 
 | Declaration | Meaning |
