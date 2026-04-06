@@ -38,7 +38,7 @@ int global = 10;          // Definition (memory allocated)
 
 // file2.cpp
 extern int global;        // Declaration (no memory, refers to file1's definition)
-// int global = 20;       // ERROR! Redefinition violates ODR
+int global = 20;       // ERROR! Redefinition violates ODR
 ```
 
 > **One Definition Rule (ODR):** Each variable/function/class can be defined only once across all translation units. Multiple declarations are allowed.
@@ -315,6 +315,146 @@ class MyClass {
 - Never use `using namespace` in header files
 - Prefer `using-declaration` (specific names) over `using-directive` (entire namespace)
 - In `.cpp` files, `using namespace std;` is acceptable for small programs
+
+## 1.4 Source File Organization
+
+As programs grow larger, splitting code into multiple files becomes essential. This section covers how to organize C++ code across multiple source files.
+
+### 1.4.1 The Two-File Model (.cpp + .hpp)
+
+In C++, each component typically consists of two files:
+
+| File Type | Extension | Contains | Purpose |
+|-----------|-----------|----------|---------|
+| **Header File** | `.hpp` | Declarations (function prototypes, class declarations) | Interface - tells other files what's available |
+| **Source File** | `.cpp` | Definitions (function implementations, global variables) | Implementation - the actual code |
+
+**Why separate them?**
+- **Compilation efficiency**: Headers are included multiple times; source files are compiled once
+- **Interface hiding**: Users see the API (header), not the implementation details
+- **Code reuse**: Multiple source files can include the same header
+
+**Example Structure:**
+```
+project/
+├── math_utils.hpp    // Declarations
+├── math_utils.cpp    // Implementations
+└── main.cpp          // Uses math_utils
+```
+
+### 1.4.2 What Goes Where
+
+**Header File (.hpp) - Interface:**
+```cpp
+// math_utils.hpp
+#pragma once
+
+// Function declarations (prototypes)
+double square(double x);
+double cube(double x);
+
+// Class declarations
+class Calculator {
+public:
+    double add(double a, double b);
+    double multiply(double a, double b);
+};
+```
+
+**Source File (.cpp) - Implementation:**
+```cpp
+// math_utils.cpp
+#include "math_utils.hpp"
+
+double square(double x) {
+    return x * x;
+}
+
+double cube(double x) {
+    return x * x * x;
+}
+
+double Calculator::add(double a, double b) {
+    return a + b;
+}
+
+double Calculator::multiply(double a, double b) {
+    return a * b;
+}
+```
+
+**Never put in headers:**
+- Function definitions (unless inline)
+- Global variable definitions (use `extern` instead)
+- `using namespace` directives
+
+### 1.4.3 Practical Example
+
+Complete multi-file project:
+
+**math_utils.hpp:**
+```cpp
+#pragma once
+
+double calculateArea(double radius);
+```
+
+**math_utils.cpp:**
+```cpp
+#include "math_utils.hpp"
+#define PI 3.14159
+
+double calculateArea(double radius) {
+    return PI * radius * radius;
+}
+```
+
+**main.cpp:**
+```cpp
+#include <iostream>
+#include "math_utils.hpp"
+
+int main() {
+    double r = 5.0;
+    std::cout << "Area: " << calculateArea(r) << std::endl;
+    return 0;
+}
+```
+
+**Compilation:**
+```bash
+# Compile each .cpp file separately
+g++ -c math_utils.cpp -o math_utils.o
+g++ -c main.cpp -o main.o
+
+# Link object files together
+g++ math_utils.o main.o -o program
+
+# Or compile all at once
+g++ math_utils.cpp main.cpp -o program
+```
+
+### 1.4.4 Build Process Recap
+
+The complete journey from source code to executable:
+
+```
+math.hpp ──┐
+            │
+math.cpp ───┼──> Compile ──> math.o ──┐
+            │                          │
+main.cpp ───┘                          ├──> Link ──> program
+                                       │
+                                    main.o
+```
+
+**Key Points:**
+- Each `.cpp` file is compiled independently into an `.o` (object) file
+- The linker combines all object files into the final executable
+- Headers are not compiled directly — they are included into `.cpp` files
+- Changing a header requires recompiling all files that include it
+
+> **Note:** Understanding this structure helps explain why we need `#include` (Chapter 2) and why the One Definition Rule (Section 1.1.2) exists.
 
 # 2 The Preprocessor
 
