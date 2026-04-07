@@ -257,6 +257,50 @@ Headers are organized by functionality. Within each category, C++ headers are li
 | **Random numbers** | `<random>` (C++) or `<cstdlib>` (C, deprecated) |
 | **Error handling** | `<exception>`, `<stdexcept>` |
 
+#### 1.1.4.3 C vs C++ Headers
+
+C++ provides two ways to include C standard library headers. Understanding the difference is important for writing idiomatic C++ code.
+
+| Style | Example | Namespace | Use Case |
+|-------|---------|-----------|----------|
+| C++ style | `<cstdio>` | `std::` namespace (standard) | **Preferred** for new C++ code |
+| C style | `<stdio.h>` | Global namespace | Legacy compatibility, C interoperability |
+
+**Complete C to C++ Header Mapping:**
+
+| C Header | C++ Equivalent | Content |
+|----------|----------------|---------|
+| `<stdio.h>` | `<cstdio>` | File I/O (`printf`, `scanf`, `FILE`) |
+| `<stdlib.h>` | `<cstdlib>` | General utilities (`malloc`, `free`, `rand`, `exit`) |
+| `<string.h>` | `<cstring>` | C-string manipulation (`strcpy`, `strlen`, `strcmp`) |
+| `<ctype.h>` | `<cctype>` | Character classification (`isdigit`, `isalpha`, `toupper`) |
+| `<math.h>` | `<cmath>` | Mathematical functions (`sin`, `cos`, `sqrt`, `pow`) |
+| `<time.h>` | `<ctime>` | Time functions (`time`, `clock`, `strftime`) |
+| `<assert.h>` | `<cassert>` | Runtime assertions (`assert`) |
+| `<errno.h>` | `<cerrno>` | Error numbers (`errno`) |
+| `<limits.h>` | `<climits>` | Integer type limits (`INT_MAX`, `LONG_MIN`) |
+| `<float.h>` | `<cfloat>` | Floating-point limits (`FLT_MAX`, `DBL_EPSILON`) |
+| `<stddef.h>` | `<cstddef>` | Common definitions (`size_t`, `NULL`, `nullptr_t`) |
+| `<stdint.h>` | `<cstdint>` | Fixed-width integer types (`int32_t`, `uint64_t`) |
+
+**Key Differences:**
+
+```cpp
+#include <stdio.h>    // C-style: names in global namespace
+printf("Hello\n");      // Works directly
+
+#include <cstdio>     // C++-style: names in std:: namespace
+std::printf("Hello\n"); // Preferred: explicit namespace
+
+// Or bring specific names into scope
+using std::printf;
+printf("Hello\n");      // Also acceptable
+```
+
+> **Best Practice:** Always use C++-style headers (`<cxxx>`) in new C++ code. They properly place names in the `std::` namespace, following C++ conventions and avoiding namespace pollution. Use C-style headers (`<xxx.h>`) only when interfacing with legacy C code that expects global namespace names.
+
+---
+
 ## 1.2 Program Entry Point: main()
 
 Every C++ program has exactly one entry point: the `main()` function.
