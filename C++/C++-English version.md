@@ -316,8 +316,8 @@ int main() {
 
 | Declaration | Standard | Usage |
 |-------------|----------|-------|
-| `int main()` | â?Standard | **Always use this** |
-| `void main()` | â?Non-standard | Avoid (not portable) |
+| `int main()` | ✓Standard | **Always use this** |
+| `void main()` | ✗Non-standard | Avoid (not portable) |
 
 **Exit status meanings:**
 
@@ -385,10 +385,10 @@ You don't manually pass `argc` when running the program. The operating system ha
 
 | Declaration | Valid? |
 |-------------|--------|
-| `int main(int argc, char* argv[])` | â?Valid (both present) |
-| `int main()` | â?Valid (neither present) |
-| `int main(int argc)` | â?Invalid (only argc) |
-| `int main(char* argv[])` | â?Invalid (only argv) |
+| `int main(int argc, char* argv[])` | ✓Valid (both present) |
+| `int main()` | ✓Valid (neither present) |
+| `int main(int argc)` | ✗Invalid (only argc) |
+| `int main(char* argv[])` | ✗Invalid (only argv) |
 
 > **Rule:** The command-line argument interface is fixed by the C++ standard â?either both parameters, or neither.
 
@@ -543,14 +543,14 @@ cin >> x;                  // OK
 ```cpp
 // BAD: In a header file
 #pragma once
-using namespace std;  // â?Pollutes all files that include this!
+using namespace std;  // ✗Pollutes all files that include this!
 
 // GOOD: Fully qualify in headers
 #pragma once
 #include <string>
 
 class MyClass {
-    std::string name;  // â?Explicit qualification
+    std::string name;  // ✓Explicit qualification
 };
 ```
 
@@ -1566,8 +1566,8 @@ if (a == b) { }      // Valid: == is together
 if (x <= 10) { }     // Valid: <= is together
 
 // Incorrect spacing - splitting operators causes errors
-if (a = = b) { }     // â?Error: = = is two separate operators
-if (x < = 10) { }    // â?Error: < = is two separate operators
+if (a = = b) { }     // ✗Error: = = is two separate operators
+if (x < = 10) { }    // ✗Error: < = is two separate operators
 ```
 
 #### 3.3.3.3 Spacing with Relational and Logical Operators
@@ -1668,7 +1668,7 @@ These rules are enforced by the compiler. Violations result in compilation error
 
 **Examples:**
 
-| â?Valid | â?Invalid | Why Invalid |
+| ✓Valid | ✗Invalid | Why Invalid |
 |----------|-----------|-------------|
 | `distance` | `1x` | Starts with digit |
 | `x_1` | `my name` | Contains space |
@@ -1694,9 +1694,9 @@ C++ distinguishes uppercase and lowercase letters.
 
 | Identifiers | Are they the same? |
 |-------------|-------------------|
-| `myVariable` vs `myvariable` | â?Different |
-| `myVariable` vs `MYVARIABLE` | â?Different |
-| `count` vs `Count` | â?Different |
+| `myVariable` vs `myvariable` | ✗Different |
+| `myVariable` vs `MYVARIABLE` | ✗Different |
+| `count` vs `Count` | ✗Different |
 
 #### 3.4.1.3 Reserved Words
 
@@ -1738,7 +1738,7 @@ C++ distinguishes uppercase and lowercase letters.
 | **Upper camelCase / PascalCase** | `MyClassName`      | Classes, structs, enums            | `StudentInfo`, `MyClass`      |
 | **Snake_case**                   | `my_variable_name` | Variables, constants (alternative) | `student_name`, `total_score` |
 | **ALL_CAPS**                     | `MY_CONSTANT`      | Constants, macros                  | `MAX_SIZE`, `PI`              |
-| **Hungarian notation**           | `iCount`, `pData`  | â?**Deprecated** in modern C++     | Not recommended               |
+| **Hungarian notation**           | `iCount`, `pData`  | ✗**Deprecated** in modern C++     | Not recommended               |
 
 #### 3.4.2.2 Naming Conventions by Identifier Type
 
@@ -1806,8 +1806,8 @@ C++ enforces the **One Definition Rule**: each variable and function can be defi
 int shared = 100;          // Definition
 
 // file2.cpp
-int shared = 100;          // â?ERROR! Redefinition (ODR violation)
-extern int shared;         // â?OK! Declaration only
+int shared = 100;          // ✗ERROR! Redefinition (ODR violation)
+extern int shared;         // ✓OK! Declaration only
 ```
 
 ## 4.2 Variable Definition
@@ -1881,8 +1881,8 @@ vector<int> v(5, 0); // 5 elements, all initialized to 0
 **The "Most Vexing Parse" Problem:**
 
 ```cpp
-int a();        // â?Declares a function "a" that returns int!
-int b{};        // â?Correctly initializes b to 0
+int a();        // ✗Declares a function "a" that returns int!
+int b{};        // ✓Correctly initializes b to 0
 ```
 
 #### 4.2.3.3 List Initialization (Brace Initialization)
@@ -1908,10 +1908,10 @@ vector<int> v{1, 2, 3};  // Initialize container with list
 
 ```cpp
 int x(7.5);      // â ï¸ Compiles, but x = 7 (truncates)
-int y{7.5};      // â?Error! Cannot convert double to int
+int y{7.5};      // ✗Error! Cannot convert double to int
 
 short a(100000); // â ï¸ Compiles (may overflow)
-short b{100000}; // â?Error! Value too large
+short b{100000}; // ✗Error! Value too large
 ```
 
 #### 4.2.3.4 Zero Initialization (Empty Braces)
@@ -1928,9 +1928,9 @@ bool flag{};     // flag = false
 | Feature | Copy Init `=` | Direct Init `()` | Brace Init `{}` |
 |---------|---------------|------------------|-----------------|
 | **Syntax** | `int a = 5;` | `int a(5);` | `int a{5};` |
-| **Narrowing check** | â?No | â?No | â?Yes |
-| **Most vexing parse** | â?No | â ï¸ Possible | â?Never |
-| **Container init** | Limited | Limited | â?Full support |
+| **Narrowing check** | ✗No | ✗No | ✓Yes |
+| **Most vexing parse** | ✓No | â ï¸ Possible | ✓Never |
+| **Container init** | Limited | Limited | ✓Full support |
 
 **Recommendations:**
 
@@ -1976,11 +1976,11 @@ int main() {
 
 ```cpp
 int main() {
-    x = 5;           // â?ERROR! x not yet defined
+    x = 5;           // ✗ERROR! x not yet defined
     int x;
     
     int y;
-    y = 10;          // â?OK: definition before statement
+    y = 10;          // ✓OK: definition before statement
 }
 ```
 
@@ -2010,8 +2010,8 @@ auto s = "hello";  // const char*
 
 ```cpp
 auto x{5};         // â ï¸ std::initializer_list<int>, NOT int!
-auto y = 5;        // â?int (correct)
-auto z(5);         // â?int
+auto y = 5;        // ✓int (correct)
+auto z(5);         // ✓int
 ```
 
 **Recommendation:** Always use `auto` with copy initialization (`=`), not brace initialization.
@@ -2752,8 +2752,8 @@ C++ provides four type cast operators for safer, more explicit conversions:
 
 | Characteristic | `static_cast` | `dynamic_cast` | `const_cast` | `reinterpret_cast` |
 |----------------|---------------|----------------|--------------|---------------------|
-| **Safety** | â?Safe | â?Safe (runtime checked) | â ï¸ Use with caution | â?Dangerous |
-| **Compile-time check** | â?Yes | Partial | â?Yes | â?No |
+| **Safety** | ✓Safe | ✓Safe (runtime checked) | â ï¸ Use with caution | ✗Dangerous |
+| **Compile-time check** | ✓Yes | Partial | ✓Yes | ✗No |
 | **Common usage** | Basic type conversions | Class inheritance conversions | Add/remove const | Low-level operations |
 
 **Recommendation:** Prefer `static_cast` over C-style cast in C++.
@@ -2775,7 +2775,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 
 | Expression | C++ | Note |
 |------------|-----|------|
-| xâ?| â?No `^` or `**` | Unlike Python (`**`) or math notation |
+| xâ?| ✗No `^` or `**` | Unlike Python (`**`) or math notation |
 | aÂ² | `a * a` | Use repeated multiplication for small exponents |
 | aâ?| `pow(a, n)` | Use <cmath> library for variable exponents |
 
@@ -3097,11 +3097,11 @@ constexpr int MAX_SIZE = 100;
 Constants (`const` and `constexpr`) **must be initialized** at the time of declaration.
 
 ```cpp
-const int a = 10;       // â?Correct: initialized immediately
-const int b;            // â?Error! const variable must be initialized
+const int a = 10;       // ✓Correct: initialized immediately
+const int b;            // ✓Error! const variable must be initialized
 
-constexpr int c = 20;   // â?Correct: initialized at compile time
-constexpr int d;        // â?Error! constexpr must be initialized
+constexpr int c = 20;   // ✓Correct: initialized at compile time
+constexpr int d;        // ✓Error! constexpr must be initialized
 ```
 
 **Why?**
@@ -3191,7 +3191,7 @@ double y = 5.0 / 2;     // Result: 2.5 (correct)
 
 | Direction | Result | Example |
 |-----------|--------|---------|
-| Narrow â?Wide | â?Safe (implicit) | `double d = 3.14f;` |
+| Narrow â?Wide | ✓Safe (implicit) | `double d = 3.14f;` |
 | Wide â?Narrow | â ï¸ Warning, data loss | `float f = 3.14;` // doubleâfloat |
 | Float â?Integer | â ï¸ Truncates decimal | `int i = 3.9;` // i = 3 |
 
@@ -3335,7 +3335,7 @@ Color c = Color(1);       // OK: explicit intâenum (c = Yellow)
 | Feature | `enum` | `enum class` |
 |---------|--------|--------------|
 | Scope | Global | Scoped (`Color::Red`) |
-| Implicit int conversion | â?Yes | â?No |
+| Implicit int conversion | ✓Yes | ✗No |
 | Type safety | Weak | Strong |
 | Underlying type | Compiler-dependent | `int` by default |
 | Access | Direct | Require scope operator (`::`) |
@@ -3617,7 +3617,7 @@ for (int i = 0; i < 3; i++) {       // rows
 
 **Cannot Return Array from Function**
 ```cpp
-int[10] func();  // â?Error: cannot return array directly
+int[10] func();  // ✗Error: cannot return array directly
 ```
 Use pointer or `std::vector` instead.
 
@@ -3625,14 +3625,14 @@ Use pointer or `std::vector` instead.
 ```cpp
 int ia[5] = {1,2,3,4,5};
 int ib[5];
-ib = ia;  // â?Error: cannot assign one array to another
+ib = ia;  // ✗Error: cannot assign one array to another
 ```
 Use loop or `memcpy` instead.
 
 **Out of Bounds Access = Undefined Behavior**
 ```cpp
 int s[6];
-s[10] = 5;  // â?Runtime error: out of bounds access
+s[10] = 5;  // ✗Runtime error: out of bounds access
 // May cause segmentation fault or silent memory corruption
 ```
 
@@ -3649,9 +3649,9 @@ Use `std::vector` for dynamic sizing instead.
 
 | Container | `()` Direct Init | `{}` Brace Init | Notes |
 |-----------|------------------|-----------------|-------|
-| **`std::vector`** | â?`vector<int> v(5, 0)` | â?`vector<int> v{1, 2, 3}` | `()` can specify size + default value |
-| **C-style array** | â?Not supported | â?`int arr[] = {1, 2, 3}` | Must use braces; size fixed at compile time |
-| **`std::array`** | â?Not supported | â?`array<int, 3> arr{1, 2, 3}` | Size is template parameter, fixed at compile time |
+| **`std::vector`** | ✓`vector<int> v(5, 0)` | ✓`vector<int> v{1, 2, 3}` | `()` can specify size + default value |
+| **C-style array** | ✗Not supported | ✓`int arr[] = {1, 2, 3}` | Must use braces; size fixed at compile time |
+| **`std::array`** | ✗Not supported | ✓`array<int, 3> arr{1, 2, 3}` | Size is template parameter, fixed at compile time |
 
 **Key Differences:**
 
@@ -3702,8 +3702,8 @@ scanf("%s", name);  // Correct: name itself is the address
 
 ```cpp
 char name[50];
-scanf("%s", &name);     // â?Wrong: &name is a "pointer to array", type mismatch
-scanf("%s", name);      // â?Correct: name is the address of first element
+scanf("%s", &name);     // ✗Wrong: &name is a "pointer to array", type mismatch
+scanf("%s", name);      // ✓Correct: name is the address of first element
 ```
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
@@ -3848,9 +3848,9 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 
 | Input Format | Valid? | Variables receive |
 |-------------|--------|-------------------|
-| `1 2 3 4` | â?| a=1, b=2, c=3, d=4 |
-| `1\n2 3\n4` | â?| Same (newlines = spaces) |
-| `1234 56.78` with `char c1,c2; int a; float b;` | â?| c1='1', c2='2', a=34, b=56.78 |
+| `1 2 3 4` | ✓| a=1, b=2, c=3, d=4 |
+| `1\n2 3\n4` | ✓| Same (newlines = spaces) |
+| `1234 56.78` with `char c1,c2; int a; float b;` | ✓| c1='1', c2='2', a=34, b=56.78 |
 
 ### 7.1.1.3 Key Behaviors
 
@@ -3866,7 +3866,7 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 
 ```cpp
 int a, b;
-cin >> a == b;  // â?Compile error!
+cin >> a == b;  // ✗Compile error!
 ```
 
 **Why it fails:**
@@ -3895,18 +3895,18 @@ if (a == b) { ... }
 int x, y;
 
 // Bitwise operators (low precedence)
-cin >> x & y;       // â?Wrong: (cin >> x) & y
+cin >> x & y;       // ✗Wrong: (cin >> x) & y
 cin >> x;
-int result = x & y;  // â?Correct
+int result = x & y;  // ✓Correct
 
 // Logical operators
-cin >> x && cin >> y;     // â?Wrong: ((cin >> x) && cin) >> y
-cin >> x >> y;            // â?Correct
+cin >> x && cin >> y;     // ✗Wrong: ((cin >> x) && cin) >> y
+cin >> x >> y;            // ✓Correct
 bool result = x && y;
 
 // Ternary operator
-cin >> x > 0 ? a : b;     // â?Wrong
-cin >> x;                 // â?Correct
+cin >> x > 0 ? a : b;     // ✗Wrong
+cin >> x;                 // ✓Correct
 int val = (x > 0) ? a : b;
 ```
 
@@ -4120,7 +4120,7 @@ double truncate(double val, int prec) {
 **Common Mistake:**
 
 ```cpp
-cout << 1 == 1;  // â?Compile error!
+cout << 1 == 1;  // ✗Compile error!
 ```
 
 **Why it fails:**
@@ -4134,23 +4134,23 @@ The stream insertion operator <<` has **higher precedence** than the equality op
 Use **parentheses** to ensure the comparison happens first:
 
 ```cpp
-cout << (1 == 1);  // â?Outputs "1" (true)
+cout << (1 == 1);  // ✓Outputs "1" (true)
 ```
 
 **More Examples:**
 
 ```cpp
 // Bitwise operators (low precedence)
-cout << a & b;       // â?Wrong: (cout << a) & b
-cout << (a & b);     // â?Correct
+cout << a & b;       // ✗Wrong: (cout << a) & b
+cout << (a & b);     // ✓Correct
 
 // Logical operators
-cout << x == 5 && y == 10;    // â?Wrong: ((cout << x) == 5) && ...
-cout << (x == 5 && y == 10);  // â?Correct
+cout << x == 5 && y == 10;    // ✗Wrong: ((cout << x) == 5) && ...
+cout << (x == 5 && y == 10);  // ✓Correct
 
 // Ternary operator
-cout << x > 0 ? "pos" : "neg";    // â?Wrong
-cout << (x > 0 ? "pos" : "neg");  // â?Correct
+cout << x > 0 ? "pos" : "neg";    // ✗Wrong
+cout << (x > 0 ? "pos" : "neg");  // ✓Correct
 ```
 
 **Operator Precedence Quick Reference:**
@@ -4256,8 +4256,8 @@ scanf("%i", &year);  // &year = address of year variable
 **Common Error:** Forgetting `&` is one of the most frequent mistakes in C++:
 
 ```cpp
-scanf("%i", year);   // â?WRONG - scanf receives the value, not the address
-scanf("%i", &year);  // â?CORRECT - scanf receives the address
+scanf("%i", year);   // ✗WRONG - scanf receives the value, not the address
+scanf("%i", &year);  // ✓CORRECT - scanf receives the address
 ```
 
 **Why `scanf` Requires `&`:**
@@ -4380,8 +4380,8 @@ The relationship between Length Modifier, Conversion Specifier, and actual varia
 
 ```cpp
 short s;
-scanf("%d", &s);   // â?WRONG: %d expects int (4 bytes), but s is short (2 bytes)
-scanf("%hd", &s);  // â?CORRECT: %hd matches short (2 bytes)
+scanf("%d", &s);   // ✗WRONG: %d expects int (4 bytes), but s is short (2 bytes)
+scanf("%hd", &s);  // ✓CORRECT: %hd matches short (2 bytes)
 ```
 
 **Common Combinations Table:**
@@ -4479,8 +4479,8 @@ scanf("%s", name);  // Correct: name itself is the address
 
 ```cpp
 char name[50];
-scanf("%s", &name);     // â?Wrong: &name is a "pointer to array", type mismatch
-scanf("%s", name);      // â?Correct: name is the address of first element
+scanf("%s", &name);     // ✗Wrong: &name is a "pointer to array", type mismatch
+scanf("%s", name);      // ✓Correct: name is the address of first element
 ```
 
 **Why it's wrong:** `&name` gives the type `char (*)[50]` (pointer to array of 50 chars), while `scanf` expects `char*` (pointer to char). Though they have the same numeric value, the types are incompatible.
@@ -4854,8 +4854,8 @@ The relationship between Length Modifier, Conversion Specifier, and actual varia
 
 ```cpp
 long long ll = 8589934592LL;  // 2^33
-printf("%d\n", ll);   // â?WRONG: %d expects int (4 bytes), but ll is long long (8 bytes)
-printf("%lld\n", ll); // â?CORRECT: %lld matches long long (8 bytes)
+printf("%d\n", ll);   // ✗WRONG: %d expects int (4 bytes), but ll is long long (8 bytes)
+printf("%lld\n", ll); // ✓CORRECT: %lld matches long long (8 bytes)
 ```
 
 **Common Combinations Table:**
@@ -5551,21 +5551,21 @@ switch (c) {
 
 | Type | Example | Valid |
 |------|---------|-------|
-| Integer literals | `5`, `100` | â?Yes |
-| Character literals | `'a'`, `'A'` | â?Yes |
-| Enum values | `Color::Red` | â?Yes |
-| `const int` constants | `const int MAX = 10;` | â?Yes (compile-time constant) |
-| Regular variables | `int x = 5;` | â?No |
-| Expressions | `x + 1` | â?No |
+| Integer literals | `5`, `100` | ✓Yes |
+| Character literals | `'a'`, `'A'` | ✓Yes |
+| Enum values | `Color::Red` | ✓Yes |
+| `const int` constants | `const int MAX = 10;` | ✓Yes (compile-time constant) |
+| Regular variables | `int x = 5;` | ✗No |
+| Expressions | `x + 1` | ✗No |
 
 **Example:**
 ```cpp
 int x = 5;
 switch (n) {
-    case x:       // â?Error: x is a variable
-    case 5:       // â?OK: literal constant
-    case 'A':     // â?OK: character constant
-    case x + 1:   // â?Error: expression
+    case x:       // ✗Error: x is a variable
+    case 5:       // ✓OK: literal constant
+    case 'A':     // ✓OK: character constant
+    case x + 1:   // ✗Error: expression
 }
 ```
 
@@ -5578,9 +5578,9 @@ switch (n) {
 ```cpp
 switch (n) {
     case 1: ...
-    case 1: ...   // â?Error: duplicate case value
+    case 1: ...   // ✗Error: duplicate case value
     case 'A': ... // ASCII 65
-    case 65: ...  // â?Error: 'A' equals 65, duplicate value
+    case 65: ...  // ✗Error: 'A' equals 65, duplicate value
 }
 ```
 
@@ -5591,7 +5591,7 @@ const int MAX = 1;  // Compile-time constant
 
 switch (n) {
     case 1: ...      // Value = 1
-    case MAX: ...    // â?Error: MAX expands to 1, duplicate value
+    case MAX: ...    // ✗Error: MAX expands to 1, duplicate value
 }
 ```
 
@@ -5605,7 +5605,7 @@ switch (n) {
 switch (choice) {
     case 1:
         cout << "One" << endl;
-        break;      // â?Exit switch
+        break;      // ✓Exit switch
     case 2:
         cout << "Two" << endl;
         // No break! Execution continues to case 3
