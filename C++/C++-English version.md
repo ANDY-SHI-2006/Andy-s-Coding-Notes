@@ -3848,9 +3848,9 @@ cin >> a >> b >> c;        // Chain input, separated by whitespace
 
 | Input Format | Valid? | Variables receive |
 |-------------|--------|-------------------|
-| `1 2 3 4` | ✓| a=1, b=2, c=3, d=4 |
-| `1\n2 3\n4` | ✓| Same (newlines = spaces) |
-| `1234 56.78` with `char c1,c2; int a; float b;` | ✓| c1='1', c2='2', a=34, b=56.78 |
+| `1 2 3 4` | ✓ | a=1, b=2, c=3, d=4 |
+| `1\n2 3\n4` | ✓ | Same (newlines = spaces) |
+| `1234 56.78` with `char c1,c2; int a; float b;` | ✓ | c1='1', c2='2', a=34, b=56.78 |
 
 ### 7.1.1.3 Key Behaviors
 
