@@ -5510,7 +5510,7 @@ switch (a) {
 
 ### 8.3.2 Syntax Rules
 
-#### 8.3.2.1 Controlling Expression
+### 11.0.2.1 Controlling Expression
 
 The `switch` statement selects statements to execute based on a **controlling expression**, which must be an expression of **integral type** (`int`, `char`, `enum`, etc.).
 
@@ -7408,7 +7408,252 @@ void transfer(BankAcct& from, BankAcct& to, double amt) {
 The Standard Template Library (STL) provides a collection of template classes and functions for common data structures and algorithms. `vector` is the most commonly used STL container.
 
 
-### 8.3 Standard Template Library (STL) OverviewThe Standard Template Library (STL) is a major component of the C++ standard library, providing reusable, generic container classes and algorithms.---#### 8.3.1 STL ComponentsSTL consists of three main components:1. **Containers** - Data structures that store objects2. **Iterators** - Objects that traverse containers3. **Algorithms** - Functions that operate on containers (via iterators)**Relationship:**```Algorithms ←→ Iterators ←→ Containers```---#### 8.3.2 STL ContainersContainers are template classes that store and manage collections of objects.**Common Container Methods (All Containers):**| Method | Description ||--------|-------------|| `size()` | Number of elements || `empty()` | Check if container is empty || `clear()` | Remove all elements || `swap(c)` | Swap contents with another container |**Container Categories:**| Category | Containers | Characteristics ||----------|------------|-----------------|| **Sequence** | `vector`, `deque`, `list`, `forward_list`, `array` | Linear order || **Associative** | `set`, `multiset`, `map`, `multimap` | Sorted, key-based || **Unordered** | `unordered_set`, `unordered_map` | Hash-based, O(1) || **Container Adaptors** | `stack`, `queue`, `priority_queue` | Restricted interface |---#### 8.3.3 Vector (`<vector>`)**Characteristics:**- Dynamic array (resizable)- Contiguous memory storage- Fast random access: O(1)- Fast insertion at end: O(1) amortized- Slow insertion/deletion in middle: O(n)**Declaration:**```cpp#include <vector>using namespace std;vector<int> v1;              // Empty vectorvector<int> v2(10);          // 10 elements (value-initialized)vector<int> v3(10, 5);       // 10 elements, all = 5vector<int> v4 = {1, 2, 3};  // Initializer listvector<int> v5(v4);          // Copy constructor```**Common Methods:**| Method | Description | Complexity ||--------|-------------|------------|| `push_back(x)` | Add to end | O(1) amortized || `pop_back()` | Remove last | O(1) || `front()` | First element | O(1) || `back()` | Last element | O(1) || `at(i)` | Element at i (bounds checked) | O(1) || `operator[i]` | Element at i (no check) | O(1) || `insert(pos, x)` | Insert at position | O(n) || `erase(pos)` | Remove at position | O(n) || `resize(n)` | Change size | O(n) || `capacity()` | Current capacity | O(1) || `reserve(n)` | Allocate space for n | O(n) |**Example:**```cppvector<int> v;v.push_back(10);v.push_back(20);v.push_back(30);cout << v.size();     // 3cout << v[0];         // 10cout << v.front();    // 10cout << v.back();     // 30v.pop_back();         // Remove 30v.insert(v.begin() + 1, 15);  // Insert 15 at position 1v.erase(v.begin());   // Remove first element```---#### 8.3.4 IteratorsIterators are abstraction of pointers used to traverse containers.**Iterator Types:**| Iterator | Capability | Supported Containers ||----------|-----------|---------------------|| Input | Read-only, forward | istream || Output | Write-only, forward | ostream || Forward | Read/write, forward | forward_list || Bidirectional | Read/write, forward/backward | list, set, map || Random Access | Read/write, random access | vector, deque, array |**Iterator Declaration:**```cppvector<int>::iterator it;           // Forward iteratorvector<int>::reverse_iterator rit;  // Reverse iterator```**Common Iterator Operations:**| Operation | Description ||-----------|-------------|| `*it` | Dereference (access element) || `it++` | Move to next element || `it--` | Move to previous (bidirectional) || `it + n` | Advance n positions (random access) || `it - n` | Retreat n positions (random access) || `it1 - it2` | Distance between iterators |**Container Iterator Methods:**| Method | Returns ||--------|---------|| `begin()` | Iterator to first element || `end()` | Iterator past last element || `rbegin()` | Reverse iterator to last element || `rend()` | Reverse iterator before first || `cbegin()` | Const iterator (C++11) |**Iterator Example:**```cppvector<int> v = {10, 20, 30, 40, 50};// Forward iterationfor (vector<int>::iterator it = v.begin(); it != v.end(); ++it) {    cout << *it << " ";  // 10 20 30 40 50}// Reverse iterationfor (vector<int>::reverse_iterator rit = v.rbegin(); rit != v.rend(); ++rit) {    cout << *rit << " ";  // 50 40 30 20 10}// Range-based for loop (C++11) - simpler!for (int x : v) {    cout << x << " ";}```**⚠️ Iterator Invalidation:**- `vector`: Insert/erase may invalidate all iterators- `list`: Only iterators to erased elements are invalidated- Always "reset" iterators after modifying container---#### 8.3.5 STL Algorithms (`<algorithm>`)STL provides generic algorithms that work with iterators.**Common Algorithms:**| Algorithm | Description ||-----------|-------------|| `sort(begin, end)` | Sort elements || `find(begin, end, val)` | Find value || `binary_search(begin, end, val)` | Binary search (sorted range) || `count(begin, end, val)` | Count occurrences || `min_element(begin, end)` | Find minimum || `max_element(begin, end)` | Find maximum || `reverse(begin, end)` | Reverse elements || `copy(srcBegin, srcEnd, dstBegin)` | Copy range || `fill(begin, end, val)` | Fill with value || `accumulate(begin, end, init)` | Sum elements (`<numeric>`) |**Examples:**```cpp#include <algorithm>#include <numeric>#include <vector>vector<int> v = {30, 10, 50, 20, 40};// Sortsort(v.begin(), v.end());  // 10, 20, 30, 40, 50// Findauto it = find(v.begin(), v.end(), 30);if (it != v.end()) {    cout << "Found at position " << (it - v.begin());}// Min/Maxauto minIt = min_element(v.begin(), v.end());auto maxIt = max_element(v.begin(), v.end());// Countint count30 = count(v.begin(), v.end(), 30);// Accumulateint sum = accumulate(v.begin(), v.end(), 0);  // <numeric>// Reversereverse(v.begin(), v.end());// Sort with custom comparatorsort(v.begin(), v.end(), greater<int>());  // Descending```---#### 8.3.6 Container Comparison| Container | Access | Insert/Delete | Use Case ||-----------|--------|---------------|----------|| `vector` | O(1) random | O(1) end, O(n) middle | Default choice || `list` | O(n) sequential | O(1) anywhere | Frequent insertion || `deque` | O(1) random | O(1) both ends | Double-ended queue || `set` | O(log n) | O(log n) | Sorted unique || `map` | O(log n) | O(log n) | Key-value pairs || `unordered_map` | O(1) avg | O(1) avg | Fast lookup |---#### 8.3.7 Best Practices1. **Use `vector` by default** - Most efficient for most cases2. **Reserve capacity** when size is known: `v.reserve(1000);`3. **Prefer range-based for loops** for readability4. **Check iterator validity** after modifying container5. **Use algorithms** instead of manual loops
+## 11.0 Standard Template Library (STL) Overview
+
+The Standard Template Library (STL) is a major component of the C++ standard library, providing reusable, generic container classes and algorithms.
+
+---
+
+### 11.0.1 STL Components
+
+STL consists of three main components:
+
+1. **Containers** - Data structures that store objects
+2. **Iterators** - Objects that traverse containers
+3. **Algorithms** - Functions that operate on containers (via iterators)
+
+**Relationship:**
+```
+Algorithms ←→ Iterators ←→ Containers
+```
+
+---
+
+#### 8.3.2 STL Containers
+
+Containers are template classes that store and manage collections of objects.
+
+**Common Container Methods (All Containers):**
+
+| Method | Description |
+|--------|-------------|
+| `size()` | Number of elements |
+| `empty()` | Check if container is empty |
+| `clear()` | Remove all elements |
+| `swap(c)` | Swap contents with another container |
+
+**Container Categories:**
+
+| Category | Containers | Characteristics |
+|----------|------------|-----------------|
+| **Sequence** | `vector`, `deque`, `list`, `forward_list`, `array` | Linear order |
+| **Associative** | `set`, `multiset`, `map`, `multimap` | Sorted, key-based |
+| **Unordered** | `unordered_set`, `unordered_map` | Hash-based, O(1) |
+| **Container Adaptors** | `stack`, `queue`, `priority_queue` | Restricted interface |
+
+---
+
+### 11.0.3 Vector (`<vector>`)
+
+**Characteristics:**
+- Dynamic array (resizable)
+- Contiguous memory storage
+- Fast random access: O(1)
+- Fast insertion at end: O(1) amortized
+- Slow insertion/deletion in middle: O(n)
+
+**Declaration:**
+```cpp
+#include <vector>
+using namespace std;
+
+vector<int> v1;              // Empty vector
+vector<int> v2(10);          // 10 elements (value-initialized)
+vector<int> v3(10, 5);       // 10 elements, all = 5
+vector<int> v4 = {1, 2, 3};  // Initializer list
+vector<int> v5(v4);          // Copy constructor
+```
+
+**Common Methods:**
+
+| Method | Description | Complexity |
+|--------|-------------|------------|
+| `push_back(x)` | Add to end | O(1) amortized |
+| `pop_back()` | Remove last | O(1) |
+| `front()` | First element | O(1) |
+| `back()` | Last element | O(1) |
+| `at(i)` | Element at i (bounds checked) | O(1) |
+| `operator[i]` | Element at i (no check) | O(1) |
+| `insert(pos, x)` | Insert at position | O(n) |
+| `erase(pos)` | Remove at position | O(n) |
+| `resize(n)` | Change size | O(n) |
+| `capacity()` | Current capacity | O(1) |
+| `reserve(n)` | Allocate space for n | O(n) |
+
+**Example:**
+```cpp
+vector<int> v;
+v.push_back(10);
+v.push_back(20);
+v.push_back(30);
+
+cout << v.size();     // 3
+cout << v[0];         // 10
+cout << v.front();    // 10
+cout << v.back();     // 30
+
+v.pop_back();         // Remove 30
+v.insert(v.begin() + 1, 15);  // Insert 15 at position 1
+v.erase(v.begin());   // Remove first element
+```
+
+---
+
+### 11.0.4 Iterators
+
+Iterators are abstraction of pointers used to traverse containers.
+
+**Iterator Types:**
+
+| Iterator | Capability | Supported Containers |
+|----------|-----------|---------------------|
+| Input | Read-only, forward | istream |
+| Output | Write-only, forward | ostream |
+| Forward | Read/write, forward | forward_list |
+| Bidirectional | Read/write, forward/backward | list, set, map |
+| Random Access | Read/write, random access | vector, deque, array |
+
+**Iterator Declaration:**
+```cpp
+vector<int>::iterator it;           // Forward iterator
+vector<int>::reverse_iterator rit;  // Reverse iterator
+```
+
+**Common Iterator Operations:**
+
+| Operation | Description |
+|-----------|-------------|
+| `*it` | Dereference (access element) |
+| `it++` | Move to next element |
+| `it--` | Move to previous (bidirectional) |
+| `it + n` | Advance n positions (random access) |
+| `it - n` | Retreat n positions (random access) |
+| `it1 - it2` | Distance between iterators |
+
+**Container Iterator Methods:**
+
+| Method | Returns |
+|--------|---------|
+| `begin()` | Iterator to first element |
+| `end()` | Iterator past last element |
+| `rbegin()` | Reverse iterator to last element |
+| `rend()` | Reverse iterator before first |
+| `cbegin()` | Const iterator (C++11) |
+
+**Iterator Example:**
+```cpp
+vector<int> v = {10, 20, 30, 40, 50};
+
+// Forward iteration
+for (vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+    cout << *it << " ";  // 10 20 30 40 50
+}
+
+// Reverse iteration
+for (vector<int>::reverse_iterator rit = v.rbegin(); rit != v.rend(); ++rit) {
+    cout << *rit << " ";  // 50 40 30 20 10
+}
+
+// Range-based for loop (C++11) - simpler!
+for (int x : v) {
+    cout << x << " ";
+}
+```
+
+**⚠️ Iterator Invalidation:**
+- `vector`: Insert/erase may invalidate all iterators
+- `list`: Only iterators to erased elements are invalidated
+- Always "reset" iterators after modifying container
+
+---
+
+### 11.0.5 STL Algorithms (`<algorithm>`)
+
+STL provides generic algorithms that work with iterators.
+
+**Common Algorithms:**
+
+| Algorithm | Description |
+|-----------|-------------|
+| `sort(begin, end)` | Sort elements |
+| `find(begin, end, val)` | Find value |
+| `binary_search(begin, end, val)` | Binary search (sorted range) |
+| `count(begin, end, val)` | Count occurrences |
+| `min_element(begin, end)` | Find minimum |
+| `max_element(begin, end)` | Find maximum |
+| `reverse(begin, end)` | Reverse elements |
+| `copy(srcBegin, srcEnd, dstBegin)` | Copy range |
+| `fill(begin, end, val)` | Fill with value |
+| `accumulate(begin, end, init)` | Sum elements (`<numeric>`) |
+
+**Examples:**
+```cpp
+#include <algorithm>
+#include <numeric>
+#include <vector>
+
+vector<int> v = {30, 10, 50, 20, 40};
+
+// Sort
+sort(v.begin(), v.end());  // 10, 20, 30, 40, 50
+
+// Find
+auto it = find(v.begin(), v.end(), 30);
+if (it != v.end()) {
+    cout << "Found at position " << (it - v.begin());
+}
+
+// Min/Max
+auto minIt = min_element(v.begin(), v.end());
+auto maxIt = max_element(v.begin(), v.end());
+
+// Count
+int count30 = count(v.begin(), v.end(), 30);
+
+// Accumulate
+int sum = accumulate(v.begin(), v.end(), 0);  // <numeric>
+
+// Reverse
+reverse(v.begin(), v.end());
+
+// Sort with custom comparator
+sort(v.begin(), v.end(), greater<int>());  // Descending
+```
+
+---
+
+### 11.0.6 Container Comparison
+
+| Container | Access | Insert/Delete | Use Case |
+|-----------|--------|---------------|----------|
+| `vector` | O(1) random | O(1) end, O(n) middle | Default choice |
+| `list` | O(n) sequential | O(1) anywhere | Frequent insertion |
+| `deque` | O(1) random | O(1) both ends | Double-ended queue |
+| `set` | O(log n) | O(log n) | Sorted unique |
+| `map` | O(log n) | O(log n) | Key-value pairs |
+| `unordered_map` | O(1) avg | O(1) avg | Fast lookup |
+
+---
+
+### 11.0.7 Best Practices
+
+1. **Use `vector` by default** - Most efficient for most cases
+2. **Reserve capacity** when size is known: `v.reserve(1000);`
+3. **Prefer range-based for loops** for readability
+4. **Check iterator validity** after modifying container
+5. **Use algorithms** instead of manual loops
+
+
 ## 11.1 Vector
 
 `vector` is a **dynamic array** that can grow or shrink in size automatically. Unlike fixed-size arrays, vectors handle memory management internally and provide a rich set of operations.
