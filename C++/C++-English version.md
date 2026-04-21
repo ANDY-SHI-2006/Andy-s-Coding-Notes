@@ -7934,6 +7934,698 @@ This List ADT example demonstrates:
    - Future: Linked list offers fast modification at cost of access speed
 
 
+#### 10.8.10.8 Linked List Based Implementation
+
+Pointer-based linked lists allow elements to be non-contiguous in memory. Elements are ordered by associating each with its neighbour(s) through pointers.
+
+##### Node Structure
+
+A single node in a singly linked list contains the data element and a pointer to the next node.
+
+```cpp
+typedef int ListItemType;
+
+struct ListNode {
+    ListItemType item;    // Data element
+    ListNode *next;       // Pointer to next node
+};
+```
+
+> **Key Point:** C++ allows the structure name (`ListNode`) to be used without the `struct` keyword.
+
+##### Linked List Example
+
+A list of four items `<a0, a1, a2, a3>` is represented as:
+
+```
+head --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
+```
+
+**Requirements:**
+- `head` pointer to indicate the first node
+- `NULL` in the `next` pointer field of the last node
+
+##### Building a Linked List
+
+```cpp
+ListNode* ptr4 = new ListNode;
+ptr4->element = a3;
+ptr4->next = NULL;
+
+ListNode* ptr3 = new ListNode;
+ptr3->element = a2;
+ptr3->next = ptr4;
+
+ListNode* ptr2 = new ListNode;
+ptr2->element = a1;
+ptr2->next = ptr3;
+
+ListNode* head = new ListNode;
+head->element = a0;
+head->next = ptr2;
+```
+
+> **Question:** Do we need `ptr2`, `ptr3`, `ptr4` after the list is built?
+> **Answer:** No. Only the `head` pointer is needed to access the entire list.
+
+##### Insertion in Linked List
+
+**General Case:** Insert a new node between `prev` and `cur`.
+
+```cpp
+// Step 1: Link new node to cur
+newPtr->next = cur;           // OR: newPtr->next = prev->next;
+
+// Step 2: Link prev to new node
+prev->next = newPtr;
+```
+
+> **Question:** Can we do insertion without the `cur` pointer?
+> **Answer:** Yes. `prev->next` gives us access to the next node.
+
+**Insertion at Head:**
+
+```cpp
+// Step 1: Link new node to current head
+newPtr->next = cur;           // OR: newPtr->next = head;
+
+// Step 2: Update head
+head = newPtr;
+```
+
+##### Deletion in Linked List
+
+**General Case:** Delete the node pointed to by `cur`, where `prev` points to the node before it.
+
+```cpp
+// Step 1: Bypass cur
+prev->next = cur->next;
+
+// Step 2: Free memory
+delete cur;
+cur = NULL;
+```
+
+**Deletion at Head:**
+
+```cpp
+// Step 1: Move head forward
+head = cur->next;             // OR: head = head->next;
+
+// Step 2: Free memory
+delete cur;
+cur = NULL;
+```
+
+##### Traversing the Linked List
+
+To move forward one node:
+
+```cpp
+// Step 1
+prev = cur;
+
+// Step 2
+cur = cur->next;
+```
+
+**Traversing by Index:**
+
+```cpp
+ListNode* find(int index) const
+/* Purpose: Return pointer to Index'th node in list */
+{
+    ListNode *prev, *cur;
+
+    prev = NULL;
+    cur = Head of List;
+
+    // Make sure 1 <= index <= length of list
+
+    for (int I = 1; I < index; I++) {
+        prev = cur;
+        cur = cur->next;
+    }
+
+    return cur;
+}
+```
+
+> **Question:** Do we need `prev` in this case?
+> **Answer:** Not for retrieval, but it is needed for insertion and deletion.
+
+**Traversing by Value:**
+
+```cpp
+ListNode* findValue(ListItemType value) const
+/* Purpose: Return pointer to a node with value indicated in list */
+{
+    ListNode *prev, *cur;
+
+    prev = NULL;
+    cur = Head of List;
+
+    while (not found && cur is not NULL) {
+        if (cur->element == value) {
+            found = true;
+        } else {
+            prev = cur;
+            cur = cur->next;
+        }
+    }
+
+    return cur;
+}
+```
+
+##### C++ Specification (Linked List)
+
+```cpp
+// ListP.h: List ADT using Linked List
+typedef int ListItemType;
+
+class List {
+public:
+    List();
+    ~List();                  // Destructor declared
+
+    // ...No change to other methods
+    bool isEmpty() const;
+    int getLength() const;
+
+    void insert(int index, const ListItemType& newItem)
+        throw(ListException, ListIndexOutOfRangeException);
+
+    void remove(int index)
+        throw(ListIndexOutOfRangeException);
+
+    void retrieve(int index, ListItemType& dataItem) const
+        throw(ListIndexOutOfRangeException);
+
+private:
+    struct ListNode {
+        ListItemType item;
+        ListNode *next;
+    };
+
+    int size;                 // Number of items
+    ListNode *head;           // Pointer to the linked list
+    ListNode* find(int index) const;  // Private method to locate a node
+};
+```
+
+> **Key Points:**
+> - Structure declaration can be private
+> - `find()` is a private helper method
+
+##### Implementation
+
+**Constructor and Destructor:**
+
+```cpp
+List::List() : size(0), head(NULL) {}
+
+List::~List()
+{
+    while (!isEmpty())
+        remove(1);
+} // end destructor
+
+bool List::isEmpty() const
+{
+    return size == 0;
+} // end isEmpty
+
+int List::getLength() const
+{
+    return size;
+} // end getLength
+```
+
+**Private `find` Method:**
+
+```cpp
+List::ListNode *List::find(int index) const
+{
+    if ((index < 1) || (index > getLength()))
+        return NULL;
+    else  // count from the beginning of the list
+    {
+        ListNode *cur = head;
+        for (int skip = 1; skip < index; ++skip)
+            cur = cur->next;
+        return cur;
+    }
+} // end find
+```
+
+**`retrieve` Method:**
+
+```cpp
+void List::retrieve(int index, ListItemType& dataItem) const
+    throw(ListIndexOutOfRangeException)
+{
+    if ((index < 1) || (index > getLength()))
+        throw ListIndexOutOfRangeException("bad index in retrieve");
+    else
+    {
+        // get pointer to node, then data in node
+        ListNode *cur = find(index);
+        dataItem = cur->item;
+    } // end if
+} // end retrieve
+```
+
+**`insert` Method:**
+
+```cpp
+void List::insert(int index, const ListItemType& newItem)
+    throw(ListIndexOutOfRangeException, ListException)
+{
+    int newLength = getLength() + 1;
+
+    if ((index < 1) || (index > newLength))
+        throw ListIndexOutOfRangeException("Bad index in insert");
+    else
+    {
+        // try to create new node and place newItem in it
+        ListNode *newPtr = new ListNode;
+        size = newLength;
+        newPtr->item = newItem;
+
+        // attach new node to list
+        if (index == 1)
+        {
+            // insert new node at beginning of list
+            newPtr->next = head;
+            head = newPtr;
+        }
+        else
+        {
+            ListNode *prev = find(index - 1);
+            // insert new node after node to which prev points
+            newPtr->next = prev->next;
+            prev->next = newPtr;
+        } // end if
+    } // end if
+} // end insert
+```
+
+**`remove` Method:**
+
+```cpp
+void List::remove(int index)
+    throw(ListIndexOutOfRangeException)
+{
+    ListNode *cur;
+
+    if ((index < 1) || (index > getLength()))
+        throw ListIndexOutOfRangeException("Bad index in remove");
+    else
+    {
+        --size;
+        if (index == 1)
+        {
+            // delete the first node from the list
+            cur = head;        // save pointer to node
+            head = head->next;
+        }
+        else
+        {
+            ListNode *prev = find(index - 1);
+            cur = prev->next;  // save pointer to node
+            prev->next = cur->next;
+        } // end if
+
+        cur->next = NULL;
+        delete cur;            // Free memory space pointed by cur pointer
+        cur = NULL;
+    } // end if
+} // end remove
+```
+
+---
+
+#### 10.8.10.9 Variations of Linked List
+
+The linked list implementation shown above is known as a **singly linked list** — each node has one pointer (a single link).
+
+Many other variations exist:
+
+| Variation | Description |
+|-----------|-------------|
+| **Doubly Linked List** | Each node has `prev` and `next` pointers |
+| **Circular Linked List** | Last node points back to the first node |
+| **Dummy Head Node** | Extra unused node at the beginning |
+| **Tailed Linked List** | Keeps track of the tail pointer |
+
+Some variations can be combined:
+- Circular Doubly-Linked List
+- Circular Linked List with Dummy Head Node
+
+##### Doubly Linked List
+
+**Motivation:**
+- Singly Linked List only facilitates movement in one direction (from head to end)
+- Cannot go to the previous node
+- The last node takes the longest time to reach
+- Doubly Linked List facilitates movement in both directions
+- Simplifies most of the methods
+
+**Node Structure:**
+
+```cpp
+struct DListNode {
+    ListItemType element;
+    DListNode *prev;   // Pointer to previous node
+    DListNode *next;   // Pointer to next node
+};
+```
+
+**Example:** `<a0, a1, a2, a3>`
+
+```
+NULL <-- [a0] <--> [a1] <--> [a2] <--> [a3] --> NULL
+```
+
+**Requirements:**
+- `head` pointer to indicate the first node
+- `NULL` in the `prev` pointer field of first node
+- `NULL` in the `next` pointer field of last node
+
+**Insertion (before `cur`):**
+
+```cpp
+// Step 1
+newPtr->next = cur;
+newPtr->prev = cur->prev;
+
+// Step 2
+cur->prev->next = newPtr;
+cur->prev = newPtr;
+```
+
+**Insertion at Head:**
+
+```cpp
+// Step 1
+newPtr->next = cur;
+newPtr->prev = NULL;
+
+// Step 2
+cur->prev = newPtr;
+head = newPtr;
+```
+
+> **Question:** How do you know `cur == head`?
+> **Answer:** When `cur->prev == NULL`.
+
+**Deletion:**
+
+```cpp
+// Step 1: Bypass cur
+cur->prev->next = cur->next;
+cur->next->prev = cur->prev;
+
+// Step 2: Free memory
+delete cur;
+cur = NULL;
+```
+
+**Deletion at Head:**
+
+```cpp
+// Step 1
+head = cur->next;
+cur->next->prev = NULL;
+
+// Step 2: Free memory
+delete cur;
+cur = NULL;
+```
+
+**C++ Specification:**
+
+```cpp
+// ListDLL.h: List ADT using Doubly Linked List
+typedef int ListItemType;
+
+class List {
+public:
+    /* Similar to List ADT using Linked List */
+    // ... other methods not shown
+
+private:
+    struct DListNode {
+        ListItemType item;
+        DListNode *prev;
+        DListNode *next;
+    };
+
+    int size;
+    DListNode *head;
+    DListNode* find(int index) const;
+};
+```
+
+##### Circular Linked List
+
+**Concept:** The last node in a singly linked list points back to the first node.
+
+```
+head --> [a0] --> [a1] --> [a2] --> [a3] -----+
+            ^                                  |
+            +----------------------------------+
+```
+
+**Properties:**
+- No need to change the `ListNode` structure at all
+- There is no `NULL` anywhere in the list
+
+**Motivation:** Useful when we need to repeatedly go through the list.
+
+**Traversal:**
+
+```cpp
+cur = head;
+do {
+    visit the node cur points to;
+    cur = cur->next;
+} while (cur != head);
+```
+
+> Simple solution as long as the list is not empty.
+
+**Tracking the Tail:**
+
+Even more useful if we keep track of the **tail** instead of the head:
+
+```
+[a0] <-- [a1] <-- [a2] <-- [a3] <-- tail
+  |                                      ^
+  +--------------------------------------+
+```
+
+- Can access both the tail and head easily
+- Head = `tail->next`
+
+##### Dummy Head Node
+
+There is an extra node at the beginning of the list:
+- It is **not** used to store a real element, hence the name **dummy**
+- Simplifies `insert()` and `remove()` such that there is no more special case
+
+```
+head --> [dummy|*] --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
+```
+
+> **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case — no need for separate head-insertion or head-deletion logic.
+
+---
+
+#### 10.8.10.10 Template List ADT
+
+**Motivation:** The current List ADT only supports `int` (via `typedef int ListItemType;`). To use it for other datatypes, we need to change the typedef and recompile.
+
+**Solution:** Use **template** to make List ADT independent of datatype.
+
+**C++ Specification:**
+
+```cpp
+template <typename T>
+class List {
+public:
+    /* Unaffected Methods not shown */
+    void insert(int index, const T& newItem)
+        throw(ListException, ListIndexOutOfRangeException);
+    void remove(int index)
+        throw(ListIndexOutOfRangeException);
+    void retrieve(int index, T& dataItem) const
+        throw(ListIndexOutOfRangeException);
+
+private:
+    template <typename S>
+    struct ListNode {
+        S item;
+        ListNode *next;
+    };
+
+    int size;
+    ListNode<T> *head;
+    ListNode<T>* find(int index) const;
+};
+```
+
+**Changes to Methods:**
+
+```cpp
+template <typename T>
+List<T>::List() : size(0), head(NULL) {}
+
+template <typename T>
+List<T>::ListNode<T> *List<T>::find(int index) const
+{
+    if ((index < 1) || (index > getLength()))
+        return NULL;
+    else
+    {
+        ListNode<T> *cur = head;
+        for (int skip = 1; skip < index; ++skip)
+            cur = cur->next;
+        return cur;
+    }
+}
+
+template <typename T>
+void List<T>::insert(int index, const T& newItem)
+    throw(ListIndexOutOfRangeException, ListException)
+{
+    int newLength = getLength() + 1;
+
+    if ((index < 1) || (index > newLength))
+        throw ListIndexOutOfRangeException("Bad index in insert");
+    else
+    {
+        ListNode<T> *newPtr = new ListNode<T>;
+        size = newLength;
+        newPtr->item = newItem;
+
+        if (index == 1)
+        {
+            newPtr->next = head;
+            head = newPtr;
+        }
+        else
+        {
+            ListNode<T> *prev = find(index - 1);
+            newPtr->next = prev->next;
+            prev->next = newPtr;
+        }
+    }
+}
+```
+
+**User Program Example:**
+
+```cpp
+#include "TListP.cpp"
+
+int main()
+{
+    List<double> dl;
+    double d;
+
+    try {
+        dl.insert(1, 3.14);
+        dl.insert(1, 1.23);
+        dl.retrieve(1, d);
+        cout << d << endl;    // 1.23
+        dl.retrieve(2, d);
+        cout << d << endl;    // 3.14
+    } catch (ListException le) {
+        cout << le.what() << endl;
+    } catch (ListIndexOutOfRangeException lie) {
+        cout << lie.what() << endl;
+    }
+}
+```
+
+---
+
+#### 10.8.10.11 List in STL
+
+List is a popular data structure with a standard implementation in the C++ Standard Template Library.
+
+**Header File:**
+
+```cpp
+#include <list>
+```
+
+**Supported Methods** (see Appendix E of Carrano's book):
+- `insert(iterator i, value)`
+- `front()`
+
+**User Program Example:**
+
+```cpp
+#include <list>
+
+int main()
+{
+    list<double> dl;
+
+    dl.insert(dl.begin(), 3.14);
+    dl.insert(dl.begin(), 1.23);
+
+    list<double>::iterator li = dl.begin();
+
+    cout << *li << endl;    // 1.23
+    li++;
+    cout << *li << endl;    // 3.14
+
+    return 0;
+}
+```
+
+---
+
+#### 10.8.10.12 Summary
+
+This section on List ADT implementations covers:
+
+1. **Linked List Based Implementation:**
+   - Node structure with pointers
+   - Insertion and deletion operations
+   - Traversal using `prev` and `cur` pointers
+   - Complete C++ implementation with exceptions
+
+2. **Variations of Linked List:**
+   - **Doubly Linked List:** Bidirectional traversal, simplified operations
+   - **Circular Linked List:** No NULL terminator, useful for repeated traversal
+   - **Dummy Head Node:** Eliminates special cases for head insertion/deletion
+
+3. **Template List ADT:**
+   - Generic datatype support using `template <typename T>`
+   - Similar structure to linked list implementation
+
+4. **List in STL:**
+   - Standard implementation via `#include <list>`
+   - Uses iterators for traversal and insertion
+
+**Complete List ADT Comparison:**
+
+| Aspect | Array-Based | Linked List-Based |
+|--------|-------------|-------------------|
+| **Retrieval** | O(1) — direct access | O(n) — must traverse |
+| **Insertion** | O(n) — must shift | O(1) — if position known |
+| **Deletion** | O(n) — must shift | O(1) — if position known |
+| **Size** | Fixed (MAXSIZE) | Dynamic — grows as needed |
+| **Memory** | Contiguous, may waste space | Non-contiguous, extra pointer overhead |
+
+> **Key Takeaway:** Choose array-based for fast random access and fixed-size collections. Choose linked list for dynamic collections with frequent insertions and deletions.
+
+
 # 11 STL
 
 The Standard Template Library (STL) provides a collection of template classes and functions for common data structures and algorithms. `vector` is the most commonly used STL container.
