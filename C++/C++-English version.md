@@ -793,7 +793,7 @@ class Helper { ... };
 
 When `main.cpp` includes both `a.hpp` and `b.hpp`, `utils.hpp` gets processed twice. Since C++ does not allow multiple definitions of the same class, this results in a compilation error.
 
-#### 2.1.4.2 Traditional Include Guards (`#ifndef`)
+#### 2.1.4.2 Traditional Include Guards (`#ifndef` / `#define` / `#endif`)
 
 The classic approach uses preprocessor directives to ensure the header content is processed only once:
 
@@ -810,12 +810,12 @@ class MyClass { ... };
 
 **How it works:**
 
-| Step | First Inclusion | Second Inclusion |
-|------|-----------------|------------------|
-| 1 | `#ifndef MYHEADER_HPP` checks if macro is defined | Same check |
-| 2 | Macro NOT defined → condition is TRUE | Macro IS defined → condition is FALSE |
-| 3 | `#define MYHEADER_HPP` creates the macro | Entire block is skipped |
-| 4 | Header content is processed | Nothing happens |
+| Step | First Inclusion                                   | Second Inclusion                      |
+| ---- | ------------------------------------------------- | ------------------------------------- |
+| 1    | `#ifndef MYHEADER_HPP` checks if macro is defined | Same check                            |
+| 2    | Macro NOT defined → condition is TRUE             | Macro IS defined → condition is FALSE |
+| 3    | `#define MYHEADER_HPP` creates the macro          | Entire block is skipped               |
+| 4    | Header content is processed                       | Nothing happens                       |
 
 **Naming Convention:**
 - Use uppercase filename + `_HPP` suffix
