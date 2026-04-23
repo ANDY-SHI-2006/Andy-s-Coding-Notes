@@ -428,9 +428,9 @@ namespace outer {
 
     void demo() {
         int value = 30;
-        cout << value;      // 30 (local)
+        cout << value;        // 30 (local)
         cout << outer::value; // 20 (namespace)
-        cout << ::value;    // 10 (global)
+        cout << ::value;      // 10 (global)
     }
 }
 ```
@@ -491,7 +491,14 @@ namespace {
 
 ### 1.3.5 using-declaration vs using-directive
 
-**using-declaration:** Bring specific name into scope
+**1. Always use fully qualified names (safest):**
+```cpp
+std::cout << "Hello" << std::endl;
+std::cin >> x;
+```
+You can always use the full name. It is the most explicit approach with no ambiguity.
+
+**2. using-declaration:** Bring specific name into scope
 ```cpp
 using std::cout;      // Only cout is accessible without std::
 using std::endl;
@@ -500,7 +507,7 @@ cout << "Hello" << endl;  // OK
 // cin >> x;              // Error: cin not declared
 ```
 
-**using-directive:** Bring all names from namespace
+**3. using-directive:** Bring all names from namespace
 ```cpp
 using namespace std;  // All std names accessible
 
