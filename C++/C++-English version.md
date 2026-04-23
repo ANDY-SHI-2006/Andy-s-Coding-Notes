@@ -839,13 +839,13 @@ The compiler internally records which files have been included. When encounterin
 
 #### 2.1.4.4 Comparison
 
-| Aspect | `#ifndef` Guards | `#pragma once` |
-|--------|------------------|----------------|
-| **Portability** | 100% ISO C++ standard | Supported by all major compilers (GCC, Clang, MSVC), but not in standard |
-| **Performance** | Slower (file must be opened to check macro) | Faster (compiler remembers included files) |
-| **Boilerplate** | 3 lines of code | 1 line of code |
-| **Potential Issues** | Name collision if macros not unique | None |
-| **Use Case** | Maximum compatibility | Modern projects |
+| Aspect               | `#ifndef` Guards                            | `#pragma once`                                                           |
+| -------------------- | ------------------------------------------- | ------------------------------------------------------------------------ |
+| **Portability**      | 100% ISO C++ standard                       | Supported by all major compilers (GCC, Clang, MSVC), but not in standard |
+| **Performance**      | Slower (file must be opened to check macro) | Faster (compiler remembers included files)                               |
+| **Boilerplate**      | 3 lines of code                             | 1 line of code                                                           |
+| **Potential Issues** | Name collision if macros not unique         | None                                                                     |
+| **Use Case**         | Maximum compatibility                       | Modern projects                                                          |
 
 #### 2.1.4.5 Recommendation
 
@@ -857,7 +857,7 @@ The compiler internally records which files have been included. When encounterin
 
 **The Essence of Macros: Text Substitution**
 
-The preprocessor performs **pure text substitution** â?it literally replaces the macro name with its defined text, without any type checking, syntax analysis, or semantic understanding.
+The preprocessor performs **pure text substitution** — it literally replaces the macro name with its defined text, without any type checking, syntax analysis, or semantic understanding.
 
 ```cpp
 #define PI 3.14159
@@ -935,7 +935,7 @@ The backslash `\` must be the **very last character** on the line. If there is a
     1
 ```
 
-**Why it fails:** The preprocessor sees `\[space]` â?the `\` only escapes the space, not the newline. The macro ends at line 1, and line 2 becomes invalid standalone code.
+**Why it fails:** The preprocessor sees `\[space]` — the `\` only escapes the space, not the newline. The macro ends at line 1, and line 2 becomes invalid standalone code.
 
 ```cpp
 // CORRECT - No characters after \
@@ -1603,7 +1603,7 @@ The placement of braces `{}` is a matter of coding style. Two common styles are 
 | **Style 1** | Allman Style | Opening brace on its own line | `if (condition) \n { \n ... \n }` |
 | **Style 2** | K&R Style | Opening brace on the same line | `if (condition) { \n ... \n }` |
 
-**Style 1 (Allman Style) â?Opening brace on a new line:**
+**Style 1 (Allman Style) — Opening brace on a new line:**
 ```cpp
 if (condition)
 {
@@ -1614,7 +1614,7 @@ if (condition)
 }
 ```
 
-**Style 2 (K&R Style) â?Opening brace on the same line:**
+**Style 2 (K&R Style) — Opening brace on the same line:**
 ```cpp
 if (condition){
     statement 1;
@@ -1738,7 +1738,7 @@ C++ distinguishes uppercase and lowercase letters.
 - Use **descriptive names**: `studentCount` is better than `sc` or `n`
 - Avoid single-letter names except for loop counters (`i`, `j`, `k`)
 - Be consistent with one style throughout your project
-- **Follow your team's existing conventions** â?consistency is more important than any single style
+- **Follow your team's existing conventions** — consistency is more important than any single style
 
 ---
 
@@ -4390,14 +4390,14 @@ scanf("%hd", &s);  // ✓CORRECT: %hd matches short (2 bytes)
 
 The `%c` specifier has unique behavior regarding whitespace handling:
 
-**`scanf("%c", &c)`** â?Reads the next character, **including whitespace** (spaces, `\n`, `\t`)
+**`scanf("%c", &c)`** — Reads the next character, **including whitespace** (spaces, `\n`, `\t`)
 
 ```cpp
 char c;
 scanf("%c", &c);  // If input is " a", c will be ' ' (space)
 ```
 
-**`scanf(" %c", &c)`** â?The leading space tells scanf to **skip all leading whitespace first**, then read the character
+**`scanf(" %c", &c)`** — The leading space tells scanf to **skip all leading whitespace first**, then read the character
 
 ```cpp
 char c;
@@ -5331,7 +5331,7 @@ if (x > 0) {              // executed when condition is true
 
 - In C++, anywhere that requires "one statement" can be replaced with a compound statement wrapped in `{}`
 - A compound statement can contain any number of statements (0, 1, or many)
-- Braces define the **scope** of variables â?variables defined inside the braces are not accessible outside
+- Braces define the **scope** of variables — variables defined inside the braces are not accessible outside
 
 #### 8.2.1.1 Empty Statement
 
@@ -5341,12 +5341,12 @@ An **empty statement** consists of just a semicolon `;` with no expression:
 ;   // This is a valid empty statement
 ```
 
-**Important:** The semicolon **cannot** be omitted â?without it, the compiler will report an error:
+**Important:** The semicolon **cannot** be omitted — without it, the compiler will report an error:
 
 ```cpp
 // Example: empty statement in if
 if (x < 0)
-    ;    // Empty statement â?does nothing when x < 0
+    ;    // Empty statement — does nothing when x < 0
 // ^ Semicolon REQUIRED here!
 
 // Without semicolon: ERROR
@@ -5423,7 +5423,7 @@ if (a > 0) {
 
 **Best Practice:** Always use braces `{}` with if statements, even for single statements, to prevent errors and improve readability.
 
-> **Note:** `{}` serves as the **code block delimiter** â?it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
+> **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
 ### 8.2.6 The Conditional (Ternary) Operator
 
@@ -5494,7 +5494,7 @@ switch (a) {
 // Case 2
 ```
 
-**Key Insight:** `case` is just a **jump label** â?it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
+**Key Insight:** `case` is just a **jump label** — it only tells the program where to start executing. Without `break`, execution continues sequentially through all subsequent cases (fall-through behavior).
 
 ### 8.3.2 Syntax Rules
 
@@ -6012,7 +6012,7 @@ for (int i = 0; i < 10; i++) {
 
 > **Header:** Most functions in this section require `#include <cmath> (C++ style) or `#include <math.h> (C style)
 >
-> **Exception:** Integer `abs()` requires `#include <cstdlib> â?see Section 9.1.2
+> **Exception:** Integer `abs()` requires `#include <cstdlib> — see Section 9.1.2
 >
 > **Note:** In C++, <cmath> places functions in the `std` namespace. Use `using namespace std;` or prefix with `std::`.
 
@@ -6032,7 +6032,7 @@ int b = sqrt(x);      // Danger: 3.0 converted back to int, loses precision
 |----------|-------------|-------|
 | `fabs(x)` | Computes the absolute value of x | Returns `double` |
 | `sqrt(x)` | Computes the square root of x | Requires `x >= 0` |
-| `pow(x, y)` | Computes x raised to the power y (x^y) | **Domain Errors:** <br>â?`x = 0` and `y <= 0` (undefined: 0^(-1)) <br>â?`x < 0` and `y` is not an integer (e.g., (-2)^1.5 is not real) |
+| `pow(x, y)` | Computes x raised to the power y (x^y) | **Domain Errors:** <br>— `x = 0` and `y <= 0` (undefined: 0^(-1)) <br>— `x < 0` and `y` is not an integer (e.g., (-2)^1.5 is not real) |
 | `ceil(x)` | Rounds x up to the nearest integer (toward +infinity) | `ceil(2.01) = 3`, `ceil(-2.01) = -2` |
 | `floor(x)` | Rounds x down to the nearest integer (toward -infinity) | `floor(2.01) = 2`, `floor(-2.01) = -3` |
 | `exp(x)` | Computes e^x | e â?2.718282 |
@@ -6267,7 +6267,7 @@ The <random> library provides a modern, type-safe way to generate random numbers
 
 #### 9.1.3.1 Basic Concepts
 
-**1. Engine â?generates raw random bits**
+**1. Engine — generates raw random bits**
 
 | Class | Description |
 |-------|-------------|
@@ -6282,7 +6282,7 @@ std::mt19937 gen(rd());       // Seed the engine
 
 > **Note:** If `std::random_device` is unavailable (rare, mostly embedded systems), use `std::chrono::steady_clock::now().time_since_epoch().count()` as a seed instead.
 
-**2. Distribution â?maps raw bits to desired range and probability**
+**2. Distribution — maps raw bits to desired range and probability**
 
 Distribution objects are independent of the engine. You pass the engine to the distribution's `operator()` each time you want a number.
 
@@ -6291,7 +6291,7 @@ Distribution objects are independent of the engine. You pass the engine to the d
 | Distribution | Use Case | Example |
 |--------------|----------|---------|
 | `std::uniform_int_distribution<int> | Equal probability for each integer in [a, b] | Dice roll, lottery |
-| `std::uniform_real_distribution<double> | Equal probability for each real in [a, b) | 0.0â?.0 random float |
+| `std::uniform_real_distribution<double> | Equal probability for each real in [a, b) | 0.0— .0 random float |
 | `std::normal_distribution<double> | Bell curve (Gaussian) | Noise, natural variation |
 
 **Integer Range [a, b] (inclusive):**
@@ -6378,8 +6378,8 @@ for (int i = 0; i < 10; ++i) {
 ### 9.1.4 Character Functions
 
 > **Headers:** This section covers functions from two different headers:
-> - <cstdio> â?Character I/O functions (Section 9.2.1)
-> - <cctype> â?Character classification & conversion (Section 9.2.2)
+> - <cstdio> — Character I/O functions (Section 9.2.1)
+> - <cctype> — Character classification & conversion (Section 9.2.2)
 
 ### 9.1.4.1 <cstdio> Character I/O
 
@@ -6508,7 +6508,7 @@ Both functions convert letter case without modifying the original variable:
 
 **Important Notes:**
 
-- **Original variable is NOT modified** â?functions only return the converted value
+- **Original variable is NOT modified** — functions only return the converted value
 - To change the variable itself, you must reassign: `ch = toupper(ch);`
 
 **Examples:**
@@ -6831,7 +6831,7 @@ If the actual parameter type differs from the formal parameter type, C++ attempt
   - `char` â?`int`
 - **Warning**: Some conversions may produce unexpected results or compiler warnings
 
-**Example â?Implicit Conversion (Not Recommended):**
+**Example — Implicit Conversion (Not Recommended):**
 ```cpp
 void printInt(int x) {
     printf("%d\n", x);
@@ -6843,7 +6843,7 @@ int main() {
 }
 ```
 
-**Example â?Explicit Conversion (Recommended):**
+**Example — Explicit Conversion (Recommended):**
 ```cpp
 void printInt(int x) {
     printf("%d\n", x);
