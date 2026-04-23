@@ -213,7 +213,6 @@ int arr[MAX_SIZE];                    // Compiler sees: int arr[100];
  constexpr double PI = 3.141593;  // Type-safe, respects scope 
 ```
  
-
 ### 2.2.2 Function-like Macros
 
 ```cpp
@@ -231,12 +230,12 @@ If a macro definition spans multiple lines, a backslash (`\`) must be placed at 
 
 ```cpp
 // A multi-line macro using backslash continuation
-#define PRINT_RECTANGLE(width, height)    \
-    for (int i = 0; i < height; i++) {    \
-        for (int j = 0; j < width; j++) { \
-            std::cout << "*";             \
+#define PRINT_RECTANGLE(width, height)     \
+    for (int i = 0; i < height; i++) {     \
+        for (int j = 0; j < width; j++) {  \
+            std::cout << "*";              \
         }                                  \
-        std::cout << std::endl;           \
+        std::cout << std::endl;            \
     }
 ```
 
@@ -301,6 +300,13 @@ int m = MAX(x++, 10);   // Expands to: ((x++) > (10) ? (x++) : (10))
 ```cpp
 inline int max(int a, int b) { return a > b ? a : b; }  // Evaluates once, type-safe
 ```
+
+Unlike macros, `inline` functions:
+- Evaluate arguments **only once** (no double-increment bugs)
+- Have **type checking** and respect scope rules
+- Are **real functions** that the debugger can see
+
+> For a detailed explanation of how `inline` works and when to use it, see [Inline Functions](09-functions.md#926-inline-functions).
 
 ### 2.2.5 Macros vs Functions: Summary
 
