@@ -392,39 +392,7 @@ You don't manually pass `argc` when running the program. The operating system ha
 | `int main(int argc)` | ✗Invalid (only argc) |
 | `int main(char* argv[])` | ✗Invalid (only argv) |
 
-> **Rule:** The command-line argument interface is fixed by the C++ standard —either both parameters, or neither.
-
-### 1.2.3 Environment Variables
-
-On some platforms, `main()` can receive environment variables via a third parameter:
-
-```cpp
-int main(int argc, char* argv[], char* envp[]) {
-    // envp: array of "KEY=value" strings, terminated by nullptr
-    
-    for (int i = 0; envp[i] != nullptr; i++) {
-        std::cout << envp[i] << std::endl;
-    }
-    
-    return 0;
-}
-```
-
-**Portable alternative (preferred):**
-```cpp
-#include <cstdlib>
-
-int main() {
-    const char* path = std::getenv("PATH");
-    if (path) {
-        std::cout << "PATH: " << path << std::endl;
-    }
-    
-    std::setenv("MY_VAR", "value", 1);  // Set environment variable (POSIX)
-    
-    return 0;
-}
-```
+> **Rule:** The command-line argument interface is fixed by the C++ standard — either both parameters, or neither.
 
 ## 1.3 Namespaces
 
