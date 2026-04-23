@@ -1193,6 +1193,46 @@ void func() {
 }
 ```
 
+### 9.2.6 Inline Functions
+
+**What is `inline`?**
+
+`inline` is a hint to the compiler: "This function is small, so copy its body directly to the call site instead of performing a real function call." This eliminates the overhead of pushing arguments, jumping to the function, and returning.
+
+**Why prefer `inline` over macros?**
+
+| Feature | Macro `#define MAX(a,b)` | `inline` Function |
+|---------|--------------------------|-------------------|
+| Argument evaluation | Text replacement, may evaluate multiple times | ✓ Evaluated once |
+| Type safety | ✗ None | ✓ Full type checking |
+| Debuggability | ✗ Debugger sees expanded code | ✓ Debugger sees function name |
+| Scope | Global pollution | ✓ Respects namespaces |
+| Performance | No function call overhead | ✓ No function call overhead (inlined by compiler) |
+
+**Usage example:**
+
+```cpp
+inline int square(int x) { return x * x; }
+
+int main() {
+    int a = 5;
+    int result = square(a++);  // a incremented once, result = 25
+    
+    // Macro version would cause bugs:
+    // #define SQUARE(x) ((x) * (x))
+    // SQUARE(a++) → ((a++) * (a++))  // a incremented twice!
+}
+```
+
+**When to use `inline`:**
+
+- For small, frequently-called functions (getters, simple math)
+- In header files when you need to include function definitions (avoids multiple-definition linker errors)
+
+**Modern C++ note:**
+
+Modern compilers automatically inline small functions even without the `inline` keyword. Explicit `inline` is still useful in header files to avoid multiple-definition errors, but for optimization purposes, the compiler usually knows best.
+
 ---
 
 [← Previous: Conditional Execution](08-conditional-execution.md) | [Next: Object-Oriented Programming →](10-object-oriented-programming.md)
