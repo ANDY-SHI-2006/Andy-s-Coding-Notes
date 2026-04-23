@@ -87,92 +87,6 @@ printf("Hello\n");    // Also works (but 'using namespace std' is discouraged in
 
 > **Best Practice:** Use `.hpp` for C++ headers to distinguish from C headers.
 
-### 2.1.4 Include Guards
-
-Include Guards prevent multiple inclusions of the same header file. Without them, including a header multiple times would cause **redefinition errors**.
-
-#### 2.1.4.1 The Problem: Multiple Inclusions
-
-Consider this scenario:
-
-```cpp
-// utils.hpp
-class Helper { ... };
-
-// a.hpp
-#include "utils.hpp"    // Helper class defined here
-
-// b.hpp  
-#include "utils.hpp"    // Helper class defined again
-
-// main.cpp
-#include "a.hpp"        // Helper defined (via utils.hpp)
-#include "b.hpp"        // Helper defined AGAIN (via utils.hpp)
-// ERROR: redefinition of 'class Helper'
-```
-
-When `main.cpp` includes both `a.hpp` and `b.hpp`, `utils.hpp` gets processed twice. Since C++ does not allow multiple definitions of the same class, this results in a compilation error.
-
-#### 2.1.4.2 Traditional Include Guards (`#ifndef` / `#define` / `#endif`)
-
-The classic approach uses preprocessor directives to ensure the header content is processed only once:
-
-```cpp
-// myheader.hpp
-#ifndef MYHEADER_HPP
-#define MYHEADER_HPP
-
-// Header content here
-class MyClass { ... };
-
-#endif // MYHEADER_HPP
-```
-
-**How it works:**
-
-| Step | First Inclusion                                   | Second Inclusion                      |
-| ---- | ------------------------------------------------- | ------------------------------------- |
-| 1    | `#ifndef MYHEADER_HPP` checks if macro is defined | Same check                            |
-| 2    | Macro NOT defined → condition is TRUE             | Macro IS defined → condition is FALSE |
-| 3    | `#define MYHEADER_HPP` creates the macro          | Entire block is skipped               |
-| 4    | Header content is processed                       | Nothing happens                       |
-
-**Naming Convention:**
-- Use uppercase filename + `_HPP` suffix
-- Example: `math_utils.hpp` → `MATH_UTILS_HPP`
-- Ensure uniqueness to avoid name collisions
-
-#### 2.1.4.3 `#pragma once`
-
-A modern, simpler alternative:
-
-```cpp
-// myheader.hpp
-#pragma once
-
-// Header content here
-class MyClass { ... };
-```
-
-**How it works:**
-The compiler internally records which files have been included. When encountering the same file again, it skips processing entirely.
-
-#### 2.1.4.4 Comparison
-
-| Aspect               | `#ifndef` Guards                            | `#pragma once`                                                           |
-| -------------------- | ------------------------------------------- | ------------------------------------------------------------------------ |
-| **Portability**      | 100% ISO C++ standard                       | Supported by all major compilers (GCC, Clang, MSVC), but not in standard |
-| **Performance**      | Slower (file must be opened to check macro) | Faster (compiler remembers included files)                               |
-| **Boilerplate**      | 3 lines of code                             | 1 line of code                                                           |
-| **Potential Issues** | Name collision if macros not unique         | None                                                                     |
-| **Use Case**         | Maximum compatibility                       | Modern projects                                                          |
-
-#### 2.1.4.5 Recommendation
-
-- **For new projects:** Use `#pragma once` (cleaner, faster)
-- **For maximum portability:** Use `#ifndef` guards
-- **Consistency matters:** Pick one approach and use it throughout your project
-
 ## 2.2 Macro Definitions (#define)
 
 **The Essence of Macros: Text Substitution**
@@ -393,66 +307,8 @@ MAKE_FUNCTION(cleanup); // Expands to: void func_cleanup() { std::cout << "clean
 
 > **Note:** These operators are advanced features. Modern C++ often prefers templates and constexpr functions over macro operators for type safety.
 
-## 2.3 Predefined Macros
 
-The preprocessor provides macros with compile-time information.
-
-### 2.3.1 Standard Macros
-
-| Macro | Description | Example Value |
-|-------|-------------|---------------|
-| `__FILE__` | Current source file name | `"main.cpp"` |
-| `__LINE__` | Current line number | `42` |
-| `__func__` | Current function name | `"main"` |
-| `__DATE__` | Compilation date | `"Apr 4 2026"` |
-| `__TIME__` | Compilation time | `"15:30:00"` |
-| `__cplusplus` | C++ standard version | `202002L` (C++20) |
-
-```cpp
-void log_error(const char* msg) {
-    std::cerr << "Error in " << __FILE__ << ":" << __LINE__
-              << " (" << __func__ << "): " << msg << std::endl;
-}
-```
-
-**Using `__cplusplus` for version-specific code:**
-
-```cpp
-#if __cplusplus >= 202002L
-    // C++20 or later
-    using std::format;
-#elif __cplusplus >= 201703L
-    // C++17
-    // Use fmt library or printf
-#else
-    #error "C++17 or later required"
-#endif
-```
-
-### 2.3.2 Compiler/Platform Identification
-
-| Macro | Meaning |
-|-------|---------|
-| `__GNUC__` | GCC compiler version (major) |
-| `__clang__` | Clang compiler |
-| `_MSC_VER` | Microsoft Visual C++ version |
-| `__STDC__` | Standard C compliance |
-
-**Detecting compiler for platform-specific code:**
-
-```cpp
-#if defined(__GNUC__) && !defined(__clang__)
-    // GCC specific code
-    #pragma GCC optimize("O3")
-#elif defined(__clang__)
-    // Clang specific code
-    #pragma clang optimize on
-#elif defined(_MSC_VER)
-    // Microsoft Visual C++ specific code
-    #pragma warning(disable: 4996)
-#endif
-```
-## 2.4 `#undef` - Remove Macro Definition
+### 2.2.7 `#undef` - Remove Macro Definition
 
 ```cpp
 #define MAX_SIZE 100
@@ -462,11 +318,12 @@ void log_error(const char* msg) {
 #define MAX_SIZE 200  // Can redefine with new value
 ```
 
-## 2.5 Conditional Compilation
+
+## 2.3 Conditional Compilation
 
 Compile different code based on conditions evaluated at preprocessing time.
 
-### 2.5.1 `#ifdef`, `#ifndef`, `#if` defined()
+### 2.3.1 `#ifdef`, `#ifndef`, `#if` defined()
 
 ```cpp
 #ifdef DEBUG
@@ -487,7 +344,7 @@ Compile different code based on conditions evaluated at preprocessing time.
 #endif
 ```
 
-### 2.5.2 Platform Detection
+### 2.3.2 Platform Detection
 
 ```cpp
 #if defined(_WIN32)
@@ -519,7 +376,7 @@ Compile different code based on conditions evaluated at preprocessing time.
 | `__FreeBSD__` | FreeBSD |
 | `__ANDROID__` | Android |
 
-### 2.5.3 Debug vs Release Builds
+### 2.3.3 Debug vs Release Builds
 
 ```cpp
 #ifdef DEBUG
@@ -538,6 +395,154 @@ ASSERT(ptr != nullptr);
 **Compilation with debug flag:**
 ```bash
 g++ -DDEBUG main.cpp -o program   # Defines DEBUG macro
+```
+
+
+## 2.4 Include Guards
+
+Include Guards prevent multiple inclusions of the same header file. Without them, including a header multiple times would cause **redefinition errors**.
+
+### 2.4.1 The Problem: Multiple Inclusions
+
+Consider this scenario:
+
+```cpp
+// utils.hpp
+class Helper { ... };
+
+// a.hpp
+#include "utils.hpp"    // Helper class defined here
+
+// b.hpp  
+#include "utils.hpp"    // Helper class defined again
+
+// main.cpp
+#include "a.hpp"        // Helper defined (via utils.hpp)
+#include "b.hpp"        // Helper defined AGAIN (via utils.hpp)
+// ERROR: redefinition of 'class Helper'
+```
+
+When `main.cpp` includes both `a.hpp` and `b.hpp`, `utils.hpp` gets processed twice. Since C++ does not allow multiple definitions of the same class, this results in a compilation error.
+
+### 2.4.2 Traditional Include Guards (`#ifndef` / `#define` / `#endif`)
+
+The classic approach uses preprocessor directives to ensure the header content is processed only once:
+
+```cpp
+// myheader.hpp
+#ifndef MYHEADER_HPP
+#define MYHEADER_HPP
+
+// Header content here
+class MyClass { ... };
+
+#endif // MYHEADER_HPP
+```
+
+**How it works:**
+
+| Step | First Inclusion                                   | Second Inclusion                      |
+| ---- | ------------------------------------------------- | ------------------------------------- |
+| 1    | `#ifndef MYHEADER_HPP` checks if macro is defined | Same check                            |
+| 2    | Macro NOT defined → condition is TRUE             | Macro IS defined → condition is FALSE |
+| 3    | `#define MYHEADER_HPP` creates the macro          | Entire block is skipped               |
+| 4    | Header content is processed                       | Nothing happens                       |
+
+**Naming Convention:**
+- Use uppercase filename + `_HPP` suffix
+- Example: `math_utils.hpp` → `MATH_UTILS_HPP`
+- Ensure uniqueness to avoid name collisions
+
+### 2.4.3 `#pragma once`
+
+A modern, simpler alternative:
+
+```cpp
+// myheader.hpp
+#pragma once
+
+// Header content here
+class MyClass { ... };
+```
+
+**How it works:**
+The compiler internally records which files have been included. When encountering the same file again, it skips processing entirely.
+
+### 2.4.4 Comparison
+
+| Aspect               | `#ifndef` Guards                            | `#pragma once`                                                           |
+| -------------------- | ------------------------------------------- | ------------------------------------------------------------------------ |
+| **Portability**      | 100% ISO C++ standard                       | Supported by all major compilers (GCC, Clang, MSVC), but not in standard |
+| **Performance**      | Slower (file must be opened to check macro) | Faster (compiler remembers included files)                               |
+| **Boilerplate**      | 3 lines of code                             | 1 line of code                                                           |
+| **Potential Issues** | Name collision if macros not unique         | None                                                                     |
+| **Use Case**         | Maximum compatibility                       | Modern projects                                                          |
+
+### 2.4.5 Recommendation
+
+- **For new projects:** Use `#pragma once` (cleaner, faster)
+- **For maximum portability:** Use `#ifndef` guards
+- **Consistency matters:** Pick one approach and use it throughout your project
+
+
+## 2.5 Predefined Macros
+
+The preprocessor provides macros with compile-time information.
+
+### 2.5.1 Standard Macros
+
+| Macro | Description | Example Value |
+|-------|-------------|---------------|
+| `__FILE__` | Current source file name | `"main.cpp"` |
+| `__LINE__` | Current line number | `42` |
+| `__func__` | Current function name | `"main"` |
+| `__DATE__` | Compilation date | `"Apr 4 2026"` |
+| `__TIME__` | Compilation time | `"15:30:00"` |
+| `__cplusplus` | C++ standard version | `202002L` (C++20) |
+
+```cpp
+void log_error(const char* msg) {
+    std::cerr << "Error in " << __FILE__ << ":" << __LINE__
+              << " (" << __func__ << "): " << msg << std::endl;
+}
+```
+
+**Using `__cplusplus` for version-specific code:**
+
+```cpp
+#if __cplusplus >= 202002L
+    // C++20 or later
+    using std::format;
+#elif __cplusplus >= 201703L
+    // C++17
+    // Use fmt library or printf
+#else
+    #error "C++17 or later required"
+#endif
+```
+
+### 2.5.2 Compiler/Platform Identification
+
+| Macro | Meaning |
+|-------|---------|
+| `__GNUC__` | GCC compiler version (major) |
+| `__clang__` | Clang compiler |
+| `_MSC_VER` | Microsoft Visual C++ version |
+| `__STDC__` | Standard C compliance |
+
+**Detecting compiler for platform-specific code:**
+
+```cpp
+#if defined(__GNUC__) && !defined(__clang__)
+    // GCC specific code
+    #pragma GCC optimize("O3")
+#elif defined(__clang__)
+    // Clang specific code
+    #pragma clang optimize on
+#elif defined(_MSC_VER)
+    // Microsoft Visual C++ specific code
+    #pragma warning(disable: 4996)
+#endif
 ```
 
 ## 2.6 Other Directives
