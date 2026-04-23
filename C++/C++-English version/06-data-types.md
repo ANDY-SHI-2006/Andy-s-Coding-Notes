@@ -268,6 +268,40 @@ int main() {
 - `const`/`constexpr` have type checking and scope rules
 - `constexpr` is more strict: value must be computable at compile time
 
+### 6.5.5 `const` vs `constexpr`: When to Use Which
+
+| Feature | `const` | `constexpr` |
+|---------|---------|-------------|
+| Value determined at | Compile time **or** runtime | **Must be** compile time |
+| Can use runtime input? | ✓ Yes | ✗ No |
+| Usable for array size? | ⚠️ Only if compile-time known | ✓ Yes |
+| Type safety | ✓ Yes | ✓ Yes |
+| Scope rules | ✓ Yes | ✓ Yes |
+
+**Use `constexpr` when:**
+- Value is known at compile time (e.g., mathematical constants, fixed limits)
+- You need a compile-time constant for array sizes or template parameters
+
+**Use `const` when:**
+- Value is determined at runtime but must not change afterward
+- Function returns a value that should be immutable
+
+```cpp
+constexpr double PI = 3.14159;      // ✓ Compile-time constant
+constexpr int MAX_USERS = 100;      // ✓ Compile-time constant
+
+int x;
+cin >> x;
+const int input = x;                // ✓ Runtime value, locked after assignment
+// constexpr int y = x;             // ✗ Error! x is not compile-time known
+
+constexpr int SIZE = 10;
+int arr[SIZE];                      // ✓ OK: SIZE is compile-time constant
+
+const int SIZE2 = 10;
+int arr2[SIZE2];                    // ✓ OK in C++11+
+```
+
 ## 6.6 Type Conversion
 
 ### 6.6.1 Type Promotion Hierarchy
