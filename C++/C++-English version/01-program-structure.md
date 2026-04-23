@@ -87,7 +87,7 @@ double area = PI * SQUARE(r);
 double area = 3.14159 * ((r) * (r));
 ```
 
-The preprocessor is covered in detail in [Chapter 2](#2-the-preprocessor).
+The preprocessor is covered in detail in [Chapter 2](02-the-preprocessor.md).
 
 ### 1.1.4 Common Header Files Reference
 
