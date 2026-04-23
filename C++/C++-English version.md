@@ -546,10 +546,10 @@ As programs grow larger, splitting code into multiple files becomes essential. T
 
 In C++, each component typically consists of two files:
 
-| File Type | Extension | Contains | Purpose |
-|-----------|-----------|----------|---------|
-| **Header File** | `.hpp` | Declarations (function prototypes, class declarations) | Interface - tells other files what's available |
-| **Source File** | `.cpp` | Definitions (function implementations, global variables) | Implementation - the actual code |
+| File Type       | Extension | Contains                                                 | Purpose                                        |
+| --------------- | --------- | -------------------------------------------------------- | ---------------------------------------------- |
+| **Header File** | `.hpp`    | Declarations (function prototypes, class declarations)   | Interface - tells other files what's available |
+| **Source File** | `.cpp`    | Definitions (function implementations, global variables) | Implementation - the actual code               |
 
 **Why separate them?**
 - **Compilation efficiency**: Headers are included multiple times; source files are compiled once
@@ -695,10 +695,10 @@ The preprocessor runs before compilation, performing text substitution and condi
 
 ### 2.1.1 Search Path: `< >` vs `" "`
 
-| Syntax | Search Order | Use Case |
-|--------|--------------|----------|
-| `<header>` | System directories only | Standard library headers (`<iostream>`, `<vector>`) |
-| `"header"` | Current directory → project paths → system directories | Custom/project headers (`"utils.h"`, `"config.h"`) |
+| Syntax     | Search Order                                           | Use Case                                            |
+| ---------- | ------------------------------------------------------ | --------------------------------------------------- |
+| `<header>` | System directories only                                | Standard library headers (`<iostream>`, `<vector>`) |
+| `"header"` | Current directory → project paths → system directories | Custom/project headers (`"utils.h"`, `"config.h"`)  |
 
 **Key Differences in Detail:**
 
@@ -720,10 +720,10 @@ The preprocessor runs before compilation, performing text substitution and condi
 
 C++ provides two ways to include C standard library headers:
 
-| Style | Example | Namespace | Recommendation |
-|-------|---------|-----------|----------------|
-| C-style | `#include <stdio.h>` | Global namespace | Legacy/C compatibility |
-| C++-style | `#include <cstdio>` | `std::` namespace (implementation may also put in global) | **Preferred in C++** |
+| Style     | Example              | Namespace                                                 | Recommendation         |
+| --------- | -------------------- | --------------------------------------------------------- | ---------------------- |
+| C-style   | `#include <stdio.h>` | Global namespace                                          | Legacy/C compatibility |
+| C++-style | `#include <cstdio>`  | `std::` namespace (implementation may also put in global) | **Preferred in C++**   |
 
 **Complete Mapping Table:**
 
@@ -762,6 +762,8 @@ printf("Hello\n");    // Also works (but 'using namespace std' is discouraged in
 |-----------|------------|-----------------|
 | `.h` | C headers, some C++ legacy | C standard library, OS APIs |
 | `.hpp` / `.hh` / `.h++` | C++ specific | Templates, classes, C++ features |
+
+> **Note:** `.hpp`, `.hh`, and `.h++` are equivalent conventions — they all indicate C++-specific headers. `.hpp` is the most widely used.
 
 > **Best Practice:** Use `.hpp` for C++ headers to distinguish from C headers.
 
