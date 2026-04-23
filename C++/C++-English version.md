@@ -38,7 +38,7 @@ int global = 10;          // Definition (memory allocated)
 
 // file2.cpp
 extern int global;        // Declaration (no memory, refers to file1's definition)
-int global = 20;       // ERROR! Redefinition violates ODR
+int global = 20;          // ERROR! Redefinition violates ODR
 ```
 
 > **One Definition Rule (ODR):** Each variable/function/class can be defined only once across all translation units. Multiple declarations are allowed.
@@ -61,13 +61,13 @@ Before the compiler processes your code, the **preprocessor** performs an initia
 
 ```
 Source File (.cpp)
-       â?
+       ↓
 Preprocessor handles #include, #define, #if, etc.
-       â?
+       ↓
 Modified Source (translation unit)
-       â?
+       ↓
 Compiler generates object code
-       â?
+       ↓
 Linker combines object files into executable
 ```
 
@@ -77,6 +77,9 @@ Linker combines object files into executable
 ```cpp
 #define PI 3.14159
 #define SQUARE(x) ((x) * (x))
+
+// Before preprocessing (what you write):
+double area = PI * SQUARE(r);
 
 // After preprocessing, the compiler sees:
 double area = 3.14159 * ((r) * (r));
@@ -299,7 +302,6 @@ printf("Hello\n");      // Also acceptable
 
 > **Best Practice:** Always use C++-style headers (`<cxxx>`) in new C++ code. They properly place names in the `std::` namespace, following C++ conventions and avoiding namespace pollution. Use C-style headers (`<xxx.h>`) only when interfacing with legacy C code that expects global namespace names.
 
----
 
 ## 1.2 Program Entry Point: main()
 
@@ -314,9 +316,9 @@ int main() {
 }
 ```
 
-| Declaration | Standard | Usage |
-|-------------|----------|-------|
-| `int main()` | ✓Standard | **Always use this** |
+| Declaration   | Standard      | Usage                |
+| ------------- | ------------- | -------------------- |
+| `int main()`  | ✓Standard     | **Always use this**  |
 | `void main()` | ✗Non-standard | Avoid (not portable) |
 
 **Exit status meanings:**
@@ -390,7 +392,7 @@ You don't manually pass `argc` when running the program. The operating system ha
 | `int main(int argc)` | ✗Invalid (only argc) |
 | `int main(char* argv[])` | ✗Invalid (only argv) |
 
-> **Rule:** The command-line argument interface is fixed by the C++ standard â?either both parameters, or neither.
+> **Rule:** The command-line argument interface is fixed by the C++ standard —either both parameters, or neither.
 
 ### 1.2.3 Environment Variables
 
@@ -700,6 +702,8 @@ main.cpp ------+                          +--> Link --> program
 - Changing a header requires recompiling all files that include it
 
 > **Note:** Understanding this structure helps explain why we need `#include` (Chapter 2) and why the One Definition Rule (Section 1.1.2) exists.
+
+---
 
 # 2 The Preprocessor
 
@@ -1269,6 +1273,8 @@ struct PackedStruct {     // Members packed with no gaps
     #warning "long is not 64-bit on this platform"
 #endif
 ```
+
+---
 
 # 3 Code Standardization
 
@@ -2030,6 +2036,9 @@ auto func = [](int x) { return x * 2; };
 ```
 
 > **Important:** `auto` requires initialization. `auto x;` is an error.
+
+---
+
 # 5 Operators
 
 Operators in C++ are symbols that perform operations on operands.
@@ -5120,6 +5129,8 @@ outFile << "New line appended" << endl;
 outFile.close();
 ```
 
+---
+
 # 8 Conditional Execution
 
 ## 8.1 Relational & Logical Operators
@@ -7210,6 +7221,9 @@ void func() {
     printf("%d\n", ::x); // Prints 10 (global)
 }
 ```
+
+---
+
 # 10 Object-Oriented Programming
 
 ## 10.1 Classes and Objects
@@ -7401,14 +7415,12 @@ void transfer(BankAcct& from, BankAcct& to, double amt) {
 
 > **Recommendation:** Pass large objects by reference to avoid copying
 
----
 
 
 ## 10.8 Abstract Data Type (ADT)
 
 An Abstract Data Type (ADT) is a fundamental concept in software engineering that separates the **specification** (what operations are available) from the **implementation** (how operations are performed).
 
----
 
 ### 10.8.1 What is Abstraction?
 
@@ -7421,7 +7433,6 @@ An Abstract Data Type (ADT) is a fundamental concept in software engineering tha
 | **Data Abstraction** | Hide data representation, expose only necessary operations |
 | **Functional Abstraction** | Hide implementation logic, expose function interface |
 
----
 
 ### 10.8.2 Definition of ADT
 
@@ -7439,7 +7450,6 @@ An ADT is a collection of data together with a set of operations on that data.
 - Users depend only on the specification
 - Changes in implementation do not affect users
 
----
 
 ### 10.8.3 The Wall of Abstraction
 
@@ -7469,7 +7479,6 @@ An ADT is a collection of data together with a set of operations on that data.
 - Users should NOT access underlying data structures directly
 - Implementation can change without affecting user programs
 
----
 
 ### 10.8.4 Benefits of ADT
 
@@ -7482,7 +7491,6 @@ An ADT is a collection of data together with a set of operations on that data.
 | **Flexibility** | Multiple implementations possible |
 | **Complexity Management** | Break down complex systems into manageable units |
 
----
 
 ### 10.8.5 ADT in C++
 
@@ -7581,7 +7589,6 @@ int main() {
 }
 ```
 
----
 
 ### 10.8.6 Precondition and Postcondition
 
@@ -7606,7 +7613,6 @@ public:
 };
 ```
 
----
 
 ### 10.8.7 Primitive Types as ADTs
 
@@ -7620,7 +7626,6 @@ Even built-in types are ADTs:
 
 Users don't need to know internal representation to use these types effectively.
 
----
 
 ### 10.8.8 When to Use ADT
 
@@ -7637,7 +7642,6 @@ Users don't need to know internal representation to use these types effectively.
 - Geometric shapes (Sphere, Cube)
 - Data structures (List, Stack, Queue, Tree)
 
----
 
 ### 10.8.9 Summary
 
@@ -7662,7 +7666,6 @@ Users don't need to know internal representation to use these types effectively.
 
 The List ADT is a fundamental abstract data type that represents an ordered collection of elements. It demonstrates the complete ADT design process: specification followed by multiple implementations.
 
----
 
 #### 10.8.10.1 List ADT Specification
 
@@ -7717,7 +7720,6 @@ public:
 };
 ```
 
----
 
 #### 10.8.10.2 Exception-Based Specification (Version 2)
 
@@ -7772,7 +7774,6 @@ public:
 };
 ```
 
----
 
 #### 10.8.10.3 Array-Based Implementation
 
@@ -7842,7 +7843,6 @@ void List::replace(int index, ItemType item) {
 }
 ```
 
----
 
 #### 10.8.10.4 Array Implementation Efficiency Analysis
 
@@ -7861,7 +7861,6 @@ void List::replace(int index, ItemType item) {
 - Wasted space if list is small
 - Out of space if list exceeds MAXSIZE
 
----
 
 #### 10.8.10.5 Sample User Program
 
@@ -7898,7 +7897,6 @@ int main() {
 }
 ```
 
----
 
 #### 10.8.10.6 When to Use Array Implementation
 
@@ -7914,7 +7912,6 @@ int main() {
 
 > **Note:** For dynamic collections with frequent modifications, a linked list implementation is preferred. See data structures courses for linked list implementation.
 
----
 
 #### 10.8.10.7 Summary
 
@@ -8264,7 +8261,6 @@ void List::remove(int index)
 } // end remove
 ```
 
----
 
 #### 10.8.10.9 Variations of Linked List
 
@@ -8441,7 +8437,6 @@ head --> [dummy|*] --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
 
 > **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case — no need for separate head-insertion or head-deletion logic.
 
----
 
 #### 10.8.10.10 Template List ADT
 
@@ -8550,7 +8545,6 @@ int main()
 }
 ```
 
----
 
 #### 10.8.10.11 List in STL
 
@@ -8588,7 +8582,6 @@ int main()
 }
 ```
 
----
 
 #### 10.8.10.12 Summary
 
@@ -8626,6 +8619,8 @@ This section on List ADT implementations covers:
 > **Key Takeaway:** Choose array-based for fast random access and fixed-size collections. Choose linked list for dynamic collections with frequent insertions and deletions.
 
 
+---
+
 # 11 STL
 
 The Standard Template Library (STL) provides a collection of template classes and functions for common data structures and algorithms. `vector` is the most commonly used STL container.
@@ -8635,7 +8630,6 @@ The Standard Template Library (STL) provides a collection of template classes an
 
 The Standard Template Library (STL) is a major component of the C++ standard library, providing reusable, generic container classes and algorithms.
 
----
 
 ### 11.0.1 STL Components
 
@@ -8650,7 +8644,6 @@ STL consists of three main components:
 Algorithms ←→ Iterators ←→ Containers
 ```
 
----
 
 #### 8.3.2 STL Containers
 
@@ -8674,7 +8667,6 @@ Containers are template classes that store and manage collections of objects.
 | **Unordered** | `unordered_set`, `unordered_map` | Hash-based, O(1) |
 | **Container Adaptors** | `stack`, `queue`, `priority_queue` | Restricted interface |
 
----
 
 ### 11.0.3 Vector (`<vector>`)
 
@@ -8730,7 +8722,6 @@ v.insert(v.begin() + 1, 15);  // Insert 15 at position 1
 v.erase(v.begin());   // Remove first element
 ```
 
----
 
 ### 11.0.4 Iterators
 
@@ -8798,7 +8789,6 @@ for (int x : v) {
 - `list`: Only iterators to erased elements are invalidated
 - Always "reset" iterators after modifying container
 
----
 
 ### 11.0.5 STL Algorithms (`<algorithm>`)
 
@@ -8853,7 +8843,6 @@ reverse(v.begin(), v.end());
 sort(v.begin(), v.end(), greater<int>());  // Descending
 ```
 
----
 
 ### 11.0.6 Container Comparison
 
@@ -8866,7 +8855,6 @@ sort(v.begin(), v.end(), greater<int>());  // Descending
 | `map` | O(log n) | O(log n) | Key-value pairs |
 | `unordered_map` | O(1) avg | O(1) avg | Fast lookup |
 
----
 
 ### 11.0.7 Best Practices
 
