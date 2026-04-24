@@ -321,30 +321,63 @@ MAKE_FUNCTION(cleanup); // Expands to: void func_cleanup() { std::cout << "clean
 
 ## 2.3 Conditional Compilation
 
-Compile different code based on conditions evaluated at preprocessing time.
+Conditional compilation is the **preprocessor's version of if-else**. Before compilation, the preprocessor evaluates conditions and decides which code to keep and which code to discard.
 
 ### 2.3.1 `#ifdef`, `#ifndef`, `#if` defined()
 
+These directives work like `if` statements, but they are evaluated at **preprocessing time**, not runtime.
+
+**Step 1: `#ifdef` — "If defined"**
+
 ```cpp
+#define DEBUG
+
 #ifdef DEBUG
-    std::cout << "Debug: x = " << x << std::endl;
-#endif
-
-#ifndef VERSION
-    #define VERSION "1.0"
-#endif
-
-// Equivalent to #ifdef/#ifndef using defined()
-#if defined(DEBUG)
-    // debug code
-#endif
-
-#if !defined(NDEBUG)
-    // debug code (if NDEBUG not defined)
+    std::cout << "Debug mode" << std::endl;
 #endif
 ```
 
+`#ifdef DEBUG` checks whether `DEBUG` has been `#define`d. If yes, the code inside is preserved; if not, the preprocessor deletes the entire block before compilation.
+
+**Step 2: `#ifndef` — "If not defined"**
+
+```cpp
+#ifndef VERSION
+    #define VERSION "1.0"
+#endif
+```
+
+`#ifndef` is the opposite — it compiles the inner code only if the macro is **NOT** defined. This is the core mechanism behind Include Guards.
+
+**Step 3: `#if defined()` — More flexible form**
+
+```cpp
+#if defined(DEBUG)       // Same as #ifdef DEBUG
+    // debug code
+#endif
+
+#if !defined(NDEBUG)     // Same as #ifndef NDEBUG
+    // debug code (if NDEBUG is not defined)
+#endif
+```
+
+`defined()` can combine multiple conditions (e.g., `#if defined(WIN32) && defined(DEBUG)`), which `#ifdef` cannot do.
+
+**Comparison Table:**
+
+| Directive | Meaning | C++ Equivalent |
+|-----------|---------|----------------|
+| `#ifdef X` | Compile if X is defined | `if (X exists)` |
+| `#ifndef X` | Compile if X is NOT defined | `if (X not exists)` |
+| `#if defined(X)` | Same as `#ifdef X` | `if (X exists)` |
+| `#if !defined(X)` | Same as `#ifndef X` | `if (X not exists)` |
+| `#elif` | Else if | `else if` |
+| `#else` | Else | `else` |
+| `#endif` | End of conditional block | `}` |
+
 ### 2.3.2 Platform Detection
+
+Different platforms require different code. The preprocessor can detect the operating system at compile time:
 
 ```cpp
 #if defined(_WIN32)
@@ -378,12 +411,14 @@ Compile different code based on conditions evaluated at preprocessing time.
 
 ### 2.3.3 Debug vs Release Builds
 
+Conditional compilation is commonly used to enable debug features only in development:
+
 ```cpp
 #ifdef DEBUG
     #define LOG(msg) std::cout << "[DEBUG] " << msg << std::endl
     #define ASSERT(cond) if(!(cond)) { std::cerr << "Assertion failed"; exit(1); }
 #else
-    #define LOG(msg)    // Empty - no overhead in release
+    #define LOG(msg)    // Empty — no overhead in release
     #define ASSERT(cond) // Empty
 #endif
 
@@ -392,11 +427,12 @@ LOG("Entering function foo");
 ASSERT(ptr != nullptr);
 ```
 
+In **Debug mode**, `LOG()` prints messages and `ASSERT()` checks conditions. In **Release mode**, both become empty — zero runtime overhead.
+
 **Compilation with debug flag:**
 ```bash
 g++ -DDEBUG main.cpp -o program   # Defines DEBUG macro
 ```
-
 
 ## 2.4 Include Guards
 
