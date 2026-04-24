@@ -411,27 +411,38 @@ Different platforms require different code. The preprocessor can detect the oper
 
 ### 2.3.3 Debug vs Release Builds
 
-Conditional compilation is commonly used to enable debug features only in development:
+Developers need debug output during development, but want it removed in the released program. Conditional compilation handles this automatically:
+
+```cpp
+#ifdef DEBUG
+    #define LOG(msg) std::cout << "[DEBUG] " << msg << std::endl
+#else
+    #define LOG(msg)    // Removed in release
+#endif
+
+LOG("Entering function foo");
+```
+
+**After preprocessing:**
+
+| Build | Command | `LOG(...)` becomes |
+|-------|---------|-------------------|
+| Debug | `g++ -DDEBUG main.cpp` | `std::cout << "[DEBUG] " << ...` |
+| Release | `g++ main.cpp` | (nothing) |
+
+**With assertion checking:**
 
 ```cpp
 #ifdef DEBUG
     #define LOG(msg) std::cout << "[DEBUG] " << msg << std::endl
     #define ASSERT(cond) if(!(cond)) { std::cerr << "Assertion failed"; exit(1); }
 #else
-    #define LOG(msg)    // Empty — no overhead in release
-    #define ASSERT(cond) // Empty
+    #define LOG(msg)
+    #define ASSERT(cond)
 #endif
 
-// Usage
-LOG("Entering function foo");
+LOG("Pointer allocated");
 ASSERT(ptr != nullptr);
-```
-
-In **Debug mode**, `LOG()` prints messages and `ASSERT()` checks conditions. In **Release mode**, both become empty — zero runtime overhead.
-
-**Compilation with debug flag:**
-```bash
-g++ -DDEBUG main.cpp -o program   # Defines DEBUG macro
 ```
 
 ## 2.4 Include Guards
