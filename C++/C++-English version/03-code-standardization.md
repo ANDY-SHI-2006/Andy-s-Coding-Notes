@@ -8,50 +8,82 @@ This complete example demonstrates all code standardization guidelines from this
 
 ```cpp
 /*------------------------------------------------------------*/
-/* Program: sinc_table.c                                      */
+/* Program: student_grade.cpp                                 */
 /*                                                            */
-/* This program computes and prints a table of sinc(x)        */
-/* values over a user-specified interval [a, b].              */
+/* This program calculates the average grade for students     */
+/* and determines their letter grade (A, B, C, D, F).         */
 /*------------------------------------------------------------*/
 
-#include <stdio.h>
-#include <math.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
 
-#define PI 3.141593
+const double MAX_SCORE = 100.0;
 
 /*------------------------------------------------------------*/
-/* This function evaluates the sinc function.                 */
-/* Sinc(x) = sin(PI*x) / (PI*x) for x != 0, 1 for x = 0       */
+/* This function converts a numeric score to a letter grade.  */
+/* A: 90-100, B: 80-89, C: 70-79, D: 60-69, F: < 60         */
 /*------------------------------------------------------------*/
-double sinc(double x)
+char getLetterGrade(double score)
 {
-    if (fabs(x) < 0.0001)
-        return 1.0;
+    if (score >= 90.0)
+        return 'A';
+    else if (score >= 80.0)
+        return 'B';
+    else if (score >= 70.0)
+        return 'C';
+    else if (score >= 60.0)
+        return 'D';
     else
-        return sin(PI * x) / (PI * x);
+        return 'F';
 }
 
 /*------------------------------------------------------------*/
-int main(void)
+int main()
 {
-    /* Declare variables. */
-    int k;
-    double a, b, x_incr, new_x;
-
-    /* Get interval endpoints from the user. */
-    printf("Enter endpoints a and b (a<b): \n");
-    scanf("%lf %lf", &a, &b);
-    x_incr = (b - a) / 20;
-
-    /* Compute and print table of sinc(x) values. */
-    printf("x and sinc(x) \n");
-    for (k = 0; k <= 20; k++)
-    {
-        new_x = a + k * x_incr;
-        printf("%f %f \n", new_x, sinc(new_x));
+    // Declare variables.
+    std::vector<double> scores;
+    std::string studentName;
+    double score;
+    double totalScore = 0.0;
+    double average;
+    
+    // Get student name from user.
+    std::cout << "Enter student name: ";
+    std::getline(std::cin, studentName);
+    
+    // Input scores until user enters -1.
+    std::cout << "Enter scores (enter -1 to finish):" << std::endl;
+    while (true) {
+        std::cout << "Score: ";
+        std::cin >> score;
+        
+        if (score < 0)
+            break;
+        
+        if (score > MAX_SCORE) {
+            std::cout << "Invalid score. Please enter 0-100." << std::endl;
+            continue;
+        }
+        
+        scores.push_back(score);
+        totalScore += score;
     }
-
-    /* Exit program. */
+    
+    // Compute and display results.
+    if (scores.empty()) {
+        std::cout << "No scores entered." << std::endl;
+        return 0;
+    }
+    
+    average = totalScore / scores.size();
+    
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nStudent: " << studentName << std::endl;
+    std::cout << "Average Score: " << average << std::endl;
+    std::cout << "Letter Grade: " << getLetterGrade(average) << std::endl;
+    
     return 0;
 }
 /*------------------------------------------------------------*/
@@ -68,7 +100,8 @@ int main(void)
 | **Blank Lines** (2.3.1) | Empty lines separate declaration, input, computation sections |
 | **Indentation** (2.3.2) | Consistent 4-space indentation inside braces |
 | **Line Splitting** (2.3.2) | Long expressions avoided; clear statement per line |
-| **Naming** (2.4.2) | Descriptive names: `x_incr` not `dx`, `new_x` not `x1` |
+| **C++ Features** | Uses `iostream`, `vector`, `string` instead of C-style I/O |
+| **Naming** (2.4.2) | Descriptive names: `totalScore` not `ts`, `studentName` not `sn` |
 | **No Hungarian** (2.4.2) | Clean names without type prefixes |
 | **No Keywords** (2.4.1) | No reserved words used as identifiers |
 ## 3.2 Comments
@@ -190,36 +223,12 @@ Indenting of the second line indicates that it is a **continuation of the previo
 
 If a statement is too long, split it over two lines at a point that preserves readability.
 
-##### 3.3.2.3.1 Splitting printf Statements
-
-**Method 1: Split after comma**
-
-Split after the comma and indent the continuation to align with the opening parenthesis or first argument.
+**Example:** Splitting a long `std::cout` statement
 
 ```cpp
-printf("The distance between the two points is %5.2f \n",
-       distance);
+std::cout << "Student: " << studentName << ", Average: " << average
+          << ", Grade: " << letterGrade << std::endl;
 ```
-
-**Method 2: Split string into two quoted parts**
-
-Divide the string literal into separate pieces, each in its own quotation marks. The compiler automatically concatenates them.
-
-```cpp
-printf("The distance between the two points is"
-       " %5.2f \n", distance);
-```
-
-**Method 3: Split at natural break in text**
-
-Split at a logical point in the text (e.g., between words) for better readability.
-
-```cpp
-printf("The distance between the "
-       "points is %5.2f \n", distance);
-```
-
-> **See also:** [7.2.6 Splitting Long printf Statements](#726-splitting-long-printf-statements) for complete syntax details and additional examples.
 
 **String Concatenation Rule**
 
@@ -487,6 +496,58 @@ C++ distinguishes uppercase and lowercase letters.
 - Avoid single-letter names except for loop counters (`i`, `j`, `k`)
 - Be consistent with one style throughout your project
 - **Follow your team's existing conventions** — consistency is more important than any single style
+
+## 3.5 Automated Code Formatting
+
+Maintaining consistent code style manually is tedious and error-prone. Modern C++ development uses automated formatting tools.
+
+### 3.5.1 clang-format
+
+**clang-format** is a tool from the LLVM project that automatically reformats C++ code according to a specified style.
+
+**Installation:**
+- Linux: `sudo apt-get install clang-format` (Ubuntu/Debian)
+- macOS: `brew install clang-format`
+- Windows: Comes with LLVM or can be installed via Visual Studio
+
+**Usage:**
+
+```bash
+# Format a single file
+clang-format -i myfile.cpp
+
+# Format all files in a directory
+find . -name "*.cpp" -o -name "*.hpp" | xargs clang-format -i
+```
+
+**Configuration (.clang-format file):**
+
+Create a `.clang-format` file in your project root to define your style:
+
+```yaml
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: false
+```
+
+**Popular Style Presets:**
+
+| Style | Description |
+|-------|-------------|
+| `LLVM` | LLVM project's style |
+| `Google` | Google's C++ style guide |
+| `Chromium` | Chromium project's style |
+| `Mozilla` | Mozilla's style |
+| `WebKit` | WebKit's style |
+| `Microsoft` | Microsoft's style |
+
+**IDE Integration:**
+- **VSCode**: Install "Clang-Format" extension
+- **Visual Studio**: Built-in support (Ctrl+K, Ctrl+D)
+- **CLion**: Built-in support with customizable styles
+
+> **Tip:** Set up clang-format in your IDE to format on save. This ensures your code is always properly formatted without manual effort.
 
 ---
 
