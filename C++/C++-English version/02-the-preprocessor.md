@@ -609,19 +609,9 @@ Beyond `#include`, `#define`, and conditional compilation, C++ provides several 
 
 > **Note:** `#pragma` directives are not standardized (except `STDC` pragmas). Different compilers support different pragmas, but many common ones work across GCC, Clang, and MSVC.
 
-#### Common `#pragma` Directives
+#### `#pragma once` - Include Guard (Recommended)
 
-| Pragma | Effect | Portability |
-|--------|--------|-------------|
-| `#pragma once` | Include guard (prevents multiple inclusion) | Universal (all modern compilers) |
-| `#pragma pack(n)` | Control struct member alignment | GCC, Clang, MSVC |
-| `#pragma warning(...)` | Enable/disable warnings | MSVC mainly |
-| `#pragma GCC ...` | GCC-specific options | GCC only |
-| `#pragma clang ...` | Clang-specific options | Clang only |
-
-#### 2.6.1.1 `#pragma once` - Include Guard
-
-The most common `#pragma`, used as an alternative to `#ifndef` include guards:
+Use this at the top of every header file to prevent multiple inclusion:
 
 ```cpp
 // myheader.hpp
@@ -640,50 +630,9 @@ class MyClass { ... };
 | Safety | Name collision possible | None (file-based) |
 | Verbosity | 3+ lines | 1 line |
 
-> **Recommendation:** Use `#pragma once` for new projects. It's cleaner, faster, and supported by all major compilers (GCC, Clang, MSVC).
+> **Recommendation:** Use `#pragma once` for all new projects. It's cleaner, faster, and supported by all major compilers (GCC, Clang, MSVC).
 
-#### 2.6.1.2 `#pragma pack` - Struct Packing
-
-Controls memory alignment of struct members. Normally, compilers add padding bytes for performance:
-
-```cpp
-// Normal struct (with padding)
-struct Normal {
-    char c;     // 1 byte + 3 bytes padding
-    int i;      // 4 bytes
-};              // Total: 8 bytes
-
-// Packed struct (no padding)
-#pragma pack(push, 1)    // Save current setting, set pack=1
-struct Packed {
-    char c;     // 1 byte (no padding)
-    int i;      // 4 bytes
-};              // Total: 5 bytes
-#pragma pack(pop)        // Restore previous setting
-
-static_assert(sizeof(Normal) == 8);
-static_assert(sizeof(Packed) == 5);
-```
-
-> **Use case:** Binary file formats, network protocols, hardware registers where exact layout matters. Can hurt performance due to unaligned memory access.
-
-#### 2.6.1.3 `#pragma warning` - MSVC Warning Control
-
-Microsoft Visual C++ specific (GCC/Clang use different mechanisms):
-
-```cpp
-// Disable a specific warning
-#pragma warning(disable: 4996)  // Deprecated function warning
-
-// Enable a warning
-#pragma warning(enable: 4244)   // Possible loss of data
-
-// Push/pop warning state
-#pragma warning(push)
-#pragma warning(disable: 4100)  // Unused parameter
-void func(int unused) { }
-#pragma warning(pop)            // Restore previous state
-```
+**Other `#pragma` directives** (e.g., `#pragma pack` for struct alignment, `#pragma warning` for MSVC) are compiler-specific and rarely needed in everyday C++ programming. Look them up when you encounter specific advanced use cases.
 
 ### 2.6.2 `#error` and `#warning` - Compile-Time Messages
 
