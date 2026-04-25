@@ -685,8 +685,6 @@ main.cpp ------+                          +--> Link --> program
 
 As projects grow beyond a few files, managing compilation becomes complex. This section introduces CMake, the industry-standard build system for C++.
 
----
-
 #### 1.4.5.1 Why Build Systems Matter
 
 **The Problem with Manual Compilation:**
@@ -720,8 +718,6 @@ But for a real project with 20+ files, multiple directories, and external librar
 | **CMake** | Meta-build system (generates Make/Ninja/MSBuild files) | Cross-platform |
 
 > **Why CMake?** It generates native build files for your platform (Makefiles on Linux, Visual Studio projects on Windows, Xcode projects on macOS). Write once, build anywhere.
-
----
 
 #### 1.4.5.2 CMake Basics
 
@@ -771,8 +767,6 @@ add_executable(program main.cpp math_utils.cpp)
 | `set(CMAKE_CXX_STANDARD 17)` | Requests C++17 (or 11, 14, 20) |
 | `set(CMAKE_CXX_STANDARD_REQUIRED ON)` | Makes it mandatory (not optional) |
 | `add_executable()` | Creates executable target from source files |
-
----
 
 #### 1.4.5.3 Multi-File Project Example
 
@@ -839,8 +833,6 @@ Always build in a separate `build/` directory. This keeps:
 - Build artifacts separate
 - Multiple build configurations possible (debug/release)
 
----
-
 #### 1.4.5.4 Common CMake Options
 
 **Compiler Flags:**
@@ -873,8 +865,6 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 | Default generator | Makefiles | Visual Studio project |
 | Specify generator | `cmake -G Ninja ..` | `cmake -G "MinGW Makefiles" ..` |
 
----
-
 #### 1.4.5.5 When to Learn CMake
 
 **For Beginners:**
@@ -889,8 +879,6 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 
 > **Note:** CMake has a steep learning curve, but it's the industry standard. Consider learning it after you're comfortable with C++ basics.
 
----
-
 #### 1.4.5.6 Summary
 
 | Concept | Key Point |
@@ -900,9 +888,5 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 | **Basic workflow** | `cmake ..` then `cmake --build .` |
 | **Best practice** | Always use out-of-source builds (separate `build/` directory) |
 | **Priority** | Learn after mastering C++ basics |
-
-
----
-
 
 [Next: The Preprocessor →](02-the-preprocessor.md)
