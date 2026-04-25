@@ -606,7 +606,7 @@ Beyond `#include`, `#define`, and conditional compilation, C++ provides several 
 
 **Purpose:** Send compiler-specific commands. Only `#pragma once` is commonly used.
 
-#### `#pragma once` - Include Guard (Recommended)
+#### 2.6.1.1 `#pragma once` - Include Guard (Recommended)
 
 Use this at the top of every header file to prevent multiple inclusion:
 
