@@ -214,10 +214,22 @@ maxSize = 200;                     // ✗ Compile error!
 ```
 
 **const and Pointers:**
+
+| Syntax | Read As | Pointer | Pointed Value |
+|--------|---------|---------|---------------|
+| `const int* ptr` | Pointer to const int | Mutable (can reassign) | Immutable (cannot modify through ptr) |
+| `int* const ptr` | Const pointer to int | Immutable (fixed address) | Mutable (can modify value) |
+| `const int* const ptr` | Const pointer to const int | Immutable | Immutable |
+
 ```cpp
-const int* ptr;        // Pointer to const (value immutable, pointer mutable)
-int* const ptr;        // Const pointer (pointer immutable, value mutable)
-const int* const ptr;  // Const pointer to const (both immutable)
+int a = 10, b = 20;
+const int* ptr1 = &a;        // Can reassign: ptr1 = &b; ✓
+                             // Cannot modify: *ptr1 = 30; ✗
+
+int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; ✗
+                             // Can modify: *ptr2 = 30; ✓
+
+const int* const ptr3 = &a;  // Both pointer and value are fixed
 ```
 
 ### 4.4.2 constexpr (Compile-Time Constant, C++11)
