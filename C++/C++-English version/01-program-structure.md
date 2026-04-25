@@ -680,6 +680,37 @@ main.cpp ------+                          +--> Link --> program
 
 > **Note:** Understanding this structure helps explain why we need `#include` (Chapter 2) and why the One Definition Rule (Section 1.1.2) exists.
 
+### 1.4.5 Build Systems and CMake (Optional)
+
+For small projects with a few files, manual compilation works. But for larger projects with dozens of files and complex dependencies, you need a **build system**.
+
+**CMake** is a popular cross-platform build system generator:
+- You write a simple CMakeLists.txt file describing your project
+- CMake generates platform-specific build files (Makefiles, Visual Studio projects, etc.)
+- It handles compiler flags, include paths, and library linking automatically
+
+**Example CMakeLists.txt:**
+`cmake
+cmake_minimum_required(VERSION 3.10)
+project(MyProgram)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Add executable
+add_executable(program main.cpp math_utils.cpp)
+`
+
+**Usage:**
+`ash
+mkdir build && cd build    # Create build directory
+cmake ..                   # Generate build files
+cmake --build .            # Compile the project
+`
+
+> **Note:** CMake is widely used in industry and open-source projects. Learning it is valuable for real-world C++ development, but not required for understanding the language basics.
+
 ---
 
 [Next: The Preprocessor →](02-the-preprocessor.md)
