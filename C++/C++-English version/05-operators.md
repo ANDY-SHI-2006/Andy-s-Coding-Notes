@@ -1,4 +1,4 @@
-[← Previous: Definitions, Declarations and Statements](04-definitions-declarations-and-statements.md) | [Next: Data Types →](06-data-types.md)
+[�?Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
 
 # 5 Operators
 
@@ -854,4 +854,4 @@ int result = a * b + b / c * d;  // Also valid, but less clear
 
 ---
 
-[← Previous: Definitions, Declarations and Statements](04-definitions-declarations-and-statements.md) | [Next: Data Types →](06-data-types.md)
+[�?Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
