@@ -603,8 +603,6 @@ Beyond `#include`, `#define`, and conditional compilation, C++ provides several 
 | `#error` | Force compilation error | Version checking, requirements enforcement |
 | `#warning` | Emit compile-time warning | Portability notices, deprecated features |
 
-
-
 ### 2.6.1 `#line` - Debug Generated Code
 
 **Purpose:** Change the apparent line number and filename in error messages.
@@ -640,8 +638,6 @@ calculator.y:42: error: expected ';' before 'return'
 ```
 
 > **When to use:** Only when writing code generators or preprocessing tools that produce C++ code.
-
-
 
 ### 2.6.2 `#pragma` - Compiler Instructions
 
@@ -725,8 +721,6 @@ void func(int unused) { }
 #pragma warning(pop)            // Restore previous state
 ```
 
-
-
 ### 2.6.3 `#error` and `#warning` - Compile-Time Messages
 
 **Purpose:** Emit user-defined messages during compilation.
@@ -793,8 +787,6 @@ Use `#error` to stop compilation if requirements aren't met:
 #endif
 ```
 
-
-
 ### 2.6.4 Summary
 
 | Directive | When to Use | Example |
@@ -810,9 +802,5 @@ Use `#error` to stop compilation if requirements aren't met:
 2. **`#error`** - Use to enforce compile-time requirements
 3. **`#line`** - Only needed for code generation tools
 4. **`#pragma` others** - Use sparingly, prefer standard C++ when possible
-
-
-
-
 
 [← Previous: Program Structure](01-program-structure.md) | [Next: Code Standardization →](03-code-standardization.md)
