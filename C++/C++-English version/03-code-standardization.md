@@ -140,10 +140,11 @@ return 0;
 ## 3.3 White Space
 
 **White space** (blank lines and indentation) makes programs more **readable**, easier to **modify**, and provides a **consistent style**.
-| Type            | Purpose                       | Example                   |
-| --------------- | ----------------------------- | ------------------------- |
+
+| Type | Purpose | Example |
+|------|---------|---------|
 | **Blank lines** | Separate different components | Between function sections |
-| **Indentation** | Show program structure        | Inside `{ }` blocks       |
+| **Indentation** | Show program structure | Inside `{ }` blocks |
 
 ### 3.3.1 Blank Lines
 
