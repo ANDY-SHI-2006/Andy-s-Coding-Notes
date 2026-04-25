@@ -81,6 +81,8 @@ int b{};             // Zero initialization (b = 0)
 vector<int> v{1, 2, 3};  // Initialize container
 ```
 
+> **Note**: When you write `vector<int> v{1, 2, 3}`, the compiler constructs a `std::initializer_list<int>` containing `{1, 2, 3}`, then passes it to the vector's constructor. This is why brace initialization works uniformly for both built-in types and containers.
+
 **Why prefer brace initialization?**
 - **Prevents narrowing**: `int x{3.14};` is a compile error
 - **Uniform syntax**: Works for all types
@@ -335,7 +337,5 @@ using Callback = void(*)(int);       // Clearer syntax
 | Type alias | `using MyInt = int;` |
 | Global (use sparingly) | `int g_count = 0;` |
 | Static local variable | `static int counter{0};` |
-
----
 
 [← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
