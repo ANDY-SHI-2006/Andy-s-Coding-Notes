@@ -598,16 +598,13 @@ Beyond `#include`, `#define`, and conditional compilation, C++ provides several 
 
 | Directive | Purpose | Common Use |
 |-----------|---------|------------|
-| `#line` | Override line numbers and filenames | Code generators, debugging generated code |
-| `#pragma` | Compiler-specific instructions | Include guards, optimization, warnings |
+| `#pragma` | Compiler-specific instructions | Include guards |
 | `#error` | Force compilation error | Version checking, requirements enforcement |
 | `#warning` | Emit compile-time warning | Portability notices, deprecated features |
 
 ### 2.6.1 `#pragma` - Compiler Instructions
 
-**Purpose:** Send implementation-specific commands to the compiler.
-
-> **Note:** `#pragma` directives are not standardized (except `STDC` pragmas). Different compilers support different pragmas, but many common ones work across GCC, Clang, and MSVC.
+**Purpose:** Send compiler-specific commands. Only `#pragma once` is commonly used.
 
 #### `#pragma once` - Include Guard (Recommended)
 
@@ -623,12 +620,12 @@ class MyClass { ... };
 
 **Comparison:**
 
-| Aspect | `#ifndef` Guard | `#pragma once` |
-|--------|-----------------|----------------|
-| Standard | ISO C++ standard | Not standard (but universal) |
-| Speed | Slower (file must be opened) | Faster (compiler tracks files) |
-| Safety | Name collision possible | None (file-based) |
-| Verbosity | 3+ lines | 1 line |
+| Aspect    | `#ifndef` Guard              | `#pragma once`                 |
+| --------- | ---------------------------- | ------------------------------ |
+| Standard  | ISO C++ standard             | Not standard (but universal)   |
+| Speed     | Slower (file must be opened) | Faster (compiler tracks files) |
+| Safety    | Name collision possible      | None (file-based)              |
+| Verbosity | 3+ lines                     | 1 line                         |
 
 > **Recommendation:** Use `#pragma once` for all new projects. It's cleaner, faster, and supported by all major compilers (GCC, Clang, MSVC).
 
