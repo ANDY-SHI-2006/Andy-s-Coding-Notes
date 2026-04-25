@@ -710,35 +710,49 @@ But for a real project with 20+ files, multiple directories, and external librar
 
 **Popular Build Systems:**
 
-| Build System | Description | Platform |
-|--------------|-------------|----------|
-| **Make** | Traditional Unix tool | Linux/macOS |
-| **MSBuild** | Microsoft's build system | Windows |
-| **Ninja** | Fast, modern alternative | Cross-platform |
-| **CMake** | Meta-build system (generates Make/Ninja/MSBuild files) | Cross-platform |
+| Build System | Description                                            | Platform       |
+| ------------ | ------------------------------------------------------ | -------------- |
+| **Make**     | Traditional Unix tool                                  | Linux/macOS    |
+| **MSBuild**  | Microsoft's build system                               | Windows        |
+| **Ninja**    | Fast, modern alternative                               | Cross-platform |
+| **CMake**    | Meta-build system (generates Make/Ninja/MSBuild files) | Cross-platform |
 
 > **Why CMake?** It generates native build files for your platform (Makefiles on Linux, Visual Studio projects on Windows, Xcode projects on macOS). Write once, build anywhere.
 
 #### 1.4.5.2 CMake Basics
 
-**How CMake Works:**
+**How CMake Works (Three Stages):**
 
+**Stage 1: Your Project Directory**
 ```
-Your Project
-    ├── CMakeLists.txt      (1. You write this)
-    ├── src/
-    └── include/
+my_project/
+├── CMakeLists.txt      (You write this file)
+├── src/
+│   └── main.cpp
+└── include/
+    └── math_utils.hpp
+```
+Run: `cmake ..`
+↓
 
-        ↓  cmake ..
+**Stage 2: Generate Build Files**
+CMake reads CMakeLists.txt and creates platform-specific build files:
+- Linux/macOS: `Makefile`
+- Windows: `MyProject.sln` (Visual Studio) or `Makefile` (MinGW)
+- Optional: `build.ninja` (if using Ninja generator)
 
-Build Files (platform-specific)
-    ├── Makefile            (Linux/macOS)
-    ├── build.ninja         (if using Ninja)
-    └── MyProject.sln       (Windows Visual Studio)
+Run: `cmake --build .`
+↓
 
-        ↓  cmake --build .
+**Stage 3: Compile and Link**
+CMake calls the underlying build tool:
+- Linux/macOS: runs `make`
+- Windows: runs `MSBuild` or compiler directly
+- Output: `program` executable
 
-Executable Program
+**In short:**
+```
+CMakeLists.txt --(cmake ..)--> Build Files --(cmake --build .)--> Executable
 ```
 
 **Minimum CMakeLists.txt:**
