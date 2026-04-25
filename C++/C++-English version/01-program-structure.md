@@ -784,68 +784,114 @@ add_executable(program main.cpp math_utils.cpp)
 
 #### 1.4.5.3 Multi-File Project Example
 
-**Project Structure:**
+This section shows a complete multi-file project with separate directories for headers and source files.
+
+**Step 1: Understand the Problem**
+
+When code is organized in subdirectories, the compiler needs to know where to find header files:
+
+```cpp
+// src/main.cpp
+#include "math_utils.hpp"   // Where is this file?
+```
+
+Without help, the compiler won't find `math_utils.hpp` because it's in the `include/` directory, not the current directory.
+
+**Step 2: Project Structure**
 
 ```
 my_project/
-├── CMakeLists.txt
-├── include/
-│   └── math_utils.hpp      # Header files
-├── src/
-│   ├── main.cpp            # Entry point
-│   └── math_utils.cpp      # Implementation
-└── build/                  # Build directory (generated)
+├── CMakeLists.txt          # Build configuration
+├── include/                # Header files (.hpp)
+│   └── math_utils.hpp
+└── src/                    # Source files (.cpp)
+    ├── main.cpp
+    └── math_utils.cpp
 ```
 
-**CMakeLists.txt:**
+**Step 3: Write CMakeLists.txt**
 
 ```cmake
 cmake_minimum_required(VERSION 3.10)
-project(Calculator VERSION 1.0)
+project(Calculator)
 
-# C++17 is required
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add include directory so compiler can find headers
+# Tell compiler where to find headers
 include_directories(include)
 
-# Create executable with all source files
-add_executable(calculator 
+# List all source files to compile
+add_executable(calculator
     src/main.cpp
     src/math_utils.cpp
 )
 ```
 
-**Build Commands:**
+**Key Differences from Single-File Project:**
+
+| Aspect | Single File | Multi-File with Directories |
+|--------|-------------|----------------------------|
+| Headers location | Same directory | `include/` subdirectory |
+| Source files | One file | Multiple files in `src/` |
+| CMake command | `add_executable(program main.cpp)` | `add_executable(program src/main.cpp src/other.cpp)` |
+| Extra needed | Nothing | `include_directories(include)` |
+
+**Step 4: Build and Run**
 
 ```bash
-# 1. Create and enter build directory
+# Create build directory (keeps source clean)
 mkdir build
 cd build
 
-# 2. Generate build files
+# Generate build files
 cmake ..
-# Output: CMake configures the project, detects compiler
 
-# 3. Compile
+# Compile the project
 cmake --build .
-# Output: Compiles all files, creates 'calculator' executable
 
-# Or on Linux/macOS with Make:
-make
-
-# 4. Run the program
-./calculator    # Linux/macOS
-calculator.exe  # Windows
+# Run the result
+./calculator          # Linux/macOS
+calculator.exe        # Windows
 ```
 
-**Out-of-Source Builds:**
+**Why `include_directories(include)`?**
 
-Always build in a separate `build/` directory. This keeps:
-- Source files clean
-- Build artifacts separate
-- Multiple build configurations possible (debug/release)
+This tells CMake: "When compiling, add the `include/` directory to the compiler's search path." This is equivalent to adding `-Iinclude` to the g++ command:
+
+```bash
+# Manual compilation equivalent:
+g++ -Iinclude src/main.cpp src/math_utils.cpp -o calculator
+```
+
+**Complete File Example:**
+
+```cpp
+// include/math_utils.hpp
+#ifndef MATH_UTILS_HPP
+#define MATH_UTILS_HPP
+int add(int a, int b);
+#endif
+```
+
+```cpp
+// src/math_utils.cpp
+#include "math_utils.hpp"
+int add(int a, int b) {
+    return a + b;
+}
+```
+
+```cpp
+// src/main.cpp
+#include <iostream>
+#include "math_utils.hpp"
+
+int main() {
+    std::cout << "2 + 3 = " << add(2, 3) << std::endl;
+    return 0;
+}
+```
 
 #### 1.4.5.4 Common CMake Options
 
