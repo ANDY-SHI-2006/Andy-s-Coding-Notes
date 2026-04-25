@@ -603,43 +603,7 @@ Beyond `#include`, `#define`, and conditional compilation, C++ provides several 
 | `#error` | Force compilation error | Version checking, requirements enforcement |
 | `#warning` | Emit compile-time warning | Portability notices, deprecated features |
 
-### 2.6.1 `#line` - Debug Generated Code
-
-**Purpose:** Change the apparent line number and filename in error messages.
-
-**Why use it?**
-When you write a code generator (e.g., parser generator, IDL compiler), the generated C++ code may have errors. By using `#line`, error messages point to the **original source file** instead of the generated code.
-
-**Syntax:**
-```cpp
-#line number "filename"
-```
-
-**Example:**
-```cpp
-// Original file: calculator.y (yacc/bison grammar)
-// Generated file: calculator.cpp
-
-#line 42 "calculator.y"
-int parse_expression() {
-    int x = 5
-    // Error here will show: "calculator.y:42" not "calculator.cpp:123"
-}
-```
-
-**Without `#line`:**
-```
-calculator.cpp:156: error: expected ';' before 'return'
-```
-
-**With `#line`:**
-```
-calculator.y:42: error: expected ';' before 'return'
-```
-
-> **When to use:** Only when writing code generators or preprocessing tools that produce C++ code.
-
-### 2.6.2 `#pragma` - Compiler Instructions
+### 2.6.1 `#pragma` - Compiler Instructions
 
 **Purpose:** Send implementation-specific commands to the compiler.
 
@@ -655,7 +619,7 @@ calculator.y:42: error: expected ';' before 'return'
 | `#pragma GCC ...` | GCC-specific options | GCC only |
 | `#pragma clang ...` | Clang-specific options | Clang only |
 
-#### 2.6.2.1 `#pragma once` - Include Guard
+#### 2.6.1.1 `#pragma once` - Include Guard
 
 The most common `#pragma`, used as an alternative to `#ifndef` include guards:
 
@@ -678,7 +642,7 @@ class MyClass { ... };
 
 > **Recommendation:** Use `#pragma once` for new projects. It's cleaner, faster, and supported by all major compilers (GCC, Clang, MSVC).
 
-#### 2.6.2.2 `#pragma pack` - Struct Packing
+#### 2.6.1.2 `#pragma pack` - Struct Packing
 
 Controls memory alignment of struct members. Normally, compilers add padding bytes for performance:
 
@@ -703,7 +667,7 @@ static_assert(sizeof(Packed) == 5);
 
 > **Use case:** Binary file formats, network protocols, hardware registers where exact layout matters. Can hurt performance due to unaligned memory access.
 
-#### 2.6.2.3 `#pragma warning` - MSVC Warning Control
+#### 2.6.1.3 `#pragma warning` - MSVC Warning Control
 
 Microsoft Visual C++ specific (GCC/Clang use different mechanisms):
 
@@ -721,7 +685,7 @@ void func(int unused) { }
 #pragma warning(pop)            // Restore previous state
 ```
 
-### 2.6.3 `#error` and `#warning` - Compile-Time Messages
+### 2.6.2 `#error` and `#warning` - Compile-Time Messages
 
 **Purpose:** Emit user-defined messages during compilation.
 
@@ -730,7 +694,7 @@ void func(int unused) { }
 | `#error "message"` | Fatal error, stops compilation | No |
 | `#warning "message"` | Warning, continues compilation | Yes (non-standard) |
 
-#### 2.6.3.1 `#error` - Enforce Requirements
+#### 2.6.2.1 `#error` - Enforce Requirements
 
 Use `#error` to stop compilation if requirements aren't met:
 
@@ -756,7 +720,7 @@ Use `#error` to stop compilation if requirements aren't met:
 #endif
 ```
 
-#### 2.6.3.2 `#warning` - Portability Notices
+#### 2.6.2.2 `#warning` - Portability Notices
 
 > **Note:** `#warning` is not ISO standard C++, but supported by GCC, Clang, and MSVC.
 
