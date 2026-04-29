@@ -44,7 +44,7 @@ Containers are template classes that store and manage collections of objects.
 | **Sequence** | `vector`, `deque`, `list`, `forward_list`, `array` | Linear order |
 | **Associative** | `set`, `multiset`, `map`, `multimap` | Sorted, key-based |
 | **Unordered** | `unordered_set`, `unordered_map` | Hash-based, O(1) |
-| **Container Adaptors** | `stack`, `queue`, `priority_queue` | Restricted interface |
+| **Container Adaptors** | `stack`, `queue`, `priority_queue` | Restricted interface (See [11.2 Stack](11.2-stack.md)) |
 
 
 ### 11.0.3 Vector (`<vector>`)
@@ -577,7 +577,7 @@ v.push_back(6);  // May invalidate all iterators!
 
 > **Warning:** Insertions (`push_back`, `insert`) may invalidate iterators when reallocation occurs. Use `reserve()` to prevent this when possible.
 
-## 11.2 String
+## 11.3 String
 
 `std::string` is a class template that represents a sequence of characters. It provides a dynamic, resizable array of characters with many convenient member functions for string manipulation.
 
@@ -779,7 +779,7 @@ for (size_t i = 0; i < s.length(); i++) {
 
 > **Use `string`** for text processing. **Use `vector<char>** only when you need a raw character array without string semantics.
 
-## 11.3 Algorithm
+## 11.4 Algorithm
 
 The <algorithm> header provides a rich set of generic algorithms that work with iterators from any container.
 
