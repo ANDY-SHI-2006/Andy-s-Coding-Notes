@@ -4,7 +4,11 @@
 
 Variables are the fundamental units for storing data in C++ programs. This chapter covers the core concepts of variable declaration, definition, initialization, types, and storage.
 
-## 4.1 Declaration vs Definition
+## 4.1 Declaration, Definition, and Linkage
+
+Understanding how variables are declared, defined, and linked across translation units is fundamental to writing correct C++ programs.
+
+### 4.1.1 Declaration vs Definition
 
 A **declaration** tells the compiler that a name and type exist, while a **definition** creates the actual variable and allocates memory.
 
@@ -26,7 +30,7 @@ void func();               // Function declaration (prototype)
 void func() { ... }        // Function definition
 ```
 
-### 4.1.1 One Definition Rule (ODR)
+### 4.1.2 One Definition Rule (ODR)
 
 C++ enforces that each variable and function can be defined **only once** per program. Multiple definitions cause linker errors.
 
@@ -37,6 +41,193 @@ int shared = 100;          // Definition
 // file2.cpp
 int shared = 100;          // ✗ ERROR! Redefinition
 extern int shared;         // ✓ OK! Declaration only
+```
+
+### 4.1.3 Linkage (Internal, External, and None)
+
+**Linkage** determines whether a name (variable or function) can be referred to from other translation units (other `.cpp` files).
+
+| Linkage Type | Accessible From | Default For | How to Specify |
+|--------------|-----------------|-------------|----------------|
+| **External** | Any translation unit | Non-const globals, functions | Default (or `extern`) |
+| **Internal** | Only current translation unit | `const` globals, `static` globals | `static` keyword |
+| **None** | Only current scope/block | Local variables | Default for locals |
+
+**External Linkage:**
+
+External linkage means the name is visible to the linker and can be accessed from other translation units.
+
+```cpp
+// math.cpp
+int globalCounter = 0;              // External linkage (default)
+void compute() { }                  // Functions have external linkage
+
+// main.cpp
+extern int globalCounter;           // Declaration (definition is in math.cpp)
+extern void compute();              // Function declaration
+
+int main() {
+    globalCounter++;                // Accessing variable from math.cpp
+    compute();                      // Calling function from math.cpp
+}
+```
+
+**Internal Linkage:**
+
+Internal linkage restricts visibility to the current translation unit. Other files cannot see or access these names.
+
+```cpp
+// helper.cpp
+static int internalCounter = 0;     // Internal linkage - only visible here
+static void helperFunc() { }        // Internal linkage - only visible here
+
+const int MAX_SIZE = 100;           // const globals have internal linkage by default
+static const int MIN_SIZE = 10;     // Explicit internal linkage
+
+// main.cpp
+extern int internalCounter;         // ✗ ERROR! Not found - internal to helper.cpp
+extern void helperFunc();           // ✗ ERROR! Not found
+extern const int MAX_SIZE;          // ✗ ERROR! const has internal linkage
+```
+
+> **Design Principle**: Use internal linkage (via `static` or anonymous namespaces) to hide implementation details and reduce global namespace pollution.
+
+**No Linkage:**
+
+Local variables have no linkage—they are only visible within their scope.
+
+```cpp
+void func() {
+    int local = 10;                 // No linkage - only visible in func()
+    {
+        int blockLocal = 20;        // No linkage - only visible in this block
+    }
+}
+```
+
+### 4.1.4 Storage Class Specifiers
+
+Storage class specifiers control linkage, storage duration, and initialization of variables.
+
+| Specifier | Effect | Typical Use |
+|-----------|--------|-------------|
+| `auto` (C++11) | Type deduction | Let compiler infer type |
+| `static` | Internal linkage OR static storage duration | Hide global, persist local |
+| `extern` | External linkage declaration | Share across files |
+| `mutable` | Modifiable even in const objects | Cache, lazy evaluation |
+| `thread_local` (C++11) | Thread-local storage duration | Thread-specific data |
+| `register` (deprecated) | Suggest CPU register | Don't use in modern C++ |
+
+**extern: Sharing Variables Across Files:**
+
+```cpp
+// constants.cpp (single definition)
+int globalValue = 42;
+
+// utils.cpp
+extern int globalValue;     // Declaration only - refers to constants.cpp's definition
+void useValue() {
+    cout << globalValue;    // Accesses the shared variable
+}
+
+// main.cpp
+extern int globalValue;     // Another declaration
+int main() {
+    globalValue = 100;      // Modifies the shared variable
+    useValue();             // Will see globalValue = 100
+}
+```
+
+**Key Rule**: `extern` declarations cannot have initializers (except in one case—see inline variables below).
+
+**static: Two Different Meanings:**
+
+```cpp
+// Meaning 1: Internal linkage at global scope
+static int internalOnly = 0;    // Only visible in this file
+
+// Meaning 2: Static storage duration at local scope
+void counter() {
+    static int count = 0;       // Persists between calls
+    count++;
+}
+```
+
+### 4.1.5 Inline Variables (C++17)
+
+Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
+
+**C++17 `inline` variables** solve this: they can be defined in a header file and shared across all translation units, guaranteed to be the same object.
+
+```cpp
+// config.h (header file)
+inline int version = 1;                 // ✓ OK in C++17: single definition shared
+inline std::string appName = "MyApp";   // ✓ Complex types work too
+
+// main.cpp
+#include "config.h"
+int main() { version++; }               // version = 2
+
+// utils.cpp
+#include "config.h"
+void print() { cout << version; }       // Sees version = 2 (same object)
+```
+
+**Benefits:**
+- True header-only libraries without `extern` gymnastics
+- Guaranteed identical object across all translation units
+- Can be initialized with non-constant expressions (unlike `constexpr`)
+
+**Comparison:**
+
+| Approach | Pre-C++17 | C++17 Modern |
+|----------|-----------|--------------|
+| Header definition | `static int x = 1;` (separate copies!) | `inline int x = 1;` (shared) |
+| Header + one .cpp | `extern int x;` in header, `int x = 1;` in .cpp | `inline int x = 1;` in header only |
+| Constexpr | `constexpr int x = 1;` (compile-time only) | `inline constexpr int x = 1;` (best of both) |
+
+### 4.1.6 Anonymous Namespaces
+
+An anonymous namespace provides internal linkage to all its members—essentially a cleaner alternative to `static` for variables and functions.
+
+```cpp
+namespace {
+    // Everything here has internal linkage
+    int internalCounter = 0;
+    void helperFunction() { }
+    class InternalClass { };
+}
+
+// Equivalent to:
+static int internalCounter = 0;
+static void helperFunction() { }
+// But cleaner - no need to repeat 'static' on every declaration
+```
+
+**Prefer anonymous namespaces over `static`** for internal linkage:
+- Cleaner syntax (apply once to many declarations)
+- Works for classes and templates (static doesn't)
+- Modern C++ idiom
+
+```cpp
+// utils.cpp
+namespace {
+    // Internal implementation details
+    const int BUFFER_SIZE = 1024;
+    
+    class Buffer {
+        char data[BUFFER_SIZE];
+    public:
+        void clear() { /* ... */ }
+    };
+    
+    Buffer internalBuffer;  // One internal buffer instance
+}
+
+// Public interface
+void resetBuffer() {
+    internalBuffer.clear();
+}
 ```
 
 ## 4.2 Variable Definition and Initialization
