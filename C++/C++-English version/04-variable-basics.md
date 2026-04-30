@@ -53,7 +53,7 @@ extern int shared;         // ✓ OK! Declaration only
 | **Internal** | Only current translation unit | `const` globals, `static` globals | `static` keyword |
 | **None** | Only current scope/block | Local variables | Default for locals |
 
-#### External Linkage
+#### 4.1.3.1 External Linkage
 
 External linkage means the name is visible to the linker and can be accessed from other translation units.
 
@@ -72,7 +72,7 @@ int main() {
 }
 ```
 
-#### Internal Linkage
+#### 4.1.3.2 Internal Linkage
 
 Internal linkage restricts visibility to the current translation unit. Other files cannot see or access these names.
 
@@ -92,7 +92,7 @@ extern const int MAX_SIZE;          // ✗ ERROR! const has internal linkage
 
 > **Design Principle**: Use internal linkage (via `static` or anonymous namespaces) to hide implementation details and reduce global namespace pollution.
 
-#### No Linkage
+#### 4.1.3.3 No Linkage
 
 Local variables have no linkage—they are only visible within their scope.
 
@@ -349,7 +349,7 @@ C++ initialization syntax has evolved significantly:
 
 ### 4.2.3 The Four Initialization Methods
 
-#### 1. Copy Initialization
+#### 4.2.3.1 Copy Initialization
 
 Uses the `=` operator. The value is "copied" into the variable.
 
@@ -367,7 +367,7 @@ double d = 3.14;
 int x = 3.14;           // ✓ Compiles, x = 3 (data loss, silent!)
 ```
 
-#### 2. Direct Initialization
+#### 4.2.3.2 Direct Initialization
 
 Uses parentheses `()`. Calls the constructor directly.
 
@@ -391,7 +391,7 @@ Date d();   // ✗ C++ parses this as "function d returning Date"
 Date d;     // ✓ This works for default construction
 ```
 
-#### 3. Brace Initialization (C++11, Recommended)
+#### 4.2.3.3 Brace Initialization (C++11, Recommended)
 
 Uses braces `{}`. This is the **modern C++ standard** for initialization.
 
@@ -468,7 +468,7 @@ vector<int> v2{10, 5};   // 2 elements: {10, 5}
 // {} calls the initializer_list constructor with elements {10, 5}
 ```
 
-#### 4. Aggregate Initialization (C++11/14/17)
+#### 4.2.3.4 Aggregate Initialization (C++11/14/17)
 
 For arrays and simple structures (aggregates), braces can initialize all members:
 
@@ -616,7 +616,7 @@ Variables have **scope** (where visible), **lifetime** (when created/destroyed),
 
 Scope determines where a variable can be accessed. C++ has several scope types:
 
-#### Block Scope (Local)
+#### 4.3.1.1 Block Scope (Local)
 
 Variables declared inside a block `{}` are only visible within that block.
 
@@ -634,7 +634,7 @@ void func() {
 // x not available here
 ```
 
-#### Function Scope
+#### 4.3.1.2 Function Scope
 
 Labels (used with `goto`) have function scope—the only identifier with this scope.
 
@@ -651,7 +651,7 @@ cleanup:               // Label has function scope
 
 > **Note**: Avoid `goto` in modern C++. Use control structures or functions instead.
 
-#### Namespace Scope
+#### 4.3.1.3 Namespace Scope
 
 Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
 
@@ -672,7 +672,7 @@ using namespace math;
 double y = pi;
 ```
 
-#### Class Scope
+#### 4.3.1.4 Class Scope
 
 Members of a class have class scope and are accessed via the class instance or scope resolution operator.
 
@@ -691,7 +691,7 @@ public:
 int Counter::totalCount = 0;  // Definition outside class
 ```
 
-#### Global (File) Scope
+#### 4.3.1.5 Global (File) Scope
 
 Variables declared outside all functions and classes have global scope, visible throughout the translation unit.
 
