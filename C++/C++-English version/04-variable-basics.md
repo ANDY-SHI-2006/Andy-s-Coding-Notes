@@ -678,15 +678,11 @@ void setValue(int value) {     // Parameter shadows global
 
 ### 4.3.3 Lifetime and Storage Duration
 
-Lifetime determines when variables are created and destroyed. While **scope** defines where a variable is visible, **lifetime** defines how long it exists in memory.
-
-### 4.3.2 Lifetime
-
 Lifetime determines when variables are created and destroyed. While **scope** defines where a variable is visible, **lifetime** defines how long it exists in memory. They are related but distinct concepts.
 
 > **Key Insight**: A variable can be out of scope (not visible) but still alive (not destroyed), as seen with `static` local variables.
 
-#### 4.3.2.1 Overview of Storage Durations
+#### 4.3.3.1 Overview of Storage Durations
 
 C++ defines three fundamental storage durations:
 
@@ -696,7 +692,7 @@ C++ defines three fundamental storage durations:
 | **Static** | Data Segment | Program start | Program end | Global, `static` variables |
 | **Dynamic** | Heap | `new` called | `delete` called | Heap objects |
 
-#### 4.3.2.2 Automatic Storage Duration
+#### 4.3.3.2 Automatic Storage Duration
 
 Variables with automatic storage duration are created when execution enters their scope and destroyed when execution exits.
 
@@ -733,7 +729,7 @@ int* ptr = badFunction();
 
 > **Rule**: Never return pointers or references to automatic (local) variables.
 
-#### 4.3.2.3 Static Storage Duration
+#### 4.3.3.3 Static Storage Duration
 
 Variables with static storage duration exist for the entire program execution.
 
@@ -796,7 +792,7 @@ void func() {
 | Initialization | Before main() | On first function call |
 | Best Practice | Minimize use | Preferred for internal state |
 
-#### 4.3.2.4 Dynamic Storage Duration
+#### 4.3.3.4 Dynamic Storage Duration
 
 Variables with dynamic storage duration are created and destroyed under explicit programmer control.
 
@@ -886,7 +882,7 @@ void sharedExample() {
 
 > **Recommendation**: Prefer `std::unique_ptr` for exclusive ownership and `std::shared_ptr` for shared ownership. Raw pointers (`new`/`delete`) should be rare in modern code.
 
-#### 4.3.2.5 Lifetime Summary and Best Practices
+#### 4.3.3.5 Lifetime Summary and Best Practices
 
 **Quick Selection Guide:**
 
@@ -941,6 +937,44 @@ int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; ✗
 
 const int* const ptr3 = &a;  // Both pointer and value are fixed
 ```
+
+**const References:**
+
+References can also be const, providing read-only access to an object without copying it.
+
+```cpp
+string getName() { return "Alice"; }
+
+void example() {
+    const string& name = getName();   // Binds to temporary, extends its lifetime
+    // name = "Bob";                  // ✗ ERROR: cannot modify through const reference
+    
+    int x = 10;
+    const int& ref = x;               // ref cannot modify x
+    // ref = 20;                      // ✗ ERROR
+    x = 20;                           // ✓ OK: modify original directly
+}
+```
+
+**When to use const references:**
+- **Function parameters**: Avoid copying large objects while preventing modification
+- **Range-based for loops**: Efficient iteration without modifying elements
+- **Binding to temporaries**: Extend lifetime of temporary objects
+
+```cpp
+// Efficient function parameter
+void printString(const string& s) {   // No copy, read-only access
+    cout << s << endl;
+}
+
+// Range-based for with const reference
+vector<int> numbers = {1, 2, 3, 4, 5};
+for (const auto& num : numbers) {     // No copy, cannot modify
+    cout << num << " ";
+}
+```
+
+**Key Insight**: Prefer `const T&` over `T` for large read-only parameters.
 
 ### 4.4.2 constexpr (Compile-Time Constant, C++11)
 
