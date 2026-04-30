@@ -795,7 +795,7 @@ Use `std::vector` for dynamic sizing instead.
 
 ### 6.8.9 Array vs `std::vector`
 
-#### Initialization Syntax Comparison
+#### 6.8.4.1 Initialization Syntax Comparison
 
 | Container | `()` Direct Init | `{}` Brace Init | Notes |
 |-----------|------------------|-----------------|-------|
