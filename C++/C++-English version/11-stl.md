@@ -581,7 +581,7 @@ v.push_back(6);  // May invalidate all iterators!
 
 `std::string` is a class template that represents a sequence of characters. It provides a dynamic, resizable array of characters with many convenient member functions for string manipulation.
 
-### 11.2.1 Why Use string?
+### 11.3.1 Why Use string?
 
 **Problem with C-style strings (char arrays):**
 ```cpp
@@ -612,7 +612,7 @@ string s = "hello";
 | **Comparison** | strcmp function | ==, !=, < operators |
 | **Concatenation** | strcat (unsafe) | + operator |
 
-### 11.2.2 Header and Declaration
+### 11.3.2 Header and Declaration
 
 ```cpp
 #include <string>  // Required header
@@ -627,7 +627,7 @@ string s4{s2};          // Copy constructor (C++11)
 string s5(5, 'a');      // "aaaaa" (5 copies of 'a')
 ```
 
-### 11.2.3 Common Operations
+### 11.3.3 Common Operations
 
 | Operation | Description | Example | Result |
 |-----------|-------------|---------|--------|
@@ -659,7 +659,7 @@ s.replace(7, 5, "C++");          // "hello, C++"
 s.erase(5, 1);                   // "hello C++"
 ```
 
-### 11.2.4 Element Access
+### 11.3.4 Element Access
 
 | Method | Description | Example | Notes |
 |--------|-------------|---------|-------|
@@ -683,7 +683,7 @@ const char* cstr = s.c_str();
 printf("%s\n", cstr);       // "hello"
 ```
 
-### 11.2.5 String Concatenation and Comparison
+### 11.3.5 String Concatenation and Comparison
 
 **Concatenation with `+`:**
 ```cpp
@@ -712,7 +712,7 @@ if (s1 <= s2) { }     // true
 if (s1 == "apple") { }  // true
 ```
 
-### 11.2.6 Numeric Conversions
+### 11.3.6 Numeric Conversions
 
 | Function | Description | Example | Since |
 |----------|-------------|---------|-------|
@@ -738,7 +738,7 @@ size_t pos;
 int y = stoi("123abc", &pos);   // y = 123, pos = 3 (chars processed)
 ```
 
-### 11.2.7 Iterating Over Strings
+### 11.3.7 Iterating Over Strings
 
 ```cpp
 string s = "hello";
@@ -764,7 +764,7 @@ for (size_t i = 0; i < s.length(); i++) {
 }
 ```
 
-### 11.2.8 String vs Vector<char>
+### 11.3.8 String vs Vector<char>
 
 `string` and `vector<char> are similar but `string` has additional string-specific functionality:
 
@@ -783,7 +783,7 @@ for (size_t i = 0; i < s.length(); i++) {
 
 The <algorithm> header provides a rich set of generic algorithms that work with iterators from any container.
 
-### 11.3.1 Header Overview
+### 11.4.1 Header Overview
 
 ```cpp
 #include <algorithm>  // Required header
@@ -795,7 +795,7 @@ These algorithms work with iterators, so they can be used with:
 - `string`
 - Any container with iterators
 
-### 11.3.2 Sorting Algorithms
+### 11.4.2 Sorting Algorithms
 
 | Algorithm | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -830,7 +830,7 @@ nth_element(v.begin(), v.begin() + v.size()/2, v.end());
 int median = v[v.size()/2];
 ```
 
-### 11.3.3 Searching Algorithms
+### 11.4.3 Searching Algorithms
 
 | Algorithm | Description | Example | Time Complexity |
 |-----------|-------------|---------|-----------------|
@@ -868,7 +868,7 @@ auto it2 = find_if(v.begin(), v.end(), [](int x) {
 // it2 points to 2
 ```
 
-### 11.3.4 Min/Max Algorithms
+### 11.4.4 Min/Max Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -906,7 +906,7 @@ int y = clamp(-5, 0, 5);   // 0 (constrained to min)
 int z = clamp(3, 0, 5);    // 3 (within range)
 ```
 
-### 11.3.5 Modifying Algorithms
+### 11.4.5 Modifying Algorithms
 
 | Algorithm | Description | Example | Notes |
 |-----------|-------------|---------|-------|
@@ -963,7 +963,7 @@ v.erase(it, v.end());
 // v = {1, 2, 3}
 ```
 
-### 11.3.6 Numeric Algorithms (in <numeric>)
+### 11.4.6 Numeric Algorithms (in <numeric>)
 
 | Algorithm | Description | Example | Since |
 |-----------|-------------|---------|-------|
@@ -1000,7 +1000,7 @@ partial_sum(v.begin(), v.end(), prefix.begin());
 iota(v.begin(), v.end(), 1);  // v = {1, 2, 3, 4, 5}
 ```
 
-### 11.3.7 Set Algorithms (for sorted ranges)
+### 11.4.7 Set Algorithms (for sorted ranges)
 
 | Algorithm | Description | Example | Notes |
 |-----------|-------------|---------|-------|
@@ -1036,7 +1036,7 @@ dest.resize(it - dest.begin());
 bool isSubset = includes(a.begin(), a.end(), b.begin(), b.end());  // false
 ```
 
-### 11.3.8 Comparison and Permutation
+### 11.4.8 Comparison and Permutation
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -1070,7 +1070,7 @@ vector<int> b = {3, 1, 2};
 bool isPerm = is_permutation(a.begin(), a.end(), b.begin());  // true
 ```
 
-### 11.3.9 Partitioning Algorithms
+### 11.4.9 Partitioning Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -1098,7 +1098,7 @@ stable_partition(v.begin(), v.end(), [](int x) {
 // v = {2, 4, 6, 8, 1, 3, 5, 7, 9} (evens and odds in original order)
 ```
 
-### 11.3.10 Heap Algorithms
+### 11.4.10 Heap Algorithms
 
 | Algorithm | Description | Example |
 |-----------|-------------|---------|
@@ -1132,7 +1132,7 @@ make_heap(v.begin(), v.end());
 sort_heap(v.begin(), v.end());  // Sorts in ascending order
 ```
 
-### 11.3.11 Best Practices
+### 11.4.11 Best Practices
 
 **1. Use iterators properly:**
 ```cpp

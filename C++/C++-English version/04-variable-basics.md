@@ -1438,7 +1438,7 @@ void example() {
 
 ## 4.7 Summary and Best Practices
 
-### Key Takeaways
+### 4.7.1 Key Takeaways
 
 1. **Declaration vs Definition**: Declaration informs, definition creates and allocates
 2. **Linkage**: Control visibility across translation units (external/internal/none)
@@ -1453,7 +1453,7 @@ void example() {
 11. **Structured Binding**: Unpack tuples/pairs/structs with `auto [a, b] = ...` (C++17)
 12. **Attributes**: Use `[[maybe_unused]]` and `[[nodiscard]]` appropriately
 
-### Quick Reference
+### 4.7.2 Quick Reference
 
 | Scenario | Recommended |
 |----------|-------------|
@@ -1472,7 +1472,7 @@ void example() {
 | Unused parameter | `[[maybe_unused]] int x` |
 | Must-use return value | `[[nodiscard]] Type func();` |
 
-### Decision Flowchart
+### 4.7.3 Decision Flowchart
 
 ```
 Variable Declaration
