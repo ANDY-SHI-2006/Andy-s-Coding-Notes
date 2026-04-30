@@ -118,7 +118,9 @@ Storage class specifiers control linkage, storage duration, and initialization o
 | `thread_local` (C++11) | Thread-local storage duration | Thread-specific data |
 | `register` (deprecated) | Suggest CPU register | Don't use in modern C++ |
 
-**extern: Sharing Variables Across Files:**
+#### 4.1.4.1 extern: Sharing Variables Across Files
+
+The `extern` keyword declares a variable or function that is defined in another translation unit. It tells the compiler "this exists somewhere else, don't allocate storage for it."
 
 ```cpp
 // constants.cpp (single definition)
@@ -140,7 +142,9 @@ int main() {
 
 **Key Rule**: `extern` declarations cannot have initializers (except in one case—see inline variables below).
 
-**static: Two Different Meanings:**
+#### 4.1.4.2 static: Two Different Meanings
+
+The `static` keyword has two distinct meanings depending on where it's used:
 
 ```cpp
 // Meaning 1: Internal linkage at global scope
@@ -153,9 +157,9 @@ void counter() {
 }
 ```
 
-**thread_local: Thread-Specific Storage (C++11):**
+#### 4.1.4.3 thread_local: Thread-Specific Storage (C++11)
 
-`thread_local` gives each thread its own separate instance of a variable. When a thread starts, the variable is initialized; when the thread ends, it's destroyed.
+`thread_local` (C++11) gives each thread its own separate instance of a variable. When a thread starts, the variable is initialized; when the thread ends, it's destroyed. When a thread starts, the variable is initialized; when the thread ends, it's destroyed.
 
 ```cpp
 #include <thread>
@@ -185,9 +189,9 @@ int main() {
 - Thread-specific random number generators
 - Avoiding locks by giving each thread private data
 
-**mutable: Modifying in const Contexts:**
+#### 4.1.4.4 mutable: Modifying in const Contexts
 
-`mutable` allows a class member to be modified even when the containing object is const. This is useful for:
+`mutable` allows a class member to be modified even when the containing object is const. This is useful for internal state that doesn't affect the logical const-ness of the object. This is useful for:
 - Internal state that doesn't affect logical const-ness
 - Lazy evaluation / caching
 - Mutex locks for thread safety
@@ -218,9 +222,9 @@ const DataProcessor dp;
 dp.getHash();  // ✓ Works: const object, but mutable member can change
 ```
 
-**volatile: Tell Compiler "Don't Optimize":**
+#### 4.1.4.5 volatile: Tell Compiler "Don't Optimize"
 
-`volatile` tells the compiler that a variable's value may change at any time (e.g., by hardware, OS, or another thread), so optimizations involving caching the value should be disabled.
+`volatile` tells the compiler that a variable's value may change at any time (e.g., by hardware, OS, or another thread), so optimizations involving caching the value should be disabled. (e.g., by hardware, OS, or another thread), so optimizations involving caching the value should be disabled.
 
 ```cpp
 // Hardware register that changes independently
@@ -233,7 +237,43 @@ while (sensorValue == 0) {  // Compiler won't optimize this away
 
 **⚠️ volatile is NOT for thread synchronization!** Use `std::atomic` or mutexes for that.
 
-| Specifier | When to Use | Don't Use For |
+#### 4.1.4.6 register: Deprecated Storage Hint (Pre-C++17)
+
+The `register` keyword was a hint to the compiler that a variable would be heavily used and should be stored in a CPU register for faster access. However, modern compilers are much better at optimization than humans, so `register` was deprecated in C++11 and removed in C++17.
+
+```cpp
+// Deprecated - don't use in modern C++
+register int counter = 0;  // Compiler ignores this hint
+
+// Modern C++: Just declare normally, compiler optimizes automatically
+int counter = 0;  // Compiler decides if it should be in a register
+```
+
+> **Note**: In C++17, `register` is a reserved keyword but has no effect. Using it generates a warning or error depending on compiler settings.
+
+#### 4.1.4.7 auto: Type Deduction (C++11)
+
+While `auto` appears in the storage class specifier table for historical reasons, in modern C++ it serves a completely different purpose: **type deduction**. It tells the compiler to automatically deduce the variable's type from its initializer.
+
+```cpp
+auto i = 5;           // int
+auto d = 3.14;        // double
+auto s = "hello";     // const char*
+```
+
+> See [4.5.1 auto (Type Deduction)](#451-auto-type-deduction-c11) for detailed coverage.
+
+**Summary Table:**
+
+| Specifier | When to Use | Don't Use For | Status |
+|-----------|-------------|---------------|--------|
+| `static` | Internal linkage, persistent locals | Thread safety (use mutexes) | Active |
+| `extern` | Share across files | Header definitions | Active |
+| `thread_local` | Per-thread data | Data shared between threads | C++11 |
+| `mutable` | Cache, lazy evaluation | Data that affects logical state | Active |
+| `volatile` | Hardware registers, signal handlers | Thread synchronization | Active |
+| `register` | Nothing (deprecated) | Any new code | Deprecated (C++11), Removed (C++17) |
+| `auto` | Type deduction | Storage class | Changed meaning (C++11) |
 |-----------|-------------|---------------|
 | `static` | Internal linkage, persistent locals | Thread safety (use mutexes) |
 | `extern` | Share across files | Header definitions |
