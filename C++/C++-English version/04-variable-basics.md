@@ -53,7 +53,7 @@ extern int shared;         // ✓ OK! Declaration only
 | **Internal** | Only current translation unit | `const` globals, `static` globals | `static` keyword |
 | **None** | Only current scope/block | Local variables | Default for locals |
 
-**External Linkage:**
+#### External Linkage
 
 External linkage means the name is visible to the linker and can be accessed from other translation units.
 
@@ -72,7 +72,7 @@ int main() {
 }
 ```
 
-**Internal Linkage:**
+#### Internal Linkage
 
 Internal linkage restricts visibility to the current translation unit. Other files cannot see or access these names.
 
@@ -92,7 +92,7 @@ extern const int MAX_SIZE;          // ✗ ERROR! const has internal linkage
 
 > **Design Principle**: Use internal linkage (via `static` or anonymous namespaces) to hide implementation details and reduce global namespace pollution.
 
-**No Linkage:**
+#### No Linkage
 
 Local variables have no linkage—they are only visible within their scope.
 
