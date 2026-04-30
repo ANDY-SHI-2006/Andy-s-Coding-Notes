@@ -1442,14 +1442,16 @@ void example() {
 
 1. **Declaration vs Definition**: Declaration informs, definition creates and allocates
 2. **Linkage**: Control visibility across translation units (external/internal/none)
-3. **ODR Rule**: Each variable/function defined only once; use `inline` (C++17) for headers
-4. **Initialization**: Prefer brace `{}` initialization, prevents narrowing
-5. **Scope & Shadowing**: Understand visibility rules; avoid confusing name hiding
-6. **Lifetime**: Automatic (stack), Static (data segment), Dynamic (heap)
-7. **Constants**: Prefer `constexpr` (compile-time), then `const`
-8. **Type Deduction**: Use `auto` and structured binding to simplify code
-9. **Type Aliases**: `using` is clearer than `typedef`
-10. **Attributes**: Use `[[maybe_unused]]` and `[[nodiscard]]` appropriately
+3. **Storage Class Specifiers**: `static`, `extern`, `thread_local`, `mutable`, `volatile` have specific use cases
+4. **ODR Rule**: Each variable/function defined only once; use `inline` (C++17) for headers
+5. **Initialization**: Prefer brace `{}` initialization, prevents narrowing
+6. **Scope & Shadowing**: Understand visibility rules; avoid confusing name hiding
+7. **Lifetime**: Automatic (stack), Static (data segment), Dynamic (heap)
+8. **Constants**: Prefer `constexpr` (compile-time), then `const`; use const references for read-only access
+9. **Type Deduction**: Use `auto` for simplicity, `decltype` when preserving qualifiers matters
+10. **Type Aliases**: `using` is clearer than `typedef`
+11. **Structured Binding**: Unpack tuples/pairs/structs with `auto [a, b] = ...` (C++17)
+12. **Attributes**: Use `[[maybe_unused]]` and `[[nodiscard]]` appropriately
 
 ### Quick Reference
 
@@ -1460,6 +1462,8 @@ void example() {
 | Compile-time constant | `constexpr int max = 100;` |
 | Runtime constant | `const int val = getValue();` |
 | Complex iterator | `auto it = container.begin();` |
+| Preserve const/reference in deduction | `decltype(var) x = y;` |
+| Read-only large parameter | `const Type& param` |
 | Type alias | `using MyInt = int;` |
 | Global (use sparingly) | `inline int g_count = 0;` (C++17) |
 | Static local variable | `static int counter{0};` |
