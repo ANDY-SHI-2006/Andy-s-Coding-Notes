@@ -1162,17 +1162,126 @@ if (auto [it, inserted] = data.insert(key); inserted) {
 - Number of bindings must match number of elements
 - Cannot nest structured binding directly
 
-## 4.6 Summary and Best Practices
+## 4.6 Variable Attributes (C++17)
+
+C++17 introduces **attributes** that provide additional information to the compiler about how variables should be handled. Attributes are enclosed in double square brackets `[[...]]`.
+
+### 4.6.1 [[maybe_unused]]
+
+Suppresses compiler warnings about unused variables. Useful for:
+- Function parameters that must exist but aren't used
+- Variables used only in debug builds
+- Return values that are sometimes ignored
+
+```cpp
+// Function parameter intentionally unused
+void callback(int id, [[maybe_unused]] void* userData) {
+    // id is used, but userData is not (yet)
+    process(id);
+}
+
+// Variable only used in debug mode
+[[maybe_unused]] int debugCounter = 0;
+#ifdef DEBUG
+debugCounter++;
+#endif
+
+// Unused return value is OK
+[[maybe_unused]] auto result = system("pause");
+```
+
+Without `[[maybe_unused]]`:
+```cpp
+void func(int x) { }  // Compiler warning: unused parameter 'x'
+```
+
+With `[[maybe_unused]]`:
+```cpp
+void func([[maybe_unused]] int x) { }  // No warning
+```
+
+### 4.6.2 [[nodiscard]]
+
+Warns if the return value of a function is discarded. Applied to:
+- Functions where ignoring the result is likely a bug
+- Types representing resources or error codes
+
+```cpp
+// Function that allocates resource - result should not be ignored
+[[nodiscard]] int* allocateBuffer(size_t size);
+
+void example() {
+    allocateBuffer(100);        // ✗ WARNING: ignoring nodiscard return value
+    auto ptr = allocateBuffer(100);  // ✓ OK: using the result
+    delete[] ptr;
+}
+```
+
+**Applying to Types:**
+
+```cpp
+// All functions returning this type warn if ignored
+struct [[nodiscard]] ErrorCode {
+    int code;
+    bool success() const { return code == 0; }
+};
+
+ErrorCode openFile(const char* path);  // Caller must check result
+
+void test() {
+    openFile("data.txt");       // ✗ WARNING
+    if (auto err = openFile("data.txt"); !err.success()) {
+        // handle error
+    }
+}
+```
+
+**Standard Library Examples:**
+- `std::unique_ptr::release()` is `[[nodiscard]]` in C++20
+- Many math and allocation functions
+
+### 4.6.3 [[deprecated]]
+
+Marks variables or types as deprecated, generating warnings when used.
+
+```cpp
+// Old API marked as deprecated
+[[deprecated("Use newConfig instead")]]
+Config oldConfig;
+
+void example() {
+    auto cfg = oldConfig;       // WARNING: 'oldConfig' is deprecated: Use newConfig instead
+}
+```
+
+### 4.6.4 When to Use Attributes
+
+| Attribute | Use When | Example |
+|-----------|----------|---------|
+| `[[maybe_unused]]` | Variable/parameter intentionally unused | Interface callbacks, debug vars |
+| `[[nodiscard]]` | Ignoring return value is likely a bug | Resource allocation, error codes |
+| `[[deprecated]]` | Old API still exists but shouldn't be used | Legacy code migration |
+
+**Benefits:**
+- Self-documenting code intent
+- Compiler enforces proper usage
+- Safer refactoring and API evolution
+- Reduces unnecessary warnings
+
+## 4.7 Summary and Best Practices
 
 ### Key Takeaways
 
 1. **Declaration vs Definition**: Declaration informs, definition creates and allocates
-2. **ODR Rule**: Each variable/function defined only once
-3. **Initialization**: Prefer brace `{}` initialization, prevents narrowing
-4. **Scope**: Understand local, global, and block scope differences
-5. **Constants**: Prefer `constexpr` (compile-time), then `const`
-6. **Type Deduction**: Use `auto` to simplify, but maintain readability
-7. **Type Aliases**: `using` is clearer than `typedef`
+2. **Linkage**: Control visibility across translation units (external/internal/none)
+3. **ODR Rule**: Each variable/function defined only once; use `inline` (C++17) for headers
+4. **Initialization**: Prefer brace `{}` initialization, prevents narrowing
+5. **Scope & Shadowing**: Understand visibility rules; avoid confusing name hiding
+6. **Lifetime**: Automatic (stack), Static (data segment), Dynamic (heap)
+7. **Constants**: Prefer `constexpr` (compile-time), then `const`
+8. **Type Deduction**: Use `auto` and structured binding to simplify code
+9. **Type Aliases**: `using` is clearer than `typedef`
+10. **Attributes**: Use `[[maybe_unused]]` and `[[nodiscard]]` appropriately
 
 ### Quick Reference
 
@@ -1184,7 +1293,29 @@ if (auto [it, inserted] = data.insert(key); inserted) {
 | Runtime constant | `const int val = getValue();` |
 | Complex iterator | `auto it = container.begin();` |
 | Type alias | `using MyInt = int;` |
-| Global (use sparingly) | `int g_count = 0;` |
+| Global (use sparingly) | `inline int g_count = 0;` (C++17) |
 | Static local variable | `static int counter{0};` |
+| Unpack multiple values | `auto [a, b] = func();` (C++17) |
+| Internal linkage | Anonymous namespace or `static` |
+| Unused parameter | `[[maybe_unused]] int x` |
+| Must-use return value | `[[nodiscard]] Type func();` |
+
+### Decision Flowchart
+
+```
+Variable Declaration
+        │
+        ├── Global? ──► Use inline (C++17) or extern + single definition
+        │
+        ├── Local to function? ──► Automatic storage (default)
+        │
+        ├── Must persist across calls? ──► static local
+        │
+        ├── Large / runtime-sized? ──► Dynamic + smart pointer
+        │
+        ├── Constant value? ──► constexpr (compile-time) or const (runtime)
+        │
+        └── Type is complex? ──► auto or structured binding (C++17)
+```
 
 [← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
