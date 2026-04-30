@@ -24,7 +24,7 @@ Algorithms ←→ Iterators ←→ Containers
 ```
 
 
-#### 8.3.2 STL Containers
+#### 11.0.2 STL Containers
 
 Containers are template classes that store and manage collections of objects.
 

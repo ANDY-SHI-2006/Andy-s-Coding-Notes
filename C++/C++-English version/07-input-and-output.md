@@ -475,7 +475,7 @@ The address operator `&` has the same precedence level as other unary operators.
 
 > **Note**: Unlike `printf`, `scanf` does **not** support precision (e.g., `%.2f` is invalid).
 
-##### 1. Flags (Optional)
+##### 7.2.1.3.1 Flags (Optional)
 
 | Flag | Description | Example |
 |------|-------------|---------|
@@ -488,7 +488,7 @@ int a, b;
 scanf("%d%*d%d", &a, &b);  // Input: 10 20 30 â?a=10, b=30 (20 is skipped)
 ```
 
-##### 2. Width (Optional)
+##### 7.2.1.3.2 Width (Optional)
 
 Specifies the **maximum** number of characters to read:
 
@@ -504,7 +504,7 @@ scanf("%9s", str);     // Read at most 9 chars + null terminator (prevents overf
 |-------|-------------|---------|
 | `n` | Maximum field width | `%3d` reads at most 3 digits |
 
-##### 3. Length Modifier (Optional)
+##### 7.2.1.3.3 Length Modifier (Optional)
 
 Specifies the size of the receiving variable. **Critical for correct memory access.**
 
@@ -527,7 +527,7 @@ Specifies the size of the receiving variable. **Critical for correct memory acce
 
 > **â ï¸ Critical:** For `scanf`, `double` **must** use `%lf`, not `%f`. Using `%f` for `double` causes undefined behavior.
 
-##### 4. Conversion Specifiers (Required)
+##### 7.2.1.3.4 Conversion Specifiers (Required)
 
 | Specifier | Type | Input Format | Example Input |
 |-----------|------|--------------|---------------|
@@ -1053,7 +1053,7 @@ printf("%lld\n", ll); // ✓CORRECT: %lld matches long long (8 bytes)
 
 > **Warning:** Mismatched specifiers cause undefined behavior. The data read may be incorrect, or the program may read wrong number of bytes from the argument stack, potentially causing crashes or data corruption.
 
-##### 7. Conversion Specifiers (Required)
+##### 7.2.2.3.5 Conversion Specifiers (Required)
 
 | Specifier                  | Type           | Output                                         | Example                        |
 | -------------------------- | -------------- | ---------------------------------------------- | ------------------------------ |
