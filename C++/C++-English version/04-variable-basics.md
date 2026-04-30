@@ -1134,7 +1134,82 @@ auto func = [](int x) { return x * x; };
 - Must initialize: `auto x;` is an error!
 - Prefer `=` over braces: `auto x = 5;` ✓, `auto x{5};` may have surprises
 
-### 4.5.2 Type Aliases
+### 4.5.2 decltype (C++11)
+
+`decltype` queries the compile-time type of an expression. Unlike `auto`, it preserves cv-qualifiers (const/volatile) and references.
+
+```cpp
+int x = 5;
+const int& ref = x;
+
+decltype(x)       a;  // int
+decltype(ref)     b = x;  // const int& (must initialize!)
+decltype(x + 3.0) c;  // double (expression type)
+
+// With functions
+decltype(std::cout) os = std::cout;  // std::ostream&
+```
+
+**Key Differences: auto vs decltype**
+
+| Feature | auto | decltype |
+|---------|------|----------|
+| **const preservation** | Strips top-level const | Preserves const |
+| **reference preservation** | Strips reference | Preserves reference |
+| **Initialization required** | Yes | No (for most cases) |
+| **Common use** | Variable declarations | Template metaprogramming, return types |
+
+```cpp
+const int x = 10;
+const int& ref = x;
+
+auto a = x;              // int (const stripped)
+decltype(x) b = 20;      // const int (const preserved)
+
+auto c = ref;            // int (reference and const stripped)
+decltype(ref) d = x;     // const int& (both preserved)
+```
+
+**decltype(auto) (C++14):**
+
+Combines the convenience of `auto` with the exact type preservation of `decltype`.
+
+```cpp
+template <typename T>
+decltype(auto) forward(T&& t) {
+    return std::forward<T>(t);  // Perfect forwarding
+}
+
+const int x = 5;
+auto a = x;                // int
+decltype(auto) b = x;      // const int
+decltype(auto) c = (x);    // const int& (x is lvalue)
+```
+
+**Trailing Return Type with decltype:**
+
+When the return type depends on template parameters:
+
+```cpp
+template <typename T, typename U>
+auto multiply(T t, U u) -> decltype(t * u) {  // Return type is T*U
+    return t * u;
+}
+
+// C++14 simplified (but decltype still useful for complex cases)
+template <typename T, typename U>
+decltype(auto) multiply(T t, U u) {
+    return t * u;
+}
+```
+
+**When to use decltype:**
+- Template return types that depend on parameters
+- Preserving const/reference qualifiers
+- Metaprogramming and type traits
+- Forwarding functions
+
+### 4.5.3 Type Aliases
 
 Type aliases create new names for existing types.
 
@@ -1157,7 +1232,7 @@ using Callback = void(*)(int);       // Clearer syntax
 - **Platform independence**: `using int32 = int;` can change to `int32_t`
 - **Easy to modify**: Change alias definition, all uses update
 
-### 4.5.3 Structured Binding (C++17)
+### 4.5.4 Structured Binding (C++17)
 
 Structured binding allows you to unpack structured types (arrays, structs, pairs, tuples) into individual named variables.
 
