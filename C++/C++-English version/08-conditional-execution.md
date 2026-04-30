@@ -390,7 +390,7 @@ switch (a) {
 
 ### 8.3.2 Syntax Rules
 
-### 11.0.2.1 Controlling Expression
+### 8.3.2.1 Controlling Expression
 
 The `switch` statement selects statements to execute based on a **controlling expression**, which must be an expression of **integral type** (`int`, `char`, `enum`, etc.).
 
