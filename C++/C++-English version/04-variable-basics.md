@@ -153,6 +153,94 @@ void counter() {
 }
 ```
 
+**thread_local: Thread-Specific Storage (C++11):**
+
+`thread_local` gives each thread its own separate instance of a variable. When a thread starts, the variable is initialized; when the thread ends, it's destroyed.
+
+```cpp
+#include <thread>
+
+thread_local int threadCounter = 0;  // Each thread has its own counter
+
+void increment() {
+    threadCounter++;
+    cout << "Thread " << std::this_thread::get_id() 
+         << ": counter = " << threadCounter << endl;
+}
+
+int main() {
+    thread t1(increment);  // t1's counter: 1
+    thread t2(increment);  // t2's counter: 1 (separate from t1)
+    
+    increment();           // main thread's counter: 1
+    
+    t1.join();
+    t2.join();
+}
+// Output: Each thread sees its own counter value
+```
+
+**Use cases for thread_local:**
+- Per-thread caches or buffers
+- Thread-specific random number generators
+- Avoiding locks by giving each thread private data
+
+**mutable: Modifying in const Contexts:**
+
+`mutable` allows a class member to be modified even when the containing object is const. This is useful for:
+- Internal state that doesn't affect logical const-ness
+- Lazy evaluation / caching
+- Mutex locks for thread safety
+
+```cpp
+class DataProcessor {
+    string data;
+    mutable size_t cachedHash = 0;  // Can be modified in const methods
+    mutable bool hashValid = false;
+    
+public:
+    void setData(const string& d) { 
+        data = d; 
+        hashValid = false;  // Invalidate cache
+    }
+    
+    // const method but can modify mutable members
+    size_t getHash() const {
+        if (!hashValid) {
+            cachedHash = std::hash<string>{}(data);  // ✓ OK: mutable
+            hashValid = true;
+        }
+        return cachedHash;
+    }
+};
+
+const DataProcessor dp;
+dp.getHash();  // ✓ Works: const object, but mutable member can change
+```
+
+**volatile: Tell Compiler "Don't Optimize":**
+
+`volatile` tells the compiler that a variable's value may change at any time (e.g., by hardware, OS, or another thread), so optimizations involving caching the value should be disabled.
+
+```cpp
+// Hardware register that changes independently
+volatile int sensorValue;  // Value read directly from hardware
+
+while (sensorValue == 0) {  // Compiler won't optimize this away
+    // Wait for hardware to update sensorValue
+}
+```
+
+**⚠️ volatile is NOT for thread synchronization!** Use `std::atomic` or mutexes for that.
+
+| Specifier | When to Use | Don't Use For |
+|-----------|-------------|---------------|
+| `static` | Internal linkage, persistent locals | Thread safety (use mutexes) |
+| `extern` | Share across files | Header definitions |
+| `thread_local` | Per-thread data | Data shared between threads |
+| `mutable` | Cache, lazy evaluation | Data that affects logical state |
+| `volatile` | Hardware registers, signal handlers | Thread synchronization |
+
 ### 4.1.5 Inline Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
