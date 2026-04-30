@@ -520,46 +520,165 @@ vector<int> v{10, 5};  // 2 elements: use {}
 
 > **Use brace initialization `{}` by default.** It prevents narrowing, eliminates ambiguity, and provides a consistent syntax across all types. Switch to `()` only when you specifically need the fill constructor behavior for containers.
 
-## 4.3 Variable Scope and Lifetime
+## 4.3 Variable Scope, Lifetime, and Visibility
 
-Variables have **scope** (where visible) and **lifetime** (when created/destroyed).
+Variables have **scope** (where visible), **lifetime** (when created/destroyed), and **visibility rules** that determine how names are resolved.
 
-### 4.3.1 Scope
+### 4.3.1 Scope and Visibility
 
-Scope determines where a variable can be accessed.
+Scope determines where a variable can be accessed. C++ has several scope types:
 
-**Local Scope:**
+#### Block Scope (Local)
+
+Variables declared inside a block `{}` are only visible within that block.
+
 ```cpp
 void func() {
-    int x = 10;        // x only visible inside func()
+    int x = 10;        // x visible from here to end of func()
+    
     if (x > 5) {
         int y = 20;    // y only visible inside if block
+        cout << x;     // ✓ OK: x is in outer scope
     }
     // y not available here
+    cout << y;         // ✗ ERROR: y out of scope
 }
 // x not available here
 ```
 
-**Global Scope:**
+#### Function Scope
+
+Labels (used with `goto`) have function scope—the only identifier with this scope.
+
 ```cpp
-int g_count = 0;       // Global, visible throughout file
+void func() {
+    if (condition) {
+        goto cleanup;  // Jump forward
+    }
+    // ... more code ...
+cleanup:               // Label has function scope
+    // cleanup code
+}
+```
+
+> **Note**: Avoid `goto` in modern C++. Use control structures or functions instead.
+
+#### Namespace Scope
+
+Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
+
+```cpp
+namespace math {
+    double pi = 3.14159;     // Namespace scope
+    
+    double circleArea(double r) {
+        return pi * r * r;    // pi visible here
+    }
+}
+
+// Access with scope resolution
+double x = math::pi;
+
+// Or with using directive
+using namespace math;
+double y = pi;
+```
+
+#### Class Scope
+
+Members of a class have class scope and are accessed via the class instance or scope resolution operator.
+
+```cpp
+class Counter {
+    static int totalCount;    // Class scope (static member)
+    int instanceCount = 0;    // Class scope (instance member)
+    
+public:
+    void increment() {
+        instanceCount++;      // Implicit class scope
+        totalCount++;         // Implicit class scope
+    }
+};
+
+int Counter::totalCount = 0;  // Definition outside class
+```
+
+#### Global (File) Scope
+
+Variables declared outside all functions and classes have global scope, visible throughout the translation unit.
+
+```cpp
+int g_count = 0;       // Global scope
 
 void func1() {
     g_count++;         // Can access
 }
 
-void func2() {
-    g_count++;         // Can also access
+namespace {
+    int internal = 0;  // Global scope, but internal linkage
 }
 ```
 
-**Block Scope:**
+### 4.3.2 Variable Shadowing (Name Hiding)
+
+When an inner scope declares a variable with the same name as an outer scope, the inner variable **shadows** (hides) the outer one.
+
 ```cpp
-{
-    int temp = 100;    // Only valid inside {} block
+int x = 10;                    // Global x
+
+void example() {
+    int x = 20;                // Shadows global x
+    cout << x;                 // 20 (local x)
+    cout << ::x;               // 10 (global x using scope resolution)
+    
+    if (true) {
+        int x = 30;            // Shadows example's x
+        cout << x;             // 30 (innermost x)
+        cout << ::x;           // 10 (global x)
+    }
+    
+    cout << x;                 // 20 (back to example's x)
 }
-// temp destroyed, not accessible
 ```
+
+**Shadowing Rules:**
+- The innermost declaration wins
+- Shadowing occurs even if types differ (can be confusing!)
+- Use `::` to access global scope, or explicit namespace names
+
+**⚠️ Pitfall: Shadowing with Different Types:**
+
+```cpp
+int count = 0;                 // Global int
+
+void func() {
+    double count = 3.14;       // Shadows global int with double!
+    count++;                   // ERROR: can't increment double this way
+    
+    // Very confusing - avoid this pattern
+}
+```
+
+**Best Practices:**
+1. **Avoid shadowing when possible**—use different names
+2. **Use descriptive names** for globals (e.g., `g_count` not `count`)
+3. **Use `::` explicitly** when you must access shadowed globals
+4. **Prefer local variables** over globals to avoid shadowing issues
+
+**Function Parameter Shadowing:**
+
+```cpp
+int value = 100;
+
+void setValue(int value) {     // Parameter shadows global
+    value = value;             // Self-assignment! No effect on global
+    ::value = value;           // Correct: assigns parameter to global
+}
+```
+
+### 4.3.3 Lifetime and Storage Duration
+
+Lifetime determines when variables are created and destroyed. While **scope** defines where a variable is visible, **lifetime** defines how long it exists in memory.
 
 ### 4.3.2 Lifetime
 
