@@ -1064,6 +1064,104 @@ using Callback = void(*)(int);       // Clearer syntax
 - **Platform independence**: `using int32 = int;` can change to `int32_t`
 - **Easy to modify**: Change alias definition, all uses update
 
+### 4.5.3 Structured Binding (C++17)
+
+Structured binding allows you to unpack structured types (arrays, structs, pairs, tuples) into individual named variables.
+
+**Basic Syntax:**
+```cpp
+auto [var1, var2, ...] = expression;
+```
+
+**With Arrays:**
+```cpp
+int arr[3] = {10, 20, 30};
+auto [a, b, c] = arr;           // a=10, b=20, c=30
+
+// With references (no copy)
+auto& [refA, refB, refC] = arr;
+refA = 100;                     // arr[0] is now 100
+```
+
+**With std::pair:**
+```cpp
+std::map<std::string, int> scores;
+scores["Alice"] = 95;
+
+// Old way: verbose
+auto result = scores.insert({"Bob", 88});
+bool inserted = result.first;
+auto iterator = result.second;
+
+// New way: structured binding
+auto [iter, success] = scores.insert({"Bob", 88});
+if (success) {
+    cout << "Inserted: " << iter->first << " = " << iter->second;
+}
+```
+
+**With std::tuple:**
+```cpp
+std::tuple<int, double, std::string> getData() {
+    return {42, 3.14, "hello"};
+}
+
+// Unpack all at once
+auto [id, value, name] = getData();
+// id = 42, value = 3.14, name = "hello"
+
+// Ignore with std::ignore (C++17)
+auto [id2, _, name2] = getData();  // _ is a common convention for "don't care"
+```
+
+**With Structs (Public Members):**
+```cpp
+struct Point { int x, y; };
+Point p{10, 20};
+
+auto [px, py] = p;              // px = 10, py = 20
+
+// Can use references
+auto& [rx, ry] = p;
+rx = 100;                       // p.x is now 100
+```
+
+**Reference vs Copy:**
+
+```cpp
+std::pair<int, int> p{1, 2};
+
+auto [a, b] = p;        // Copy: modifications don't affect p
+auto& [ra, rb] = p;     // Reference: modifications affect p
+const auto& [ca, cb] = p;  // Const reference: read-only access
+```
+
+**Practical Use Cases:**
+
+```cpp
+// 1. Iterating over maps
+for (const auto& [key, value] : scores) {
+    cout << key << ": " << value << endl;
+}
+
+// 2. Multiple return values without defining a struct
+auto divide(int a, int b) -> std::pair<int, int> {
+    return {a / b, a % b};
+}
+auto [quotient, remainder] = divide(17, 5);
+
+// 3. Unpacking container operations
+if (auto [it, inserted] = data.insert(key); inserted) {
+    // Use it here
+}
+```
+
+**Limitations:**
+- Cannot use with bit fields
+- Cannot use with private/protected members (only public)
+- Number of bindings must match number of elements
+- Cannot nest structured binding directly
+
 ## 4.6 Summary and Best Practices
 
 ### Key Takeaways
