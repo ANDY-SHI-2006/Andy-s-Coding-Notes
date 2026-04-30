@@ -906,35 +906,6 @@ void sharedExample() {
 4. **Avoid Global Static**: Minimize global variables to reduce coupling and side effects
 5. **Never Return Dangling References**: Always ensure returned pointers/references point to valid memory
 
-### 4.3.3 Global vs Local Variables
-
-**Local Variables:**
-- Defined inside functions or blocks
-- Not initialized by default (random values)
-- Destroyed when function ends
-- Different functions can have same name, no conflict
-
-**Global Variables:**
-- Defined outside all functions
-- Zero-initialized automatically (0, false, nullptr)
-- Destroyed when program ends
-- Accessible throughout program (via `extern`)
-
-```cpp
-int g_value = 100;     // Global variable
-
-void foo() {
-    int local = 10;    // Local variable
-    g_value++;         // Can access global
-}
-
-void bar() {
-    cout << g_value;   // Sees value modified by foo()
-}
-```
-
-> **Advice**: Minimize global variables; they increase coupling and complexity.
-
 ## 4.4 Constants: const and constexpr
 
 Constants are variables whose values cannot be modified.
