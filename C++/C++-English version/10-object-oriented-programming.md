@@ -711,7 +711,7 @@ This List ADT example demonstrates:
 
 Pointer-based linked lists allow elements to be non-contiguous in memory. Elements are ordered by associating each with its neighbour(s) through pointers.
 
-##### Node Structure
+##### 10.8.10.8.1 Node Structure
 
 A single node in a singly linked list contains the data element and a pointer to the next node.
 
@@ -726,7 +726,7 @@ struct ListNode {
 
 > **Key Point:** C++ allows the structure name (`ListNode`) to be used without the `struct` keyword.
 
-##### Linked List Example
+##### 10.8.10.8.2 Linked List Example
 
 A list of four items `<a0, a1, a2, a3>` is represented as:
 
@@ -738,7 +738,7 @@ head --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
 - `head` pointer to indicate the first node
 - `NULL` in the `next` pointer field of the last node
 
-##### Building a Linked List
+##### 10.8.10.8.3 Building a Linked List
 
 ```cpp
 ListNode* ptr4 = new ListNode;
@@ -761,7 +761,7 @@ head->next = ptr2;
 > **Question:** Do we need `ptr2`, `ptr3`, `ptr4` after the list is built?
 > **Answer:** No. Only the `head` pointer is needed to access the entire list.
 
-##### Insertion in Linked List
+##### 10.8.10.8.4 Insertion in Linked List
 
 **General Case:** Insert a new node between `prev` and `cur`.
 
@@ -786,7 +786,7 @@ newPtr->next = cur;           // OR: newPtr->next = head;
 head = newPtr;
 ```
 
-##### Deletion in Linked List
+##### 10.8.10.8.5 Deletion in Linked List
 
 **General Case:** Delete the node pointed to by `cur`, where `prev` points to the node before it.
 
@@ -810,7 +810,7 @@ delete cur;
 cur = NULL;
 ```
 
-##### Traversing the Linked List
+##### 10.8.10.8.6 Traversing the Linked List
 
 To move forward one node:
 
@@ -871,7 +871,7 @@ ListNode* findValue(ListItemType value) const
 }
 ```
 
-##### C++ Specification (Linked List)
+##### 10.8.10.8.7 C++ Specification (Linked List)
 
 ```cpp
 // ListP.h: List ADT using Linked List
@@ -911,7 +911,7 @@ private:
 > - Structure declaration can be private
 > - `find()` is a private helper method
 
-##### Implementation
+##### 10.8.10.8.8 Implementation
 
 **Constructor and Destructor:**
 
@@ -1055,7 +1055,7 @@ Some variations can be combined:
 - Circular Doubly-Linked List
 - Circular Linked List with Dummy Head Node
 
-##### Doubly Linked List
+##### 10.8.10.9.1 Doubly Linked List
 
 **Motivation:**
 - Singly Linked List only facilitates movement in one direction (from head to end)
@@ -1160,7 +1160,7 @@ private:
 };
 ```
 
-##### Circular Linked List
+##### 10.8.10.9.2 Circular Linked List
 
 **Concept:** The last node in a singly linked list points back to the first node.
 
@@ -1201,7 +1201,7 @@ Even more useful if we keep track of the **tail** instead of the head:
 - Can access both the tail and head easily
 - Head = `tail->next`
 
-##### Dummy Head Node
+##### 10.8.10.9.3 Dummy Head Node
 
 There is an extra node at the beginning of the list:
 - It is **not** used to store a real element, hence the name **dummy**
