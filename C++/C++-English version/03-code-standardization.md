@@ -1,4 +1,4 @@
-[�?Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Definitions, Declarations and Statements →](04-variable-basics.md)
+[←Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Definitions, Declarations and Statements →](04-variable-basics.md)
 
 # 3 Code Standardization
 
@@ -360,7 +360,7 @@ The placement of braces `{}` is a matter of coding style. Two common styles are 
 | **Style 1** | Allman Style | Opening brace on its own line | `if (condition) \n { \n ... \n }` |
 | **Style 2** | K&R Style | Opening brace on the same line | `if (condition) { \n ... \n }` |
 
-**Style 1 (Allman Style) �?Opening brace on a new line:**
+**Style 1 (Allman Style) ←Opening brace on a new line:**
 ```cpp
 if (condition)
 {
@@ -371,7 +371,7 @@ if (condition)
 }
 ```
 
-**Style 2 (K&R Style) �?Opening brace on the same line:**
+**Style 2 (K&R Style) ←Opening brace on the same line:**
 ```cpp
 if (condition){
     statement 1;
@@ -478,7 +478,7 @@ C++ distinguishes uppercase and lowercase letters.
 | **Upper camelCase / PascalCase** | `MyClassName`      | Classes, structs, enums            | `StudentInfo`, `MyClass`      |
 | **Snake_case**                   | `my_variable_name` | Variables, constants (alternative) | `student_name`, `total_score` |
 | **ALL_CAPS**                     | `MY_CONSTANT`      | Constants, macros                  | `MAX_SIZE`, `PI`              |
-| **Hungarian notation**           | `iCount`, `pData`  | �?*Deprecated** in modern C++     | Not recommended               |
+| **Hungarian notation**           | `iCount`, `pData`  | ←*Deprecated** in modern C++     | Not recommended               |
 
 #### 3.4.2.2 Naming Conventions by Identifier Type
 
@@ -495,7 +495,7 @@ C++ distinguishes uppercase and lowercase letters.
 - Use **descriptive names**: `studentCount` is better than `sc` or `n`
 - Avoid single-letter names except for loop counters (`i`, `j`, `k`)
 - Be consistent with one style throughout your project
-- **Follow your team's existing conventions** �?consistency is more important than any single style
+- **Follow your team's existing conventions** ←consistency is more important than any single style
 
 ## 3.5 Automated Code Formatting
 
@@ -551,4 +551,4 @@ AllowShortFunctionsOnASingleLine: false
 
 ---
 
-[�?Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Definitions, Declarations and Statements →](04-variable-basics.md)
+[←Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Definitions, Declarations and Statements →](04-variable-basics.md)
