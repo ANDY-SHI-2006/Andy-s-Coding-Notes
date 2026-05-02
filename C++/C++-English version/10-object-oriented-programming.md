@@ -447,3 +447,6 @@ The List ADT is a fundamental abstract data type that represents an ordered coll
 
 > **Continue Reading**: For detailed implementations of List, Stack, Queue, and other data structures, see [Chapter 16: Data Structures](16-data-structures.md).
 
+
+
+[← Previous: Functions](09-functions.md) | [Next: Data Structures →](16-data-structures.md) | [STL →](11-stl.md)

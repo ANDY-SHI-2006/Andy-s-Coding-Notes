@@ -394,3 +394,6 @@ Variable Declaration
 ```
 
 
+
+
+[← Previous: Variable Basics](04-variable-basics.md) | [Next: Exception Handling →](17-exception-handling.md)

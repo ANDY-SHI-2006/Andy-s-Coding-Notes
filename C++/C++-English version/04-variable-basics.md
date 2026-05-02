@@ -1114,3 +1114,6 @@ constexpr int result = square(5);      // ✓ Computed at compile time
 
 > **Continue Reading**: For advanced topics like `auto`, `decltype`, Structured Binding, and Variable Attributes, see [Chapter 15: Modern C++ Variable Features](15-modern-cpp-variables.md).
 
+
+
+[← Previous: Code Standardization](03-code-standardization.md) | [Next: Modern C++ Variable Features →](15-modern-cpp-variables.md) | [Operators →](05-operators.md)
