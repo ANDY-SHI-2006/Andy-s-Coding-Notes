@@ -660,24 +660,7 @@ void func() {
 // x not available here
 ```
 
-#### 4.3.1.2 Function Scope
-
-Labels (used with `goto`) have function scope—the only identifier with this scope.
-
-```cpp
-void func() {
-    if (condition) {
-        goto cleanup;  // Jump forward
-    }
-    // ... more code ...
-cleanup:               // Label has function scope
-    // cleanup code
-}
-```
-
-> **Note**: Avoid `goto` in modern C++. Use control structures or functions instead.
-
-#### 4.3.1.3 Namespace Scope
+#### 4.3.1.2 Namespace Scope
 
 Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
 
