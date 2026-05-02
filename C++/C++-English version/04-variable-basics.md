@@ -116,7 +116,7 @@ Storage class specifiers control linkage, storage duration, and initialization o
 | `extern` | External linkage declaration | Share across files |
 | `mutable` | Modifiable even in const objects | Cache, lazy evaluation |
 | `thread_local` (C++11) | Thread-local storage duration | Thread-specific data |
-| `register` (deprecated) | Suggest CPU register | Don't use in modern C++ |
+
 
 #### 4.1.4.1 extern: Sharing Variables Across Files
 
@@ -237,21 +237,7 @@ while (sensorValue == 0) {  // Compiler won't optimize this away
 
 **⚠️ volatile is NOT for thread synchronization!** Use `std::atomic` or mutexes for that.
 
-#### 4.1.4.6 register: Deprecated Storage Hint (Pre-C++17)
-
-The `register` keyword was a hint to the compiler that a variable would be heavily used and should be stored in a CPU register for faster access. However, modern compilers are much better at optimization than humans, so `register` was deprecated in C++11 and removed in C++17.
-
-```cpp
-// Deprecated - don't use in modern C++
-register int counter = 0;  // Compiler ignores this hint
-
-// Modern C++: Just declare normally, compiler optimizes automatically
-int counter = 0;  // Compiler decides if it should be in a register
-```
-
-> **Note**: In C++17, `register` is a reserved keyword but has no effect. Using it generates a warning or error depending on compiler settings.
-
-#### 4.1.4.7 auto: Type Deduction (C++11)
+#### 4.1.4.6 auto: Type Deduction (C++11)
 
 While `auto` appears in the storage class specifier table for historical reasons, in modern C++ it serves a completely different purpose: **type deduction**. It tells the compiler to automatically deduce the variable's type from its initializer.
 
@@ -272,7 +258,7 @@ auto s = "hello";     // const char*
 | `thread_local` | Per-thread data | Data shared between threads | C++11 |
 | `mutable` | Cache, lazy evaluation | Data that affects logical state | Active |
 | `volatile` | Hardware registers, signal handlers | Thread synchronization | Active |
-| `register` | Nothing (deprecated) | Any new code | Deprecated (C++11), Removed (C++17) |
+
 | `auto` | Type deduction | Storage class | Changed meaning (C++11) |
 |-----------|-------------|---------------|
 | `static` | Internal linkage, persistent locals | Thread safety (use mutexes) |
