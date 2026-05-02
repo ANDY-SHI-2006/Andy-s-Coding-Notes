@@ -35,8 +35,8 @@ The `signed` and `unsigned` modifiers can only be used with **integer types** (`
 
 | Type          | Size       | Precision     | Typical Range      |
 | ------------- | ---------- | ------------- | ------------------ |
-| `float`       | 4 bytes    | ~7 digits     | Â±3.4 Ã 10Â³â?       |
-| `double`      | 8 bytes    | ~15 digits    | Â±1.7 Ã 10Â³â°â¸       |
+| `float`       | 4 bytes    | ~7 digits     | ±3.4 × 10³⁸       |
+| `double`      | 8 bytes    | ~15 digits    | ±1.7 × 10³⁰⁸       |
 | `long double` | 8-16 bytes | ~18-21 digits | Platform dependent |
 
 ## 6.2 Boolean Type
