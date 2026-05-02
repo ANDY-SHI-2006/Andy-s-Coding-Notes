@@ -1,4 +1,4 @@
-[← Previous: Queue ADT](21-queue.md) | [Next: Sorting Algorithms →](23-sorting-algorithms.md)
+[�?Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)
 
 # 22 Algorithm Analysis
 
@@ -31,7 +31,7 @@ int binarySearch(int arr[], int n, int target) {
     }
     return -1;
 }
-// Worst case: log₂(n) checks
+// Worst case: log�?n) checks
 ```
 
 For n = 1,000,000:
@@ -65,7 +65,7 @@ As n grows large, the constant factors and lower-order terms become insignifican
 
 ## 22.3 Big-O Notation
 
-Big-O notation describes the upper bound of growth rate, focusing on the dominant term as n → ∞.
+Big-O notation describes the upper bound of growth rate, focusing on the dominant term as n �?�?
 
 ### Common Complexities (Ordered by Growth)
 
@@ -77,7 +77,7 @@ Big-O notation describes the upper bound of growth rate, focusing on the dominan
 | **O(n log n)** | Linearithmic | Divide and conquer algorithms | Merge sort |
 | **O(n²)** | Quadratic | Nested loops | Bubble sort |
 | **O(n³)** | Cubic | Triple nested loops | Matrix multiplication |
-| **O(2ⁿ)** | Exponential | Brute force combinations | Subset generation |
+| **O(2�?** | Exponential | Brute force combinations | Subset generation |
 | **O(n!)** | Factorial | Permutations | Traveling salesman |
 
 ### Visual Comparison
@@ -94,10 +94,10 @@ n     | O(1) | O(log n) | O(n) | O(n log n) | O(n²)
 ### Simplifying to Big-O
 
 Drop constants and lower-order terms:
-- `3n² + 2n + 5` → **O(n²)**
-- `100n log n + 50n` → **O(n log n)**
-- `2ⁿ + n³` → **O(2ⁿ)**
-- `5` → **O(1)**
+- `3n² + 2n + 5` �?**O(n²)**
+- `100n log n + 50n` �?**O(n log n)**
+- `2�?+ n³` �?**O(2�?**
+- `5` �?**O(1)**
 
 ## 22.4 Analyzing Common Structures
 
@@ -152,7 +152,7 @@ for (int i = 1; i < n; i *= 2) {
     // O(1) work
 }
 // i: 1, 2, 4, 8, ..., n
-// Number of iterations: log₂(n)
+// Number of iterations: log�?n)
 // Time: O(log n)
 ```
 
@@ -277,7 +277,7 @@ int factorial(int n) {
     return n * factorial(n - 1);
 }
 
-// Fibonacci (naive): O(2ⁿ) time - very slow!
+// Fibonacci (naive): O(2�? time - very slow!
 int fibonacci(int n) {
     if (n <= 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);
@@ -298,27 +298,27 @@ int fibonacciOptimized(int n) {
 
 ## 22.9 Rules of Thumb
 
-1. **Nested loops** → Multiply complexities
+1. **Nested loops** �?Multiply complexities
    ```cpp
    for() { for() { } }  // O(n) * O(n) = O(n²)
    ```
 
-2. **Sequential statements** → Add, keep maximum
+2. **Sequential statements** �?Add, keep maximum
    ```cpp
    O(n) + O(n²) = O(n²)
    ```
 
-3. **Loop with fixed iterations** → O(1)
+3. **Loop with fixed iterations** �?O(1)
    ```cpp
    for(int i = 0; i < 100; i++)  // O(1), not O(n)
    ```
 
-4. **Divide by constant** → Logarithmic
+4. **Divide by constant** �?Logarithmic
    ```cpp
    while(n > 1) { n /= 2; }  // O(log n)
    ```
 
-5. **Multiple variables** → State both
+5. **Multiple variables** �?State both
    ```cpp
    for(i=0; i<n; i++)
        for(j=0; j<m; j++)  // O(n * m)
@@ -329,7 +329,7 @@ int fibonacciOptimized(int n) {
 ### Key Takeaways
 
 1. **Big-O measures growth rate**, not absolute time
-2. **Drop constants and lower-order terms**: `2n² + 3n + 1` → `O(n²)`
+2. **Drop constants and lower-order terms**: `2n² + 3n + 1` �?`O(n²)`
 3. **Focus on worst-case** for guarantees
 4. **Space complexity** matters for large inputs
 5. **Amortized analysis** gives average per-operation cost
@@ -343,16 +343,13 @@ O(n)        <── Fair
 O(n log n)  <── Acceptable
 O(n²)       <── Poor (be careful with large n)
 O(n³)       <── Very Poor
-O(2ⁿ)       <── Terrible (avoid for n > 30)
+O(2�?       <── Terrible (avoid for n > 30)
 O(n!)       <── Impossible (avoid for n > 15)
 ```
 
 ### When Does It Matter?
 
 For n = 1,000:
-- O(log n): ~10 operations ✅
-- O(n): 1,000 operations ✅
-- O(n²): 1,000,000 operations ⚠️
-- O(2ⁿ): More operations than atoms in the universe ❌
-
-[← Previous: Queue ADT](21-queue.md) | [Next: Sorting Algorithms →](23-sorting-algorithms.md)
+- O(log n): ~10 operations �?- O(n): 1,000 operations �?- O(n²): 1,000,000 operations ⚠️
+- O(2�?: More operations than atoms in the universe �?
+[�?Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)

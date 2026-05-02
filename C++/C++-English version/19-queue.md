@@ -1,4 +1,4 @@
-[← Previous: Move Semantics](20-move-semantics.md) | [Next: Algorithm Analysis →](22-algorithm-analysis.md)
+[�?Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis →](20-algorithm-analysis.md)
 
 # 21 Queue ADT
 
@@ -17,14 +17,7 @@ Think of a queue at a bank or supermarket checkout:
 
 ```
 Enqueue 10   Enqueue 20   Enqueue 30   Dequeue     Dequeue
-     │            │            │           │           │
-     ▼            ▼            ▼           ▼           ▼
-┌─────┐      ┌─────┐      ┌─────┐      ┌─────┐      ┌─────┐
-│     │      │ 10  │      │ 10  │      │ 20  │      │ 30  │
-│     │      │     │      │ 20  │      │ 30  │      │     │
-│     │      │     │      │ 30  │◄───┐ │     │◄───┐ │     │
-└─────┘      └─────┘      └─────┘    │ └─────┘    │ └─────┘
- Front       Front        Front      │  Front     │  Front
+     �?           �?           �?          �?          �?     �?           �?           �?          �?          �?┌─────�?     ┌─────�?     ┌─────�?     ┌─────�?     ┌─────�?�?    �?     �?10  �?     �?10  �?     �?20  �?     �?30  �?�?    �?     �?    �?     �?20  �?     �?30  �?     �?    �?�?    �?     �?    �?     �?30  │◄───�?�?    │◄───�?�?    �?└─────�?     └─────�?     └─────�?   �?└─────�?   �?└─────�? Front       Front        Front      �? Front     �? Front
                                         Rear         Rear
 ```
 
@@ -447,9 +440,9 @@ public:
 ### Best Practices
 
 1. **Choose Implementation Wisely:**
-   - Fixed size known? → Circular array (cache-friendly)
-   - Unknown/dynamic size? → Linked list
-   - Most cases? → STL `queue`
+   - Fixed size known? �?Circular array (cache-friendly)
+   - Unknown/dynamic size? �?Linked list
+   - Most cases? �?STL `queue`
 
 2. **Always Check Empty Before Front/Dequeue:**
    ```cpp
@@ -494,7 +487,7 @@ public:
 - **Fair resource allocation**
 
 **Queue vs Stack Decision:**
-- Need fairness/order preservation? → Queue
-- Need reverse order/backtracking? → Stack
+- Need fairness/order preservation? �?Queue
+- Need reverse order/backtracking? �?Stack
 
-[← Previous: Move Semantics](20-move-semantics.md) | [Next: Algorithm Analysis →](22-algorithm-analysis.md)
+[�?Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis →](20-algorithm-analysis.md)

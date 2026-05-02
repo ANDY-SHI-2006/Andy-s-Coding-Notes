@@ -1,4 +1,4 @@
-[‚Üê Previous: Recursion](24-recursion.md) | [Next: Heap and Priority Queue ‚Üí](26-heap-priority-queue.md)
+[‚Ü?Previous: Recursion](22-recursion.md) | [Next: Heap and Priority Queue ‚Üí](24-heap-priority-queue.md)
 
 # 25 Trees
 
@@ -71,7 +71,7 @@ struct BinaryTreeNode {
 | **Full** | Every node has 0 or 2 children |
 | **Complete** | All levels filled except possibly last, filled left to right |
 | **Perfect** | All internal nodes have 2 children, all leaves same depth |
-| **Balanced** | Height difference between subtrees ‚â§ 1 |
+| **Balanced** | Height difference between subtrees ‚â?1 |
 | **Degenerate** | Each node has only one child (like linked list) |
 
 ## 25.3 Binary Tree Traversals
@@ -79,7 +79,7 @@ struct BinaryTreeNode {
 ### Depth-First Traversals
 
 ```cpp
-// Preorder: Root ‚Üí Left ‚Üí Right
+// Preorder: Root ‚Ü?Left ‚Ü?Right
 void preorder(BinaryTreeNode* root) {
     if (!root) return;
     cout << root->data << " ";    // Visit root
@@ -87,7 +87,7 @@ void preorder(BinaryTreeNode* root) {
     preorder(root->right);         // Traverse right
 }
 
-// Inorder: Left ‚Üí Root ‚Üí Right
+// Inorder: Left ‚Ü?Root ‚Ü?Right
 void inorder(BinaryTreeNode* root) {
     if (!root) return;
     inorder(root->left);           // Traverse left
@@ -95,7 +95,7 @@ void inorder(BinaryTreeNode* root) {
     inorder(root->right);          // Traverse right
 }
 
-// Postorder: Left ‚Üí Right ‚Üí Root
+// Postorder: Left ‚Ü?Right ‚Ü?Root
 void postorder(BinaryTreeNode* root) {
     if (!root) return;
     postorder(root->left);         // Traverse left
@@ -216,7 +216,7 @@ public:
 
 ### AVL Tree
 
-Height-balanced BST: difference between subtrees ‚â§ 1.
+Height-balanced BST: difference between subtrees ‚â?1.
 
 ```cpp
 struct AVLNode {
@@ -531,4 +531,4 @@ public:
 4. **Traversals**: Pre/In/Post-order, Level-order
 5. **Applications**: Searching, expression evaluation, autocomplete, range queries
 
-[‚Üê Previous: Recursion](24-recursion.md) | [Next: Heap and Priority Queue ‚Üí](26-heap-priority-queue.md)
+[‚Ü?Previous: Recursion](22-recursion.md) | [Next: Heap and Priority Queue ‚Üí](24-heap-priority-queue.md)

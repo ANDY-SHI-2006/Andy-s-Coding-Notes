@@ -1,4 +1,4 @@
-[← Previous: Exception Handling](17-exception-handling.md) | [Next: Lambda →](19-lambda-expressions.md)
+[�?Previous: Exception Handling](15-exception-handling.md) | [Next: Lambda →](17-lambda-expressions.md)
 
 # 18 Smart Pointers
 
@@ -196,11 +196,11 @@ auto q = std::make_shared<Bar>(4, 5, 6);
 
 ```
 Need shared ownership?
-├── No → unique_ptr
-└── Yes → shared_ptr
+├── No �?unique_ptr
+└── Yes �?shared_ptr
     └── Circular reference possible?
-        ├── No → OK
-        └── Yes → weak_ptr to break cycle
+        ├── No �?OK
+        └── Yes �?weak_ptr to break cycle
 ```
 
 ### Examples by Use Case
@@ -250,4 +250,4 @@ public:
 
 > **Golden Rule**: Never use raw `new`/`delete` in modern C++. Always use smart pointers and `make_unique`/`make_shared`.
 
-[← Previous: Exception Handling](17-exception-handling.md) | [Next: Lambda →](19-lambda-expressions.md)
+[�?Previous: Exception Handling](15-exception-handling.md) | [Next: Lambda →](17-lambda-expressions.md)

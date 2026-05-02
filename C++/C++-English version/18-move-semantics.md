@@ -1,4 +1,4 @@
-[← Previous: Lambda](19-lambda-expressions.md) | [Next: Queue ADT →](21-queue.md)
+[�?Previous: Lambda](17-lambda-expressions.md) | [Next: Queue ADT →](19-queue.md)
 
 # 20 Move Semantics
 
@@ -230,4 +230,4 @@ for (int i = 0; i < 1000; ++i) {
 
 > **Modern C++**: Use move semantics to avoid unnecessary copies. Most of the time, it happens automatically—just write natural code and let the compiler optimize!
 
-[← Previous: Lambda](19-lambda-expressions.md) | [Next: Queue ADT →](21-queue.md)
+[�?Previous: Lambda](17-lambda-expressions.md) | [Next: Queue ADT →](19-queue.md)

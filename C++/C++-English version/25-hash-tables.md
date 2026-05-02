@@ -1,4 +1,4 @@
-[‚Üê Previous: Heap and Priority Queue](26-heap-priority-queue.md) | [Next: Graph Algorithms ‚Üí](28-graph-algorithms.md)
+[‚Ü?Previous: Heap and Priority Queue](24-heap-priority-queue.md) | [Next: Graph Algorithms ‚Üí](26-graph-algorithms.md)
 
 # 27 Hash Tables
 
@@ -10,13 +10,13 @@ Arrays provide O(1) access by index, but searching by value takes O(n). What if 
 
 **Hash Function**: Maps keys to array indices
 ```
-hash(key) ‚Üí index
+hash(key) ‚Ü?index
 ```
 
 ## 27.2 Hash Functions
 
 A good hash function:
-- Is deterministic (same key ‚Üí same index)
+- Is deterministic (same key ‚Ü?same index)
 - Distributes keys uniformly
 - Is fast to compute
 - Minimizes collisions
@@ -56,7 +56,7 @@ size_t hashKey(const T& key, size_t tableSize) {
 | Uniformity | Keys should spread evenly across table |
 | Determinism | Same input always produces same output |
 | Efficiency | Fast computation |
-| Avalanche | Small input change ‚Üí large output change |
+| Avalanche | Small input change ‚Ü?large output change |
 
 ## 27.3 Collision Resolution
 
@@ -471,4 +471,4 @@ public:
 | BST | O(log n) | O(log n) | Ordered |
 | **Hash Table** | **O(1)** | **O(1)** | Unordered, fast |
 
-[‚Üê Previous: Heap and Priority Queue](26-heap-priority-queue.md) | [Next: Graph Algorithms ‚Üí](28-graph-algorithms.md)
+[‚Ü?Previous: Heap and Priority Queue](24-heap-priority-queue.md) | [Next: Graph Algorithms ‚Üí](26-graph-algorithms.md)

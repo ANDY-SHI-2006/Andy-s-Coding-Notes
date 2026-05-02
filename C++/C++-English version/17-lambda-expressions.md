@@ -1,4 +1,4 @@
-[← Previous: Smart Pointers](18-smart-pointers.md) | [Next: Move Semantics →](20-move-semantics.md)
+[�?Previous: Smart Pointers](16-smart-pointers.md) | [Next: Move Semantics →](18-move-semantics.md)
 
 # 19 Lambda Expressions
 
@@ -266,4 +266,4 @@ auto f6 = [x]() mutable { return ++x; };
 
 > **Modern C++**: Lambdas are the preferred way to write short, inline functions, especially for STL algorithms and callbacks.
 
-[← Previous: Smart Pointers](18-smart-pointers.md) | [Next: Move Semantics →](20-move-semantics.md)
+[�?Previous: Smart Pointers](16-smart-pointers.md) | [Next: Move Semantics →](18-move-semantics.md)

@@ -1,4 +1,4 @@
-[‚Üê Previous: Algorithm Analysis](22-algorithm-analysis.md) | [Next: Recursion ‚Üí](24-recursion.md)
+[‚Ü?Previous: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion ‚Üí](22-recursion.md)
 
 # 23 Sorting Algorithms
 
@@ -326,22 +326,22 @@ void radixSort(int arr[], int n) {
 
 ```
 Small array (n < 50)?
-  Yes ‚Üí Insertion Sort (simple, cache-friendly)
+  Yes ‚Ü?Insertion Sort (simple, cache-friendly)
   
 Need stability?
-  Yes ‚Üí Merge Sort or Insertion Sort
+  Yes ‚Ü?Merge Sort or Insertion Sort
   
 Limited memory?
-  Yes ‚Üí Heap Sort or Quick Sort
+  Yes ‚Ü?Heap Sort or Quick Sort
   
 Worst-case guarantee needed?
-  Yes ‚Üí Merge Sort or Heap Sort
+  Yes ‚Ü?Merge Sort or Heap Sort
   
 Integer keys in range?
-  Yes ‚Üí Counting Sort or Radix Sort
+  Yes ‚Ü?Counting Sort or Radix Sort
   
 General purpose?
-  ‚Üí Quick Sort (fastest in practice)
+  ‚Ü?Quick Sort (fastest in practice)
 ```
 
 ### C++ STL Sorting
@@ -428,4 +428,4 @@ void hybridSort(int arr[], int left, int right) {
 | Worst-case matters | Merge Sort, Heap Sort |
 | Linked lists | Merge Sort |
 
-[‚Üê Previous: Algorithm Analysis](22-algorithm-analysis.md) | [Next: Recursion ‚Üí](24-recursion.md)
+[‚Ü?Previous: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion ‚Üí](22-recursion.md)

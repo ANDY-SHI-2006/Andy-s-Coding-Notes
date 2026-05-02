@@ -1,4 +1,4 @@
-[‚Üê Previous: Code Standardization](03-code-standardization.md) | [Next: Operators ‚Üí](05-operators.md)
+[‚Ü?Previous: Code Standardization](03-code-standardization.md) | [Next: Operators ‚Üí](05-operators.md)
 
 # 4 Variable Basics
 
@@ -39,8 +39,8 @@ C++ enforces that each variable and function can be defined **only once** per pr
 int shared = 100;          // Definition
 
 // file2.cpp
-int shared = 100;          // ‚úó ERROR! Redefinition
-extern int shared;         // ‚úì OK! Declaration only
+int shared = 100;          // ‚ú?ERROR! Redefinition
+extern int shared;         // ‚ú?OK! Declaration only
 ```
 
 ### 4.1.3 Linkage (Internal, External, and None)
@@ -85,9 +85,9 @@ const int MAX_SIZE = 100;           // const globals have internal linkage by de
 static const int MIN_SIZE = 10;     // Explicit internal linkage
 
 // main.cpp
-extern int internalCounter;         // ‚úó ERROR! Not found - internal to helper.cpp
-extern void helperFunc();           // ‚úó ERROR! Not found
-extern const int MAX_SIZE;          // ‚úó ERROR! const has internal linkage
+extern int internalCounter;         // ‚ú?ERROR! Not found - internal to helper.cpp
+extern void helperFunc();           // ‚ú?ERROR! Not found
+extern const int MAX_SIZE;          // ‚ú?ERROR! const has internal linkage
 ```
 
 > **Design Principle**: Use internal linkage (via `static` or anonymous namespaces) to hide implementation details and reduce global namespace pollution.
@@ -211,7 +211,7 @@ public:
     // const method but can modify mutable members
     size_t getHash() const {
         if (!hashValid) {
-            cachedHash = std::hash<string>{}(data);  // ‚úì OK: mutable
+            cachedHash = std::hash<string>{}(data);  // ‚ú?OK: mutable
             hashValid = true;
         }
         return cachedHash;
@@ -219,7 +219,7 @@ public:
 };
 
 const DataProcessor dp;
-dp.getHash();  // ‚úì Works: const object, but mutable member can change
+dp.getHash();  // ‚ú?Works: const object, but mutable member can change
 ```
 
 #### 4.1.4.5 volatile: Tell Compiler "Don't Optimize"
@@ -275,8 +275,8 @@ Before C++17, global variables with external linkage could only be defined in on
 
 ```cpp
 // config.h (header file)
-inline int version = 1;                 // ‚úì OK in C++17: single definition shared
-inline std::string appName = "MyApp";   // ‚úì Complex types work too
+inline int version = 1;                 // ‚ú?OK in C++17: single definition shared
+inline std::string appName = "MyApp";   // ‚ú?Complex types work too
 
 // main.cpp
 #include "config.h"
@@ -352,7 +352,7 @@ In C++, variables are not automatically initialized. Using an uninitialized vari
 
 ```cpp
 void dangerous() {
-    int x;           // ‚úó Uninitialized!
+    int x;           // ‚ú?Uninitialized!
     cout << x;       // Undefined behavior: could print 0, 12345, or crash
     
     int y = x + 5;   // Compiles, but result is meaningless
@@ -390,7 +390,7 @@ double d = 3.14;
 - Cannot use with `explicit` constructors (for classes)
 
 ```cpp
-int x = 3.14;           // ‚úì Compiles, x = 3 (data loss, silent!)
+int x = 3.14;           // ‚ú?Compiles, x = 3 (data loss, silent!)
 ```
 
 #### 4.2.3.2 Direct Initialization
@@ -411,10 +411,10 @@ Direct initialization can be ambiguous‚ÄîC++ may interpret it as a function decl
 class Date { public: Date(); };
 
 // Ambiguity: variable or function declaration?
-Date d();   // ‚úó C++ parses this as "function d returning Date"
+Date d();   // ‚ú?C++ parses this as "function d returning Date"
             // Not a default-constructed Date object!
 
-Date d;     // ‚úì This works for default construction
+Date d;     // ‚ú?This works for default construction
 ```
 
 #### 4.2.3.3 Brace Initialization (C++11, Recommended)
@@ -432,24 +432,24 @@ int b{};                // Empty braces = zero initialization (b = 0)
 
 | Advantage | Explanation | Example |
 |-----------|-------------|---------|
-| **Prevents narrowing** | Compiler rejects conversions that lose data | `int x{3.14};` ‚úó Error! |
+| **Prevents narrowing** | Compiler rejects conversions that lose data | `int x{3.14};` ‚ú?Error! |
 | **Uniform syntax** | Same syntax for all types (built-in, class, array, container) | `int x{5};` `string s{"hi"};` `vector<int> v{1,2,3};` |
-| **No ambiguity** | Cannot be parsed as function declaration | `Date d{};` ‚úì Always an object |
+| **No ambiguity** | Cannot be parsed as function declaration | `Date d{};` ‚ú?Always an object |
 | **Zero initialization** | Empty braces `{}` initialize to zero/null | `int x{};` // x = 0 |
 
 **Narrowing Conversion Prevention (Compile-Time Safety):**
 
 ```cpp
 // These will NOT compile with brace initialization:
-int a{3.14};            // ‚úó double ‚Üí int loses precision
-int b{1000000000000};   // ‚úó Exceeds int range  
-char c{1000};           // ‚úó 1000 exceeds char range (-128 to 127 or 0 to 255)
-unsigned d{-5};         // ‚úó Negative to unsigned
+int a{3.14};            // ‚ú?double ‚Ü?int loses precision
+int b{1000000000000};   // ‚ú?Exceeds int range  
+char c{1000};           // ‚ú?1000 exceeds char range (-128 to 127 or 0 to 255)
+unsigned d{-5};         // ‚ú?Negative to unsigned
 
 // These ARE allowed (no data loss):
-int e{3};               // ‚úì int to int
-int f{static_cast<int>(3.14)};  // ‚úì Explicit cast OK
-double g{3};            // ‚úì int to double is safe (no loss)
+int e{3};               // ‚ú?int to int
+int f{static_cast<int>(3.14)};  // ‚ú?Explicit cast OK
+double g{3};            // ‚ú?int to double is safe (no loss)
 ```
 
 > **Safety First**: Brace initialization catches bugs at compile time that copy/direct init would allow at runtime.
@@ -464,12 +464,12 @@ public:
 };
 
 // Direct initialization - AMBIGUOUS
-TimeKeeper time(Date());  // ‚úó Function declaration: "time is a function 
+TimeKeeper time(Date());  // ‚ú?Function declaration: "time is a function 
                           //    taking a Date(*)() and returning TimeKeeper"
 
 // Brace initialization - UNAMBIGUOUS  
-TimeKeeper time{Date()};  // ‚úì Clearly an object definition
-TimeKeeper time{Date{}};  // ‚úì Nested braces, even clearer
+TimeKeeper time{Date()};  // ‚ú?Clearly an object definition
+TimeKeeper time{Date{}};  // ‚ú?Nested braces, even clearer
 ```
 
 **The std::initializer_list Mechanism:**
@@ -531,12 +531,12 @@ A **narrowing conversion** is one that may lose information:
 
 | From | To | Status | Reason |
 |------|-----|--------|--------|
-| `double` | `int` | ‚úó Narrowing | Loses fractional part |
-| `int` | `char` | ‚úó Narrowing | May overflow |
-| `long long` | `int` | ‚úó Narrowing | May overflow on 32-bit systems |
-| `int` | `unsigned` | ‚úó (if negative) | Negative values wrap around |
-| `int` | `double` | ‚úì OK | No data loss |
-| `char` | `int` | ‚úì OK | No data loss |
+| `double` | `int` | ‚ú?Narrowing | Loses fractional part |
+| `int` | `char` | ‚ú?Narrowing | May overflow |
+| `long long` | `int` | ‚ú?Narrowing | May overflow on 32-bit systems |
+| `int` | `unsigned` | ‚ú?(if negative) | Negative values wrap around |
+| `int` | `double` | ‚ú?OK | No data loss |
+| `char` | `int` | ‚ú?OK | No data loss |
 
 **Brace initialization enforces this at compile time:**
 
@@ -545,13 +545,13 @@ void example() {
     double pi = 3.14159;
     
     // Copy init - silent data loss
-    int rounded1 = pi;      // ‚úì Compiles, rounded1 = 3
+    int rounded1 = pi;      // ‚ú?Compiles, rounded1 = 3
     
     // Brace init - compile error!
-    int rounded2{pi};       // ‚úó Error: type 'double' cannot be narrowed to 'int'
+    int rounded2{pi};       // ‚ú?Error: type 'double' cannot be narrowed to 'int'
     
     // Explicit cast required (shows intent)
-    int rounded3{static_cast<int>(pi)};  // ‚úì OK: explicit conversion
+    int rounded3{static_cast<int>(pi)};  // ‚ú?OK: explicit conversion
 }
 ```
 
@@ -564,10 +564,10 @@ The "Most Vexing Parse" is a syntax ambiguity in C++ where something that looks 
 ```cpp
 // You want: a function object 'f' that takes no arguments and returns int
 // You write:
-int f();    // ‚úó This is a function DECLARATION, not a default-constructed int!
+int f();    // ‚ú?This is a function DECLARATION, not a default-constructed int!
 
 // The variable 'f' doesn't exist‚Äîyou've declared a function instead.
-// f = 5;   // ‚úó Error: f is a function, not a variable
+// f = 5;   // ‚ú?Error: f is a function, not a variable
 ```
 
 **With Classes:**
@@ -575,9 +575,9 @@ int f();    // ‚úó This is a function DECLARATION, not a default-constructed int
 ```cpp
 class Timer {};
 
-Timer t();  // ‚úó Function t returning Timer, taking no arguments
-Timer t;    // ‚úì Default-constructed Timer object
-Timer t{};  // ‚úì Also default-constructed (brace init, clearer)
+Timer t();  // ‚ú?Function t returning Timer, taking no arguments
+Timer t;    // ‚ú?Default-constructed Timer object
+Timer t{};  // ‚ú?Also default-constructed (brace init, clearer)
 ```
 
 **Why It Happens:**
@@ -588,12 +588,12 @@ C++'s grammar tries to parse declarations as functions when possible. Anything t
 
 ```cpp
 // Unambiguous with braces
-int x{};                // ‚úì Variable x initialized to 0
-Timer t{};              // ‚úì Object t default-constructed
+int x{};                // ‚ú?Variable x initialized to 0
+Timer t{};              // ‚ú?Object t default-constructed
 
 // Also works with arguments
-Date d{today};          // ‚úì Clearly an object, not function
-vector<int> v{10};      // ‚úì Vector with one element (10)
+Date d{today};          // ‚ú?Clearly an object, not function
+vector<int> v{10};      // ‚ú?Vector with one element (10)
 ```
 
 ### 4.2.6 Initialization Best Practices
@@ -621,9 +621,9 @@ vector<int> scores{85, 90, 95}; // Container
 Point p{10, 20};                // Aggregate
 
 // Exception: auto type deduction
-auto x = 5;           // ‚úì x is int
+auto x = 5;           // ‚ú?x is int
 auto y{5};            // ‚ö†Ô∏è In C++11/14, y is std::initializer_list<int>!
-                      // ‚úì Fixed in C++17 (y is int)
+                      // ‚ú?Fixed in C++17 (y is int)
 
 // Exception: Container fill constructor
 vector<int> v(10, 5);  // 10 elements of 5: use ()
@@ -652,10 +652,10 @@ void func() {
     
     if (x > 5) {
         int y = 20;    // y only visible inside if block
-        cout << x;     // ‚úì OK: x is in outer scope
+        cout << x;     // ‚ú?OK: x is in outer scope
     }
     // y not available here
-    cout << y;         // ‚úó ERROR: y out of scope
+    cout << y;         // ‚ú?ERROR: y out of scope
 }
 // x not available here
 ```
@@ -817,7 +817,7 @@ automaticExample();  // New x=10 created and destroyed
 ```cpp
 int* badFunction() {
     int local = 10;
-    return &local;       // ‚úó DANGEROUS! Returns address of local variable
+    return &local;       // ‚ú?DANGEROUS! Returns address of local variable
 }                        // local is destroyed here‚Äîthe pointer is dangling
 
 int* ptr = badFunction();
@@ -940,14 +940,14 @@ void useArray() {
 // Memory leak example
 void leak() {
     int* p = new int(10);
-    // Forgot delete‚Äî4 bytes lost forever (per call)
+    // Forgot delete‚Ä? bytes lost forever (per call)
 }
 
 // Dangling pointer example
 int* dangling() {
     int* p = new int(10);
     delete p;           // Memory freed
-    return p;           // ‚úó Returns dangling pointer
+    return p;           // ‚ú?Returns dangling pointer
 }                       // Don't use the returned pointer!
 ```
 
@@ -1013,7 +1013,7 @@ const double pi = 3.14159;         // Known at compile time
 
 const int userInput = getInput();  // Runtime determined, but immutable
 
-maxSize = 200;                     // ‚úó Compile error!
+maxSize = 200;                     // ‚ú?Compile error!
 ```
 
 **const and Pointers:**
@@ -1026,12 +1026,8 @@ maxSize = 200;                     // ‚úó Compile error!
 
 ```cpp
 int a = 10, b = 20;
-const int* ptr1 = &a;        // Can reassign: ptr1 = &b; ‚úì
-                             // Cannot modify: *ptr1 = 30; ‚úó
-
-int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; ‚úó
-                             // Can modify: *ptr2 = 30; ‚úì
-
+const int* ptr1 = &a;        // Can reassign: ptr1 = &b; ‚ú?                             // Cannot modify: *ptr1 = 30; ‚ú?
+int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; ‚ú?                             // Can modify: *ptr2 = 30; ‚ú?
 const int* const ptr3 = &a;  // Both pointer and value are fixed
 ```
 
@@ -1044,12 +1040,12 @@ string getName() { return "Alice"; }
 
 void example() {
     const string& name = getName();   // Binds to temporary, extends its lifetime
-    // name = "Bob";                  // ‚úó ERROR: cannot modify through const reference
+    // name = "Bob";                  // ‚ú?ERROR: cannot modify through const reference
     
     int x = 10;
     const int& ref = x;               // ref cannot modify x
-    // ref = 20;                      // ‚úó ERROR
-    x = 20;                           // ‚úì OK: modify original directly
+    // ref = 20;                      // ‚ú?ERROR
+    x = 20;                           // ‚ú?OK: modify original directly
 }
 ```
 
@@ -1078,12 +1074,12 @@ for (const auto& num : numbers) {     // No copy, cannot modify
 `constexpr` requires the value to be known at **compile time**, usable for array sizes, template arguments, etc.
 
 ```cpp
-constexpr int maxSize = 100;           // ‚úì Compile-time constant
-constexpr int size = maxSize * 2;      // ‚úì Can be used in calculations
+constexpr int maxSize = 100;           // ‚ú?Compile-time constant
+constexpr int size = maxSize * 2;      // ‚ú?Can be used in calculations
 
-int arr[size];                         // ‚úì Can define array size
+int arr[size];                         // ‚ú?Can define array size
 
-constexpr int userVal = getInput();    // ‚úó Error! Must be compile-time computable
+constexpr int userVal = getInput();    // ‚ú?Error! Must be compile-time computable
 ```
 
 **constexpr Functions:**
@@ -1092,7 +1088,7 @@ constexpr int square(int x) {          // constexpr function
     return x * x;
 }
 
-constexpr int result = square(5);      // ‚úì Computed at compile time
+constexpr int result = square(5);      // ‚ú?Computed at compile time
 ```
 
 ### 4.4.3 const vs constexpr: When to Use?
@@ -1101,19 +1097,19 @@ constexpr int result = square(5);      // ‚úì Computed at compile time
 |---------|-------|-----------|
 | **Determined** | Compile or runtime | Compile time |
 | **Use Cases** | Prevent modification | Need compile-time constant |
-| **Array Size** | Not before C++11 | ‚úì Available |
-| **Template Args** | ‚úó Not available | ‚úì Available |
+| **Array Size** | Not before C++11 | ‚ú?Available |
+| **Template Args** | ‚ú?Not available | ‚ú?Available |
 | **Recommendation** | General constants | Prefer if possible |
 
 **Selection Guide:**
-- Value known at compile time ‚Üí Use `constexpr`
-- Value determined at runtime ‚Üí Use `const`
-- Just want to prevent modification ‚Üí Use `const`
+- Value known at compile time ‚Ü?Use `constexpr`
+- Value determined at runtime ‚Ü?Use `const`
+- Just want to prevent modification ‚Ü?Use `const`
 
 
 
-> **Continue Reading**: For advanced topics like `auto`, `decltype`, Structured Binding, and Variable Attributes, see [Chapter 15: Modern C++ Variable Features](15-modern-cpp-variables.md).
+> **Continue Reading**: For advanced topics like `auto`, `decltype`, Structured Binding, and Variable Attributes, see [Chapter 15: Modern C++ Variable Features](13-modern-cpp-variables.md).
 
 
 
-[‚Üê Previous: Code Standardization](03-code-standardization.md) | [Next: Operators ‚Üí](05-operators.md)
+[‚Ü?Previous: Code Standardization](03-code-standardization.md) | [Next: Operators ‚Üí](05-operators.md)

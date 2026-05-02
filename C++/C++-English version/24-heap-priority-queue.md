@@ -1,4 +1,4 @@
-[← Previous: Trees](25-trees.md) | [Next: Hash Tables →](27-hash-tables.md)
+[�?Previous: Trees](23-trees.md) | [Next: Hash Tables →](25-hash-tables.md)
 
 # 26 Heap and Priority Queue
 
@@ -30,7 +30,7 @@ Heaps are efficiently stored as arrays without explicit pointers:
 | i | Current node |
 | 2i + 1 | Left child |
 | 2i + 2 | Right child |
-| ⌊(i-1)/2⌋ | Parent |
+| �?i-1)/2�?| Parent |
 
 ```cpp
 // For node at index i:
@@ -518,4 +518,4 @@ private:
 - **Data compression**: Huffman coding
 - **External sorting**: k-way merge
 
-[← Previous: Trees](25-trees.md) | [Next: Hash Tables →](27-hash-tables.md)
+[�?Previous: Trees](23-trees.md) | [Next: Hash Tables →](25-hash-tables.md)

@@ -1,4 +1,4 @@
-[â† Previous: Sorting Algorithms](23-sorting-algorithms.md) | [Next: Trees â†’](25-trees.md)
+[â†?Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees â†’](23-trees.md)
 
 # 24 Recursion
 
@@ -42,11 +42,11 @@ int factorial(int n) {
 
 ```
 factorial(3)
-  â†’ factorial(2)
-      â†’ factorial(1)
-      â† returns 1
-  â† returns 2 * 1 = 2
-â† returns 3 * 2 = 6
+  â†?factorial(2)
+      â†?factorial(1)
+      â†?returns 1
+  â†?returns 2 * 1 = 2
+â†?returns 3 * 2 = 6
 ```
 
 ## 24.2 Recursion vs Iteration
@@ -383,4 +383,4 @@ returnType solve(problem) {
 }
 ```
 
-[â† Previous: Sorting Algorithms](23-sorting-algorithms.md) | [Next: Trees â†’](25-trees.md)
+[â†?Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees â†’](23-trees.md)

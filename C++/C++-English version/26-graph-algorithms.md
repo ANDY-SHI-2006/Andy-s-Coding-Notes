@@ -1,4 +1,4 @@
-[‚Üê Previous: Hash Tables](27-hash-tables.md) | [Return to Index](README.md)
+[‚Ü?Previous: Hash Tables](25-hash-tables.md) | [Return to Index](README.md)
 
 # 28 Graph Algorithms
 
@@ -625,4 +625,4 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 5. **Union-Find** for connectivity and MST problems
 6. **Topological sort** for dependency resolution
 
-[‚Üê Previous: Hash Tables](27-hash-tables.md) | [Return to Index](README.md)
+[‚Ü?Previous: Hash Tables](25-hash-tables.md) | [Return to Index](README.md)

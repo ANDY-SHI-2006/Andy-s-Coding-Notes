@@ -1,4 +1,4 @@
-[← Previous: Data Structures](16-data-structures.md) | [Next: Smart Pointers →](18-smart-pointers.md)
+[�?Previous: Data Structures](14-data-structures.md) | [Next: Smart Pointers →](16-smart-pointers.md)
 
 # 17 Exception Handling
 
@@ -184,4 +184,4 @@ public:
 
 > **Modern C++**: Use exceptions for error handling, but prefer RAII (smart pointers, etc.) to avoid needing explicit cleanup in catch blocks.
 
-[← Previous: Data Structures](16-data-structures.md) | [Next: Smart Pointers →](18-smart-pointers.md)
+[�?Previous: Data Structures](14-data-structures.md) | [Next: Smart Pointers →](16-smart-pointers.md)

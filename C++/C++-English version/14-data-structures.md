@@ -1,4 +1,4 @@
-[‚Üê Previous: Modern C++ Variables](15-modern-cpp-variables.md) | [Next: Exception Handling ‚Üí](17-exception-handling.md)
+[‚Ü?Previous: Modern C++ Variables](13-modern-cpp-variables.md) | [Next: Exception Handling ‚Üí](15-exception-handling.md)
 
 # 16 Data Structures
 
@@ -601,7 +601,7 @@ void List::remove(int index)
 
 ## 16.9 Variations of Linked List
 
-The linked list implementation shown above is known as a **singly linked list** ‚Äî each node has one pointer (a single link).
+The linked list implementation shown above is known as a **singly linked list** ‚Ä?each node has one pointer (a single link).
 
 Many other variations exist:
 
@@ -772,7 +772,7 @@ There is an extra node at the beginning of the list:
 head --> [dummy|*] --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
 ```
 
-> **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case ‚Äî no need for separate head-insertion or head-deletion logic.
+> **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case ‚Ä?no need for separate head-insertion or head-deletion logic.
 
 
 ## 16.10 Template List ADT
@@ -947,10 +947,10 @@ This section on List ADT implementations covers:
 
 | Aspect | Array-Based | Linked List-Based |
 |--------|-------------|-------------------|
-| **Retrieval** | O(1) ‚Äî direct access | O(n) ‚Äî must traverse |
-| **Insertion** | O(n) ‚Äî must shift | O(1) ‚Äî if position known |
-| **Deletion** | O(n) ‚Äî must shift | O(1) ‚Äî if position known |
-| **Size** | Fixed (MAXSIZE) | Dynamic ‚Äî grows as needed |
+| **Retrieval** | O(1) ‚Ä?direct access | O(n) ‚Ä?must traverse |
+| **Insertion** | O(n) ‚Ä?must shift | O(1) ‚Ä?if position known |
+| **Deletion** | O(n) ‚Ä?must shift | O(1) ‚Ä?if position known |
+| **Size** | Fixed (MAXSIZE) | Dynamic ‚Ä?grows as needed |
 | **Memory** | Contiguous, may waste space | Non-contiguous, extra pointer overhead |
 
 > **Key Takeaway:** Choose array-based for fast random access and fixed-size collections. Choose linked list for dynamic collections with frequent insertions and deletions.
@@ -960,4 +960,4 @@ This section on List ADT implementations covers:
 
 
 
-[‚Üê Previous: Modern C++ Variables](15-modern-cpp-variables.md) | [Next: Exception Handling ‚Üí](17-exception-handling.md)
+[‚Ü?Previous: Modern C++ Variables](13-modern-cpp-variables.md) | [Next: Exception Handling ‚Üí](15-exception-handling.md)
