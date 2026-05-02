@@ -1450,7 +1450,7 @@ These algorithms work with iterators, so they can be used with:
 |-----------|-------------|---------|-----------------|
 | `sort(begin, end)` | Sort ascending | `sort(v.begin(), v.end())` | O(n log n) |
 | `sort(begin, end, comp)` | Sort with comparator | `sort(v.begin(), v.end(), greater<int>())` | O(n log n) |
-| `stable_sort(begin, end)` | Stable sort | `stable_sort(v.begin(), v.end())` | O(n logÂ² n) or O(n log n) |
+| `stable_sort(begin, end)` | Stable sort | `stable_sort(v.begin(), v.end())` | O(n log² n) or O(n log n) |
 | `partial_sort(begin, mid, end)` | Partial sort | `partial_sort(v.begin(), v.begin()+5, v.end())` | O(n log n) |
 | `nth_element(begin, nth, end)` | Partition at nth element | `nth_element(v.begin(), v.begin()+5, v.end())` | O(n) on average |
 
