@@ -1,4 +1,4 @@
-[← Previous: Functions](09-functions.md) | [Next: Data Structures →](16-data-structures.md) | [STL →](11-stl.md)
+[← Previous: Functions](09-functions.md) | [Next: STL →](11-stl.md)
 
 # 10 Object-Oriented Programming
 
@@ -449,4 +449,4 @@ The List ADT is a fundamental abstract data type that represents an ordered coll
 
 
 
-[← Previous: Functions](09-functions.md) | [Next: Data Structures →](16-data-structures.md) | [STL →](11-stl.md)
+[← Previous: Functions](09-functions.md) | [Next: STL →](11-stl.md)

@@ -1,4 +1,4 @@
-[← Previous: Code Standardization](03-code-standardization.md) | [Next: Modern C++ Variable Features →](15-modern-cpp-variables.md) | [Operators →](05-operators.md)
+[← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
 
 # 4 Variable Basics
 
@@ -1116,4 +1116,4 @@ constexpr int result = square(5);      // ✓ Computed at compile time
 
 
 
-[← Previous: Code Standardization](03-code-standardization.md) | [Next: Modern C++ Variable Features →](15-modern-cpp-variables.md) | [Operators →](05-operators.md)
+[← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)

@@ -1,4 +1,4 @@
-[← Previous: STL](11-stl.md)
+[← Previous: STL](11-stl.md) | [Next: Modern C++ Variable Features →](15-modern-cpp-variables.md)
 
 # 12 Advanced Topics
 
@@ -135,4 +135,4 @@ int main() {
 
 > **Recommendation:** Use references instead of pointers when possible - safer and cleaner syntax.
 
-[← Previous: STL](11-stl.md)
+[← Previous: STL](11-stl.md) | [Next: Modern C++ Variable Features →](15-modern-cpp-variables.md)

@@ -1,4 +1,4 @@
-[← Previous: Functions](09-functions.md) | [Next: STL →](11-stl.md)
+[← Previous: Modern C++ Variables](15-modern-cpp-variables.md) | [Next: Exception Handling →](17-exception-handling.md)
 
 # 16 Data Structures
 
@@ -960,4 +960,4 @@ This section on List ADT implementations covers:
 
 
 
-[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Exception Handling →](17-exception-handling.md)
+[← Previous: Modern C++ Variables](15-modern-cpp-variables.md) | [Next: Exception Handling →](17-exception-handling.md)
