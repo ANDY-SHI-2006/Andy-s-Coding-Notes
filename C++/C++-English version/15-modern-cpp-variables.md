@@ -1,3 +1,9 @@
+[← Previous: Variable Basics](04-variable-basics.md) | [Next: Exception Handling →](17-exception-handling.md)
+
+# 15 Modern C++ Variable Features
+
+This chapter covers advanced C++ variable features including type deduction, structured binding, and attributes.
+
 ## 15.1 Type Deduction and Aliases
 
 ### 15.1.1 auto (Type Deduction, C++11)
@@ -387,6 +393,4 @@ Variable Declaration
         └── Type is complex? ──► auto or structured binding (C++17)
 ```
 
-[← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
 
-# 15 Modern C++ Variable Features

@@ -1,3 +1,5 @@
+[← Previous: Functions](09-functions.md) | [Next: STL →](11-stl.md)
+
 # 16 Data Structures
 
 This chapter covers the implementation of fundamental data structures using C++.
@@ -956,4 +958,3 @@ This section on List ADT implementations covers:
 
 ---
 
-[← Previous: Functions](09-functions.md) | [Next: STL →](11-stl.md)
