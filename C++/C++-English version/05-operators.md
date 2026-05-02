@@ -1,4 +1,4 @@
-[�?Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
+[�?Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
 
 # 5 Operators
 
@@ -746,13 +746,13 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 | Expression | C++ | Note |
 |------------|-----|------|
 | xâ?| ✗No `^` or `**` | Unlike Python (`**`) or math notation |
-| aÂ² | `a * a` | Use repeated multiplication for small exponents |
+| a² | `a * a` | Use repeated multiplication for small exponents |
 | aâ?| `pow(a, n)` | Use <cmath> library for variable exponents |
 
 **Method 1: Repeated Multiplication**
 ```cpp
-int square = a * a;           // aÂ²
-int cube = a * a * a;         // aÂ³
+int square = a * a;           // a²
+int cube = a * a * a;         // a³
 int fourth = a * a * a * a;   // aâ?
 ```
 
@@ -764,7 +764,7 @@ double result = pow(x, 4);  // xâ?
 
 | Method | Speed | Use Case |
 |--------|-------|----------|
-| `a * a` | â?Fastest | Small fixed exponents: `aÂ²`, `aÂ³` |
+| `a * a` | ✓Fastest | Small fixed exponents: `a²`, `a³` |
 | `pow(a, b)` | ð¢ Slower | Variable/fractional exponents |
 
 ## 5.11 Operator Precedence and Associativity
@@ -854,4 +854,4 @@ int result = a * b + b / c * d;  // Also valid, but less clear
 
 ---
 
-[�?Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
+[�?Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)

@@ -65,7 +65,7 @@ int result = 2 ^ 3;  // Result: 1 (XOR), NOT 8!
 
 | Method | Speed | Use Case |
 |--------|-------|----------|
-| `a * a` | Fastest | Small fixed exponents: aÂ², aÂ³ |
+| `a * a` | Fastest | Small fixed exponents: a², a³ |
 | `pow(a, b)` | Slower | Variable/fractional exponents |
 
 ### 9.1.1.4 Trigonometric Functions
