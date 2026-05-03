@@ -109,16 +109,16 @@ void func() {
 
 Storage class specifiers control linkage, storage duration, and initialization of variables.
 
-| Specifier | Effect | Typical Use |
-|-----------|--------|-------------|
-| `static` | Internal linkage OR static storage duration | Hide global, persist local |
-| `extern` | External linkage declaration | Share across files |
-| `auto` (C++11) | Type deduction | Let compiler infer type |
-| `thread_local` (C++11) | Thread-local storage duration | Thread-specific data |
-| `mutable` | Modifiable even in const objects | Cache, lazy evaluation |
-| `volatile` | Tell compiler "Don't optimize" | Hardware registers |
-| `inline` (C++17) | Allow definition in header | Header-only libraries |
-| `register` | *Hint for register storage* | *Deprecated (C++17)* |
+| Specifier              | Effect                                      | Typical Use                |
+| ---------------------- | ------------------------------------------- | -------------------------- |
+| `static`               | Internal linkage OR static storage duration | Hide global, persist local |
+| `extern`               | External linkage declaration                | Share across files         |
+| `auto` (C++11)         | Type deduction                              | Let compiler infer type    |
+| `thread_local` (C++11) | Thread-local storage duration               | Thread-specific data       |
+| `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     |
+| `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         |
+| `inline` (C++17)       | Allow definition in header                  | Header-only libraries      |
+| `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       |
 
 #### 4.1.4.1 static: Two Different Meanings
 
@@ -261,15 +261,8 @@ while (sensorValue == 0) {  // Compiler won't optimize this away
 | `thread_local` | Per-thread data | Data shared between threads | C++11 |
 | `mutable` | Cache, lazy evaluation | Data that affects logical state | Active |
 | `volatile` | Hardware registers, signal handlers | Thread synchronization | Active |
-
-| `static` | Internal linkage, persistent locals | Thread safety (use mutexes) |
-| `extern` | Share across files | Header definitions |
-| `auto` | Type deduction | Storage class |
-| `thread_local` | Per-thread data | Data shared between threads |
-| `mutable` | Cache, lazy evaluation | Data that affects logical state |
-| `volatile` | Hardware registers, signal handlers | Thread synchronization |
-| `inline` | Header definition | See [4.1.5](#415-inline-variables-c17) |
-| `register` | *No effect* | *Removed in C++17* |
+| `inline` | Header definition | See [4.1.5](#415-inline-variables-c17) | C++17 |
+| `register` | *No effect* | *Removed in C++17* | *Obsolete* |
 
 ### 4.1.5 Inline Variables (C++17)
 
