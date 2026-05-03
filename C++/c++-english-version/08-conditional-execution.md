@@ -143,11 +143,11 @@ if (isWeekend || isHoliday) {
 **Truth Table for `||`:**
 
 | A     | B     | A \|\| B |
-| ----- | ----- | ---------------------------------------- |
-| true  | true  | true                                     |
-| true  | false | true                                     |
-| false | true  | true                                     |
-| false | false | false                                    |
+| ----- | ----- | -------- |
+| true  | true  | true     |
+| true  | false | true     |
+| false | true  | true     |
+| false | false | false    |
 
 #### 8.1.2.4 Summary of Logical Operators
 
@@ -155,7 +155,7 @@ if (isWeekend || isHoliday) {
 | ------------------------------------ | ----------- | ------------------------------------ | -------------------------------------------------------- |
 | `!`                                  | Logical NOT | Negates the expression               | `!true` → `false`                                        |
 | `&&`                                 | Logical AND | True if both operands are true       | `true && false` → `false`                                |
-| `\|\|`                                | Logical OR  | True if at least one operand is true | `true \|\| false` → `true`                                |
+| \|\|                                | Logical OR  | True if at least one operand is true | true \|\| false → `true`                                |
 
 > **Key Points:**
 > - Logical operators can also be used within conditions.
@@ -163,13 +163,13 @@ if (isWeekend || isHoliday) {
 
 ### 8.1.3 Operator Precedence
 
-| Precedence | Operators                                        |
-| ---------- | ------------------------------------------------ |
-| Highest    | `!` (logical NOT)                                |
-|            | Relational: <`, <=`, `>, `>=`                 |
-|            | Equality: `==`, `!=`                             |
-|            | Logical AND: `&&`                                |
-| Lowest     | Logical OR: `\|\|`                                |
+| Precedence | Operators                     |
+| ---------- | ----------------------------- |
+| Highest    | `!` (logical NOT)             |
+|            | Relational: <`, <=`, `>, `>=` |
+|            | Equality: `==`, `!=`          |
+|            | Logical AND: `&&`             |
+| Lowest     | Logical OR: \|\|            |
 
 
 **Recommendation:** Use parentheses to make complex conditions clear:
