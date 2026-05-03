@@ -117,6 +117,8 @@ Storage class specifiers control linkage, storage duration, and initialization o
 | `thread_local` (C++11) | Thread-local storage duration | Thread-specific data |
 | `mutable` | Modifiable even in const objects | Cache, lazy evaluation |
 | `volatile` | Tell compiler "Don't optimize" | Hardware registers |
+| `inline` (C++17) | Allow definition in header | Header-only libraries |
+| `register` | *Hint for register storage* | *Deprecated (C++17)* |
 
 #### 4.1.4.1 static: Two Different Meanings
 
@@ -266,6 +268,8 @@ while (sensorValue == 0) {  // Compiler won't optimize this away
 | `thread_local` | Per-thread data | Data shared between threads |
 | `mutable` | Cache, lazy evaluation | Data that affects logical state |
 | `volatile` | Hardware registers, signal handlers | Thread synchronization |
+| `inline` | Header definition | See [4.1.5](#415-inline-variables-c17) |
+| `register` | *No effect* | *Removed in C++17* |
 
 ### 4.1.5 Inline Variables (C++17)
 
