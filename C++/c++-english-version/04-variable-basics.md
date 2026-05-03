@@ -155,12 +155,13 @@ extern void internal_helper();         // ❌ Link error: not found
 **Use Case:** Hide implementation details to avoid name collisions in large projects.
 
 > **Modern C++ Note:** Prefer **anonymous namespaces** over file-level `static` for internal linkage:
-> ```cpp
-> namespace {  // Anonymous namespace
->     int helper_count = 0;  // Automatically has internal linkage
->     void internal_helper() { }
-> }
-> ```
+
+```cpp
+namespace {  // Anonymous namespace
+    int helper_count = 0;  // Automatically has internal linkage
+    void internal_helper() { }
+}
+```
 
 **Meaning 2: Static Storage Duration (Function-Level `static`)**
 
