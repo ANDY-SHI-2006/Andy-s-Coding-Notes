@@ -142,7 +142,7 @@ if (isWeekend || isHoliday) {
 
 **Truth Table for `||`:**
 
-| A     | B     | A ![[Pasted image 20260328141407.png]] B |
+| A     | B     | A \|\| B |
 | ----- | ----- | ---------------------------------------- |
 | true  | true  | true                                     |
 | true  | false | true                                     |
@@ -153,9 +153,9 @@ if (isWeekend || isHoliday) {
 
 | Operator                             | Name        | Description                          | Example                                                  |
 | ------------------------------------ | ----------- | ------------------------------------ | -------------------------------------------------------- |
-| `!`                                  | Logical NOT | Negates the expression               | `!true` â?`false`                                        |
-| `&&`                                 | Logical AND | True if both operands are true       | `true && false` â?`false`                                |
-| ![[Pasted image 20260328141639.png]] | Logical OR  | True if at least one operand is true | true ![[Pasted image 20260328141649.png]] false â?`true` |
+| `!`                                  | Logical NOT | Negates the expression               | `!true` → `false`                                        |
+| `&&`                                 | Logical AND | True if both operands are true       | `true && false` → `false`                                |
+| `\|\|`                                | Logical OR  | True if at least one operand is true | `true \|\| false` → `true`                                |
 
 > **Key Points:**
 > - Logical operators can also be used within conditions.
@@ -169,7 +169,7 @@ if (isWeekend || isHoliday) {
 |            | Relational: <`, <=`, `>, `>=`                 |
 |            | Equality: `==`, `!=`                             |
 |            | Logical AND: `&&`                                |
-| Lowest     | Logical OR: ![[Pasted image 20260328141744.png]] |
+| Lowest     | Logical OR: `\|\|`                                |
 
 
 **Recommendation:** Use parentheses to make complex conditions clear:
