@@ -1,0 +1,159 @@
+[← Previous: Functions](07-functions.md) | [Next: Closures and Decorators →](09-closures-and-decorators.md)
+
+# 8 Advanced Functions
+
+## 8.1 Lambda Anonymous Functions
+
+| Feature | Description |
+|---------|-------------|
+| Syntax | `lambda params: expression` |
+| Limitation | Single expression only, no statements |
+| Use case | Short, throwaway functions |
+
+```python
+# Basic lambda
+square = lambda x: x ** 2
+square(5)                   # 25
+
+# Common use: as argument
+pairs = [(1, 'one'), (2, 'two'), (3, 'three')]
+pairs.sort(key=lambda x: x[1])  # Sort by second element
+
+# With map/filter
+list(map(lambda x: x * 2, [1, 2, 3]))      # [2, 4, 6]
+list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
+```
+
+**Note:** Lambda doesn't improve performance; use `def` for complex logic.
+
+## 8.2 Higher-Order Functions
+
+### 8.2.1 Introduction
+
+**Higher-Order Function:** Takes function as argument or returns function.
+
+| Built-in HOF | Purpose |
+|-------------|---------|
+| `map()` | Apply function to each element |
+| `filter()` | Select elements matching condition |
+| `sorted()` | Sort with custom key |
+
+### 8.2.2 `map()`
+
+| Feature | Description |
+|---------|-------------|
+| Syntax | `map(func, iterable)` |
+| Returns | Iterator with transformed elements |
+| Output | `list()` to convert to list |
+
+```python
+# Convert strings to integers
+nums = ["1", "2", "3"]
+list(map(int, nums))        # [1, 2, 3]
+
+# Transform with lambda
+list(map(lambda x: x ** 2, [1, 2, 3]))  # [1, 4, 9]
+```
+
+### 8.2.3 `filter()`
+
+| Feature | Description |
+|---------|-------------|
+| Syntax | `filter(func, iterable)` |
+| Returns | Iterator with elements where func returns True |
+| Output | `list()` to convert to list |
+
+```python
+# Filter even numbers
+nums = [1, 2, 3, 4, 5, 6]
+list(filter(lambda x: x % 2 == 0, nums))  # [2, 4, 6]
+
+# Filter with condition
+users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 17}]
+list(filter(lambda u: u["age"] >= 18, users))
+```
+
+### 8.2.4 `sorted()` with Key
+
+| Feature | Description |
+|---------|-------------|
+| Syntax | `sorted(iterable, key=None, reverse=False)` |
+| Returns | New sorted list (original unchanged) |
+| `key` | Function to extract comparison key |
+
+```python
+nums = [3, 1, 4, 1, 5]
+sorted(nums)                        # [1, 1, 3, 4, 5]
+sorted(nums, reverse=True)          # [5, 4, 3, 1, 1]
+
+# Sort by key function
+words = ["banana", "pie", "Washington"]
+sorted(words, key=len)              # ['pie', 'banana', 'Washington']
+
+# Sort by object attribute
+users = [{"name": "Bob", "age": 30}, {"name": "Alice", "age": 25}]
+sorted(users, key=lambda x: x["age"])  # Alice first
+```
+
+**Note:** For basic sorting syntax and comparison with `.sort()`, see [5.10 `sorted()` vs `.sort()`](05-sequences-and-slicing.md#510-sorted-vs-sort).
+
+## 8.3 Iterators
+
+| Method | Description |
+|--------|-------------|
+| `__iter__()` | Returns iterator object |
+| `__next__()` | Returns next element; raises `StopIteration` when done |
+| `iter(obj)` | Built-in equivalent to `__iter__()` |
+| `next(obj)` | Built-in equivalent to `__next__()` |
+
+```python
+lst = [1, 2, 3]
+it = iter(lst)              # Create iterator
+
+next(it)                    # 1
+next(it)                    # 2
+next(it)                    # 3
+# next(it)                  # StopIteration exception
+
+# for loop uses iterator internally
+for item in lst:            # Calls iter(), then next() repeatedly
+    print(item)
+```
+
+**Iterable vs Iterator:**
+- **Iterable:** Has `__iter__()` (can be looped multiple times)
+- **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
+
+## 8.4 Generators
+
+| Feature | Description |
+|---------|-------------|
+| Definition | Function with `yield` or generator expression |
+| Behavior | Lazy evaluation, produces values on demand |
+| Memory | Efficient for large/infinite sequences |
+
+```python
+# Generator function
+def countdown(n):
+    while n > 0:
+        yield n             # Pause and return value
+        n -= 1
+
+for num in countdown(5):    # 5, 4, 3, 2, 1
+    print(num)
+
+# Generator expression (like list comprehension with parentheses)
+gen = (x ** 2 for x in range(1000000))  # Doesn't store all values
+
+# Infinite sequence
+def fibonacci():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+
+fib = fibonacci()
+[next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
+```
+
+[← Previous: Functions](07-functions.md) | [Next: Closures and Decorators →](09-closures-and-decorators.md)

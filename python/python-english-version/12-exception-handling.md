@@ -1,0 +1,173 @@
+[← Previous: Object-Oriented Programming](11-object-oriented-programming.md)
+
+# 12 Exception Handling
+
+## 12.1 Common Exceptions
+
+| Exception | Cause |
+|-----------|-------|
+| `SyntaxError` | Invalid Python syntax |
+| `NameError` | Undefined variable |
+| `TypeError` | Operation on incompatible type |
+| `ValueError` | Invalid value for operation |
+| `IndexError` | List index out of range |
+| `KeyError` | Dictionary key not found |
+| `ZeroDivisionError` | Division by zero |
+| `FileNotFoundError` | File doesn't exist |
+| `AttributeError` | Attribute doesn't exist |
+
+```python
+# Common exceptions
+def demo_exceptions():
+    # ValueError
+    int("abc")                  # Invalid literal
+
+    # IndexError
+    [1, 2, 3][10]               # Index out of range
+
+    # KeyError
+    {"a": 1}["b"]               # Key not found
+
+    # TypeError
+    "1" + 2                     # Can't add str and int
+```
+
+## 12.2 Exception Hierarchy
+
+Python exceptions form a class hierarchy. Catching a parent class catches all its subclasses.
+
+```
+BaseException
+ ├── SystemExit
+ ├── KeyboardInterrupt
+ └── Exception
+      ├── ArithmeticError
+      │    └── ZeroDivisionError
+      ├── LookupError
+      │    ├── IndexError
+      │    └── KeyError
+      ├── TypeError
+      ├── ValueError
+      ├── AttributeError
+      └── FileNotFoundError
+```
+
+**Best Practice:** Catch the most specific exception possible.
+
+## 12.3 Exception Handling Syntax
+
+| Syntax | Purpose |
+|--------|---------|
+| `try` | Code that might raise exception |
+| `except` | Handle specific exception |
+| `except Exception as e` | Catch exception with details |
+| `else` | Execute if no exception |
+| `finally` | Always execute (cleanup) |
+
+```python
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+except Exception as e:
+    print(f"Error: {e}")
+else:
+    print(f"Result: {result}")  # Only if no exception
+finally:
+    print("Cleanup code")       # Always runs
+
+# Catch multiple exceptions
+try:
+    value = int(input("Enter number: "))
+except (ValueError, TypeError):
+    print("Invalid input")
+```
+
+## 12.4 Best Practices
+
+### 12.4.1 Be Specific
+
+```python
+# Bad - catches everything including SystemExit and KeyboardInterrupt
+try:
+    risky_operation()
+except:                     # Bare except - dangerous!
+    pass
+
+# Good - catch expected exceptions only
+try:
+    risky_operation()
+except ValueError as e:
+    print(f"Invalid value: {e}")
+except FileNotFoundError:
+    print("File missing")
+```
+
+### 12.4.2 Don't Silence Exceptions Blindly
+
+```python
+# Bad - hides bugs
+try:
+    process_data()
+except:
+    pass                    # Bug goes unnoticed!
+
+# Good - log or handle meaningfully
+try:
+    process_data()
+except ValueError as e:
+    logger.error(f"Data error: {e}")
+    raise                   # Re-raise if caller should know
+```
+
+## 12.5 `raise`
+
+| Feature | Description |
+|---------|-------------|
+| `raise Exception()` | Raise specific exception |
+| `raise` | Re-raise current exception |
+| Custom message | `raise ValueError("message")` |
+
+```python
+def withdraw(balance, amount):
+    if amount > balance:
+        raise ValueError("Insufficient funds")
+    if amount <= 0:
+        raise ValueError("Amount must be positive")
+    return balance - amount
+
+# Custom exception
+class ValidationError(Exception):
+    pass
+
+def validate_age(age):
+    if age < 0:
+        raise ValidationError("Age cannot be negative")
+```
+
+## 12.6 `assert`
+
+| Feature | Description |
+|---------|-------------|
+| Purpose | Debug check (should never happen) |
+| Syntax | `assert condition, "message"` |
+| Effect | Raises `AssertionError` if condition is False |
+| Disabled | With `python -O` (optimized mode) |
+
+```python
+def divide(a, b):
+    assert b != 0, "Divisor cannot be zero"     # Debug check
+    return a / b
+
+# Use for internal logic validation
+class Stack:
+    def pop(self):
+        assert len(self.items) > 0, "Stack is empty"  # Should not happen if used correctly
+        return self.items.pop()
+```
+
+**Assertion vs Exception:**
+- **Assertion**: Internal bug check, can be disabled
+- **Exception**: Expected error cases, always handled
+
+[← Previous: Object-Oriented Programming](11-object-oriented-programming.md)
