@@ -161,126 +161,141 @@ Format specifiers follow a consistent syntax inside the `{}`:
 
 Each component is optional. Order matters only in that `fill` must precede `align`.
 
-#### 3.3.2.1 Fill and Alignment
+#### 3.3.2.1 Fill
 
-**Fill** is any single character placed before **align** to pad empty space. **Align** controls positioning within the field width.
-
-| Component | Syntax | Meaning |
-|-----------|--------|---------|
-| Fill | any char + align | Padding character (e.g., `0>`, `#^`) |
-| Align | `<` | Left-align |
-| | `>` | Right-align |
-| | `^` | Center |
-| | `=` | Pad between sign and digits (numbers only) |
+Any single character placed before `align` to pad empty space. Must be paired with an alignment specifier.
 
 ```python
-# Fill + align
-f"{'hi':0>5}"     # '000hi'        (0-pad, right, width 5)
-f"{'hi':#^6}"     # '#hi###'       (#-pad, center, width 6)
+f"{'hi':0>5}"     # '000hi'   (0 fills the empty space)
+f"{'hi':#^6}"     # '#hi###'  (# fills the empty space)
+```
 
-# Align without fill
+#### 3.3.2.2 Alignment
+
+Controls positioning within the field width. Align is always preceded by a width value.
+
+| Symbol | Meaning |
+|--------|---------|
+| `<` | Left-align |
+| `>` | Right-align |
+| `^` | Center |
+| `=` | Pad between sign and digits (numbers only) |
+
+```python
 f"{'hi':>10}"     # '        hi'   (right, width 10)
 f"{'hi':<10}"     # 'hi        '   (left, width 10)
 f"{'hi':^10}"     # '    hi    '   (center, width 10)
-
-# = for numbers
 f"{-42:0=10}"     # '-000000042'   (pad between sign and digits)
 ```
 
-#### 3.3.2.2 Sign and Alternate Form
+#### 3.3.2.3 Sign
 
-**Sign** controls how positive and negative numbers are displayed. **`#`** adds a prefix for alternate number representations. **`0`** is shorthand for zero-fill after the sign.
+Controls how positive and negative numbers are displayed.
 
-| Component | Symbol | Meaning |
-|-----------|--------|---------|
-| Sign | `+` | Always show sign (`+3`, `-3`) |
-| | `-` | Show sign only for negatives (default) |
-| | ` ` | Space for positive, minus for negative |
-| Alternate | `#` | Add prefix: `0b`/`0o`/`0x` for binary/octal/hex |
-| Zero fill | `0` | Equivalent to `0=` (pad with zeros after sign) |
+| Symbol | Meaning |
+|--------|---------|
+| `+` | Always show sign (`+3`, `-3`) |
+| `-` | Show sign only for negatives (default) |
+| ` ` | Space for positive, minus for negative |
 
 ```python
-# Sign
 f"{3:+d}"         # '+3'
 f"{3: d}"         # ' 3'
 f"{-3:d}"         # '-3'
+```
 
-# Alternate form with #
+#### 3.3.2.4 Alternate Form (`#`)
+
+Adds a prefix for alternate number representations.
+
+```python
 f"{255:#b}"       # '0b11111111'
 f"{255:#o}"       # '0o377'
 f"{255:#x}"       # '0xff'
 f"{255:#X}"       # '0XFF'
-
-# 0 as shorthand for zero-fill
-f"{42:05d}"        # '00042'
 ```
 
-#### 3.3.2.3 Width and Grouping
+#### 3.3.2.5 Zero Fill
 
-**Width** sets the minimum field size. **Grouping** inserts separators between digits.
-
-| Component | Symbol | Meaning |
-|-----------|--------|---------|
-| Width | number | Minimum total field width |
-| Grouping | `,` | Comma as thousands separator |
-| | `_` | Underscore as thousands separator |
+`0` before width is shorthand for `0=` — pad with zeros after the sign.
 
 ```python
-# Width
-f"{'hi':10}"      # 'hi        '   (width 10, default left-align)
-f"{42:10d}"       # '        42'   (numbers default right-align)
+f"{42:05d}"        # '00042'
+# Equivalent to
+f"{42:0=5d}"       # '00042'
+```
 
-# Grouping
+#### 3.3.2.6 Width
+
+Sets the minimum field size. If the value is shorter, padding is applied according to alignment.
+
+```python
+f"{'hi':10}"      # 'hi        '   (width 10, strings default left-align)
+f"{42:10d}"       # '        42'   (numbers default right-align)
+```
+
+#### 3.3.2.7 Grouping
+
+Inserts separators between digits for readability.
+
+| Symbol | Meaning |
+|--------|---------|
+| `,` | Comma as thousands separator |
+| `_` | Underscore as thousands separator |
+
+```python
 f"{1000000:,}"    # '1,000,000'
 f"{1000000:_}"    # '1_000,000'
 ```
 
-#### 3.3.2.4 Precision and Type
+#### 3.3.2.8 Precision
 
-**Precision** (`.n`) sets decimal places for numbers or max length for strings. **Type** declares the output format.
-
-| Component | Symbol | Meaning |
-|-----------|--------|---------|
-| Precision | `.n` | Decimal places (numbers); max length (strings) |
-| Type | `f` | Fixed-point float |
-| | `e` / `E` | Scientific notation |
-| | `%` | Percentage (multiplies by 100) |
-| | `d` | Integer (decimal) |
-| | `b` | Binary |
-| | `o` | Octal |
-| | `x` / `X` | Hexadecimal |
-| | `s` | String (default) |
+`.n` sets decimal places for numbers or maximum length for strings.
 
 ```python
-# Precision on numbers
+# Numbers
+f"{3.14159:.2f}"  # '3.14'
+
+# Strings (truncation)
+f"{'hello':.3}"   # 'hel'
+```
+
+#### 3.3.2.9 Type
+
+Declares the output format.
+
+| Symbol | Meaning |
+|--------|---------|
+| `f` | Fixed-point float |
+| `e` / `E` | Scientific notation |
+| `%` | Percentage (multiplies by 100) |
+| `d` | Integer (decimal) |
+| `b` | Binary |
+| `o` | Octal |
+| `x` / `X` | Hexadecimal |
+| `s` | String (default) |
+
+```python
 f"{3.14159:.2f}"  # '3.14'
 f"{3.14159:.2e}"  # '3.14e+00'
 f"{0.25:.1%}"     # '25.0%'
-
-# Precision on strings (truncation)
-f"{'hello':.3}"   # 'hel'
-
-# Type
 f"{255:b}"        # '11111111'
 f"{255:x}"        # 'ff'
 ```
 
-#### 3.3.2.5 Combining Components
+#### 3.3.2.10 Combining Components
 
 Build complex formats by concatenating components in the same order as the syntax template.
 
 ```python
 # [fill][align][width][.precision][type]
 f"{3.14159:0>10.2f}"   # '0000003.14'
-# 0 = fill, > = align, 10 = width, .2 = precision, f = type
 
 # [sign][#][width][grouping][.precision][type]
 f"{1234.5:+#12,.2f}"   # '   +1,234.50'
-# + = sign, # = alternate, 12 = width, , = grouping, .2 = precision, f = type
 
 # [fill][align][sign][width][type]
 f"{-42:*<+8x}"         # '-2a****'
-# * = fill, < = align, + = sign, 8 = width, x = hex type
 ```
 
 ### 3.3.3 `str.format()`
