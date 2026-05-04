@@ -149,7 +149,7 @@ The `static` keyword is one of the most confusing in C++ because it has **comple
 | **Initialized** | Program startup | First time execution reaches it |
 | **Destroyed** | Program exit | Program exit |
 
-**Meaning 1: Internal Linkage (File-Level `static`)**
+##### 4.1.5.1.1 Internal Linkage (File-Level `static`)
 
 When you declare a global variable or function as `static`, you tell the linker: "This name is private to this translation unit (file)."
 
@@ -169,9 +169,9 @@ extern int helper_count;               // ❌ Link error: not found
 extern void internal_helper();         // ❌ Link error: not found
 ```
 
-> **Modern C++ Note:** Prefer **anonymous namespaces** over file-level `static` for internal linkage.
+> **Modern C++ Note:** Prefer **anonymous namespaces** over file-level `static` for internal linkage. See [1.3.4 Unnamed Namespaces](../01-program-structure.md#134-unnamed-namespaces) for a detailed comparison.
 
-**Meaning 2: Static Storage Duration (Function-Level `static`)**
+##### 4.1.5.1.2 Static Storage Duration (Function-Level `static`)
 
 Inside a function, `static` changes the variable's lifetime. It's created **once** on first use and lives until program exit.
 
@@ -201,7 +201,7 @@ Database& get_database() {
 }
 ```
 
-**⚠️ Common Pitfalls**
+##### 4.1.5.1.3 Common Pitfalls
 
 1. **Thread Safety for Non-Initialization Access**
    While initialization is thread-safe, subsequent modifications are not:
@@ -215,10 +215,6 @@ Database& get_database() {
 2. **Static Initialization Order Fiasco (SIOF)**
    
    When global variables in different files depend on each other, initialization order is **undefined**. This can cause crashes or silent failures. See [4.1.6 SIOF](#416-static-initialization-order-fiasco-siof) for details.
-
-**Anonymous Namespace vs `static`**
-
-For hiding implementation details, you can use either file-level `static` or anonymous namespaces. See [1.3.4 Unnamed Namespaces](../01-program-structure.md#134-unnamed-namespaces) for a detailed comparison.
 
 **Summary Mnemonic:**
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
