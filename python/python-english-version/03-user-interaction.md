@@ -245,7 +245,7 @@ Inserts separators between digits for readability.
 
 ```python
 f"{1000000:,}"    # '1,000,000'
-f"{1000000:_}"    # '1_000,000'
+f"{1000000:_}"    # '1_000_000'
 ```
 
 #### 3.3.2.8 Precision
