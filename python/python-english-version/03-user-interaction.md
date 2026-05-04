@@ -355,7 +355,31 @@ print(format(value, spec))   # 3.14
 print(f"{value:.2f}")        # 3.14
 ```
 
-### 3.3.5 Comparison
+### 3.3.5 `%` Formatting (Legacy)
+
+The `%` operator is the original Python formatting style from C's `printf`. It is still found in legacy code but is **not recommended** for new projects.
+
+| Specifier | Type | Example |
+|-----------|------|---------|
+| `%s` | String | `"%s" % "hello"` → `'hello'` |
+| `%d` | Integer | `"%d" % 42` → `'42'` |
+| `%f` | Float | `"%f" % 3.14` → `'3.140000'` |
+| `%.2f` | Float with precision | `"%.2f" % 3.14` → `'3.14'` |
+| `%10s` | Width | `"%10s" % "hi"` → `'        hi'` |
+| `%%` | Literal `%` | `"100%%"` → `'100%'` |
+
+```python
+name = "Alice"
+age = 20
+print("My name is %s and I am %d years old." % (name, age))
+
+# Dictionary style
+print("Name: %(name)s, Age: %(age)d" % {"name": "Bob", "age": 25})
+```
+
+> **Not recommended for new code.** Use f-strings instead.
+
+### 3.3.6 Comparison
 
 | Method | Example | When to Use |
 |--------|---------|-------------|
