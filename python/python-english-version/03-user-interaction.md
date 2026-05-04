@@ -185,7 +185,15 @@ Controls positioning within the field width. Align is always preceded by a width
 | `^` | Center |
 | `=` | Pad between sign and digits (numbers only) |
 
+**Default alignment when width is specified:**
+- Strings default to **left-align** (`<`)
+- Numbers default to **right-align** (`>`)
+
 ```python
+f"{'hi':10}"      # 'hi        '   (string defaults to left)
+f"{42:10}"        # '        42'   (number defaults to right)
+
+# Explicit alignment
 f"{'hi':>10}"     # '        hi'   (right, width 10)
 f"{'hi':<10}"     # 'hi        '   (left, width 10)
 f"{'hi':^10}"     # '    hi    '   (center, width 10)
