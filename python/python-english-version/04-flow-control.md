@@ -6,7 +6,43 @@ Programs execute statements in a specific order. By default, Python runs code fr
 
 ## 4.1 Branching Structure
 
-### 4.1.1 Ternary Operator
+### 4.1.1 `if` / `elif` / `else`
+
+Execute code blocks conditionally. Python uses indentation to define block scope.
+
+```python
+age = 20
+
+if age >= 18:
+    print("Adult")
+elif age >= 13:
+    print("Teenager")
+else:
+    print("Child")
+```
+
+**Key Points:**
+- `elif` is short for "else if" — can chain multiple conditions
+- `else` is optional
+- Only the first matching branch executes
+
+```python
+# Multiple conditions with elif
+score = 85
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+elif score >= 60:
+    grade = "D"
+else:
+    grade = "F"
+```
+
+### 4.1.2 Ternary Operator
 
 A concise way to write simple if-else statements in one line.
 
@@ -29,7 +65,7 @@ status = "adult" if age >= 18 else "minor"
 
 **Use Case:** Best for simple conditional assignments. For complex logic, use standard if-else for readability.
 
-### 4.1.2 Single-line if Statement
+### 4.1.3 Single-line `if` Statement
 
 Python allows simple `if` statements to be written on a single line.
 
@@ -54,9 +90,64 @@ if x > 0: print("positive")
 
 **Note:** Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
 
+### 4.1.4 `match` / `case` (Structural Pattern Matching)
+
+Python 3.10+ feature for matching data structures against patterns.
+
+```python
+status = 200
+
+match status:
+    case 200:
+        print("OK")
+    case 404:
+        print("Not Found")
+    case 500:
+        print("Server Error")
+    case _:
+        print("Unknown status")
+```
+
+**Features:**
+- `case _:` acts as a wildcard (default case)
+- Can match lists, tuples, dictionaries by structure
+- Supports variable binding from matched values
+
+```python
+# Matching tuples
+point = (3, 4)
+
+match point:
+    case (0, 0):
+        print("Origin")
+    case (x, 0):
+        print(f"On x-axis at {x}")
+    case (0, y):
+        print(f"On y-axis at {y}")
+    case (x, y):
+        print(f"Point at ({x}, {y})")
+```
+
 ## 4.2 Loop Structures
 
 ### 4.2.1 `for` Loop
+
+Iterate over elements of an iterable (list, string, dictionary, etc.).
+
+```python
+# Iterate over a list
+fruits = ["apple", "banana", "cherry"]
+for fruit in fruits:
+    print(fruit)
+
+# Iterate over a string
+for char in "hello":
+    print(char)
+
+# Iterate over dictionary keys
+for key in {"a": 1, "b": 2}:
+    print(key)
+```
 
 **`range(start, stop, step)`:**
 - **start**: Starting value (inclusive). Default: 0
@@ -137,5 +228,22 @@ else:
 ```
 
 **Use Case:** Useful for search operations where you want to know if the item was not found.
+
+### 4.2.6 `pass` Statement
+
+A placeholder that does nothing. Used when a statement is syntactically required but no action is needed.
+
+```python
+# Placeholder for future implementation
+if condition:
+    pass  # TODO: handle this case
+
+# Empty class or function body
+class MyClass:
+    pass
+
+def my_function():
+    pass
+```
 
 [← Previous: User Interaction](03-user-interaction.md) | [Next: Sequences and Slicing →](05-sequences-and-slicing.md)
