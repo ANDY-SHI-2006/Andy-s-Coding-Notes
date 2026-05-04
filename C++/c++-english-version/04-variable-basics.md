@@ -353,17 +353,17 @@ Database& get_database() {
    // But if getLogger() accesses dbPort internally, chaos ensues!
    ```
 
-   #### Why SIOF is Dangerous
-   
-   | Aspect | Description |
-   |--------|-------------|
-   | **Undefined Behavior** | Reading uninitialized memory = nasal demons (anything can happen) |
-   | **Heisenbug** | May work in debug, fail in release; work on Monday, crash on Tuesday |
-   | **Platform Dependent** | Works on Linux with GCC, crashes on Windows with MSVC |
-   | **Silent Failure** | Might not crash, just produce wrong values silently |
-   | **Hard to Debug** | Crash happens at program start, debugger shows garbage values |
+#### Why SIOF is Dangerous
 
-   #### How to Detect SIOF
+| Aspect | Description |
+|--------|-------------|
+| **Undefined Behavior** | Reading uninitialized memory = nasal demons (anything can happen) |
+| **Heisenbug** | May work in debug, fail in release; work on Monday, crash on Tuesday |
+| **Platform Dependent** | Works on Linux with GCC, crashes on Windows with MSVC |
+| **Silent Failure** | Might not crash, just produce wrong values silently |
+| **Hard to Debug** | Crash happens at program start, debugger shows garbage values |
+
+#### How to Detect SIOF
    
    *Code Review Red Flags:*
    - Global variables initialized from `extern` variables
@@ -380,16 +380,16 @@ Database& get_database() {
    cppcheck --enable=all --std=c++17 *.cpp
    ```
 
-   #### Solution Comparison
-   
-   | Solution | When to Use | Pros | Cons |
-   |----------|-------------|------|------|
-   | **Function-local static** | Most cases | Lazy init, thread-safe (C++11), deterministic | Slight overhead on first call |
-   | **constexpr** | Compile-time constants | Zero runtime cost, guaranteed safe | Limited to compile-time computable values |
-   | **Refactoring** | Complex dependencies | Eliminates problem entirely | May require significant redesign |
-   | **Single translation unit** | Small projects | Deterministic order | Defeats purpose of separate compilation |
+#### Solution Comparison
 
-   #### Recommended Solution: Construct On First Use
+| Solution | When to Use | Pros | Cons |
+|----------|-------------|------|------|
+| **Function-local static** | Most cases | Lazy init, thread-safe (C++11), deterministic | Slight overhead on first call |
+| **constexpr** | Compile-time constants | Zero runtime cost, guaranteed safe | Limited to compile-time computable values |
+| **Refactoring** | Complex dependencies | Eliminates problem entirely | May require significant redesign |
+| **Single translation unit** | Small projects | Deterministic order | Defeats purpose of separate compilation |
+
+#### Recommended Solution: Construct On First Use
    
    The idiomatic C++ solution is to wrap globals in functions:
    
