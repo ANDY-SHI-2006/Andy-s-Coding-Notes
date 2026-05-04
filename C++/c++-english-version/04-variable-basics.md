@@ -514,28 +514,26 @@ DatabaseConnection& get_connection() {
 
 #### 4.1.5.5 mutable: Modifying in const Contexts
 
-**What it does**
 `mutable` allows a class member to be modified even when the containing object is `const`. It marks data as "logically const but physically modifiable."
 
-**Core Concept: Logical vs Physical Constness**
+| Aspect | Description |
+|--------|-------------|
+| **Purpose** | Modify members in const methods |
+| **Use case** | Caching, mutexes, instrumentation |
+| **Key concept** | Logical constness vs physical constness |
+
+##### 4.1.5.5.1 Core Concept: Logical vs Physical Constness
 
 ```cpp
 class Document {
     std::string content;
     mutable size_t hashCache = 0;        // Cache: doesn't affect logical state
-    mutable bool hashValid = false;      // Cache status
+    mutable bool hashValid = false;
     
 public:
-    void setContent(const std::string& c) {
-        content = c;
-        hashValid = false;  // Invalidate cache
-    }
-    
-    // getHash() is const because logically it doesn't change the document
     size_t getHash() const {
         if (!hashValid) {
-            // Physical modification, but logical constness preserved
-            hashCache = std::hash<std::string>{}(content);
+            hashCache = std::hash<std::string>{}(content);  // Modifies in const method!
             hashValid = true;
         }
         return hashCache;
@@ -546,79 +544,39 @@ const Document doc("Hello");
 doc.getHash();  // —Works: const object, but mutable members can change
 ```
 
-**Common Use Cases**
+##### 4.1.5.5.2 Common Use Cases
 
-1. **Lazy Evaluation / Caching**
-   ```cpp
-   class Image {
-       std::vector<Pixel> data;
-       mutable std::optional<Histogram> cachedHistogram;
-       
-   public:
-       Histogram getHistogram() const {
-           if (!cachedHistogram) {
-               cachedHistogram = computeHistogram(data);  // Expensive!
-           }
-           return *cachedHistogram;
-       }
-   };
-   ```
-
-2. **Thread-Safety (Mutex in const methods)**
-   ```cpp
-   class ThreadSafeCounter {
-       mutable std::mutex mtx;  // Mutex doesn't change logical state
-       int count = 0;
-       
-   public:
-       int get() const {
-           std::lock_guard<std::mutex> lock(mtx);  // Modifies mutex!
-           return count;
-       }
-   };
-   ```
-
-3. **Instrumentation / Debugging**
-   ```cpp
-   class Algorithm {
-       mutable int callCount = 0;  // For profiling only
-       
-   public:
-       Result compute() const {
-           ++callCount;  // Track how often this is called
-           // ... actual computation ...
-       }
-   };
-   ```
-
-**mutable vs const_cast: When to use which?**
-
-| Approach | Use When | Example |
-|----------|----------|---------|
-| `mutable` | Member is inherently cache/state data | Caching, mutexes, debug counters |
-| `const_cast` | External const-correctness issue | Calling legacy API, unit testing |
-
+**Lazy Evaluation / Caching**
 ```cpp
-// Using mutable (preferred for internal state)
-class Good {
-    mutable Cache cache;
+class Image {
+    std::vector<Pixel> data;
+    mutable std::optional<Histogram> cachedHistogram;
+    
 public:
-    Data get() const {
-        return cache.lookup(key);  // Clean, type-safe
-    }
-};
-
-// Using const_cast (discouraged, but sometimes necessary)
-class LegacyWrapper {
-    ExternalAPI* api;  // Not const-correct
-public:
-    void call() const {
-        const_cast<ExternalAPI*>(api)->doSomething();  // Hack!
+    Histogram getHistogram() const {
+        if (!cachedHistogram) {
+            cachedHistogram = computeHistogram(data);  // Expensive!
+        }
+        return *cachedHistogram;
     }
 };
 ```
 
-**⚠️ Pitfalls**
+**Thread-Safety (Mutex in const methods)**
+```cpp
+class ThreadSafeCounter {
+    mutable std::mutex mtx;  // Mutex doesn't change logical state
+    int count = 0;
+    
+public:
+    int get() const {
+        std::lock_guard<std::mutex> lock(mtx);  // Modifies mutex!
+        return count;
+    }
+};
+```
+
+##### 4.1.5.5.3 Common Pitfalls
 
 1. **Overuse breaks const-correctness**
    ```cpp
@@ -631,7 +589,7 @@ public:
    };
    ```
 
-2. **Thread safety with mutable**
+2. **Thread safety**
    ```cpp
    class UnsafeCache {
        mutable int cache = 0;  // —Not thread-safe!
@@ -642,7 +600,7 @@ public:
        }
    };
    
-   // Solution: mutable + mutex, or use std::atomic
+   // Solution: mutable + mutex
    class SafeCache {
        mutable std::mutex mtx;
        mutable int cache = 0;
@@ -655,23 +613,19 @@ public:
    };
    ```
 
-3. **Cache invalidation complexity**
-   ```cpp
-   class Complex {
-       mutable std::vector<Data> cache;
-       // Must carefully track when cache becomes invalid
-       // Multiple mutable members need synchronized invalidation
-   };
-   ```
+**mutable vs const_cast**
+
+| Use `mutable` | Use `const_cast` |
+|--------------|------------------|
+| Member is inherently cache/state | External const-correctness issue |
+| Caching, mutexes, debug counters | Calling legacy API, unit testing |
 
 **Best Practices**
 
 | Do | Don't |
 |----|-------|
-| Use for caches that don't affect equality | Use for actual object state |
-| Document why something is mutable | Make everything mutable "just in case" |
-| Consider thread safety with mutable | Assume mutable means "thread-safe" |
-| Keep mutable state isolated | Spread mutable dependencies across class |
+| Use for caches | Use for actual object state |
+| Document why | Make everything mutable |
 
 #### 4.1.5.6 volatile: Tell Compiler "Don't Optimize"
 
