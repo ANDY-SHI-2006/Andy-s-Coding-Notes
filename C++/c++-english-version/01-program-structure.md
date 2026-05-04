@@ -479,11 +479,11 @@ gl::init();  // Equivalent to graphics::rendering::opengl::init()
 
 An **unnamed namespace** (anonymous namespace) restricts visibility to the current translation unit (source file). It is the modern C++ replacement for `static` at global scope.
 
-#### Overview
+#### 1.3.4.1 Overview
 
 An anonymous namespace provides **internal linkage** to all its members, making them accessible only within the current translation unit (`.cpp` file).
 
-#### Syntax
+#### 1.3.4.2 Syntax
 
 ```cpp
 namespace {
@@ -498,7 +498,7 @@ static void helperFunction() { }
 // Must repeat 'static' on every declaration
 ```
 
-#### Comparison with the `static` Keyword
+#### 1.3.4.3 Comparison with the `static` Keyword
 
 | Feature | Anonymous Namespace | `static` Keyword |
 |---------|---------------------|------------------|
@@ -510,7 +510,7 @@ static void helperFunction() { }
 | **Code Clutter** | Low (one wrapper) | High (repetitive) |
 | **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
 
-#### Usage Guidelines
+#### 1.3.4.4 Usage Guidelines
 
 | Scenario | Recommendation | Example |
 |----------|---------------|---------|
@@ -520,7 +520,7 @@ static void helperFunction() { }
 | Hide a template | **Anonymous namespace** (only option) | `template<typename T> T max(T a, T b)` |
 | C compatibility required | Use `static` | C code or C++ code used by C |
 
-#### Practical Example
+#### 1.3.4.5 Practical Example
 
 ```cpp
 // math_utils.cpp
