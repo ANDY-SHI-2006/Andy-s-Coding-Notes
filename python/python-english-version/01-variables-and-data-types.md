@@ -78,42 +78,16 @@ def greet():
 
 ## 1.3 Variable Naming
 
-### 1.3.1 Meaningful Names
+Variable names should clearly describe their purpose. Avoid single-letter names except for loop counters.
 
-Variable names should clearly describe their purpose. Avoid single-letter names except for loop counters. For example, use `age = 18` instead of `a = 18`.
+| Convention | Format | Used For | Example |
+|------------|--------|----------|---------|
+| **snake_case** | All lowercase with underscores | Variables and functions | `student_age_info = 18` |
+| **PascalCase** | Capitalize first letter of each word | Class names | `class StudentAgeInfo:` |
+| **camelCase** | First word lowercase, rest capitalized | Not common in Python | `studentAgeInfo = 18` |
+| **UPPER_SNAKE_CASE** | All uppercase with underscores | Constants (by convention) | `MAX_RETRIES = 3` |
 
-### 1.3.2 PascalCase
-
-Capitalize the first letter of each word. This style is reserved for **class names**.
-
-```python
-class StudentAgeInfo:
-```
-
-### 1.3.3 snake_case
-
-Write all letters in lowercase with underscores between words. This is the **standard convention for Python variables and functions**.
-
-```python
-student_age_info = 18
-```
-
-### 1.3.4 camelCase
-
-Write the first word in lowercase and capitalize subsequent words. This style is not commonly used in Python; it is more typical in JavaScript.
-
-```python
-studentAgeInfo = 18
-```
-
-### 1.3.5 Constants
-
-Python has no `const` keyword. By convention, constants are written in `UPPER_SNAKE_CASE` to indicate that they should not be modified. This relies on programmer discipline, as the value remains mutable at runtime.
-
-```python
-MAX_RETRIES = 3
-PI = 3.14159
-```
+> **Note:** Python has no `const` keyword. `UPPER_SNAKE_CASE` indicates "do not modify" by programmer discipline; the value remains mutable at runtime.
 
 ## 1.4 Integer Type
 
