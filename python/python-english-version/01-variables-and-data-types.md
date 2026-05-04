@@ -113,9 +113,10 @@ y = 3.14E-2    # 3.14 × 10⁻² = 0.0314
 Floating-point arithmetic can produce unexpected results due to binary representation limitations. Use `round()` or `decimal.Decimal` for exact decimal arithmetic.
 
 > **Precision Trap:**
-> ```python
-> 0.1 + 0.2 == 0.3    # False (0.30000000000000004)
-> ```
+
+```python
+0.1 + 0.2 == 0.3    # False (0.30000000000000004)
+```
 
 ## 1.6 String Type
 
