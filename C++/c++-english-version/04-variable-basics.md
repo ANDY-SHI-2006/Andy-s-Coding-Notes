@@ -322,11 +322,7 @@ extern "C" void cpp_for_c(int x) {  // C code can call this by name "cpp_for_c"
 | Use `extern "C"` for C interoperability | Mix C and C++ linkage carelessly |
 | Consider `inline` variables (C++17) instead of `extern` + separate definition | Rely on `extern` for constants (use `constexpr` instead) |
 
----
-
 #### 4.1.5.3 auto: From Storage Class to Type Deduction (C++11)
-
-**⚠️ Historical Context (Important!)**
 
 `auto` is a rare keyword that **completely changed its meaning** in C++11:
 
@@ -335,42 +331,31 @@ extern "C" void cpp_for_c(int x) {  // C code can call this by name "cpp_for_c"
 | C++98/03 | "Automatic storage duration" (local variable default) | Redundant, never used |
 | C++11+ | Type deduction from initializer | **Primary usage today** |
 
-In modern C++, forget the old meaning—`auto` is now about **letting the compiler figure out the type**.
+In modern C++, `auto` asks the compiler: "Look at the initializer, what type is it? Use that type."
 
-**What it does**
-`auto` asks the compiler: "Look at the initializer, what type is it? Use that type."
+| Feature | Description |
+|---------|-------------|
+| **Purpose** | Let compiler deduce type from initializer |
+| **Syntax** | `auto name = initializer;` |
+| **Benefit** | Shorter code, type-safe, maintainable |
+| **Pitfall** | May lose const/ref qualifiers, unexpected types |
 
-**Basic Examples**
+##### 4.1.5.3.1 Basic Usage
+
 ```cpp
 auto i = 42;                    // int
 auto d = 3.14159;               // double
 auto s = "hello";               // const char*
 auto v = std::vector<int>{1,2}; // std::vector<int>
+
+// Shorter code for complex types
+auto it = m.begin();  // vs std::map<std::string, std::vector<int>>::iterator it = m.begin();
+
+// Correctness: avoids type mismatches
+auto x = some_func();  // Always correct, no narrowing
 ```
 
-**Why use auto?**
-
-1. **Shorter code**
-   ```cpp
-   // Without auto (verbose and error-prone)
-   std::map<std::string, std::vector<int>>::iterator it = m.begin();
-   
-   // With auto (clean and maintainable)
-   auto it = m.begin();
-   ```
-
-2. **Correctness**: Avoids type mismatches
-   ```cpp
-   unsigned int x = some_func();  // Dangerous if func returns signed
-   auto x = some_func();          // Always correct, no narrowing
-   ```
-
-3. **Maintainability**: Type changes don't break code
-   ```cpp
-   auto x = get_value();  // If return type changes from int to long, code still works
-   ```
-
-**Advanced Features**
+##### 4.1.5.3.2 Advanced Features
 
 ```cpp
 // auto& for references (avoid copying)
@@ -384,18 +369,18 @@ auto* ptr = &x;               // ptr is int*, not int
 
 // Multiple variables (must be same type)
 auto a = 1, b = 2;            // OK, both int
-auto c = 1, d = 3.14;         // —ERROR: deduced types conflict (int vs double)
+auto c = 1, d = 3.14;         // —ERROR: deduced types conflict
 
 // auto with structured binding (C++17)
 auto [min, max] = std::minmax(3, 7);  // min=3, max=7
 ```
 
-**⚠️ Pitfalls**
+##### 4.1.5.3.3 Common Pitfalls
 
 1. **Unexpected type deductions**
    ```cpp
    auto x = {1, 2, 3};      // Surprise! x is std::initializer_list, not vector
-   auto y = 3.0f;           // y is float, not double (be careful with literals)
+   auto y = 3.0f;           // y is float, not double
    ```
 
 2. **Losing const/reference qualifiers**
@@ -403,39 +388,22 @@ auto [min, max] = std::minmax(3, 7);  // min=3, max=7
    const int& cref = 42;
    auto x = cref;           // —x is int (copy!), loses const&
    auto& y = cref;          // —y is const int& (correct)
-   
-   // Best practice: use const auto& for read-only access
-   const auto& safe = cref; // Always preserves constness, never copies
    ```
 
-3. **Hard to see type in complex code**
-   ```cpp
-   auto result = some_obscure_function();  // What type is result? Need IDE to tell you.
-   // Alternative: explicit type comment
-   auto result = some_obscure_function();  // Returns Future<shared_ptr<Response>>
-   ```
-
-4. **Proxy types causing unexpected behavior**
+3. **Proxy types causing unexpected behavior**
    ```cpp
    std::vector<bool> v = {true, false, true};
-   auto b = v[0];           // —Surprise! b is std::vector<bool>::reference, not bool
-   auto&& b = v[0];         // —Correct way to handle proxy types
+   auto b = v[0];           // —Surprise! b is vector<bool>::reference, not bool
+   auto&& b = v[0];         // —Correct way
    ```
 
 **Best Practices**
 
-| Guideline | Example | Rationale |
-|-----------|---------|-----------|
-| Use auto when type is obvious | `auto it = v.begin()` | Iterator types are verbose |
-| Use explicit type when clarity matters | `int count = 0` | Shows intent (it's a counter) |
-| Use `const auto&` for read-only iteration | `for (const auto& e : container)` | Avoids copies, preserves const |
-| Use `auto*` for pointer semantics | `auto* ptr = get_ptr()` | Makes pointer nature explicit |
-| Avoid auto for numeric code needing specific precision | `double x = 1.5` | auto might give float |
-
-**When NOT to use auto**
-- When the type is critical to understanding (e.g., `bool is_valid` vs `auto is_valid`)
-- In interfaces/APIs where explicit types document contracts
-- When you need to ensure a specific type (e.g., `int64_t` for fixed-width arithmetic)
+| Do | Don't |
+|----|-------|
+| Use `auto` when type is obvious | Use when type is critical to understanding |
+| Use `const auto&` for read-only | Use when you need specific precision |
+| Use `auto*` for pointer semantics | Use in interfaces where explicit types document |
 
 > 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#4151-auto-type-deduction-c11)
 
@@ -566,8 +534,6 @@ void demo() {
 | Thread-specific RNGs | When you need to track global state |
 | Connection pooling | When memory is extremely constrained |
 | Avoiding locks on thread-private data | When thread count is very high |
-
----
 
 #### 4.1.5.5 mutable: Modifying in const Contexts
 
@@ -729,8 +695,6 @@ public:
 | Document why something is mutable | Make everything mutable "just in case" |
 | Consider thread safety with mutable | Assume mutable means "thread-safe" |
 | Keep mutable state isolated | Spread mutable dependencies across class |
-
----
 
 #### 4.1.5.6 volatile: Tell Compiler "Don't Optimize"
 
