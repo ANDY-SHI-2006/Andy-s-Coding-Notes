@@ -111,13 +111,13 @@ Storage class specifiers control linkage, storage duration, and initialization o
 
 | Specifier              | Effect                                      | Typical Use                | Details                                             |
 | ---------------------- | ------------------------------------------- | -------------------------- | --------------------------------------------------- |
-| `static`               | Internal linkage OR static storage duration | Hide global, persist local | [4.5.1](#451-static-two-different-meanings)         |
-| `extern`               | External linkage declaration                | Share across files         | [4.5.2](#452-extern-sharing-variables-across-files) |
-| `auto` (C++11)         | Type deduction                              | Let compiler infer type    | [4.5.3](#453-auto-type-deduction)                   |
-| `thread_local` (C++11) | Thread-local storage duration               | Thread-specific data       | [4.5.4](#454-thread-local-thread-specific-storage)  |
-| `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.5.5](#455-mutable-modifying-in-const-contexts)   |
-| `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.5.6](#456-volatile-tell-compiler-dont-optimize)  |
-| `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.5.7](#457-inline-variables)                      |
+| `static`               | Internal linkage OR static storage duration | Hide global, persist local | [4.1.6.1](#4161-static-two-different-meanings)         |
+| `extern`               | External linkage declaration                | Share across files         | [4.1.6.2](#4162-extern-sharing-variables-across-files) |
+| `auto` (C++11)         | Type deduction                              | Let compiler infer type    | [4.1.6.3](#4163-auto-type-deduction)                   |
+| `thread_local` (C++11) | Thread-local storage duration               | Thread-specific data       | [4.1.6.4](#4164-thread-local-thread-specific-storage)  |
+| `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.1.6.5](#4165-mutable-modifying-in-const-contexts)   |
+| `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.1.6.6](#4166-volatile-tell-compiler-dont-optimize)  |
+| `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.1.6.7](#4167-inline-variables)                      |
 | `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | — |
 
 **Quick Overview:**
@@ -131,9 +131,9 @@ Storage class specifiers control linkage, storage duration, and initialization o
 - **`inline`** — Allow variable definition in headers (C++17+)
 - **`register`** — Deprecated hint for register storage (C++17 removed)
 
-> 📚 **For detailed coverage** of each specifier, including examples, pitfalls, and best practices, see [4.5 Storage Class Specifiers in Depth](#45-storage-class-specifiers-in-depth).
+> 📚 **For detailed coverage** of each specifier, including examples, pitfalls, and best practices, see [4.1.6 Storage Class Specifiers in Depth](#416-storage-class-specifiers-in-depth).
 
-### 4.1.6 Anonymous Namespaces
+### 4.1.5 Anonymous Namespaces
 
 **What it is**
 
@@ -227,9 +227,9 @@ void resetBuffer() {
 }
 ```
 
-## 4.2 Variable Definition and Initialization
+## 4.3 Variable Definition and Initialization
 
-### 4.2.1 The Problem: Uninitialized Variables
+### 4.3.1 The Problem: Uninitialized Variables
 
 In C++, variables are not automatically initialized. Using an uninitialized variable leads to **undefined behavior**—the program may crash, produce garbage values, or appear to work correctly (making bugs hard to detect).
 
@@ -244,7 +244,7 @@ void dangerous() {
 
 > ⚠️ **Critical Rule**: Always initialize variables before use. Modern C++ makes this easy with uniform initialization.
 
-### 4.2.2 Evolution of C++ Initialization
+### 4.3.2 Evolution of C++ Initialization
 
 C++ initialization syntax has evolved significantly:
 
@@ -256,9 +256,9 @@ C++ initialization syntax has evolved significantly:
 
 **C++11's Brace Initialization** (also called *Uniform Initialization* or *List Initialization*) solves multiple problems with a single, consistent syntax.
 
-### 4.2.3 The Four Initialization Methods
+### 4.3.3 The Four Initialization Methods
 
-#### 4.2.3.1 Copy Initialization
+#### 4.3.3.1 Copy Initialization
 
 Uses the `=` operator. The value is "copied" into the variable.
 
@@ -276,7 +276,7 @@ double d = 3.14;
 int x = 3.14;           // -?Compiles, x = 3 (data loss, silent!)
 ```
 
-#### 4.2.3.2 Direct Initialization
+#### 4.3.3.2 Direct Initialization
 
 Uses parentheses `()`. Calls the constructor directly.
 
@@ -300,7 +300,7 @@ Date d();   // -?C++ parses this as "function d returning Date"
 Date d;     // -?This works for default construction
 ```
 
-#### 4.2.3.3 Brace Initialization (C++11, Recommended)
+#### 4.3.3.3 Brace Initialization (C++11, Recommended)
 
 Uses braces `{}`. This is the **modern C++ standard** for initialization.
 
@@ -377,7 +377,7 @@ vector<int> v2{10, 5};   // 2 elements: {10, 5}
 // {} calls the initializer_list constructor with elements {10, 5}
 ```
 
-#### 4.2.3.4 Aggregate Initialization (C++11/14/17)
+#### 4.3.3.4 Aggregate Initialization (C++11/14/17)
 
 For arrays and simple structures (aggregates), braces can initialize all members:
 
@@ -408,7 +408,7 @@ struct Config {
 Config cfg{.width = 1920, .height = 1080, .fullscreen = true};  // C++17
 ```
 
-### 4.2.4 Deep Dive: Narrowing Conversions
+### 4.3.4 Deep Dive: Narrowing Conversions
 
 A **narrowing conversion** is one that may lose information:
 
@@ -438,7 +438,7 @@ void example() {
 }
 ```
 
-### 4.2.5 Deep Dive: Most Vexing Parse
+### 4.3.5 Deep Dive: Most Vexing Parse
 
 The "Most Vexing Parse" is a syntax ambiguity in C++ where something that looks like a variable definition is parsed as a function declaration.
 
@@ -479,7 +479,7 @@ Date d{today};          // -?Clearly an object, not function
 vector<int> v{10};      // -?Vector with one element (10)
 ```
 
-### 4.2.6 Initialization Best Practices
+### 4.3.6 Initialization Best Practices
 
 | Scenario | C++98 Style | Modern C++ Style | Recommendation |
 |----------|-------------|------------------|----------------|
@@ -517,15 +517,15 @@ vector<int> v{10, 5};  // 2 elements: use {}
 
 > **Use brace initialization `{}` by default.** It prevents narrowing, eliminates ambiguity, and provides a consistent syntax across all types. Switch to `()` only when you specifically need the fill constructor behavior for containers.
 
-## 4.3 Variable Scope, Lifetime, and Visibility
+## 4.4 Variable Scope, Lifetime, and Visibility
 
 Variables have **scope** (where visible), **lifetime** (when created/destroyed), and **visibility rules** that determine how names are resolved.
 
-### 4.3.1 Scope and Visibility
+### 4.4.1 Scope and Visibility
 
 Scope determines where a variable can be accessed. C++ has several scope types:
 
-#### 4.3.1.1 Block Scope (Local)
+#### 4.4.1.1 Block Scope (Local)
 
 Variables declared inside a block `{}` are only visible within that block.
 
@@ -543,7 +543,7 @@ void func() {
 // x not available here
 ```
 
-#### 4.3.1.2 Namespace Scope
+#### 4.4.1.2 Namespace Scope
 
 Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
 
@@ -564,7 +564,7 @@ using namespace math;
 double y = pi;
 ```
 
-#### 4.3.1.4 Class Scope
+#### 4.4.1.4 Class Scope
 
 Members of a class have class scope and are accessed via the class instance or scope resolution operator.
 
@@ -583,7 +583,7 @@ public:
 int Counter::totalCount = 0;  // Definition outside class
 ```
 
-#### 4.3.1.5 Global (File) Scope
+#### 4.4.1.5 Global (File) Scope
 
 Variables declared outside all functions and classes have global scope, visible throughout the translation unit.
 
@@ -599,7 +599,7 @@ namespace {
 }
 ```
 
-### 4.3.2 Variable Shadowing (Name Hiding)
+### 4.4.2 Variable Shadowing (Name Hiding)
 
 When an inner scope declares a variable with the same name as an outer scope, the inner variable **shadows** (hides) the outer one.
 
@@ -656,13 +656,13 @@ void setValue(int value) {     // Parameter shadows global
 }
 ```
 
-### 4.3.3 Lifetime and Storage Duration
+### 4.4.3 Lifetime and Storage Duration
 
 Lifetime determines when variables are created and destroyed. While **scope** defines where a variable is visible, **lifetime** defines how long it exists in memory. They are related but distinct concepts.
 
 > **Key Insight**: A variable can be out of scope (not visible) but still alive (not destroyed), as seen with `static` local variables.
 
-#### 4.3.3.1 Overview of Storage Durations
+#### 4.4.3.1 Overview of Storage Durations
 
 C++ defines three fundamental storage durations:
 
@@ -672,7 +672,7 @@ C++ defines three fundamental storage durations:
 | **Static** | Data Segment | Program start | Program end | Global, `static` variables |
 | **Dynamic** | Heap | `new` called | `delete` called | Heap objects |
 
-#### 4.3.3.2 Automatic Storage Duration
+#### 4.4.3.2 Automatic Storage Duration
 
 Variables with automatic storage duration are created when execution enters their scope and destroyed when execution exits.
 
@@ -709,7 +709,7 @@ int* ptr = badFunction();
 
 > **Rule**: Never return pointers or references to automatic (local) variables.
 
-#### 4.3.3.3 Static Storage Duration
+#### 4.4.3.3 Static Storage Duration
 
 Variables with static storage duration exist for the entire program execution.
 
@@ -772,7 +772,7 @@ void func() {
 | Initialization | Before main() | On first function call |
 | Best Practice | Minimize use | Preferred for internal state |
 
-#### 4.3.3.4 Dynamic Storage Duration
+#### 4.4.3.4 Dynamic Storage Duration
 
 Variables with dynamic storage duration are created and destroyed under explicit programmer control.
 
@@ -862,7 +862,7 @@ void sharedExample() {
 
 > **Recommendation**: Prefer `std::unique_ptr` for exclusive ownership and `std::shared_ptr` for shared ownership. Raw pointers (`new`/`delete`) should be rare in modern code.
 
-#### 4.3.3.5 Lifetime Summary and Best Practices
+#### 4.4.3.5 Lifetime Summary and Best Practices
 
 **Quick Selection Guide:**
 
@@ -882,11 +882,11 @@ void sharedExample() {
 4. **Avoid Global Static**: Minimize global variables to reduce coupling and side effects
 5. **Never Return Dangling References**: Always ensure returned pointers/references point to valid memory
 
-## 4.4 Constants: const and constexpr
+## 4.5 Constants: const and constexpr
 
 Constants are variables whose values cannot be modified.
 
-### 4.4.1 const (Runtime Constant)
+### 4.5.1 const (Runtime Constant)
 
 `const` means the value cannot be changed after initialization.
 
@@ -952,7 +952,7 @@ for (const auto& num : numbers) {     // No copy, cannot modify
 
 **Key Insight**: Prefer `const T&` over `T` for large read-only parameters.
 
-### 4.4.2 constexpr (Compile-Time Constant, C++11)
+### 4.5.2 constexpr (Compile-Time Constant, C++11)
 
 `constexpr` requires the value to be known at **compile time**, usable for array sizes, template arguments, etc.
 
@@ -974,7 +974,7 @@ constexpr int square(int x) {          // constexpr function
 constexpr int result = square(5);      // -?Computed at compile time
 ```
 
-### 4.4.3 const vs constexpr: When to Use?
+### 4.5.3 const vs constexpr: When to Use?
 
 | Feature | const | constexpr |
 |---------|-------|-----------|
@@ -989,11 +989,11 @@ constexpr int result = square(5);      // -?Computed at compile time
 - Value determined at runtime -?Use `const`
 - Just want to prevent modification -?Use `const`
 
-## 4.5 Storage Class Specifiers in Depth
+## 4.1.6 Storage Class Specifiers in Depth
 
 This section provides detailed coverage of C++ storage class specifiers, including usage patterns, pitfalls, and best practices. For a quick reference, see [4.1.4 Storage Class Specifiers Overview](#414-storage-class-specifiers).
 
-### 4.5.1 static: Two Different Meanings
+### 4.1.6.1 static: Two Different Meanings
 
 The `static` keyword is one of the most confusing in C++ because it has **completely different meanings** depending on where you use it:
 
@@ -1231,7 +1231,7 @@ Database& get_database() {
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
 - **Local `static`** = "Remember forever" (persist between calls)
 
-### 4.5.2 extern: Sharing Variables Across Files
+### 4.1.6.2 extern: Sharing Variables Across Files
 
 **What it does**
 The `extern` keyword declares a variable or function that is defined in another translation unit. It tells the compiler: "This exists somewhere else—don't allocate storage for it here."
@@ -1336,7 +1336,7 @@ extern "C" void cpp_for_c(int x) {  // C code can call this by name "cpp_for_c"
 
 ---
 
-### 4.5.3 auto: From Storage Class to Type Deduction (C++11)
+### 4.1.6.3 auto: From Storage Class to Type Deduction (C++11)
 
 **⚠️ Historical Context (Important!)**
 
@@ -1449,9 +1449,9 @@ auto [min, max] = std::minmax(3, 7);  // min=3, max=7
 - In interfaces/APIs where explicit types document contracts
 - When you need to ensure a specific type (e.g., `int64_t` for fixed-width arithmetic)
 
-> 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#451-auto-type-deduction-c11)
+> 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#4161-auto-type-deduction-c11)
 
-### 4.5.4 thread_local: Thread-Specific Storage (C++11)
+### 4.1.6.4 thread_local: Thread-Specific Storage (C++11)
 
 **What it does**
 `thread_local` gives each thread its own separate instance of a variable. Like each thread gets its own "copy" that other threads cannot see or modify.
@@ -1581,7 +1581,7 @@ void demo() {
 
 ---
 
-### 4.5.5 mutable: Modifying in const Contexts
+### 4.1.6.5 mutable: Modifying in const Contexts
 
 **What it does**
 `mutable` allows a class member to be modified even when the containing object is `const`. It marks data as "logically const but physically modifiable."
@@ -1744,7 +1744,7 @@ public:
 
 ---
 
-### 4.5.6 volatile: Tell Compiler "Don't Optimize"
+### 4.1.6.6 volatile: Tell Compiler "Don't Optimize"
 
 **What it does**
 `volatile` tells the compiler that a variable's value may change at any time by external factors (hardware, OS, signal handlers), so it should not optimize away reads or writes.
@@ -1900,7 +1900,7 @@ Is variable modified by hardware/OS/signals?
 
 
 
-### 4.5.7 Inline Variables (C++17)
+### 4.1.6.7 Inline Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
 
