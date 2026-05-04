@@ -56,7 +56,9 @@ print("Loading...", end="", flush=True)
 
 ## 3.2 `input()` Function
 
-Reads a line from the user as a **string**. Optional prompt message. Must convert to numeric types manually.
+### 3.2.1 Basic Input
+
+Reads a line from the user as a **string**. The trailing newline is stripped. Optional prompt message. Must convert to numeric types manually.
 
 ```python
 # Basic input
@@ -71,7 +73,7 @@ print(f"Next year you will be {age + 1}")
 height = float(input("Enter your height (m): "))
 ```
 
-### 3.2.1 Input Validation
+### 3.2.2 Input Validation
 
 `input()` always returns a string. Always validate before converting to avoid crashes.
 
@@ -96,7 +98,7 @@ except EOFError:
     print("Input closed")
 ```
 
-### 3.2.2 Secure Input with `getpass`
+### 3.2.3 Secure Input with `getpass`
 
 Use `getpass.getpass()` for password or sensitive input. Characters are not echoed to the terminal.
 
@@ -105,6 +107,38 @@ from getpass import getpass
 
 password = getpass("Enter password: ")
 # Characters typed are hidden
+```
+
+### 3.2.4 Reading Multiple Lines
+
+Read input until EOF, or read the entire stream at once.
+
+```python
+# Read line by line until EOF
+lines = []
+while True:
+    try:
+        line = input()
+    except EOFError:
+        break
+    lines.append(line)
+
+# Read entire input at once
+import sys
+data = sys.stdin.read()
+```
+
+### 3.2.5 Safe Parsing with `ast.literal_eval`
+
+> **Never use `eval()` on untrusted input.** `eval()` executes arbitrary code and is a severe security risk.
+
+```python
+# DANGEROUS — do not use
+result = eval(input())  # User can input malicious code
+
+# Safer alternative
+import ast
+value = ast.literal_eval(input())  # Only parses literals
 ```
 
 ## 3.3 String Formatting
