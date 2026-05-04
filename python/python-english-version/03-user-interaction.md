@@ -206,13 +206,28 @@ f"{-3:d}"         # '-3'
 
 #### 3.3.2.4 Alternate Form (`#`)
 
-Adds a prefix for alternate number representations.
+Changes the default output format to an alternate representation.
+
+| Used with | Effect | Example |
+|-----------|--------|---------|
+| `b` | Prefix `0b` | `f"{255:#b}"` → `'0b11111111'` |
+| `o` | Prefix `0o` | `f"{255:#o}"` → `'0o377'` |
+| `x` | Prefix `0x` | `f"{255:#x}"` → `'0xff'` |
+| `X` | Prefix `0X` | `f"{255:#X}"` → `'0XFF'` |
+| `f` / `F` | Always show decimal point | `f"{1.0:#f}"` → `'1.000000'` |
+| `e` / `E` | Always show decimal point | `f"{1.0:#e}"` → `'1.000000e+00'` |
+| `g` / `G` | Keep trailing zeros | `f"{1.0:#g}"` → `'1.00000'` |
 
 ```python
+# Integer prefixes
 f"{255:#b}"       # '0b11111111'
 f"{255:#o}"       # '0o377'
 f"{255:#x}"       # '0xff'
-f"{255:#X}"       # '0XFF'
+
+# Float: force decimal point display
+f"{1.0:f}"         # '1.000000'  (default also shows it)
+f"{1.0:g}"         # '1'         (default removes it)
+f"{1.0:#g}"        # '1.00000'   (# keeps trailing zeros)
 ```
 
 #### 3.3.2.5 Zero Fill
