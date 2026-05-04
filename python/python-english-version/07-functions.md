@@ -206,7 +206,39 @@ user: dict[str, int] = {"age": 20}
 
 **Note:** Python remains dynamically typed. Type hints are checked by external tools (like `mypy`), not at runtime.
 
-## 7.9 Advanced Usage
+### Advanced Type Annotations
+
+Import from the `typing` module for complex type declarations.
+
+```python
+from typing import Optional, Union, Callable, List
+
+# Optional: value or None
+def greet(name: Optional[str] = None) -> str:
+    return f"Hello, {name or 'Guest'}"
+
+# Union: multiple accepted types
+def add(a: Union[int, float], b: Union[int, float]) -> float:
+    return a + b
+
+# Callable: function as parameter
+def apply(func: Callable[[int], int], value: int) -> int:
+    return func(value)
+```
+
+## 7.9 `__main__` Guard
+
+Code inside `if __name__ == "__main__":` only runs when the file is executed directly, not when it is imported as a module.
+
+```python
+def main():
+    print("Running directly")
+
+if __name__ == "__main__":
+    main()
+```
+
+## 7.10 Advanced Usage
 
 Functions in Python are first-class objects:
 

@@ -99,17 +99,17 @@ name = user_input or "Anonymous"
 
 ## 2.4 Assignment Operators
 
-| Operator | Example | Equivalent to |
-|----------|---------|---------------|
-| `=` | `x = 5` | `x = 5` |
-| `+=` | `x += 3` | `x = x + 3` |
-| `-=` | `x -= 3` | `x = x - 3` |
-| `*=` | `x *= 3` | `x = x * 3` |
-| `/=` | `x /= 3` | `x = x / 3` |
-| `//=` | `x //= 3` | `x = x // 3` |
-| `%=` | `x %= 3` | `x = x % 3` |
-| `**=` | `x **= 3` | `x = x ** 3` |
-| `:=` | `if (n := len(s)) > 5` | Expression assignment (Python 3.8+) |
+| Operator | Example                | Equivalent to                       |
+| -------- | ---------------------- | ----------------------------------- |
+| `=`      | `x = 5`                | `x = 5`                             |
+| `+=`     | `x += 3`               | `x = x + 3`                         |
+| `-=`     | `x -= 3`               | `x = x - 3`                         |
+| `*=`     | `x *= 3`               | `x = x * 3`                         |
+| `/=`     | `x /= 3`               | `x = x / 3`                         |
+| `//=`    | `x //= 3`              | `x = x // 3`                        |
+| `%=`     | `x %= 3`               | `x = x % 3`                         |
+| `**=`    | `x **= 3`              | `x = x ** 3`                        |
+| `:=`     | `if (n := len(s)) > 5` | Expression assignment (Python 3.8+) |
 
 ```python
 count = 10
@@ -242,6 +242,8 @@ else:
 ## 2.10 Operator Overloading
 
 Define custom behavior for operators on user-defined classes using special (magic) methods.
+
+> **Note:** This section uses classes and `self`, which are covered in [Chapter 11: Object-Oriented Programming](11-object-oriented-programming.md). Return here after reading that chapter for deeper understanding.
 
 | Operator | Magic Method | Example Trigger |
 |----------|--------------|-----------------|

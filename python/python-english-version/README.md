@@ -22,6 +22,9 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 11. [Object-Oriented Programming](11-object-oriented-programming.md) — *Classes, inheritance, encapsulation, magic methods*
 12. [Exception Handling](12-exception-handling.md) — *try/except, raise, custom exceptions, assert*
 
+### Part 4: Development Essentials
+13. [Modules and Packages](13-modules-and-packages.md) — *import, pip, venv, standard library*
+
 ---
 
 ## Navigation
@@ -33,3 +36,4 @@ Each chapter contains navigation links at the top and bottom for easy browsing b
 - **Chapters 1-7**: Python Fundamentals
 - **Chapters 8-10**: Advanced Topics
 - **Chapters 11-12**: OOP & Robustness
+- **Chapter 13**: Development Essentials

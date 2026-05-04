@@ -1,3 +1,5 @@
+[Next: Operators →](02-operators.md)
+
 # 1 Variables and Data Types
 
 ## 1.1 Variables and Assignment

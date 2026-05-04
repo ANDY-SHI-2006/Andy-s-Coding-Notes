@@ -225,4 +225,40 @@ c.radius = 10           # Uses setter
 print(c.area)           # 314.159
 ```
 
+## 11.11 Duck Typing and Polymorphism
+
+Python uses **duck typing**: an object's fitness for use is determined by the presence of required methods/attributes, not by its type.
+
+```python
+class Dog:
+    def speak(self):
+        return "Woof!"
+
+class Cat:
+    def speak(self):
+        return "Meow!"
+
+def animal_sound(animal):
+    # No type check needed — any object with .speak() works
+    print(animal.speak())
+
+animal_sound(Dog())   # Woof!
+animal_sound(Cat())   # Meow!
+```
+
+### 11.11.1 Type Introspection
+
+| Function | Purpose |
+|----------|---------|
+| `isinstance(obj, type)` | Check if object is an instance of a type (supports inheritance) |
+| `issubclass(cls, type)` | Check if a class is a subclass of another |
+| `type(obj)` | Return the exact type of an object |
+
+```python
+d = Dog()
+isinstance(d, Dog)      # True
+isinstance(d, object)   # True (Dog inherits from object)
+issubclass(Dog, object) # True
+```
+
 [← Previous: File Operations](10-file-operations.md) | [Next: Exception Handling →](12-exception-handling.md)

@@ -401,6 +401,24 @@ print(t1 == t2)        # True (same values)
 | Mutable | `list`, `dict`, `set` | Yes | Stays same |
 | Immutable | `int`, `str`, `tuple`, `bool`, `float` | No | Changes (new object) |
 
+### 5.11.1 Shallow Copy vs Deep Copy
+
+`copy.copy()` creates a shallow copy (new container, but references to nested objects are shared). `copy.deepcopy()` creates a fully independent copy.
+
+```python
+import copy
+
+original = [[1, 2], [3, 4]]
+
+shallow = copy.copy(original)
+shallow[0][0] = 99
+print(original)  # [[99, 2], [3, 4]] — nested object shared!
+
+deep = copy.deepcopy(original)
+deep[0][0] = 100
+print(original)  # [[99, 2], [3, 4]] — original unchanged
+```
+
 ## 5.12 `enumerate()` and `zip()`
 
 ### 5.12.1 `enumerate()`

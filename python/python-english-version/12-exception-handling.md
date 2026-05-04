@@ -1,4 +1,4 @@
-[← Previous: Object-Oriented Programming](11-object-oriented-programming.md)
+[← Previous: Object-Oriented Programming](11-object-oriented-programming.md) | [Next: Modules and Packages →](13-modules-and-packages.md)
 
 # 12 Exception Handling
 
@@ -143,6 +143,17 @@ class ValidationError(Exception):
 def validate_age(age):
     if age < 0:
         raise ValidationError("Age cannot be negative")
+```
+
+### 12.5.1 Exception Chaining
+
+`raise ... from ...` attaches the original exception as the cause, preserving full traceback information.
+
+```python
+try:
+    int("not_a_number")
+except ValueError as e:
+    raise RuntimeError("Conversion failed") from e
 ```
 
 ## 12.6 `assert`
