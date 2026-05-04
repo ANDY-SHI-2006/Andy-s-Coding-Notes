@@ -222,10 +222,17 @@ Database& get_database() {
 
 #### 4.1.5.2 extern: Sharing Variables Across Files
 
-**What it does**
 The `extern` keyword declares a variable or function that is defined in another translation unit. It tells the compiler: "This exists somewhere else—don't allocate storage for it here."
 
-**Basic Usage: Variables**
+| Aspect | `extern` Declaration | Definition |
+|--------|---------------------|------------|
+| **Purpose** | Tell compiler "this exists elsewhere" | Actually create the variable/function |
+| **Storage** | No storage allocated | Storage allocated |
+| **Count** | Multiple files can declare | Exactly one file must define |
+| **Initializer** | ❌ Not allowed | ✅ Required (or default) |
+| **Example** | `extern int x;` | `int x = 42;` |
+
+##### 4.1.5.2.1 Basic Usage: Variables
 
 ```cpp
 // constants.cpp (single definition)
@@ -245,7 +252,7 @@ int main() {
 }
 ```
 
-**Basic Usage: Functions**
+##### 4.1.5.2.2 Basic Usage: Functions
 
 Functions have external linkage by default, so `extern` is optional but can improve clarity:
 
@@ -262,15 +269,7 @@ double square(double x) {        // Definition
 extern double square(double);    // Can also declare without parameter names
 ```
 
-**Critical Rules**
-
-| Rule | Explanation | Example |
-|------|-------------|---------|
-| No initialization | `extern` declarations cannot have initializers | `extern int x = 5;` —|
-| One definition | Only one translation unit can define the variable | `int x;` in exactly one .cpp file |
-| Multiple declarations | Any number of files can declare it | `extern int x;` in many files |
-
-**⚠️ Common Pitfalls**
+##### 4.1.5.2.3 Common Pitfalls
 
 1. **Accidental redefinition in headers**
    ```cpp
@@ -298,7 +297,7 @@ extern double square(double);    // Can also declare without parameter names
    int main() { return missing; }  // —Link error: undefined reference
    ```
 
-**Special Case: `extern "C"` (Name Mangling Control)**
+##### 4.1.5.2.4 Special Case: `extern "C"`
 
 When C++ code needs to interact with C code, use `extern "C"` to prevent C++ name mangling:
 
