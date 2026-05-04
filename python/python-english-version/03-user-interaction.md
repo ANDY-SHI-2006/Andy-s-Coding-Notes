@@ -168,6 +168,10 @@ Any single character placed before `align` to pad empty space. Must be paired wi
 ```python
 f"{'hi':0>5}"     # '000hi'   (0 fills the empty space)
 f"{'hi':#^6}"     # '#hi###'  (# fills the empty space)
+
+# Zero-fill shorthand for numbers
+f"{42:05d}"       # '00042'
+f"{42:0=5d}"      # '00042'   (equivalent explicit form)
 ```
 
 #### 3.3.2.2 Alignment
