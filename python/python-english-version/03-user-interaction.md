@@ -98,7 +98,19 @@ except EOFError:
     print("Input closed")
 ```
 
-### 3.2.3 Secure Input with `getpass`
+### 3.2.3 Default Value for Empty Input
+
+When the user presses Enter without typing anything, `input()` returns an empty string `""` (which is falsy). Use `or` to provide a fallback in one line.
+
+```python
+name = input("Name: ") or "Anonymous"
+print(f"Hello, {name}!")
+
+# Combined with strip
+command = input("> ").strip() or "help"
+```
+
+### 3.2.4 Secure Input with `getpass`
 
 Use `getpass.getpass()` for password or sensitive input. Characters are not echoed to the terminal.
 
@@ -109,7 +121,7 @@ password = getpass("Enter password: ")
 # Characters typed are hidden
 ```
 
-### 3.2.4 Safe Parsing with `ast.literal_eval`
+### 3.2.5 Safe Parsing with `ast.literal_eval`
 
 > **Never use `eval()` on untrusted input.** `eval()` executes arbitrary code and is a severe security risk.
 
