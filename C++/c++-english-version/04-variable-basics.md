@@ -227,769 +227,7 @@ void resetBuffer() {
 }
 ```
 
-## 4.3 Variable Definition and Initialization
-
-### 4.3.1 The Problem: Uninitialized Variables
-
-In C++, variables are not automatically initialized. Using an uninitialized variable leads to **undefined behavior**—the program may crash, produce garbage values, or appear to work correctly (making bugs hard to detect).
-
-```cpp
-void dangerous() {
-    int x;           // -?Uninitialized!
-    cout << x;       // Undefined behavior: could print 0, 12345, or crash
-    
-    int y = x + 5;   // Compiles, but result is meaningless
-}
-```
-
-> ⚠️ **Critical Rule**: Always initialize variables before use. Modern C++ makes this easy with uniform initialization.
-
-### 4.3.2 Evolution of C++ Initialization
-
-C++ initialization syntax has evolved significantly:
-
-| Era | Style | Example | Characteristics |
-|-----|-------|---------|-----------------|
-| **C++98** | Copy init | `int x = 5;` | Simple, but allows narrowing |
-| **C++98** | Direct init | `int x(5);` | Constructor-like, but has parsing issues |
-| **C++11** | Brace init | `int x{5};` | **Modern standard**—safe, uniform, preferred |
-
-**C++11's Brace Initialization** (also called *Uniform Initialization* or *List Initialization*) solves multiple problems with a single, consistent syntax.
-
-### 4.3.3 The Four Initialization Methods
-
-#### 4.3.3.1 Copy Initialization
-
-Uses the `=` operator. The value is "copied" into the variable.
-
-```cpp
-int a = 5;              // OK
-string s = "hello";     // Calls string(const char*)
-double d = 3.14;
-```
-
-**Limitations:**
-- Allows **narrowing conversions** without warning
-- Cannot use with `explicit` constructors (for classes)
-
-```cpp
-int x = 3.14;           // -?Compiles, x = 3 (data loss, silent!)
-```
-
-#### 4.3.3.2 Direct Initialization
-
-Uses parentheses `()`. Calls the constructor directly.
-
-```cpp
-int a(5);               // OK
-string s("hello");      // Direct constructor call
-vector<int> v(10, 5);   // 10 elements, all initialized to 5
-```
-
-**The "Most Vexing Parse" Problem:**
-
-Direct initialization can be ambiguous—C++ may interpret it as a function declaration instead of a variable definition!
-
-```cpp
-class Date { public: Date(); };
-
-// Ambiguity: variable or function declaration?
-Date d();   // -?C++ parses this as "function d returning Date"
-            // Not a default-constructed Date object!
-
-Date d;     // -?This works for default construction
-```
-
-#### 4.3.3.3 Brace Initialization (C++11, Recommended)
-
-Uses braces `{}`. This is the **modern C++ standard** for initialization.
-
-```cpp
-int a{5};               // Brace initialization
-string s{"hello"};      // Works for classes
-vector<int> v{1, 2, 3}; // Initialize with elements
-int b{};                // Empty braces = zero initialization (b = 0)
-```
-
-**Why Brace Initialization is Superior:**
-
-| Advantage | Explanation | Example |
-|-----------|-------------|---------|
-| **Prevents narrowing** | Compiler rejects conversions that lose data | `int x{3.14};` -?Error! |
-| **Uniform syntax** | Same syntax for all types (built-in, class, array, container) | `int x{5};` `string s{"hi"};` `vector<int> v{1,2,3};` |
-| **No ambiguity** | Cannot be parsed as function declaration | `Date d{};` -?Always an object |
-| **Zero initialization** | Empty braces `{}` initialize to zero/null | `int x{};` // x = 0 |
-
-**Narrowing Conversion Prevention (Compile-Time Safety):**
-
-```cpp
-// These will NOT compile with brace initialization:
-int a{3.14};            // -?double -?int loses precision
-int b{1000000000000};   // -?Exceeds int range  
-char c{1000};           // -?1000 exceeds char range (-128 to 127 or 0 to 255)
-unsigned d{-5};         // -?Negative to unsigned
-
-// These ARE allowed (no data loss):
-int e{3};               // -?int to int
-int f{static_cast<int>(3.14)};  // -?Explicit cast OK
-double g{3};            // -?int to double is safe (no loss)
-```
-
-> **Safety First**: Brace initialization catches bugs at compile time that copy/direct init would allow at runtime.
-
-**Solving the Most Vexing Parse:**
-
-```cpp
-class TimeKeeper {
-public:
-    TimeKeeper();
-    TimeKeeper(const Date& d);
-};
-
-// Direct initialization - AMBIGUOUS
-TimeKeeper time(Date());  // -?Function declaration: "time is a function 
-                          //    taking a Date(*)() and returning TimeKeeper"
-
-// Brace initialization - UNAMBIGUOUS  
-TimeKeeper time{Date()};  // -?Clearly an object definition
-TimeKeeper time{Date{}};  // -?Nested braces, even clearer
-```
-
-**The std::initializer_list Mechanism:**
-
-When you use braces with multiple values for containers, C++ constructs a temporary `std::initializer_list`:
-
-```cpp
-vector<int> v{1, 2, 3};
-
-// Step 1: Compiler creates std::initializer_list<int>{1, 2, 3}
-// Step 2: Calls vector(std::initializer_list<int>) constructor
-// Result: v contains 1, 2, 3 (three elements)
-```
-
-**⚠️ Important Distinction: `()` vs `{}` for Containers:**
-
-```cpp
-vector<int> v1(10, 5);   // 10 elements, all set to 5: {5,5,5,5,5,5,5,5,5,5}
-vector<int> v2{10, 5};   // 2 elements: {10, 5}
-
-// () calls the "fill" constructor: vector(size_type n, const T& value)
-// {} calls the initializer_list constructor with elements {10, 5}
-```
-
-#### 4.3.3.4 Aggregate Initialization (C++11/14/17)
-
-For arrays and simple structures (aggregates), braces can initialize all members:
-
-```cpp
-// Array initialization
-int arr[]{1, 2, 3, 4};           // Size deduced as 4
-int arr2[5]{};                    // All 5 elements = 0
-
-// Struct initialization (C++11)
-struct Point { int x; int y; };
-Point p{10, 20};                  // p.x = 10, p.y = 20
-Point p2{};                       // p2.x = 0, p2.y = 0 (zero-initialized)
-
-// Nested structures
-struct Rect { Point topLeft; Point bottomRight; };
-Rect r{{0, 0}, {100, 200}};       // Nested brace initialization
-```
-
-**C++17 Enhanced: Designated Initializers** (from C)
-
-```cpp
-struct Config {
-    int width;
-    int height;
-    bool fullscreen;
-};
-
-Config cfg{.width = 1920, .height = 1080, .fullscreen = true};  // C++17
-```
-
-### 4.3.4 Deep Dive: Narrowing Conversions
-
-A **narrowing conversion** is one that may lose information:
-
-| From | To | Status | Reason |
-|------|-----|--------|--------|
-| `double` | `int` | -?Narrowing | Loses fractional part |
-| `int` | `char` | -?Narrowing | May overflow |
-| `long long` | `int` | -?Narrowing | May overflow on 32-bit systems |
-| `int` | `unsigned` | -?(if negative) | Negative values wrap around |
-| `int` | `double` | -?OK | No data loss |
-| `char` | `int` | -?OK | No data loss |
-
-**Brace initialization enforces this at compile time:**
-
-```cpp
-void example() {
-    double pi = 3.14159;
-    
-    // Copy init - silent data loss
-    int rounded1 = pi;      // -?Compiles, rounded1 = 3
-    
-    // Brace init - compile error!
-    int rounded2{pi};       // -?Error: type 'double' cannot be narrowed to 'int'
-    
-    // Explicit cast required (shows intent)
-    int rounded3{static_cast<int>(pi)};  // -?OK: explicit conversion
-}
-```
-
-### 4.3.5 Deep Dive: Most Vexing Parse
-
-The "Most Vexing Parse" is a syntax ambiguity in C++ where something that looks like a variable definition is parsed as a function declaration.
-
-**Classic Example:**
-
-```cpp
-// You want: a function object 'f' that takes no arguments and returns int
-// You write:
-int f();    // -?This is a function DECLARATION, not a default-constructed int!
-
-// The variable 'f' doesn't exist—you've declared a function instead.
-// f = 5;   // -?Error: f is a function, not a variable
-```
-
-**With Classes:**
-
-```cpp
-class Timer {};
-
-Timer t();  // -?Function t returning Timer, taking no arguments
-Timer t;    // -?Default-constructed Timer object
-Timer t{};  // -?Also default-constructed (brace init, clearer)
-```
-
-**Why It Happens:**
-
-C++'s grammar tries to parse declarations as functions when possible. Anything that can be interpreted as a function declaration, will be.
-
-**Brace Initialization Solution:**
-
-```cpp
-// Unambiguous with braces
-int x{};                // -?Variable x initialized to 0
-Timer t{};              // -?Object t default-constructed
-
-// Also works with arguments
-Date d{today};          // -?Clearly an object, not function
-vector<int> v{10};      // -?Vector with one element (10)
-```
-
-### 4.3.6 Initialization Best Practices
-
-| Scenario | C++98 Style | Modern C++ Style | Recommendation |
-|----------|-------------|------------------|----------------|
-| Basic type, zero init | `int x = 0;` | `int x{};` | Use `{}` |
-| Basic type, with value | `int x = 5;` | `int x{5};` | Use `{}` (prevents narrowing) |
-| Class type | `string s = "hi";` | `string s{"hi"};` | Use `{}` (uniform) |
-| Container, fill n copies | `vector<int> v(10, 5);` | `vector<int> v(10, 5);` | Use `()` for fill! |
-| Container, list of values | `vector<int> v; v.push_back(1); ...` | `vector<int> v{1, 2, 3};` | Use `{}` |
-| Auto type deduction | `auto x = 5;` | `auto x = 5;` | Use `=` with `auto` |
-| Default construction | `int x = 0;` `string s;` | `int x{};` `string s{};` | Use `{}` consistently |
-| Return value | `return result;` | `return {x, y, z};` | Use `{}` for lists |
-| Dynamic array | `new int[10];` | `new int[10]{};` | Use `{}` to zero-initialize |
-
-**Modern C++ Initialization Guideline:**
-
-```cpp
-// Prefer brace initialization almost everywhere
-int count{};                    // Zero
-double price{19.99};            // With value
-string name{"Alice"};           // Class type
-vector<int> scores{85, 90, 95}; // Container
-Point p{10, 20};                // Aggregate
-
-// Exception: auto type deduction
-auto x = 5;           // -?x is int
-auto y{5};            // ⚠️ In C++11/14, y is std::initializer_list<int>!
-                      // -?Fixed in C++17 (y is int)
-
-// Exception: Container fill constructor
-vector<int> v(10, 5);  // 10 elements of 5: use ()
-vector<int> v{10, 5};  // 2 elements: use {}
-```
-
-**The Golden Rule:**
-
-> **Use brace initialization `{}` by default.** It prevents narrowing, eliminates ambiguity, and provides a consistent syntax across all types. Switch to `()` only when you specifically need the fill constructor behavior for containers.
-
-## 4.4 Variable Scope, Lifetime, and Visibility
-
-Variables have **scope** (where visible), **lifetime** (when created/destroyed), and **visibility rules** that determine how names are resolved.
-
-### 4.4.1 Scope and Visibility
-
-Scope determines where a variable can be accessed. C++ has several scope types:
-
-#### 4.4.1.1 Block Scope (Local)
-
-Variables declared inside a block `{}` are only visible within that block.
-
-```cpp
-void func() {
-    int x = 10;        // x visible from here to end of func()
-    
-    if (x > 5) {
-        int y = 20;    // y only visible inside if block
-        cout << x;     // -?OK: x is in outer scope
-    }
-    // y not available here
-    cout << y;         // -?ERROR: y out of scope
-}
-// x not available here
-```
-
-#### 4.4.1.2 Namespace Scope
-
-Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
-
-```cpp
-namespace math {
-    double pi = 3.14159;     // Namespace scope
-    
-    double circleArea(double r) {
-        return pi * r * r;    // pi visible here
-    }
-}
-
-// Access with scope resolution
-double x = math::pi;
-
-// Or with using directive
-using namespace math;
-double y = pi;
-```
-
-#### 4.4.1.4 Class Scope
-
-Members of a class have class scope and are accessed via the class instance or scope resolution operator.
-
-```cpp
-class Counter {
-    static int totalCount;    // Class scope (static member)
-    int instanceCount = 0;    // Class scope (instance member)
-    
-public:
-    void increment() {
-        instanceCount++;      // Implicit class scope
-        totalCount++;         // Implicit class scope
-    }
-};
-
-int Counter::totalCount = 0;  // Definition outside class
-```
-
-#### 4.4.1.5 Global (File) Scope
-
-Variables declared outside all functions and classes have global scope, visible throughout the translation unit.
-
-```cpp
-int g_count = 0;       // Global scope
-
-void func1() {
-    g_count++;         // Can access
-}
-
-namespace {
-    int internal = 0;  // Global scope, but internal linkage
-}
-```
-
-### 4.4.2 Variable Shadowing (Name Hiding)
-
-When an inner scope declares a variable with the same name as an outer scope, the inner variable **shadows** (hides) the outer one.
-
-```cpp
-int x = 10;                    // Global x
-
-void example() {
-    int x = 20;                // Shadows global x
-    cout << x;                 // 20 (local x)
-    cout << ::x;               // 10 (global x using scope resolution)
-    
-    if (true) {
-        int x = 30;            // Shadows example's x
-        cout << x;             // 30 (innermost x)
-        cout << ::x;           // 10 (global x)
-    }
-    
-    cout << x;                 // 20 (back to example's x)
-}
-```
-
-**Shadowing Rules:**
-- The innermost declaration wins
-- Shadowing occurs even if types differ (can be confusing!)
-- Use `::` to access global scope, or explicit namespace names
-
-**⚠️ Pitfall: Shadowing with Different Types:**
-
-```cpp
-int count = 0;                 // Global int
-
-void func() {
-    double count = 3.14;       // Shadows global int with double!
-    count++;                   // ERROR: can't increment double this way
-    
-    // Very confusing - avoid this pattern
-}
-```
-
-**Best Practices:**
-1. **Avoid shadowing when possible**—use different names
-2. **Use descriptive names** for globals (e.g., `g_count` not `count`)
-3. **Use `::` explicitly** when you must access shadowed globals
-4. **Prefer local variables** over globals to avoid shadowing issues
-
-**Function Parameter Shadowing:**
-
-```cpp
-int value = 100;
-
-void setValue(int value) {     // Parameter shadows global
-    value = value;             // Self-assignment! No effect on global
-    ::value = value;           // Correct: assigns parameter to global
-}
-```
-
-### 4.4.3 Lifetime and Storage Duration
-
-Lifetime determines when variables are created and destroyed. While **scope** defines where a variable is visible, **lifetime** defines how long it exists in memory. They are related but distinct concepts.
-
-> **Key Insight**: A variable can be out of scope (not visible) but still alive (not destroyed), as seen with `static` local variables.
-
-#### 4.4.3.1 Overview of Storage Durations
-
-C++ defines three fundamental storage durations:
-
-| Storage Duration | Memory Location | Created | Destroyed | Example |
-|-----------------|-----------------|---------|-----------|---------|
-| **Automatic** | Stack | Enter scope | Exit scope | Local variables `int x;` |
-| **Static** | Data Segment | Program start | Program end | Global, `static` variables |
-| **Dynamic** | Heap | `new` called | `delete` called | Heap objects |
-
-#### 4.4.3.2 Automatic Storage Duration
-
-Variables with automatic storage duration are created when execution enters their scope and destroyed when execution exits.
-
-**Characteristics:**
-- **Memory Location**: Stack (fast allocation/deallocation)
-- **Default Initialization**: Uninitialized (indeterminate values)
-- **Management**: Fully automatic—no programmer intervention needed
-- **Performance**: Extremely fast allocation (just pointer arithmetic)
-
-**Basic Example:**
-```cpp
-void automaticExample() {
-    int x = 10;          // Created here
-    double d{3.14};      // Created here (C++11 brace init)
-    
-    // Both x and d are usable here
-}                        // Both destroyed here
-
-// Each function call creates fresh instances
-automaticExample();  // x=10 created and destroyed
-automaticExample();  // New x=10 created and destroyed
-```
-
-**⚠️ Critical Pitfall—Dangling References:**
-```cpp
-int* badFunction() {
-    int local = 10;
-    return &local;       // -?DANGEROUS! Returns address of local variable
-}                        // local is destroyed here—the pointer is dangling
-
-int* ptr = badFunction();
-// *ptr is now undefined behavior! The memory was freed.
-```
-
-> **Rule**: Never return pointers or references to automatic (local) variables.
-
-#### 4.4.3.3 Static Storage Duration
-
-Variables with static storage duration exist for the entire program execution.
-
-**Characteristics:**
-- **Memory Location**: Data segment (global/static memory area)
-- **Default Initialization**: Zero-initialized (0, false, nullptr)
-- **Lifetime**: Created before `main()` starts, destroyed after `main()` ends
-- **C++11 Thread Safety**: Static local variable initialization is thread-safe
-
-**Static Local Variables:**
-```cpp
-void visitCounter() {
-    static int count = 0;    // Initialized only ONCE, before first call
-    count++;
-    cout << "Visit #" << count << endl;
-}
-
-visitCounter();  // "Visit #1"
-visitCounter();  // "Visit #2"  (count retains its value)
-visitCounter();  // "Visit #3"
-```
-
-**Practical Use Cases:**
-
-1. **Function Call Counter** (as shown above)
-2. **Lazy Initialization / Singleton Pattern:**
-```cpp
-Database& getDatabase() {
-    static Database instance;    // Created on first call
-    return instance;             // Same instance on all subsequent calls
-}
-```
-3. **Caching Expensive Computations:**
-```cpp
-int fibonacci(int n) {
-    static vector<int> cache = {0, 1};  // Cache persists between calls
-    
-    if (n < cache.size()) return cache[n];
-    
-    int result = fibonacci(n - 1) + fibonacci(n - 2);
-    cache.push_back(result);
-    return result;
-}
-```
-
-**Global vs Static Local Variables:**
-```cpp
-int globalCounter = 0;           // Global static—visible to entire program
-
-void func() {
-    static int localCounter = 0; // Local static—only visible in func()
-    globalCounter++;
-    localCounter++;
-}
-```
-
-| Aspect | Global Static | Static Local |
-|--------|--------------|--------------|
-| Visibility | Entire program | Only in defining function |
-| Initialization | Before main() | On first function call |
-| Best Practice | Minimize use | Preferred for internal state |
-
-#### 4.4.3.4 Dynamic Storage Duration
-
-Variables with dynamic storage duration are created and destroyed under explicit programmer control.
-
-**Characteristics:**
-- **Memory Location**: Heap (free store)
-- **Default Initialization**: Uninitialized (unless using `()` or `{}` syntax)
-- **Management**: Manual—programmer must explicitly `delete` what they `new`
-- **Flexibility**: Size can be determined at runtime; lifetime spans scopes
-
-**Basic Usage:**
-```cpp
-void dynamicExample() {
-    // Single object
-    int* p = new int(10);        // Allocated on heap
-    cout << *p;                   // Use the value
-    delete p;                     // Must manually free!
-    
-    // Array
-    int* arr = new int[100]{};    // Allocated array, zero-initialized
-    // ... use arr ...
-    delete[] arr;                 // Array delete syntax
-}
-```
-
-**Crossing Scope Boundaries:**
-```cpp
-int* createArray(int size) {
-    return new int[size];        // Created in function, but survives return
-}
-
-void useArray() {
-    int* data = createArray(100);  // Receive heap object
-    // ... use data ...
-    delete[] data;                  // Must destroy here
-}
-```
-
-**⚠️ Common Pitfalls:**
-
-| Error | Description | Consequence |
-|-------|-------------|-------------|
-| **Memory Leak** | Forgetting to `delete` | Memory unavailable until program ends |
-| **Dangling Pointer** | Using memory after `delete` | Undefined behavior, potential crash |
-| **Double Delete** | Calling `delete` twice | Undefined behavior, heap corruption |
-| **Mismatch** | `new[]` with `delete` (not `delete[]`) | Undefined behavior |
-
-```cpp
-// Memory leak example
-void leak() {
-    int* p = new int(10);
-    // Forgot delete-? bytes lost forever (per call)
-}
-
-// Dangling pointer example
-int* dangling() {
-    int* p = new int(10);
-    delete p;           // Memory freed
-    return p;           // -?Returns dangling pointer
-}                       // Don't use the returned pointer!
-```
-
-**Modern C++ Best Practice—Smart Pointers:**
-
-Since manual memory management is error-prone, modern C++ provides automatic alternatives:
-
-```cpp
-#include <memory>
-
-// Unique ownership—automatically deleted when out of scope
-void modernExample() {
-    auto ptr = std::make_unique<int>(10);  // C++14
-    // No delete needed—automatic cleanup when ptr goes out of scope
-    
-    auto arr = std::make_unique<int[]>(100);  // Array version
-    arr[0] = 42;  // Use like regular array
-}  // Both automatically freed here
-
-// Shared ownership—reference counted
-void sharedExample() {
-    auto shared = std::make_shared<int>(20);
-    {
-        auto another = shared;  // Reference count increases
-        // Both point to same memory
-    }  // Reference count decreases, but memory not freed (shared still exists)
-}  // Reference count reaches zero, memory freed
-```
-
-> **Recommendation**: Prefer `std::unique_ptr` for exclusive ownership and `std::shared_ptr` for shared ownership. Raw pointers (`new`/`delete`) should be rare in modern code.
-
-#### 4.4.3.5 Lifetime Summary and Best Practices
-
-**Quick Selection Guide:**
-
-| Scenario | Recommended Duration | Reasoning |
-|----------|---------------------|-----------|
-| Temporary computation within function | Automatic | Simplest, fastest, automatic cleanup |
-| State that must persist across calls | Static Local | Encapsulated, thread-safe (C++11), automatic |
-| Data that must outlive its creator | Dynamic + Smart Pointer | Flexible lifetime with safe cleanup |
-| Large objects (> few KB) | Dynamic | Avoid stack overflow |
-| Size determined at runtime | Dynamic + Smart Pointer | Automatic storage requires compile-time size |
-
-**Key Takeaways:**
-
-1. **Prefer Automatic**: Use local variables whenever possible—simplest and safest
-2. **Use Static for Persistence**: Function-local `static` for state that must survive function exits
-3. **Minimize Raw Dynamic**: If you must use `new`, immediately wrap it in a smart pointer
-4. **Avoid Global Static**: Minimize global variables to reduce coupling and side effects
-5. **Never Return Dangling References**: Always ensure returned pointers/references point to valid memory
-
-## 4.5 Constants: const and constexpr
-
-Constants are variables whose values cannot be modified.
-
-### 4.5.1 const (Runtime Constant)
-
-`const` means the value cannot be changed after initialization.
-
-```cpp
-const int maxSize = 100;           // Known at compile time
-const double pi = 3.14159;         // Known at compile time
-
-const int userInput = getInput();  // Runtime determined, but immutable
-
-maxSize = 200;                     // -?Compile error!
-```
-
-**const and Pointers:**
-
-| Syntax | Read As | Pointer | Pointed Value |
-|--------|---------|---------|---------------|
-| `const int* ptr` | Pointer to const int | Mutable (can reassign) | Immutable (cannot modify through ptr) |
-| `int* const ptr` | Const pointer to int | Immutable (fixed address) | Mutable (can modify value) |
-| `const int* const ptr` | Const pointer to const int | Immutable | Immutable |
-
-```cpp
-int a = 10, b = 20;
-const int* ptr1 = &a;        // Can reassign: ptr1 = &b; -?                             // Cannot modify: *ptr1 = 30; -?
-int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; -?                             // Can modify: *ptr2 = 30; -?
-const int* const ptr3 = &a;  // Both pointer and value are fixed
-```
-
-**const References:**
-
-References can also be const, providing read-only access to an object without copying it.
-
-```cpp
-string getName() { return "Alice"; }
-
-void example() {
-    const string& name = getName();   // Binds to temporary, extends its lifetime
-    // name = "Bob";                  // -?ERROR: cannot modify through const reference
-    
-    int x = 10;
-    const int& ref = x;               // ref cannot modify x
-    // ref = 20;                      // -?ERROR
-    x = 20;                           // -?OK: modify original directly
-}
-```
-
-**When to use const references:**
-- **Function parameters**: Avoid copying large objects while preventing modification
-- **Range-based for loops**: Efficient iteration without modifying elements
-- **Binding to temporaries**: Extend lifetime of temporary objects
-
-```cpp
-// Efficient function parameter
-void printString(const string& s) {   // No copy, read-only access
-    cout << s << endl;
-}
-
-// Range-based for with const reference
-vector<int> numbers = {1, 2, 3, 4, 5};
-for (const auto& num : numbers) {     // No copy, cannot modify
-    cout << num << " ";
-}
-```
-
-**Key Insight**: Prefer `const T&` over `T` for large read-only parameters.
-
-### 4.5.2 constexpr (Compile-Time Constant, C++11)
-
-`constexpr` requires the value to be known at **compile time**, usable for array sizes, template arguments, etc.
-
-```cpp
-constexpr int maxSize = 100;           // -?Compile-time constant
-constexpr int size = maxSize * 2;      // -?Can be used in calculations
-
-int arr[size];                         // -?Can define array size
-
-constexpr int userVal = getInput();    // -?Error! Must be compile-time computable
-```
-
-**constexpr Functions:**
-```cpp
-constexpr int square(int x) {          // constexpr function
-    return x * x;
-}
-
-constexpr int result = square(5);      // -?Computed at compile time
-```
-
-### 4.5.3 const vs constexpr: When to Use?
-
-| Feature | const | constexpr |
-|---------|-------|-----------|
-| **Determined** | Compile or runtime | Compile time |
-| **Use Cases** | Prevent modification | Need compile-time constant |
-| **Array Size** | Not before C++11 | -?Available |
-| **Template Args** | -?Not available | -?Available |
-| **Recommendation** | General constants | Prefer if possible |
-
-**Selection Guide:**
-- Value known at compile time -?Use `constexpr`
-- Value determined at runtime -?Use `const`
-- Just want to prevent modification -?Use `const`
-
-## 4.1.6 Storage Class Specifiers in Depth
+### 4.1.6 Storage Class Specifiers in Depth
 
 This section provides detailed coverage of C++ storage class specifiers, including usage patterns, pitfalls, and best practices. For a quick reference, see [4.1.4 Storage Class Specifiers Overview](#414-storage-class-specifiers).
 
@@ -1940,3 +1178,765 @@ void print() { cout << version; }       // Sees version = 2 (same object)
 
 
 [-?Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
+## 4.2 Variable Definition and Initialization
+
+### 4.2.1 The Problem: Uninitialized Variables
+
+In C++, variables are not automatically initialized. Using an uninitialized variable leads to **undefined behavior**—the program may crash, produce garbage values, or appear to work correctly (making bugs hard to detect).
+
+```cpp
+void dangerous() {
+    int x;           // -?Uninitialized!
+    cout << x;       // Undefined behavior: could print 0, 12345, or crash
+    
+    int y = x + 5;   // Compiles, but result is meaningless
+}
+```
+
+> ⚠️ **Critical Rule**: Always initialize variables before use. Modern C++ makes this easy with uniform initialization.
+
+### 4.2.2 Evolution of C++ Initialization
+
+C++ initialization syntax has evolved significantly:
+
+| Era | Style | Example | Characteristics |
+|-----|-------|---------|-----------------|
+| **C++98** | Copy init | `int x = 5;` | Simple, but allows narrowing |
+| **C++98** | Direct init | `int x(5);` | Constructor-like, but has parsing issues |
+| **C++11** | Brace init | `int x{5};` | **Modern standard**—safe, uniform, preferred |
+
+**C++11's Brace Initialization** (also called *Uniform Initialization* or *List Initialization*) solves multiple problems with a single, consistent syntax.
+
+### 4.2.3 The Four Initialization Methods
+
+#### 4.2.3.1 Copy Initialization
+
+Uses the `=` operator. The value is "copied" into the variable.
+
+```cpp
+int a = 5;              // OK
+string s = "hello";     // Calls string(const char*)
+double d = 3.14;
+```
+
+**Limitations:**
+- Allows **narrowing conversions** without warning
+- Cannot use with `explicit` constructors (for classes)
+
+```cpp
+int x = 3.14;           // -?Compiles, x = 3 (data loss, silent!)
+```
+
+#### 4.2.3.2 Direct Initialization
+
+Uses parentheses `()`. Calls the constructor directly.
+
+```cpp
+int a(5);               // OK
+string s("hello");      // Direct constructor call
+vector<int> v(10, 5);   // 10 elements, all initialized to 5
+```
+
+**The "Most Vexing Parse" Problem:**
+
+Direct initialization can be ambiguous—C++ may interpret it as a function declaration instead of a variable definition!
+
+```cpp
+class Date { public: Date(); };
+
+// Ambiguity: variable or function declaration?
+Date d();   // -?C++ parses this as "function d returning Date"
+            // Not a default-constructed Date object!
+
+Date d;     // -?This works for default construction
+```
+
+#### 4.2.3.3 Brace Initialization (C++11, Recommended)
+
+Uses braces `{}`. This is the **modern C++ standard** for initialization.
+
+```cpp
+int a{5};               // Brace initialization
+string s{"hello"};      // Works for classes
+vector<int> v{1, 2, 3}; // Initialize with elements
+int b{};                // Empty braces = zero initialization (b = 0)
+```
+
+**Why Brace Initialization is Superior:**
+
+| Advantage | Explanation | Example |
+|-----------|-------------|---------|
+| **Prevents narrowing** | Compiler rejects conversions that lose data | `int x{3.14};` -?Error! |
+| **Uniform syntax** | Same syntax for all types (built-in, class, array, container) | `int x{5};` `string s{"hi"};` `vector<int> v{1,2,3};` |
+| **No ambiguity** | Cannot be parsed as function declaration | `Date d{};` -?Always an object |
+| **Zero initialization** | Empty braces `{}` initialize to zero/null | `int x{};` // x = 0 |
+
+**Narrowing Conversion Prevention (Compile-Time Safety):**
+
+```cpp
+// These will NOT compile with brace initialization:
+int a{3.14};            // -?double -?int loses precision
+int b{1000000000000};   // -?Exceeds int range  
+char c{1000};           // -?1000 exceeds char range (-128 to 127 or 0 to 255)
+unsigned d{-5};         // -?Negative to unsigned
+
+// These ARE allowed (no data loss):
+int e{3};               // -?int to int
+int f{static_cast<int>(3.14)};  // -?Explicit cast OK
+double g{3};            // -?int to double is safe (no loss)
+```
+
+> **Safety First**: Brace initialization catches bugs at compile time that copy/direct init would allow at runtime.
+
+**Solving the Most Vexing Parse:**
+
+```cpp
+class TimeKeeper {
+public:
+    TimeKeeper();
+    TimeKeeper(const Date& d);
+};
+
+// Direct initialization - AMBIGUOUS
+TimeKeeper time(Date());  // -?Function declaration: "time is a function 
+                          //    taking a Date(*)() and returning TimeKeeper"
+
+// Brace initialization - UNAMBIGUOUS  
+TimeKeeper time{Date()};  // -?Clearly an object definition
+TimeKeeper time{Date{}};  // -?Nested braces, even clearer
+```
+
+**The std::initializer_list Mechanism:**
+
+When you use braces with multiple values for containers, C++ constructs a temporary `std::initializer_list`:
+
+```cpp
+vector<int> v{1, 2, 3};
+
+// Step 1: Compiler creates std::initializer_list<int>{1, 2, 3}
+// Step 2: Calls vector(std::initializer_list<int>) constructor
+// Result: v contains 1, 2, 3 (three elements)
+```
+
+**⚠️ Important Distinction: `()` vs `{}` for Containers:**
+
+```cpp
+vector<int> v1(10, 5);   // 10 elements, all set to 5: {5,5,5,5,5,5,5,5,5,5}
+vector<int> v2{10, 5};   // 2 elements: {10, 5}
+
+// () calls the "fill" constructor: vector(size_type n, const T& value)
+// {} calls the initializer_list constructor with elements {10, 5}
+```
+
+#### 4.2.3.4 Aggregate Initialization (C++11/14/17)
+
+For arrays and simple structures (aggregates), braces can initialize all members:
+
+```cpp
+// Array initialization
+int arr[]{1, 2, 3, 4};           // Size deduced as 4
+int arr2[5]{};                    // All 5 elements = 0
+
+// Struct initialization (C++11)
+struct Point { int x; int y; };
+Point p{10, 20};                  // p.x = 10, p.y = 20
+Point p2{};                       // p2.x = 0, p2.y = 0 (zero-initialized)
+
+// Nested structures
+struct Rect { Point topLeft; Point bottomRight; };
+Rect r{{0, 0}, {100, 200}};       // Nested brace initialization
+```
+
+**C++17 Enhanced: Designated Initializers** (from C)
+
+```cpp
+struct Config {
+    int width;
+    int height;
+    bool fullscreen;
+};
+
+Config cfg{.width = 1920, .height = 1080, .fullscreen = true};  // C++17
+```
+
+### 4.2.4 Deep Dive: Narrowing Conversions
+
+A **narrowing conversion** is one that may lose information:
+
+| From | To | Status | Reason |
+|------|-----|--------|--------|
+| `double` | `int` | -?Narrowing | Loses fractional part |
+| `int` | `char` | -?Narrowing | May overflow |
+| `long long` | `int` | -?Narrowing | May overflow on 32-bit systems |
+| `int` | `unsigned` | -?(if negative) | Negative values wrap around |
+| `int` | `double` | -?OK | No data loss |
+| `char` | `int` | -?OK | No data loss |
+
+**Brace initialization enforces this at compile time:**
+
+```cpp
+void example() {
+    double pi = 3.14159;
+    
+    // Copy init - silent data loss
+    int rounded1 = pi;      // -?Compiles, rounded1 = 3
+    
+    // Brace init - compile error!
+    int rounded2{pi};       // -?Error: type 'double' cannot be narrowed to 'int'
+    
+    // Explicit cast required (shows intent)
+    int rounded3{static_cast<int>(pi)};  // -?OK: explicit conversion
+}
+```
+
+### 4.2.5 Deep Dive: Most Vexing Parse
+
+The "Most Vexing Parse" is a syntax ambiguity in C++ where something that looks like a variable definition is parsed as a function declaration.
+
+**Classic Example:**
+
+```cpp
+// You want: a function object 'f' that takes no arguments and returns int
+// You write:
+int f();    // -?This is a function DECLARATION, not a default-constructed int!
+
+// The variable 'f' doesn't exist—you've declared a function instead.
+// f = 5;   // -?Error: f is a function, not a variable
+```
+
+**With Classes:**
+
+```cpp
+class Timer {};
+
+Timer t();  // -?Function t returning Timer, taking no arguments
+Timer t;    // -?Default-constructed Timer object
+Timer t{};  // -?Also default-constructed (brace init, clearer)
+```
+
+**Why It Happens:**
+
+C++'s grammar tries to parse declarations as functions when possible. Anything that can be interpreted as a function declaration, will be.
+
+**Brace Initialization Solution:**
+
+```cpp
+// Unambiguous with braces
+int x{};                // -?Variable x initialized to 0
+Timer t{};              // -?Object t default-constructed
+
+// Also works with arguments
+Date d{today};          // -?Clearly an object, not function
+vector<int> v{10};      // -?Vector with one element (10)
+```
+
+### 4.2.6 Initialization Best Practices
+
+| Scenario | C++98 Style | Modern C++ Style | Recommendation |
+|----------|-------------|------------------|----------------|
+| Basic type, zero init | `int x = 0;` | `int x{};` | Use `{}` |
+| Basic type, with value | `int x = 5;` | `int x{5};` | Use `{}` (prevents narrowing) |
+| Class type | `string s = "hi";` | `string s{"hi"};` | Use `{}` (uniform) |
+| Container, fill n copies | `vector<int> v(10, 5);` | `vector<int> v(10, 5);` | Use `()` for fill! |
+| Container, list of values | `vector<int> v; v.push_back(1); ...` | `vector<int> v{1, 2, 3};` | Use `{}` |
+| Auto type deduction | `auto x = 5;` | `auto x = 5;` | Use `=` with `auto` |
+| Default construction | `int x = 0;` `string s;` | `int x{};` `string s{};` | Use `{}` consistently |
+| Return value | `return result;` | `return {x, y, z};` | Use `{}` for lists |
+| Dynamic array | `new int[10];` | `new int[10]{};` | Use `{}` to zero-initialize |
+
+**Modern C++ Initialization Guideline:**
+
+```cpp
+// Prefer brace initialization almost everywhere
+int count{};                    // Zero
+double price{19.99};            // With value
+string name{"Alice"};           // Class type
+vector<int> scores{85, 90, 95}; // Container
+Point p{10, 20};                // Aggregate
+
+// Exception: auto type deduction
+auto x = 5;           // -?x is int
+auto y{5};            // ⚠️ In C++11/14, y is std::initializer_list<int>!
+                      // -?Fixed in C++17 (y is int)
+
+// Exception: Container fill constructor
+vector<int> v(10, 5);  // 10 elements of 5: use ()
+vector<int> v{10, 5};  // 2 elements: use {}
+```
+
+**The Golden Rule:**
+
+> **Use brace initialization `{}` by default.** It prevents narrowing, eliminates ambiguity, and provides a consistent syntax across all types. Switch to `()` only when you specifically need the fill constructor behavior for containers.
+
+## 4.3 Variable Scope, Lifetime, and Visibility
+
+Variables have **scope** (where visible), **lifetime** (when created/destroyed), and **visibility rules** that determine how names are resolved.
+
+### 4.3.1 Scope and Visibility
+
+Scope determines where a variable can be accessed. C++ has several scope types:
+
+#### 4.2.1.1 Block Scope (Local)
+
+Variables declared inside a block `{}` are only visible within that block.
+
+```cpp
+void func() {
+    int x = 10;        // x visible from here to end of func()
+    
+    if (x > 5) {
+        int y = 20;    // y only visible inside if block
+        cout << x;     // -?OK: x is in outer scope
+    }
+    // y not available here
+    cout << y;         // -?ERROR: y out of scope
+}
+// x not available here
+```
+
+#### 4.2.1.2 Namespace Scope
+
+Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
+
+```cpp
+namespace math {
+    double pi = 3.14159;     // Namespace scope
+    
+    double circleArea(double r) {
+        return pi * r * r;    // pi visible here
+    }
+}
+
+// Access with scope resolution
+double x = math::pi;
+
+// Or with using directive
+using namespace math;
+double y = pi;
+```
+
+#### 4.2.1.4 Class Scope
+
+Members of a class have class scope and are accessed via the class instance or scope resolution operator.
+
+```cpp
+class Counter {
+    static int totalCount;    // Class scope (static member)
+    int instanceCount = 0;    // Class scope (instance member)
+    
+public:
+    void increment() {
+        instanceCount++;      // Implicit class scope
+        totalCount++;         // Implicit class scope
+    }
+};
+
+int Counter::totalCount = 0;  // Definition outside class
+```
+
+#### 4.2.1.5 Global (File) Scope
+
+Variables declared outside all functions and classes have global scope, visible throughout the translation unit.
+
+```cpp
+int g_count = 0;       // Global scope
+
+void func1() {
+    g_count++;         // Can access
+}
+
+namespace {
+    int internal = 0;  // Global scope, but internal linkage
+}
+```
+
+### 4.3.2 Variable Shadowing (Name Hiding)
+
+When an inner scope declares a variable with the same name as an outer scope, the inner variable **shadows** (hides) the outer one.
+
+```cpp
+int x = 10;                    // Global x
+
+void example() {
+    int x = 20;                // Shadows global x
+    cout << x;                 // 20 (local x)
+    cout << ::x;               // 10 (global x using scope resolution)
+    
+    if (true) {
+        int x = 30;            // Shadows example's x
+        cout << x;             // 30 (innermost x)
+        cout << ::x;           // 10 (global x)
+    }
+    
+    cout << x;                 // 20 (back to example's x)
+}
+```
+
+**Shadowing Rules:**
+- The innermost declaration wins
+- Shadowing occurs even if types differ (can be confusing!)
+- Use `::` to access global scope, or explicit namespace names
+
+**⚠️ Pitfall: Shadowing with Different Types:**
+
+```cpp
+int count = 0;                 // Global int
+
+void func() {
+    double count = 3.14;       // Shadows global int with double!
+    count++;                   // ERROR: can't increment double this way
+    
+    // Very confusing - avoid this pattern
+}
+```
+
+**Best Practices:**
+1. **Avoid shadowing when possible**—use different names
+2. **Use descriptive names** for globals (e.g., `g_count` not `count`)
+3. **Use `::` explicitly** when you must access shadowed globals
+4. **Prefer local variables** over globals to avoid shadowing issues
+
+**Function Parameter Shadowing:**
+
+```cpp
+int value = 100;
+
+void setValue(int value) {     // Parameter shadows global
+    value = value;             // Self-assignment! No effect on global
+    ::value = value;           // Correct: assigns parameter to global
+}
+```
+
+### 4.3.3 Lifetime and Storage Duration
+
+Lifetime determines when variables are created and destroyed. While **scope** defines where a variable is visible, **lifetime** defines how long it exists in memory. They are related but distinct concepts.
+
+> **Key Insight**: A variable can be out of scope (not visible) but still alive (not destroyed), as seen with `static` local variables.
+
+#### 4.2.3.1 Overview of Storage Durations
+
+C++ defines three fundamental storage durations:
+
+| Storage Duration | Memory Location | Created | Destroyed | Example |
+|-----------------|-----------------|---------|-----------|---------|
+| **Automatic** | Stack | Enter scope | Exit scope | Local variables `int x;` |
+| **Static** | Data Segment | Program start | Program end | Global, `static` variables |
+| **Dynamic** | Heap | `new` called | `delete` called | Heap objects |
+
+#### 4.2.3.2 Automatic Storage Duration
+
+Variables with automatic storage duration are created when execution enters their scope and destroyed when execution exits.
+
+**Characteristics:**
+- **Memory Location**: Stack (fast allocation/deallocation)
+- **Default Initialization**: Uninitialized (indeterminate values)
+- **Management**: Fully automatic—no programmer intervention needed
+- **Performance**: Extremely fast allocation (just pointer arithmetic)
+
+**Basic Example:**
+```cpp
+void automaticExample() {
+    int x = 10;          // Created here
+    double d{3.14};      // Created here (C++11 brace init)
+    
+    // Both x and d are usable here
+}                        // Both destroyed here
+
+// Each function call creates fresh instances
+automaticExample();  // x=10 created and destroyed
+automaticExample();  // New x=10 created and destroyed
+```
+
+**⚠️ Critical Pitfall—Dangling References:**
+```cpp
+int* badFunction() {
+    int local = 10;
+    return &local;       // -?DANGEROUS! Returns address of local variable
+}                        // local is destroyed here—the pointer is dangling
+
+int* ptr = badFunction();
+// *ptr is now undefined behavior! The memory was freed.
+```
+
+> **Rule**: Never return pointers or references to automatic (local) variables.
+
+#### 4.2.3.3 Static Storage Duration
+
+Variables with static storage duration exist for the entire program execution.
+
+**Characteristics:**
+- **Memory Location**: Data segment (global/static memory area)
+- **Default Initialization**: Zero-initialized (0, false, nullptr)
+- **Lifetime**: Created before `main()` starts, destroyed after `main()` ends
+- **C++11 Thread Safety**: Static local variable initialization is thread-safe
+
+**Static Local Variables:**
+```cpp
+void visitCounter() {
+    static int count = 0;    // Initialized only ONCE, before first call
+    count++;
+    cout << "Visit #" << count << endl;
+}
+
+visitCounter();  // "Visit #1"
+visitCounter();  // "Visit #2"  (count retains its value)
+visitCounter();  // "Visit #3"
+```
+
+**Practical Use Cases:**
+
+1. **Function Call Counter** (as shown above)
+2. **Lazy Initialization / Singleton Pattern:**
+```cpp
+Database& getDatabase() {
+    static Database instance;    // Created on first call
+    return instance;             // Same instance on all subsequent calls
+}
+```
+3. **Caching Expensive Computations:**
+```cpp
+int fibonacci(int n) {
+    static vector<int> cache = {0, 1};  // Cache persists between calls
+    
+    if (n < cache.size()) return cache[n];
+    
+    int result = fibonacci(n - 1) + fibonacci(n - 2);
+    cache.push_back(result);
+    return result;
+}
+```
+
+**Global vs Static Local Variables:**
+```cpp
+int globalCounter = 0;           // Global static—visible to entire program
+
+void func() {
+    static int localCounter = 0; // Local static—only visible in func()
+    globalCounter++;
+    localCounter++;
+}
+```
+
+| Aspect | Global Static | Static Local |
+|--------|--------------|--------------|
+| Visibility | Entire program | Only in defining function |
+| Initialization | Before main() | On first function call |
+| Best Practice | Minimize use | Preferred for internal state |
+
+#### 4.2.3.4 Dynamic Storage Duration
+
+Variables with dynamic storage duration are created and destroyed under explicit programmer control.
+
+**Characteristics:**
+- **Memory Location**: Heap (free store)
+- **Default Initialization**: Uninitialized (unless using `()` or `{}` syntax)
+- **Management**: Manual—programmer must explicitly `delete` what they `new`
+- **Flexibility**: Size can be determined at runtime; lifetime spans scopes
+
+**Basic Usage:**
+```cpp
+void dynamicExample() {
+    // Single object
+    int* p = new int(10);        // Allocated on heap
+    cout << *p;                   // Use the value
+    delete p;                     // Must manually free!
+    
+    // Array
+    int* arr = new int[100]{};    // Allocated array, zero-initialized
+    // ... use arr ...
+    delete[] arr;                 // Array delete syntax
+}
+```
+
+**Crossing Scope Boundaries:**
+```cpp
+int* createArray(int size) {
+    return new int[size];        // Created in function, but survives return
+}
+
+void useArray() {
+    int* data = createArray(100);  // Receive heap object
+    // ... use data ...
+    delete[] data;                  // Must destroy here
+}
+```
+
+**⚠️ Common Pitfalls:**
+
+| Error | Description | Consequence |
+|-------|-------------|-------------|
+| **Memory Leak** | Forgetting to `delete` | Memory unavailable until program ends |
+| **Dangling Pointer** | Using memory after `delete` | Undefined behavior, potential crash |
+| **Double Delete** | Calling `delete` twice | Undefined behavior, heap corruption |
+| **Mismatch** | `new[]` with `delete` (not `delete[]`) | Undefined behavior |
+
+```cpp
+// Memory leak example
+void leak() {
+    int* p = new int(10);
+    // Forgot delete-? bytes lost forever (per call)
+}
+
+// Dangling pointer example
+int* dangling() {
+    int* p = new int(10);
+    delete p;           // Memory freed
+    return p;           // -?Returns dangling pointer
+}                       // Don't use the returned pointer!
+```
+
+**Modern C++ Best Practice—Smart Pointers:**
+
+Since manual memory management is error-prone, modern C++ provides automatic alternatives:
+
+```cpp
+#include <memory>
+
+// Unique ownership—automatically deleted when out of scope
+void modernExample() {
+    auto ptr = std::make_unique<int>(10);  // C++14
+    // No delete needed—automatic cleanup when ptr goes out of scope
+    
+    auto arr = std::make_unique<int[]>(100);  // Array version
+    arr[0] = 42;  // Use like regular array
+}  // Both automatically freed here
+
+// Shared ownership—reference counted
+void sharedExample() {
+    auto shared = std::make_shared<int>(20);
+    {
+        auto another = shared;  // Reference count increases
+        // Both point to same memory
+    }  // Reference count decreases, but memory not freed (shared still exists)
+}  // Reference count reaches zero, memory freed
+```
+
+> **Recommendation**: Prefer `std::unique_ptr` for exclusive ownership and `std::shared_ptr` for shared ownership. Raw pointers (`new`/`delete`) should be rare in modern code.
+
+#### 4.2.3.5 Lifetime Summary and Best Practices
+
+**Quick Selection Guide:**
+
+| Scenario | Recommended Duration | Reasoning |
+|----------|---------------------|-----------|
+| Temporary computation within function | Automatic | Simplest, fastest, automatic cleanup |
+| State that must persist across calls | Static Local | Encapsulated, thread-safe (C++11), automatic |
+| Data that must outlive its creator | Dynamic + Smart Pointer | Flexible lifetime with safe cleanup |
+| Large objects (> few KB) | Dynamic | Avoid stack overflow |
+| Size determined at runtime | Dynamic + Smart Pointer | Automatic storage requires compile-time size |
+
+**Key Takeaways:**
+
+1. **Prefer Automatic**: Use local variables whenever possible—simplest and safest
+2. **Use Static for Persistence**: Function-local `static` for state that must survive function exits
+3. **Minimize Raw Dynamic**: If you must use `new`, immediately wrap it in a smart pointer
+4. **Avoid Global Static**: Minimize global variables to reduce coupling and side effects
+5. **Never Return Dangling References**: Always ensure returned pointers/references point to valid memory
+
+## 4.4 Constants: const and constexpr
+
+Constants are variables whose values cannot be modified.
+
+### 4.4.1 const (Runtime Constant)
+
+`const` means the value cannot be changed after initialization.
+
+```cpp
+const int maxSize = 100;           // Known at compile time
+const double pi = 3.14159;         // Known at compile time
+
+const int userInput = getInput();  // Runtime determined, but immutable
+
+maxSize = 200;                     // -?Compile error!
+```
+
+**const and Pointers:**
+
+| Syntax | Read As | Pointer | Pointed Value |
+|--------|---------|---------|---------------|
+| `const int* ptr` | Pointer to const int | Mutable (can reassign) | Immutable (cannot modify through ptr) |
+| `int* const ptr` | Const pointer to int | Immutable (fixed address) | Mutable (can modify value) |
+| `const int* const ptr` | Const pointer to const int | Immutable | Immutable |
+
+```cpp
+int a = 10, b = 20;
+const int* ptr1 = &a;        // Can reassign: ptr1 = &b; -?                             // Cannot modify: *ptr1 = 30; -?
+int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; -?                             // Can modify: *ptr2 = 30; -?
+const int* const ptr3 = &a;  // Both pointer and value are fixed
+```
+
+**const References:**
+
+References can also be const, providing read-only access to an object without copying it.
+
+```cpp
+string getName() { return "Alice"; }
+
+void example() {
+    const string& name = getName();   // Binds to temporary, extends its lifetime
+    // name = "Bob";                  // -?ERROR: cannot modify through const reference
+    
+    int x = 10;
+    const int& ref = x;               // ref cannot modify x
+    // ref = 20;                      // -?ERROR
+    x = 20;                           // -?OK: modify original directly
+}
+```
+
+**When to use const references:**
+- **Function parameters**: Avoid copying large objects while preventing modification
+- **Range-based for loops**: Efficient iteration without modifying elements
+- **Binding to temporaries**: Extend lifetime of temporary objects
+
+```cpp
+// Efficient function parameter
+void printString(const string& s) {   // No copy, read-only access
+    cout << s << endl;
+}
+
+// Range-based for with const reference
+vector<int> numbers = {1, 2, 3, 4, 5};
+for (const auto& num : numbers) {     // No copy, cannot modify
+    cout << num << " ";
+}
+```
+
+**Key Insight**: Prefer `const T&` over `T` for large read-only parameters.
+
+### 4.4.2 constexpr (Compile-Time Constant, C++11)
+
+`constexpr` requires the value to be known at **compile time**, usable for array sizes, template arguments, etc.
+
+```cpp
+constexpr int maxSize = 100;           // -?Compile-time constant
+constexpr int size = maxSize * 2;      // -?Can be used in calculations
+
+int arr[size];                         // -?Can define array size
+
+constexpr int userVal = getInput();    // -?Error! Must be compile-time computable
+```
+
+**constexpr Functions:**
+```cpp
+constexpr int square(int x) {          // constexpr function
+    return x * x;
+}
+
+constexpr int result = square(5);      // -?Computed at compile time
+```
+
+### 4.4.3 const vs constexpr: When to Use?
+
+| Feature | const | constexpr |
+|---------|-------|-----------|
+| **Determined** | Compile or runtime | Compile time |
+| **Use Cases** | Prevent modification | Need compile-time constant |
+| **Array Size** | Not before C++11 | -?Available |
+| **Template Args** | -?Not available | -?Available |
+| **Recommendation** | General constants | Prefer if possible |
+
+**Selection Guide:**
+- Value known at compile time -?Use `constexpr`
+- Value determined at runtime -?Use `const`
+- Just want to prevent modification -?Use `const`
+
