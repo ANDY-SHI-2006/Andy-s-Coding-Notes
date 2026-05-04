@@ -78,6 +78,25 @@ if not name:
     print("Name is empty")  # This prints
 ```
 
+### 2.3.2 Short-circuit Evaluation
+
+`and` returns the **first falsy value** it encounters, or the **last value** if all are truthy. `or` returns the **first truthy value**, or the **last value** if all are falsy.
+
+```python
+# and: stops at first falsy
+print(0 and 99)        # 0 (stops at 0)
+print(3 and 5 and 0)   # 0
+print(3 and 5)         # 5 (all truthy, returns last)
+
+# or: stops at first truthy
+print(3 or 0)          # 3 (stops at 3)
+print(0 or "" or 7)    # 7
+print(0 or "")         # "" (all falsy, returns last)
+
+# Common pattern: default value
+name = user_input or "Anonymous"
+```
+
 ## 2.4 Assignment Operators
 
 | Operator | Example | Equivalent to |
@@ -90,6 +109,16 @@ if not name:
 | `//=` | `x //= 3` | `x = x // 3` |
 | `%=` | `x %= 3` | `x = x % 3` |
 | `**=` | `x **= 3` | `x = x ** 3` |
+| `:=` | `if (n := len(s)) > 5` | Expression assignment (Python 3.8+) |
+
+```python
+count = 10
+count += 5   # count is now 15
+
+# Walrus operator: assign inside expression
+if (n := len("hello")) > 3:
+    print(n)  # 5
+```
 
 ## 2.5 Identity Operators
 
@@ -101,12 +130,10 @@ Identity operators compare memory addresses (identity), not just values.
 | `is not` | Returns `True` if operands refer to different objects | `x is not y` |
 
 ### 2.5.1 `id()` Function
-- Returns the memory address (identity) of an object
-- `id(x) == id(y)` is equivalent to `x is y`
 
-#### Key Difference
-- `==` compares **values** (equality)
-- `is` compares **memory addresses** (identity)
+The `id()` function returns the memory address (identity) of an object. `id(x) == id(y)` is equivalent to `x is y`.
+
+`==` compares **values** (equality). `is` compares **memory addresses** (identity).
 
 ```python
 a = [1, 2, 3]
@@ -117,6 +144,20 @@ print(a == b)   # True - same values
 print(a is b)   # False - different objects in memory
 print(a is c)   # True - same object (c references a)
 print(id(a))    # Memory address of a
+```
+
+### 2.5.2 Interning
+
+Python caches small integers (`-5` to `256`) and empty strings at startup, so `is` may return `True` for equal values in these ranges. Do not rely on this behavior; always use `==` for value comparison and `is` only for `None` checks.
+
+```python
+a = 256
+b = 256
+print(a is b)   # True (cached)
+
+c = 257
+d = 257
+print(c is d)   # False (not cached)
 ```
 
 ## 2.6 Membership Operators
@@ -130,6 +171,112 @@ print(id(a))    # Memory address of a
 fruits = ["apple", "banana", "cherry"]
 print("apple" in fruits)      # True
 print("grape" not in fruits)  # True
+```
+
+## 2.7 Bitwise Operators
+
+Bitwise operators work on integers at the binary level. Do not confuse `&` and `|` with logical `and`/`or`.
+
+| Operator | Name | Example | Result |
+|----------|------|---------|--------|
+| `&` | AND | `5 & 3` | `1` (`101 & 011 = 001`) |
+| `\|` | OR | `5 \| 3` | `7` (`101 \| 011 = 111`) |
+| `^` | XOR | `5 ^ 3` | `6` (`101 ^ 011 = 110`) |
+| `~` | NOT | `~5` | `-6` (inverts all bits) |
+| `<<` | Left shift | `5 << 1` | `10` (`1010`) |
+| `>>` | Right shift | `5 >> 1` | `2` (`10`) |
+
+```python
+flags = 0b1010
+mask = 0b1100
+
+print(flags & mask)   # 0b1000 (8) - keep bits set in both
+print(flags | mask)   # 0b1110 (14) - set bits in either
+print(flags ^ mask)   # 0b0110 (6)  - set bits different
+print(flags << 1)     # 0b10100 (20) - multiply by 2
+print(flags >> 1)     # 0b0101 (5)   - divide by 2
+```
+
+## 2.8 Operator Precedence
+
+From highest to lowest precedence:
+
+| Precedence | Operators | Description |
+|------------|-----------|-------------|
+| 1 | `()` | Parentheses (grouping) |
+| 2 | `**` | Exponentiation |
+| 3 | `+x`, `-x`, `~x` | Unary positive, negative, bitwise NOT |
+| 4 | `*`, `/`, `//`, `%` | Multiplication, division, floor division, modulo |
+| 5 | `+`, `-` | Addition, subtraction |
+| 6 | `<<`, `>>` | Bitwise shifts |
+| 7 | `&` | Bitwise AND |
+| 8 | `^` | Bitwise XOR |
+| 9 | `\|` | Bitwise OR |
+| 10 | `==`, `!=`, `>`, `<`, `>=`, `<=`, `is`, `is not`, `in`, `not in` | Comparisons, identity, membership |
+| 11 | `not` | Logical NOT |
+| 12 | `and` | Logical AND |
+| 13 | `or` | Logical OR |
+| 14 | `if ... else` | Conditional expression |
+| 15 | `=`, `+=`, `-=`, etc. | Assignment |
+
+> **Best Practice:** Use parentheses to make precedence explicit. Do not rely on memorizing the full table.
+
+## 2.9 Ternary Operator
+
+A concise conditional expression in a single line.
+
+```python
+# Syntax
+value_if_true if condition else value_if_false
+
+# Example
+status = "adult" if age >= 18 else "minor"
+
+# Equivalent to
+if age >= 18:
+    status = "adult"
+else:
+    status = "minor"
+```
+
+## 2.10 Operator Overloading
+
+Define custom behavior for operators on user-defined classes using special (magic) methods.
+
+| Operator | Magic Method | Example Trigger |
+|----------|--------------|-----------------|
+| `+` | `__add__(self, other)` | `a + b` |
+| `-` | `__sub__(self, other)` | `a - b` |
+| `*` | `__mul__(self, other)` | `a * b` |
+| `/` | `__truediv__(self, other)` | `a / b` |
+| `==` | `__eq__(self, other)` | `a == b` |
+| `!=` | `__ne__(self, other)` | `a != b` |
+| `<` | `__lt__(self, other)` | `a < b` |
+| `>` | `__gt__(self, other)` | `a > b` |
+| `<=` | `__le__(self, other)` | `a <= b` |
+| `>=` | `__ge__(self, other)` | `a >= b` |
+| `str()` | `__str__(self)` | `print(a)` |
+| `len()` | `__len__(self)` | `len(a)` |
+| `[]` | `__getitem__(self, key)` | `a[key]` |
+
+```python
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __str__(self):
+        return f"Vector({self.x}, {self.y})"
+
+v1 = Vector(1, 2)
+v2 = Vector(3, 4)
+print(v1 + v2)   # Vector(4, 6)
 ```
 
 [← Previous: Variables and Data Types](01-variables-and-data-types.md) | [Next: User Interaction →](03-user-interaction.md)
