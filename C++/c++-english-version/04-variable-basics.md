@@ -151,6 +151,23 @@ static void helperFunction() { }
 // But cleaner - no need to repeat 'static' on every declaration
 ```
 
+**Anonymous Namespace vs `static`: Comparison**
+
+| Feature | Anonymous Namespace | `static` Keyword |
+|---------|---------------------|------------------|
+| **Syntax** | Wrap once, applies to all members | Must repeat on every declaration |
+| **Variables** | ✅ `int x;` | ✅ `static int x;` |
+| **Functions** | ✅ `void f();` | ✅ `static void f();` |
+| **Classes** | ✅ `class C {};` | ❌ Not allowed |
+| **Templates** | ✅ `template<...>` | ❌ Not allowed |
+| **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
+| **Code Clutter** | Low (one wrapper) | High (repetitive keywords) |
+| **C++ Standard** | Preferred (modern C++) | Deprecated for this use |
+
+**Key Insight:**
+- Use **anonymous namespace** when you need to hide classes, templates, or multiple declarations
+- Use **`static`** only for simple cases (single variable/function) or in C-compatible code
+
 **Prefer anonymous namespaces over `static`** for internal linkage:
 - Cleaner syntax (apply once to many declarations)
 - Works for classes and templates (static doesn't)
