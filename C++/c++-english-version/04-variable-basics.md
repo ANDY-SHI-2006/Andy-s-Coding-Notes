@@ -409,19 +409,17 @@ auto [min, max] = std::minmax(3, 7);  // min=3, max=7
 
 #### 4.1.5.4 thread_local: Thread-Specific Storage (C++11)
 
-**What it does**
 `thread_local` gives each thread its own separate instance of a variable. Like each thread gets its own "copy" that other threads cannot see or modify.
-
-**Key Characteristics**
 
 | Aspect | Behavior |
 |--------|----------|
+| **Purpose** | Separate variable instance per thread |
 | **Initialization** | When thread starts (first use) |
 | **Lifetime** | Until thread ends |
 | **Visibility** | Only visible to owning thread |
 | **Storage** | Separate memory per thread |
 
-**Basic Example**
+##### 4.1.5.4.1 Basic Usage
 
 ```cpp
 #include <thread>
@@ -437,7 +435,6 @@ void increment() {
 int main() {
     thread t1(increment);  // t1's counter: 0→
     thread t2(increment);  // t2's counter: 0→(separate from t1!)
-    
     increment();           // main thread's counter: 0→
     
     t1.join();
@@ -457,9 +454,6 @@ void demo() {
     local++;
     shared++;
     thread_only++;
-    
-    cout << "local: " << local << ", shared: " << shared 
-         << ", thread_only: " << thread_only << endl;
 }
 
 // Thread A calls demo() 3 times:  local=1, shared=1, thread_only=1
@@ -467,62 +461,46 @@ void demo() {
 // Thread A calls demo() again:    local=1, shared=3, thread_only=2
 ```
 
-**Real-World Use Cases**
+##### 4.1.5.4.2 Common Use Cases
 
-1. **Thread-Specific Random Number Generators**
-   ```cpp
-   thread_local std::mt19937 rng(std::random_device{}());
-   
-   int random_int() {
-       // Each thread has its own RNG state, no locking needed
-       return rng();
-   }
-   ```
+**Thread-Specific Random Number Generators**
+```cpp
+thread_local std::mt19937 rng(std::random_device{}());
 
-2. **Per-Thread Connection Pools** (avoiding global lock)
-   ```cpp
-   thread_local std::unique_ptr<DatabaseConnection> conn;
-   
-   DatabaseConnection& get_connection() {
-       if (!conn) {
-           conn = std::make_unique<DatabaseConnection>();
-       }
-       return *conn;
-   }
-   ```
+int random_int() {
+    // Each thread has its own RNG state, no locking needed
+    return rng();
+}
+```
 
-3. **Recursive Function State**
-   ```cpp
-   void recursive_process() {
-       thread_local int depth = 0;  // Tracks recursion depth per thread
-       depth++;
-       // ... recursion logic ...
-       depth--;
-   }
-   ```
+**Per-Thread Connection Pools**
+```cpp
+thread_local std::unique_ptr<DatabaseConnection> conn;
 
-**⚠️ Pitfalls**
+DatabaseConnection& get_connection() {
+    if (!conn) {
+        conn = std::make_unique<DatabaseConnection>();
+    }
+    return *conn;
+}
+```
 
-1. **Destruction Order Issues**
-   ```cpp
-   // Thread-local destructors run in unspecified order during thread exit
-   // Avoid dependencies between thread_local variables during cleanup
-   ```
+##### 4.1.5.4.3 Common Pitfalls
 
-2. **Memory Overhead**
+1. **Memory Overhead**
    ```cpp
    // Each thread allocates its own copy
    thread_local char big_buffer[1024*1024];  // 1MB per thread!
    // With 100 threads = 100MB total
    ```
 
-3. **Not a replacement for synchronization**
+2. **Not a replacement for synchronization**
    ```cpp
    thread_local int counter = 0;
    
    void unsafe() {
-       counter++;           // Thread-safe (each thread has own copy)
-       global_var = counter; // —NOT thread-safe! Multiple threads write to global_var
+       counter++;              // Thread-safe (each thread has own copy)
+       global_var = counter;   // —NOT thread-safe!
    }
    ```
 
@@ -531,9 +509,8 @@ void demo() {
 | Use thread_local | Don't use thread_local |
 |------------------|----------------------|
 | Per-thread caches | Data that needs to be shared |
-| Thread-specific RNGs | When you need to track global state |
-| Connection pooling | When memory is extremely constrained |
-| Avoiding locks on thread-private data | When thread count is very high |
+| Thread-specific RNGs | When memory is extremely constrained |
+| Connection pooling | When thread count is very high |
 
 #### 4.1.5.5 mutable: Modifying in const Contexts
 
