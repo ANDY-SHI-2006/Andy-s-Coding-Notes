@@ -54,11 +54,27 @@ first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 
 ### 1.2.1 Single-line Comments
 
-Use `#` to start a single-line comment. Everything after `#` on the same line is ignored by the interpreter. In most IDEs, the shortcut is `Ctrl+/`.
+Use `#` to start a single-line comment. Everything after `#` on the same line is ignored by the interpreter.
+
+```python
+# This is a single-line comment
+x = 10  # Inline comment
+```
 
 ### 1.2.2 Multi-line Comments
 
-Python has no formal multi-line comment syntax. Triple quotes `'''` or `"""` create string literals; when not assigned to a variable, the interpreter discards them. This is commonly used as a workaround for multi-line comments, though the standard use case is **docstrings** (documentation strings for functions and classes).
+Python has no formal multi-line comment syntax. Triple quotes `'''` or `"""` create string literals; when not assigned to a variable, the interpreter discards them. The standard use case is **docstrings**.
+
+```python
+'''
+This is a multi-line string literal.
+It acts as a comment when not assigned.
+'''
+
+def greet():
+    """Return a greeting string."""
+    return "Hello"
+```
 
 ## 1.3 Variable Naming
 
