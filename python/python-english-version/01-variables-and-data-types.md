@@ -18,25 +18,33 @@ type(x)         # <class 'str'>
 
 Python supports several forms of multiple assignment.
 
-Unpacking assigns multiple values to multiple variables in a single statement:
+**Unpacking**
+
+Assigns multiple values to multiple variables in a single statement.
 
 ```python
 a, b = 1, 2
 ```
 
-Chain assignment binds multiple names to the same object:
+**Chain Assignment**
+
+Binds multiple names to the same object.
 
 ```python
 a = b = 0
 ```
 
-Swapping two values does not require a temporary variable:
+**Swap**
+
+Exchanges two values without a temporary variable.
 
 ```python
 a, b = b, a
 ```
 
-Extended unpacking captures the remainder into a list:
+**Extended Unpacking**
+
+Captures the remainder into a list.
 
 ```python
 first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
