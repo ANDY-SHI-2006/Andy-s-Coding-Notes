@@ -629,156 +629,93 @@ public:
 
 #### 4.1.5.6 volatile: Tell Compiler "Don't Optimize"
 
-**What it does**
 `volatile` tells the compiler that a variable's value may change at any time by external factors (hardware, OS, signal handlers), so it should not optimize away reads or writes.
 
-**The Problem: Compiler Optimization**
+| Aspect | Description |
+|--------|-------------|
+| **Purpose** | Prevent compiler optimization for external modifications |
+| **Use case** | Hardware registers, signal handlers |
+| **⚠️ Important** | NOT for thread synchronization! |
+
+##### 4.1.5.6.1 The Problem: Compiler Optimization
 
 ```cpp
 // Without volatile - compiler might optimize:
 int sensor = read_hardware();
 
-while (sensor == 0) {  // Compiler: "sensor never changes in this loop"
+while (sensor == 0) {  // Compiler: "sensor never changes"
     // Wait for hardware...
 }
-// Optimized to:
-// if (sensor == 0) { while (true) {} }  // Infinite loop! Never re-reads sensor!
-```
+// Optimized to infinite loop! Never re-reads sensor!
 
-```cpp
 // With volatile - correct behavior:
 volatile int sensor = read_hardware();
-
-while (sensor == 0) {  // Compiler must re-read from memory each time
+while (sensor == 0) {  // Must re-read from memory each time
     // Wait for hardware...
 }
 ```
 
-**Correct Use Cases**
+##### 4.1.5.6.2 Correct Use Cases
 
-1. **Hardware Registers**
-   ```cpp
-   // Memory-mapped hardware register
-   volatile uint32_t* const TIMER_STATUS = reinterpret_cast<volatile uint32_t*>(0x4000);
-   
-   while (*TIMER_STATUS & 0x01) {  // Wait for timer flag
-       // Hardware will set bit when timer expires
-   }
-   ```
-
-2. **Signal Handlers**
-   ```cpp
-   volatile sig_atomic_t signal_received = 0;
-   
-   void signal_handler(int) {
-       signal_received = 1;  // Signal handler modifies this
-   }
-   
-   int main() {
-       signal(SIGINT, signal_handler);
-       while (!signal_received) {  // Main loop must check actual memory
-           // Do work...
-       }
-   }
-   ```
-
-3. **setjmp/longjmp Context**
-   ```cpp
-   volatile int jump_count = 0;  // Must be volatile if modified after setjmp
-   
-   if (setjmp(env) == 0) {
-       jump_count++;
-       longjmp(env, 1);
-   }
-   ```
-
-**⚠️ volatile is NOT for Thread Synchronization!**
-
-This is a common and dangerous misconception:
-
+**Hardware Registers**
 ```cpp
-// —WRONG: volatile does NOT provide atomicity or memory ordering!
-volatile bool data_ready = false;
-volatile int shared_data = 0;
-
-// Thread 1
-void producer() {
-    shared_data = 42;           // Not atomic, not ordered!
-    data_ready = true;          // Compiler might reorder these!
-}
-
-// Thread 2
-void consumer() {
-    while (!data_ready) {}      // Might be optimized away!
-    use(shared_data);           // Might see stale value!
+volatile uint32_t* const TIMER_STATUS = reinterpret_cast<volatile uint32_t*>(0x4000);
+while (*TIMER_STATUS & 0x01) {  // Wait for timer flag
+    // Hardware will set bit when timer expires
 }
 ```
 
-**Why volatile fails for threading:**
+**Signal Handlers**
+```cpp
+volatile sig_atomic_t signal_received = 0;
 
-| Property | volatile | std::atomic | What happens without it |
-|----------|----------|-------------|------------------------|
-| Atomicity | —No | —Yes | Torn reads/writes (32-bit on 64-bit value) |
-| Memory ordering | —No | —Yes | Instructions reordered across threads |
-| Visibility | —No guarantee | —Guarantee | CPU cache not synchronized |
+void signal_handler(int) {
+    signal_received = 1;  // Signal handler modifies this
+}
 
-**Correct Threading Solution:**
+int main() {
+    signal(SIGINT, signal_handler);
+    while (!signal_received) {}  // Must check actual memory
+}
+```
+
+##### 4.1.5.6.3 volatile is NOT for Threading!
+
+```cpp
+// —WRONG: volatile does NOT provide atomicity!
+volatile bool data_ready = false;
+void producer() { data_ready = true; }  // Not atomic, may reorder!
+void consumer() { while (!data_ready) {} }  // Might be optimized away!
+```
+
+| Property | volatile | std::atomic |
+|----------|----------|-------------|
+| Atomicity | ❌ No | ✅ Yes |
+| Memory ordering | ❌ No | ✅ Yes |
+| Visibility | ❌ No guarantee | ✅ Guaranteed |
+
 ```cpp
 // —CORRECT: Use std::atomic for threading
 std::atomic<bool> data_ready{false};
-std::atomic<int> shared_data{0};
-
-// Thread 1
-void producer() {
-    shared_data.store(42, std::memory_order_relaxed);
-    data_ready.store(true, std::memory_order_release);  // Happens-before
-}
-
-// Thread 2
-void consumer() {
-    while (!data_ready.load(std::memory_order_acquire)) {}
-    use(shared_data.load(std::memory_order_relaxed));  // Guaranteed to see 42
-}
+void producer() { data_ready.store(true, std::memory_order_release); }
+void consumer() { while (!data_ready.load(std::memory_order_acquire)) {} }
 ```
-
-**⚠️ Other Pitfalls**
-
-1. **Volatile operations are not atomic**
-   ```cpp
-   volatile int counter = 0;
-   counter++;  // —Not atomic! Read-modify-write can race
-   ```
-
-2. **Volatile doesn't prevent all optimizations**
-   ```cpp
-   volatile int x = 0;
-   x = 1;
-   x = 2;      // Compiler CAN eliminate x=1 (dead store), must do x=2
-   ```
-
-3. **Overhead**
-   ```cpp
-   // Each volatile access generates actual memory read/write
-   // Slower than register access, only use when necessary
-   ```
 
 **Best Practices**
 
 | Do | Don't |
 |----|-------|
 | Use for hardware registers | Use for thread synchronization |
-| Use for signal handler flags | Assume it provides atomicity |
-| Document why volatile is needed | Sprinkle volatile "just to be safe" |
-| Prefer std::atomic for threading | Mix volatile with threading primitives |
+| Use for signal handlers | Assume atomicity |
+| Document why needed | Use "just to be safe" |
 
-**Summary Decision Tree:**
-
+**Decision Tree:**
 ```
-Is variable modified by hardware/OS/signals?
-├── Yes —Use volatile
-└── No —Is it shared between threads?
-    ├── Yes —Use std::atomic or mutex
-    └── No —Regular variable (no volatile needed)
+Modified by hardware/OS/signals?
+├── Yes → Use volatile
+└── No → Shared between threads?
+    ├── Yes → Use std::atomic
+    └── No → Regular variable
 ```
 
 
