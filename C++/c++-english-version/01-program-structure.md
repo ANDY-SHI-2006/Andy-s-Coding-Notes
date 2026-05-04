@@ -479,17 +479,68 @@ gl::init();  // Equivalent to graphics::rendering::opengl::init()
 
 An **unnamed namespace** (anonymous namespace) restricts visibility to the current translation unit (source file). It is the modern C++ replacement for `static` at global scope.
 
+#### Overview
+
+An anonymous namespace provides **internal linkage** to all its members, making them accessible only within the current translation unit (`.cpp` file).
+
+#### Syntax
+
 ```cpp
 namespace {
-    int internal_counter = 0;  // Only visible in this file
+    // Everything here has internal linkage
+    int internalCounter = 0;
+    void helperFunction() { }
+}
 
-    void helper() {           // Only visible in this file
-        ++internal_counter;
+// vs. the old C-style way:
+static int internalCounter = 0;
+static void helperFunction() { }
+// Must repeat 'static' on every declaration
+```
+
+#### Comparison with the `static` Keyword
+
+| Feature | Anonymous Namespace | `static` Keyword |
+|---------|---------------------|------------------|
+| **Variables** | ✅ `int x;` | ✅ `static int x;` |
+| **Functions** | ✅ `void f();` | ✅ `static void f();` |
+| **Classes** | ✅ `class C {};` | ❌ Not allowed |
+| **Templates** | ✅ `template<...>` | ❌ Not allowed |
+| **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
+| **Code Clutter** | Low (one wrapper) | High (repetitive) |
+| **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
+
+#### Usage Guidelines
+
+| Scenario | Recommendation | Example |
+|----------|---------------|---------|
+| Single variable/function | Either works | `static int count;` or `namespace { int count; }` |
+| Multiple related declarations | **Anonymous namespace** | Variables + functions + helpers together |
+| Hide a class | **Anonymous namespace** (only option) | `class InternalHelper { };` |
+| Hide a template | **Anonymous namespace** (only option) | `template<typename T> T max(T a, T b)` |
+| C compatibility required | Use `static` | C code or C++ code used by C |
+
+#### Practical Example
+
+```cpp
+// math_utils.cpp
+namespace {
+    // Internal implementation - hidden from other files
+    const double PI = 3.14159265359;
+    
+    void validateInput(double x) {
+        if (x < 0) throw std::invalid_argument("Negative input");
     }
+}
+
+// Public interface - visible to other files
+double computeCircleArea(double radius) {
+    validateInput(radius);           // Access internal function
+    return PI * radius * radius;     // Access internal constant
 }
 ```
 
-> **Comparison:** `static int x;` and `namespace { int x; }` achieve the same internal linkage effect, but unnamed namespaces are preferred in modern C++.
+> **Summary:** Prefer anonymous namespaces for new C++ code—it's cleaner, more powerful, and the modern standard idiom.
 
 ### 1.3.5 using-declaration vs using-directive
 
