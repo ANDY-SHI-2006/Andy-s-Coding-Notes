@@ -118,28 +118,28 @@ Storage class specifiers control linkage, storage duration, and initialization o
 | `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.1.6.5](#4165-mutable-modifying-in-const-contexts)   |
 | `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.1.6.6](#4166-volatile-tell-compiler-dont-optimize)  |
 | `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.1.6.7](#4167-inline-variables)                      |
-| `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | �?                                                     |
+| `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | —                                                      |
 
 **Quick Overview:**
 
-- **`static`** �?Two meanings: (1) hide from other files at global scope, (2) persist between function calls at local scope
-- **`extern`** �?Declare that a variable/function is defined in another file
-- **`auto`** �?Let compiler deduce the type from initializer (C++11+)
-- **`thread_local`** �?Each thread gets its own instance (C++11+)
-- **`mutable`** �?Allow modification in const objects (for caching/mutexes)
-- **`volatile`** �?Prevent compiler optimization for hardware-mapped memory
-- **`inline`** �?Allow variable definition in headers (C++17+)
-- **`register`** �?Deprecated hint for register storage (C++17 removed)
+- **`static`** — Two meanings: (1) hide from other files at global scope, (2) persist between function calls at local scope
+- **`extern`** — Declare that a variable/function is defined in another file
+- **`auto`** — Let compiler deduce the type from initializer (C++11+)
+- **`thread_local`** — Each thread gets its own instance (C++11+)
+- **`mutable`** — Allow modification in const objects (for caching/mutexes)
+- **`volatile`** — Prevent compiler optimization for hardware-mapped memory
+- **`inline`** — Allow variable definition in headers (C++17+)
+- **`register`** — Deprecated hint for register storage (C++17 removed)
 
 > 📚 **For detailed coverage** of each specifier, including examples, pitfalls, and best practices, see [4.1.6 Storage Class Specifiers in Depth](#416-storage-class-specifiers-in-depth).
 
 ### 4.1.5 Anonymous Namespaces
 
-**What it is**
+#### 4.1.5.1 Overview
 
 An anonymous namespace provides **internal linkage** to all its members, making them accessible only within the current translation unit (`.cpp` file). It's the modern C++ replacement for the `static` keyword.
 
-**Basic Syntax**
+#### 4.1.5.2 Syntax
 
 ```cpp
 namespace {
@@ -154,19 +154,19 @@ static void helperFunction() { }
 // Must repeat 'static' on every declaration
 ```
 
-**Anonymous Namespace vs `static`**
+#### 4.1.5.3 Comparison with the `static` Keyword
 
 | Feature | Anonymous Namespace | `static` Keyword |
 |---------|---------------------|------------------|
-| **Variables** | �?`int x;` | �?`static int x;` |
-| **Functions** | �?`void f();` | �?`static void f();` |
-| **Classes** | �?`class C {};` | �?Not allowed |
-| **Templates** | �?`template<...>` | �?Not allowed |
-| **Type Aliases** | �?`using Alias = T;` | �?Not applicable |
+| **Variables** | ✅ `int x;` | ✅ `static int x;` |
+| **Functions** | ✅ `void f();` | ✅ `static void f();` |
+| **Classes** | ✅ `class C {};` | ❌ Not allowed |
+| **Templates** | ✅ `template<...>` | ❌ Not allowed |
+| **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
 | **Code Clutter** | Low (one wrapper) | High (repetitive) |
-| **C++ Standard** | �?Preferred (modern) | ⚠️ Deprecated |
+| **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
 
-**When to Use Which**
+#### 4.1.5.4 Usage Guidelines
 
 | Scenario | Recommendation | Example |
 |----------|---------------|---------|
@@ -176,21 +176,13 @@ static void helperFunction() { }
 | Hide a template | **Anonymous namespace** (only option) | `template<typename T> T max(T a, T b)` |
 | C compatibility required | Use `static` | C code or C++ code used by C |
 
-**Practical Example**
+#### 4.1.5.5 Practical Example
 
 ```cpp
 // math_utils.cpp
 namespace {
-    // Internal implementation details - not visible outside this file
+    // Internal implementation - hidden from other files
     const double PI = 3.14159265359;
-    
-    class PrecisionSettings {
-    public:
-        int decimalPlaces = 6;
-    };
-    
-    template<typename T>
-    T square(T x) { return x * x; }
     
     void validateInput(double x) {
         if (x < 0) throw std::invalid_argument("Negative input");
@@ -199,33 +191,12 @@ namespace {
 
 // Public interface - visible to other files
 double computeCircleArea(double radius) {
-    validateInput(radius);           // Can access internal function
-    return PI * square(radius);      // Can access internal constants and templates
+    validateInput(radius);           // Access internal function
+    return PI * radius * radius;     // Access internal constant
 }
 ```
 
-**Summary:** Prefer anonymous namespaces for new C++ code—it's cleaner, more powerful, and the modern standard idiom.
-
-```cpp
-// utils.cpp
-namespace {
-    // Internal implementation details
-    const int BUFFER_SIZE = 1024;
-    
-    class Buffer {
-        char data[BUFFER_SIZE];
-    public:
-        void clear() { /* ... */ }
-    };
-    
-    Buffer internalBuffer;  // One internal buffer instance
-}
-
-// Public interface
-void resetBuffer() {
-    internalBuffer.clear();
-}
-```
+> **Summary:** Prefer anonymous namespaces for new C++ code—it's cleaner, more powerful, and the modern standard idiom.
 
 ### 4.1.6 Storage Class Specifiers in Depth
 
@@ -382,7 +353,7 @@ Database& get_database() {
    // But if getLogger() accesses dbPort internally, chaos ensues!
    ```
 
-   **Why SIOF is Dangerous**
+   #### Why SIOF is Dangerous
    
    | Aspect | Description |
    |--------|-------------|
@@ -392,7 +363,7 @@ Database& get_database() {
    | **Silent Failure** | Might not crash, just produce wrong values silently |
    | **Hard to Debug** | Crash happens at program start, debugger shows garbage values |
 
-   **How to Detect SIOF**
+   #### How to Detect SIOF
    
    *Code Review Red Flags:*
    - Global variables initialized from `extern` variables
@@ -409,7 +380,7 @@ Database& get_database() {
    cppcheck --enable=all --std=c++17 *.cpp
    ```
 
-   **Solution Comparison**
+   #### Solution Comparison
    
    | Solution | When to Use | Pros | Cons |
    |----------|-------------|------|------|
@@ -418,7 +389,7 @@ Database& get_database() {
    | **Refactoring** | Complex dependencies | Eliminates problem entirely | May require significant redesign |
    | **Single translation unit** | Small projects | Deterministic order | Defeats purpose of separate compilation |
 
-   **Recommended Solution: Construct On First Use**
+   #### Recommended Solution: Construct On First Use
    
    The idiomatic C++ solution is to wrap globals in functions:
    
@@ -717,10 +688,10 @@ void increment() {
 }
 
 int main() {
-    thread t1(increment);  // t1's counter: 0�?
-    thread t2(increment);  // t2's counter: 0�?(separate from t1!)
+    thread t1(increment);  // t1's counter: 0→
+    thread t2(increment);  // t2's counter: 0→(separate from t1!)
     
-    increment();           // main thread's counter: 0�?
+    increment();           // main thread's counter: 0→
     
     t1.join();
     t2.join();
@@ -1277,7 +1248,7 @@ int b{};                // Empty braces = zero initialization (b = 0)
 // These will NOT compile with brace initialization:
 int a{3.14};            // —double —int loses precision
 int b{1000000000000};   // —Exceeds int range  
-char c{1000};           // �?000 exceeds char range (-128 to 127 or 0 to 255)
+char c{1000};           // →000 exceeds char range (-128 to 127 or 0 to 255)
 unsigned d{-5};         // —Negative to unsigned
 
 // These ARE allowed (no data loss):
@@ -1368,7 +1339,7 @@ A **narrowing conversion** is one that may lose information:
 | `double` | `int` | —Narrowing | Loses fractional part |
 | `int` | `char` | —Narrowing | May overflow |
 | `long long` | `int` | —Narrowing | May overflow on 32-bit systems |
-| `int` | `unsigned` | �?if negative) | Negative values wrap around |
+| `int` | `unsigned` | ❌ if negative) | Negative values wrap around |
 | `int` | `double` | —OK | No data loss |
 | `char` | `int` | —OK | No data loss |
 
@@ -1774,7 +1745,7 @@ void useArray() {
 // Memory leak example
 void leak() {
     int* p = new int(10);
-    // Forgot delete�?bytes lost forever (per call)
+    // Forgot delete→bytes lost forever (per call)
 }
 
 // Dangling pointer example
@@ -1833,6 +1804,74 @@ void sharedExample() {
 4. **Avoid Global Static**: Minimize global variables to reduce coupling and side effects
 5. **Never Return Dangling References**: Always ensure returned pointers/references point to valid memory
 
+### 4.3.4 Scope, Lifetime, and Linkage: How They Interact
+
+Understanding the relationship between **scope**, **lifetime**, and **linkage** is crucial for mastering C++ variable behavior. These three concepts are related but distinct:
+
+| Concept | Defines | Determined By |
+|---------|---------|---------------|
+| **Scope** | Where the name is visible | Code block structure ( `{}` ) |
+| **Lifetime** | When the object exists in memory | Storage duration (automatic, static, dynamic) |
+| **Linkage** | Whether the name refers to the same entity across translation units | Declarations and keywords (`static`, `extern`, anonymous namespace) |
+
+#### The Distinctions
+
+**Scope ≠ Lifetime**: A variable can be out of scope but still alive:
+```cpp
+int* createInt() {
+    int* p = new int(42);  // p has block scope
+    return p;              // p goes out of scope here
+}                          // but the int lives on (dynamic lifetime)
+
+int* ptr = createInt();    // ptr can still access the object
+```
+
+**Lifetime ≠ Linkage**: Two variables can share linkage but have different lifetimes:
+```cpp
+// File A.cpp
+int global = 10;           // static storage, external linkage
+
+void func() {
+    static int local = 20; // static storage, no linkage
+}
+```
+
+#### Common Combinations
+
+| Variable Type | Scope | Lifetime | Linkage | Example |
+|---------------|-------|----------|---------|---------|
+| Local variable | Block | Automatic | None | `void f() { int x; }` |
+| Static local | Block | Static | None | `void f() { static int x; }` |
+| Global variable | Namespace | Static | External | `int g_x;` (at namespace scope) |
+| Static global | Namespace | Static | Internal | `static int g_x;` |
+| Anonymous namespace member | Namespace | Static | Internal | `namespace { int x; }` |
+| Dynamic object | N/A | Dynamic | N/A | `new int(42)` |
+
+#### Common Misconceptions
+
+**Misconception 1**: "`static` always means the same thing"
+- At namespace scope: affects **linkage** (internal vs external)
+- At function scope: affects **lifetime** (persists across calls)
+- At class scope: affects **lifetime** (shared across instances)
+
+**Misconception 2**: "Global variables always have external linkage"
+```cpp
+static int hidden = 42;   // Global scope, but internal linkage
+namespace { int also_hidden = 42; }  // Also internal linkage
+```
+
+**Misconception 3**: "Variables with the same name in different files are the same variable"
+```cpp
+// File A.cpp
+int count = 0;      // External linkage
+
+// File B.cpp  
+int count = 0;      // ERROR: multiple definitions (ODR violation)
+                    // Must use 'extern int count;' to refer to A's variable
+```
+
+> **Summary**: Think of scope as "who can see the name", lifetime as "when does the object exist", and linkage as "is this the same object in other files". They are orthogonal concepts that combine to determine variable behavior.
+
 ## 4.4 Constants: const and constexpr
 
 Constants are variables whose values cannot be modified.
@@ -1860,8 +1899,8 @@ maxSize = 200;                     // —Compile error!
 
 ```cpp
 int a = 10, b = 20;
-const int* ptr1 = &a;        // Can reassign: ptr1 = &b; �?                            // Cannot modify: *ptr1 = 30; �?
-int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; �?                            // Can modify: *ptr2 = 30; �?
+const int* ptr1 = &a;        // Can reassign: ptr1 = &b; ✅                            // Cannot modify: *ptr1 = 30; ❌
+int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; ❌                            // Can modify: *ptr2 = 30; ✅
 const int* const ptr3 = &a;  // Both pointer and value are fixed
 ```
 
@@ -1950,6 +1989,6 @@ constexpr int result = square(5);      // —Computed at compile time
  
  
  
-[�� Previous: Code Standardization](03-code-standardization.md) | [Next: Operators ��](05-operators.md)
+[← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
  
  
