@@ -153,21 +153,96 @@ print(f"Pi = {pi:.2f}")  # Pi = 3.14
 
 ### 3.3.2 Format Specifiers
 
-| Specifier | Description | Example | Output |
-|-----------|-------------|---------|--------|
-| `:.2f` | 2 decimal places | `f"{pi:.2f}"` | `3.14` |
-| `:>10` | Right-align, width 10 | `f"{'hi':>10}"` | `        hi` |
-| `:<10` | Left-align, width 10 | `f"{'hi':<10}"` | `hi        ` |
-| `:^10` | Center, width 10 | `f"{'hi':^10}"` | `    hi    ` |
-| `:,` | Thousands separator | `f"{1000000:,}"` | `1,000,000` |
-| `:.2%` | Percentage | `f"{0.25:.2%}"` | `25.00%` |
-| `:0>5` | Zero-padding | `f"{42:0>5}"` | `00042` |
+Format specifiers follow a consistent syntax inside the `{}`:
+
+```
+{value:[fill][align][sign][#][0][width][grouping][.precision][type]}
+```
+
+Each component is optional. Order matters only in that `fill` must precede `align`.
+
+#### 3.3.2.1 Alignment and Width
+
+| Component | Symbol | Meaning |
+|-----------|--------|---------|
+| **Align** | `<` | Left-align |
+| | `>` | Right-align |
+| | `^` | Center |
+| | `=` | Pad after sign (numbers only) |
+| **Fill** | any char | Character used for padding (placed before align) |
+| **Width** | number | Minimum total field width |
 
 ```python
-price = 1234.5
-print(f"${price:>10.2f}")   # $   1234.50
-print(f"{1000000:,}")        # 1,000,000
-print(f"{0.85:.1%}")         # 85.0%
+# Alignment
+f"{'hi':>10}"     # '        hi'   (right, width 10)
+f"{'hi':<10}"     # 'hi        '   (left, width 10)
+f"{'hi':^10}"     # '    hi    '   (center, width 10)
+
+# Fill + align
+f"{'hi':0>5}"     # '000hi'        (0-pad, right, width 5)
+f"{'hi':#^6}"     # '#hi###'       (#-pad, center, width 6)
+
+# Numbers with =
+f"{-42:0=10}"     # '-000000042'   (pad between sign and digits)
+```
+
+#### 3.3.2.2 Number Formatting
+
+| Component | Symbol | Meaning |
+|-----------|--------|---------|
+| **Sign** | `+` | Always show sign (`+3`, `-3`) |
+| | `-` | Show sign only for negatives (default) |
+| | ` ` | Space for positive, minus for negative |
+| **Grouping** | `,` | Comma as thousands separator |
+| | `_` | Underscore as thousands separator |
+| **Precision** | `.n` | Decimal places for floats; max length for strings |
+| **Type** | `f` | Fixed-point float |
+| | `e` | Scientific notation |
+| | `%` | Percentage (multiplies by 100) |
+| | `d` | Integer (decimal) |
+| | `b` | Binary |
+| | `o` | Octal |
+| | `x` / `X` | Hexadecimal (lower/upper) |
+
+```python
+# Sign and grouping
+f"{1234:+d}"      # '+1234'
+f"{1234: }"       # ' 1234'
+f"{1000000:,}"    # '1,000,000'
+f"{1000000:_}"    # '1_000_000'
+
+# Precision and type
+f"{3.14159:.2f}"  # '3.14'
+f"{3.14159:.2e}"  # '3.14e+00'
+f"{0.25:.1%}"     # '25.0%'
+```
+
+#### 3.3.2.3 String Truncation
+
+Precision on strings limits the maximum length.
+
+```python
+f"{'hello':.3}"   # 'hel'  (first 3 characters)
+```
+
+#### 3.3.2.4 Combining Components
+
+Build complex formats by concatenating components in order.
+
+```python
+value = 3.14159
+
+# Fill + align + width + precision + type
+f"{value:0>10.2f}"   # '0000003.14'
+# 0 = fill, > = align right, 10 = width, .2 = precision, f = float
+
+# Sign + width + grouping + precision + type
+f"{1234.5:+#12,.2f}" # '   +1,234.50'
+# + = sign, # = alternate, 12 = width, , = grouping, .2 = precision, f = float
+
+# Hex with prefix
+f"{255:#x}"          # '0xff'
+f"{255:#X}"          # '0XFF'
 ```
 
 ### 3.3.3 `str.format()`
