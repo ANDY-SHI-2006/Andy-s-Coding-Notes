@@ -114,10 +114,45 @@ name = user_input or "Anonymous"
 ```python
 count = 10
 count += 5   # count is now 15
+```
 
-# Walrus operator: assign inside expression
-if (n := len("hello")) > 3:
-    print(n)  # 5
+### 2.4.2 Walrus Operator `:=`
+
+The walrus operator assigns a value **inside an expression** and returns that value. Unlike `=`, which is a statement, `:=` is an expression and can be used where statements are not allowed.
+
+**`=` vs `:=`:**
+
+| Feature | `=` | `:=` |
+|---------|-----|------|
+| Type | Statement | Expression |
+| Returns value | No | Yes |
+| Can use in `if`/`while` | No | Yes |
+| Python version | All | 3.8+ |
+
+**Common Patterns:**
+
+```python
+# Pattern 1: while loop with input
+while (line := input()) != "quit":
+    print(f"You entered: {line}")
+
+# Pattern 2: if with reused value
+if (n := len(data)) > 10:
+    print(f"Too long: {n} items")
+
+# Pattern 3: list comprehension without duplicate computation
+results = [y for x in data if (y := f(x)) > 0]
+
+# Pattern 4: regex match with reuse
+if (match := re.search(r"\d+", text)):
+    print(match.group())
+```
+
+**Limitation:** `:=` cannot be used as a standalone statement. It must appear inside an expression context.
+
+```python
+x := 1       # SyntaxError
+(x := 1)     # OK — parentheses create expression context
 ```
 
 ## 2.5 Identity Operators
