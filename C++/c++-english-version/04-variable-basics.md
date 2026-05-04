@@ -111,13 +111,13 @@ Storage class specifiers control linkage, storage duration, and initialization o
 
 | Specifier              | Effect                                      | Typical Use                | Details                                                |
 | ---------------------- | ------------------------------------------- | -------------------------- | ------------------------------------------------------ |
-| `static`               | Internal linkage OR static storage duration | Hide global, persist local | [4.1.6.1](#4161-static-two-different-meanings)         |
-| `extern`               | External linkage declaration                | Share across files         | [4.1.6.2](#4162-extern-sharing-variables-across-files) |
-| `auto` (C++11)         | Type deduction                              | Let compiler infer type    | [4.1.6.3](#4163-auto-type-deduction)                   |
-| `thread_local` (C++11) | Thread-local storage duration               | Thread-specific data       | [4.1.6.4](#4164-thread-local-thread-specific-storage)  |
-| `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.1.6.5](#4165-mutable-modifying-in-const-contexts)   |
-| `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.1.6.6](#4166-volatile-tell-compiler-dont-optimize)  |
-| `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.1.6.7](#4167-inline-variables)                      |
+| `static`               | Internal linkage OR static storage duration | Hide global, persist local | [4.1.5.1](#4151-static-two-different-meanings)         |
+| `extern`               | External linkage declaration                | Share across files         | [4.1.5.2](#4152-extern-sharing-variables-across-files) |
+| `auto` (C++11)         | Type deduction                              | Let compiler infer type    | [4.1.5.3](#4153-auto-type-deduction)                   |
+| `thread_local` (C++11) | Thread-local storage duration               | Thread-specific data       | [4.1.5.4](#4154-thread-local-thread-specific-storage)  |
+| `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.1.5.5](#4155-mutable-modifying-in-const-contexts)   |
+| `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.1.5.6](#4156-volatile-tell-compiler-dont-optimize)  |
+| `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.1.5.7](#4157-inline-variables)                      |
 | `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | —                                                      |
 
 **Quick Overview:**
@@ -131,78 +131,13 @@ Storage class specifiers control linkage, storage duration, and initialization o
 - **`inline`** — Allow variable definition in headers (C++17+)
 - **`register`** — Deprecated hint for register storage (C++17 removed)
 
-> 📚 **For detailed coverage** of each specifier, including examples, pitfalls, and best practices, see [4.1.6 Storage Class Specifiers in Depth](#416-storage-class-specifiers-in-depth).
+> 📚 **For detailed coverage** of each specifier, including examples, pitfalls, and best practices, see [4.1.5 Storage Class Specifiers in Depth](#415-storage-class-specifiers-in-depth).
 
-### 4.1.5 Anonymous Namespaces
-
-#### 4.1.5.1 Overview
-
-An anonymous namespace provides **internal linkage** to all its members, making them accessible only within the current translation unit (`.cpp` file). It's the modern C++ replacement for the `static` keyword.
-
-#### 4.1.5.2 Syntax
-
-```cpp
-namespace {
-    // Everything here has internal linkage
-    int internalCounter = 0;
-    void helperFunction() { }
-}
-
-// vs. the old C-style way:
-static int internalCounter = 0;
-static void helperFunction() { }
-// Must repeat 'static' on every declaration
-```
-
-#### 4.1.5.3 Comparison with the `static` Keyword
-
-| Feature | Anonymous Namespace | `static` Keyword |
-|---------|---------------------|------------------|
-| **Variables** | ✅ `int x;` | ✅ `static int x;` |
-| **Functions** | ✅ `void f();` | ✅ `static void f();` |
-| **Classes** | ✅ `class C {};` | ❌ Not allowed |
-| **Templates** | ✅ `template<...>` | ❌ Not allowed |
-| **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
-| **Code Clutter** | Low (one wrapper) | High (repetitive) |
-| **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
-
-#### 4.1.5.4 Usage Guidelines
-
-| Scenario | Recommendation | Example |
-|----------|---------------|---------|
-| Single variable/function | Either works | `static int count;` or `namespace { int count; }` |
-| Multiple related declarations | **Anonymous namespace** | Variables + functions + helpers together |
-| Hide a class | **Anonymous namespace** (only option) | `class InternalHelper { };` |
-| Hide a template | **Anonymous namespace** (only option) | `template<typename T> T max(T a, T b)` |
-| C compatibility required | Use `static` | C code or C++ code used by C |
-
-#### 4.1.5.5 Practical Example
-
-```cpp
-// math_utils.cpp
-namespace {
-    // Internal implementation - hidden from other files
-    const double PI = 3.14159265359;
-    
-    void validateInput(double x) {
-        if (x < 0) throw std::invalid_argument("Negative input");
-    }
-}
-
-// Public interface - visible to other files
-double computeCircleArea(double radius) {
-    validateInput(radius);           // Access internal function
-    return PI * radius * radius;     // Access internal constant
-}
-```
-
-> **Summary:** Prefer anonymous namespaces for new C++ code—it's cleaner, more powerful, and the modern standard idiom.
-
-### 4.1.6 Storage Class Specifiers in Depth
+### 4.1.5 Storage Class Specifiers in Depth
 
 This section provides detailed coverage of C++ storage class specifiers, including usage patterns, pitfalls, and best practices. For a quick reference, see [4.1.4 Storage Class Specifiers Overview](#414-storage-class-specifiers).
 
-#### 4.1.6.1 static: Two Different Meanings
+#### 4.1.5.1 static: Two Different Meanings
 
 The `static` keyword is one of the most confusing in C++ because it has **completely different meanings** depending on where you use it:
 
@@ -279,24 +214,36 @@ Database& get_database() {
 
 2. **Static Initialization Order Fiasco (SIOF)**
    
-   When global variables in different files depend on each other, initialization order is **undefined**. This can cause crashes or silent failures. See [4.1.6.1.3 SIOF](#41613-static-initialization-order-fiasco-siof) for details.
+   When global variables in different files depend on each other, initialization order is **undefined**. This can cause crashes or silent failures. See [4.1.5.1.3 SIOF](#41513-static-initialization-order-fiasco-siof) for details.
 
 **Summary Mnemonic:**
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
 - **Local `static`** = "Remember forever" (persist between calls)
 
-##### 4.1.6.1.1 Internal Linkage in Detail
+##### 4.1.5.1.1 Internal Linkage in Detail
 
-For a comprehensive comparison between `static` and anonymous namespaces, see [4.1.5 Anonymous Namespaces](#415-anonymous-namespaces).
+**Anonymous Namespace vs `static`**
 
-##### 4.1.6.1.2 Function-Level static in Detail
+| Feature | Anonymous Namespace | `static` Keyword |
+|---------|---------------------|------------------|
+| **Variables** | ✅ `int x;` | ✅ `static int x;` |
+| **Functions** | ✅ `void f();` | ✅ `static void f();` |
+| **Classes** | ✅ `class C {};` | ❌ Not allowed |
+| **Templates** | ✅ `template<...>` | ❌ Not allowed |
+| **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
+| **Code Clutter** | Low (one wrapper) | High (repetitive) |
+| **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
+
+For a comprehensive discussion of anonymous namespaces, see [1.3.4 Unnamed Namespaces](../01-program-structure.md#134-unnamed-namespaces).
+
+##### 4.1.5.1.2 Function-Level static in Detail
 
 Function-level `static` variables are ideal for:
 - **Function call counting/debugging**: Track how many times a function is called
 - **Caching expensive computations**: Store results of costly calculations
 - **Lazy initialization**: Defer expensive setup until first use
 
-##### 4.1.6.1.3 Static Initialization Order Fiasco (SIOF)
+##### 4.1.5.1.3 Static Initialization Order Fiasco (SIOF)
 
 SIOF occurs when global variables in different files depend on each other, but initialization order is **undefined** across translation units.
 
@@ -347,7 +294,7 @@ std::string& getAddress() {
 - [ ] Prefer `constexpr` for constants
 - [ ] Use static analyzers: `clang-tidy -checks='cppcoreguidelines-interfaces-global-init'`
 
-#### 4.1.6.2 extern: Sharing Variables Across Files
+#### 4.1.5.2 extern: Sharing Variables Across Files
 
 **What it does**
 The `extern` keyword declares a variable or function that is defined in another translation unit. It tells the compiler: "This exists somewhere else—don't allocate storage for it here."
@@ -452,7 +399,7 @@ extern "C" void cpp_for_c(int x) {  // C code can call this by name "cpp_for_c"
 
 ---
 
-#### 4.1.6.3 auto: From Storage Class to Type Deduction (C++11)
+#### 4.1.5.3 auto: From Storage Class to Type Deduction (C++11)
 
 **⚠️ Historical Context (Important!)**
 
@@ -565,9 +512,9 @@ auto [min, max] = std::minmax(3, 7);  // min=3, max=7
 - In interfaces/APIs where explicit types document contracts
 - When you need to ensure a specific type (e.g., `int64_t` for fixed-width arithmetic)
 
-> 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#4161-auto-type-deduction-c11)
+> 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#4151-auto-type-deduction-c11)
 
-#### 4.1.6.4 thread_local: Thread-Specific Storage (C++11)
+#### 4.1.5.4 thread_local: Thread-Specific Storage (C++11)
 
 **What it does**
 `thread_local` gives each thread its own separate instance of a variable. Like each thread gets its own "copy" that other threads cannot see or modify.
@@ -697,7 +644,7 @@ void demo() {
 
 ---
 
-#### 4.1.6.5 mutable: Modifying in const Contexts
+#### 4.1.5.5 mutable: Modifying in const Contexts
 
 **What it does**
 `mutable` allows a class member to be modified even when the containing object is `const`. It marks data as "logically const but physically modifiable."
@@ -860,7 +807,7 @@ public:
 
 ---
 
-#### 4.1.6.6 volatile: Tell Compiler "Don't Optimize"
+#### 4.1.5.6 volatile: Tell Compiler "Don't Optimize"
 
 **What it does**
 `volatile` tells the compiler that a variable's value may change at any time by external factors (hardware, OS, signal handlers), so it should not optimize away reads or writes.
@@ -1016,7 +963,7 @@ Is variable modified by hardware/OS/signals?
 
 
 
-#### 4.1.6.7 Inline Variables (C++17)
+#### 4.1.5.7 Inline Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
 
