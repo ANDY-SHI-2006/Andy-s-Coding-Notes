@@ -722,13 +722,20 @@ Modified by hardware/OS/signals?
 
 #### 4.1.5.7 Inline Variables (C++17)
 
-Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
+Before C++17, global variables with external linkage could only be defined in one translation unit. **C++17 `inline` variables** solve this: they can be defined in a header file and shared across all translation units.
 
-**C++17 `inline` variables** solve this: they can be defined in a header file and shared across all translation units, guaranteed to be the same object.
+| Aspect | Description |
+|--------|-------------|
+| **Purpose** | Define global variables in headers (shared across translation units) |
+| **Benefit** | True header-only libraries without `extern` gymnastics |
+| **vs static** | `inline` = shared, `static` = separate copies per file |
+| **vs constexpr** | `inline` allows non-constant initialization |
+
+##### 4.1.5.7.1 Basic Usage
 
 ```cpp
 // config.h (header file)
-inline int version = 1;                 // —OK in C++17: single definition shared
+inline int version = 1;                 // —OK: single definition shared
 inline std::string appName = "MyApp";   // —Complex types work too
 
 // main.cpp
@@ -740,18 +747,13 @@ int main() { version++; }               // version = 2
 void print() { cout << version; }       // Sees version = 2 (same object)
 ```
 
-**Benefits:**
-- True header-only libraries without `extern` gymnastics
-- Guaranteed identical object across all translation units
-- Can be initialized with non-constant expressions (unlike `constexpr`)
-
-**Comparison:**
+##### 4.1.5.7.2 Comparison with Alternatives
 
 | Approach | Pre-C++17 | C++17 Modern |
 |----------|-----------|--------------|
-| Header definition | `static int x = 1;` (separate copies!) | `inline int x = 1;` (shared) |
-| Header + one .cpp | `extern int x;` in header, `int x = 1;` in .cpp | `inline int x = 1;` in header only |
-| Constexpr | `constexpr int x = 1;` (compile-time only) | `inline constexpr int x = 1;` (best of both) |
+| Header only | `static int x = 1;` (separate copies!) | `inline int x = 1;` (shared) |
+| Header + .cpp | `extern int x;` + `int x = 1;` | `inline int x = 1;` (header only) |
+| Compile-time | `constexpr int x = 1;` | `inline constexpr int x = 1;` (best of both) |
 
 
 
