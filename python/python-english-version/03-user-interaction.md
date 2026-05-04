@@ -269,13 +269,21 @@ f"{1000000:_}"    # '1_000_000'
 
 `.n` sets decimal places for numbers or maximum length for strings.
 
-```python
-# Numbers
-f"{3.14159:.2f}"  # '3.14'
+**For numbers:** Precision rounds the value (using round-half-to-even, also known as banker's rounding). It does not truncate.
 
-# Strings (truncation)
+**For strings:** Precision truncates to the given maximum length.
+
+```python
+# Numbers: rounded, not truncated
+f"{3.14159:.2f}"  # '3.14'
+f"{2.5:.0f}"       # '2'   (round half to even)
+f"{3.5:.0f}"       # '4'   (round half to even)
+
+# Strings: truncated
 f"{'hello':.3}"   # 'hel'
 ```
+
+> **Floating-point trap:** Some decimals cannot be represented exactly in binary. For example, `f"{2.675:.2f}"` produces `'2.67'` instead of `'2.68'` because `2.675` is stored as slightly less than the true value.
 
 #### 3.3.2.8 Type
 
