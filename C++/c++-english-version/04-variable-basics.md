@@ -112,11 +112,11 @@ Storage class specifiers control linkage, storage duration, and initialization o
 | Specifier              | Effect                                      | Typical Use                | Details                                                |
 | ---------------------- | ------------------------------------------- | -------------------------- | ------------------------------------------------------ |
 | `static`               | Internal linkage OR static storage duration | Hide global, persist local | [4.1.5.1](#4151-static-two-different-meanings)         |
-| `extern`               | External linkage declaration                | Share across files         | [4.1.5.2](#4152-extern-sharing-variables-across-files) |
-| `auto` (C++11)         | Type deduction                              | Let compiler infer type    | [4.1.5.3](#4153-auto-type-deduction)                   |
-| `thread_local` (C++11) | Thread-local storage duration               | Thread-specific data       | [4.1.5.4](#4154-thread-local-thread-specific-storage)  |
-| `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.1.5.5](#4155-mutable-modifying-in-const-contexts)   |
-| `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.1.5.6](#4156-volatile-tell-compiler-dont-optimize)  |
+| `extern`               | External linkage declaration                | Share across files         | [4.1.5.3](#4153-extern-sharing-variables-across-files) |
+| `auto` (C++11)         | Type deduction                              | Let compiler infer type    | [4.1.5.4](#4154-auto-type-deduction)                   |
+| `thread_local` (C++11) | Thread-local storage duration               | Thread-specific data       | [4.1.5.5](#4155-thread-local-thread-specific-storage)  |
+| `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.1.5.6](#4156-mutable-modifying-in-const-contexts)   |
+| `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.1.5.7](#4157-volatile-tell-compiler-dont-optimize)  |
 | `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.1.5.7](#4157-inline-variables)                      |
 | `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | —                                                      |
 
@@ -216,34 +216,15 @@ Database& get_database() {
    
    When global variables in different files depend on each other, initialization order is **undefined**. This can cause crashes or silent failures. See [4.1.5.1.3 SIOF](#41513-static-initialization-order-fiasco-siof) for details.
 
+**Anonymous Namespace vs `static`**
+
+For hiding implementation details, you can use either file-level `static` or anonymous namespaces. See [1.3.4 Unnamed Namespaces](../01-program-structure.md#134-unnamed-namespaces) for a detailed comparison.
+
 **Summary Mnemonic:**
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
 - **Local `static`** = "Remember forever" (persist between calls)
 
-##### 4.1.5.1.1 Internal Linkage in Detail
-
-**Anonymous Namespace vs `static`**
-
-| Feature | Anonymous Namespace | `static` Keyword |
-|---------|---------------------|------------------|
-| **Variables** | ✅ `int x;` | ✅ `static int x;` |
-| **Functions** | ✅ `void f();` | ✅ `static void f();` |
-| **Classes** | ✅ `class C {};` | ❌ Not allowed |
-| **Templates** | ✅ `template<...>` | ❌ Not allowed |
-| **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
-| **Code Clutter** | Low (one wrapper) | High (repetitive) |
-| **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
-
-For a comprehensive discussion of anonymous namespaces, see [1.3.4 Unnamed Namespaces](../01-program-structure.md#134-unnamed-namespaces).
-
-##### 4.1.5.1.2 Function-Level static in Detail
-
-Function-level `static` variables are ideal for:
-- **Function call counting/debugging**: Track how many times a function is called
-- **Caching expensive computations**: Store results of costly calculations
-- **Lazy initialization**: Defer expensive setup until first use
-
-##### 4.1.5.1.3 Static Initialization Order Fiasco (SIOF)
+#### 4.1.5.3 Static Initialization Order Fiasco (SIOF)
 
 SIOF occurs when global variables in different files depend on each other, but initialization order is **undefined** across translation units.
 
@@ -294,7 +275,7 @@ std::string& getAddress() {
 - [ ] Prefer `constexpr` for constants
 - [ ] Use static analyzers: `clang-tidy -checks='cppcoreguidelines-interfaces-global-init'`
 
-#### 4.1.5.2 extern: Sharing Variables Across Files
+#### 4.1.5.4 extern: Sharing Variables Across Files
 
 **What it does**
 The `extern` keyword declares a variable or function that is defined in another translation unit. It tells the compiler: "This exists somewhere else—don't allocate storage for it here."
@@ -399,7 +380,7 @@ extern "C" void cpp_for_c(int x) {  // C code can call this by name "cpp_for_c"
 
 ---
 
-#### 4.1.5.3 auto: From Storage Class to Type Deduction (C++11)
+#### 4.1.5.4 auto: From Storage Class to Type Deduction (C++11)
 
 **⚠️ Historical Context (Important!)**
 
@@ -514,7 +495,7 @@ auto [min, max] = std::minmax(3, 7);  // min=3, max=7
 
 > 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#4151-auto-type-deduction-c11)
 
-#### 4.1.5.4 thread_local: Thread-Specific Storage (C++11)
+#### 4.1.5.5 thread_local: Thread-Specific Storage (C++11)
 
 **What it does**
 `thread_local` gives each thread its own separate instance of a variable. Like each thread gets its own "copy" that other threads cannot see or modify.
@@ -644,7 +625,7 @@ void demo() {
 
 ---
 
-#### 4.1.5.5 mutable: Modifying in const Contexts
+#### 4.1.5.6 mutable: Modifying in const Contexts
 
 **What it does**
 `mutable` allows a class member to be modified even when the containing object is `const`. It marks data as "logically const but physically modifiable."
@@ -807,7 +788,7 @@ public:
 
 ---
 
-#### 4.1.5.6 volatile: Tell Compiler "Don't Optimize"
+#### 4.1.5.7 volatile: Tell Compiler "Don't Optimize"
 
 **What it does**
 `volatile` tells the compiler that a variable's value may change at any time by external factors (hardware, OS, signal handlers), so it should not optimize away reads or writes.
