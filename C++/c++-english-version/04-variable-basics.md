@@ -109,8 +109,8 @@ void func() {
 
 Storage class specifiers control linkage, storage duration, and initialization of variables.
 
-| Specifier              | Effect                                      | Typical Use                | Details                                             |
-| ---------------------- | ------------------------------------------- | -------------------------- | --------------------------------------------------- |
+| Specifier              | Effect                                      | Typical Use                | Details                                                |
+| ---------------------- | ------------------------------------------- | -------------------------- | ------------------------------------------------------ |
 | `static`               | Internal linkage OR static storage duration | Hide global, persist local | [4.1.6.1](#4161-static-two-different-meanings)         |
 | `extern`               | External linkage declaration                | Share across files         | [4.1.6.2](#4162-extern-sharing-variables-across-files) |
 | `auto` (C++11)         | Type deduction                              | Let compiler infer type    | [4.1.6.3](#4163-auto-type-deduction)                   |
@@ -118,18 +118,18 @@ Storage class specifiers control linkage, storage duration, and initialization o
 | `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.1.6.5](#4165-mutable-modifying-in-const-contexts)   |
 | `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.1.6.6](#4166-volatile-tell-compiler-dont-optimize)  |
 | `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.1.6.7](#4167-inline-variables)                      |
-| `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | — |
+| `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | �?                                                     |
 
 **Quick Overview:**
 
-- **`static`** — Two meanings: (1) hide from other files at global scope, (2) persist between function calls at local scope
-- **`extern`** — Declare that a variable/function is defined in another file
-- **`auto`** — Let compiler deduce the type from initializer (C++11+)
-- **`thread_local`** — Each thread gets its own instance (C++11+)
-- **`mutable`** — Allow modification in const objects (for caching/mutexes)
-- **`volatile`** — Prevent compiler optimization for hardware-mapped memory
-- **`inline`** — Allow variable definition in headers (C++17+)
-- **`register`** — Deprecated hint for register storage (C++17 removed)
+- **`static`** �?Two meanings: (1) hide from other files at global scope, (2) persist between function calls at local scope
+- **`extern`** �?Declare that a variable/function is defined in another file
+- **`auto`** �?Let compiler deduce the type from initializer (C++11+)
+- **`thread_local`** �?Each thread gets its own instance (C++11+)
+- **`mutable`** �?Allow modification in const objects (for caching/mutexes)
+- **`volatile`** �?Prevent compiler optimization for hardware-mapped memory
+- **`inline`** �?Allow variable definition in headers (C++17+)
+- **`register`** �?Deprecated hint for register storage (C++17 removed)
 
 > 📚 **For detailed coverage** of each specifier, including examples, pitfalls, and best practices, see [4.1.6 Storage Class Specifiers in Depth](#416-storage-class-specifiers-in-depth).
 
@@ -158,13 +158,13 @@ static void helperFunction() { }
 
 | Feature | Anonymous Namespace | `static` Keyword |
 |---------|---------------------|------------------|
-| **Variables** | ✅ `int x;` | ✅ `static int x;` |
-| **Functions** | ✅ `void f();` | ✅ `static void f();` |
-| **Classes** | ✅ `class C {};` | ❌ Not allowed |
-| **Templates** | ✅ `template<...>` | ❌ Not allowed |
-| **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
+| **Variables** | �?`int x;` | �?`static int x;` |
+| **Functions** | �?`void f();` | �?`static void f();` |
+| **Classes** | �?`class C {};` | �?Not allowed |
+| **Templates** | �?`template<...>` | �?Not allowed |
+| **Type Aliases** | �?`using Alias = T;` | �?Not applicable |
 | **Code Clutter** | Low (one wrapper) | High (repetitive) |
-| **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
+| **C++ Standard** | �?Preferred (modern) | ⚠️ Deprecated |
 
 **When to Use Which**
 
@@ -717,10 +717,10 @@ void increment() {
 }
 
 int main() {
-    thread t1(increment);  // t1's counter: 0—
-    thread t2(increment);  // t2's counter: 0— (separate from t1!)
+    thread t1(increment);  // t1's counter: 0�?
+    thread t2(increment);  // t2's counter: 0�?(separate from t1!)
     
-    increment();           // main thread's counter: 0—
+    increment();           // main thread's counter: 0�?
     
     t1.join();
     t2.join();
@@ -1277,7 +1277,7 @@ int b{};                // Empty braces = zero initialization (b = 0)
 // These will NOT compile with brace initialization:
 int a{3.14};            // —double —int loses precision
 int b{1000000000000};   // —Exceeds int range  
-char c{1000};           // —1000 exceeds char range (-128 to 127 or 0 to 255)
+char c{1000};           // �?000 exceeds char range (-128 to 127 or 0 to 255)
 unsigned d{-5};         // —Negative to unsigned
 
 // These ARE allowed (no data loss):
@@ -1368,7 +1368,7 @@ A **narrowing conversion** is one that may lose information:
 | `double` | `int` | —Narrowing | Loses fractional part |
 | `int` | `char` | —Narrowing | May overflow |
 | `long long` | `int` | —Narrowing | May overflow on 32-bit systems |
-| `int` | `unsigned` | —(if negative) | Negative values wrap around |
+| `int` | `unsigned` | �?if negative) | Negative values wrap around |
 | `int` | `double` | —OK | No data loss |
 | `char` | `int` | —OK | No data loss |
 
@@ -1774,7 +1774,7 @@ void useArray() {
 // Memory leak example
 void leak() {
     int* p = new int(10);
-    // Forgot delete— bytes lost forever (per call)
+    // Forgot delete�?bytes lost forever (per call)
 }
 
 // Dangling pointer example
@@ -1860,8 +1860,8 @@ maxSize = 200;                     // —Compile error!
 
 ```cpp
 int a = 10, b = 20;
-const int* ptr1 = &a;        // Can reassign: ptr1 = &b; —                             // Cannot modify: *ptr1 = 30; —
-int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; —                             // Can modify: *ptr2 = 30; —
+const int* ptr1 = &a;        // Can reassign: ptr1 = &b; �?                            // Cannot modify: *ptr1 = 30; �?
+int* const ptr2 = &a;        // Cannot reassign: ptr2 = &b; �?                            // Can modify: *ptr2 = 30; �?
 const int* const ptr3 = &a;  // Both pointer and value are fixed
 ```
 
@@ -1940,10 +1940,16 @@ constexpr int result = square(5);      // —Computed at compile time
 - Value determined at runtime —Use `const`
 - Just want to prevent modification —Use `const`
 
- 
-  
- >   * * C o n t i n u e   R e a d i n g * * :   F o r   a d v a n c e d   t o p i c s   l i k e   ` a u t o ` ,   ` d e c l t y p e ` ,   S t r u c t u r e d   B i n d i n g ,   a n d   V a r i a b l e   A t t r i b u t e s ,   s e e   [ C h a p t e r   1 3 :   M o d e r n   C + +   V a r i a b l e   F e a t u r e s ] ( 1 3 - m o d e r n - c p p - v a r i a b l e s . m d ) .  
-  
-  
- [ �!  P r e v i o u s :   C o d e   S t a n d a r d i z a t i o n ] ( 0 3 - c o d e - s t a n d a r d i z a t i o n . m d )   |   [ N e x t :   O p e r a t o r s   �!] ( 0 5 - o p e r a t o r s . m d )  
+
+ 
+ 
+ 
+ >   * * C o n t i n u e   R e a d i n g * * :   F o r   a d v a n c e d   t o p i c s   l i k e   ` a u t o ` ,   ` d e c l t y p e ` ,   S t r u c t u r e d   B i n d i n g ,   a n d   V a r i a b l e   A t t r i b u t e s ,   s e e   [ C h a p t e r   1 3 :   M o d e r n   C + +   V a r i a b l e   F e a t u r e s ] ( 1 3 - m o d e r n - c p p - v a r i a b l e s . m d ) . 
+ 
+ 
+ 
+ 
+ 
+[�� Previous: Code Standardization](03-code-standardization.md) | [Next: Operators ��](05-operators.md)
+ 
  
