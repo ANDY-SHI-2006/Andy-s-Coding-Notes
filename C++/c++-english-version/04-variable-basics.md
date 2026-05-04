@@ -214,7 +214,7 @@ Database& get_database() {
 
 2. **Static Initialization Order Fiasco (SIOF)**
    
-   When global variables in different files depend on each other, initialization order is **undefined**. This can cause crashes or silent failures. See [4.1.5.1.3 SIOF](#41513-static-initialization-order-fiasco-siof) for details.
+   When global variables in different files depend on each other, initialization order is **undefined**. This can cause crashes or silent failures. See [4.1.5.2 SIOF](#4152-static-initialization-order-fiasco-siof) for details.
 
 **Anonymous Namespace vs `static`**
 
