@@ -4,7 +4,21 @@
 
 ## 3.1 `print()` Function
 
-### 3.1.1 `sep` Parameter
+### 3.1.1 Syntax
+
+```python
+print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
+```
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `*objects` | Values to print (variable number) | — |
+| `sep` | Separator between values | `' '` (space) |
+| `end` | String appended after the last value | `'\n'` (newline) |
+| `file` | Output stream | `sys.stdout` |
+| `flush` | Force flush the stream | `False` |
+
+### 3.1.2 `sep` Parameter
 
 Specifies the separator between multiple values. Default is a space `' '`.
 
@@ -14,7 +28,7 @@ print(1, 2, 3, sep='+')  # Output: 1+2+3
 print(1, 2, 3, sep='\n') # Output: each on new line
 ```
 
-### 3.1.2 `end` Parameter
+### 3.1.3 `end` Parameter
 
 Specifies what to print at the end. Default is a newline `'\n'`.
 
@@ -24,7 +38,7 @@ print(2, end=' ')        # Space instead of newline
 print(3)                 # Output: 1 2 3
 ```
 
-### 3.1.3 `file` and `flush` Parameters
+### 3.1.4 `file` and `flush` Parameters
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
