@@ -135,43 +135,76 @@ Storage class specifiers control linkage, storage duration, and initialization o
 
 ### 4.1.6 Anonymous Namespaces
 
-An anonymous namespace provides internal linkage to all its members—essentially a cleaner alternative to `static` for variables and functions.
+**What it is**
+
+An anonymous namespace provides **internal linkage** to all its members, making them accessible only within the current translation unit (`.cpp` file). It's the modern C++ replacement for the `static` keyword.
+
+**Basic Syntax**
 
 ```cpp
 namespace {
     // Everything here has internal linkage
     int internalCounter = 0;
     void helperFunction() { }
-    class InternalClass { };
 }
 
-// Equivalent to:
+// vs. the old C-style way:
 static int internalCounter = 0;
 static void helperFunction() { }
-// But cleaner - no need to repeat 'static' on every declaration
+// Must repeat 'static' on every declaration
 ```
 
-**Anonymous Namespace vs `static`: Comparison**
+**Anonymous Namespace vs `static`**
 
 | Feature | Anonymous Namespace | `static` Keyword |
 |---------|---------------------|------------------|
-| **Syntax** | Wrap once, applies to all members | Must repeat on every declaration |
 | **Variables** | ✅ `int x;` | ✅ `static int x;` |
 | **Functions** | ✅ `void f();` | ✅ `static void f();` |
 | **Classes** | ✅ `class C {};` | ❌ Not allowed |
 | **Templates** | ✅ `template<...>` | ❌ Not allowed |
 | **Type Aliases** | ✅ `using Alias = T;` | ❌ Not applicable |
-| **Code Clutter** | Low (one wrapper) | High (repetitive keywords) |
-| **C++ Standard** | Preferred (modern C++) | Deprecated for this use |
+| **Code Clutter** | Low (one wrapper) | High (repetitive) |
+| **C++ Standard** | ✅ Preferred (modern) | ⚠️ Deprecated |
 
-**Key Insight:**
-- Use **anonymous namespace** when you need to hide classes, templates, or multiple declarations
-- Use **`static`** only for simple cases (single variable/function) or in C-compatible code
+**When to Use Which**
 
-**Prefer anonymous namespaces over `static`** for internal linkage:
-- Cleaner syntax (apply once to many declarations)
-- Works for classes and templates (static doesn't)
-- Modern C++ idiom
+| Scenario | Recommendation | Example |
+|----------|---------------|---------|
+| Single variable/function | Either works | `static int count;` or `namespace { int count; }` |
+| Multiple related declarations | **Anonymous namespace** | Variables + functions + helpers together |
+| Hide a class | **Anonymous namespace** (only option) | `class InternalHelper { };` |
+| Hide a template | **Anonymous namespace** (only option) | `template<typename T> T max(T a, T b)` |
+| C compatibility required | Use `static` | C code or C++ code used by C |
+
+**Practical Example**
+
+```cpp
+// math_utils.cpp
+namespace {
+    // Internal implementation details - not visible outside this file
+    const double PI = 3.14159265359;
+    
+    class PrecisionSettings {
+    public:
+        int decimalPlaces = 6;
+    };
+    
+    template<typename T>
+    T square(T x) { return x * x; }
+    
+    void validateInput(double x) {
+        if (x < 0) throw std::invalid_argument("Negative input");
+    }
+}
+
+// Public interface - visible to other files
+double computeCircleArea(double radius) {
+    validateInput(radius);           // Can access internal function
+    return PI * square(radius);      // Can access internal constants and templates
+}
+```
+
+**Summary:** Prefer anonymous namespaces for new C++ code—it's cleaner, more powerful, and the modern standard idiom.
 
 ```cpp
 // utils.cpp
