@@ -224,59 +224,6 @@ For hiding implementation details, you can use either file-level `static` or ano
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
 - **Local `static`** = "Remember forever" (persist between calls)
 
-### 4.1.6 Static Initialization Order Fiasco (SIOF)
-
-SIOF occurs when global variables in different files depend on each other, but initialization order is **undefined** across translation units.
-
-**The Problem**
-
-Within a single file, order is predictable (top to bottom). Across files, it's determined by the linker—**unpredictable and non-portable**.
-
-```cpp
-// config.cpp
-int port = 8080;
-
-// server.cpp
-extern int port;
-std::string address = "localhost:" + std::to_string(port);  
-// Danger: If server.cpp initializes first, address uses uninitialized port!
-```
-
-**Why It Matters**
-
-- **Undefined Behavior**: Reading uninitialized memory
-- **Heisenbug**: Works in debug, crashes in release
-- **Hard to Debug**: Error occurs at program start with garbage values
-
-**Solution: Construct On First Use**
-
-Wrap globals in functions with function-local statics:
-
-```cpp
-// config.cpp
-int& getPort() {
-    static int port = 8080;  // Initialized on first call, thread-safe (C++11)
-    return port;
-}
-
-std::string& getAddress() {
-    static std::string addr = "localhost:" + std::to_string(getPort());
-    return addr;
-}
-```
-
-*For compile-time constants, use `constexpr` instead.*
-
-**Prevention Checklist**
-
-- [ ] Avoid non-const global variables
-- [ ] Never initialize a global with another global from a different file
-- [ ] Use function-local static instead of global static
-- [ ] Prefer `constexpr` for constants
-- [ ] Use static analyzers: `clang-tidy -checks='cppcoreguidelines-interfaces-global-init'`
-
-> **Related Sections:** This problem involves interactions between [4.1.5.1 static](#4151-static-two-different-meanings), [4.1.5.2 extern](#4152-extern-sharing-variables-across-files), and global variables with constructors.
-
 #### 4.1.5.2 extern: Sharing Variables Across Files
 
 **What it does**
@@ -946,6 +893,7 @@ Is variable modified by hardware/OS/signals?
 
 
 
+## 4.2 Variable Definition and Initialization
 #### 4.1.5.7 Inline Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
@@ -986,7 +934,59 @@ void print() { cout << version; }       // Sees version = 2 (same object)
 
 
 [←Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
-## 4.2 Variable Definition and Initialization
+### 4.1.6 Static Initialization Order Fiasco (SIOF)
+
+SIOF occurs when global variables in different files depend on each other, but initialization order is **undefined** across translation units.
+
+**The Problem**
+
+Within a single file, order is predictable (top to bottom). Across files, it's determined by the linker—**unpredictable and non-portable**.
+
+```cpp
+// config.cpp
+int port = 8080;
+
+// server.cpp
+extern int port;
+std::string address = "localhost:" + std::to_string(port);  
+// Danger: If server.cpp initializes first, address uses uninitialized port!
+```
+
+**Why It Matters**
+
+- **Undefined Behavior**: Reading uninitialized memory
+- **Heisenbug**: Works in debug, crashes in release
+- **Hard to Debug**: Error occurs at program start with garbage values
+
+**Solution: Construct On First Use**
+
+Wrap globals in functions with function-local statics:
+
+```cpp
+// config.cpp
+int& getPort() {
+    static int port = 8080;  // Initialized on first call, thread-safe (C++11)
+    return port;
+}
+
+std::string& getAddress() {
+    static std::string addr = "localhost:" + std::to_string(getPort());
+    return addr;
+}
+```
+
+*For compile-time constants, use `constexpr` instead.*
+
+**Prevention Checklist**
+
+- [ ] Avoid non-const global variables
+- [ ] Never initialize a global with another global from a different file
+- [ ] Use function-local static instead of global static
+- [ ] Prefer `constexpr` for constants
+- [ ] Use static analyzers: `clang-tidy -checks='cppcoreguidelines-interfaces-global-init'`
+
+> **Related Sections:** This problem involves interactions between [4.1.5.1 static](#4151-static-two-different-meanings), [4.1.5.2 extern](#4152-extern-sharing-variables-across-files), and global variables with constructors.
+
 
 ### 4.2.1 The Problem: Uninitialized Variables
 
