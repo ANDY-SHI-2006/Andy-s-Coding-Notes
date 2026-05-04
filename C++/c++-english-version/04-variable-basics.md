@@ -224,7 +224,7 @@ For hiding implementation details, you can use either file-level `static` or ano
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
 - **Local `static`** = "Remember forever" (persist between calls)
 
-#### 4.1.5.3 Static Initialization Order Fiasco (SIOF)
+#### 4.1.5.2 Static Initialization Order Fiasco (SIOF)
 
 SIOF occurs when global variables in different files depend on each other, but initialization order is **undefined** across translation units.
 
@@ -275,7 +275,7 @@ std::string& getAddress() {
 - [ ] Prefer `constexpr` for constants
 - [ ] Use static analyzers: `clang-tidy -checks='cppcoreguidelines-interfaces-global-init'`
 
-#### 4.1.5.4 extern: Sharing Variables Across Files
+#### 4.1.5.3 extern: Sharing Variables Across Files
 
 **What it does**
 The `extern` keyword declares a variable or function that is defined in another translation unit. It tells the compiler: "This exists somewhere else—don't allocate storage for it here."
@@ -944,7 +944,7 @@ Is variable modified by hardware/OS/signals?
 
 
 
-#### 4.1.5.7 Inline Variables (C++17)
+#### 4.1.5.8 Inline Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
 
