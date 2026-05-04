@@ -231,7 +231,7 @@ void resetBuffer() {
 
 This section provides detailed coverage of C++ storage class specifiers, including usage patterns, pitfalls, and best practices. For a quick reference, see [4.1.4 Storage Class Specifiers Overview](#414-storage-class-specifiers).
 
-### 4.1.6.1 static: Two Different Meanings
+#### 4.1.6.1 static: Two Different Meanings
 
 The `static` keyword is one of the most confusing in C++ because it has **completely different meanings** depending on where you use it:
 
@@ -469,7 +469,7 @@ Database& get_database() {
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
 - **Local `static`** = "Remember forever" (persist between calls)
 
-### 4.1.6.2 extern: Sharing Variables Across Files
+#### 4.1.6.2 extern: Sharing Variables Across Files
 
 **What it does**
 The `extern` keyword declares a variable or function that is defined in another translation unit. It tells the compiler: "This exists somewhere else—don't allocate storage for it here."
@@ -574,7 +574,7 @@ extern "C" void cpp_for_c(int x) {  // C code can call this by name "cpp_for_c"
 
 ---
 
-### 4.1.6.3 auto: From Storage Class to Type Deduction (C++11)
+#### 4.1.6.3 auto: From Storage Class to Type Deduction (C++11)
 
 **⚠️ Historical Context (Important!)**
 
@@ -689,7 +689,7 @@ auto [min, max] = std::minmax(3, 7);  // min=3, max=7
 
 > 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#4161-auto-type-deduction-c11)
 
-### 4.1.6.4 thread_local: Thread-Specific Storage (C++11)
+#### 4.1.6.4 thread_local: Thread-Specific Storage (C++11)
 
 **What it does**
 `thread_local` gives each thread its own separate instance of a variable. Like each thread gets its own "copy" that other threads cannot see or modify.
@@ -819,7 +819,7 @@ void demo() {
 
 ---
 
-### 4.1.6.5 mutable: Modifying in const Contexts
+#### 4.1.6.5 mutable: Modifying in const Contexts
 
 **What it does**
 `mutable` allows a class member to be modified even when the containing object is `const`. It marks data as "logically const but physically modifiable."
@@ -982,7 +982,7 @@ public:
 
 ---
 
-### 4.1.6.6 volatile: Tell Compiler "Don't Optimize"
+#### 4.1.6.6 volatile: Tell Compiler "Don't Optimize"
 
 **What it does**
 `volatile` tells the compiler that a variable's value may change at any time by external factors (hardware, OS, signal handlers), so it should not optimize away reads or writes.
@@ -1138,7 +1138,7 @@ Is variable modified by hardware/OS/signals?
 
 
 
-### 4.1.6.7 Inline Variables (C++17)
+#### 4.1.6.7 Inline Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
 
@@ -1476,7 +1476,7 @@ Variables have **scope** (where visible), **lifetime** (when created/destroyed),
 
 Scope determines where a variable can be accessed. C++ has several scope types:
 
-#### 4.2.1.1 Block Scope (Local)
+#### 4.3.1.1 Block Scope (Local)
 
 Variables declared inside a block `{}` are only visible within that block.
 
@@ -1494,7 +1494,7 @@ void func() {
 // x not available here
 ```
 
-#### 4.2.1.2 Namespace Scope
+#### 4.3.1.2 Namespace Scope
 
 Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
 
@@ -1515,7 +1515,7 @@ using namespace math;
 double y = pi;
 ```
 
-#### 4.2.1.4 Class Scope
+#### 4.3.1.3 Class Scope
 
 Members of a class have class scope and are accessed via the class instance or scope resolution operator.
 
@@ -1534,7 +1534,7 @@ public:
 int Counter::totalCount = 0;  // Definition outside class
 ```
 
-#### 4.2.1.5 Global (File) Scope
+#### 4.3.1.4 Global (File) Scope
 
 Variables declared outside all functions and classes have global scope, visible throughout the translation unit.
 
@@ -1613,7 +1613,7 @@ Lifetime determines when variables are created and destroyed. While **scope** de
 
 > **Key Insight**: A variable can be out of scope (not visible) but still alive (not destroyed), as seen with `static` local variables.
 
-#### 4.2.3.1 Overview of Storage Durations
+#### 4.3.3.1 Overview of Storage Durations
 
 C++ defines three fundamental storage durations:
 
@@ -1623,7 +1623,7 @@ C++ defines three fundamental storage durations:
 | **Static** | Data Segment | Program start | Program end | Global, `static` variables |
 | **Dynamic** | Heap | `new` called | `delete` called | Heap objects |
 
-#### 4.2.3.2 Automatic Storage Duration
+#### 4.3.3.2 Automatic Storage Duration
 
 Variables with automatic storage duration are created when execution enters their scope and destroyed when execution exits.
 
@@ -1660,7 +1660,7 @@ int* ptr = badFunction();
 
 > **Rule**: Never return pointers or references to automatic (local) variables.
 
-#### 4.2.3.3 Static Storage Duration
+#### 4.3.3.3 Static Storage Duration
 
 Variables with static storage duration exist for the entire program execution.
 
@@ -1723,7 +1723,7 @@ void func() {
 | Initialization | Before main() | On first function call |
 | Best Practice | Minimize use | Preferred for internal state |
 
-#### 4.2.3.4 Dynamic Storage Duration
+#### 4.3.3.4 Dynamic Storage Duration
 
 Variables with dynamic storage duration are created and destroyed under explicit programmer control.
 
@@ -1813,7 +1813,7 @@ void sharedExample() {
 
 > **Recommendation**: Prefer `std::unique_ptr` for exclusive ownership and `std::shared_ptr` for shared ownership. Raw pointers (`new`/`delete`) should be rare in modern code.
 
-#### 4.2.3.5 Lifetime Summary and Best Practices
+#### 4.3.3.5 Lifetime Summary and Best Practices
 
 **Quick Selection Guide:**
 
