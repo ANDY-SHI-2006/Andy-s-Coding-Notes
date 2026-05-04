@@ -893,7 +893,6 @@ Is variable modified by hardware/OS/signals?
 
 
 
-## 4.2 Variable Definition and Initialization
 #### 4.1.5.7 Inline Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. Header-only libraries had to work around this with `extern` declarations or `static` (which created separate copies).
@@ -987,6 +986,8 @@ std::string& getAddress() {
 
 > **Related Sections:** This problem involves interactions between [4.1.5.1 static](#4151-static-two-different-meanings), [4.1.5.2 extern](#4152-extern-sharing-variables-across-files), and global variables with constructors.
 
+
+## 4.2 Variable Definition and Initialization
 
 ### 4.2.1 The Problem: Uninitialized Variables
 
