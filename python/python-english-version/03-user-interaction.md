@@ -230,17 +230,7 @@ f"{1.0:g}"         # '1'         (default removes it)
 f"{1.0:#g}"        # '1.00000'   (# keeps trailing zeros)
 ```
 
-#### 3.3.2.5 Zero Fill
-
-`0` before width is shorthand for `0=` — pad with zeros after the sign.
-
-```python
-f"{42:05d}"        # '00042'
-# Equivalent to
-f"{42:0=5d}"       # '00042'
-```
-
-#### 3.3.2.6 Width
+#### 3.3.2.5 Width
 
 Sets the minimum field size. If the value is shorter, padding is applied according to alignment.
 
@@ -249,7 +239,7 @@ f"{'hi':10}"      # 'hi        '   (width 10, strings default left-align)
 f"{42:10d}"       # '        42'   (numbers default right-align)
 ```
 
-#### 3.3.2.7 Grouping
+#### 3.3.2.6 Grouping
 
 Inserts separators between digits for readability.
 
@@ -263,7 +253,7 @@ f"{1000000:,}"    # '1,000,000'
 f"{1000000:_}"    # '1_000_000'
 ```
 
-#### 3.3.2.8 Precision
+#### 3.3.2.7 Precision
 
 `.n` sets decimal places for numbers or maximum length for strings.
 
@@ -275,7 +265,7 @@ f"{3.14159:.2f}"  # '3.14'
 f"{'hello':.3}"   # 'hel'
 ```
 
-#### 3.3.2.9 Type
+#### 3.3.2.8 Type
 
 Declares the output format.
 
@@ -298,7 +288,7 @@ f"{255:b}"        # '11111111'
 f"{255:x}"        # 'ff'
 ```
 
-#### 3.3.2.10 Combining Components
+#### 3.3.2.9 Combining Components
 
 Build complex formats by concatenating components in the same order as the syntax template.
 
