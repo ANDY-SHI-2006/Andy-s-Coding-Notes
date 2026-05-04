@@ -109,26 +109,7 @@ password = getpass("Enter password: ")
 # Characters typed are hidden
 ```
 
-### 3.2.4 Reading Multiple Lines
-
-Read input until EOF, or read the entire stream at once.
-
-```python
-# Read line by line until EOF
-lines = []
-while True:
-    try:
-        line = input()
-    except EOFError:
-        break
-    lines.append(line)
-
-# Read entire input at once
-import sys
-data = sys.stdin.read()
-```
-
-### 3.2.5 Safe Parsing with `ast.literal_eval`
+### 3.2.4 Safe Parsing with `ast.literal_eval`
 
 > **Never use `eval()` on untrusted input.** `eval()` executes arbitrary code and is a severe security risk.
 
