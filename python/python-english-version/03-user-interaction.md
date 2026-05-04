@@ -73,6 +73,26 @@ except ValueError:
 num = int(input("Enter a number: "))  # Crashes on "abc"
 ```
 
+**Handling EOF:** `input()` raises `EOFError` when it encounters end-of-file (Unix: Ctrl+D, Windows: Ctrl+Z).
+
+```python
+try:
+    line = input()
+except EOFError:
+    print("Input closed")
+```
+
+### 3.2.2 Secure Input with `getpass`
+
+Use `getpass.getpass()` for password or sensitive input. Characters are not echoed to the terminal.
+
+```python
+from getpass import getpass
+
+password = getpass("Enter password: ")
+# Characters typed are hidden
+```
+
 ## 3.3 String Formatting
 
 ### 3.3.1 f-strings (Recommended)
@@ -111,7 +131,7 @@ print(f"{0.85:.1%}")         # 85.0%
 
 ### 3.3.3 `str.format()`
 
-Alternative for older Python versions or complex formatting.
+Alternative for older Python versions or complex formatting. The same format specifiers work inside `{}`.
 
 ```python
 template = "My name is {} and I am {} years old."
@@ -122,14 +142,32 @@ print("Name: {name}, Age: {age}".format(name="Bob", age=25))
 
 # Positional with indices
 print("{0} {1} {0}".format("A", "B"))  # A B A
+
+# With format specifiers
+print("{:.2f}".format(3.14159))        # 3.14
+print("{:>10}".format("hi"))           # "        hi"
 ```
 
-### 3.3.4 Comparison
+### 3.3.4 `format()` Built-in Function
+
+The `format()` function applies a format specifier to a single value. Useful when you have the value and the format string separately.
+
+```python
+value = 3.14159
+spec = ".2f"
+print(format(value, spec))   # 3.14
+
+# Equivalent to f-string
+print(f"{value:.2f}")        # 3.14
+```
+
+### 3.3.5 Comparison
 
 | Method | Example | When to Use |
 |--------|---------|-------------|
 | f-string | `f"{name}"` | Modern Python (3.6+), most readable |
 | `.format()` | `"{}".format(name)` | Compatibility, complex formatting |
+| `format()` | `format(x, ".2f")` | Dynamic format strings |
 | `%` operator | `"%s" % name` | Legacy code only (not recommended) |
 
 [← Previous: Operators](02-operators.md) | [Next: Flow Control →](04-flow-control.md)
