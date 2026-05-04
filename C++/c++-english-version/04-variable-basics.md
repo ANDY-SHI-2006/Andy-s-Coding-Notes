@@ -118,18 +118,18 @@ Storage class specifiers control linkage, storage duration, and initialization o
 | `mutable`              | Modifiable even in const objects            | Cache, lazy evaluation     | [4.5.5](#455-mutable-modifying-in-const-contexts)   |
 | `volatile`             | Tell compiler "Don't optimize"              | Hardware registers         | [4.5.6](#456-volatile-tell-compiler-dont-optimize)  |
 | `inline` (C++17)       | Allow definition in header                  | Header-only libraries      | [4.5.7](#457-inline-variables)                      |
-| `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | -?|
+| `register`             | *Hint for register storage*                 | *Deprecated (C++17)*       | — |
 
 **Quick Overview:**
 
-- **`static`** -?Two meanings: (1) hide from other files at global scope, (2) persist between function calls at local scope
-- **`extern`** -?Declare that a variable/function is defined in another file
-- **`auto`** -?Let compiler deduce the type from initializer (C++11+)
-- **`thread_local`** -?Each thread gets its own instance (C++11+)
-- **`mutable`** -?Allow modification in const objects (for caching/mutexes)
-- **`volatile`** -?Prevent compiler optimization for hardware-mapped memory
-- **`inline`** -?Allow variable definition in headers (C++17+)
-- **`register`** -?Deprecated hint for register storage (C++17 removed)
+- **`static`** — Two meanings: (1) hide from other files at global scope, (2) persist between function calls at local scope
+- **`extern`** — Declare that a variable/function is defined in another file
+- **`auto`** — Let compiler deduce the type from initializer (C++11+)
+- **`thread_local`** — Each thread gets its own instance (C++11+)
+- **`mutable`** — Allow modification in const objects (for caching/mutexes)
+- **`volatile`** — Prevent compiler optimization for hardware-mapped memory
+- **`inline`** — Allow variable definition in headers (C++17+)
+- **`register`** — Deprecated hint for register storage (C++17 removed)
 
 > 📚 **For detailed coverage** of each specifier, including examples, pitfalls, and best practices, see [4.5 Storage Class Specifiers in Depth](#45-storage-class-specifiers-in-depth).
 
