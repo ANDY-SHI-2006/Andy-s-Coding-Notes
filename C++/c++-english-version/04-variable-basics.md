@@ -297,90 +297,23 @@ extern double square(double);    // Can also declare without parameter names
 
 > **Note on `extern "C"`**: For C and C++ interoperability, see [4.1.7 extern "C": C and C++ Interoperability](#417-extern-c-c-and-c-interoperability).
 
-#### 4.1.5.3 auto: From Storage Class to Type Deduction (C++11)
+#### 4.1.5.3 `auto`: The Obsolete Storage Class (C++11)
 
-`auto` is a rare keyword that **completely changed its meaning** in C++11:
+`auto` originally meant "automatic storage duration" (the default for local variables), but this meaning was **completely removed** in C++11.
 
 | Era | Meaning | Status |
 |-----|---------|--------|
-| C++98/03 | "Automatic storage duration" (local variable default) | Redundant, never used |
-| C++11+ | Type deduction from initializer | **Primary usage today** |
+| C++98/03 | Explicit "automatic storage duration" specifier | Redundant — local variables already have automatic duration by default |
+| C++11+ | Type deduction from initializer | **Entirely different meaning** |
 
-In modern C++, `auto` asks the compiler: "Look at the initializer, what type is it? Use that type."
+The original `auto` storage class was never useful because all local variables already have automatic storage duration by default. It was so rarely used that the C++11 standard reclaimed the keyword for type deduction.
 
-| Feature | Description |
-|---------|-------------|
-| **Purpose** | Let compiler deduce type from initializer |
-| **Syntax** | `auto name = initializer;` |
-| **Benefit** | Shorter code, type-safe, maintainable |
-| **Pitfall** | May lose const/ref qualifiers, unexpected types |
+When you see `auto` in modern C++ code, it has nothing to do with storage duration — it tells the compiler to deduce the variable's type from its initializer. This is covered in detail in:
 
-##### 4.1.5.3.1 Basic Usage
+- [2.3 `auto` Type Deduction](/C++/c++-english-version/02-data-types.md#23-auto-type-deduction-c11)
+- [5.5 `decltype` and `decltype(auto)`](/C++/c++-english-version/05-functions.md#55-decltype-and-decltypeauto-c11c14)
 
-```cpp
-auto i = 42;                    // int
-auto d = 3.14159;               // double
-auto s = "hello";               // const char*
-auto v = std::vector<int>{1,2}; // std::vector<int>
-
-// Shorter code for complex types
-auto it = m.begin();  // vs std::map<std::string, std::vector<int>>::iterator it = m.begin();
-
-// Correctness: avoids type mismatches
-auto x = some_func();  // Always correct, no narrowing
-```
-
-##### 4.1.5.3.2 Advanced Features
-
-```cpp
-// auto& for references (avoid copying)
-auto& ref = vec[0];           // Gets the element by reference
-
-// const auto for immutability
-const auto max_size = 100;    // Cannot be modified
-
-// auto* for pointers
-auto* ptr = &x;               // ptr is int*, not int
-
-// Multiple variables (must be same type)
-auto a = 1, b = 2;            // OK, both int
-auto c = 1, d = 3.14;         // —ERROR: deduced types conflict
-
-// auto with structured binding (C++17)
-auto [min, max] = std::minmax(3, 7);  // min=3, max=7
-```
-
-##### 4.1.5.3.3 Common Pitfalls
-
-1. **Unexpected type deductions**
-   ```cpp
-   auto x = {1, 2, 3};      // Surprise! x is std::initializer_list, not vector
-   auto y = 3.0f;           // y is float, not double
-   ```
-
-2. **Losing const/reference qualifiers**
-   ```cpp
-   const int& cref = 42;
-   auto x = cref;           // —x is int (copy!), loses const&
-   auto& y = cref;          // —y is const int& (correct)
-   ```
-
-3. **Proxy types causing unexpected behavior**
-   ```cpp
-   std::vector<bool> v = {true, false, true};
-   auto b = v[0];           // —Surprise! b is vector<bool>::reference, not bool
-   auto&& b = v[0];         // —Correct way
-   ```
-
-**Best Practices**
-
-| Do | Don't |
-|----|-------|
-| Use `auto` when type is obvious | Use when type is critical to understanding |
-| Use `const auto&` for read-only | Use when you need specific precision |
-| Use `auto*` for pointer semantics | Use in interfaces where explicit types document |
-
-> 📚 **For more details**: See [4.5.1 auto (Type Deduction)](#4151-auto-type-deduction-c11)
+In the context of storage class specifiers, `auto` is simply **obsolete** and no longer applies.
 
 #### 4.1.5.4 thread_local: Thread-Specific Storage (C++11)
 
