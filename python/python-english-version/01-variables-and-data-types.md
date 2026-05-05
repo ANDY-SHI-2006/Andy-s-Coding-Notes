@@ -52,6 +52,47 @@ Captures the remainder into a list.
 first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 ```
 
+### 1.1.3 Type Annotations
+
+Python is dynamically typed, but you can attach a **type hint** to a variable using the syntax `name: type`. This is a hint for programmers and IDEs; the Python interpreter does **not** enforce it at runtime.
+
+```python
+age: int = 25
+name: str = "Alice"
+pi: float = 3.14
+```
+
+Type annotations are commonly used in function signatures and with `@dataclass`.
+
+**Function signature**
+
+```python
+def greet(name: str, times: int) -> str:
+    return name * times
+```
+
+The `-> type` after the parameter list declares the **return type**. In the example above, `greet` is expected to return a `str`.
+
+```python
+def add(a: int, b: int) -> int:
+    return a + b
+```
+
+**`@dataclass`**
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: int
+    y: int
+```
+
+The `@dataclass` decorator reads these annotations to auto-generate the `__init__` method.
+
+> **Note:** Type hints do not prevent wrong types at runtime. Use a static type checker like `mypy` if you want enforcement.
+
 ## 1.2 Comments
 
 ### 1.2.1 Single-line Comments
