@@ -310,8 +310,8 @@ The original `auto` storage class was never useful because all local variables a
 
 When you see `auto` in modern C++ code, it has nothing to do with storage duration — it tells the compiler to deduce the variable's type from its initializer. This is covered in detail in:
 
-- [2.3 `auto` Type Deduction](/C++/c++-english-version/02-data-types.md#23-auto-type-deduction-c11)
-- [5.5 `decltype` and `decltype(auto)`](/C++/c++-english-version/05-functions.md#55-decltype-and-decltypeauto-c11c14)
+- [15.1.1 `auto` (Type Deduction, C++11)](13-modern-cpp-variables.md#1511-auto-type-deduction-c11)
+- [15.1.2 `decltype` (C++11)](13-modern-cpp-variables.md#1512-decltype-c11) (includes `decltype(auto)` C++14)
 
 In the context of storage class specifiers, `auto` is simply **obsolete** and no longer applies.
 
