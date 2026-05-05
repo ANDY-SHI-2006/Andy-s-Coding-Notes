@@ -297,30 +297,7 @@ extern double square(double);    // Can also declare without parameter names
    int main() { return missing; }  // —Link error: undefined reference
    ```
 
-##### 4.1.5.2.4 Special Case: `extern "C"`
-
-When C++ code needs to interact with C code, use `extern "C"` to prevent C++ name mangling:
-
-```cpp
-// C++ code calling C library
-extern "C" {
-    #include <c_header.h>       // C functions won't be name-mangled
-    void c_function(int x);     // Can also declare individually
-}
-
-// Exporting C++ function to C
-extern "C" void cpp_for_c(int x) {  // C code can call this by name "cpp_for_c"
-    // ...
-}
-```
-
-**Best Practices**
-
-| Do | Don't |
-|----|-------|
-| Put `extern` declarations in headers | Put definitions in headers (causes multiple definitions) |
-| Use `extern "C"` for C interoperability | Mix C and C++ linkage carelessly |
-| Consider `inline` variables (C++17) instead of `extern` + separate definition | Rely on `extern` for constants (use `constexpr` instead) |
+> **Note on `extern "C"`**: For C and C++ interoperability, see [4.1.7 extern "C": C and C++ Interoperability](#417-extern-c-c-and-c-interoperability).
 
 #### 4.1.5.3 auto: From Storage Class to Type Deduction (C++11)
 
@@ -815,6 +792,85 @@ std::string& getAddress() {
 
 > **Related Sections:** This problem involves interactions between [4.1.5.1 static](#4151-static-two-different-meanings), [4.1.5.2 extern](#4152-extern-sharing-variables-across-files), and global variables with constructors.
 
+### 4.1.7 `extern "C"`: C and C++ Interoperability
+
+When C++ code needs to interact with C code, use `extern "C"` to prevent C++ name mangling.
+
+| Aspect | C++ | C |
+|--------|-----|---|
+| **Function names** | Encoded (mangled) for overloading support | Plain names |
+| **Example** | `_Z3foov` | `foo` |
+| **Problem** | C can't find C++ functions | C++ can't find C functions |
+| **Solution** | `extern "C"` to disable mangling | `extern "C"` wrapper |
+
+#### 4.1.7.1 Calling C Code from C++
+
+```cpp
+// C header math_lib.h
+int add(int a, int b);  // Compiled as 'add' in C
+
+// C++ code
+extern "C" {
+    #include "math_lib.h"  // Prevents mangling, C++ can now find 'add'
+}
+
+int main() {
+    return add(1, 2);  // Works!
+}
+```
+
+#### 4.1.7.2 Exposing C++ Code to C
+
+```cpp
+// C++ implementation
+class Calculator {
+public:
+    int compute(int x) { return x * x; }
+};
+
+// C-compatible wrapper
+extern "C" int calc_compute(int x) {
+    static Calculator c;
+    return c.compute(x);
+}
+```
+
+```c
+// C code can now call it
+int calc_compute(int x);  // Declaration
+
+int main() {
+    return calc_compute(5);  // Returns 25
+}
+```
+
+#### 4.1.7.3 Header Files for Both Languages
+
+Use preprocessor to make headers work with both C and C++:
+
+```cpp
+// mylib.h
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    // Declarations visible to both C and C++
+    void init_library(void);
+    int process_data(const char* data);
+
+#ifdef __cplusplus
+}
+#endif
+```
+
+**Common Use Cases**
+
+| Scenario | Solution |
+|----------|----------|
+| Using OS system calls (C API) | `extern "C"` around system headers |
+| Linking C libraries (OpenSSL, zlib) | `extern "C"` wrapper in C++ code |
+| Creating Python bindings | `extern "C"` wrapper for Python C-API |
+| Writing plugins for C applications | `extern "C"` exports for host application |
 
 ## 4.2 Variable Definition and Initialization
 
