@@ -321,14 +321,13 @@ extern double square(double);    // Can also declare without parameter names
 | **Initialization** | When thread starts (first use) |
 | **Lifetime** | Until thread ends |
 | **Visibility** | Only visible to owning thread |
-| **Storage** | Separate memory per thread |
 
 ##### 4.1.5.4.1 Basic Usage
 
 ```cpp
 #include <thread>
 
-thread_local int threadCounter = 0;  // Each thread has its own counter
+thread_local int threadCounter = 0;
 
 void increment() {
     threadCounter++;
@@ -337,17 +336,17 @@ void increment() {
 }
 
 int main() {
-    thread t1(increment);  // t1's counter: 0→
-    thread t2(increment);  // t2's counter: 0→(separate from t1!)
-    increment();           // main thread's counter: 0→
+    thread t1(increment);  // t1's counter: 0→1
+    thread t2(increment);  // t2's counter: 0→1 (separate from t1!)
+    increment();           // main thread's counter: 0→1
     
     t1.join();
     t2.join();
 }
-// Output: All threads see "counter = 1", not cumulative
+// Output: Each thread prints "counter = 1"
 ```
 
-**Comparison: thread_local vs static vs regular local**
+**Local vs static vs thread_local in multi-threaded code:**
 
 ```cpp
 void demo() {
@@ -360,9 +359,9 @@ void demo() {
     thread_only++;
 }
 
-// Thread A calls demo() 3 times:  local=1, shared=1, thread_only=1
-// Thread B calls demo() 3 times:  local=1, shared=2, thread_only=1
-// Thread A calls demo() again:    local=1, shared=3, thread_only=2
+// Thread A calls demo() 3 times:  local=1, shared=3, thread_only=3
+// Thread B calls demo() 3 times:  local=1, shared=6, thread_only=3
+// Thread A calls demo() again:    local=1, shared=7, thread_only=4
 ```
 
 ##### 4.1.5.4.2 Common Use Cases
@@ -389,32 +388,43 @@ DatabaseConnection& get_connection() {
 }
 ```
 
+**Per-Thread Error Codes**
+```cpp
+thread_local int last_error = 0;
+
+void set_error(int code) { last_error = code; }
+int get_error() { return last_error; }  // Each thread sees its own error
+```
+
 ##### 4.1.5.4.3 Common Pitfalls
 
-1. **Memory Overhead**
+1. **Memory overhead scales with thread count**
    ```cpp
-   // Each thread allocates its own copy
-   thread_local char big_buffer[1024*1024];  // 1MB per thread!
-   // With 100 threads = 100MB total
+   thread_local char big_buffer[1024 * 1024];  // 1MB per thread
+   // 100 threads = 100MB. Be careful with large thread_local objects.
    ```
 
-2. **Not a replacement for synchronization**
+2. **Thread-local does not make shared data safe**
    ```cpp
-   thread_local int counter = 0;
+   thread_local int my_count = 0;
+   int global_count = 0;
    
    void unsafe() {
-       counter++;              // Thread-safe (each thread has own copy)
-       global_var = counter;   // —NOT thread-safe!
+       my_count++;           // Safe: each thread has its own copy
+       global_count++;       // —NOT safe! Still a data race
    }
    ```
 
+**Summary Mnemonic**
+- **`thread_local`** = "Each thread gets its own notebook"
+
 **Best Practices**
 
-| Use thread_local | Don't use thread_local |
-|------------------|----------------------|
-| Per-thread caches | Data that needs to be shared |
-| Thread-specific RNGs | When memory is extremely constrained |
-| Connection pooling | When thread count is very high |
+| Do | Don't |
+|----|-------|
+| Use for per-thread caches, RNGs, connections | Use for data that must be shared across threads |
+| Use to avoid locks on thread-private data | Use when memory per thread is large |
+| Use for thread-specific state (error codes, IDs) | Forget that it still doesn't protect shared variables |
 
 #### 4.1.5.5 mutable: Modifying in const Contexts
 
