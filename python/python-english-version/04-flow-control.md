@@ -94,6 +94,8 @@ if x > 0: print("positive")
 
 Python 3.10+ feature for matching data structures against patterns.
 
+#### 4.1.4.1 Basic Value Matching
+
 ```python
 status = 200
 
@@ -108,14 +110,25 @@ match status:
         print("Unknown status")
 ```
 
-**Features:**
-- `case _:` acts as a wildcard (default case)
-- Can match lists, tuples, dictionaries by structure
-- Supports variable binding from matched values
+**OR Pattern:** Match multiple values with `|`.
 
 ```python
-# Matching tuples
-point = (3, 4)
+match status:
+    case 200 | 201:
+        print("Success")
+    case 404 | 403 | 401:
+        print("Client Error")
+    case _:
+        print("Other")
+```
+
+#### 4.1.4.2 Sequence Matching (List / Tuple)
+
+Match by structure and bind variables.
+
+```python
+# Tuple matching
+point = (3, 0)
 
 match point:
     case (0, 0):
@@ -126,6 +139,92 @@ match point:
         print(f"On y-axis at {y}")
     case (x, y):
         print(f"Point at ({x}, {y})")
+
+# List matching with unpacking
+items = [1, 2, 3]
+
+match items:
+    case []:
+        print("Empty")
+    case [single]:
+        print(f"One item: {single}")
+    case [first, second]:
+        print(f"Two items: {first}, {second}")
+    case [first, *rest]:
+        print(f"First: {first}, Rest: {rest}")
+```
+
+#### 4.1.4.3 Guard Clause
+
+Add an `if` condition to a `case` for additional filtering.
+
+```python
+age = 25
+
+match age:
+    case n if n < 13:
+        print("Child")
+    case n if n < 20:
+        print("Teenager")
+    case n if n < 65:
+        print("Adult")
+    case _:
+        print("Senior")
+```
+
+#### 4.1.4.4 Dictionary Matching
+
+Match dictionaries by key structure.
+
+```python
+user = {"name": "Alice", "age": 20}
+
+match user:
+    case {"name": str(name), "age": int(age)}:
+        print(f"{name} is {age} years old")
+    case {"name": str(name)}:
+        print(f"Name only: {name}")
+    case {}:
+        print("Empty dict")
+```
+
+#### 4.1.4.5 Matching Data Classes
+
+Match class instances by attribute structure.
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: int
+    y: int
+
+p = Point(3, 4)
+
+match p:
+    case Point(x=0, y=0):
+        print("Origin")
+    case Point(x=0, y=y):
+        print(f"On y-axis at {y}")
+    case Point(x=x, y=y):
+        print(f"Point ({x}, {y})")
+```
+
+#### 4.1.4.6 Wildcard `_`
+
+`_` matches any value but does not bind it. Useful when you don't need the value.
+
+```python
+match point:
+    case (0, 0):
+        print("Origin")
+    case (_, 0):      # Any x, y is 0
+        print("On x-axis")
+    case (0, _):      # x is 0, any y
+        print("On y-axis")
+    case _:
+        print("Somewhere else")
 ```
 
 ## 4.2 Loop Structures
