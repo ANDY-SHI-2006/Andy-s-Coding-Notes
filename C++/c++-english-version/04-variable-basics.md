@@ -299,21 +299,17 @@ extern double square(double);    // Can also declare without parameter names
 
 #### 4.1.5.3 `auto`: The Obsolete Storage Class (C++11)
 
-`auto` originally meant "automatic storage duration" (the default for local variables), but this meaning was **completely removed** in C++11.
-
 | Era | Meaning | Status |
 |-----|---------|--------|
-| C++98/03 | Explicit "automatic storage duration" specifier | Redundant — local variables already have automatic duration by default |
-| C++11+ | Type deduction from initializer | **Entirely different meaning** |
+| C++98/03 | "Automatic storage duration" specifier | Redundant — local variables already have this by default |
+| C++11+ | Type deduction from initializer | Reclaimed for a completely different purpose |
 
-The original `auto` storage class was never useful because all local variables already have automatic storage duration by default. It was so rarely used that the C++11 standard reclaimed the keyword for type deduction.
-
-When you see `auto` in modern C++ code, it has nothing to do with storage duration — it tells the compiler to deduce the variable's type from its initializer. This is covered in detail in:
+`auto` as a storage class was **never useful** (automatic duration is the default for locals) and was **removed in C++11**. The keyword now means type deduction:
 
 - [15.1.1 `auto` (Type Deduction, C++11)](13-modern-cpp-variables.md#1511-auto-type-deduction-c11)
-- [15.1.2 `decltype` (C++11)](13-modern-cpp-variables.md#1512-decltype-c11) (includes `decltype(auto)` C++14)
+- [15.1.2 `decltype` (C++11)](13-modern-cpp-variables.md#1512-decltype-c11)
 
-In the context of storage class specifiers, `auto` is simply **obsolete** and no longer applies.
+> **Bottom line**: In modern C++, `auto` is **not a storage class specifier**.
 
 #### 4.1.5.4 thread_local: Thread-Specific Storage (C++11)
 
