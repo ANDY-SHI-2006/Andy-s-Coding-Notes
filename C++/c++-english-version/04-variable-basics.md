@@ -1,5 +1,3 @@
-[←Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
-
 # 4 Variable Basics
 
 Variables are the fundamental units for storing data in C++ programs. This chapter covers the core concepts of variable declaration, definition, initialization, types, and storage.
