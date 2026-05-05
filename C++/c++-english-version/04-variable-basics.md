@@ -1696,15 +1696,3 @@ constexpr int result = square(5);      // —Computed at compile time
 - Just want to prevent modification —Use `const`
 
 
- 
- 
- 
- >   * * C o n t i n u e   R e a d i n g * * :   F o r   a d v a n c e d   t o p i c s   l i k e   ` a u t o ` ,   ` d e c l t y p e ` ,   S t r u c t u r e d   B i n d i n g ,   a n d   V a r i a b l e   A t t r i b u t e s ,   s e e   [ C h a p t e r   1 3 :   M o d e r n   C + +   V a r i a b l e   F e a t u r e s ] ( 1 3 - m o d e r n - c p p - v a r i a b l e s . m d ) . 
- 
- 
- 
- 
- 
-[← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
- 
- 
