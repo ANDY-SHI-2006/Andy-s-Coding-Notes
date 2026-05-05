@@ -54,31 +54,55 @@ first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 
 ### 1.1.3 Type Annotations
 
-Python is dynamically typed, but you can attach a **type hint** to a variable using the syntax `name: type`. This is a hint for programmers and IDEs; the Python interpreter does **not** enforce it at runtime.
+Python is dynamically typed, but you can attach **type hints** to variables, function parameters, and return values using the syntax `name: type`. These hints are for programmers and IDEs; the interpreter ignores them at runtime.
+
+#### 1.1.3.1 Variable Annotations
+
+Annotate a variable to indicate its expected type.
 
 ```python
 age: int = 25
 name: str = "Alice"
 pi: float = 3.14
+enabled: bool = True
 ```
 
-Type annotations are commonly used in function signatures and with `@dataclass`.
+#### 1.1.3.2 Function Annotations
 
-**Function signature**
+Annotate parameter types with `param: type` and the return type with `-> type`.
 
 ```python
 def greet(name: str, times: int) -> str:
     return name * times
+
+# No return value (None)
+def log(message: str) -> None:
+    print(message)
 ```
 
-The `-> type` after the parameter list declares the **return type**. In the example above, `greet` is expected to return a `str`.
+| Syntax | Meaning |
+|--------|---------|
+| `name: str` | Parameter `name` should be a `str` |
+| `times: int` | Parameter `times` should be an `int` |
+| `-> str` | Function should return a `str` |
+| `-> None` | Function returns nothing |
+
+#### 1.1.3.3 Collection Annotations
+
+From Python 3.9 onward, built-in collection types support generic syntax directly.
 
 ```python
-def add(a: int, b: int) -> int:
-    return a + b
+scores: list[int] = [90, 85, 88]
+profile: dict[str, int] = {"age": 25, "score": 90}
+point: tuple[int, int] = (3, 4)
+flags: set[str] = {"a", "b"}
 ```
 
-**`@dataclass`**
+> **Note:** In Python 3.8 and earlier, import from `typing`: `from typing import List, Dict, Tuple, Set`.
+
+#### 1.1.3.4 Type Annotations in `@dataclass`
+
+The `@dataclass` decorator reads field annotations to auto-generate `__init__` and other methods.
 
 ```python
 from dataclasses import dataclass
@@ -87,11 +111,24 @@ from dataclasses import dataclass
 class Point:
     x: int
     y: int
+
+p = Point(3, 4)  # __init__ generated automatically
 ```
 
-The `@dataclass` decorator reads these annotations to auto-generate the `__init__` method.
+#### 1.1.3.5 Runtime Behavior
 
-> **Note:** Type hints do not prevent wrong types at runtime. Use a static type checker like `mypy` if you want enforcement.
+Type hints are **not enforced** at runtime. They exist for documentation, IDE autocompletion, and static analysis tools.
+
+```python
+def add(a: int, b: int) -> int:
+    return "surprise"   # Runs fine; no runtime error
+```
+
+For actual enforcement, use a static type checker such as `mypy`.
+
+```bash
+mypy script.py
+```
 
 ## 1.2 Comments
 
