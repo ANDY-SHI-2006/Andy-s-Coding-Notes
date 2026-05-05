@@ -734,11 +734,6 @@ void print() { cout << version; }       // Sees version = 2 (same object)
 
 
 
-> **Continue Reading**: For advanced topics like `auto`, `decltype`, Structured Binding, and Variable Attributes, see [Chapter 15: Modern C++ Variable Features](13-modern-cpp-variables.md).
-
-
-
-[←Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)
 ### 4.1.6 Static Initialization Order Fiasco (SIOF)
 
 SIOF occurs when global variables in different files depend on each other, but initialization order is **undefined** across translation units.
