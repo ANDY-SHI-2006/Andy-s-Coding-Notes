@@ -156,65 +156,27 @@ match items:
 
 #### 4.1.4.3 Guard Clause
 
-A guard adds an `if` condition after a `case` to filter matched values further.
+A guard adds an `if` condition after `case` to filter matched values further.
 
-**Problem:** Classifying age without a guard. You either list every value or fall back to `if/elif`:
+**Syntax:** `case variable if condition:`
 
-```python
-# Without guard — back to if/elif
-if age < 13:
-    print("Child")
-elif age < 20:
-    print("Teenager")
-elif age < 65:
-    print("Adult")
-else:
-    print("Senior")
-```
-
-**With guard:** Capture the value into a variable, then check a condition.
+- `variable` captures the matched value
+- `if condition` filters whether this branch executes
 
 ```python
-age = 25
-
+# Range classification
 match age:
-    case n if n < 13:
-        print("Child")
-    case n if n < 20:
-        print("Teenager")
-    case n if n < 65:
-        print("Adult")
-    case _:
-        print("Senior")
-```
+    case n if n < 13:      print("Child")
+    case n if n < 20:      print("Teenager")
+    case n if n < 65:      print("Adult")
+    case _:                print("Senior")
 
-**How it works (step by step with `age = 25`):**
-
-| Step | Case | Variable `n` | Guard `if` | Result |
-|------|------|-------------|-----------|--------|
-| 1 | `case n if n < 13` | `n = 25` | `25 < 13` → False | Skip |
-| 2 | `case n if n < 20` | `n = 25` | `25 < 20` → False | Skip |
-| 3 | `case n if n < 65` | `n = 25` | `25 < 65` → True | Execute "Adult" |
-
-**Syntax pattern:**
-
-```python
-case variable if condition:
-#      ^           ^
-#      |           └─ extra filter applied after matching
-#      └─ captures the matched value
-```
-
-**Guard with structure matching:**
-
-```python
-nums = [1, 2, 3]
-
+# Structure match + guard
 match nums:
     case [a, b, c] if a + b + c > 10:
-        print(f"Sum is {a+b+c}, greater than 10")
+        print(f"Sum {a+b+c} > 10")
     case [a, b, c]:
-        print(f"Sum is {a+b+c}, not greater than 10")
+        print(f"Sum {a+b+c} <= 10")
 ```
 
 #### 4.1.4.4 Dictionary Matching
