@@ -411,11 +411,12 @@ while True:
         break
     print(f"Processing: {choice}")
 
-# Search loop
-for i in range(100):
-    if i == 42:
-        result = i
+# Search loop with unknown end condition
+while True:
+    data = fetch_data()
+    if data is None:
         break
+    process(data)
 ```
 
 ### 4.2.3 `break` Statement
