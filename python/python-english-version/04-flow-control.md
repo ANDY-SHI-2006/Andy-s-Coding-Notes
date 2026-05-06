@@ -42,6 +42,19 @@ else:
     grade = "F"
 ```
 
+**Short-Circuit Evaluation:**
+
+`and` / `or` in conditions are evaluated left-to-right and stop as soon as the result is determined. Use this for safe attribute access.
+
+```python
+# Safe: obj.name is only evaluated if obj is not None
+if obj is not None and obj.name == "Alice":
+    print(obj.name)
+
+# Safe: fallback_value is only evaluated if value is falsy
+result = value or fallback_value
+```
+
 ### 4.1.2 Ternary Operator
 
 A concise way to write simple if-else statements in one line.
