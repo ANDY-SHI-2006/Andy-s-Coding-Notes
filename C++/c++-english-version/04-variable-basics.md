@@ -650,7 +650,7 @@ Modified by hardware/OS/signals?
     └── No → Regular variable
 ```
 
-#### 4.1.5.7 Inline Variables (C++17)
+#### 4.1.5.7 `inline` Variables (C++17)
 
 Before C++17, global variables with external linkage could only be defined in one translation unit. **C++17 `inline` variables** solve this: they can be defined in a header file and shared across all translation units.
 
@@ -660,6 +660,9 @@ Before C++17, global variables with external linkage could only be defined in on
 | **Benefit** | True header-only libraries without `extern` gymnastics |
 | **vs static** | `inline` = shared, `static` = separate copies per file |
 | **vs constexpr** | `inline` allows non-constant initialization |
+| **Since** | C++17 |
+
+> 📌 **Prerequisite**: This section assumes understanding of how C++ projects are split into **header files (.h)** and **source files (.cpp)**, plus the basics of the **One Definition Rule (ODR)**. If you haven't written multi-file projects yet, this may feel abstract.
 
 ##### 4.1.5.7.1 Basic Usage
 
@@ -685,7 +688,36 @@ void print() { cout << version; }       // Sees version = 2 (same object)
 | Header + .cpp | `extern int x;` + `int x = 1;` | `inline int x = 1;` (header only) |
 | Compile-time | `constexpr int x = 1;` | `inline constexpr int x = 1;` (best of both) |
 
+##### 4.1.5.7.3 Common Pitfalls
 
+1. **Confusing `inline` with `static` in headers**
+   ```cpp
+   // header.h
+   static int s = 1;    // —Each .cpp gets its OWN copy (5 files = 5 variables)
+   inline int i = 1;    // —All .cpp share ONE variable
+   ```
+   `static` at global scope means internal linkage — every translation unit sees a different object. `inline` means one object shared everywhere.
+
+2. **`inline` does NOT solve initialization order (SIOF)**
+   ```cpp
+   // a.h
+   inline int a = compute();  // Dynamic initialization
+   
+   // b.h
+   inline int b = a + 1;      // —Danger: if b initializes before a, UB!
+   ```
+   `inline` guarantees all files see the *same* variable, but it does not guarantee *when* that variable is initialized relative to other globals. See [4.1.6 SIOF](#416-static-initialization-order-fiasco-siof).
+
+**Best Practices**
+
+| Do | Don't |
+|----|-------|
+| Use for header-only library globals | Use when `constexpr` suffices |
+| Use `inline constexpr` for true constants | Confuse with `static` in headers |
+| Document why a variable must live in a header | Assume `inline` fixes SIOF |
+
+**Summary Mnemonic**
+- **`inline`** = "One definition, many files"
 
 ### 4.1.6 Static Initialization Order Fiasco (SIOF)
 
