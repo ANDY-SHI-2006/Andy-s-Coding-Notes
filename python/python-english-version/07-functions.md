@@ -37,6 +37,31 @@ info(name="Bob", age=25, gender="M")      # Keyword
 info("Charlie", gender="F", age=30)       # Mixed
 ```
 
+### 7.1.3 Keyword-Only Arguments
+
+Arguments after a bare `*` must be passed by keyword.
+
+```python
+def greet(name, *, greeting="Hello"):
+    print(f"{greeting}, {name}!")
+
+greet("Alice")              # OK
+greet("Alice", greeting="Hi")  # OK
+# greet("Alice", "Hi")      # TypeError: positional argument after *
+```
+
+### 7.1.4 Positional-Only Arguments (Python 3.8+)
+
+Arguments before a `/` must be passed positionally.
+
+```python
+def divide(a, b, /):
+    return a / b
+
+divide(10, 2)       # OK
+# divide(a=10, b=2) # TypeError: positional-only argument passed as keyword
+```
+
 ## 7.2 Variable Parameters
 
 ### 7.2.1 Variable Positional Parameters `*args`
@@ -226,7 +251,27 @@ def apply(func: Callable[[int], int], value: int) -> int:
     return func(value)
 ```
 
-## 7.9 `__main__` Guard
+## 7.9 Recursion
+
+A function that calls itself. Must have a **base case** to terminate.
+
+```python
+def factorial(n):
+    if n <= 1:           # Base case
+        return 1
+    return n * factorial(n - 1)  # Recursive case
+
+factorial(5)  # 120
+```
+
+**Note:** Python has a recursion depth limit (~1000 by default). Use iteration for deep recursion.
+
+```python
+import sys
+sys.getrecursionlimit()   # 1000 (default)
+```
+
+## 7.10 `__main__` Guard
 
 Code inside `if __name__ == "__main__":` only runs when the file is executed directly, not when it is imported as a module.
 
