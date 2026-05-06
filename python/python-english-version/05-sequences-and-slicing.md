@@ -79,6 +79,30 @@ fruits[0] = "avocado"   # Modify element
 print(fruits)           # ['avocado', 'banana']
 ```
 
+### 5.2.4 Copying Lists
+
+| Method | Behavior | Use Case |
+|--------|----------|----------|
+| `list.copy()` | Shallow copy | Explicit, readable |
+| `list[:]` | Shallow copy | Idiomatic slice |
+| `copy.deepcopy()` | Deep copy | Nested mutable objects |
+
+```python
+import copy
+
+original = [1, [2, 3]]
+shallow = original.copy()    # or original[:]
+deep = copy.deepcopy(original)
+
+# Shallow: nested object is shared
+shallow[1][0] = 99
+print(original)              # [1, [99, 3]] — affected!
+
+# Deep: fully independent
+deep[1][0] = 77
+print(original)              # [1, [99, 3]] — unaffected
+```
+
 ## 5.3 Tuple Basics
 
 - Ordered, immutable collection
@@ -93,6 +117,24 @@ print(point[0])  # 3
 
 # Tuples are immutable
 # point[0] = 10  # TypeError
+```
+
+### 5.3.1 Tuple Unpacking
+
+Unpack tuples directly in `for` loops and assignments.
+
+```python
+pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
+
+for num, letter in pairs:
+    print(f"{num}: {letter}")
+
+# Swapping via unpacking
+a, b = 1, 2
+a, b = b, a   # a=2, b=1
+
+# Extended unpacking
+first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
 ```
 
 ## 5.4 `range` as a Sequence
