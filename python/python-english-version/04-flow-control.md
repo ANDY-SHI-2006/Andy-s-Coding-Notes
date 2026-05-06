@@ -94,6 +94,15 @@ if x > 0: print("positive")
 
 Python 3.10+ feature for matching data structures against patterns.
 
+> **Variable Scope:** Variables bound in a `case` pattern remain accessible **after** the `match` statement.
+>
+> ```python
+> match point:
+>     case (x, y):
+>         pass
+> print(x, y)   # x and y are accessible here
+> ```
+
 #### 4.1.4.1 Basic Value Matching
 
 ```python
