@@ -122,6 +122,27 @@ match status:
         print("Other")
 ```
 
+**Enum Matching:**
+
+Match `Enum` members for safer, more readable code.
+
+```python
+from enum import Enum
+
+class Status(Enum):
+    OK = 200
+    NOT_FOUND = 404
+    ERROR = 500
+
+match status:
+    case Status.OK:
+        print("Success")
+    case Status.NOT_FOUND:
+        print("Missing")
+    case Status.ERROR:
+        print("Failed")
+```
+
 #### 4.1.4.2 Sequence Matching (List / Tuple)
 
 Match by structure and bind variables.
