@@ -240,40 +240,83 @@ match point:
 
 ### 4.2.1 `for` Loop
 
-Iterate over elements of an iterable (list, string, dictionary, etc.).
+#### 4.2.1.1 Basic Iteration
+
+Iterate over elements of an iterable.
 
 ```python
-# Iterate over a list
 fruits = ["apple", "banana", "cherry"]
 for fruit in fruits:
     print(fruit)
 
-# Iterate over a string
 for char in "hello":
     print(char)
-
-# Iterate over dictionary keys
-for key in {"a": 1, "b": 2}:
-    print(key)
 ```
 
-**`range(start, stop, step)`:**
-- **start**: Starting value (inclusive). Default: 0
-- **stop**: Ending value (**exclusive**)
-- **step**: Increment/decrement. Default: 1
+#### 4.2.1.2 `range()`
+
+Generate a sequence of numbers.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `start` | Starting value (inclusive) | `0` |
+| `stop` | Ending value (**exclusive**) | required |
+| `step` | Increment or decrement | `1` |
 
 ```python
-# 0 to 4 (5 is exclusive)
-for i in range(5):
+for i in range(5):           # 0, 1, 2, 3, 4
     print(i)
 
-# 1 to 9 with step 2: 1, 3, 5, 7, 9
-for i in range(1, 10, 2):
+for i in range(1, 10, 2):    # 1, 3, 5, 7, 9
     print(i)
 
-# Negative step: countdown from 10 to 1
-for i in range(10, 0, -1):
+for i in range(10, 0, -1):   # 10, 9, ..., 1
     print(i)
+```
+
+#### 4.2.1.3 `enumerate()`
+
+Get both the index and the value while iterating.
+
+```python
+fruits = ["apple", "banana", "cherry"]
+
+for i, fruit in enumerate(fruits):
+    print(f"{i}: {fruit}")
+
+# Custom start index
+for i, fruit in enumerate(fruits, start=1):
+    print(f"{i}. {fruit}")
+```
+
+#### 4.2.1.4 `zip()`
+
+Iterate over multiple sequences in parallel. Stops at the shortest sequence.
+
+```python
+names = ["Alice", "Bob", "Charlie"]
+scores = [85, 92, 78]
+
+for name, score in zip(names, scores):
+    print(f"{name}: {score}")
+```
+
+#### 4.2.1.5 Dictionary Iteration
+
+```python
+data = {"a": 1, "b": 2, "c": 3}
+
+# Keys (default)
+for key in data:
+    print(key)
+
+# Values
+for value in data.values():
+    print(value)
+
+# Key-value pairs
+for key, value in data.items():
+    print(f"{key} = {value}")
 ```
 
 ### 4.2.2 `while` Loop
