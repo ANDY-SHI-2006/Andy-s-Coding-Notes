@@ -70,6 +70,35 @@ for item in set1:        # Only way to traverse
 print("Alice" in set1)   # True
 ```
 
+### 6.1.3 Subset and Superset
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| `a.issubset(b)` | All elements of `a` are in `b` | `{1,2}.issubset({1,2,3})` → `True` |
+| `a.issuperset(b)` | All elements of `b` are in `a` | `{1,2,3}.issuperset({1,2})` → `True` |
+| `a.isdisjoint(b)` | No common elements | `{1,2}.isdisjoint({3,4})` → `True` |
+
+```python
+a = {1, 2, 3}
+b = {1, 2}
+
+print(b <= a)       # True  (subset operator)
+print(a >= b)       # True  (superset operator)
+print(a.isdisjoint({4, 5}))  # True
+```
+
+### 6.1.4 `frozenset`
+
+Immutable version of a set. Can be used as dictionary keys or elements of another set.
+
+```python
+frozen = frozenset([1, 2, 3])
+# frozen.add(4)     # AttributeError: 'frozenset' object has no attribute 'add'
+
+# Used as dict key
+registry = {frozenset({"a", "b"}): "group A"}
+```
+
 ## 6.2 Dictionaries
 
 ### 6.2.1 Methods
@@ -233,5 +262,55 @@ scores = [85, 90, 78]
 gradebook = {name: score for name, score in zip(names, scores)}
 # {'Alice': 85, 'Bob': 90, 'Charlie': 78}
 ```
+
+### 6.2.5 Merge Operators (Python 3.9+)
+
+| Operator | Description | In-place |
+|----------|-------------|----------|
+| `\|` | Union: returns new dict | No |
+| `\|=` | Update: modifies left dict | Yes |
+
+```python
+a = {"x": 1, "y": 2}
+b = {"y": 3, "z": 4}
+
+print(a | b)    # {'x': 1, 'y': 3, 'z': 4} — new dict, b wins on conflict
+a |= b          # a is now {'x': 1, 'y': 3, 'z': 4}
+```
+
+### 6.2.6 `collections.defaultdict`
+
+Automatically provides a default value for missing keys.
+
+```python
+from collections import defaultdict
+
+counts = defaultdict(int)
+counts["apple"] += 1      # No KeyError; default 0 is used
+
+# Grouping by first letter
+words = ["apple", "apricot", "banana", "cherry"]
+groups = defaultdict(list)
+for word in words:
+    groups[word[0]].append(word)
+
+print(groups)   # {'a': ['apple', 'apricot'], 'b': ['banana'], 'c': ['cherry']}
+```
+
+### 6.2.7 `collections.Counter`
+
+Specialized dict for counting hashable objects.
+
+```python
+from collections import Counter
+
+items = ["apple", "banana", "apple", "cherry", "banana", "apple"]
+counts = Counter(items)
+
+print(counts)              # Counter({'apple': 3, 'banana': 2, 'cherry': 1})
+print(counts.most_common(2))  # [('apple', 3), ('banana', 2)]
+```
+
+**Note:** Dictionary iteration order is guaranteed to match insertion order (Python 3.7+).
 
 [← Previous: Sequences and Slicing](05-sequences-and-slicing.md) | [Next: Functions →](07-functions.md)
