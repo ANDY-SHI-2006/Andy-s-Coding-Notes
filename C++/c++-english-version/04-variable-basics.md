@@ -440,6 +440,8 @@ int get_error() { return last_error; }  // Each thread sees its own error
 | **Key concept** | Logical constness vs physical constness |
 | **Since** | C++98 |
 
+> 📌 **Prerequisite**: This section requires understanding of C++ **classes**, **member functions**, and **`const` methods**. If you haven't studied object-oriented programming (OOP) in C++ yet, you can skip this for now and return after covering [Chapter 10: Object-Oriented Programming](10-object-oriented-programming.md).
+
 ##### 4.1.5.5.1 Core Concept: Logical vs Physical Constness
 
 ```cpp
