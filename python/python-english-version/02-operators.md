@@ -4,6 +4,8 @@
 
 ## 2.1 Arithmetic Operators
 
+### 2.1.1 Basic Arithmetic
+
 | Operator | Description | Example | Result |
 |----------|-------------|---------|--------|
 | `+` | Addition | `5 + 3` | `8` |
@@ -25,6 +27,23 @@ print(10 // 3)   # 3
 print(17 % 5)    # 2
 ```
 
+### 2.1.2 Negative Modulo
+
+Python's `%` always returns a non-negative result when the divisor is positive.
+
+```python
+print(-5 % 3)    # 1  (not -2)
+print(5 % -3)    # -1 (sign follows divisor)
+```
+
+### 2.1.3 `divmod()`
+
+Returns both the quotient and remainder in one call.
+
+```python
+q, r = divmod(17, 5)   # q=3, r=2
+```
+
 ## 2.2 Comparison Operators
 
 | Operator | Description | Example | Result |
@@ -39,6 +58,20 @@ print(17 % 5)    # 2
 ```python
 age = 20
 print(age >= 18)  # True
+```
+
+### 2.2.1 Chain Comparison
+
+Python supports chaining comparisons for readability. The intermediate value is evaluated only once.
+
+```python
+x = 5
+
+# Equivalent to: 1 < x and x < 10
+print(1 < x < 10)     # True
+
+# Equivalent to: x == y == z
+print(1 < 2 < 3 < 4)  # True
 ```
 
 ## 2.3 Logical Operators
@@ -206,6 +239,12 @@ print(c is d)   # False (not cached)
 fruits = ["apple", "banana", "cherry"]
 print("apple" in fruits)      # True
 print("grape" not in fruits)  # True
+
+# Dict membership checks keys
+print("name" in {"name": "Alice", "age": 20})  # True
+
+# String substring check
+print("he" in "hello")  # True
 ```
 
 ## 2.7 Bitwise Operators
@@ -230,6 +269,23 @@ print(flags | mask)   # 0b1110 (14) - set bits in either
 print(flags ^ mask)   # 0b0110 (6)  - set bits different
 print(flags << 1)     # 0b10100 (20) - multiply by 2
 print(flags >> 1)     # 0b0101 (5)   - divide by 2
+```
+
+**Bitmask Example:**
+
+```python
+READ = 4    # 0b100
+WRITE = 2   # 0b010
+EXECUTE = 1 # 0b001
+
+# Grant read + write
+permissions = READ | WRITE   # 0b110 (6)
+
+# Check if write is granted
+print(bool(permissions & WRITE))  # True
+
+# Revoke write
+permissions &= ~WRITE
 ```
 
 ## 2.8 Operator Precedence
@@ -272,6 +328,21 @@ if age >= 18:
     status = "adult"
 else:
     status = "minor"
+```
+
+**Note:** Nested ternaries are legal but hurt readability.
+
+```python
+# Avoid
+result = "A" if score >= 90 else "B" if score >= 80 else "C"
+
+# Prefer
+if score >= 90:
+    result = "A"
+elif score >= 80:
+    result = "B"
+else:
+    result = "C"
 ```
 
 ## 2.10 Operator Overloading
