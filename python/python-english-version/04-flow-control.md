@@ -426,6 +426,8 @@ for i in range(10):
     print(i)  # Prints 1, 3, 5, 7, 9
 ```
 
+> **Note:** Like `break`, `continue` only affects the **innermost** loop in nested structures.
+
 ### 4.2.5 Loop `else` Clause
 
 The `else` block executes **only if the loop completed normally** (without hitting a `break`).
