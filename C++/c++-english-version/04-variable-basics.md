@@ -433,8 +433,10 @@ int get_error() { return last_error; }  // Each thread sees its own error
 | Aspect | Description |
 |--------|-------------|
 | **Purpose** | Modify members in const methods |
+| **Applies to** | Class data members only (not globals or locals) |
 | **Use case** | Caching, mutexes, instrumentation |
 | **Key concept** | Logical constness vs physical constness |
+| **Since** | C++98 |
 
 ##### 4.1.5.5.1 Core Concept: Logical vs Physical Constness
 
@@ -534,12 +536,16 @@ public:
 | Member is inherently cache/state | External const-correctness issue |
 | Caching, mutexes, debug counters | Calling legacy API, unit testing |
 
+**Summary Mnemonic**
+- **`mutable`** = "const on the outside, mutable on the inside"
+
 **Best Practices**
 
 | Do | Don't |
 |----|-------|
-| Use for caches | Use for actual object state |
-| Document why | Make everything mutable |
+| Use for caches, mutexes, instrumentation | Use for actual logical state |
+| Document why a member is mutable | Make everything mutable |
+| Pair mutable caches with mutexes in threaded code | Assume mutable alone fixes all thread-safety issues |
 
 #### 4.1.5.6 volatile: Tell Compiler "Don't Optimize"
 
