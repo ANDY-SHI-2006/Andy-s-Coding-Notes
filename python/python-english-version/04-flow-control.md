@@ -129,6 +129,19 @@ Python 3.10+ feature for matching data structures against patterns.
 > **Execution Order:** Cases are checked top-to-bottom. The first matching `case` executes, and the rest are skipped. Place `_` (wildcard) last, or it will shadow all branches below it.
 >
 > **No Match:** If no `case` matches and there is no `_`, the `match` statement does nothing — no error, no warning.
+>
+> **Variable Name Trap:** A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. Use literal values or dotted names for comparison.
+>
+> ```python
+> HTTP_OK = 200
+> match status:
+>     case HTTP_OK:       # ❌ Binds 'HTTP_OK', does NOT compare to 200
+>         print("OK")
+>     case 200:           # ✅ Literal comparison
+>         print("OK")
+>     case Status.OK:     # ✅ Dotted name comparison
+>         print("OK")
+> ```
 
 #### 4.1.4.1 Basic Value Matching
 
