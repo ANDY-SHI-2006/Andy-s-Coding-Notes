@@ -54,6 +54,28 @@ with open("output.txt", "w") as f:
 print("Loading...", end="", flush=True)
 ```
 
+### 3.1.5 Return Value
+
+`print()` always returns `None`. It cannot be used as part of an expression.
+
+```python
+result = print("hello")   # Prints "hello"
+print(result)             # None
+```
+
+### 3.1.6 Combined `sep` and `end` Patterns
+
+Practical one-liners using both parameters together.
+
+```python
+# CSV-style output
+print("Alice", 20, "NY", sep=",", end="\n")
+
+# Progress bar style
+for i in range(5):
+    print(i, end=" ", flush=True)   # 0 1 2 3 4
+```
+
 ## 3.2 `input()` Function
 
 ### 3.2.1 Basic Input
@@ -132,6 +154,24 @@ result = eval(input())  # User can input malicious code
 # Safer alternative
 import ast
 value = ast.literal_eval(input())  # Only parses literals
+```
+
+### 3.2.6 Multi-line Input
+
+Read multiple lines until EOF or an empty line.
+
+```python
+# Read until EOF (Unix: Ctrl+D, Windows: Ctrl+Z)
+import sys
+lines = sys.stdin.read()
+
+# Read until empty line
+lines = []
+while True:
+    line = input()
+    if line == "":
+        break
+    lines.append(line)
 ```
 
 ## 3.3 String Formatting
