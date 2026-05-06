@@ -113,6 +113,10 @@ Python 3.10+ feature for matching data structures against patterns.
 | Range comparisons (`>`, `<`) | `if` | Guards in `match` are less readable |
 | Python < 3.10 | `if` | `match` is not available |
 
+> **Execution Order:** Cases are checked top-to-bottom. The first matching `case` executes, and the rest are skipped. Place `_` (wildcard) last, or it will shadow all branches below it.
+>
+> **No Match:** If no `case` matches and there is no `_`, the `match` statement does nothing — no error, no warning.
+
 #### 4.1.4.1 Basic Value Matching
 
 ```python
