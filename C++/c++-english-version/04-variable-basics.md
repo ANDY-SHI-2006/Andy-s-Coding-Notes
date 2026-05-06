@@ -322,6 +322,8 @@ extern double square(double);    // Can also declare without parameter names
 | **Lifetime** | Until thread ends |
 | **Visibility** | Only visible to owning thread |
 
+> 📌 **Prerequisite**: This section assumes familiarity with `std::thread` and basic concurrency. If you haven't encountered multi-threaded programming yet, you can skip this for now and return when needed.
+
 ##### 4.1.5.4.1 Basic Usage
 
 ```cpp
