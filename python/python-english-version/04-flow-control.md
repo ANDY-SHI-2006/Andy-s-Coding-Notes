@@ -345,6 +345,18 @@ for i in range(10, 0, -1):   # 10, 9, ..., 1
 
 > **Note:** `range()` returns a lazy iterator, not a list. `range(10**9)` uses almost no memory until iterated.
 
+**`reversed()`:**
+
+Iterate over a sequence in reverse order without modifying it.
+
+```python
+for i in reversed(range(5)):     # 4, 3, 2, 1, 0
+    print(i)
+
+for char in reversed("hello"):   # 'o', 'l', 'l', 'e', 'h'
+    print(char)
+```
+
 #### 4.2.1.3 `enumerate()`
 
 Get both the index and the value while iterating.
