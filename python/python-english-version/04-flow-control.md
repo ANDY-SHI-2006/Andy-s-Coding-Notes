@@ -416,13 +416,13 @@ matrix = [[1, 2, 3], [4, 5, 6]]
 cols = list(zip(*matrix))   # [(1, 4), (2, 5), (3, 6)]
 ```
 
-> **Note:** `zip()` returns a one-time iterator. Once exhausted, it cannot be iterated again.
->
-> ```python
-> z = zip([1, 2], ['a', 'b'])
-> list(z)  # [(1, 'a'), (2, 'b')]
-> list(z)  # [] — already exhausted
-> ```
+**Note:** `zip()` returns a one-time iterator. Once exhausted, it cannot be iterated again.
+
+```python
+z = zip([1, 2], ['a', 'b'])
+list(z)  # [(1, 'a'), (2, 'b')]
+list(z)  # [] — already exhausted
+```
 
 #### 4.2.1.5 Dictionary Iteration
 
