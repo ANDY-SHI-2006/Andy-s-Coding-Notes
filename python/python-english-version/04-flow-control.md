@@ -399,6 +399,23 @@ else:
 
 **Use Case:** Useful for search operations where you want to know if the item was not found.
 
+**`while...else`**
+
+The same logic applies to `while` loops.
+
+```python
+# User input with retry limit
+tries = 0
+while tries < 3:
+    password = input("Password: ")
+    if password == "secret":
+        print("Access granted")
+        break
+    tries += 1
+else:
+    print("Too many failed attempts")
+```
+
 ### 4.2.6 `pass` Statement
 
 A placeholder that does nothing. Used when a statement is syntactically required but no action is needed.
