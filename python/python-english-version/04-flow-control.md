@@ -103,6 +103,16 @@ Python 3.10+ feature for matching data structures against patterns.
 > print(x, y)   # x and y are accessible here
 > ```
 
+**When to Use `match` vs `if`:**
+
+| Scenario | Preferred | Reason |
+|----------|-----------|--------|
+| Multiple exact value branches | `match` | Cleaner than chained `elif` |
+| Complex boolean logic (`and`/`or`) | `if` | More expressive |
+| Destructuring data (tuples, lists) | `match` | Pattern binding is concise |
+| Range comparisons (`>`, `<`) | `if` | Guards in `match` are less readable |
+| Python < 3.10 | `if` | `match` is not available |
+
 #### 4.1.4.1 Basic Value Matching
 
 ```python
