@@ -38,6 +38,25 @@ with open("data.txt", encoding="utf-8") as f:
     lines = f.readlines()       # List of lines
 ```
 
+### 10.2.1 `seek()` and `tell()`
+
+Control the file cursor position.
+
+| Method | Description |
+|--------|-------------|
+| `tell()` | Return current cursor position |
+| `seek(offset, whence=0)` | Move cursor to position |
+
+`whence`: `0` = start (default), `1` = current, `2` = end.
+
+```python
+with open("data.txt", encoding="utf-8") as f:
+    f.read(5)          # Read first 5 chars
+    print(f.tell())    # 5
+    f.seek(0)          # Back to start
+    print(f.read(3))   # First 3 chars again
+```
+
 ## 10.3 Writing Files
 
 ```python
@@ -103,6 +122,30 @@ with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
+### 10.6.1 CSV Handling
+
+```python
+import csv
+
+# Read CSV
+with open("data.csv", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)          # Each row is a list
+
+# Write CSV
+with open("output.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["name", "age"])
+    writer.writerow(["Alice", 20])
+
+# DictReader / DictWriter
+with open("data.csv", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row["name"])  # Access by column name
+```
+
 ## 10.7 Character Encoding
 
 | Encoding | Description | Bytes per char |
@@ -157,5 +200,42 @@ for txt_file in data_dir.glob("*.txt"):
 | Check exists | `os.path.exists(p)` | `Path(p).exists()` |
 | Read text | `open(p).read()` | `Path(p).read_text()` |
 | Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
+
+## 10.9 Temporary Files
+
+Use the `tempfile` module for short-lived files.
+
+```python
+import tempfile
+
+# Temporary file (auto-deleted when closed)
+with tempfile.NamedTemporaryFile(mode="w", delete=True) as f:
+    f.write("temporary data")
+    print(f.name)       # Path to temp file
+
+# Temporary directory
+with tempfile.TemporaryDirectory() as tmpdir:
+    print(tmpdir)       # Path to temp directory
+```
+
+## 10.10 File Existence and Metadata
+
+```python
+import os
+from pathlib import Path
+
+# Check existence
+os.path.exists("file.txt")          # True / False
+Path("file.txt").exists()           # True / False
+
+# Metadata
+os.path.getsize("file.txt")         # File size in bytes
+os.path.getmtime("file.txt")        # Last modification timestamp
+
+# stat object
+stat = os.stat("file.txt")
+print(stat.st_size)                 # Size
+print(stat.st_mtime)                # Modification time
+```
 
 [← Previous: Closures and Decorators](09-closures-and-decorators.md) | [Next: Object-Oriented Programming →](11-object-oriented-programming.md)
