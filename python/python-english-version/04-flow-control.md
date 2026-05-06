@@ -435,6 +435,20 @@ for item in items[:]:
         items.remove(item)
 ```
 
+#### 4.2.1.7 Loop Variable Scope
+
+The loop variable remains accessible **after** the loop ends, holding the last assigned value. If the loop never executes, the variable is undefined.
+
+```python
+for i in range(3):
+    pass
+print(i)   # 2 — still accessible
+
+for target in ["a", "b", "c"]:
+    pass
+print(target)   # 'c' — last value remains
+```
+
 ### 4.2.2 `while` Loop
 
 Repeats a block of code as long as a condition remains `True`.
