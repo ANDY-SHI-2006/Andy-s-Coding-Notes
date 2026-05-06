@@ -141,4 +141,96 @@ def my_function():
 # my_function = decorator_b(decorator_a(my_function))
 ```
 
+### 9.2.6 Parametric Decorators
+
+A decorator that accepts its own parameters. Requires a factory function.
+
+```python
+def repeat(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(times):
+                result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator
+
+@repeat(3)
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("Alice")   # Prints 3 times
+```
+
+### 9.2.7 Class Decorators
+
+Decorators can also be applied to classes.
+
+```python
+def singleton(cls):
+    instance = {}
+    def wrapper(*args, **kwargs):
+        if cls not in instance:
+            instance[cls] = cls(*args, **kwargs)
+        return instance[cls]
+    return wrapper
+
+@singleton
+class Database:
+    def __init__(self):
+        print("Connecting...")
+
+db1 = Database()
+db2 = Database()
+print(db1 is db2)   # True — same instance
+```
+
+### 9.2.8 `@property`
+
+Turn a method into an attribute-like accessor.
+
+```python
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        if value < 0:
+            raise ValueError("Radius cannot be negative")
+        self._radius = value
+
+c = Circle(5)
+print(c.radius)     # 5 (calls getter)
+c.radius = 10       # Calls setter
+```
+
+### 9.2.9 `@classmethod` and `@staticmethod`
+
+| Decorator | First param | Use case |
+|-----------|-------------|----------|
+| `@classmethod` | `cls` | Factory methods, alternative constructors |
+| `@staticmethod` | None | Utility functions related to class |
+
+```python
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data["name"])
+
+    @staticmethod
+    def is_adult(age):
+        return age >= 18
+
+p = Person.from_dict({"name": "Alice"})
+print(Person.is_adult(20))   # True
+```
+
 [← Previous: Advanced Functions](08-advanced-functions.md) | [Next: File Operations →](10-file-operations.md)
