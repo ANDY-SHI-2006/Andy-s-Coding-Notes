@@ -334,6 +334,15 @@ for name, score in zip(names, scores):
     print(f"{name}: {score}")
 ```
 
+**Transpose with `zip(*matrix)`:**
+
+Use the unpacking operator `*` with `zip` to transpose rows and columns.
+
+```python
+matrix = [[1, 2, 3], [4, 5, 6]]
+cols = list(zip(*matrix))   # [(1, 4), (2, 5), (3, 6)]
+```
+
 #### 4.2.1.5 Dictionary Iteration
 
 ```python
