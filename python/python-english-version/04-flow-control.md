@@ -326,6 +326,8 @@ for i in range(10, 0, -1):   # 10, 9, ..., 1
     print(i)
 ```
 
+> **Note:** `range()` returns a lazy iterator, not a list. `range(10**9)` uses almost no memory until iterated.
+
 #### 4.2.1.3 `enumerate()`
 
 Get both the index and the value while iterating.
