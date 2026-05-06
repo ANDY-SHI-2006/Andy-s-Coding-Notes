@@ -83,6 +83,30 @@ except (ValueError, TypeError):
     print("Invalid input")
 ```
 
+### 12.3.1 Execution Flow
+
+```
+try:
+    # Code runs first
+    risky_operation()
+    # If no exception → else block runs
+except SomeError:
+    # Runs only if SomeError is raised
+    handle_error()
+else:
+    # Runs only if NO exception in try
+    success_handler()
+finally:
+    # ALWAYS runs (cleanup)
+    cleanup()
+```
+
+**Order guarantee:**
+1. `try` block executes
+2. If exception → matching `except` executes
+3. If no exception → `else` executes
+4. `finally` always executes last
+
 ## 12.4 Best Practices
 
 ### 12.4.1 Be Specific
@@ -180,5 +204,67 @@ class Stack:
 **Assertion vs Exception:**
 - **Assertion**: Internal bug check, can be disabled
 - **Exception**: Expected error cases, always handled
+
+## 12.7 Context Managers
+
+The `with` statement ensures cleanup code runs even if exceptions occur.
+
+```python
+# File context manager (auto-closes)
+with open("file.txt") as f:
+    content = f.read()
+```
+
+### Custom Context Manager
+
+Implement `__enter__` and `__exit__`.
+
+```python
+class Timer:
+    def __enter__(self):
+        import time
+        self.start = time.time()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import time
+        elapsed = time.time() - self.start
+        print(f"Elapsed: {elapsed:.2f}s")
+
+with Timer():
+    # Code to time
+    sum(range(1000000))
+```
+
+### `contextlib.contextmanager`
+
+Simpler way to write context managers using generators.
+
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def managed_resource(name):
+    print(f"Acquiring {name}")
+    yield name
+    print(f"Releasing {name}")
+
+with managed_resource("db_connection") as res:
+    print(f"Using {res}")
+```
+
+## 12.8 `warnings` Module
+
+Issue non-fatal warnings without stopping execution.
+
+```python
+import warnings
+
+# Issue a warning
+warnings.warn("This feature is deprecated", DeprecationWarning)
+
+# Filter warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+```
 
 [← Previous: Object-Oriented Programming](11-object-oriented-programming.md)
