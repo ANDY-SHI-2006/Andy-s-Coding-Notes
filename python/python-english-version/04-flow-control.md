@@ -394,6 +394,22 @@ for key, value in data.items():
     print(f"{key} = {value}")
 ```
 
+#### 4.2.1.6 Modifying a Sequence While Iterating
+
+Do not add or remove items from a sequence while iterating over it. The iterator skips elements because indices shift.
+
+```python
+# WRONG: skips elements
+for item in items:
+    if item < 0:
+        items.remove(item)
+
+# CORRECT: iterate over a copy
+for item in items[:]:
+    if item < 0:
+        items.remove(item)
+```
+
 ### 4.2.2 `while` Loop
 
 Repeats a block of code as long as a condition remains `True`.
