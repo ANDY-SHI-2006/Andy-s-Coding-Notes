@@ -171,7 +171,27 @@ Variable names should clearly describe their purpose. Avoid single-letter names 
 
 ## 1.4 Integer Type
 
-Python integers have unlimited precision; there is no overflow. For readability, use underscore separators `_` (available in Python 3.6 and later).
+Python integers have unlimited precision; there is no overflow.
+
+### 1.4.1 Number Bases
+
+Integers can be written in binary, octal, or hexadecimal using prefixes.
+
+| Prefix | Base | Example | Decimal |
+|--------|------|---------|---------|
+| `0b` | Binary (2) | `0b1010` | `10` |
+| `0o` | Octal (8) | `0o17` | `15` |
+| `0x` | Hexadecimal (16) | `0xFF` | `255` |
+
+```python
+bin(10)   # '0b1010'
+oct(15)   # '0o17'
+hex(255)  # '0xff'
+```
+
+### 1.4.2 Underscore Separators
+
+Use underscore separators `_` for readability (Python 3.6+).
 
 ```python
 million = 1_000_000  # Same as 1000000
@@ -188,21 +208,64 @@ x = 9.9e2      # 9.9 × 10² = 990.0
 y = 3.14E-2    # 3.14 × 10⁻² = 0.0314
 ```
 
-### 1.5.2 Precision Trap
+### 1.5.2 Special Values
 
-Floating-point arithmetic can produce unexpected results due to binary representation limitations. Use `round()` or `decimal.Decimal` for exact decimal arithmetic.
+Floats support infinity and not-a-number.
 
-> **Precision Trap:**
+```python
+import math
+
+positive_inf = float('inf')
+negative_inf = float('-inf')
+not_a_number = float('nan')
+
+math.isinf(float('inf'))   # True
+math.isnan(float('nan'))   # True
+```
+
+### 1.5.3 Precision Trap
+
+Floating-point arithmetic can produce unexpected results due to binary representation limitations.
 
 ```python
 0.1 + 0.2 == 0.3    # False (0.30000000000000004)
+```
+
+**`round()` uses banker's rounding** (round half to even):
+
+```python
+round(2.5)   # 2
+round(3.5)   # 4
+```
+
+For exact decimal arithmetic, use `decimal.Decimal`:
+
+```python
+from decimal import Decimal
+
+Decimal('0.1') + Decimal('0.2') == Decimal('0.3')  # True
 ```
 
 ## 1.6 String Type
 
 A string is an immutable sequence of characters. Single quotes `' '` and double quotes `" "` are interchangeable.
 
-### 1.6.1 Raw Strings
+### 1.6.1 Escape Sequences
+
+| Sequence | Meaning |
+|----------|---------|
+| `\n` | Newline |
+| `\t` | Tab |
+| `\\` | Backslash |
+| `\'` | Single quote |
+| `\"` | Double quote |
+
+```python
+print("Line 1\nLine 2")   # Two lines
+print("Tab\there")        # Tab separation
+```
+
+### 1.6.2 Raw Strings
 
 Prefix a string with `r` to create a raw string. Backslashes are treated as literal characters, which is useful for Windows file paths and regular expressions.
 
@@ -214,7 +277,7 @@ path = "C:\\Users\\EDY\\Desktop\\demo.py"
 path = r"C:\Users\EDY\Desktop\demo.py"
 ```
 
-### 1.6.2 Multi-line Strings
+### 1.6.3 Multi-line Strings
 
 Triple quotes `'''` or `"""` preserve line breaks and formatting. They are commonly used for docstrings and long text blocks.
 
@@ -222,6 +285,33 @@ Triple quotes `'''` or `"""` preserve line breaks and formatting. They are commo
 text = """This is a
 multi-line string
 that spans several lines"""
+```
+
+### 1.6.4 String Operations
+
+```python
+# Concatenation
+full = "Hello" + " " + "World"   # 'Hello World'
+
+# Repetition
+line = "-" * 20                   # '--------------------'
+
+# Length
+count = len("hello")              # 5
+
+# Membership
+found = "he" in "hello"           # True
+```
+
+### 1.6.5 Immutability
+
+Strings cannot be modified in place. Any operation that appears to change a string creates a new one.
+
+```python
+s = "hello"
+# s[0] = "H"     # TypeError: 'str' object does not support item assignment
+
+s = "H" + s[1:]   # Creates a new string: 'Hello'
 ```
 
 ## 1.7 Boolean Type
@@ -249,6 +339,19 @@ In a boolean context, the following values evaluate to `False`. Everything else 
 | `()` | Empty tuple |
 | `None` | NoneType |
 | `set()` | Empty set |
+
+### 1.7.3 `bool()` Constructor
+
+Explicitly convert any value to a Boolean.
+
+```python
+bool(0)         # False
+bool(1)         # True
+bool("")        # False
+bool("hello")   # True
+bool([])        # False
+bool([1, 2])    # True
+```
 
 ## 1.8 None Type
 
@@ -287,6 +390,7 @@ if value == None:
 |----------|-------------|--------------|
 | `int(x)` | Integer | `ValueError` if not parseable |
 | `float(x)` | Float | `ValueError` if not parseable |
+| `complex(x)` | Complex number | `ValueError` if not parseable |
 | `str(x)` | String | Rarely fails |
 | `bool(x)` | Boolean | Never fails (uses truthiness) |
 | `list(x)` | List | `TypeError` if not iterable |
@@ -300,6 +404,8 @@ int(3.14)       # 3 (truncates toward zero)
 int("abc")      # ValueError
 
 float("3.14")   # 3.14
+complex("3+4j") # (3+4j)
+
 str(100)        # "100"
 bool(0)         # False
 bool("hello")   # True
