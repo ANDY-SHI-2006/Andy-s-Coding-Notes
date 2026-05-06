@@ -551,15 +551,20 @@ public:
 | Document why a member is mutable | Make everything mutable |
 | Pair mutable caches with mutexes in threaded code | Assume mutable alone fixes all thread-safety issues |
 
-#### 4.1.5.6 volatile: Tell Compiler "Don't Optimize"
+#### 4.1.5.6 `volatile`: Tell Compiler "Don't Optimize"
 
 `volatile` tells the compiler that a variable's value may change at any time by external factors (hardware, OS, signal handlers), so it should not optimize away reads or writes.
 
 | Aspect | Description |
 |--------|-------------|
 | **Purpose** | Prevent compiler optimization for external modifications |
+| **Applies to** | Any variable (local, global, member, pointer) |
 | **Use case** | Hardware registers, signal handlers |
-| **⚠️ Important** | NOT for thread synchronization! |
+| **Since** | Inherited from C |
+
+> 📌 **Prerequisite**: This section involves compiler optimization and low-level hardware concepts. If embedded programming or signal handling feels unfamiliar, focus on the key takeaway: `volatile` is for hardware/signals, **not threads**.
+
+> ⚠️ **`volatile` is NOT for thread synchronization!** It does not provide atomicity, memory ordering, or visibility guarantees between threads. Use `std::atomic` instead. See [4.1.5.6.3](#41563-volatile-is-not-for-threading) below.
 
 ##### 4.1.5.6.1 The Problem: Compiler Optimization
 
@@ -633,6 +638,9 @@ void consumer() { while (!data_ready.load(std::memory_order_acquire)) {} }
 | Use for signal handlers | Assume atomicity |
 | Document why needed | Use "just to be safe" |
 
+**Summary Mnemonic**
+- **`volatile`** = "Always ask memory, never assume the cache"
+
 **Decision Tree:**
 ```
 Modified by hardware/OS/signals?
@@ -641,8 +649,6 @@ Modified by hardware/OS/signals?
     ├── Yes → Use std::atomic
     └── No → Regular variable
 ```
-
-
 
 #### 4.1.5.7 Inline Variables (C++17)
 
