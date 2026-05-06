@@ -97,6 +97,36 @@ sorted(users, key=lambda x: x["age"])  # Alice first
 
 **Note:** For basic sorting syntax and comparison with `.sort()`, see [5.10 `sorted()` vs `.sort()`](05-sequences-and-slicing.md#510-sorted-vs-sort).
 
+### 8.2.5 `reduce()`
+
+Cumulatively apply a function to reduce an iterable to a single value.
+
+```python
+from functools import reduce
+
+reduce(lambda a, b: a + b, [1, 2, 3, 4])   # 10
+reduce(lambda a, b: a * b, [1, 2, 3, 4])   # 24
+```
+
+### 8.2.6 `partial()`
+
+Create a new function with pre-filled arguments.
+
+```python
+from functools import partial
+
+# Base function
+def power(base, exponent):
+    return base ** exponent
+
+# Create specialized functions
+square = partial(power, exponent=2)
+cube = partial(power, exponent=3)
+
+square(5)   # 25
+cube(3)     # 27
+```
+
 ## 8.3 Iterators
 
 | Method | Description |
@@ -123,6 +153,30 @@ for item in lst:            # Calls iter(), then next() repeatedly
 **Iterable vs Iterator:**
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
+
+### 8.3.1 `itertools` Overview
+
+Built-in module for efficient iteration patterns.
+
+| Function | Purpose | Example |
+|----------|---------|---------|
+| `count(start, step)` | Infinite counter | `count(10, 2)` → 10, 12, 14... |
+| `cycle(iterable)` | Infinite repetition | `cycle("AB")` → A, B, A, B... |
+| `repeat(value, times)` | Repeat value | `repeat(5, 3)` → 5, 5, 5 |
+| `chain(a, b)` | Concatenate iterables | `chain([1,2], [3,4])` → 1, 2, 3, 4 |
+| `groupby(iterable, key)` | Group consecutive equal items | See example below |
+
+```python
+import itertools
+
+# chain: flatten lists
+list(itertools.chain([1, 2], [3, 4]))   # [1, 2, 3, 4]
+
+# groupby: group consecutive items
+data = [("A", 1), ("A", 2), ("B", 3), ("B", 4)]
+for key, group in itertools.groupby(data, key=lambda x: x[0]):
+    print(key, list(group))   # A [(A,1), (A,2)]  B [(B,3), (B,4)]
+```
 
 ## 8.4 Generators
 
@@ -154,6 +208,49 @@ def fibonacci():
 
 fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
+```
+
+### 8.4.1 Generator Methods
+
+Generators support communication with the caller.
+
+| Method | Purpose |
+|--------|---------|
+| `send(value)` | Send value into generator, resumes execution |
+| `throw(exc)` | Raise exception inside generator |
+| `close()` | Terminate generator early |
+
+```python
+def accumulator():
+    total = 0
+    while True:
+        value = yield total   # Receive value via send()
+        if value is None:
+            break
+        total += value
+
+acc = accumulator()
+next(acc)           # Start generator
+acc.send(10)        # total = 10
+acc.send(5)         # total = 15
+acc.close()         # Clean shutdown
+```
+
+### 8.4.2 `yield from`
+
+Delegate iteration to a sub-generator.
+
+```python
+def sub_generator():
+    yield 1
+    yield 2
+
+def main_generator():
+    yield "start"
+    yield from sub_generator()
+    yield "end"
+
+list(main_generator())   # ['start', 1, 2, 'end']
 ```
 
 [← Previous: Functions](07-functions.md) | [Next: Closures and Decorators →](09-closures-and-decorators.md)
