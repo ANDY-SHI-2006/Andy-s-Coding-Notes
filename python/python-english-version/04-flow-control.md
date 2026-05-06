@@ -257,6 +257,18 @@ match point:
         print("Somewhere else")
 ```
 
+**Class Instance Pattern (`case ClassName()`)**
+
+Match any instance of a class without extracting attributes.
+
+```python
+match p:
+    case Point():           # Any Point instance
+        print("It's a point")
+    case _:
+        print("Not a point")
+```
+
 ## 4.2 Loop Structures
 
 ### 4.2.1 `for` Loop
