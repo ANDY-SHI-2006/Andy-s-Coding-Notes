@@ -214,7 +214,15 @@ Database& get_database() {
    
    When global variables in different files depend on each other, initialization order is **undefined**. This can cause crashes or silent failures. See [4.1.6 SIOF](#416-static-initialization-order-fiasco-siof) for details.
 
-**Summary Mnemonic:**
+**Best Practices**
+
+| Do | Don't |
+|----|-------|
+| Use for file-private globals / functions | Use when anonymous namespace is preferred (C++11+) |
+| Use for lazy-initialized singletons | Use for thread-shared mutable state without locks |
+| Rely on thread-safe initialization (C++11+) | Assume access after initialization is thread-safe |
+
+**Summary Mnemonic**
 - **Global `static`** = "Keep it secret, keep it safe" (hide from other files)
 - **Local `static`** = "Remember forever" (persist between calls)
 
@@ -294,6 +302,17 @@ extern double square(double);    // Can also declare without parameter names
    extern int missing;   // Declaration
    int main() { return missing; }  // —Link error: undefined reference
    ```
+
+**Best Practices**
+
+| Do | Don't |
+|----|-------|
+| Declare in headers, define in one .cpp | Define in headers without `inline`/`extern` |
+| Use for sharing across translation units | Use when the variable should be file-local |
+| Match types exactly across files | Assume the linker catches type mismatches |
+
+**Summary Mnemonic**
+- **`extern`** = "Declare everywhere, define once"
 
 > **Note on `extern "C"`**: For C and C++ interoperability, see [4.1.7 extern "C": C and C++ Interoperability](#417-extern-c-c-and-c-interoperability).
 
@@ -417,9 +436,6 @@ int get_error() { return last_error; }  // Each thread sees its own error
    }
    ```
 
-**Summary Mnemonic**
-- **`thread_local`** = "Each thread gets its own notebook"
-
 **Best Practices**
 
 | Do | Don't |
@@ -427,6 +443,9 @@ int get_error() { return last_error; }  // Each thread sees its own error
 | Use for per-thread caches, RNGs, connections | Use for data that must be shared across threads |
 | Use to avoid locks on thread-private data | Use when memory per thread is large |
 | Use for thread-specific state (error codes, IDs) | Forget that it still doesn't protect shared variables |
+
+**Summary Mnemonic**
+- **`thread_local`** = "Each thread gets its own notebook"
 
 #### 4.1.5.5 mutable: Modifying in const Contexts
 
@@ -540,9 +559,6 @@ public:
 | Member is inherently cache/state | External const-correctness issue |
 | Caching, mutexes, debug counters | Calling legacy API, unit testing |
 
-**Summary Mnemonic**
-- **`mutable`** = "const on the outside, mutable on the inside"
-
 **Best Practices**
 
 | Do | Don't |
@@ -550,6 +566,9 @@ public:
 | Use for caches, mutexes, instrumentation | Use for actual logical state |
 | Document why a member is mutable | Make everything mutable |
 | Pair mutable caches with mutexes in threaded code | Assume mutable alone fixes all thread-safety issues |
+
+**Summary Mnemonic**
+- **`mutable`** = "const on the outside, mutable on the inside"
 
 #### 4.1.5.6 `volatile`: Tell Compiler "Don't Optimize"
 
