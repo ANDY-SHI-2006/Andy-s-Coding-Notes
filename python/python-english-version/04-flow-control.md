@@ -338,6 +338,25 @@ print("Access granted")
 
 **Caution:** Ensure the condition eventually becomes `False`, or the loop runs forever.
 
+**`while True` + `break` Pattern**
+
+Use `while True` for loops where the exit condition is determined inside the loop body.
+
+```python
+# Menu loop
+while True:
+    choice = input("Enter command (q to quit): ")
+    if choice == "q":
+        break
+    print(f"Processing: {choice}")
+
+# Search loop
+for i in range(100):
+    if i == 42:
+        result = i
+        break
+```
+
 ### 4.2.3 `break` Statement
 
 Immediately exits the innermost loop.
