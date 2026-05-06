@@ -211,6 +211,16 @@ match items:
         print(f"First: {first}, Rest: {rest}")
 ```
 
+**`as` Pattern:**
+
+Capture the entire matched value alongside its components.
+
+```python
+match point:
+    case (x, y) as pt:
+        print(f"Matched {pt} with x={x}, y={y}")
+```
+
 #### 4.1.4.3 Guard Clause
 
 A guard adds an `if` condition after `case` to filter matched values further.
