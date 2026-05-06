@@ -403,6 +403,17 @@ for i in range(100):
     print(i)  # Prints 0 to 41
 ```
 
+**Nested Loops:** `break` only exits the **innermost** loop.
+
+```python
+for i in range(3):
+    for j in range(3):
+        if i == j == 1:
+            break          # Exits inner loop only
+        print(f"({i}, {j})")
+# Output: (0,0) (0,1) (0,2) (1,0) (2,0) (2,1) (2,2)
+```
+
 ### 4.2.4 `continue` Statement
 
 Skips the rest of the current iteration and proceeds to the next.
