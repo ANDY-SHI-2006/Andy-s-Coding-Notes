@@ -33,6 +33,68 @@ c2()                        # 1
 
 **Decorator:** A function that wraps another function to extend its behavior without modifying it.
 
+### 9.2.0 Why Decorators? (Evolution)
+
+Suppose you need to measure execution time for multiple functions. Without decorators, you have three bad options:
+
+**Approach 1: Duplicate code** — violates DRY principle.
+
+```python
+import time
+
+def login():
+    start = time.time()
+    print("Login logic")
+    time.sleep(1)
+    print(f"Time: {time.time() - start:.2f}s")
+
+def register():
+    start = time.time()
+    print("Register logic")
+    time.sleep(1)
+    print(f"Time: {time.time() - start:.2f}s")
+```
+
+**Approach 2: Extract common code** — better, but still need to manually call the wrapper.
+
+```python
+def measure(func):
+    start = time.time()
+    func()
+    time.sleep(1)
+    print(f"Time: {time.time() - start:.2f}s")
+
+measure(login)      # Works, but changes how you call the function
+```
+
+**Approach 3: Closure + return inner function** — the decorator pattern.
+
+```python
+def timer(func):
+    def wrapper():
+        start = time.time()
+        func()
+        time.sleep(1)
+        print(f"Time: {time.time() - start:.2f}s")
+    return wrapper
+
+login = timer(login)    # Replaces login with wrapped version
+login()                 # Looks like normal call, but has timing
+```
+
+**Approach 4: `@` syntax sugar** — same as Approach 3, cleaner to write.
+
+```python
+@timer
+def login():
+    print("Login logic")
+    time.sleep(1)
+
+login()                 # Identical behavior to Approach 3
+```
+
+**Key benefit:** Decorators add functionality without changing the original function's source code or its calling convention.
+
 ### 9.2.1 Decorator 1.0 (Basic Template)
 
 ```python
@@ -265,5 +327,38 @@ transfer_money(True, 100)   # 💰 Transferring $100...
 ```
 
 **Key pattern:** The decorator intercepts the call, checks a condition, and either blocks execution or proceeds to the original function. This pattern is widely used in web frameworks (Flask, Django) for authentication and authorization.
+
+### 9.2.11 Practical Example: Logging Decorator
+
+A logging decorator records function calls — useful for debugging and monitoring.
+
+```python
+def log_call(func):
+    """Log function name, arguments, and return value."""
+    def wrapper(*args, **kwargs):
+        print(f"[CALL] {func.__name__} args={args} kwargs={kwargs}")
+        result = func(*args, **kwargs)
+        print(f"[RETURN] {func.__name__} → {result}")
+        return result
+    return wrapper
+
+@log_call
+def add(a, b):
+    return a + b
+
+@log_call
+def greet(name, greeting="Hello"):
+    return f"{greeting}, {name}!"
+
+add(3, 5)
+# [CALL] add args=(3, 5) kwargs={}
+# [RETURN] add → 8
+
+greet("Alice", greeting="Hi")
+# [CALL] greet args=('Alice',) kwargs={'greeting': 'Hi'}
+# [RETURN] greet → Hi, Alice!
+```
+
+**Real-world tip:** In production, replace `print()` with a proper logging framework like Python's `logging` module.
 
 [← Previous: Advanced Functions](08-advanced-functions.md) | [Next: File Operations →](10-file-operations.md)
