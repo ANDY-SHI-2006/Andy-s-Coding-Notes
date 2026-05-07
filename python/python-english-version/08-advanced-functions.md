@@ -284,7 +284,30 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-### 8.4.1 Generator Expression vs List Comprehension
+### 8.4.1 Generator Execution Flow
+
+When a generator function is called, it does **not** execute the function body immediately. Instead, it returns a generator object. The body executes only when `next()` is called, and it **pauses** at each `yield`, resuming from that exact point on the next `next()` call.
+
+```python
+def step_generator():
+    print("Step 1: start")
+    yield 10
+    print("Step 2: resumed")
+    yield 20
+    print("Step 3: resumed again")
+    yield 30
+    print("Step 4: finished")
+
+g = step_generator()        # Nothing printed yet — returns generator object
+print(next(g))              # Step 1: start → 10  (pauses at first yield)
+print(next(g))              # Step 2: resumed → 20  (resumes, pauses at second yield)
+print(next(g))              # Step 3: resumed again → 30
+# next(g)                   # Step 4: finished → StopIteration
+```
+
+**Key insight:** `yield` is both an output point and a checkpoint. The generator remembers its local variables and execution position between calls.
+
+### 8.4.2 Generator Expression vs List Comprehension
 
 Syntax differs by only one character, but behavior is very different:
 
@@ -314,7 +337,7 @@ print(list(squares_gen))  # [0, 1, 4, 9, 16]
 - Use **list comprehension** when you need random access or multiple passes
 - Use **generator expression** for large/infinite sequences or single-pass pipelines
 
-### 8.4.2 Generator Methods
+### 8.4.3 Generator Methods
 
 Generators support communication with the caller.
 
@@ -340,7 +363,7 @@ acc.send(5)         # total = 15
 acc.close()         # Clean shutdown
 ```
 
-### 8.4.3 `yield from`
+### 8.4.4 `yield from`
 
 Delegate iteration to a sub-generator.
 
