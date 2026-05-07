@@ -2,6 +2,35 @@
 
 # 7 Functions
 
+## 7.0 Function Anatomy (The Three Elements)
+
+Every function in Python has three core components:
+
+| Element | Role | Example |
+|---------|------|---------|
+| **Name** | Identifier + address in memory | `def greet():` → `greet` is the name |
+| **Parameters** | Input variables (formal) / arguments (actual) | `(name, age)` |
+| **Return Value** | Output sent back to the caller | `return result` |
+
+```python
+def add(a, b):          # name = "add", parameters = (a, b)
+    result = a + b      # function body
+    return result       # return value
+
+# The function name is a reference to the function object
+print(add)              # <function add at 0x...>
+
+# You can assign the function to another variable
+my_add = add            # Both names point to the same function
+print(my_add(2, 3))     # 5
+```
+
+**Key rules about return values:**
+1. Whatever follows `return` becomes the return value
+2. `return` immediately ends function execution — code after it does not run
+3. If no `return` is present, the function implicitly returns `None`
+4. `return` without a value also returns `None`
+
 ## 7.1 Function Parameters
 
 ### 7.1.1 Formal Parameters Definition
@@ -188,7 +217,29 @@ def outer():
         x += 1
     inner()
     return x
+
+# nonlocal searches outward and stops at the first match
+def level_1():
+    x = "level_1"
+    def level_2():
+        x = "level_2"       # New local variable in level_2
+        def level_3():
+            nonlocal x      # Binds to the NEAREST enclosing x → level_2's x
+            x = "modified by level_3"
+        level_3()
+        print(x)            # "modified by level_3" (level_2's x was changed)
+    level_2()
+    print(x)                # "level_1" (level_1's x was NOT changed)
+
+level_1()
 ```
+
+**`nonlocal` lookup rule:**
+1. Search **outward** from the innermost enclosing scope
+2. Stop at the **first** matching variable name found
+3. If no match is found in any enclosing (non-global) scope → `SyntaxError`
+
+Use `global` when you need to modify a module-level variable. Use `nonlocal` when you need to modify a variable in an enclosing function scope.
 
 ## 7.7 Docstrings
 
