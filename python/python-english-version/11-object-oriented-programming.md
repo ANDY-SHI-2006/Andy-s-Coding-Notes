@@ -292,6 +292,34 @@ c.radius = 10           # Uses setter
 print(c.area)           # 314.159
 ```
 
+**Important: `@<name>.setter` requires `@property` first.**
+
+You cannot define a setter without first defining the corresponding getter with `@property`. Python needs to know the property exists before it can attach a setter to it.
+
+```python
+class BankAccount:
+    def __init__(self, balance):
+        self._balance = balance
+
+    @property
+    def balance(self):
+        return self._balance
+
+    # OK: balance.setter follows balance.property
+    @balance.setter
+    def balance(self, value):
+        if value < 0:
+            raise ValueError("Balance cannot be negative")
+        self._balance = value
+
+    # ERROR without @property first:
+    # @pin.setter      # AttributeError: 'function' object has no attribute 'setter'
+    # def pin(self, value):
+    #     self._pin = value
+```
+
+**Best practice:** Use the same method name for both `@property` getter and `@<name>.setter`. This ensures consistency and makes the property behave like a real attribute.
+
 ## 11.11 Duck Typing and Polymorphism
 
 Python uses **duck typing**: an object's fitness for use is determined by the presence of required methods/attributes, not by its type.
