@@ -154,7 +154,37 @@ for item in lst:            # Calls iter(), then next() repeatedly
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
-### 8.3.1 `itertools` Overview
+### 8.3.1 How `for` Loops Work Under the Hood
+
+A `for` loop is syntactic sugar for this iterator protocol pattern:
+
+```python
+lst = ["Alice", "Bob", "Charlie"]
+
+# What "for item in lst" actually does internally:
+_iterator = iter(lst)           # 1. Get iterator from iterable
+while True:
+    try:
+        item = next(_iterator)  # 2. Get next element
+        print(item)             # 3. Execute loop body
+    except StopIteration:       # 4. No more elements → exit
+        break
+```
+
+**Key insight:** The `for` loop automatically handles `StopIteration`, which is why you never see this exception in normal loop usage. When you exhaust an iterator manually with `next()`, you must catch (or allow) `StopIteration` yourself.
+
+```python
+it = iter([1, 2, 3])
+
+# Manual iteration (must handle StopIteration)
+try:
+    while True:
+        print(next(it))
+except StopIteration:
+    print("Done")
+```
+
+### 8.3.2 `itertools` Overview
 
 Built-in module for efficient iteration patterns.
 
@@ -210,7 +240,37 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-### 8.4.1 Generator Methods
+### 8.4.1 Generator Expression vs List Comprehension
+
+Syntax differs by only one character, but behavior is very different:
+
+| Feature | List Comprehension `[]` | Generator Expression `()` |
+|---------|------------------------|---------------------------|
+| Result | Full list in memory | Lazy iterator object |
+| Memory | High (stores all values) | Low (produces on demand) |
+| Reusability | Can iterate multiple times | One-time use |
+| Syntax | `[x**2 for x in range(n)]` | `(x**2 for x in range(n))` |
+
+```python
+# List comprehension — creates entire list immediately
+squares_list = [x ** 2 for x in range(5)]
+print(squares_list)       # [0, 1, 4, 9, 16]
+print(type(squares_list)) # <class 'list'>
+
+# Generator expression — creates iterator, values generated on demand
+squares_gen = (x ** 2 for x in range(5))
+print(squares_gen)        # <generator object <genexpr> at 0x...>
+print(type(squares_gen))  # <class 'generator'>
+
+# Must consume with list() or iterate
+print(list(squares_gen))  # [0, 1, 4, 9, 16]
+```
+
+**When to use which:**
+- Use **list comprehension** when you need random access or multiple passes
+- Use **generator expression** for large/infinite sequences or single-pass pipelines
+
+### 8.4.2 Generator Methods
 
 Generators support communication with the caller.
 
@@ -236,7 +296,7 @@ acc.send(5)         # total = 15
 acc.close()         # Clean shutdown
 ```
 
-### 8.4.2 `yield from`
+### 8.4.3 `yield from`
 
 Delegate iteration to a sub-generator.
 
