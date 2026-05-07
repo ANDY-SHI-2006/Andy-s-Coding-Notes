@@ -233,4 +233,37 @@ p = Person.from_dict({"name": "Alice"})
 print(Person.is_adult(20))   # True
 ```
 
+### 9.2.10 Practical Example: Login Check Decorator
+
+A common real-world use case: restrict function execution based on login status.
+
+```python
+def require_login(func):
+    """Decorator that checks if user is logged in before executing."""
+    def wrapper(is_logged_in, *args, **kwargs):
+        if not is_logged_in:
+            print("❌ Access denied. Please log in first.")
+            return
+        return func(is_logged_in, *args, **kwargs)
+    return wrapper
+
+@require_login
+def view_dashboard(is_logged_in):
+    print("📊 Showing dashboard...")
+
+@require_login
+def transfer_money(is_logged_in, amount):
+    print(f"💰 Transferring ${amount}...")
+
+# Not logged in
+view_dashboard(False)       # ❌ Access denied. Please log in first.
+transfer_money(False, 100)  # ❌ Access denied. Please log in first.
+
+# Logged in
+view_dashboard(True)        # 📊 Showing dashboard...
+transfer_money(True, 100)   # 💰 Transferring $100...
+```
+
+**Key pattern:** The decorator intercepts the call, checks a condition, and either blocks execution or proceeds to the original function. This pattern is widely used in web frameworks (Flask, Django) for authentication and authorization.
+
 [← Previous: Advanced Functions](08-advanced-functions.md) | [Next: File Operations →](10-file-operations.md)
