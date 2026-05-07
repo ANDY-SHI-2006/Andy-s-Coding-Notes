@@ -169,7 +169,42 @@ def validate_age(age):
         raise ValidationError("Age cannot be negative")
 ```
 
-### 12.5.1 Exception Chaining
+### 12.5.1 Practical Example: Custom Exception with Context
+
+A custom exception with a descriptive message makes debugging much easier. Inherit from `Exception` (or a more specific built-in exception) and pass the error details to `super().__init__()`.
+
+```python
+class FutureYearError(Exception):
+    """Raised when a year from the future is provided."""
+    def __init__(self, year, current_year):
+        message = f"Year {year} does not exist yet (current year is {current_year})"
+        super().__init__(message)
+        self.year = year
+        self.current_year = current_year
+
+def calculate_age(birth_year, current_year=2025):
+    if birth_year > current_year:
+        raise FutureYearError(birth_year, current_year)
+    if birth_year < 1900:
+        raise ValueError("Birth year seems unrealistic")
+    return current_year - birth_year
+
+# Normal case
+print(calculate_age(2000))   # 25
+
+# Custom exception with rich context
+try:
+    print(calculate_age(2030))
+except FutureYearError as e:
+    print(f"Error: {e}")
+    print(f"Provided year: {e.year}")
+    print(f"Current year: {e.current_year}")
+# Error: Year 2030 does not exist yet (current year is 2025)
+# Provided year: 2030
+# Current year: 2025
+```
+
+### 12.5.2 Exception Chaining
 
 `raise ... from ...` attaches the original exception as the cause, preserving full traceback information.
 
