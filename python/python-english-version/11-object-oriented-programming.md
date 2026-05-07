@@ -356,6 +356,35 @@ isinstance(d, object)   # True (Dog inherits from object)
 issubclass(Dog, object) # True
 ```
 
+**Inheritance chain example:**
+
+```python
+class Animal:
+    pass
+
+class Mammal(Animal):
+    pass
+
+class Dog(Mammal):
+    pass
+
+dog = Dog()
+
+# isinstance checks the entire inheritance chain
+isinstance(dog, Dog)      # True  — exact match
+isinstance(dog, Mammal)   # True  — parent class
+isinstance(dog, Animal)   # True  — grandparent class
+isinstance(dog, object)   # True  — all classes inherit from object
+
+# type() only checks exact type
+type(dog) is Dog          # True
+type(dog) is Mammal       # False  ← type() does NOT check inheritance
+```
+
+**Key difference:**
+- `isinstance(obj, Class)` → checks inheritance chain (usually preferred)
+- `type(obj) is Class` → checks exact type only (ignores inheritance)
+
 ## 11.12 Multiple Inheritance and MRO
 
 A class can inherit from multiple parents. Python uses **Method Resolution Order (C3 linearization)** to determine which method runs.
