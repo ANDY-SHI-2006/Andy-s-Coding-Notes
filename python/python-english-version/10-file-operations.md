@@ -38,6 +38,19 @@ with open("data.txt", encoding="utf-8") as f:
     lines = f.readlines()       # List of lines
 ```
 
+**⚠️ Character vs Byte:** `read(n)` reads **n characters**, not n bytes. This is usually what you want, but be aware that with UTF-8 encoding, one Chinese character occupies **3 bytes** on disk. The file cursor (`tell()`) moves by bytes, while `read(n)` counts characters.
+
+```python
+with open("chinese.txt", "w", encoding="utf-8") as f:
+    f.write("中文")             # 2 characters, 6 bytes on disk
+
+with open("chinese.txt", "r", encoding="utf-8") as f:
+    print(f.read(1))            # "中" — 1 character (3 bytes internally)
+    print(f.tell())             # 3 — cursor position in bytes
+    print(f.read(1))            # "文" — next character
+    print(f.tell())             # 6
+```
+
 ### 10.2.1 `seek()` and `tell()`
 
 Control the file cursor position.
