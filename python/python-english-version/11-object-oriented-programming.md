@@ -291,6 +291,14 @@ print(acct._balance)                # Works but discouraged
 print(acct._BankAccount__pin)       # Technically accessible (name mangling)
 ```
 
+**Python's philosophy: Convention over enforcement.**
+
+Unlike Java or C++, Python cannot truly hide attributes. Both `_name` and `__name` remain accessible:
+- `_name` is simply a **gentleman's agreement** — the interpreter does nothing to block access
+- `__name` uses **name mangling** (`_ClassName__name`) which makes accidental access harder, but a determined developer can still reach it
+
+This is sometimes described as "keeping honest people honest." The goal is to communicate intent to other programmers, not to enforce security. If you need actual access control, use property getters/setters or design your API carefully.
+
 ## 11.10 Property Decorator
 
 Expose a method as an attribute.
