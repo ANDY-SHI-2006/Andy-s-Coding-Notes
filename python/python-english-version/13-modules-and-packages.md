@@ -133,6 +133,8 @@ os.getcwd()              # Current working directory
 os.listdir(".")          # List files in directory
 os.path.exists("file.txt")  # Check if file exists
 os.path.join("dir", "file") # Cross-platform path joining
+os.path.basename("/home/user/file.txt")  # "file.txt"
+os.path.dirname("/home/user/file.txt")   # "/home/user"
 os.mkdir("new_folder")   # Create directory
 os.remove("file.txt")    # Delete file
 ```
@@ -154,7 +156,11 @@ sys.platform      # Platform identifier ('win32', 'darwin', 'linux')
 from datetime import datetime, timedelta
 
 now = datetime.now()
-print(now.strftime("%Y-%m-%d %H:%M:%S"))  # Format
+print(now.strftime("%Y-%m-%d %H:%M:%S"))  # datetime → string
+
+# Parse string to datetime
+birthday = datetime.strptime("2000-05-15", "%Y-%m-%d")
+print(birthday.year)          # 2000
 
 future = now + timedelta(days=7)
 print(future)
@@ -167,9 +173,25 @@ import random
 
 random.randint(1, 10)     # Random integer [1, 10]
 random.random()           # Random float [0.0, 1.0)
-random.choice(["a", "b"]) # Random element
+random.choice(["a", "b"]) # Random single element
 random.shuffle(list)      # Shuffle list in-place
+
+# choices() — sampling WITH replacement (can pick same item multiple times)
+# Supports weights for biased sampling
+elements = ["A", "B", "C", "D"]
+weights = [10, 1, 1, 1]   # A is 10x more likely
+random.choices(elements, weights=weights, k=3)
+# Example: ['A', 'A', 'B'] — A appears more frequently
+
+# sample() — sampling WITHOUT replacement (no duplicates)
+random.sample(elements, k=2)   # Example: ['C', 'A']
 ```
+
+| Method | Replacement | Duplicates | Weights | Use case |
+|--------|-------------|------------|---------|----------|
+| `choice()` | Single pick | — | No | Pick one random item |
+| `choices()` | With | Allowed | Yes | Lottery, weighted selection |
+| `sample()` | Without | Not allowed | No | Draw without replacement |
 
 ### 13.6.5 `re` — Regular Expressions
 
