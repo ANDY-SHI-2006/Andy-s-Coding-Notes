@@ -83,7 +83,31 @@ except (ValueError, TypeError):
     print("Invalid input")
 ```
 
-### 12.3.1 Execution Flow
+### 12.3.1 Nested `try/except`
+
+You can nest `try` blocks. The inner `except` handles errors from the inner block; if it doesn't catch the exception, it propagates to the outer `except`.
+
+```python
+try:
+    print("Outer try")
+    try:
+        result = 10 / 0
+    except ZeroDivisionError:
+        print("Inner: caught division by zero")
+    # Inner block handled the error, outer continues normally
+    print("Outer continues")
+except Exception:
+    print("Outer: caught something")
+
+# Output:
+# Outer try
+# Inner: caught division by zero
+# Outer continues
+```
+
+**Use case:** Inner blocks handle expected, local errors; outer blocks handle unexpected, broader failures.
+
+### 12.3.2 Execution Flow
 
 ```
 try:
