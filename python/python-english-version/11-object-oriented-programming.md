@@ -238,6 +238,34 @@ s = Student("Alice", 20, "S001")
 print(s.name)                       # Alice (from Person)
 ```
 
+### 11.8.1 Method Override with `super()`
+
+When a subclass redefines a parent method, `super()` lets you reuse the parent's implementation before adding custom behavior.
+
+```python
+class Chef:
+    def cook(self):
+        print("Heat pan")
+        print("Add ingredients")
+        print("Simmer")
+
+class SichuanChef(Chef):
+    def cook(self):
+        super().cook()              # Reuse parent's steps
+        print("Add chili oil")      # Add custom step
+        print("Plate")
+
+s = SichuanChef()
+s.cook()
+# Heat pan
+# Add ingredients
+# Simmer
+# Add chili oil
+# Plate
+```
+
+**Rule of thumb:** Call `super().method()` when you want to *extend* parent behavior. Omit it when you want to *completely replace* it.
+
 ## 11.9 Encapsulation
 
 Python uses naming conventions to indicate intended visibility.
