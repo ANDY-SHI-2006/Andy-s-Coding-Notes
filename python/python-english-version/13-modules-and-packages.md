@@ -183,4 +183,41 @@ re.findall(r"\d+", "a1b2c3")   # Find all matches: ['1', '2', '3']
 re.sub(r"\d+", "X", "a1b2")    # Replace: 'aXbX'
 ```
 
+### 13.6.6 `pprint` — Pretty Printing
+
+The `pprint` module formats complex data structures (especially nested dicts and lists) with automatic indentation and line wrapping, making them far more readable than standard `print()`.
+
+```python
+import pprint
+
+data = {
+    1: {"name": "Alice", "age": 25, "scores": [90, 85, 88]},
+    2: {"name": "Bob", "age": 30, "scores": [78, 82, 91]},
+    3: {"name": "Charlie", "age": 22, "scores": [95, 92, 89]},
+}
+
+# Standard print — hard to read
+print(data)
+# {1: {'name': 'Alice', 'age': 25, 'scores': [90, 85, 88]}, 2: ...}
+
+# Pretty print — structured and readable
+pprint.pprint(data)
+# {1: {'age': 25, 'name': 'Alice', 'scores': [90, 85, 88]},
+#  2: {'age': 30, 'name': 'Bob', 'scores': [78, 82, 91]},
+#  3: {'age': 22, 'name': 'Charlie', 'scores': [95, 92, 89]}}
+```
+
+**Controlling output width:**
+
+```python
+# Limit line width (default is 80)
+pprint.pprint(data, width=40)
+
+# Use a PrettyPrinter instance for repeated use
+printer = pprint.PrettyPrinter(indent=4, width=50)
+printer.pprint(data)
+```
+
+**When to use:** Any time you need to inspect nested data structures during debugging.
+
 [← Previous: Exception Handling](12-exception-handling.md)
