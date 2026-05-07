@@ -281,6 +281,18 @@ list1.insert(100, "Eve")          # Adds to end (no error)
 list1.extend([1, 2])              # ['David', ..., 'Charlie', 'Eve', 1, 2]
 ```
 
+**⚠️ Trap: `extend()` with a string iterates characters:**
+
+Since strings are iterable, passing a string to `extend()` splits it into individual characters — often not what you want.
+
+```python
+names = ["Alice"]
+names.extend("Bob")       # ['Alice', 'B', 'o', 'b']  ← not ["Alice", "Bob"]!
+
+# Correct: wrap in a list
+names.extend(["Bob"])     # ['Alice', 'Bob']
+```
+
 ### 5.7.2 Delete
 
 | Method | Syntax | Description | Error if Invalid |
