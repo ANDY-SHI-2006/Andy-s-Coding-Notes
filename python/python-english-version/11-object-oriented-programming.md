@@ -83,6 +83,21 @@ class Student:
 print(Student.get_count())      # 0
 ```
 
+**Limitation:** Class methods can only access **class attributes** and call other **class methods**. They **cannot** access instance attributes or call instance methods — there is no `self` available.
+
+```python
+class Demo:
+    class_attr = "shared"
+
+    def __init__(self):
+        self.instance_attr = "mine"
+
+    @classmethod
+    def class_method(cls):
+        print(cls.class_attr)       # ✅ OK — class attribute
+        # print(self.instance_attr) # ❌ Error — no self in class method
+```
+
 ## 11.5 Static Methods
 
 | Feature | Description |
@@ -99,6 +114,20 @@ class MathUtils:
 
 print(MathUtils.add(3, 5))      # 8 (no instance needed)
 ```
+
+**Key insight:** A static method is essentially a plain function that happens to live inside a class namespace. It has no access to `self` (instance) or `cls` (class). Use it when the logic is related to the class conceptually but does not need any class or instance data.
+
+### 11.5.1 Instance vs Class vs Static Methods
+
+| Aspect | Instance Method | Class Method | Static Method |
+|--------|----------------|--------------|---------------|
+| Decorator | None | `@classmethod` | `@staticmethod` |
+| First param | `self` (instance) | `cls` (class) | None |
+| Can access instance attrs? | ✅ Yes | ❌ No | ❌ No |
+| Can access class attrs? | ✅ Yes | ✅ Yes | ❌ No |
+| Can call instance methods? | ✅ Yes | ❌ No | ❌ No |
+| Can call class methods? | ✅ Yes | ✅ Yes | ❌ No |
+| Typical use | Object behavior | Factory / counters | Utility functions |
 
 ## 11.6 Special Methods (Magic Methods)
 
