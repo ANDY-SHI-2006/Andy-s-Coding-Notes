@@ -137,6 +137,9 @@ os.path.basename("/home/user/file.txt")  # "file.txt"
 os.path.dirname("/home/user/file.txt")   # "/home/user"
 os.mkdir("new_folder")   # Create directory
 os.remove("file.txt")    # Delete file
+
+# Execute a shell command (platform-dependent)
+os.system("python --version")   # Runs command in subshell
 ```
 
 ### 13.6.2 `sys` — System-Specific Parameters
@@ -148,6 +151,7 @@ sys.argv          # Command-line arguments list
 sys.exit(0)       # Exit program
 sys.path          # Module search path
 sys.platform      # Platform identifier ('win32', 'darwin', 'linux')
+sys.version       # Python version information string
 ```
 
 ### 13.6.3 `datetime` — Date and Time
