@@ -349,6 +349,44 @@ d.move()            # Flying — Flyer comes first in MRO
 print(Duck.__mro__) # (<class 'Duck'>, <class 'Flyer'>, <class 'Swimmer'>, <class 'object'>)
 ```
 
+### 11.12.1 Inspecting Inheritance with `__bases__` and `__base__`
+
+Python provides special attributes on classes for introspecting their inheritance:
+
+| Attribute | Returns | Use Case |
+|-----------|---------|----------|
+| `Class.__bases__` | Tuple of all direct parent classes | Check all immediate parents |
+| `Class.__base__` | The first (leftmost) direct parent | Quick check of primary parent |
+
+```python
+class Animal:
+    pass
+
+class Mammal(Animal):
+    pass
+
+class Dog(Mammal):
+    pass
+
+# __base__ — the first (leftmost) direct parent
+print(Dog.__base__)      # <class '__main__.Mammal'>
+
+# __bases__ — tuple of all direct parents
+print(Dog.__bases__)     # (<class '__main__.Mammal'>,)
+
+# Multiple inheritance
+class CanFly:
+    pass
+
+class FlyingDog(Dog, CanFly):
+    pass
+
+print(FlyingDog.__base__)   # <class '__main__.Dog'> (first parent)
+print(FlyingDog.__bases__)  # (<class '__main__.Dog'>, <class '__main__.CanFly'>)"}}
+```
+
+**Note:** `__base__` only shows the *first* parent. For the complete hierarchy, use `__mro__` or `__bases__`.
+
 ## 11.13 Abstract Base Classes
 
 Enforce that subclasses implement specific methods.
