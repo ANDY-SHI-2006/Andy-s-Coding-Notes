@@ -159,15 +159,42 @@ with open("data.csv", encoding="utf-8") as f:
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
 
-```python
-# ASCII
-c = 'A'                     # 1 byte
-print(ord('A'))             # 65
-print(chr(65))              # 'A'
+### 10.7.1 Encoding Evolution
 
-# UTF-8 for Chinese (3 bytes per character)
+Understanding why encodings exist helps prevent file-reading errors:
+
+1. **ASCII (1963):** 7 bits, 128 characters. Covers English letters, digits, and basic symbols. Insufficient for any other language.
+
+2. **GBK (China):** Extension of ASCII. English = 1 byte, Chinese = 2 bytes. Widely used in legacy Chinese Windows systems.
+
+3. **Unicode:** A universal character set assigning a unique number to every character in every language. UTF-8, UTF-16, and UTF-32 are different ways to encode these numbers into bytes.
+
+4. **UTF-8 (recommended):** Variable-length encoding. ASCII characters = 1 byte, most others = 2-4 bytes. Chinese characters typically use **3 bytes**. Backward-compatible with ASCII.
+
+**Rule of thumb:** Always specify `encoding="utf-8"` when opening files. Python defaults to the system's locale encoding, which varies by OS and can cause `UnicodeDecodeError`.
+
+```python
+# ASCII — 1 byte per character
+print(ord('A'))             # 65  (ASCII code point)
+print(chr(65))              # 'A' (character from code point)
+
+# UTF-8 — Chinese uses 3 bytes per character
 with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")          # 6 bytes total
+    f.write("中文")          # 6 bytes total (2 chars × 3 bytes)
+```
+
+### 10.7.2 `seek()` with Multi-byte Characters
+
+`seek()` moves the cursor by **bytes**, not characters. With UTF-8 Chinese text, you must seek to byte positions that align with character boundaries (multiples of 3 for Chinese).
+
+```python
+with open("chinese.txt", "r", encoding="utf-8") as f:
+    f.read()                # "中文" — cursor at end
+    f.seek(3)               # Move to byte 3 (start of second Chinese char)
+    print(f.read(1))        # "文" — reads one character
+
+    # f.seek(1)             # ❌ Bad — lands in middle of a 3-byte character
+    # f.read(1)             # UnicodeDecodeError
 ```
 
 ## 10.8 Modern Path Handling with `pathlib`
