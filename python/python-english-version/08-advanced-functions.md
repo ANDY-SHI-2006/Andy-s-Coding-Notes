@@ -46,6 +46,11 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 | Returns | Iterator with transformed elements |
 | Output | `list()` to convert to list |
 
+**Execution flow:**
+1. Create a `map` iterator object that remembers `func` and `iterable`
+2. On each iteration, pull one element from `iterable`, pass it to `func`, yield the result
+3. Continue until `iterable` is exhausted
+
 ```python
 # Convert strings to integers
 nums = ["1", "2", "3"]
@@ -53,6 +58,10 @@ list(map(int, nums))        # [1, 2, 3]
 
 # Transform with lambda
 list(map(lambda x: x ** 2, [1, 2, 3]))  # [1, 4, 9]
+
+# map() returns an iterator — lazy evaluation
+mapped = map(int, nums)
+print(mapped)               # <map object at 0x...>  (not a list yet)
 ```
 
 ### 8.2.3 `filter()`
@@ -62,6 +71,12 @@ list(map(lambda x: x ** 2, [1, 2, 3]))  # [1, 4, 9]
 | Syntax | `filter(func, iterable)` |
 | Returns | Iterator with elements where func returns True |
 | Output | `list()` to convert to list |
+
+**Execution flow:**
+1. Create a `filter` iterator object that remembers `func` and `iterable`
+2. On each iteration, pull one element, call `func(element)`
+3. If result is **truthy**, yield the element; if **falsy**, skip it
+4. Continue until `iterable` is exhausted
 
 ```python
 # Filter even numbers
@@ -93,11 +108,40 @@ sorted(words, key=len)              # ['pie', 'banana', 'Washington']
 # Sort by object attribute
 users = [{"name": "Bob", "age": 30}, {"name": "Alice", "age": 25}]
 sorted(users, key=lambda x: x["age"])  # Alice first
+
+# Sort by absolute value
+nums = [-3, 1, -2, 4]
+sorted(nums, key=lambda x: abs(x))   # [1, -2, -3, 4]
+
+# Sort by parsed numeric value from string
+products = ["iPhone_8000", "Mi_4000", "Huawei_10000"]
+sorted(products, key=lambda x: int(x.split("_")[1]))  # ['Mi_4000', 'iPhone_8000', 'Huawei_10000']
 ```
 
 **Note:** For basic sorting syntax and comparison with `.sort()`, see [5.10 `sorted()` vs `.sort()`](05-sequences-and-slicing.md#510-sorted-vs-sort).
 
-### 8.2.5 `reduce()`
+### 8.2.5 `any()` and `all()`
+
+| Function | Returns `True` when | Example |
+|----------|--------------------|---------|
+| `any(iterable)` | At least one element is truthy | `any([0, 1, 0])` → `True` |
+| `all(iterable)` | All elements are truthy | `all([1, 2, 3])` → `True` |
+
+```python
+# Check if any number is positive
+nums = [-1, -5, 3, -8]
+any(n > 0 for n in nums)     # True
+
+# Check if all users are adults
+users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}]
+all(u["age"] >= 18 for u in users)   # True
+
+# Empty inputs
+any([])                      # False
+all([])                      # True  (vacuously true)
+```
+
+### 8.2.6 `reduce()`
 
 Cumulatively apply a function to reduce an iterable to a single value.
 
@@ -108,7 +152,7 @@ reduce(lambda a, b: a + b, [1, 2, 3, 4])   # 10
 reduce(lambda a, b: a * b, [1, 2, 3, 4])   # 24
 ```
 
-### 8.2.6 `partial()`
+### 8.2.7 `partial()`
 
 Create a new function with pre-filled arguments.
 
