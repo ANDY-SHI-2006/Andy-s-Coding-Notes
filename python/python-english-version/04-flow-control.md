@@ -590,7 +590,7 @@ A placeholder that does nothing. Used when a statement is syntactically required
 ```python
 # Placeholder for future implementation
 if condition:
-    pass  # TODO: handle this case
+    pass  # Placeholder — does nothing, but satisfies syntax requirement
 
 # Empty class or function body
 class MyClass:
