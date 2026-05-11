@@ -504,7 +504,7 @@ class FlyingDog(Dog, CanFly):
     pass
 
 print(FlyingDog.__base__)   # <class '__main__.Dog'> (first parent)
-print(FlyingDog.__bases__)  # (<class '__main__.Dog'>, <class '__main__.CanFly'>)"}}
+print(FlyingDog.__bases__)  # (<class '__main__.Dog'>, <class '__main__.CanFly'>)
 ```
 
 **Note:** `__base__` only shows the *first* parent. For the complete hierarchy, use `__mro__` or `__bases__`.

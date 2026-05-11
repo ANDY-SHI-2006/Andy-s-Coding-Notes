@@ -141,7 +141,7 @@ with open("data.json", encoding="utf-8") as f:
 import csv
 
 # Read CSV
-with open("data.csv", encoding="utf-8") as f:
+with open("data.csv", encoding="utf-8", newline="") as f:
     reader = csv.reader(f)
     for row in reader:
         print(row)          # Each row is a list
@@ -153,7 +153,7 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
     writer.writerow(["Alice", 20])
 
 # DictReader / DictWriter
-with open("data.csv", encoding="utf-8") as f:
+with open("data.csv", encoding="utf-8", newline="") as f:
     reader = csv.DictReader(f)
     for row in reader:
         print(row["name"])  # Access by column name
