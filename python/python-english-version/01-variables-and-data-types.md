@@ -100,7 +100,38 @@ flags: set[str] = {"a", "b"}
 
 > **Note:** In Python 3.8 and earlier, import from `typing`: `from typing import List, Dict, Tuple, Set`.
 
-#### 1.1.3.4 Type Annotations in `@dataclass`
+#### 1.1.3.4 Union and Optional Types
+
+A value may be one of several types, or it may be `None`. Use `|` (Python 3.10+) or `Union` / `Optional` from the `typing` module.
+
+```python
+from typing import Union, Optional
+
+# Python 3.10+ union syntax — preferred
+# Value can be int OR str
+# Return value can be dict OR None
+
+def find(user_id: int | str) -> dict | None:
+    ...
+
+# Python 3.9 and earlier — Union
+def find(user_id: Union[int, str]) -> Union[dict, None]:
+    ...
+
+# Optional[X] is shorthand for Union[X, None]
+def greet(name: Optional[str] = None) -> str:
+    if name is None:
+        return "Hello, Guest"
+    return f"Hello, {name}"
+
+# Python 3.10+ idiomatic way — X | None
+def greet(name: str | None = None) -> str:
+    if name is None:
+        return "Hello, Guest"
+    return f"Hello, {name}"
+```
+
+#### 1.1.3.5 Type Annotations in `@dataclass`
 
 The `@dataclass` decorator reads field annotations to auto-generate `__init__` and other methods.
 
@@ -115,7 +146,7 @@ class Point:
 p = Point(3, 4)  # __init__ generated automatically
 ```
 
-#### 1.1.3.5 Runtime Behavior
+#### 1.1.3.6 Runtime Behavior
 
 Type hints are **not enforced** at runtime. They exist for documentation, IDE autocompletion, and static analysis tools.
 
@@ -128,6 +159,18 @@ For actual enforcement, use a static type checker such as `mypy`.
 
 ```bash
 mypy script.py
+```
+
+You can also read type hints at runtime via the `typing` module:
+
+```python
+import typing
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+print(typing.get_type_hints(add))
+# {'a': <class 'int'>, 'b': <class 'int'>, 'return': <class 'int'>}
 ```
 
 ## 1.2 Comments
