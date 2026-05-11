@@ -282,7 +282,7 @@ user: dict[str, int] = {"age": 20}
 
 **Note:** Python remains dynamically typed. Type hints are checked by external tools (like `mypy`), not at runtime.
 
-### Advanced Type Annotations
+### 7.8.1 Advanced Type Annotations
 
 Import from the `typing` module for complex type declarations.
 
@@ -334,7 +334,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## 7.10 Advanced Usage
+## 7.11 Advanced Usage
 
 Functions in Python are first-class objects:
 
