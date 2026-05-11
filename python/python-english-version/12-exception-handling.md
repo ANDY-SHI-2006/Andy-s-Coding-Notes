@@ -1,4 +1,4 @@
-[← Previous: Object-Oriented Programming](11-object-oriented-programming.md) | [Next: Modules and Packages →](13-modules-and-packages.md)
+[← Previous: Object-Oriented Programming](11-object-oriented-programming.md) | [Next: Modules and Packages →](13-modules-and-packages.md) | [Next: Modules and Packages →](13-modules-and-packages.md)
 
 # 12 Exception Handling
 
