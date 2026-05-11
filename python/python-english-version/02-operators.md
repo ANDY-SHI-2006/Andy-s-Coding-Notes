@@ -149,7 +149,7 @@ count = 10
 count += 5   # count is now 15
 ```
 
-### 2.4.2 Walrus Operator `:=`
+### 2.4.1 Walrus Operator `:=`
 
 The walrus operator assigns a value **inside an expression** and returns that value. Unlike `=`, which is a statement, `:=` is an expression and can be used where statements are not allowed.
 
