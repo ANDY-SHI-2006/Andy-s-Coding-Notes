@@ -102,34 +102,98 @@ flags: set[str] = {"a", "b"}
 
 #### 1.1.3.4 Union and Optional Types
 
-A value may be one of several types, or it may be `None`. Use `|` (Python 3.10+) or `Union` / `Optional` from the `typing` module.
+Sometimes a value isn't just one fixed type — it could be one of several types, or it might be missing entirely (`None`).
+
+### Why Union Types Exist
+
+Real-world data is messy. The same parameter may arrive as different types depending on where it comes from:
 
 ```python
-from typing import Union, Optional
+# A database may store IDs as integers
+find(1001)
 
-# Python 3.10+ union syntax — preferred
-# Value can be int OR str
-# Return value can be dict OR None
+# But a user typing into a form sends a string
+find("USR-1001")
 
+# Without type hints, readers of your code have to guess
+# what user_id accepts. With Union, it's explicit:
 def find(user_id: int | str) -> dict | None:
     ...
+```
 
-# Python 3.9 and earlier — Union
-def find(user_id: Union[int, str]) -> Union[dict, None]:
-    ...
+### (a) Multiple Types: `X | Y`
 
-# Optional[X] is shorthand for Union[X, None]
-def greet(name: Optional[str] = None) -> str:
-    if name is None:
-        return "Hello, Guest"
-    return f"Hello, {name}"
+Python 3.10+ uses `|` (the pipe character) to mean "or":
 
-# Python 3.10+ idiomatic way — X | None
+```python
+# age can be an int or a float
+# The function returns a str or None
+
+def describe(age: int | float) -> str | None:
+    if age < 0:
+        return None
+    return f"Age is {age}"
+```
+
+**How to read it:**
+- `int | float` → "this value is either an int or a float"
+- `str | None` → "this value is either a string or None"
+
+### (b) The "May Be Missing" Case: `X | None`
+
+This is the **most common** use of Union in practice. Many parameters are optional — if you don't pass them, they default to `None`.
+
+```python
+# name is optional. If omitted, it becomes None.
 def greet(name: str | None = None) -> str:
     if name is None:
         return "Hello, Guest"
     return f"Hello, {name}"
+
+greet("Alice")   # "Hello, Alice"
+greet()          # "Hello, Guest"
 ```
+
+**⚠️ Common trap:** You cannot treat a `str | None` value as if it were definitely a `str`. You must check first.
+
+```python
+def greet(name: str | None = None) -> str:
+    # ❌ Wrong: None has no upper() method
+    # return name.upper()
+
+    # ✅ Correct: check before using str methods
+    if name is None:
+        return "Hello"
+    return name.upper()
+```
+
+This "check then use" pattern is called **type narrowing** — you narrow the union down to one concrete type before operating on it.
+
+### (c) Older Syntax: `Union` and `Optional`
+
+Before Python 3.10, you had to import these from the `typing` module. They still work today for backward compatibility.
+
+```python
+from typing import Union, Optional
+
+# Old way — same meaning as int | str
+def find(user_id: Union[int, str]) -> Union[dict, None]:
+    ...
+
+# Optional[X] is just shorthand for Union[X, None]
+def greet(name: Optional[str] = None) -> str:
+    ...
+```
+
+**Syntax comparison:**
+
+| Meaning | Python 3.10+ (recommended) | Python ≤3.9 |
+|---------|---------------------------|-------------|
+| int or str | `int \| str` | `Union[int, str]` |
+| str or None | `str \| None` | `Optional[str]` |
+| list of int | `list[int]` | `List[int]` |
+
+**Recommendation:** Use `X | Y` and `X | None` in new code. They read like plain English and require no imports.
 
 #### 1.1.3.5 Type Annotations in `@dataclass`
 
