@@ -1,4 +1,4 @@
-[â†?Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis â†’](20-algorithm-analysis.md)
+[â† Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis â†’](20-algorithm-analysis.md)
 
 # 21 Queue ADT
 
@@ -16,9 +16,24 @@ Think of a queue at a bank or supermarket checkout:
 **Core Principle: FIFO (First In, First Out)**
 
 ```
-Enqueue 10   Enqueue 20   Enqueue 30   Dequeue     Dequeue
-     â”?           â”?           â”?          â”?          â”?     â–?           â–?           â–?          â–?          â–?â”Œâ”€â”€â”€â”€â”€â”?     â”Œâ”€â”€â”€â”€â”€â”?     â”Œâ”€â”€â”€â”€â”€â”?     â”Œâ”€â”€â”€â”€â”€â”?     â”Œâ”€â”€â”€â”€â”€â”?â”?    â”?     â”?10  â”?     â”?10  â”?     â”?20  â”?     â”?30  â”?â”?    â”?     â”?    â”?     â”?20  â”?     â”?30  â”?     â”?    â”?â”?    â”?     â”?    â”?     â”?30  â”‚â—„â”€â”€â”€â”?â”?    â”‚â—„â”€â”€â”€â”?â”?    â”?â””â”€â”€â”€â”€â”€â”?     â””â”€â”€â”€â”€â”€â”?     â””â”€â”€â”€â”€â”€â”?   â”?â””â”€â”€â”€â”€â”€â”?   â”?â””â”€â”€â”€â”€â”€â”? Front       Front        Front      â”? Front     â”? Front
-                                        Rear         Rear
+Step 1: Empty queue
+[ ]  front=0, rear=-1
+
+Step 2: enqueue(10)
+[10]  front=0, rear=0
+
+Step 3: enqueue(20)
+[10, 20]  front=0, rear=1
+
+Step 4: enqueue(30)
+[10, 20, 30]  front=0, rear=2
+
+Step 5: dequeue() â†’ returns 10
+[20, 30]  front=1, rear=2
+      â†‘ front moves right (FIFO: first in, first out)
+
+Step 6: dequeue() â†’ returns 20
+[30]  front=2, rear=2
 ```
 
 ### Core Operations
@@ -132,7 +147,36 @@ public:
 };
 ```
 
-**Why Circular Array?**
+### The Index Drift Problem
+
+A naive array implementation uses `front = 0` and shifts all elements left on each `dequeue()`:
+
+```cpp
+// NAIVE: O(n) dequeue â€” shifts everything left
+void dequeue() {
+    for (int i = 0; i < count - 1; i++) {
+        items[i] = items[i + 1];  // Shift left
+    }
+    count--;
+}
+```
+
+Even if we avoid shifting by simply advancing `front`, a new problem emerges:
+
+```
+Initial:     [ 10 | 20 | 30 | 40 | _ ]  front=0, rear=3, count=4
+After dequeue: [ _ | 20 | 30 | 40 | _ ]  front=1, rear=3, count=3
+After dequeue: [ _ | _ | 30 | 40 | _ ]  front=2, rear=3, count=2
+After enqueue(50): [ _ | _ | 30 | 40 | 50 ]  front=2, rear=4, count=3
+After dequeue: [ _ | _ | _ | 40 | 50 ]  front=3, rear=4, count=2
+```
+
+> **Problem:** The `front` index drifts to the right. After many operations, most array locations at the front become empty and unusable. Even though the array has free space, you cannot enqueue new items because `rear` has reached the end.
+
+**Solution:** Treat the array as **circular** â€” when an index reaches the end, it wraps around to 0 using modulo arithmetic.
+
+### Why Circular Array?
+
 - Without circular buffer, dequeue would require shifting all elements (O(n))
 - Circular buffer allows O(1) enqueue and dequeue
 - Uses modulo arithmetic to wrap around
@@ -239,6 +283,86 @@ public:
 **Why maintain rear pointer?**
 - Without rear pointer, enqueue would be O(n) (need to traverse to end)
 - With rear pointer, both enqueue and dequeue are O(1)
+
+### Circular Linked List Implementation
+
+An alternative design uses a **circular linked list** with only a `lastNode` pointer. The front node is always `lastNode->next`.
+
+```cpp
+template <typename T>
+class CircularLinkedQueue {
+private:
+    struct Node {
+        T data;
+        Node* next;
+        Node(const T& d, Node* n = nullptr) : data(d), next(n) {}
+    };
+    
+    Node* lastNode;   // Points to the LAST node; front = lastNode->next
+    int count;
+    
+public:
+    CircularLinkedQueue() : lastNode(nullptr), count(0) {}
+    
+    ~CircularLinkedQueue() {
+        clear();
+    }
+    
+    void enqueue(const T& item) {
+        Node* newNode = new Node(item);
+        
+        if (isEmpty()) {
+            newNode->next = newNode;   // Points to itself
+            lastNode = newNode;
+        } else {
+            newNode->next = lastNode->next;  // Link to front
+            lastNode->next = newNode;        // Old last points to new
+            lastNode = newNode;              // Update last
+        }
+        count++;
+    }
+    
+    void dequeue() {
+        if (isEmpty()) {
+            throw runtime_error("Queue underflow");
+        }
+        
+        Node* frontNode = lastNode->next;   // Front is lastNode->next
+        
+        if (frontNode == lastNode) {
+            // Only one element
+            lastNode = nullptr;
+        } else {
+            lastNode->next = frontNode->next;  // Skip front node
+        }
+        
+        delete frontNode;
+        count--;
+    }
+    
+    T& front() {
+        if (isEmpty()) {
+            throw runtime_error("Queue empty");
+        }
+        return lastNode->next->data;
+    }
+    
+    bool isEmpty() const {
+        return lastNode == nullptr;
+    }
+    
+    void clear() {
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+};
+```
+
+**Advantages of Circular Design:**
+- Only **one pointer** (`lastNode`) needed â€” `firstNode` is derived as `lastNode->next`
+- Enqueue/dequeue are both O(1)
+- No special `nullptr` checks for `rearNode` in the single-element case (the circle handles it naturally)
 
 ## 21.5 STL Queue Container Adaptor
 
@@ -425,6 +549,65 @@ public:
 };
 ```
 
+### Application 5: Palindrome Checking (Stack + Queue)
+
+A **palindrome** reads the same forwards and backwards (e.g., "radar", "deed"). By combining a **stack** (LIFO) and a **queue** (FIFO), we can verify this property elegantly:
+
+- **Queue** preserves the original order
+- **Stack** reverses the order
+- If both sequences match, the string is a palindrome
+
+```cpp
+#include <queue>
+#include <stack>
+#include <string>
+#include <cctype>
+using namespace std;
+
+bool isPalindrome(const string& text) {
+    queue<char> q;
+    stack<char> s;
+    
+    // Enqueue and push each character (ignoring spaces and case)
+    for (char c : text) {
+        if (isalpha(c)) {
+            char lower = tolower(c);
+            q.push(lower);   // Preserves order: FIFO
+            s.push(lower);   // Reverses order: LIFO
+        }
+    }
+    
+    // Compare front of queue with top of stack
+    while (!q.empty()) {
+        if (q.front() != s.top()) {
+            return false;   // Mismatch found
+        }
+        q.pop();
+        s.pop();
+    }
+    
+    return true;   // All characters matched
+}
+
+// Usage
+int main() {
+    cout << isPalindrome("radar") << endl;       // 1 (true)
+    cout << isPalindrome("A man a plan a canal Panama") << endl;  // 1 (true)
+    cout << isPalindrome("data") << endl;        // 0 (false)
+}
+```
+
+**Why this works:**
+
+| Data Structure | Order | Result for "radar" |
+|----------------|-------|-------------------|
+| **Queue** | FIFO | r â†’ a â†’ d â†’ a â†’ r |
+| **Stack** | LIFO | r â†’ a â†’ d â†’ a â†’ r |
+
+Both produce the same sequence, confirming the palindrome.
+
+> **Note:** This is an educational demonstration of LIFO vs FIFO. In practice, a two-pointer approach is more space-efficient: compare `text[i]` with `text[n-1-i]`.
+
 ## 21.7 Queue vs Stack Comparison
 
 | Feature | Stack (LIFO) | Queue (FIFO) |
@@ -440,9 +623,9 @@ public:
 ### Best Practices
 
 1. **Choose Implementation Wisely:**
-   - Fixed size known? â†?Circular array (cache-friendly)
-   - Unknown/dynamic size? â†?Linked list
-   - Most cases? â†?STL `queue`
+   - Fixed size known? â†’Circular array (cache-friendly)
+   - Unknown/dynamic size? â†’Linked list
+   - Most cases? â†’STL `queue`
 
 2. **Always Check Empty Before Front/Dequeue:**
    ```cpp
@@ -487,7 +670,7 @@ public:
 - **Fair resource allocation**
 
 **Queue vs Stack Decision:**
-- Need fairness/order preservation? â†?Queue
-- Need reverse order/backtracking? â†?Stack
+- Need fairness/order preservation? â†’Queue
+- Need reverse order/backtracking? â†’ Stack
 
-[â†?Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis â†’](20-algorithm-analysis.md)
+[â† Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis â†’](20-algorithm-analysis.md)
