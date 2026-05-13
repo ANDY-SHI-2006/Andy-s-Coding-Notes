@@ -1,4 +1,4 @@
-[�?Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)
+[→Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)
 
 # 22 Algorithm Analysis
 
@@ -31,7 +31,7 @@ int binarySearch(int arr[], int n, int target) {
     }
     return -1;
 }
-// Worst case: log�?n) checks
+// Worst case: logₖn) checks
 ```
 
 For n = 1,000,000:
@@ -43,6 +43,22 @@ For n = 1,000,000:
 - Compare different approaches
 - Identify bottlenecks
 - Make informed design decisions
+
+### Limitation of Exact Running Time
+
+You might think: "Why not just measure the wall-clock time?" In practice, exact timing has severe limitations:
+
+| Factor | Effect on Measured Time |
+|--------|------------------------|
+| **Programming language** | C++ is ~100× faster than Python for the same algorithm |
+| **Input data set** | Sorted vs. random data can change runtime dramatically |
+| **Computer hardware** | CPU speed, cache size, memory bandwidth all vary |
+| **System load** | Background processes steal CPU cycles |
+| **Compiler optimizations** | `-O3` vs. `-O0` can change runtime by 10× |
+
+> **Example:** The same sorting algorithm might take 2 ms on a desktop with optimized C++ code, but 200 ms on an interpreted language. The **algorithm itself** hasn't changed — only the environment has.
+
+**Asymptotic analysis solves this** by counting operations independently of hardware and language. It answers: "How does runtime grow as input grows?" rather than "How many seconds does it take?"
 
 ## 22.2 Time Complexity
 
@@ -65,7 +81,7 @@ As n grows large, the constant factors and lower-order terms become insignifican
 
 ## 22.3 Big-O Notation
 
-Big-O notation describes the upper bound of growth rate, focusing on the dominant term as n �?�?
+Big-O notation describes the upper bound of growth rate, focusing on the dominant term as n →∞
 
 ### Common Complexities (Ordered by Growth)
 
@@ -77,7 +93,7 @@ Big-O notation describes the upper bound of growth rate, focusing on the dominan
 | **O(n log n)** | Linearithmic | Divide and conquer algorithms | Merge sort |
 | **O(n²)** | Quadratic | Nested loops | Bubble sort |
 | **O(n³)** | Cubic | Triple nested loops | Matrix multiplication |
-| **O(2�?** | Exponential | Brute force combinations | Subset generation |
+| **O(2ⁿ)** | Exponential | Brute force combinations | Subset generation |
 | **O(n!)** | Factorial | Permutations | Traveling salesman |
 
 ### Visual Comparison
@@ -94,10 +110,10 @@ n     | O(1) | O(log n) | O(n) | O(n log n) | O(n²)
 ### Simplifying to Big-O
 
 Drop constants and lower-order terms:
-- `3n² + 2n + 5` �?**O(n²)**
-- `100n log n + 50n` �?**O(n log n)**
-- `2�?+ n³` �?**O(2�?**
-- `5` �?**O(1)**
+- `3n² + 2n + 5` →**O(n²)**
+- `100n log n + 50n` →**O(n log n)**
+- `2ⁿ + n³` → **O(2ⁿ)**
+- `5` →**O(1)**
 
 ## 22.4 Analyzing Common Structures
 
@@ -152,7 +168,7 @@ for (int i = 1; i < n; i *= 2) {
     // O(1) work
 }
 // i: 1, 2, 4, 8, ..., n
-// Number of iterations: log�?n)
+// Number of iterations: logₖn)
 // Time: O(log n)
 ```
 
@@ -277,7 +293,7 @@ int factorial(int n) {
     return n * factorial(n - 1);
 }
 
-// Fibonacci (naive): O(2�? time - very slow!
+// Fibonacci (naive): O(2ⁿ) time - very slow!
 int fibonacci(int n) {
     if (n <= 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);
@@ -296,29 +312,153 @@ int fibonacciOptimized(int n) {
 }
 ```
 
+### Example 4: Tower of Hanoi (Exponential Time)
+
+The classic Tower of Hanoi puzzle moves `n` disks from one peg to another, obeying:
+1. Only one disk moved at a time
+2. A larger disk cannot sit on a smaller disk
+
+```cpp
+void hanoi(int n, char from, char aux, char to) {
+    if (n == 1) {
+        cout << from << " → " << to << endl;
+        return;
+    }
+    hanoi(n - 1, from, to, aux);   // Move n-1 disks to auxiliary
+    cout << from << " → " << to << endl;  // Move largest disk
+    hanoi(n - 1, aux, from, to);   // Move n-1 disks to destination
+}
+```
+
+**Complexity Derivation:**
+
+Let `T(n)` be the number of moves for `n` disks:
+- `T(1) = 1` (base case)
+- `T(n) = T(n-1) + 1 + T(n-1) = 2·T(n-1) + 1`
+
+Expanding the recurrence:
+```
+T(n) = 2·T(n-1) + 1
+     = 2·(2·T(n-2) + 1) + 1 = 4·T(n-2) + 2 + 1
+     = 4·(2·T(n-3) + 1) + 3 = 8·T(n-3) + 4 + 2 + 1
+     = ...
+     = 2ⁿ⁻¹·T(1) + (2ⁿ⁻¹ - 1)
+     = 2ⁿ⁻¹ + 2ⁿ⁻¹ - 1
+     = 2ⁿ - 1
+```
+
+**Result:** `T(n) = 2ⁿ - 1 = O(2ⁿ)` — exponential time.
+
+> Even for `n = 64`, this requires 2⁶⁴ − 1 ≈ 18 quintillion moves. At one move per second, that's ~585 billion years.
+
+### Example 5: Sequential Search (Detailed Loop Analysis)
+
+```cpp
+int sequentialSearch(int arr[], int n, int target) {
+    for (int i = 0; i < n; i++) {     // Loop iterates at most n times
+        if (arr[i] == target) {       // One comparison per iteration
+            return i;                 // One return
+        }
+    }
+    return -1;
+}
+```
+
+**Step-by-step analysis:**
+- Time outside loop (initialization, final return): at most some constant `c₂`
+- Time inside each iteration (comparison, index access): at most some constant `c₁`
+- Maximum iterations: `n`
+
+**Total time ≤ c₁·n + c₂ = O(n)**
+
+> **General rule:** A loop of `n` iterations where each iteration does O(1) work leads to **O(n)** time complexity. This is an example of **worst-case analysis**.
+
+### Example 6: Binary Search ("Alive Elements" Derivation)
+
+Binary search requires a **sorted array** and repeatedly halves the search range:
+
+```cpp
+int binarySearch(int arr[], int n, int target) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) return mid;
+        if (arr[mid] < target) left = mid + 1;   // Eliminate left half
+        else right = mid - 1;                     // Eliminate right half
+    }
+    return -1;
+}
+```
+
+**Derivation using "alive elements":**
+
+At any point, part of the array is "alive" (might contain the target). Each iteration eliminates at least half:
+
+| Iteration | Alive elements (worst case) |
+|-----------|----------------------------|
+| Start | `n` |
+| 1 | `n / 2` |
+| 2 | `n / 4 = n / 2²` |
+| 3 | `n / 8 = n / 2³` |
+| ... | ... |
+| k | `n / 2ᵏ` |
+
+At the final iteration, at most **1 element** is left:
+```
+n / 2ᵏ = 1
+2ᵏ = n
+k = log₂(n)
+```
+
+**Result:** Binary search takes **O(log n)** time.
+
+> **General rule:** When the search domain is reduced by a constant fraction each iteration, the complexity is **O(log n)**.
+
+### Example 7: Why Growth Rate Matters (Numerical Comparison)
+
+Consider the same problem solved by two algorithms on a 33 MHz handheld PC:
+
+**Algorithm A: O(n) — linear time**
+| Input size | Operations | Time |
+|------------|-----------|------|
+| 15 items | 15 | ~1 ms |
+| 30 items | 30 | ~2 ms |
+| 50 items | 50 | ~3 ms |
+| 80 items | 80 | ~5 ms |
+
+**Algorithm B: O(n²) — quadratic time** (e.g., 300·n² clock cycles)
+| Input size | Operations | Time |
+|------------|-----------|------|
+| 15 items | 225 | ~2 ms |
+| 30 items | 900 | ~8 ms |
+| 50 items | 2,500 | ~22 ms |
+| 80 items | 6,400 | ~58 ms |
+
+> **Key insight:** Doubling the input for O(n²) **quadruples** the time. For O(n), it only **doubles** the time. This gap widens dramatically as `n` grows — raw CPU power cannot compensate for a poorly chosen algorithm.
+
 ## 22.9 Rules of Thumb
 
-1. **Nested loops** �?Multiply complexities
+1. **Nested loops** →Multiply complexities
    ```cpp
    for() { for() { } }  // O(n) * O(n) = O(n²)
    ```
 
-2. **Sequential statements** �?Add, keep maximum
+2. **Sequential statements** →Add, keep maximum
    ```cpp
    O(n) + O(n²) = O(n²)
    ```
 
-3. **Loop with fixed iterations** �?O(1)
+3. **Loop with fixed iterations** →O(1)
    ```cpp
    for(int i = 0; i < 100; i++)  // O(1), not O(n)
    ```
 
-4. **Divide by constant** �?Logarithmic
+4. **Divide by constant** →Logarithmic
    ```cpp
    while(n > 1) { n /= 2; }  // O(log n)
    ```
 
-5. **Multiple variables** �?State both
+5. **Multiple variables** →State both
    ```cpp
    for(i=0; i<n; i++)
        for(j=0; j<m; j++)  // O(n * m)
@@ -329,7 +469,7 @@ int fibonacciOptimized(int n) {
 ### Key Takeaways
 
 1. **Big-O measures growth rate**, not absolute time
-2. **Drop constants and lower-order terms**: `2n² + 3n + 1` �?`O(n²)`
+2. **Drop constants and lower-order terms**: `2n² + 3n + 1` →`O(n²)`
 3. **Focus on worst-case** for guarantees
 4. **Space complexity** matters for large inputs
 5. **Amortized analysis** gives average per-operation cost
@@ -343,13 +483,13 @@ O(n)        <── Fair
 O(n log n)  <── Acceptable
 O(n²)       <── Poor (be careful with large n)
 O(n³)       <── Very Poor
-O(2�?       <── Terrible (avoid for n > 30)
+O(2ⁿ)      <── Terrible (avoid for n > 30)
 O(n!)       <── Impossible (avoid for n > 15)
 ```
 
 ### When Does It Matter?
 
 For n = 1,000:
-- O(log n): ~10 operations �?- O(n): 1,000 operations �?- O(n²): 1,000,000 operations ⚠️
-- O(2�?: More operations than atoms in the universe �?
-[�?Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)
+- O(log n): ~10 operations ✔- O(n): 1,000 operations ✔- O(n²): 1,000,000 operations ⚠️
+- O(2ⁿ): More operations than atoms in the universe ❌
+[→Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)
