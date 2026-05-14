@@ -153,11 +153,11 @@ def greet(name: Optional[str] = None) -> str:
 
 **Syntax comparison:**
 
-| Meaning     | Python 3.10+  | Python ≤3.9       |
-| ----------- | ------------- | ----------------- |
-| int or str  | `int | str`   | `Union[int, str]` |
-| str or None | `str | None`  | `Optional[str]`   |
-| list of int | `list[int]`   | `List[int]`       |
+| Meaning     | Python 3.10+ | Python ≤3.9       |
+| ----------- | ------------ | ----------------- |
+| int or str  | int \| str   | `Union[int, str]` |
+| str or None | str \| None  | `Optional[str]`   |
+| list of int | `list[int]`  | `List[int]`       |
 
 **@dataclass example** — type annotations in practice:
 
