@@ -253,18 +253,50 @@ Python integers have unlimited precision; there is no overflow.
 
 ### 1.4.1 Number Bases
 
-Integers can be written in binary, octal, or hexadecimal using prefixes.
+| Prefix | Base | Valid Digits | Example | Value | Why It Matters |
+|--------|------|-------------|---------|-------|----------------|
+| `0b` | 2 | `0-1` | `0b1010` | `10` | Bitwise ops, flag masks |
+| `0o` | 8 | `0-7` | `0o755` | `493` | Unix file permissions |
+| `0x` | 16 | `0-9`, `a-f`/`A-F` | `0xFF` | `255` | Colors, memory addresses, bytes |
 
-| Prefix | Base | Example | Decimal |
-|--------|------|---------|---------|
-| `0b` | Binary (2) | `0b1010` | `10` |
-| `0o` | Octal (8) | `0o17` | `15` |
-| `0x` | Hexadecimal (16) | `0xFF` | `255` |
+**Convert to string (with prefix):**
 
 ```python
-bin(10)   # '0b1010'
-oct(15)   # '0o17'
-hex(255)  # '0xff'
+bin(10)    # '0b1010'
+oct(493)   # '0o755'
+hex(255)   # '0xff'   ← always lowercase
+```
+
+**Convert from string to integer:**
+
+```python
+int('1010', 2)       # 10
+int('0o755', 8)      # 493
+int('0xff', 16)      # 255
+int('FF', 16)        # 255  (prefix optional)
+
+hex(255)[2:].upper() # 'FF'
+```
+
+**Common pitfalls:**
+
+- `hex()` always returns lowercase; it does not zero-pad.
+- `int(x, base)` expects a **string**. `int(0xff, 16)` raises `TypeError` because `0xff` is already an `int`.
+- A prefix-less string must have `base` passed explicitly; otherwise it is parsed as decimal:
+  ```python
+  int('10', 2)   # 2
+  int('10')      # 10
+  ```
+
+**Formatted output (fixed width, zero-padded):**
+
+```python
+x = 5
+
+bin(x)[2:]       # '101'          (strip prefix)
+f'{x:08b}'       # '00000101'     (8-bit binary)
+f'{x:02x}'       # '05'           (2-digit hex, lowercase)
+f'{255:02X}'     # 'FF'           (2-digit hex, uppercase)
 ```
 
 ### 1.4.2 Underscore Separators
