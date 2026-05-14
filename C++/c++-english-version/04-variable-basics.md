@@ -1030,7 +1030,7 @@ string s("hello");      // Direct constructor call
 vector<int> v(10, 5);   // 10 elements, all initialized to 5
 ```
 
-**The "Most Vexing Parse" Problem:**
+##### 4.2.3.2.1 The "Most Vexing Parse" Problem
 
 Direct initialization can be ambiguous—C++ may interpret it as a function declaration instead of a variable definition!
 
@@ -1043,6 +1043,27 @@ Date d();   // —C++ parses this as "function d returning Date"
 
 Date d;     // —This works for default construction
 ```
+
+The same trap exists with built-in types:
+
+```cpp
+// You want: a variable 'f' initialized to default int value
+// You write:
+int f();    // —This is a function DECLARATION, not a variable!
+
+// f = 5;   // —Error: f is a function, not a variable
+```
+
+And with any class that has a default constructor:
+
+```cpp
+class Timer {};
+
+Timer t();  // —Function t returning Timer, taking no arguments
+Timer t;    // —Default-constructed Timer object
+```
+
+> **Why it happens:** C++'s grammar tries to parse declarations as functions when possible. Anything that can be interpreted as a function declaration, will be.
 
 #### 4.2.3.3 Brace Initialization (C++11, Recommended)
 
@@ -1081,7 +1102,7 @@ double g{3};            // —int to double is safe (no loss)
 
 > **Safety First**: Brace initialization catches bugs at compile time that copy/direct init would allow at runtime.
 
-**Solving the Most Vexing Parse:**
+##### 4.2.3.3.1 Solving the Most Vexing Parse
 
 ```cpp
 class TimeKeeper {
@@ -1182,48 +1203,7 @@ void example() {
 }
 ```
 
-### 4.2.5 Deep Dive: Most Vexing Parse
-
-The "Most Vexing Parse" is a syntax ambiguity in C++ where something that looks like a variable definition is parsed as a function declaration.
-
-**Classic Example:**
-
-```cpp
-// You want: a function object 'f' that takes no arguments and returns int
-// You write:
-int f();    // —This is a function DECLARATION, not a default-constructed int!
-
-// The variable 'f' doesn't exist—you've declared a function instead.
-// f = 5;   // —Error: f is a function, not a variable
-```
-
-**With Classes:**
-
-```cpp
-class Timer {};
-
-Timer t();  // —Function t returning Timer, taking no arguments
-Timer t;    // —Default-constructed Timer object
-Timer t{};  // —Also default-constructed (brace init, clearer)
-```
-
-**Why It Happens:**
-
-C++'s grammar tries to parse declarations as functions when possible. Anything that can be interpreted as a function declaration, will be.
-
-**Brace Initialization Solution:**
-
-```cpp
-// Unambiguous with braces
-int x{};                // —Variable x initialized to 0
-Timer t{};              // —Object t default-constructed
-
-// Also works with arguments
-Date d{today};          // —Clearly an object, not function
-vector<int> v{10};      // —Vector with one element (10)
-```
-
-### 4.2.6 Initialization Best Practices
+### 4.2.5 Initialization Best Practices
 
 | Scenario | C++98 Style | Modern C++ Style | Recommendation |
 |----------|-------------|------------------|----------------|
