@@ -1156,14 +1156,14 @@ Config cfg{.width = 1920, .height = 1080, .fullscreen = true};  // C++17
 
 A **narrowing conversion** is one that may lose information:
 
-| From | To | Status | Reason |
-|------|-----|--------|--------|
-| `double` | `int` | —Narrowing | Loses fractional part |
-| `int` | `char` | —Narrowing | May overflow |
-| `long long` | `int` | —Narrowing | May overflow on 32-bit systems |
-| `int` | `unsigned` | ❌ if negative) | Negative values wrap around |
-| `int` | `double` | —OK | No data loss |
-| `char` | `int` | —OK | No data loss |
+| From        | To         | Status         | Reason                         |
+| ----------- | ---------- | -------------- | ------------------------------ |
+| `double`    | `int`      | —Narrowing     | Loses fractional part          |
+| `int`       | `char`     | —Narrowing     | May overflow                   |
+| `long long` | `int`      | —Narrowing     | May overflow on 32-bit systems |
+| `int`       | `unsigned` | ❌ (if negative) | Negative values wrap around    |
+| `int`       | `double`   | —OK            | No data loss                   |
+| `char`      | `int`      | —OK            | No data loss                   |
 
 **Brace initialization enforces this at compile time:**
 
