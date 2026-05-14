@@ -54,11 +54,19 @@ first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 
 ### 1.1.3 Type Annotations
 
-Python is dynamically typed, but you can attach **type hints** to variables, function parameters, and return values using the syntax `name: type`. These hints are for programmers and IDEs; the interpreter ignores them at runtime.
+Python is **dynamically typed** — a variable's type is determined at runtime, and you can reassign it to a different type anytime. This is flexible but can make large codebases hard to understand.
 
-#### 1.1.3.1 Variable Annotations
+**Type annotations** (also called *type hints*) let you document what type a value *should* be. They are not enforced by the interpreter; instead, they help with:
 
-Annotate a variable to indicate its expected type.
+1. **Code readability** — other developers (and your future self) know what to expect
+2. **IDE support** — autocompletion, error detection before running
+3. **Static analysis** — tools like `mypy` can catch type mismatches before deployment
+
+Think of type annotations as **high-quality comments that machines can read**.
+
+#### 1.1.3.1 Basic Syntax
+
+Attach a type to a name with a colon `:`.
 
 ```python
 age: int = 25
@@ -67,29 +75,29 @@ pi: float = 3.14
 enabled: bool = True
 ```
 
-#### 1.1.3.2 Function Annotations
-
-Annotate parameter types with `param: type` and the return type with `-> type`.
+For functions, annotate each parameter and the return value:
 
 ```python
 def greet(name: str, times: int) -> str:
     return name * times
 
-# No return value (None)
 def log(message: str) -> None:
     print(message)
 ```
 
-| Syntax | Meaning |
-|--------|---------|
-| `name: str` | Parameter `name` should be a `str` |
-| `times: int` | Parameter `times` should be an `int` |
-| `-> str` | Function should return a `str` |
-| `-> None` | Function returns nothing |
+**Syntax summary:**
 
-#### 1.1.3.3 Collection Annotations
+| Syntax | Where | Meaning |
+|--------|-------|---------|
+| `x: int` | Variable / parameter | This value should be an `int` |
+| `-> str` | Function return | This function returns a `str` |
+| `-> None` | Function return | This function returns nothing |
 
-From Python 3.9 onward, built-in collection types support generic syntax directly.
+#### 1.1.3.2 Common Types
+
+**Basic types:** `int`, `float`, `str`, `bool`, `None`
+
+**Collection types** (Python 3.9+):
 
 ```python
 scores: list[int] = [90, 85, 88]
@@ -100,104 +108,58 @@ flags: set[str] = {"a", "b"}
 
 > **Note:** In Python 3.8 and earlier, import from `typing`: `from typing import List, Dict, Tuple, Set`.
 
-#### 1.1.3.4 Union and Optional Types
-
-Sometimes a value isn't just one fixed type — it could be one of several types, or it might be missing entirely (`None`).
-
-### Why Union Types Exist
-
-Real-world data is messy. The same parameter may arrive as different types depending on where it comes from:
+**Union types** — when a value may be one of several types:
 
 ```python
-# A database may store IDs as integers
-find(1001)
-
-# But a user typing into a form sends a string
-find("USR-1001")
-
-# Without type hints, readers of your code have to guess
-# what user_id accepts. With Union, it's explicit:
+# Parameter can be int OR str
 def find(user_id: int | str) -> dict | None:
     ...
-```
 
-### (a) Multiple Types: `X | Y`
-
-Python 3.10+ uses `|` (the pipe character) to mean "or":
-
-```python
-# age can be an int or a float
-# The function returns a str or None
-
-def describe(age: int | float) -> str | None:
-    if age < 0:
-        return None
-    return f"Age is {age}"
-```
-
-**How to read it:**
-- `int | float` → "this value is either an int or a float"
-- `str | None` → "this value is either a string or None"
-
-### (b) The "May Be Missing" Case: `X | None`
-
-This is the **most common** use of Union in practice. Many parameters are optional — if you don't pass them, they default to `None`.
-
-```python
-# name is optional. If omitted, it becomes None.
+# Most common case: parameter is optional (may be None)
 def greet(name: str | None = None) -> str:
     if name is None:
         return "Hello, Guest"
     return f"Hello, {name}"
-
-greet("Alice")   # "Hello, Alice"
-greet()          # "Hello, Guest"
 ```
 
-**⚠️ Common trap:** You cannot treat a `str | None` value as if it were definitely a `str`. You must check first.
+**⚠️ Common trap:** A `str | None` value is not definitely a `str`. You must check first:
 
 ```python
 def greet(name: str | None = None) -> str:
     # ❌ Wrong: None has no upper() method
     # return name.upper()
 
-    # ✅ Correct: check before using str methods
+    # ✅ Correct: narrow the type before using it
     if name is None:
         return "Hello"
     return name.upper()
 ```
 
-This "check then use" pattern is called **type narrowing** — you narrow the union down to one concrete type before operating on it.
+This "check then use" pattern is called **type narrowing**.
 
-### (c) Older Syntax: `Union` and `Optional`
-
-Before Python 3.10, you had to import these from the `typing` module. They still work today for backward compatibility.
+**Older syntax** (Python ≤3.9):
 
 ```python
 from typing import Union, Optional
 
-# Old way — same meaning as int | str
+# Same meaning as int | str
 def find(user_id: Union[int, str]) -> Union[dict, None]:
     ...
 
-# Optional[X] is just shorthand for Union[X, None]
+# Optional[X] is shorthand for Union[X, None]
 def greet(name: Optional[str] = None) -> str:
     ...
 ```
 
 **Syntax comparison:**
 
-| Meaning | Python 3.10+ (recommended) | Python ≤3.9 |
-|---------|---------------------------|-------------|
+| Meaning | Python 3.10+ | Python ≤3.9 |
+|---------|-------------|-------------|
 | int or str | `int \| str` | `Union[int, str]` |
 | str or None | `str \| None` | `Optional[str]` |
 | list of int | `list[int]` | `List[int]` |
 
-**Recommendation:** Use `X | Y` and `X | None` in new code. They read like plain English and require no imports.
-
-#### 1.1.3.5 Type Annotations in `@dataclass`
-
-The `@dataclass` decorator reads field annotations to auto-generate `__init__` and other methods.
+**@dataclass example** — type annotations in practice:
 
 ```python
 from dataclasses import dataclass
@@ -207,25 +169,28 @@ class Point:
     x: int
     y: int
 
-p = Point(3, 4)  # __init__ generated automatically
+p = Point(3, 4)  # __init__ generated automatically from annotations
 ```
 
-#### 1.1.3.6 Runtime Behavior
+#### 1.1.3.3 Runtime Behavior
 
-Type hints are **not enforced** at runtime. They exist for documentation, IDE autocompletion, and static analysis tools.
+Type hints are **not enforced** at runtime. The interpreter ignores them completely.
 
 ```python
 def add(a: int, b: int) -> int:
     return "surprise"   # Runs fine; no runtime error
+
+add(1, 2)   # Returns "surprise" without complaint
 ```
 
-For actual enforcement, use a static type checker such as `mypy`.
+For actual enforcement, use a static type checker such as `mypy`:
 
 ```bash
 mypy script.py
+# error: Incompatible return value type (got "str", expected "int")
 ```
 
-You can also read type hints at runtime via the `typing` module:
+You can also read type hints at runtime:
 
 ```python
 import typing
@@ -236,6 +201,12 @@ def add(a: int, b: int) -> int:
 print(typing.get_type_hints(add))
 # {'a': <class 'int'>, 'b': <class 'int'>, 'return': <class 'int'>}
 ```
+
+**When to use type annotations:**
+- ✅ Function signatures (especially public APIs)
+- ✅ Variables whose type isn't obvious from the value
+- ✅ Complex data structures
+- ❌ Don't over-annotate trivial cases like `i: int = 0` where the type is obvious
 
 ## 1.2 Comments
 
