@@ -1173,7 +1173,7 @@ struct Config {
 Config cfg{.width = 1920, .height = 1080, .fullscreen = true};  // C++17
 ```
 
-### 4.2.4 Deep Dive: Narrowing Conversions
+##### 4.2.3.3.2 Narrowing Conversions
 
 A **narrowing conversion** is one that may lose information:
 
@@ -1203,7 +1203,7 @@ void example() {
 }
 ```
 
-### 4.2.5 Initialization Best Practices
+### 4.2.4 Initialization Best Practices
 
 | Scenario | C++98 Style | Modern C++ Style | Recommendation |
 |----------|-------------|------------------|----------------|
