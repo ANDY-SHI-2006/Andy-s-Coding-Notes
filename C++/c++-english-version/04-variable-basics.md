@@ -964,12 +964,12 @@ extern "C" {
 
 **Common Use Cases**
 
-| Scenario | Solution |
-|----------|----------|
-| Using OS system calls (C API) | `extern "C"` around system headers |
-| Linking C libraries (OpenSSL, zlib) | `extern "C"` wrapper in C++ code |
-| Creating Python bindings | `extern "C"` wrapper for Python C-API |
-| Writing plugins for C applications | `extern "C"` exports for host application |
+| Scenario                            | Solution                                  |
+| ----------------------------------- | ----------------------------------------- |
+| Using OS system calls (C API)       | `extern "C"` around system headers        |
+| Linking C libraries (OpenSSL, zlib) | `extern "C"` wrapper in C++ code          |
+| Creating Python bindings            | `extern "C"` wrapper for Python C-API     |
+| Writing plugins for C applications  | `extern "C"` exports for host application |
 
 ## 4.2 Variable Definition and Initialization
 
@@ -1057,12 +1057,12 @@ int b{};                // Empty braces = zero initialization (b = 0)
 
 **Why Brace Initialization is Superior:**
 
-| Advantage | Explanation | Example |
-|-----------|-------------|---------|
-| **Prevents narrowing** | Compiler rejects conversions that lose data | `int x{3.14};` —Error! |
-| **Uniform syntax** | Same syntax for all types (built-in, class, array, container) | `int x{5};` `string s{"hi"};` `vector<int> v{1,2,3};` |
-| **No ambiguity** | Cannot be parsed as function declaration | `Date d{};` —Always an object |
-| **Zero initialization** | Empty braces `{}` initialize to zero/null | `int x{};` // x = 0 |
+| Advantage               | Explanation                                                   | Example                                               |
+| ----------------------- | ------------------------------------------------------------- | ----------------------------------------------------- |
+| **Prevents narrowing**  | Compiler rejects conversions that lose data                   | `int x{3.14};` —Error!                                |
+| **Uniform syntax**      | Same syntax for all types (built-in, class, array, container) | `int x{5};` `string s{"hi"};` `vector<int> v{1,2,3};` |
+| **No ambiguity**        | Cannot be parsed as function declaration                      | `Date d{};` —Always an object                         |
+| **Zero initialization** | Empty braces `{}` initialize to zero/null                     | `int x{};` // x = 0                                   |
 
 **Narrowing Conversion Prevention (Compile-Time Safety):**
 
