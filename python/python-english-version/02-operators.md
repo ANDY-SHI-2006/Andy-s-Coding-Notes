@@ -251,14 +251,14 @@ print("he" in "hello")  # True
 
 Bitwise operators work on integers at the binary level. Do not confuse `&` and `|` with logical `and`/`or`.
 
-| Operator | Name | Example | Result |
-|----------|------|---------|--------|
-| `&` | AND | `5 & 3` | `1` (`101 & 011 = 001`) |
-| `\|` | OR | `5 \| 3` | `7` (`101 \| 011 = 111`) |
-| `^` | XOR | `5 ^ 3` | `6` (`101 ^ 011 = 110`) |
-| `~` | NOT | `~5` | `-6` (inverts all bits) |
-| `<<` | Left shift | `5 << 1` | `10` (`1010`) |
-| `>>` | Right shift | `5 >> 1` | `2` (`10`) |
+| Operator | Name        | Example  | Result                   |
+| -------- | ----------- | -------- | ------------------------ |
+| `&`      | AND         | `5 & 3`  | `1` (`101 & 011 = 001`)  |
+| \|       | OR          | 5 \| 3   | 7 (101 \| 011 = 111)     |
+| `^`      | XOR         | `5 ^ 3`  | `6` (`101 ^ 011 = 110`)  |
+| `~`      | NOT         | `~5`     | `-6` (inverts all bits)  |
+| `<<`     | Left shift  | `5 << 1` | `10` (`1010`)            |
+| `>>`     | Right shift | `5 >> 1` | `2` (`10`)               |
 
 ```python
 flags = 0b1010
