@@ -701,11 +701,11 @@ void print() { cout << version; }       // Sees version = 2 (same object)
 
 ##### 4.1.5.7.2 Comparison with Alternatives
 
-| Approach | Pre-C++17 | C++17 Modern |
-|----------|-----------|--------------|
-| Header only | `static int x = 1;` (separate copies!) | `inline int x = 1;` (shared) |
-| Header + .cpp | `extern int x;` + `int x = 1;` | `inline int x = 1;` (header only) |
-| Compile-time | `constexpr int x = 1;` | `inline constexpr int x = 1;` (best of both) |
+| Approach      | Pre-C++17                              | C++17 Modern                                 |
+| ------------- | -------------------------------------- | -------------------------------------------- |
+| Header only   | `static int x = 1;` (separate copies!) | `inline int x = 1;` (shared)                 |
+| Header + .cpp | `extern int x;` + `int x = 1;`         | `inline int x = 1;` (header only)            |
+| Compile-time  | `constexpr int x = 1;`                 | `inline constexpr int x = 1;` (best of both) |
 
 ##### 4.1.5.7.3 Common Pitfalls
 
@@ -729,22 +729,32 @@ void print() { cout << version; }       // Sees version = 2 (same object)
 
 **Best Practices**
 
-| Do | Don't |
-|----|-------|
-| Use for header-only library globals | Use when `constexpr` suffices |
-| Use `inline constexpr` for true constants | Confuse with `static` in headers |
-| Document why a variable must live in a header | Assume `inline` fixes SIOF |
+| Do                                            | Don't                            |
+| --------------------------------------------- | -------------------------------- |
+| Use for header-only library globals           | Use when `constexpr` suffices    |
+| Use `inline constexpr` for true constants     | Confuse with `static` in headers |
+| Document why a variable must live in a header | Assume `inline` fixes SIOF       |
 
 **Summary Mnemonic**
 - **`inline`** = "One definition, many files"
 
 ### 4.1.6 Static Initialization Order Fiasco (SIOF)
 
-SIOF occurs when global variables in different files depend on each other, but initialization order is **undefined** across translation units.
+SIOF occurs when global variables in different files depend on each other, but the C++ standard leaves their initialization order undefined across translation units.
 
-**The Problem**
+#### 4.1.6.1 Overview
 
-Within a single file, order is predictable (top to bottom). Across files, it's determined by the linker—**unpredictable and non-portable**.
+Within a single file, initialization order is predictable (top to bottom). Across files, the linker decides the order — and the standard guarantees nothing. This means:
+
+- File A's global may be initialized before File B's global
+- Or after
+- Or interleaved in ways that depend on compiler, platform, and build flags
+
+> **Key Concept:** The linker is free to order initialization however it wants. Your code must not depend on any specific cross-file initialization order.
+
+#### 4.1.6.2 The Problem
+
+Consider two files that depend on each other:
 
 ```cpp
 // config.cpp
@@ -752,26 +762,44 @@ int port = 8080;
 
 // server.cpp
 extern int port;
-std::string address = "localhost:" + std::to_string(port);  
-// Danger: If server.cpp initializes first, address uses uninitialized port!
+std::string address = "localhost:" + std::to_string(port);
 ```
 
-**Why It Matters**
+If the linker initializes `server.cpp` before `config.cpp`, `address` is constructed with an uninitialized `port` → **undefined behavior**.
 
-- **Undefined Behavior**: Reading uninitialized memory
-- **Heisenbug**: Works in debug, crashes in release
-- **Hard to Debug**: Error occurs at program start with garbage values
+**Symptoms:**
+- Works in debug, crashes in release
+- Different behavior on different platforms
+- Intermittent crashes that vanish when you add logging
 
-**Solution: Construct On First Use**
+#### 4.1.6.3 Why Some Initializations Are Safe
 
-Wrap globals in functions with function-local statics:
+Not all global initializations are vulnerable. The critical distinction is between **static initialization** (safe) and **dynamic initialization** (dangerous):
+
+| Initialization Type | When It Runs | Examples | Safe from SIOF? |
+|---------------------|-------------|----------|-----------------|
+| **Zero initialization** | Before anything else | `int x;` → 0, `T* p;` → nullptr | ✅ Yes |
+| **Constant initialization** | Compile-time | `const int x = 42;`, `constexpr int y = 10;` | ✅ Yes |
+| **Dynamic initialization** | At runtime, order undefined | `int x = foo();`, `std::string s = "hi";` | ❌ No |
+
+> **Key Point:** SIOF only affects **dynamic initialization** — globals whose initial value requires running code at program startup.
+
+#### 4.1.6.4 Solution: Construct On First Use
+
+Wrap globals in accessor functions that contain function-local statics:
 
 ```cpp
+// config.h
+int& getPort();
+
 // config.cpp
 int& getPort() {
     static int port = 8080;  // Initialized on first call, thread-safe (C++11)
     return port;
 }
+
+// server.cpp
+#include "config.h"
 
 std::string& getAddress() {
     static std::string addr = "localhost:" + std::to_string(getPort());
@@ -779,17 +807,89 @@ std::string& getAddress() {
 }
 ```
 
-*For compile-time constants, use `constexpr` instead.*
+**Why this works:**
 
-**Prevention Checklist**
+```
+Program starts
+    ↓
+main() calls getAddress()
+    ↓
+getAddress() is entered for the first time
+    ↓
+static std::string addr is constructed    ← Order is deterministic!
+    ↓
+addr's initializer calls getPort()
+    ↓
+getPort() is entered for the first time
+    ↓
+static int port is constructed
+    ↓
+Control returns, initialization completes
+```
 
-- [ ] Avoid non-const global variables
-- [ ] Never initialize a global with another global from a different file
-- [ ] Use function-local static instead of global static
-- [ ] Prefer `constexpr` for constants
-- [ ] Use static analyzers: `clang-tidy -checks='cppcoreguidelines-interfaces-global-init'`
+Function-local statics are initialized **the first time control passes through their declaration** — guaranteed by the standard, independent of link order.
 
-> **Related Sections:** This problem involves interactions between [4.1.5.1 static](#4151-static-two-different-meanings), [4.1.5.2 extern](#4152-extern-sharing-variables-across-files), and global variables with constructors.
+#### 4.1.6.5 Comparison: Approaches to Cross-File Globals
+
+| Approach | Code | Shared? | SIOF Safe? | Header-Only? |
+|----------|------|---------|-----------|--------------|
+| Global variable | `int x = 1;` in `.cpp` | ✅ Yes | ❌ No | ❌ No |
+| `extern` + definition | `extern int x;` + `int x = 1;` | ✅ Yes | ❌ No | ❌ No |
+| `inline` variable (C++17) | `inline int x = 1;` in `.h` | ✅ Yes | ❌ No | ✅ Yes |
+| Function-local static | `int& getX() { static int x = 1; return x; }` | ✅ Yes | ✅ Yes | ✅ Yes |
+| `constexpr` | `constexpr int x = 1;` | ✅ Yes | ✅ Yes | ✅ Yes |
+
+> **Key Point:** `inline` variables (C++17) solve the "where to define" problem, but they do **not** solve the "when to initialize" problem. Only function-local statics and `constexpr` are truly SIOF-safe.
+
+#### 4.1.6.6 Practical Example: Configuration Manager
+
+A realistic scenario where a logging system depends on a configuration manager:
+
+```cpp
+// config.h
+class Config {
+public:
+    int getLogLevel() const { return logLevel; }
+private:
+    int logLevel = 1;  // Default
+};
+
+Config& getConfig();   // Accessor
+
+// config.cpp
+Config& getConfig() {
+    static Config instance;   // Lazy initialization
+    return instance;
+}
+
+// logger.h
+class Logger {
+public:
+    void log(const std::string& msg);
+};
+
+Logger& getLogger();
+
+// logger.cpp
+Logger& getLogger() {
+    static Logger instance(getConfig().getLogLevel());  // Safe: order is deterministic
+    return instance;
+}
+```
+
+Without function-local statics, if `logger.cpp` initializes before `config.cpp`, the logger would read an uninitialized config object.
+
+#### 4.1.6.7 Summary
+
+- **SIOF affects dynamic initialization** of globals across translation units
+- **Zero initialization and constant initialization** are safe (happen before dynamic init)
+- **Function-local statics** are the standard solution: lazy, ordered, thread-safe
+- **`constexpr`** is the best choice when the value is known at compile time
+- **`inline` variables** do not protect against SIOF — they only solve the ODR problem
+
+> **Summary:** Never let one global variable's initialization depend on another global variable from a different file. If you need cross-file shared state, use function-local statics or `constexpr`.
+
+> **Related Sections:** This problem involves interactions between [4.1.5.1 static](#4151-static-two-different-meanings), [4.1.5.2 extern](#4152-extern-sharing-variables-across-files), [4.1.5.7 inline](#4157-inline-variables), and global variables with constructors.
 
 ### 4.1.7 `extern "C"`: C and C++ Interoperability
 
