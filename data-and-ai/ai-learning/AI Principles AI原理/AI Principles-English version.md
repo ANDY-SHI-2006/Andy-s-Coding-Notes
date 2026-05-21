@@ -1223,6 +1223,146 @@ Timeline & Evolution:
 
 > **Key Concept:** The field has moved from task-specific architectures with strong inductive biases (CNNs) to general-purpose architectures (Transformers) that learn structure from data at scale. The unifying theme is that **scale + simple architecture + enough data** leads to emergent capabilities.
 
+## 7.5 LLM Foundations: Pre-training and SFT
+
+Large language models are trained in two main stages: **pre-training** learns general language patterns from raw text, and **supervised fine-tuning (SFT)** aligns the model to follow instructions.
+
+### 7.5.1 Pre-training: Next-Token Prediction
+
+Pre-training is **self-supervised**: no human labels are required. The training target is simply the next token already present in the text.
+
+**Objective:**
+```
+P(w₁, ..., wₙ) = ∏ P(wₜ | w₁, ..., wₜ₋₁)
+```
+
+The model learns to complete text one token at a time by minimizing cross-entropy loss against the true next token.
+
+**Common corpora:**
+| Source | Content |
+|--------|---------|
+| Wikipedia | Encyclopedic articles |
+| BookCorpus | Published books |
+| Common Crawl | Web pages |
+| GitHub | Code repositories (for code-capable models) |
+
+> **Key Concept:** Pre-training teaches **fluent continuation**, not task behavior. Instruction tuning later bridges this gap.
+
+### 7.5.2 Supervised Fine-Tuning (SFT)
+
+After pre-training, the model is fine-tuned on labeled (input, output) pairs to align it with specific tasks.
+
+| Stage | Data | Goal |
+|-------|------|------|
+| **Pre-training** | Raw text | Learn grammar, semantics, world knowledge |
+| **SFT** | (instruction, response) pairs | Teach task-following behavior |
+
+```
+input x  →  model  →  prediction
+                    ↓
+                  target y
+                    ↓
+            minimize loss(prediction, y)
+```
+
+Examples of SFT tasks:
+- Sentiment classification: sentence → positive/negative
+- Question answering: question → answer
+- Code generation: description → code snippet
+
+## 7.6 Visual Instruction Tuning: LLaVA
+
+### 7.6.1 Motivation
+
+Text-only LLMs benefit from instruction tuning, but multimodal tasks lack scalable vision-language instruction datasets. **LLaVA** (Liu et al., 2023) proposes a lightweight paradigm for turning a frozen LLM into a visual assistant.
+
+### 7.6.2 Architecture
+
+```
+Image  →  CLIP ViT-L/14  →  Linear Projector  →  Vicuna LLM  →  Response
+         (vision encoder)      (W · Z)            (frozen)
+```
+
+A single projection matrix maps visual features into the same token space the LLM already understands. The LLM itself remains frozen — only the projector is trained.
+
+| Component | Role |
+|-----------|------|
+| **Vision Encoder** | CLIP ViT extracts image features |
+| **Linear Projector** | Maps visual tokens to language embedding space |
+| **LLM** | Frozen language model (e.g., Vicuna) generates text |
+
+### 7.6.3 Two-Stage Training
+
+| Stage | What is trained | Goal |
+|-------|----------------|------|
+| **1. Alignment** | Only the projection matrix | Align visual features to LLM token space |
+| **2. Behavior tuning** | Projection + LLM LoRA layers | Teach multi-turn dialogue and instruction following |
+
+> **Key Point:** Separating alignment from behavior learning keeps the architecture simple and makes the data contribution legible.
+
+## 7.7 Image Generation with Diffusion Models
+
+### 7.7.1 Stable Diffusion Overview
+
+Stable Diffusion generates images by iteratively **denoising** a random latent tensor. The core idea: start from pure noise, then gradually refine it into a coherent image guided by a text prompt.
+
+**Key components:**
+- **VAE**: Compresses images into a lower-dimensional latent space
+- **U-Net**: Predicts noise to remove at each step
+- **Text Encoder (CLIP)**: Converts prompts into conditioning vectors
+- **Scheduler**: Controls the denoising trajectory
+
+### 7.7.2 Cross-Attention: Where Text Meets Image
+
+Inside the U-Net, **cross-attention layers** inject text conditioning into the image generation process:
+
+```
+Query: image features from U-Net
+Key/Value: text embeddings from CLIP
+
+Output: image features influenced by text semantics
+```
+
+This is how "a cat wearing a hat" influences the pixels being generated.
+
+### 7.7.3 Controllable Generation
+
+| Method | Mechanism | Use Case |
+|--------|-----------|----------|
+| **ControlNet** | Duplicate U-Net layers, train on edge/pose/depth maps | Control composition without retraining base model |
+| **IP-Adapter** | Learn image prompt embeddings via decoupled cross-attention | Transfer style/content from reference images |
+
+> **Key Concept:** ControlNet and IP-Adapter add controllability **without modifying the base diffusion model**, making them lightweight and composable.
+
+## 7.8 Practice: ComfyUI Workflows
+
+ComfyUI represents image generation as a **node graph** — each node performs one operation, and edges define data flow. This makes experiments reproducible and workflows shareable.
+
+### 7.8.1 The Six Core Nodes
+
+Every text-to-image workflow uses these six node families:
+
+| # | Node | Function |
+|---|------|----------|
+| 1 | **Load Checkpoint** | Loads the base model (UNet + CLIP + VAE) |
+| 2 | **CLIP Text Encode** | Converts positive/negative prompts into conditioning vectors |
+| 3 | **Empty Latent** | Sets canvas size (width, height, batch size) |
+| 4 | **KSampler** | Runs the iterative denoising loop |
+| 5 | **VAE Decode** | Converts final latent tensor back into pixels |
+| 6 | **Save Image** | Writes the result to a PNG file |
+
+### 7.8.2 KSampler Parameters
+
+| Parameter | Meaning | Typical Value |
+|-----------|---------|---------------|
+| **seed** | Random seed for reproducibility | fixed or random |
+| **steps** | Number of denoising iterations | 20-50 |
+| **cfg** | How strongly to follow the prompt | 7-8 |
+| **sampler** | Noise trajectory algorithm | euler_a, dpmpp_2m |
+| **denoise** | How much to change the latent | 1.0 (full generation) |
+
+> **Key Concept:** Once these six nodes make sense, most larger workflows (inpainting, img2img, ControlNet) stop looking mysterious — they are just additional nodes plugged into the same graph.
+
 ---
 
 # 8 Practical PyTorch Reference
