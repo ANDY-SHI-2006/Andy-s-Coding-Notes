@@ -1,4 +1,4 @@
-[â†?Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees â†’](23-trees.md)
+[â†’Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees â†’](23-trees.md)
 
 # 24 Recursion
 
@@ -42,11 +42,11 @@ int factorial(int n) {
 
 ```
 factorial(3)
-  â†?factorial(2)
-      â†?factorial(1)
-      â†?returns 1
-  â†?returns 2 * 1 = 2
-â†?returns 3 * 2 = 6
+  â†’factorial(2)
+      â†’factorial(1)
+      â†’returns 1
+  â†’returns 2 * 1 = 2
+â†’returns 3 * 2 = 6
 ```
 
 ## 24.2 Recursion vs Iteration
@@ -109,6 +109,28 @@ int gcd(int a, int b) {
 // gcd(48, 18) = gcd(18, 12) = gcd(12, 6) = gcd(6, 0) = 6
 ```
 
+### Combinations: Choose(k, n)
+
+How many ways can we choose `k` items from `n` items? The recursive relation comes from considering whether we include the first item or not:
+
+- **Include** the first item: choose `k-1` from the remaining `n-1`
+- **Exclude** the first item: choose `k` from the remaining `n-1`
+
+```cpp
+int choose(int n, int k) {
+    // Base cases
+    if (k == 0 || k == n) return 1;  // C(n,0) = C(n,n) = 1
+    
+    // Recursive case: C(n,k) = C(n-1,k-1) + C(n-1,k)
+    return choose(n - 1, k - 1) + choose(n - 1, k);
+}
+
+// Example: choose(4, 2) = choose(3, 1) + choose(3, 2)
+//                        = 3 + 3 = 6
+```
+
+> **Performance Note:** This naive recursive solution has exponential time complexity due to repeated calculations of the same subproblems (e.g., `choose(2,1)` is computed multiple times). Use **memoization** or **dynamic programming** for efficient computation in practice.
+
 ## 24.4 Recursion on Arrays
 
 ### Binary Search (Recursive)
@@ -145,6 +167,49 @@ void reverseArray(int arr[], int start, int end) {
     reverseArray(arr, start + 1, end - 1);  // Recursive case
 }
 ```
+
+### QuickSelect: Find the k-th Smallest Element
+
+QuickSelect uses the same partition idea as QuickSort to find the k-th smallest element in **average O(n)** time.
+
+```cpp
+#include <algorithm>
+using namespace std;
+
+int partition(int arr[], int left, int right) {
+    int pivot = arr[right];
+    int i = left;
+    
+    for (int j = left; j < right; j++) {
+        if (arr[j] <= pivot) {
+            swap(arr[i], arr[j]);
+            i++;
+        }
+    }
+    swap(arr[i], arr[right]);
+    return i;  // Final position of pivot
+}
+
+// Find k-th smallest (0-indexed: k=0 is minimum)
+int quickSelect(int arr[], int left, int right, int k) {
+    if (left == right) return arr[left];
+    
+    int pivotIndex = partition(arr, left, right);
+    
+    if (k == pivotIndex) {
+        return arr[k];  // Found it!
+    } else if (k < pivotIndex) {
+        return quickSelect(arr, left, pivotIndex - 1, k);  // Search left
+    } else {
+        return quickSelect(arr, pivotIndex + 1, right, k); // Search right
+    }
+}
+
+// Usage: find the 3rd smallest element (k=2)
+// int result = quickSelect(arr, 0, n - 1, 2);
+```
+
+> **Key Insight:** Unlike QuickSort which recurses on both sides, QuickSelect only recurses on the side containing the k-th element. This gives average O(n) time instead of O(n log n).
 
 ## 24.5 Recursion on Linked Lists
 
@@ -383,4 +448,4 @@ returnType solve(problem) {
 }
 ```
 
-[â†?Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees â†’](23-trees.md)
+[â†’Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees â†’](23-trees.md)
