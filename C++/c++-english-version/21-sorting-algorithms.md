@@ -1,4 +1,4 @@
-[‚Ü?Previous: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion ‚Üí](22-recursion.md)
+[‚Üê Previous: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion ‚Üí](22-recursion.md)
 
 # 23 Sorting Algorithms
 
@@ -326,22 +326,22 @@ void radixSort(int arr[], int n) {
 
 ```
 Small array (n < 50)?
-  Yes ‚Ü?Insertion Sort (simple, cache-friendly)
+  Yes ‚ÜíInsertion Sort (simple, cache-friendly)
   
 Need stability?
-  Yes ‚Ü?Merge Sort or Insertion Sort
+  Yes ‚ÜíMerge Sort or Insertion Sort
   
 Limited memory?
-  Yes ‚Ü?Heap Sort or Quick Sort
+  Yes ‚ÜíHeap Sort or Quick Sort
   
 Worst-case guarantee needed?
-  Yes ‚Ü?Merge Sort or Heap Sort
+  Yes ‚ÜíMerge Sort or Heap Sort
   
 Integer keys in range?
-  Yes ‚Ü?Counting Sort or Radix Sort
+  Yes ‚ÜíCounting Sort or Radix Sort
   
 General purpose?
-  ‚Ü?Quick Sort (fastest in practice)
+  ‚ÜíQuick Sort (fastest in practice)
 ```
 
 ### C++ STL Sorting
@@ -368,6 +368,66 @@ sort(v.begin(), v.end(), greater<int>());  // Descending
 sort(v.begin(), v.end(), [](int a, int b) {
     return a > b;  // Descending lambda
 });
+```
+
+### Strict Weak Ordering
+
+STL sort functions require a comparison that satisfies **strict weak ordering**:
+
+| Property | Meaning | Example |
+|----------|---------|---------|
+| **Irreflexive** | `a < a` is always false | No element is less than itself |
+| **Antisymmetric** | If `a < b`, then `!(b < a)` | Only one direction is true |
+| **Transitive** | If `a < b` and `b < c`, then `a < c` | Ordering is consistent |
+
+> **Common mistake:** Using `<=` instead of `<` breaks strict weak ordering and causes undefined behavior in `std::sort`.
+
+```cpp
+// WRONG: <= breaks strict weak ordering
+sort(v.begin(), v.end(), [](int a, int b) {
+    return a <= b;  // ‚ùå Undefined behavior!
+});
+
+// CORRECT: strict weak ordering with <
+sort(v.begin(), v.end(), [](int a, int b) {
+    return a < b;   // ‚úÖ Well-defined
+});
+```
+
+### Sorting Class Objects
+
+```cpp
+struct BankAccount {
+    string owner;
+    double balance;
+    int accountId;
+};
+
+vector<BankAccount> accounts = {
+    {"Alice", 5000.0, 1001},
+    {"Bob", 12000.0, 1002},
+    {"Charlie", 3000.0, 1003}
+};
+
+// Sort by balance (ascending)
+sort(accounts.begin(), accounts.end(),
+    [](const BankAccount& a, const BankAccount& b) {
+        return a.balance < b.balance;
+    });
+
+// Sort by owner name (alphabetical)
+sort(accounts.begin(), accounts.end(),
+    [](const BankAccount& a, const BankAccount& b) {
+        return a.owner < b.owner;
+    });
+
+// Multi-field sort: by balance DESC, then by name ASC
+stable_sort(accounts.begin(), accounts.end(),
+    [](const BankAccount& a, const BankAccount& b) {
+        if (a.balance != b.balance)
+            return a.balance > b.balance;  // Higher balance first
+        return a.owner < b.owner;           // Then alphabetical
+    });
 ```
 
 ## 23.6 Practical Considerations
@@ -428,4 +488,4 @@ void hybridSort(int arr[], int left, int right) {
 | Worst-case matters | Merge Sort, Heap Sort |
 | Linked lists | Merge Sort |
 
-[‚Ü?Previous: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion ‚Üí](22-recursion.md)
+[‚ÜíPrevious: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion ‚Üí](22-recursion.md)
