@@ -1,22 +1,22 @@
-[â†?Previous: Heap and Priority Queue](24-heap-priority-queue.md) | [Next: Graph Algorithms â†’](26-graph-algorithms.md)
+[â† Previous: Heap and Priority Queue](20-heap-priority-queue.md) | [Next: Graph Algorithms â†’](22-graph-algorithms.md)
 
-# 27 Hash Tables
+# 21 Hash Tables
 
 Hash tables provide O(1) average time complexity for insert, delete, and search operations, making them one of the most important data structures in computer science.
 
-## 27.1 The Problem: Fast Lookup
+## 21.1 The Problem: Fast Lookup
 
 Arrays provide O(1) access by index, but searching by value takes O(n). What if we could use values as "indices"?
 
 **Hash Function**: Maps keys to array indices
 ```
-hash(key) â†?index
+hash(key) ï¿½?index
 ```
 
-## 27.2 Hash Functions
+## 21.2 Hash Functions
 
 A good hash function:
-- Is deterministic (same key â†?same index)
+- Is deterministic (same key ï¿½?same index)
 - Distributes keys uniformly
 - Is fast to compute
 - Minimizes collisions
@@ -56,13 +56,13 @@ size_t hashKey(const T& key, size_t tableSize) {
 | Uniformity | Keys should spread evenly across table |
 | Determinism | Same input always produces same output |
 | Efficiency | Fast computation |
-| Avalanche | Small input change â†?large output change |
+| Avalanche | Small input change ï¿½?large output change |
 
-## 27.3 Collision Resolution
+## 21.3 Collision Resolution
 
 When two keys hash to the same index, we have a collision. Two main approaches:
 
-### 27.3.1 Separate Chaining
+### 21.3.1 Separate Chaining
 
 Each bucket contains a linked list of entries.
 
@@ -141,7 +141,7 @@ public:
 };
 ```
 
-### 27.3.2 Open Addressing
+### 21.3.2 Open Addressing
 
 All entries stored in table itself. On collision, probe for next empty slot.
 
@@ -239,7 +239,7 @@ idx = (hash1(key) + i * hash2(key)) % tableSize;
 | **Quadratic Probing** | Reduces clustering | May not find empty slot |
 | **Double Hashing** | Best distribution | Two hash computations |
 
-## 27.4 C++ Standard Library
+## 21.4 C++ Standard Library
 
 ### unordered_map
 
@@ -296,7 +296,7 @@ if (seen.count(10)) {  // Check existence
 }
 ```
 
-## 27.5 Complexity Analysis
+## 21.5 Complexity Analysis
 
 | Operation | Average | Worst |
 |-----------|---------|-------|
@@ -315,7 +315,7 @@ Load Factor Î± = n / m (entries / buckets)
 - **Chaining**: Î± can be > 1, average chain length = Î±
 - **Open Addressing**: Î± must be < 1, typically < 0.75
 
-## 27.6 Applications
+## 21.6 Applications
 
 ### Frequency Counting
 
@@ -400,7 +400,7 @@ vector<int> removeDuplicates(vector<int>& nums) {
 }
 ```
 
-## 27.7 Bloom Filters
+## 21.7 Bloom Filters
 
 Probabilistic data structure for membership testing with space efficiency.
 
@@ -442,7 +442,7 @@ public:
 - No false negatives
 - Space-efficient compared to hash sets
 
-## 27.8 Summary
+## 21.8 Summary
 
 ### Key Takeaways
 
@@ -471,4 +471,4 @@ public:
 | BST | O(log n) | O(log n) | Ordered |
 | **Hash Table** | **O(1)** | **O(1)** | Unordered, fast |
 
-[â†?Previous: Heap and Priority Queue](24-heap-priority-queue.md) | [Next: Graph Algorithms â†’](26-graph-algorithms.md)
+[ï¿½?Previous: Heap and Priority Queue](24-heap-priority-queue.md) | [Next: Graph Algorithms â†’](26-graph-algorithms.md)

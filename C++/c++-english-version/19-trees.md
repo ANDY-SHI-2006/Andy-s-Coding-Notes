@@ -1,10 +1,10 @@
-[‚Ü?Previous: Recursion](22-recursion.md) | [Next: Heap and Priority Queue ‚Üí](24-heap-priority-queue.md)
+[‚Üê Previous: Recursion](18-recursion.md) | [Next: Heap and Priority Queue ‚Üí](20-heap-priority-queue.md)
 
-# 25 Trees
+# 19 Trees
 
 A tree is a hierarchical data structure consisting of nodes connected by edges, with no cycles. Trees are fundamental for representing hierarchical data and enabling efficient searching.
 
-## 25.1 Tree Basics
+## 19.1 Tree Basics
 
 ### Terminology
 
@@ -47,7 +47,7 @@ struct TreeNode {
 };
 ```
 
-## 25.2 Binary Trees
+## 19.2 Binary Trees
 
 A binary tree is a tree where each node has at most two children (left and right).
 
@@ -71,15 +71,15 @@ struct BinaryTreeNode {
 | **Full** | Every node has 0 or 2 children |
 | **Complete** | All levels filled except possibly last, filled left to right |
 | **Perfect** | All internal nodes have 2 children, all leaves same depth |
-| **Balanced** | Height difference between subtrees ‚â?1 |
+| **Balanced** | Height difference between subtrees ÔøΩ?1 |
 | **Degenerate** | Each node has only one child (like linked list) |
 
-## 25.3 Binary Tree Traversals
+## 19.3 Binary Tree Traversals
 
 ### Depth-First Traversals
 
 ```cpp
-// Preorder: Root ‚Ü?Left ‚Ü?Right
+// Preorder: Root ÔøΩ?Left ÔøΩ?Right
 void preorder(BinaryTreeNode* root) {
     if (!root) return;
     cout << root->data << " ";    // Visit root
@@ -87,7 +87,7 @@ void preorder(BinaryTreeNode* root) {
     preorder(root->right);         // Traverse right
 }
 
-// Inorder: Left ‚Ü?Root ‚Ü?Right
+// Inorder: Left ÔøΩ?Root ÔøΩ?Right
 void inorder(BinaryTreeNode* root) {
     if (!root) return;
     inorder(root->left);           // Traverse left
@@ -95,7 +95,7 @@ void inorder(BinaryTreeNode* root) {
     inorder(root->right);          // Traverse right
 }
 
-// Postorder: Left ‚Ü?Right ‚Ü?Root
+// Postorder: Left ÔøΩ?Right ÔøΩ?Root
 void postorder(BinaryTreeNode* root) {
     if (!root) return;
     postorder(root->left);         // Traverse left
@@ -133,7 +133,7 @@ void levelOrder(BinaryTreeNode* root) {
 | Postorder | Delete tree, postfix expression |
 | Level Order | BFS, find shortest path |
 
-## 25.4 Binary Search Trees (BST)
+## 19.4 Binary Search Trees (BST)
 
 BST property: Left subtree values < root < right subtree values.
 
@@ -212,11 +212,11 @@ public:
 | Insert | O(log n) | O(n) |
 | Delete | O(log n) | O(n) |
 
-## 25.5 Self-Balancing BSTs
+## 19.5 Self-Balancing BSTs
 
 ### AVL Tree
 
-Height-balanced BST: difference between subtrees ‚â?1.
+Height-balanced BST: difference between subtrees ÔøΩ?1.
 
 ```cpp
 struct AVLNode {
@@ -319,7 +319,7 @@ Self-balancing BST with color properties ensuring O(log n) operations.
 
 Used in `std::map` and `std::set`.
 
-## 25.6 Tree Properties and Algorithms
+## 19.6 Tree Properties and Algorithms
 
 ### Tree Height
 
@@ -388,7 +388,7 @@ BinaryTreeNode* findLCA(BinaryTreeNode* root, int n1, int n2) {
 }
 ```
 
-## 25.7 Expression Trees
+## 19.7 Expression Trees
 
 Binary trees representing arithmetic expressions.
 
@@ -415,7 +415,7 @@ int evaluate(BinaryTreeNode* root) {
 }
 ```
 
-## 25.8 Trie (Prefix Tree)
+## 19.8 Trie (Prefix Tree)
 
 Tree for storing strings with common prefixes.
 
@@ -469,7 +469,7 @@ private:
 };
 ```
 
-## 25.9 Segment Tree
+## 19.9 Segment Tree
 
 For range queries and updates.
 
@@ -509,7 +509,7 @@ public:
 };
 ```
 
-## 25.10 Summary
+## 19.10 Summary
 
 ### Tree Types Comparison
 
@@ -531,4 +531,4 @@ public:
 4. **Traversals**: Pre/In/Post-order, Level-order
 5. **Applications**: Searching, expression evaluation, autocomplete, range queries
 
-[‚Ü?Previous: Recursion](22-recursion.md) | [Next: Heap and Priority Queue ‚Üí](24-heap-priority-queue.md)
+[ÔøΩ?Previous: Recursion](22-recursion.md) | [Next: Heap and Priority Queue ‚Üí](24-heap-priority-queue.md)

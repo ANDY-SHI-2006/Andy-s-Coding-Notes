@@ -1,4 +1,4 @@
-[←Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
+[← Previous: Variable Basics](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
 
 # 5 Operators
 

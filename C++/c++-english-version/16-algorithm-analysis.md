@@ -1,10 +1,10 @@
-[→Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)
+[← Previous: Queue ADT](15-queue.md) | [Next: Sorting Algorithms →](17-sorting-algorithms.md)
 
-# 22 Algorithm Analysis
+# 16 Algorithm Analysis
 
 Algorithm analysis is the study of how much resources (time and space) an algorithm requires as a function of the input size. It allows us to compare algorithms and choose the most efficient one for a given problem.
 
-## 22.1 Why Analyze Algorithms?
+## 16.1 Why Analyze Algorithms?
 
 Consider two algorithms to find a number in a sorted array:
 
@@ -60,7 +60,7 @@ You might think: "Why not just measure the wall-clock time?" In practice, exact 
 
 **Asymptotic analysis solves this** by counting operations independently of hardware and language. It answers: "How does runtime grow as input grows?" rather than "How many seconds does it take?"
 
-## 22.2 Time Complexity
+## 16.2 Time Complexity
 
 Time complexity measures how the running time grows as input size increases.
 
@@ -79,7 +79,7 @@ int sum(int arr[], int n) {
 
 As n grows large, the constant factors and lower-order terms become insignificant.
 
-## 22.3 Big-O Notation
+## 16.3 Big-O Notation
 
 Big-O notation describes the upper bound of growth rate, focusing on the dominant term as n →∞
 
@@ -115,7 +115,7 @@ Drop constants and lower-order terms:
 - `2ⁿ + n³` → **O(2ⁿ)**
 - `5` →**O(1)**
 
-## 22.4 Analyzing Common Structures
+## 16.4 Analyzing Common Structures
 
 ### Single Loop: O(n)
 
@@ -172,7 +172,7 @@ for (int i = 1; i < n; i *= 2) {
 // Time: O(log n)
 ```
 
-## 22.5 Space Complexity
+## 16.5 Space Complexity
 
 Space complexity measures how much additional memory an algorithm needs.
 
@@ -212,7 +212,7 @@ int binarySearch(int arr[], int left, int right, int target) {
 }
 ```
 
-## 22.6 Best, Average, and Worst Case
+## 16.6 Best, Average, and Worst Case
 
 | Case | Definition | Example: Linear Search |
 |------|------------|----------------------|
@@ -222,7 +222,7 @@ int binarySearch(int arr[], int left, int right, int target) {
 
 **Big-O usually refers to worst-case complexity.**
 
-## 22.7 Amortized Analysis
+## 16.7 Amortized Analysis
 
 Amortized analysis gives the average performance of each operation in a sequence, even if some operations are expensive.
 
@@ -242,7 +242,7 @@ for (int i = 0; i < n; i++) {
 
 Even though some operations are O(n), the average over many operations is O(1).
 
-## 22.8 Practical Examples
+## 16.8 Practical Examples
 
 ### Example 1: Array Operations
 
@@ -436,7 +436,7 @@ Consider the same problem solved by two algorithms on a 33 MHz handheld PC:
 
 > **Key insight:** Doubling the input for O(n²) **quadruples** the time. For O(n), it only **doubles** the time. This gap widens dramatically as `n` grows — raw CPU power cannot compensate for a poorly chosen algorithm.
 
-## 22.9 Rules of Thumb
+## 16.9 Rules of Thumb
 
 1. **Nested loops** →Multiply complexities
    ```cpp
@@ -464,7 +464,7 @@ Consider the same problem solved by two algorithms on a 33 MHz handheld PC:
        for(j=0; j<m; j++)  // O(n * m)
    ```
 
-## 22.10 Summary
+## 16.10 Summary
 
 ### Key Takeaways
 

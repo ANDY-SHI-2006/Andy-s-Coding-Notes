@@ -1,10 +1,10 @@
-[�?Previous: Smart Pointers](16-smart-pointers.md) | [Next: Move Semantics →](18-move-semantics.md)
+[← Previous: Smart Pointers](26-smart-pointers.md) | [Next: Move Semantics →](28-move-semantics.md)
 
-# 19 Lambda Expressions
+# 27 Lambda Expressions
 
 Lambda expressions provide a concise way to write inline functions without naming them. They are essential for modern C++ programming, especially with algorithms and callbacks.
 
-## 19.1 Function Objects vs Lambdas
+## 27.1 Function Objects vs Lambdas
 
 **Traditional function object (verbose):**
 ```cpp
@@ -25,7 +25,7 @@ std::find_if(v.begin(), v.end(), [](int x) {
 });
 ```
 
-## 19.2 Lambda Syntax
+## 27.2 Lambda Syntax
 
 ```cpp
 [capture](parameters) -> return_type {
@@ -53,7 +53,7 @@ auto multiply = [](int a, int b) {
 };
 ```
 
-## 19.3 Capture List
+## 27.3 Capture List
 
 The capture list `[]` determines what variables from the surrounding scope are accessible inside the lambda.
 
@@ -120,7 +120,7 @@ cout << f() << endl;  // 12 (keeps state!)
 cout << x << endl;    // 10 (original unchanged)
 ```
 
-## 19.4 Generic Lambdas (C++14)
+## 27.4 Generic Lambdas (C++14)
 
 Lambdas can be generic with `auto` parameters:
 ```cpp
@@ -134,7 +134,7 @@ add(1.5, 2.5);      // double
 add(string("a"), "b");  // string
 ```
 
-## 19.5 Use Cases
+## 27.5 Use Cases
 
 ### With STL Algorithms
 
@@ -205,7 +205,7 @@ std::sort(people.begin(), people.end(), [](const Person& a, const Person& b) {
 });
 ```
 
-## 19.6 Best Practices
+## 27.6 Best Practices
 
 1. **Prefer capturing by value** unless you need to modify:
    ```cpp
@@ -242,7 +242,7 @@ std::sort(people.begin(), people.end(), [](const Person& a, const Person& b) {
    }
    ```
 
-## 19.7 Summary
+## 27.7 Summary
 
 ```cpp
 // Basic lambda
@@ -266,4 +266,4 @@ auto f6 = [x]() mutable { return ++x; };
 
 > **Modern C++**: Lambdas are the preferred way to write short, inline functions, especially for STL algorithms and callbacks.
 
-[�?Previous: Smart Pointers](16-smart-pointers.md) | [Next: Move Semantics →](18-move-semantics.md)
+[�?Previous: Smart Pointers](16-smart-pointers.md) | [Next: Move Semantics →](18-move-semantics.md)

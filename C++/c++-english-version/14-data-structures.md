@@ -1,10 +1,10 @@
-[‚Ü?Previous: Modern C++ Variables](13-modern-cpp-variables.md) | [Next: Exception Handling ‚Üí](15-exception-handling.md)
+[‚Üê Previous: Abstract Data Types](13-abstract-data-types.md) | [Next: Queue ADT ‚Üí](15-queue.md)
 
-# 16 Data Structures
+# 14 Data Structures
 
 This chapter covers the implementation of fundamental data structures using C++.
 
-## 16.1 List ADT Specification
+## 14.1 List ADT Specification
 
 A List is an ordered collection of elements where each element has a position (index). Lists are pervasive in computing: student lists, event lists, appointment lists, etc.
 
@@ -58,7 +58,7 @@ public:
 ```
 
 
-## 16.2 Exception-Based Specification (Version 2)
+## 14.2 Exception-Based Specification (Version 2)
 
 **Problem with Version 1:** Boolean return values can be ignored by careless programmers, causing hard-to-debug runtime errors.
 
@@ -112,7 +112,7 @@ public:
 ```
 
 
-## 16.3 Array-Based Implementation
+## 14.3 Array-Based Implementation
 
 Arrays are a straightforward choice for implementing List ADT.
 
@@ -181,7 +181,7 @@ void List::replace(int index, ItemType item) {
 ```
 
 
-## 16.4 Array Implementation Efficiency Analysis
+## 14.4 Array Implementation Efficiency Analysis
 
 **Time Complexity:**
 
@@ -199,7 +199,7 @@ void List::replace(int index, ItemType item) {
 - Out of space if list exceeds MAXSIZE
 
 
-## 16.5 Sample User Program
+## 14.5 Sample User Program
 
 ```cpp
 #include <iostream>
@@ -235,7 +235,7 @@ int main() {
 ```
 
 
-## 16.6 When to Use Array Implementation
+## 14.6 When to Use Array Implementation
 
 **Good for:**
 - Fixed-size collections
@@ -250,7 +250,7 @@ int main() {
 > **Note:** For dynamic collections with frequent modifications, a linked list implementation is preferred. See data structures courses for linked list implementation.
 
 
-## 16.7 Summary
+## 14.7 Summary
 
 This List ADT example demonstrates:
 
@@ -268,11 +268,11 @@ This List ADT example demonstrates:
    - Future: Linked list offers fast modification at cost of access speed
 
 
-## 16.8 Linked List Based Implementation
+## 14.8 Linked List Based Implementation
 
 Pointer-based linked lists allow elements to be non-contiguous in memory. Elements are ordered by associating each with its neighbour(s) through pointers.
 
-### 16.8.1 Node Structure
+### 14.8.1 Node Structure
 
 A single node in a singly linked list contains the data element and a pointer to the next node.
 
@@ -287,7 +287,7 @@ struct ListNode {
 
 > **Key Point:** C++ allows the structure name (`ListNode`) to be used without the `struct` keyword.
 
-### 16.8.2 Linked List Example
+### 14.8.2 Linked List Example
 
 A list of four items `<a0, a1, a2, a3>` is represented as:
 
@@ -299,7 +299,7 @@ head --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
 - `head` pointer to indicate the first node
 - `NULL` in the `next` pointer field of the last node
 
-### 16.8.3 Building a Linked List
+### 14.8.3 Building a Linked List
 
 ```cpp
 ListNode* ptr4 = new ListNode;
@@ -322,7 +322,7 @@ head->next = ptr2;
 > **Question:** Do we need `ptr2`, `ptr3`, `ptr4` after the list is built?
 > **Answer:** No. Only the `head` pointer is needed to access the entire list.
 
-### 16.8.4 Insertion in Linked List
+### 14.8.4 Insertion in Linked List
 
 **General Case:** Insert a new node between `prev` and `cur`.
 
@@ -347,7 +347,7 @@ newPtr->next = cur;           // OR: newPtr->next = head;
 head = newPtr;
 ```
 
-### 16.8.5 Deletion in Linked List
+### 14.8.5 Deletion in Linked List
 
 **General Case:** Delete the node pointed to by `cur`, where `prev` points to the node before it.
 
@@ -371,7 +371,7 @@ delete cur;
 cur = NULL;
 ```
 
-### 16.8.6 Traversing the Linked List
+### 14.8.6 Traversing the Linked List
 
 To move forward one node:
 
@@ -432,7 +432,7 @@ ListNode* findValue(ListItemType value) const
 }
 ```
 
-### 16.8.7 C++ Specification (Linked List)
+### 14.8.7 C++ Specification (Linked List)
 
 ```cpp
 // ListP.h: List ADT using Linked List
@@ -472,7 +472,7 @@ private:
 > - Structure declaration can be private
 > - `find()` is a private helper method
 
-### 16.8.8 Implementation
+### 14.8.8 Implementation
 
 **Constructor and Destructor:**
 
@@ -599,9 +599,9 @@ void List::remove(int index)
 ```
 
 
-## 16.9 Variations of Linked List
+## 14.9 Variations of Linked List
 
-The linked list implementation shown above is known as a **singly linked list** ‚Ä?each node has one pointer (a single link).
+The linked list implementation shown above is known as a **singly linked list** ÔøΩ?each node has one pointer (a single link).
 
 Many other variations exist:
 
@@ -616,7 +616,7 @@ Some variations can be combined:
 - Circular Doubly-Linked List
 - Circular Linked List with Dummy Head Node
 
-### 16.9.1 Doubly Linked List
+### 14.9.1 Doubly Linked List
 
 **Motivation:**
 - Singly Linked List only facilitates movement in one direction (from head to end)
@@ -721,7 +721,7 @@ private:
 };
 ```
 
-### 16.9.2 Circular Linked List
+### 14.9.2 Circular Linked List
 
 **Concept:** The last node in a singly linked list points back to the first node.
 
@@ -762,7 +762,7 @@ Even more useful if we keep track of the **tail** instead of the head:
 - Can access both the tail and head easily
 - Head = `tail->next`
 
-### 16.9.3 Dummy Head Node
+### 14.9.3 Dummy Head Node
 
 There is an extra node at the beginning of the list:
 - It is **not** used to store a real element, hence the name **dummy**
@@ -772,10 +772,10 @@ There is an extra node at the beginning of the list:
 head --> [dummy|*] --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
 ```
 
-> **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case ‚Ä?no need for separate head-insertion or head-deletion logic.
+> **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case ÔøΩ?no need for separate head-insertion or head-deletion logic.
 
 
-## 16.10 Template List ADT
+## 14.10 Template List ADT
 
 **Motivation:** The current List ADT only supports `int` (via `typedef int ListItemType;`). To use it for other datatypes, we need to change the typedef and recompile.
 
@@ -883,7 +883,7 @@ int main()
 ```
 
 
-## 16.11 List in STL
+## 14.11 List in STL
 
 List is a popular data structure with a standard implementation in the C++ Standard Template Library.
 
@@ -920,7 +920,7 @@ int main()
 ```
 
 
-## 16.12 Summary
+## 14.12 Summary
 
 This section on List ADT implementations covers:
 
@@ -947,10 +947,10 @@ This section on List ADT implementations covers:
 
 | Aspect | Array-Based | Linked List-Based |
 |--------|-------------|-------------------|
-| **Retrieval** | O(1) ‚Ä?direct access | O(n) ‚Ä?must traverse |
-| **Insertion** | O(n) ‚Ä?must shift | O(1) ‚Ä?if position known |
-| **Deletion** | O(n) ‚Ä?must shift | O(1) ‚Ä?if position known |
-| **Size** | Fixed (MAXSIZE) | Dynamic ‚Ä?grows as needed |
+| **Retrieval** | O(1) ÔøΩ?direct access | O(n) ÔøΩ?must traverse |
+| **Insertion** | O(n) ÔøΩ?must shift | O(1) ÔøΩ?if position known |
+| **Deletion** | O(n) ÔøΩ?must shift | O(1) ÔøΩ?if position known |
+| **Size** | Fixed (MAXSIZE) | Dynamic ÔøΩ?grows as needed |
 | **Memory** | Contiguous, may waste space | Non-contiguous, extra pointer overhead |
 
 > **Key Takeaway:** Choose array-based for fast random access and fixed-size collections. Choose linked list for dynamic collections with frequent insertions and deletions.
@@ -960,4 +960,4 @@ This section on List ADT implementations covers:
 
 
 
-[‚Ü?Previous: Modern C++ Variables](13-modern-cpp-variables.md) | [Next: Exception Handling ‚Üí](15-exception-handling.md)
+[ÔøΩ?Previous: Modern C++ Variables](13-modern-cpp-variables.md) | [Next: Exception Handling ‚Üí](15-exception-handling.md)

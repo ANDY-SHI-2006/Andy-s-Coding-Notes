@@ -1,10 +1,10 @@
-[�?Previous: Exception Handling](15-exception-handling.md) | [Next: Lambda →](17-lambda-expressions.md)
+[← Previous: Exception Handling](25-exception-handling.md) | [Next: Lambda Expressions →](27-lambda-expressions.md)
 
-# 18 Smart Pointers
+# 26 Smart Pointers
 
 Smart pointers are objects that act like pointers but automatically manage the lifetime of dynamically allocated memory. They are the modern C++ replacement for raw pointers with `new` and `delete`.
 
-## 18.1 Problems with Raw Pointers
+## 26.1 Problems with Raw Pointers
 
 ```cpp
 void rawPointerProblems() {
@@ -26,7 +26,7 @@ void rawPointerProblems() {
 - Double delete
 - Exception safety issues
 
-## 18.2 unique_ptr - Exclusive Ownership
+## 26.2 unique_ptr - Exclusive Ownership
 
 `unique_ptr` owns the object exclusively. When the `unique_ptr` is destroyed, the object is deleted.
 
@@ -79,7 +79,7 @@ process(std::move(resource));  // Transfer ownership
 // resource is now nullptr
 ```
 
-## 18.3 shared_ptr - Shared Ownership
+## 26.3 shared_ptr - Shared Ownership
 
 `shared_ptr` allows multiple pointers to own the same object. The object is deleted when the last `shared_ptr` is destroyed.
 
@@ -133,7 +133,7 @@ auto obj = std::make_shared<MyClass>(10, 20);
 obj->doSomething();
 ```
 
-## 18.4 weak_ptr - Breaking Cycles
+## 26.4 weak_ptr - Breaking Cycles
 
 `weak_ptr` holds a non-owning reference to an object managed by `shared_ptr`. It doesn't keep the object alive.
 
@@ -163,7 +163,7 @@ if (auto locked = weak.lock()) {  // Convert to shared_ptr
 }
 ```
 
-## 18.5 make_unique and make_shared
+## 26.5 make_unique and make_shared
 
 Always prefer factory functions over direct `new`:
 
@@ -184,7 +184,7 @@ auto p = std::make_unique<Foo>(1, 2, 3);
 auto q = std::make_shared<Bar>(4, 5, 6);
 ```
 
-## 18.6 Comparison and Selection Guide
+## 26.6 Comparison and Selection Guide
 
 | Smart Pointer | Ownership | Use When |
 |--------------|-----------|----------|
@@ -196,11 +196,11 @@ auto q = std::make_shared<Bar>(4, 5, 6);
 
 ```
 Need shared ownership?
-├── No �?unique_ptr
-└── Yes �?shared_ptr
+├── No �?unique_ptr
+└── Yes �?shared_ptr
     └── Circular reference possible?
-        ├── No �?OK
-        └── Yes �?weak_ptr to break cycle
+        ├── No �?OK
+        └── Yes �?weak_ptr to break cycle
 ```
 
 ### Examples by Use Case
@@ -238,7 +238,7 @@ public:
 };
 ```
 
-## 18.7 Summary
+## 26.7 Summary
 
 | Feature | unique_ptr | shared_ptr | weak_ptr |
 |---------|-----------|------------|----------|
@@ -250,4 +250,4 @@ public:
 
 > **Golden Rule**: Never use raw `new`/`delete` in modern C++. Always use smart pointers and `make_unique`/`make_shared`.
 
-[�?Previous: Exception Handling](15-exception-handling.md) | [Next: Lambda →](17-lambda-expressions.md)
+[�?Previous: Exception Handling](15-exception-handling.md) | [Next: Lambda →](17-lambda-expressions.md)

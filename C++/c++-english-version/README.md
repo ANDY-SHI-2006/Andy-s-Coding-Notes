@@ -1,10 +1,10 @@
 # C++ English Version
 
-A comprehensive C++ programming course covering fundamentals, modern C++ features, data structures, and algorithms.
+A comprehensive C++ programming course covering single-file fundamentals, data structures, modern C++ features, and engineering practices.
 
 ## Table of Contents
 
-### Part 1: C++ Fundamentals
+### Phase 1: Single-File Programming Fundamentals
 1. [Program Structure](01-program-structure.md)
 2. [The Preprocessor](02-the-preprocessor.md)
 3. [Code Standardization](03-code-standardization.md)
@@ -15,35 +15,44 @@ A comprehensive C++ programming course covering fundamentals, modern C++ feature
 8. [Conditional Execution](08-conditional-execution.md)
 9. [Functions](09-functions.md)
 10. [Object-Oriented Programming](10-object-oriented-programming.md)
-11. [STL](11-stl.md)
-12. [Advanced Topics](12-advanced-topics.md)
+11. [STL Basics](11-stl-basics.md)
+12. [Pointers and Dynamic Memory](12-pointers-and-dynamic-memory.md)
 
-### Part 2: Modern C++ (C++11/14/17/20)
-13. [Modern C++ Variable Features](13-modern-cpp-variables.md) - *auto, decltype, structured binding*
-14. [Data Structures](14-data-structures.md) - *List ADT implementations*
-15. [Exception Handling](15-exception-handling.md) - *try/catch/throw, RAII*
-16. [Smart Pointers](16-smart-pointers.md) - *unique_ptr, shared_ptr, weak_ptr*
-17. [Lambda Expressions](17-lambda-expressions.md) - *Anonymous functions, closures*
-18. [Move Semantics](18-move-semantics.md) - *Rvalue references, perfect forwarding*
+### Phase 2: Data Structures & Algorithms
+13. [Abstract Data Types](13-abstract-data-types.md)
+14. [Data Structures](14-data-structures.md)
+15. [Queue ADT](15-queue.md)
+16. [Algorithm Analysis](16-algorithm-analysis.md)
+17. [Sorting Algorithms](17-sorting-algorithms.md)
+18. [Recursion](18-recursion.md)
+19. [Trees](19-trees.md)
+20. [Heap and Priority Queue](20-heap-priority-queue.md)
+21. [Hash Tables](21-hash-tables.md)
+22. [Graph Algorithms](22-graph-algorithms.md)
 
-### Part 3: Data Structures & Algorithms
-19. [Queue ADT](19-queue.md) - *FIFO, array/linked list implementations, BFS*
-20. [Algorithm Analysis](20-algorithm-analysis.md) - *Big-O notation, time/space complexity*
-21. [Sorting Algorithms](21-sorting-algorithms.md) - *Quick sort, merge sort, heap sort*
-22. [Recursion](22-recursion.md) - *Backtracking, divide and conquer*
-23. [Trees](23-trees.md) - *Binary trees, BST, AVL, Trie*
-24. [Heap and Priority Queue](24-heap-priority-queue.md) - *Heap sort, Dijkstra*
-25. [Hash Tables](25-hash-tables.md) - *Collision resolution, Bloom filters*
-26. [Graph Algorithms](26-graph-algorithms.md) - *DFS, BFS, MST, topological sort*
+### Phase 3: Modern C++ Advanced Features
+23. [Modern C++ Variable Features](23-modern-cpp-variables.md)
+24. [Templates and Generics](24-templates-and-generics.md)
+25. [Exception Handling](25-exception-handling.md)
+26. [Smart Pointers](26-smart-pointers.md)
+27. [Lambda Expressions](27-lambda-expressions.md)
+28. [Move Semantics](28-move-semantics.md)
+
+### Phase 4: Engineering & Multithreading
+29. [Variable Advanced Topics](29-variable-advanced-topics.md)
+30. [OOP Advanced Topics](30-oop-advanced.md)
+31. [Multi-File Programming](31-multi-file-programming.md)
+32. [Multi-Threading](32-multi-threading.md)
 
 ---
 
 ## Navigation
 
-Each chapter contains navigation links at the top and bottom for easy browsing between sections.
+Each chapter contains navigation links at the top for easy browsing between sections.
 
 ## Course Structure
 
-- **Chapters 1-12**: C++ Fundamentals
-- **Chapters 13-18**: Modern C++ Features
-- **Chapters 19-26**: Data Structures and Algorithms
+- **Chapters 1-12**: Single-file programming fundamentals — everything you need to write complete C++ programs within one file.
+- **Chapters 13-22**: Data structures and algorithms — implementing ADTs and classic algorithms using C++.
+- **Chapters 23-28**: Modern C++ advanced features — templates, exceptions, smart pointers, lambdas, and move semantics.
+- **Chapters 29-32**: Engineering and multithreading — linkage, multi-file builds, advanced OOP, and concurrent programming.

@@ -1,10 +1,10 @@
-[← Previous: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion →](22-recursion.md)
+[← Previous: Algorithm Analysis](16-algorithm-analysis.md) | [Next: Recursion →](18-recursion.md)
 
-# 23 Sorting Algorithms
+# 17 Sorting Algorithms
 
 Sorting is one of the most fundamental operations in computer science. Efficient sorting enables faster searching, data analysis, and many other algorithms.
 
-## 23.1 Why Sorting Matters
+## 17.1 Why Sorting Matters
 
 **Applications:**
 - Database query optimization
@@ -19,7 +19,7 @@ Sorting is one of the most fundamental operations in computer science. Efficient
 - Stability (preserves relative order of equal elements)
 - Adaptivity (performance on nearly-sorted data)
 
-## 23.2 Comparison-Based Sorts
+## 17.2 Comparison-Based Sorts
 
 ### Bubble Sort
 
@@ -230,7 +230,7 @@ void heapSort(int arr[], int n) {
 | Space | O(1) |
 | Stable | No |
 
-## 23.3 Non-Comparison Sorts
+## 17.3 Non-Comparison Sorts
 
 ### Counting Sort
 
@@ -307,7 +307,7 @@ void radixSort(int arr[], int n) {
 | Stable | Yes |
 | Requirement | Fixed-width integers/strings |
 
-## 23.4 Algorithm Comparison
+## 17.4 Algorithm Comparison
 
 | Algorithm | Best | Average | Worst | Space | Stable |
 |-----------|------|---------|-------|-------|--------|
@@ -320,7 +320,7 @@ void radixSort(int arr[], int n) {
 | Counting Sort | O(n + k) | O(n + k) | O(n + k) | O(n + k) | Yes |
 | Radix Sort | O(dn) | O(dn) | O(dn) | O(n + k) | Yes |
 
-## 23.5 Choosing the Right Sort
+## 17.5 Choosing the Right Sort
 
 ### Decision Tree
 
@@ -430,7 +430,7 @@ stable_sort(accounts.begin(), accounts.end(),
     });
 ```
 
-## 23.6 Practical Considerations
+## 17.6 Practical Considerations
 
 ### Stability Example
 
@@ -465,7 +465,7 @@ void hybridSort(int arr[], int left, int right) {
 }
 ```
 
-## 23.7 Summary
+## 17.7 Summary
 
 ### Key Takeaways
 

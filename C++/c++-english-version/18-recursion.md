@@ -1,10 +1,10 @@
-[→Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees →](23-trees.md)
+[← Previous: Sorting Algorithms](17-sorting-algorithms.md) | [Next: Trees →](19-trees.md)
 
-# 24 Recursion
+# 18 Recursion
 
 Recursion is a programming technique where a function calls itself to solve a problem by breaking it down into smaller, similar subproblems.
 
-## 24.1 Understanding Recursion
+## 18.1 Understanding Recursion
 
 A recursive solution consists of:
 1. **Base case(s)**: Simplest instance(s) that can be solved directly
@@ -49,7 +49,7 @@ factorial(3)
 →returns 3 * 2 = 6
 ```
 
-## 24.2 Recursion vs Iteration
+## 18.2 Recursion vs Iteration
 
 | Aspect | Recursion | Iteration |
 |--------|-----------|-----------|
@@ -59,7 +59,7 @@ factorial(3)
 | Risk | Stack overflow | Infinite loops |
 | Tail optimization | Some compilers optimize | Always efficient |
 
-## 24.3 Classic Recursive Problems
+## 18.3 Classic Recursive Problems
 
 ### Fibonacci Sequence
 
@@ -131,7 +131,7 @@ int choose(int n, int k) {
 
 > **Performance Note:** This naive recursive solution has exponential time complexity due to repeated calculations of the same subproblems (e.g., `choose(2,1)` is computed multiple times). Use **memoization** or **dynamic programming** for efficient computation in practice.
 
-## 24.4 Recursion on Arrays
+## 18.4 Recursion on Arrays
 
 ### Binary Search (Recursive)
 
@@ -211,7 +211,7 @@ int quickSelect(int arr[], int left, int right, int k) {
 
 > **Key Insight:** Unlike QuickSort which recurses on both sides, QuickSelect only recurses on the side containing the k-th element. This gives average O(n) time instead of O(n log n).
 
-## 24.5 Recursion on Linked Lists
+## 18.5 Recursion on Linked Lists
 
 ```cpp
 struct Node {
@@ -250,7 +250,7 @@ void deleteList(Node* head) {
 }
 ```
 
-## 24.6 Backtracking
+## 18.6 Backtracking
 
 Backtracking explores all possible solutions systematically, abandoning partial candidates when they cannot lead to valid solutions.
 
@@ -309,7 +309,7 @@ void generateSubsets(vector<int>& nums, int index,
 }
 ```
 
-## 24.7 Divide and Conquer
+## 18.7 Divide and Conquer
 
 Divide the problem into smaller subproblems, solve each, and combine results.
 
@@ -339,7 +339,7 @@ void quickSort(int arr[], int low, int high) {
 }
 ```
 
-## 24.8 Common Pitfalls
+## 18.8 Common Pitfalls
 
 ### Missing Base Case
 
@@ -377,7 +377,7 @@ void iterative(int n) {
 }
 ```
 
-## 24.9 Tail Recursion
+## 18.9 Tail Recursion
 
 A tail recursive function makes the recursive call as its last operation. Some compilers optimize this.
 
@@ -395,7 +395,7 @@ int factorialTail(int n, int acc = 1) {
 }
 ```
 
-## 24.10 When to Use Recursion
+## 18.10 When to Use Recursion
 
 **Use Recursion For:**
 - Tree/graph traversals
@@ -410,7 +410,7 @@ int factorialTail(int n, int acc = 1) {
 - Very deep recursions (risk of stack overflow)
 - Problems with simple sequential structure
 
-## 24.11 Summary
+## 18.11 Summary
 
 ### Key Takeaways
 

@@ -1,10 +1,10 @@
-[�?Previous: Hash Tables](25-hash-tables.md) | [Return to Index](README.md)
+[← Previous: Hash Tables](21-hash-tables.md) | [Next: Modern C++ Variable Features →](23-modern-cpp-variables.md)
 
-# 28 Graph Algorithms
+# 22 Graph Algorithms
 
 Graphs are versatile data structures that model relationships between objects. They are essential for solving problems in networking, mapping, scheduling, and many other domains.
 
-## 28.1 Graph Fundamentals
+## 22.1 Graph Fundamentals
 
 ### Graph Definition
 
@@ -78,7 +78,7 @@ public:
 };
 ```
 
-## 28.2 Graph Traversals
+## 22.2 Graph Traversals
 
 ### Depth-First Search (DFS)
 
@@ -159,7 +159,7 @@ void bfs(const vector<vector<int>>& adj, int start) {
 - Web crawling
 - Social network analysis
 
-## 28.3 Shortest Path Algorithms
+## 22.3 Shortest Path Algorithms
 
 ### Dijkstra's Algorithm
 
@@ -259,7 +259,7 @@ vector<vector<int>> floydWarshall(vector<vector<int>>& dist) {
 | Bellman-Ford | Weighted, negative edges | O(V × E) | Yes |
 | Floyd-Warshall | All-pairs shortest path | O(V³) | Yes |
 
-## 28.4 Minimum Spanning Tree
+## 22.4 Minimum Spanning Tree
 
 ### Kruskal's Algorithm
 
@@ -352,7 +352,7 @@ int prim(const vector<vector<pair<int,int>>>& graph) {
 // Time: O((V + E) log V), Space: O(V)
 ```
 
-## 28.5 Topological Sort
+## 22.5 Topological Sort
 
 Ordering of vertices in a DAG such that for every edge (u, v), u comes before v.
 
@@ -419,7 +419,7 @@ vector<int> topologicalSortDFS(const vector<vector<int>>& adj) {
 }
 ```
 
-## 28.6 Cycle Detection
+## 22.6 Cycle Detection
 
 ### Undirected Graph
 
@@ -478,7 +478,7 @@ bool hasCycleDirected(const vector<vector<int>>& adj) {
 }
 ```
 
-## 28.7 Strongly Connected Components
+## 22.7 Strongly Connected Components
 
 Tarjan's Algorithm for finding SCCs in directed graphs.
 
@@ -525,7 +525,7 @@ vector<vector<int>> findSCC(const vector<vector<int>>& adj) {
 }
 ```
 
-## 28.8 Common Graph Problems
+## 22.8 Common Graph Problems
 
 ### Number of Islands
 
@@ -588,7 +588,7 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 }
 ```
 
-## 28.9 Summary
+## 22.9 Summary
 
 ### Algorithm Selection Guide
 
@@ -625,4 +625,4 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 5. **Union-Find** for connectivity and MST problems
 6. **Topological sort** for dependency resolution
 
-[�?Previous: Hash Tables](25-hash-tables.md) | [Return to Index](README.md)
+[�?Previous: Hash Tables](25-hash-tables.md) | [Return to Index](README.md)

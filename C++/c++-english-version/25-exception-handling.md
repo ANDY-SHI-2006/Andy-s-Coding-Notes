@@ -1,10 +1,10 @@
-[�?Previous: Data Structures](14-data-structures.md) | [Next: Smart Pointers →](16-smart-pointers.md)
+[← Previous: Templates and Generics](24-templates-and-generics.md) | [Next: Smart Pointers →](26-smart-pointers.md)
 
-# 17 Exception Handling
+# 25 Exception Handling
 
 Exception handling is a mechanism for dealing with runtime errors in a structured way. It allows separating error-handling code from normal program logic.
 
-## 17.1 Why Exceptions?
+## 25.1 Why Exceptions?
 
 Traditional error handling uses return codes:
 ```cpp
@@ -25,7 +25,7 @@ if (result == ERROR_CODE) {
 - Separates error handling from normal logic
 - Automatically unwinds the stack to find handlers
 
-## 17.2 try/catch/throw Basics
+## 25.2 try/catch/throw Basics
 
 ### Throwing Exceptions
 
@@ -69,7 +69,7 @@ try {
 }
 ```
 
-## 17.3 Standard Exception Classes
+## 25.3 Standard Exception Classes
 
 C++ provides a hierarchy of exception classes in `<stdexcept>`:
 
@@ -96,7 +96,7 @@ try {
 }
 ```
 
-## 17.4 noexcept Specifier
+## 25.4 noexcept Specifier
 
 Use `noexcept` to indicate a function doesn't throw:
 ```cpp
@@ -112,7 +112,7 @@ void func() noexcept(noexcept(T()));    // noexcept if T() is noexcept
 - Documents function behavior
 - Required for some standard library operations
 
-## 17.5 Exception Safety
+## 25.5 Exception Safety
 
 ### Basic Guarantee
 - Program remains in a valid state
@@ -143,7 +143,7 @@ public:
 };
 ```
 
-## 17.6 Best Practices
+## 25.6 Best Practices
 
 1. **Throw by value, catch by reference:**
    ```cpp
@@ -172,7 +172,7 @@ public:
    void push_back(const T& value);
    ```
 
-## 17.7 Summary
+## 25.7 Summary
 
 | Feature | Purpose |
 |---------|---------|
@@ -184,4 +184,4 @@ public:
 
 > **Modern C++**: Use exceptions for error handling, but prefer RAII (smart pointers, etc.) to avoid needing explicit cleanup in catch blocks.
 
-[�?Previous: Data Structures](14-data-structures.md) | [Next: Smart Pointers →](16-smart-pointers.md)
+[�?Previous: Data Structures](14-data-structures.md) | [Next: Smart Pointers →](16-smart-pointers.md)

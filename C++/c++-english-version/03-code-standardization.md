@@ -1,4 +1,4 @@
-[←Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Definitions, Declarations and Statements →](04-variable-basics.md)
+[← Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Variable Basics →](04-variable-basics.md)
 
 # 3 Code Standardization
 

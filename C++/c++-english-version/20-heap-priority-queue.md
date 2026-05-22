@@ -1,10 +1,10 @@
-[‚Ü?Previous: Trees](23-trees.md) | [Next: Hash Tables ‚Üí](25-hash-tables.md)
+[‚Üê Previous: Trees](19-trees.md) | [Next: Hash Tables ‚Üí](21-hash-tables.md)
 
-# 26 Heap and Priority Queue
+# 20 Heap and Priority Queue
 
 A heap is a specialized tree-based data structure that satisfies the heap property. It is commonly used to implement priority queues and efficient sorting algorithms.
 
-## 26.1 What is a Heap?
+## 20.1 What is a Heap?
 
 A heap is a **complete binary tree** where:
 - **Max Heap**: Parent is greater than or equal to children
@@ -30,7 +30,7 @@ Heaps are efficiently stored as arrays without explicit pointers:
 | i | Current node |
 | 2i + 1 | Left child |
 | 2i + 2 | Right child |
-| ‚å?i-1)/2‚å?| Parent |
+| ÔøΩ?i-1)/2ÔøΩ?| Parent |
 
 ```cpp
 // For node at index i:
@@ -39,7 +39,7 @@ int left(int i) { return 2 * i + 1; }
 int right(int i) { return 2 * i + 2; }
 ```
 
-## 26.2 Max Heap Implementation
+## 20.2 Max Heap Implementation
 
 ```cpp
 class MaxHeap {
@@ -105,7 +105,7 @@ public:
 };
 ```
 
-## 26.3 Build Heap from Array
+## 20.3 Build Heap from Array
 
 ### Naive Approach: O(n log n)
 
@@ -142,7 +142,7 @@ void buildHeap(vector<int>& arr) {
 }
 ```
 
-## 26.4 Heap Sort
+## 20.4 Heap Sort
 
 ```cpp
 void heapSort(vector<int>& arr) {
@@ -166,7 +166,7 @@ void heapSort(vector<int>& arr) {
 | Space | O(1) - in-place |
 | Stable | No |
 
-## 26.5 Priority Queue
+## 20.5 Priority Queue
 
 A priority queue is an abstract data type where each element has a priority. Highest priority element is served first.
 
@@ -258,7 +258,7 @@ public:
 };
 ```
 
-## 26.6 Heap Operations Complexity
+## 20.6 Heap Operations Complexity
 
 | Operation | Time | Description |
 |-----------|------|-------------|
@@ -268,7 +268,7 @@ public:
 | Build Heap | O(n) | Heapify all non-leaves |
 | Heap Sort | O(n log n) | n extractions |
 
-## 26.7 Applications
+## 20.7 Applications
 
 ### Top K Elements
 
@@ -376,7 +376,7 @@ vector<int> dijkstra(vector<vector<pair<int,int>>>& graph, int start) {
 }
 ```
 
-## 26.8 Variations
+## 20.8 Variations
 
 ### Double-Ended Priority Queue
 
@@ -491,7 +491,7 @@ private:
 };
 ```
 
-## 26.9 Summary
+## 20.9 Summary
 
 ### Key Points
 
@@ -518,4 +518,4 @@ private:
 - **Data compression**: Huffman coding
 - **External sorting**: k-way merge
 
-[‚Ü?Previous: Trees](23-trees.md) | [Next: Hash Tables ‚Üí](25-hash-tables.md)
+[ÔøΩ?Previous: Trees](23-trees.md) | [Next: Hash Tables ‚Üí](25-hash-tables.md)

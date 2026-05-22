@@ -1,10 +1,10 @@
-[← Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis →](20-algorithm-analysis.md)
+[← Previous: Data Structures](14-data-structures.md) | [Next: Algorithm Analysis →](16-algorithm-analysis.md)
 
-# 21 Queue ADT
+# 15 Queue ADT
 
 A **queue** is a linear data structure that follows the **First-In-First-Out (FIFO)** principle. Unlike stacks where the last element is removed first, queues remove the oldest element first—similar to a line of people waiting for service.
 
-## 21.1 Queue Concept and Real-World Analogy
+## 15.1 Queue Concept and Real-World Analogy
 
 ### What is a Queue?
 
@@ -48,7 +48,7 @@ Step 6: dequeue() → returns 20
 
 > **Note**: Unlike stacks, queues process elements in the order they arrive—essential for fair scheduling and breadth-first traversal.
 
-## 21.2 Queue ADT Specification
+## 15.2 Queue ADT Specification
 
 ### C++ Interface Design
 
@@ -87,7 +87,7 @@ public:
 - Use exceptions for underflow/overflow conditions
 - Template-based for type-generic implementation
 
-## 21.3 Array-Based Implementation
+## 15.3 Array-Based Implementation
 
 ### Basic Array Queue
 
@@ -209,7 +209,7 @@ After enqueue(60):  [ 60 | 20 | 30 | 40 | 50 ]
                     front=1, rear=0  (wrapped around!)
 ```
 
-## 21.4 Linked List-Based Implementation
+## 15.4 Linked List-Based Implementation
 
 ### Node Structure
 
@@ -364,7 +364,7 @@ public:
 - Enqueue/dequeue are both O(1)
 - No special `nullptr` checks for `rearNode` in the single-element case (the circle handles it naturally)
 
-## 21.5 STL Queue Container Adaptor
+## 15.5 STL Queue Container Adaptor
 
 ### Usage
 
@@ -407,7 +407,7 @@ if (!q1.empty()) {
 
 **Important:** `pop()` returns void—use `front()` first to get the value!
 
-## 21.6 Queue Applications
+## 15.6 Queue Applications
 
 ### Application 1: Breadth-First Search (BFS)
 
@@ -608,7 +608,7 @@ Both produce the same sequence, confirming the palindrome.
 
 > **Note:** This is an educational demonstration of LIFO vs FIFO. In practice, a two-pointer approach is more space-efficient: compare `text[i]` with `text[n-1-i]`.
 
-## 21.7 Queue vs Stack Comparison
+## 15.7 Queue vs Stack Comparison
 
 | Feature | Stack (LIFO) | Queue (FIFO) |
 |---------|--------------|--------------|
@@ -618,7 +618,7 @@ Both produce the same sequence, confirming the palindrome.
 | **Real-world** | Stack of plates | Line of people |
 | **Implementation** | Array/Linked List | Circular Array/Linked List |
 
-## 21.8 Best Practices and Common Pitfalls
+## 15.8 Best Practices and Common Pitfalls
 
 ### Best Practices
 
@@ -649,7 +649,7 @@ Both produce the same sequence, confirming the palindrome.
 | **Not Using Circular Buffer** | Array implementation is O(n) | Use modulo arithmetic |
 | **Losing Rear Pointer** | Linked list enqueue is O(n) | Maintain both front and rear pointers |
 
-## 21.9 Summary
+## 15.9 Summary
 
 **Key Concepts:**
 - Queue is a FIFO data structure

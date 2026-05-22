@@ -1,12 +1,12 @@
-[�?Previous: Advanced Topics](12-advanced-topics.md) | [Next: Data Structures →](14-data-structures.md)
+[← Previous: Graph Algorithms](22-graph-algorithms.md) | [Next: Templates and Generics →](24-templates-and-generics.md)
 
-# 15 Modern C++ Variable Features
+# 23 Modern C++ Variable Features
 
 This chapter covers advanced C++ variable features including type deduction, structured binding, and attributes.
 
-## 15.1 Type Deduction and Aliases
+## 23.1 Type Deduction and Aliases
 
-### 15.1.1 auto (Type Deduction, C++11)
+### 23.1.1 auto (Type Deduction, C++11)
 
 `auto` lets the compiler infer the variable type from the initializer.
 
@@ -35,9 +35,9 @@ auto func = [](int x) { return x * x; };
 
 **auto Limitations:**
 - Must initialize: `auto x;` is an error!
-- Prefer `=` over braces: `auto x = 5;` �? `auto x{5};` may have surprises
+- Prefer `=` over braces: `auto x = 5;` �? `auto x{5};` may have surprises
 
-### 15.1.2 decltype (C++11)
+### 23.1.2 decltype (C++11)
 
 `decltype` queries the compile-time type of an expression. Unlike `auto`, it preserves cv-qualifiers (const/volatile) and references.
 
@@ -112,7 +112,7 @@ decltype(auto) multiply(T t, U u) {
 - Metaprogramming and type traits
 - Forwarding functions
 
-### 15.1.3 Type Aliases
+### 23.1.3 Type Aliases
 
 Type aliases create new names for existing types.
 
@@ -131,11 +131,11 @@ using Callback = void(*)(int);       // Clearer syntax
 ```
 
 **Why use type aliases?**
-- **Simplify long names**: `std::map<std::string, std::vector<int>>` �?`StringToIntVectorMap`
+- **Simplify long names**: `std::map<std::string, std::vector<int>>` �?`StringToIntVectorMap`
 - **Platform independence**: `using int32 = int;` can change to `int32_t`
 - **Easy to modify**: Change alias definition, all uses update
 
-### 15.1.4 Structured Binding (C++17)
+### 23.1.4 Structured Binding (C++17)
 
 Structured binding allows you to unpack structured types (arrays, structs, pairs, tuples) into individual named variables.
 
@@ -233,11 +233,11 @@ if (auto [it, inserted] = data.insert(key); inserted) {
 - Number of bindings must match number of elements
 - Cannot nest structured binding directly
 
-## 15.2 Variable Attributes (C++17)
+## 23.2 Variable Attributes (C++17)
 
 C++17 introduces **attributes** that provide additional information to the compiler about how variables should be handled. Attributes are enclosed in double square brackets `[[...]]`.
 
-### 15.2.1 [[maybe_unused]]
+### 23.2.1 [[maybe_unused]]
 
 Suppresses compiler warnings about unused variables. Useful for:
 - Function parameters that must exist but aren't used
@@ -271,7 +271,7 @@ With `[[maybe_unused]]`:
 void func([[maybe_unused]] int x) { }  // No warning
 ```
 
-### 15.2.2 [[nodiscard]]
+### 23.2.2 [[nodiscard]]
 
 Warns if the return value of a function is discarded. Applied to:
 - Functions where ignoring the result is likely a bug
@@ -282,8 +282,8 @@ Warns if the return value of a function is discarded. Applied to:
 [[nodiscard]] int* allocateBuffer(size_t size);
 
 void example() {
-    allocateBuffer(100);        // �?WARNING: ignoring nodiscard return value
-    auto ptr = allocateBuffer(100);  // �?OK: using the result
+    allocateBuffer(100);        // �?WARNING: ignoring nodiscard return value
+    auto ptr = allocateBuffer(100);  // �?OK: using the result
     delete[] ptr;
 }
 ```
@@ -300,7 +300,7 @@ struct [[nodiscard]] ErrorCode {
 ErrorCode openFile(const char* path);  // Caller must check result
 
 void test() {
-    openFile("data.txt");       // �?WARNING
+    openFile("data.txt");       // �?WARNING
     if (auto err = openFile("data.txt"); !err.success()) {
         // handle error
     }
@@ -311,7 +311,7 @@ void test() {
 - `std::unique_ptr::release()` is `[[nodiscard]]` in C++20
 - Many math and allocation functions
 
-### 15.2.3 [[deprecated]]
+### 23.2.3 [[deprecated]]
 
 Marks variables or types as deprecated, generating warnings when used.
 
@@ -325,7 +325,7 @@ void example() {
 }
 ```
 
-### 15.2.4 When to Use Attributes
+### 23.2.4 When to Use Attributes
 
 | Attribute | Use When | Example |
 |-----------|----------|---------|
@@ -339,9 +339,9 @@ void example() {
 - Safer refactoring and API evolution
 - Reduces unnecessary warnings
 
-## 15.3 Summary and Best Practices
+## 23.3 Summary and Best Practices
 
-### 15.3.1 Key Takeaways
+### 23.3.1 Key Takeaways
 
 1. **Declaration vs Definition**: Declaration informs, definition creates and allocates
 2. **Linkage**: Control visibility across translation units (external/internal/none)
@@ -356,7 +356,7 @@ void example() {
 11. **Structured Binding**: Unpack tuples/pairs/structs with `auto [a, b] = ...` (C++17)
 12. **Attributes**: Use `[[maybe_unused]]` and `[[nodiscard]]` appropriately
 
-### 15.3.2 Quick Reference
+### 23.3.2 Quick Reference
 
 | Scenario | Recommended |
 |----------|-------------|
@@ -375,19 +375,19 @@ void example() {
 | Unused parameter | `[[maybe_unused]] int x` |
 | Must-use return value | `[[nodiscard]] Type func();` |
 
-### 15.3.3 Decision Flowchart
+### 23.3.3 Decision Flowchart
 
 ```
 Variable Declaration
-        �?        ├── Global? ──�?Use inline (C++17) or extern + single definition
-        �?        ├── Local to function? ──�?Automatic storage (default)
-        �?        ├── Must persist across calls? ──�?static local
-        �?        ├── Large / runtime-sized? ──�?Dynamic + smart pointer
-        �?        ├── Constant value? ──�?constexpr (compile-time) or const (runtime)
-        �?        └── Type is complex? ──�?auto or structured binding (C++17)
+        �?        ├── Global? ──�?Use inline (C++17) or extern + single definition
+        �?        ├── Local to function? ──�?Automatic storage (default)
+        �?        ├── Must persist across calls? ──�?static local
+        �?        ├── Large / runtime-sized? ──�?Dynamic + smart pointer
+        �?        ├── Constant value? ──�?constexpr (compile-time) or const (runtime)
+        �?        └── Type is complex? ──�?auto or structured binding (C++17)
 ```
 
 
 
 
-[�?Previous: Advanced Topics](12-advanced-topics.md) | [Next: Data Structures →](14-data-structures.md)
+[�?Previous: Advanced Topics](12-advanced-topics.md) | [Next: Data Structures →](14-data-structures.md)

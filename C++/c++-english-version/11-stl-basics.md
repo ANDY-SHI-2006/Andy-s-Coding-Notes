@@ -1,4 +1,4 @@
-[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Advanced Topics →](12-advanced-topics.md)
+[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: 12 Pointers And Dynamic Memory →](12-pointers-and-dynamic-memory.md)
 
 # 11 STL
 

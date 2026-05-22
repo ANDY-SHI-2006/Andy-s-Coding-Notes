@@ -1,10 +1,10 @@
-[�?Previous: Lambda](17-lambda-expressions.md) | [Next: Queue ADT →](19-queue.md)
+[← Previous: Lambda Expressions](27-lambda-expressions.md) | [Next: Variable Advanced Topics →](29-variable-advanced-topics.md)
 
-# 20 Move Semantics
+# 28 Move Semantics
 
 Move semantics, introduced in C++11, allow resources to be transferred (moved) rather than copied, significantly improving performance for large objects.
 
-## 20.1 Copy vs Move
+## 28.1 Copy vs Move
 
 ### The Problem with Copy
 
@@ -36,7 +36,7 @@ Source: [data] -----> Destination
         (empty)      [data]
 ```
 
-## 20.2 Rvalue References
+## 28.2 Rvalue References
 
 Rvalue references (`&&`) enable move semantics:
 
@@ -67,7 +67,7 @@ int&& ref4 = x;         // ERROR: can't bind rvalue ref to lvalue
 int&& ref5 = std::move(x);  // OK: explicitly convert to rvalue
 ```
 
-## 20.3 move() and forward()
+## 28.3 move() and forward()
 
 ### std::move
 
@@ -99,7 +99,7 @@ wrapper(x);           // foo gets lvalue
 wrapper(20);          // foo gets rvalue
 ```
 
-## 20.4 Rule of Five
+## 28.4 Rule of Five
 
 If your class manages resources, you should implement:
 
@@ -150,7 +150,7 @@ public:
 };
 ```
 
-## 20.5 Performance Benefits
+## 28.5 Performance Benefits
 
 ### Before Move (C++98)
 ```cpp
@@ -180,7 +180,7 @@ for (int i = 0; i < 1000; ++i) {
 | Copy vector | O(n) |
 | Move vector | O(1) |
 
-## 20.6 Best Practices
+## 28.6 Best Practices
 
 1. **Use `std::move` on rvalue references:**
    ```cpp
@@ -216,7 +216,7 @@ for (int i = 0; i < 1000; ++i) {
    v1.push_back(42);  // DANGER: v1 is empty!
    ```
 
-## 20.7 Summary
+## 28.7 Summary
 
 | Concept | Purpose |
 |---------|---------|
@@ -230,4 +230,4 @@ for (int i = 0; i < 1000; ++i) {
 
 > **Modern C++**: Use move semantics to avoid unnecessary copies. Most of the time, it happens automatically—just write natural code and let the compiler optimize!
 
-[�?Previous: Lambda](17-lambda-expressions.md) | [Next: Queue ADT →](19-queue.md)
+[�?Previous: Lambda](17-lambda-expressions.md) | [Next: Queue ADT →](19-queue.md)
