@@ -1,4 +1,4 @@
-[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Abstract Data Types →](13-abstract-data-types.md)
+[← Previous: STL Basics](11-stl-basics.md) | [Next: Abstract Data Types →](13-abstract-data-types.md)
 
 # 12 Pointers and Dynamic Memory
 

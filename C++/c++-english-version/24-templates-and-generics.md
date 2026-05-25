@@ -1,4 +1,4 @@
-[← Previous: Graph Algorithms](22-graph-algorithms.md) | [Next: Exception Handling →](25-exception-handling.md)
+[← Previous: Modern C++ Variable Features](23-modern-cpp-variables.md) | [Next: Exception Handling →](25-exception-handling.md)
 
 # 24 Templates and Generics
 
