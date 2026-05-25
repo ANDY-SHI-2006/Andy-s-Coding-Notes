@@ -46,6 +46,19 @@ A comprehensive C++ programming course covering single-file fundamentals, data s
 33. [Regular Expressions](33-regular-expressions.md)
 34. [C++20 Features](34-cpp20-features.md)
 
+### Phase 5: Advanced Algorithms & Competitive Programming Fundamentals
+35. [Algorithmic Paradigms](35-algorithmic-paradigms.md) — Enumeration, simulation, greedy & divide and conquer
+36. [Backtracking & Search Optimization](36-backtracking-search-optimization.md) — DFS, pruning, memoization
+37. [Dynamic Programming I](37-dynamic-programming-I.md) — Linear DP, LIS & LCS
+38. [Dynamic Programming II](38-dynamic-programming-II.md) — Knapsack, interval DP & tree DP
+39. [High-Precision Arithmetic](39-high-precision-arithmetic.md) — Big integers with arrays
+40. [Number Theory Essentials](40-number-theory-essentials.md) — Primes, GCD, fast power & modular inverse
+41. [Union-Find & Minimum Spanning Tree](41-union-find-mst.md) — Disjoint sets, Kruskal & Prim
+42. [Shortest Paths & Topological Sort](42-shortest-paths-topological-sort.md) — Dijkstra, Floyd-Warshall & Kahn's algorithm
+43. [String Algorithms](43-string-algorithms.md) — String hashing, Trie & KMP
+44. [Linear-Time Sorting & Selection](44-linear-time-sorting.md) — Counting sort, radix sort & QuickSelect
+45. [Combinatorics, Probability & Advanced Math](45-combinatorics-probability.md) — Permutations, expectations & competitive math *(Bonus)*
+
 ---
 
 ## Navigation
@@ -57,4 +70,5 @@ Each chapter contains navigation links at the top for easy browsing between sect
 - **Chapters 1-12**: Single-file programming fundamentals — everything you need to write complete C++ programs within one file.
 - **Chapters 13-22**: Data structures and algorithms — implementing ADTs and classic algorithms using C++.
 - **Chapters 23-28**: Modern C++ advanced features — templates, exceptions, smart pointers, lambdas, and move semantics.
-- **Chapters 29-32**: Engineering and multithreading — linkage, multi-file builds, advanced OOP, and concurrent programming.
+- **Chapters 29-34**: Engineering and multithreading — linkage, multi-file builds, advanced OOP, concurrent programming, and C++20.
+- **Chapters 35-45**: Advanced algorithms and competitive programming fundamentals — algorithmic paradigms, dynamic programming, graph theory, string algorithms, and mathematical foundations.

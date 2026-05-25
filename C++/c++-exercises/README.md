@@ -21,6 +21,8 @@ This folder contains practice exercises designed to reinforce the concepts cover
 | [05-phase2-algorithms](05-phase2-algorithms.md) | Chapters 16–22 | Complexity analysis, sorting, recursion, trees, heaps, hash tables, graphs |
 | [06-phase3-modern-cpp](06-phase3-modern-cpp.md) | Chapters 23–28 | Templates, exceptions, smart pointers, lambdas, move semantics |
 | [07-phase4-engineering](07-phase4-engineering.md) | Chapters 29–34 | Linkage, multi-file builds, multithreading, regex, C++20 |
+| [08-phase5-core](08-phase5-core-exercises.md) | Chapters 35–42 | Algorithmic paradigms, DP, graph theory, number theory |
+| [09-phase5-bonus](09-phase5-bonus-exercises.md) | Chapters 43–45 | String algorithms, linear-time sorting, combinatorics |
 | [project-student-management-system](project-student-management-system.md) | Cross-phase | A capstone project applying concepts from all phases |
 
 ## Answer Keys
@@ -36,6 +38,8 @@ Each exercise file has a corresponding solution file with standard answers, code
 | [05-phase2-algorithms](05-phase2-algorithms.md) | [05-phase2-algorithms-solutions](05-phase2-algorithms-solutions.md) |
 | [06-phase3-modern-cpp](06-phase3-modern-cpp.md) | [06-phase3-modern-cpp-solutions](06-phase3-modern-cpp-solutions.md) |
 | [07-phase4-engineering](07-phase4-engineering.md) | [07-phase4-engineering-solutions](07-phase4-engineering-solutions.md) |
+| [08-phase5-core](08-phase5-core-exercises.md) | [08-phase5-core-solutions](08-phase5-core-solutions.md) |
+| [09-phase5-bonus](09-phase5-bonus-exercises.md) | [09-phase5-bonus-solutions](09-phase5-bonus-solutions.md) |
 | [project-student-management-system](project-student-management-system.md) | [project-student-management-system-solutions](project-student-management-system-solutions.md) |
 
 ## Difficulty Labels
