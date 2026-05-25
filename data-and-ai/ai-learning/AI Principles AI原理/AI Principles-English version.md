@@ -1479,6 +1479,977 @@ train_transform = transforms.Compose([
 
 ---
 
+# 9 Diffusion Models: From DDPM to Latent Diffusion
+
+> **Source:** SCI 1003 Class 9, Dr. Chi Zhang @ Westlake AGI Lab  
+> Diffusion models are a family of generative models that learn to reverse a gradual noising process. This chapter covers the mathematical foundations of DDPM, the efficiency gains of Latent Diffusion Models, and the practical mechanism of Classifier-Free Guidance.
+
+## 9.1 What Are Diffusion Models?
+
+Diffusion models are inspired by **non-equilibrium thermodynamics**. They define a Markov chain of diffusion steps that slowly add random noise to data, then learn to reverse this process to construct desired data samples from noise.
+
+| Model Family | Year | Key Idea |
+|--------------|------|----------|
+| **Diffusion Probabilistic Models** | 2015 | Forward noising + reverse denoising as Markov chain |
+| **NCSN** (Noise-Conditioned Score Network) | 2019 | Learn score function (gradient of log data density) |
+| **DDPM** (Denoising Diffusion Probabilistic Models) | 2020 | Simplified training; predicts noise directly |
+
+> **Key Concept:** Diffusion models consist of two processes: a **forward diffusion process** that adds noise, and a **reverse diffusion process** that removes it. The model learns the reverse process.
+
+## 9.2 Forward Diffusion Process
+
+Given a data sample $x_0 \sim q(x)$, the forward process adds small amounts of Gaussian noise over $T$ steps, producing a sequence $x_1, x_2, ..., x_T$.
+
+**Step sizes are controlled by a variance schedule** $\{\beta_t \in (0,1)\}_{t=1}^T$:
+
+$$q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} \, x_{t-1}, \beta_t \mathbf{I})$$
+
+### 9.2.1 Closed-Form Expression
+
+A key insight: we can sample $x_t$ directly from $x_0$ without iterating through all intermediate steps. Define:
+
+$$\alpha_t = 1 - \beta_t, \quad \bar{\alpha}_t = \prod_{s=1}^t \alpha_s$$
+
+Then:
+
+$$q(x_t | x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} \, x_0, (1 - \bar{\alpha}_t) \mathbf{I})$$
+
+Or equivalently:
+
+$$x_t = \sqrt{\bar{\alpha}_t} \, x_0 + \sqrt{1 - \bar{\alpha}_t} \, \epsilon, \quad \text{where } \epsilon \sim \mathcal{N}(0, \mathbf{I})$$
+
+> **Key Point:** As $t \to \infty$, $x_T$ becomes pure isotropic Gaussian noise. The data sample gradually loses all distinguishable features.
+
+## 9.3 Reverse Diffusion Process
+
+If we could reverse the forward process and sample from $q(x_{t-1} | x_t)$, we could generate data from pure noise $x_T \sim \mathcal{N}(0, \mathbf{I})$.
+
+Unfortunately, $q(x_{t-1} | x_t)$ is intractable. We therefore learn a model $p_\theta$ to approximate these conditional probabilities:
+
+$$p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))$$
+
+### 9.3.1 The Training Objective
+
+DDPM simplifies the problem by training a neural network to **predict the noise** $\epsilon$ that was added:
+
+$$\mathcal{L}_{\text{DDPM}} = \mathbb{E}_{x_0, t, \epsilon} \left[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \right]$$
+
+Where:
+- $x_t$ is created via the forward process from clean data $x_0$
+- $t$ is sampled uniformly from $\{1, ..., T\}$
+- $\epsilon \sim \mathcal{N}(0, \mathbf{I})$ is the noise we want the model to predict
+
+> **Key Concept:** Instead of predicting the denoised image directly, the model predicts the **noise residual**. This is mathematically equivalent but empirically more stable.
+
+### 9.3.2 Sampling (Reverse Process)
+
+At inference time, we start from $x_T \sim \mathcal{N}(0, \mathbf{I})$ and iteratively denoise:
+
+$$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \, \epsilon_\theta(x_t, t) \right) + \sigma_t z$$
+
+Where $z \sim \mathcal{N}(0, \mathbf{I})$ (only when $t > 1$).
+
+## 9.4 Denoising Diffusion Probabilistic Models (DDPM)
+
+### 9.4.1 Noise Schedule
+
+A common choice is a **linear schedule**:
+
+$$\beta_t = \text{linspace}(\beta_{\text{start}}, \beta_{\text{end}}, T)$$
+
+| Parameter | Typical Value | Description |
+|-----------|---------------|-------------|
+| $T$ | 1000-2000 | Number of diffusion steps |
+| $\beta_{\text{start}}$ | $10^{-4}$ | Initial noise level |
+| $\beta_{\text{end}}$ | 0.02 | Final noise level |
+
+### 9.4.2 Precomputed Terms
+
+For efficient training and sampling, precompute:
+
+```
+alphas      = 1.0 - betas
+alphas_cumprod = cumprod(alphas)
+sqrt_alphas_cumprod = sqrt(alphas_cumprod)
+sqrt_one_minus_alphas_cumprod = sqrt(1 - alphas_cumprod)
+```
+
+## 9.5 Latent Diffusion Model (LDM)
+
+> **Core Thesis:** Spend diffusion capacity on semantics, not on nearly invisible pixel detail.
+
+### 9.5.1 Motivation
+
+Pixel-space diffusion is expensive: every bit of the image participates in the diffusion process, yet most bits contribute only to perceptual details. The semantic and conceptual composition remains stable even after aggressive compression.
+
+**LDM = DDPM + VAE**
+
+| Stage | Operation | Purpose |
+|-------|-----------|---------|
+| **Stage A: Autoencoder** | Encode pixels → latents; Decode latents → pixels | Remove perceptual redundancy once |
+| **Stage B: Diffusion** | Predict noise in latent space | Focus on semantic composition |
+| **Stage C: Conditioning** | Cross-attention with text/boxes/maps | Control generation flexibly |
+| **Stage D: Decode** | VAE decoder reconstructs pixels | Final image output |
+
+### 9.5.2 Architecture
+
+```
+Pixels x          Condition y (text / boxes / maps)
+    │                      │
+    ▼                      ▼
+Encoder E          Condition encoder τ_θ
+    │                      │
+    ▼                      ▼
+Latent z  ──────→  U-Net denoiser ←── Cross-Attention (Q from UNet, K/V from τ_θ)
+    │                      │
+    ▼                      ▼
+Decoder D          Denoised latent z_0
+    │
+    ▼
+Reconstructed image
+```
+
+**Training objective in latent space:**
+
+$$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{z_0, t, \epsilon, y} \left[ \| \epsilon - \epsilon_\theta(z_t, t, \tau_\theta(y)) \|^2 \right]$$
+
+Where $z_0 = E(x)$ is the encoded latent.
+
+### 9.5.3 Compression Factor
+
+The paper studies downsampling factors $f \in \{2, 4, 8, 16, 32\}$:
+
+| Factor | Quality | Speed | Verdict |
+|--------|---------|-------|---------|
+| $f = 1$–$2$ | Excellent | Slow | Too expensive |
+| $f = 4$–$8$ | Best balance | Fast | **Sweet spot** |
+| $f = 32$ | Degraded | Fastest | Too lossy |
+
+> **Key Point:** A 38-point FID gap separates LDM-1 (no compression) from LDM-8 after 2M training steps. Moderate compression is the sweet spot.
+
+### 9.5.4 Cross-Attention for Conditioning
+
+Cross-attention layers inside the U-Net inject text (or other modalities) into the generation process:
+
+- **Query (Q):** from U-Net image features
+- **Key (K) / Value (V):** from condition encoder $\tau_\theta(y)$
+
+This generalizes beyond text-to-image: boxes, semantic maps, and depth images can all be encoded as conditioning tokens.
+
+## 9.6 Classifier-Free Guidance (CFG)
+
+### 9.6.1 The Problem
+
+A direct conditional model gives one answer per prompt. There is no knob to trade off **fidelity** (how closely the image matches the prompt) against **diversity** (how varied the outputs are).
+
+### 9.6.2 The Idea
+
+Train **one denoiser** to work in two modes: with the condition and without it. At test time, compare the two outputs and push the sample toward the prompt.
+
+**Training rule:**
+
+```
+c_train = c            with probability 1 - p_uncond
+c_train = empty        with probability p_uncond
+loss = || ε_θ(z, c_train) - ε ||²
+```
+
+> **Key Concept:** During training, randomly drop the condition (replace with empty/null) some fraction of the time. The same model learns both conditional and unconditional denoising.
+
+### 9.6.3 Sampling Rule
+
+At each denoising step, compute both the conditional and unconditional noise estimates, then extrapolate:
+
+$$\epsilon_{\text{guided}} = (1 + w) \cdot \epsilon_{\text{cond}} - w \cdot \epsilon_{\text{uncond}}$$
+
+Or equivalently:
+
+$$\epsilon_{\text{guided}} = \epsilon_{\text{uncond}} + s \cdot (\epsilon_{\text{cond}} - \epsilon_{\text{uncond}})$$
+
+Where:
+- $w$ = extra guidance strength
+- $s = 1 + w$ (common implementation)
+
+| Guidance Scale | Effect |
+|----------------|--------|
+| $s = 1$ ($w = 0$) | No guidance; diverse but less faithful |
+| $s = 7$–$8$ | Typical default; good balance |
+| $s > 15$ | Very faithful but often oversaturated/artifacted |
+
+> **Best Practice:** CFG is the standard mechanism for controlling prompt adherence in Stable Diffusion and related models. It requires no additional model training at inference time.
+
+## 9.7 Practice: DDPM Toy Example
+
+The course provides a minimal DDPM implementation on the 2D Swiss Roll dataset. The code demonstrates all core concepts: forward noising, noise prediction training, and iterative sampling.
+
+```python
+import math
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from sklearn.datasets import make_swiss_roll
+
+# ---------- 1. Data ----------
+def sample_swiss_roll(n_samples=1000, noise=0.25):
+    data, _ = make_swiss_roll(n_samples, noise=noise)
+    data = data[:, [0, 2]]  # keep x and z
+    stdev = np.sqrt((39 * math.pi ** 2 / 8 - 4) + np.array([[-1, 1]]) * 0.25 + noise ** 2)
+    data = data / stdev
+    return torch.tensor(data, dtype=torch.float32)
+
+# ---------- 2. Model ----------
+class MLP(nn.Module):
+    def __init__(self, dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(dim + 1, 128), nn.ReLU(),
+            nn.Linear(128, 128), nn.ReLU(),
+            nn.Linear(128, dim),
+        )
+
+    def forward(self, x, t):
+        t = t.unsqueeze(1) / 1000.0
+        x_input = torch.cat([x, t], dim=1)
+        return self.net(x_input)
+
+# ---------- 3. Diffusion Schedule ----------
+T = 2000
+betas = torch.linspace(1e-4, 0.02, T)
+alphas = 1.0 - betas
+alphas_cumprod = torch.cumprod(alphas, dim=0)
+sqrt_alphas_cumprod = torch.sqrt(alphas_cumprod)
+sqrt_one_minus_alphas_cumprod = torch.sqrt(1 - alphas_cumprod)
+
+# ---------- 4. Forward Process ----------
+def q_sample(x_start, t, noise=None):
+    if noise is None:
+        noise = torch.randn_like(x_start)
+    return (sqrt_alphas_cumprod[t].view(-1, 1) * x_start
+            + sqrt_one_minus_alphas_cumprod[t].view(-1, 1) * noise)
+
+# ---------- 5. Training Loop ----------
+def train(model, data, epochs=1000, batch_size=128, lr=1e-3):
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    n = len(data)
+    for epoch in range(epochs):
+        idx = torch.randperm(n)
+        data_shuffled = data[idx]
+        for i in range(0, n, batch_size):
+            x = data_shuffled[i:i + batch_size]
+            t = torch.randint(0, T, (x.size(0),))
+            noise = torch.randn_like(x)
+            x_t = q_sample(x, t, noise)
+            pred = model(x_t, t.float())
+            loss = F.mse_loss(pred, noise)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        if (epoch + 1) % 100 == 0:
+            print(f"Epoch {epoch + 1}: loss = {loss.item():.4f}")
+
+# ---------- 6. Sampling (Reverse Process) ----------
+@torch.no_grad()
+def p_sample_loop(model, shape):
+    x = torch.randn(shape)
+    for t in reversed(range(T)):
+        t_batch = torch.full((shape[0],), t, dtype=torch.float)
+        noise_pred = model(x, t_batch)
+        beta_t = betas[t]
+        sqrt_one_minus_alpha = sqrt_one_minus_alphas_cumprod[t]
+        sqrt_recip_alpha = 1.0 / torch.sqrt(alphas[t])
+        x = sqrt_recip_alpha * (x - beta_t / sqrt_one_minus_alpha * noise_pred)
+        if t > 0:
+            x += torch.sqrt(beta_t) * torch.randn_like(x)
+    return x
+
+# ---------- 7. Run ----------
+if __name__ == "__main__":
+    torch.manual_seed(0)
+    data = sample_swiss_roll(1000, noise=0.25)
+    model = MLP(dim=2)
+    train(model, data, epochs=5000)
+    samples = p_sample_loop(model, (1000, 2))
+    # Compare real vs generated with matplotlib
+```
+
+> **Key Concept:** This toy example shows that diffusion works on any data modality, not just images. The same mathematics applies to 2D points, images, audio, or protein structures.
+
+## 9.8 Timeline of Diffusion-Based Image Generation
+
+| Year | Milestone | Significance |
+|------|-----------|--------------|
+| 2015.06 | Diffusion Probabilistic Models (Sohl-Dickstein et al.) | First diffusion framework |
+| 2019 | NCSN (Song & Ermon) | Score-based perspective |
+| 2020.06 | DDPM (Ho et al.) | Simplified training; high-quality samples |
+| 2021.12 | LDM (Rombach et al.) | Latent space diffusion; text conditioning |
+| 2022.08 | Stable Diffusion v1 | Open-source text-to-image |
+| 2022.10 | SD v1.5 | Improved quality |
+| 2023.06 | SDXL | Larger U-Net; better text rendering |
+| 2024.03 | SD3 | New architecture (MMDiT) |
+
+---
+
+# 10 LLM Adaptation, Multimodal AI, and Controllable Generation
+
+> **Source:** SCI 1003 Class 10, Dr. Chi Zhang @ Westlake AGI Lab  
+> This chapter bridges three domains: adapting LLMs through instruction tuning, building multimodal assistants, and controlling image generation with diffusion models.
+
+## 10.1 LLM Foundations: Pre-training and Adaptation
+
+### 10.1.1 Pre-training: Next-Token Prediction
+
+Pre-training is **self-supervised**: no human labels are required. The training target is the next token already present in the text.
+
+$$P(w_1, ..., w_n) = \prod_{t} P(w_t \mid w_1, ..., w_{t-1})$$
+
+**Common corpora:**
+
+| Source | Content |
+|--------|---------|
+| Wikipedia | Encyclopedic articles |
+| BookCorpus | Published books |
+| Common Crawl | Web pages |
+| GitHub | Code repositories |
+
+> **Key Concept:** Pre-training teaches **fluent continuation**, not task behavior. Instruction tuning later bridges this gap.
+
+### 10.1.2 Supervised Fine-Tuning (SFT)
+
+After pre-training, the model is fine-tuned on labeled (input, output) pairs:
+
+| Stage | Data | Goal |
+|-------|------|------|
+| **Pre-training** | Raw text | Learn grammar, semantics, world knowledge |
+| **SFT** | (instruction, response) pairs | Teach task-following behavior |
+
+```
+input x  →  model  →  prediction
+                    ↓
+                  target y
+                    ↓
+            minimize loss(prediction, y)
+```
+
+> **Key Point:** The full pipeline is: Pre-training → SFT → RLHF (optional). Each stage builds on the previous without replacing it.
+
+## 10.2 Visual Instruction Tuning: LLaVA
+
+### 10.2.1 The Bottleneck
+
+Text-only LLMs benefit from instruction tuning, but multimodal tasks lacked scalable vision-language instruction datasets. The key question: **how do we cheaply create instruction-following data for images?**
+
+| What Existed | What Was Missing |
+|--------------|------------------|
+| Images paired with captions | Multi-turn instruction-following data |
+| Vision models specialized by task | Rich answers beyond one-sentence captions |
+| Systems that describe what they see | Benchmarks for useful assistant behavior |
+
+### 10.2.2 Data Engine: GPT-4 as a Teacher
+
+LLaVA reframes the shortage of multimodal instructions as a **data reformation problem**:
+
+```
+Existing corpora (captions + bounding boxes)
+        ↓
+Prompt GPT-4 with textual proxies of the image
+        ↓
+Generate: conversation · detailed description · complex reasoning
+        ↓
+Instruction-tune visual assistant
+```
+
+> **Key Point:** GPT-4 never sees the image itself during data generation; it sees **textual proxies** (captions + bounding boxes). This makes data synthesis cheaper and scalable, but makes caption quality absolutely central.
+
+**Dataset composition:**
+
+| Type | Size | Purpose |
+|------|------|---------|
+| Conversation | 58K | Multi-turn QA grounded in visible content |
+| Detailed description | 23K | Dense scene narration |
+| Complex reasoning | 77K | Logic beyond literal description |
+| **Total** | **158K** | Unique language-image instruction samples |
+
+### 10.2.3 Architecture
+
+```
+Image → CLIP ViT-L/14 → Linear Projector W → Vicuna LLM → Response
+         (vision encoder)   (H_v = W · Z_v)   (frozen)
+```
+
+A single projection matrix maps visual features into the same token space the LLM already knows how to process. This is the **minimum interface** needed to let a frozen LLM consume visual evidence.
+
+| Component | Role |
+|-----------|------|
+| **Vision Encoder** | CLIP ViT extracts image features |
+| **Linear Projector** | Maps visual tokens to language embedding space |
+| **LLM** | Frozen language model generates text |
+
+> **Key Concept:** The paper is architecture-light because it wants the **data contribution** to be legible. Simple interfaces are enough when the data is right.
+
+### 10.2.4 Two-Stage Training
+
+| Stage | What Is Trained | Data | Goal |
+|-------|----------------|------|------|
+| **1. Feature Alignment** | Only projector W | 595K image-text pairs (filtered CC3M) | Learn a compatible visual tokenizer |
+| **2. End-to-End Fine-Tuning** | W + LLM (Vicuna) | 158K visual instructions or ScienceQA | Learn assistant behavior |
+
+**Training recipe (modest by modern standards):**
+
+| Stage | Hardware | Time | Epochs | LR | Batch | Trainable Params |
+|-------|----------|------|--------|-----|-------|------------------|
+| Alignment | 8× A100 | 4h | 1 | 2e-3 | 128 | W only |
+| LLaVA chat | 8× A100 | 10h | 3 | 2e-5 | 32 | W + Vicuna |
+
+Implementation details: Adam, no weight decay, cosine schedule, 3% warmup, FSDP, gradient checkpointing, BF16, TF32.
+
+> **Key Point:** Separating alignment from behavior learning keeps the architecture simple and makes the data contribution legible.
+
+### 10.2.5 Evaluation: GPT-4 as a Judge
+
+LLaVA changes the evaluation question from "what is in the image?" to "did the assistant answer the request well?"
+
+**LLaVA-Bench splits:**
+
+| Split | Content | Purpose |
+|-------|---------|---------|
+| **COCO** | 30 COCO images, 90 questions | Clean ablations |
+| **In-the-Wild** | 24 diverse images, 60 questions | Real generalization stress tests |
+
+**Scoring protocol:**
+```
+Image + question → LLaVA answer
+                        ↓
+              Reference answer (from text-only GPT-4)
+                        ↓
+                    GPT-4 judge
+                        ↓
+                   1–10 score
+```
+
+Score dimensions: helpfulness, relevance, accuracy, detail.
+
+**Results (In-the-Wild):**
+
+| Model | Score |
+|-------|-------|
+| OpenFlamingo | 19.1 |
+| BLIP-2 | 38.1 |
+| **LLaVA** | **67.3** |
+
+> **Key Result:** The gap is largest on complex reasoning (81.7 vs 32.9 for BLIP-2), showing that assistant alignment matters more than encoder size.
+
+### 10.2.6 Legacy and Follow-ups
+
+| Date | Model | Improvement |
+|------|-------|-------------|
+| Apr 2023 | Original LLaVA | Synthetic instruction data, simple connectors |
+| Oct 2023 | LLaVA-1.5 | Higher resolution, stronger vision backbone |
+| Jan 2024 | LLaVA-NeXT | Better reasoning, broader modalities |
+| Aug 2024 | LLaVA-OneVision | Unified image + video understanding |
+
+What persisted: synthetic instruction data, simple connectors, staged training, open release culture.
+
+## 10.3 Beyond LLaVA: StableLLaVA and ChartLlama
+
+### 10.3.1 StableLLaVA
+
+StableLLaVA enhances visual instruction tuning with **synthesized image-dialogue data**. It addresses data scarcity by generating higher-quality synthetic conversations with stronger visual grounding.
+
+### 10.3.2 ChartLlama
+
+ChartLlama is a multimodal LLM specialized for **chart understanding and generation**:
+- Reads bar charts, line charts, pie charts, and tables
+- Generates charts from natural language descriptions
+- Performs numerical reasoning over visual data
+
+## 10.4 Latent Diffusion and Stable Diffusion
+
+> For the mathematical foundations of DDPM and LDM, see **Chapter 9**.
+
+### 10.4.1 System-Level Context
+
+Stable Diffusion v1 is a latent diffusion model conditioned on CLIP text embeddings. It was trained on:
+- **LAION-2B-en**: 2 billion English image-text pairs
+- **LAION-Aesthetics v2**: Fine-tuning subset filtered for aesthetic quality (score ≥ 5)
+
+This operationalizes the LDM recipe into the text-to-image system that became culturally visible.
+
+### 10.4.2 Cross-Attention in Detail
+
+Inside the U-Net denoiser, cross-attention layers inject text conditioning:
+
+- **Q:** from UNet spatial features
+- **K, V:** from text encoder $\tau_\theta(y)$
+
+```
+Image features (UNet) ──Q──┐
+                            ├──→ Cross-Attention ──→ Conditioned features
+Text embeddings ──────K,V─┘
+```
+
+The original LDM paper used a BERT tokenizer and transformer conditioner. Stable Diffusion v1 switched to a **frozen CLIP ViT-L/14 text encoder**, but the cross-attention mechanism remained the same.
+
+## 10.5 Controllable Generation
+
+| Method | Mechanism | Use Case |
+|--------|-----------|----------|
+| **ControlNet** | Duplicate U-Net encoder layers, add zero-convolution adapters | Control composition with edge/pose/depth maps without retraining base model |
+| **IP-Adapter** | Decoupled cross-attention path for image prompts | Transfer style/content from reference images |
+
+> **Key Concept:** ControlNet and IP-Adapter add controllability **without modifying the base diffusion model**, making them lightweight and composable. Users can stack multiple ControlNets (e.g., pose + depth) for fine-grained control.
+
+## 10.6 Practice: ComfyUI Workflows
+
+ComfyUI represents image generation as a **node graph**. Each node performs one operation, and edges define data flow.
+
+### 10.6.1 The Six Core Nodes
+
+| # | Node | Function |
+|---|------|----------|
+| 1 | **Load Checkpoint** | Loads model (UNet + CLIP + VAE) |
+| 2 | **CLIP Text Encode** | Converts prompts into conditioning vectors |
+| 3 | **Empty Latent** | Sets canvas size |
+| 4 | **KSampler** | Runs the denoising loop |
+| 5 | **VAE Decode** | Converts latent back to pixels |
+| 6 | **Save Image** | Writes PNG file |
+
+### 10.6.2 KSampler Parameters
+
+| Parameter | Meaning | Typical Value |
+|-----------|---------|---------------|
+| **seed** | Reproducibility | fixed or random |
+| **steps** | Denoising iterations | 20–50 |
+| **cfg** | Prompt strength | 7–8 |
+| **sampler** | Trajectory algorithm | euler_a, dpmpp_2m |
+| **denoise** | Amount of change | 1.0 (full generation) |
+
+> **Key Concept:** Once these six nodes make sense, larger workflows (inpainting, img2img, ControlNet) are just additional nodes plugged into the same graph. The workflow file itself becomes a **reproducible recipe**.
+
+## 10.7 Takeaways
+
+1. **Data format changes behavior.** LLaVA's key insight was reformatting existing captions into instruction-following dialogues.
+2. **Alignment before instruction tuning is not optional.** Stage 1 (projector training) protects the LLM's pretrained knowledge.
+3. **Simple interfaces can be enough when the data is right.** A single linear projection matrix was sufficient.
+4. **Controllability comes from conditioning paths, not base model retraining.** ControlNet and IP-Adapter prove this.
+
+---
+
+# 11 Personalized Generation and Agentic AI
+
+> **Source:** SCI 1003 Class 11, Dr. Chi Zhang @ Westlake AGI Lab  
+> Part A covers how text-to-image systems learn new subjects, styles, or identities. Part B covers how language models become systems that act.
+
+---
+
+## Part A: Personalized Image Generation
+
+## 11.1 Motivation: Why Prompt Engineering Is Not Enough
+
+A pretrained model knows "dog," but not **your dog**. Generic prompts describe categories; they cannot upload a new identity by words alone.
+
+| Level | Example | Model Knowledge |
+|-------|---------|-----------------|
+| **Category** | "a dog" | Pretraining already knows it |
+| **Instance** | "my dog" | The model has never seen it |
+
+**Personalization** adds concept memory, then prompts can reuse it. The payoff is **compositional reuse**: one learned concept can enter new scenes, styles, and contexts.
+
+### 11.1.1 The Personalization Triangle
+
+Three competing goals:
+
+| Goal | Meaning | Tension |
+|------|---------|---------|
+| **Identity fidelity** | Looks like the target | Pushes toward overfitting |
+| **Editability** | Obeys new prompts | Pushes toward generality |
+| **Efficiency** | Few images, little compute | Constrains model capacity |
+
+> **Key Point:** Push one corner too hard and another usually pays. Every method makes a different trade-off.
+
+### 11.1.2 Method Taxonomy
+
+| Route | Mechanism | Strength | Weakness |
+|-------|-----------|----------|----------|
+| **Prompt-only** | No new weights | Zero cost | Weak for unseen concepts |
+| **Embedding tuning** | New token embedding | Tiny artifact | Limited capacity |
+| **Model adaptation** | Fine-tune or adapters | Best fidelity | Higher compute |
+| **Reference-conditioned** | Image encoder + control path | No training | Requires reference at inference |
+
+## 11.2 Textual Inversion
+
+Textual Inversion learns a **pseudo-word** for a concept.
+
+**Setup:**
+- Input: a few concept images
+- Output: one learned embedding $v^*$
+- Use the pseudo-word $S^*$ inside normal prompts
+
+### 11.2.1 Method
+
+```
+Prompt: "A photo of S*"
+          │
+          ▼
+    Tokenizer routes S* → v*
+          │
+          ▼
+    LDM (frozen) generates image
+```
+
+Only $v^*$ changes. The generator and text encoder stay frozen.
+
+**Objective:**
+
+$$v^* = \arg\min_v \mathbb{E}\left[ \| \epsilon - \epsilon_\theta(z_t, t, c_\theta(y_v)) \|^2 \right]$$
+
+Same denoising target as diffusion training, but only the pseudo-word embedding is trainable.
+
+### 11.2.2 Trade-offs
+
+| Advantages | Limitations |
+|------------|-------------|
+| Tiny artifact to store | One embedding has limited capacity |
+| Base model stays frozen | Hard subjects lose identity |
+| Pseudo-word composes with prompts | Editability and fidelity still trade off |
+
+> **Best Practice:** Use Textual Inversion for small concept shifts and lightweight teaching examples. It is elegant because it is small, and limited because it is small.
+
+## 11.3 DreamBooth
+
+DreamBooth turns a **rare token** into an instance handle.
+
+**Pattern:** "a [V] dog wearing sunglasses"
+
+### 11.3.1 Training
+
+| Step | Action |
+|------|--------|
+| **Input** | 3–5 subject images |
+| **Binding** | Rare token + class word (keeps semantic grounding) |
+| **Training** | Fine-tune the generator to make [V] refer to the subject |
+| **Output** | Re-contextualized samples in new scenes |
+
+### 11.3.2 Prior Preservation Loss
+
+DreamBooth motivates the **fidelity-editability trade-off** explicitly through its loss design:
+
+$$\mathcal{L} = \underbrace{\mathbb{E}\left[ \| \epsilon - \epsilon_\theta(x_{\text{instance}}) \|^2 \right]}_{\text{Instance loss}} + \lambda \underbrace{\mathbb{E}\left[ \| \epsilon - \epsilon_\theta(x_{\text{prior}}) \|^2 \right]}_{\text{Prior loss}}$$
+
+- **Instance loss:** Make $[V]$ dog reproduce the target dog
+- **Prior loss:** Keep "dog" broad enough to remain a class
+
+> **Key Concept:** Without prior preservation, the model overfits to the instance and forgets the class. With too little adaptation, identity is weak. Prior preservation loss explicitly balances this.
+
+## 11.4 LoRA: Low-Rank Adaptation
+
+LoRA asks: **do we really need to move every weight?**
+
+### 11.4.1 Full Fine-Tuning vs LoRA
+
+| Aspect | Full Fine-Tuning | LoRA |
+|--------|-----------------|------|
+| Parameters | Update many | Update small A/B matrices |
+| Memory | High | Low |
+| Sharing | Harder | Easy (swap adapters) |
+| Modularity | One model per subject | Mix subject/style/task adapters |
+
+### 11.4.2 Formula
+
+$$W' = W + \Delta W, \quad \text{where } \Delta W = B \cdot A$$
+
+- $W$ stays **frozen**
+- $A$ and $B$ are small trainable matrices
+- Rank $r$ controls adapter capacity
+
+In diffusion personalization, LoRA typically trains attention blocks while the base checkpoint remains intact.
+
+> **Key Concept:** Personalization becomes modular when the delta is small. Artists can collect and mix LoRA files for different subjects and styles.
+
+## 11.5 Reference-Conditioned Methods
+
+Newer systems personalize **without any training** by using reference images at inference time:
+
+| Method | Mechanism | Use Case |
+|--------|-----------|----------|
+| **IP-Adapter** | Generic image prompt adapter via decoupled cross-attention | Strong reference route |
+| **PhotoMaker** | Stacked identity inputs | Personalized photos |
+| **InstantID** | Identity-preserving generation | Face identity transfer |
+
+> **Key Point:** Reference-conditioned methods shift the paradigm from "adapt after pretraining" to "train reference inputs end-to-end." The trade-off becomes concept memory vs in-context control.
+
+## 11.6 Qwen-Image
+
+Qwen-Image represents the **frontier** of open image generation foundation models.
+
+### 11.6.1 Architecture
+
+```
+Text / Multimodal Instruction
+        │
+        ▼
+Qwen2.5-VL (MLLM condition encoder)
+        │
+        ▼
+VAE (latent space)
+        │
+        ▼
+MMDiT (double-stream multimodal diffusion transformer)
+        │
+        ▼
+Generated image
+```
+
+- **MSRoPE:** Multimodal Rotary Position Embedding designed for joint text-image positional encoding
+- **Double-stream:** Text and image features processed in parallel under shared conditioning
+
+### 11.6.2 Family Members
+
+| Model | Capability |
+|-------|------------|
+| **Qwen-Image** | Open T2I + strong editing backbone |
+| **Qwen-Image-Edit** | Reference image + instruction; preserve while changing |
+| **Qwen-Image-Edit-2509** | Single + multiple image editing |
+| **Qwen-Image-Edit-2511** | Stronger identity and group consistency |
+| **Qwen-Image 2.0** (2026) | Unified generation + editing direction |
+
+> **Key Concept:** The frontier is moving from durable adapters (LoRA, DreamBooth) toward **in-context control** where the model natively consumes reference images during inference.
+
+## 11.7 Choosing a Personalization Route
+
+| Constraint | Recommended Method |
+|------------|-------------------|
+| Few images, zero training | IP-Adapter / InstantID |
+| Tiny artifact to share | Textual Inversion / LoRA |
+| Best instance binding | DreamBooth-style fine-tuning |
+| In-context editing | Qwen-Image-Edit |
+
+---
+
+## Part B: Agentic AI
+
+## 11.8 From Language Models to Agents
+
+### 11.8.1 The Capability Stack
+
+```
+Layer 1: Language Model     → Predicts text from context
+Layer 2: Chatbot            → Turns prediction into dialogue
+Layer 3: Agent              → Pursues goals with tools
+Layer 4: Multi-Agent        → Divides work across roles
+Layer 5: AI Organization    → Adds policies, evaluation, oversight
+```
+
+> **Key Concept:** The story is a shift from conversation to delegation. Each step adds one missing capability: memory, tools, planning, roles, and governance.
+
+### 11.8.2 Why Fluency Is Not Enough
+
+| What LLMs Are Good At | What Breaks Without a System |
+|-----------------------|------------------------------|
+| Summarizing messy text | Confident hallucinations |
+| Drafting and translating | Stale or missing external knowledge |
+| Writing code patterns | No native ability to click, buy, call |
+| Connecting ideas | Long-horizon drift over many steps |
+| Explaining concepts | Weak self-review when stakes are high |
+
+> **Key Point:** A fluent model is not the same thing as a reliable worker. Agents need external feedback, constraints, and verifiable action.
+
+## 11.9 Agent Anatomy
+
+An agent is the **control loop around an LLM**:
+
+```
+        ┌─────────────────────────────┐
+        │          LLM                │
+        │    (reasoning engine)       │
+        └─────────────┬───────────────┘
+                      │
+    ┌─────────┬───────┼───────┬─────────┐
+    ▼         ▼       ▼       ▼         ▼
+ Observe    Plan     Act     Check    Memory
+ (read)   (decide) (tools) (verify) (store)
+```
+
+| Component | Role |
+|-----------|------|
+| **LLM** | Language prediction and reasoning |
+| **Instructions** | Role, policy, task boundary |
+| **Planner** | Next actions and stop conditions |
+| **Tools** | APIs, browser, code, files, UI |
+| **Memory** | Short-term and long-term state |
+| **Evaluator** | Checks quality and safety |
+| **Permissions** | What actions need approval |
+
+## 11.10 ReAct: Interleaving Reasoning and Acting
+
+The ReAct pattern alternates between thinking, tool use, observation, and revised thinking:
+
+| Step | Example |
+|------|---------|
+| **Thought** | "I need the city and forecast source." |
+| **Action** | Call weather API or browser search. |
+| **Observation** | Forecast: rain, 18-22°C, windy. |
+| **Thought** | "Now convert weather into useful advice." |
+| **Action** | Draft concise message for the user. |
+
+> **Key Concept:** The tool result changes the next reasoning step. This makes the system more grounded and inspectable than one long hidden answer.
+
+## 11.11 Tool Use at the Prompt Level
+
+### 11.11.1 Before the Tool
+
+The first LLM call contains the task plus a menu of possible tools. The model decides whether a tool is needed before answering.
+
+```
+SYSTEM: You are a helpful travel assistant. 
+        If weather matters, use Weather Lookup before giving advice.
+
+USER: "I'm leaving for Paris tomorrow morning. 
+      Should I bring an umbrella?"
+
+LLM: Tool request: Weather Lookup(city=Paris, time=tomorrow morning)
+```
+
+This is already an agent step: the assistant message is an **action request**, not the final answer.
+
+### 11.11.2 After the Tool
+
+The tool result is inserted into the next prompt as an observation:
+
+```
+CONTEXT NOW:
+1. System prompt
+2. User question
+3. Assistant's weather tool request
+4. New observation: "Paris: light rain, 17°C, wind 18 kph"
+
+LLM FINAL REPLY: "Yes, bring a compact umbrella. 
+                   Wear a light jacket..."
+```
+
+> **Key Point:** The model did not become smarter between turns. **The prompt changed**: it now contains the weather observation. An agent loop is a repeated prompt: ask model → receive action → add observation → ask model again.
+
+## 11.12 GUI Agents
+
+GUI agents move action into the interface itself:
+
+| Aspect | Approach |
+|--------|----------|
+| **Perception** | Screen pixels |
+| **Execution** | Structured actions (tap, type, swipe) |
+| **Generalization** | Spans apps and tasks |
+
+Example: AppAgent uses screen observations and simplified actions (tap, swipe, text input, back) without relying on privileged backend APIs.
+
+## 11.13 Multi-Agent Systems
+
+### 11.13.1 Role Decomposition
+
+Multi-agent systems split roles, not just prompts:
+
+| Role | Function |
+|------|----------|
+| **Planner** | Decompose task; decide who does what |
+| **Executor** | Act with tools and edits |
+| **Critic** | Verify; catch gaps and regressions |
+| **Shared State** | Coordinate memory, messages, artifacts |
+
+### 11.13.2 MetaGPT
+
+MetaGPT makes a software team out of agent roles:
+- Encode SOP-like workflows
+- Assign specialist roles (product manager, architect, engineer, tester)
+- Pass structured artifacts between agents
+
+> **Key Concept:** Multi-agent value comes from **useful handoffs**, not from having many agents. Each role should produce an artifact that the next role can consume.
+
+## 11.14 Summary: Think in Layers
+
+| Layer | Job | Key Insight |
+|-------|-----|-------------|
+| **LLM** | Language prediction and reasoning from context | Do not confuse fluency with reliability |
+| **Agent** | Goal loop with tools, memory, and feedback | Agents need feedback, tools, and constraints |
+| **Multi-Agent** | Roles, protocols, shared state, oversight | Value comes from useful handoffs |
+
+> **Best Practice:** Read an agent as a **message transcript**, not as code. The important object is the sequence of visible messages: user prompt, assistant tool request, tool observation, final answer.
+
+## 11.15 Practice: Building a Simple Agent
+
+The course provides a restaurant reservation agent using the OpenAI API:
+
+```python
+from openai import OpenAI
+import json
+import datetime
+
+class CustomerServiceAgent:
+    def __init__(self, base_url, api_key, model="qwen-plus", max_retries=3):
+        self.client = OpenAI(base_url=base_url, api_key=api_key)
+        self.model = model
+        self.max_retries = max_retries
+        self.conversation_history = []
+        
+        # System prompt defines the agent's role and constraints
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        self.system_prompt = f"""You are a restaurant reservation assistant.
+Today's date is {current_date}.
+1. Extract reservation time and number of people from user input
+2. Format as JSON: {{"time": "YYYY-MM-DD HH:MM", "people": "X"}}
+3. If information is missing, actively ask the user
+4. Only return JSON when complete, otherwise continue dialogue"""
+        
+        self.conversation_history.append(
+            {"role": "system", "content": self.system_prompt}
+        )
+    
+    def process_query(self, user_input):
+        self.conversation_history.append(
+            {"role": "user", "content": user_input}
+        )
+        
+        for attempt in range(self.max_retries):
+            try:
+                response = self.client.chat.completions.create(
+                    messages=self.conversation_history,
+                    model=self.model,
+                )
+                assistant_response = response.choices[0].message.content
+                self.conversation_history.append(
+                    {"role": "assistant", "content": assistant_response}
+                )
+                self.try_extract_reservation(assistant_response)
+                return assistant_response
+            except Exception as e:
+                if attempt < self.max_retries - 1:
+                    time.sleep((attempt + 1) * 2)
+                    continue
+                return f"Error: {str(e)}"
+    
+    def try_extract_reservation(self, response_text):
+        try:
+            start_idx = response_text.find("{")
+            end_idx = response_text.rfind("}")
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                json_str = response_text[start_idx:end_idx + 1]
+                reservation_data = json.loads(json_str)
+                if "time" in reservation_data and "people" in reservation_data:
+                    self.save_reservation(reservation_data)
+                    return True
+            return False
+        except:
+            return False
+    
+    def save_reservation(self, reservation_data):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open("reservations.txt", "a", encoding="utf-8") as f:
+            f.write(f"[{current_time}] Time: {reservation_data['time']}, "
+                    f"People: {reservation_data['people']}\n")
+```
+
+> **Key Concept:** This minimal agent demonstrates the core loop: system prompt defines behavior, user input triggers reasoning, the model may output structured data (JSON), and the wrapper handles persistence. No special "agent framework" is required — just careful prompt engineering and state management.
+
+---
+
 # Appendix A: AI for Science Methods
 
 > **Source:** AI + Science (Spring 2026), Dr. Tailin Wu @ Westlake University  
