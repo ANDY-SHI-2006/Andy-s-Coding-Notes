@@ -96,3 +96,26 @@ Write a function `std::vector<int> sieveOfEratosthenes(int n)` that returns all 
 
 ### Exercise 9.8 🔴
 Implement a simple **command-line argument parser**. Your program should accept flags like `-n 10`, `-name Alice`, and `--help`. Use `int main(int argc, char* argv[])` to parse arguments and print a summary of what was received.
+
+### Exercise 8.8 🔴
+Implement a **number guessing game** with the following requirements:
+1. The program generates a random number between 1 and 100
+2. The user has 7 attempts to guess it
+3. After each guess, print whether it is too high, too low, or correct
+4. If the user runs out of attempts, reveal the answer
+5. Ask if they want to play again
+
+Use a `do-while` loop for the replay mechanism.
+
+### Exercise 8.9 🔴
+Write a program that prints the first `n` rows of **Pascal's Triangle** using nested loops. Each number is the sum of the two numbers directly above it. Example for `n = 5`:
+```
+    1
+   1 1
+  1 2 1
+ 1 3 3 1
+1 4 6 4 1
+```
+
+### Exercise 9.9 🔴
+Implement **binary search** as a recursive function `int binarySearch(const int arr[], int left, int right, int target)`. Return the index if found, -1 otherwise. Compare its performance with linear search on a sorted array of 1,000,000 elements. Measure with `<chrono>`.

@@ -183,3 +183,15 @@ Implement **Dijkstra's algorithm** for shortest path. Use a `std::priority_queue
 
 ### Exercise 22.5 🔴
 Implement **topological sort** using Kahn's algorithm (in-degree counting with a queue). Test on a DAG representing course prerequisites. Example: course C requires A and B; course D requires C.
+
+### Exercise 16.4 🔴
+Given an array where every element appears twice except one element that appears once, find the unique element in O(n) time and O(1) space. Then solve the variation where two elements appear once and all others appear twice.
+
+### Exercise 17.8 🔴
+Given an unsorted array of integers, find the **k-th smallest element** using QuickSelect (a variation of quicksort). Average case O(n), worst case O(n²). Compare performance with sorting the entire array and picking index `k`.
+
+### Exercise 18.7 🔴
+Solve the **N-Queens problem** for `n = 8` using backtracking. Place 8 queens on a chessboard such that no two queens threaten each other. Print all valid configurations (there are 92).
+
+### Exercise 22.6 🔴
+Implement **Kruskal's algorithm** for Minimum Spanning Tree (MST). Use a union-find (disjoint set) data structure. Given a weighted undirected graph, find the MST and print its total weight.

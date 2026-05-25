@@ -170,4 +170,27 @@ Implement a 2D matrix using a **raw multidimensional array** (`int matrix[3][3]`
 3. Compute the transpose in a new matrix
 4. Compute the sum of the main diagonal
 
+### Exercise 6.7 🟡
+Write a function `int countSetBits(int n)` that counts the number of 1 bits in an integer. Implement it using three different approaches:
+1. Loop and bit-test
+2. Brian Kernighan's algorithm
+3. Built-in `__builtin_popcount` (GCC/Clang)
+
+Compare the readability and efficiency of each approach.
+
+### Exercise 6.8 🟡
+Given `enum class Color { Red, Green, Blue, Yellow, Cyan, Magenta };`, write a function that returns a `std::vector<Color>` containing all colors. Then write a function `bool isPrimary(Color c)` that returns true only for Red, Green, and Blue. Use a `switch` with `enum class`.
+
+### Exercise 6.9 🟡
+Create a `struct Date { int year, month, day; };` and a `struct Person { std::string name; Date birthDate; };`. Write a function `int getAge(const Person& p)` that computes the person's age based on the current year (assume 2024). Handle the case where the birthday hasn't occurred yet this year.
+
+### Exercise 6.10 🔴
+Implement a function `void rotateMatrix(int matrix[4][4])` that rotates a 4×4 matrix 90 degrees clockwise **in-place** (no extra matrix). Use only raw arrays. Test with:
+```
+1  2  3  4      13  9  5  1
+5  6  7  8  →   14 10  6  2
+9 10 11 12      15 11  7  3
+13 14 15 16     16 12  8  4
+```
+
 Do not use `std::vector` or dynamic allocation.

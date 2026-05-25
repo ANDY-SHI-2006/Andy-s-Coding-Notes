@@ -215,3 +215,12 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 ```
 
 Use it to create objects that require different constructor signatures (default, copy, move, multi-arg). Verify that no unnecessary copies are made.
+
+### Exercise 24.7 🔴
+Write a **CRTP (Curiously Recurring Template Pattern)** example. Create a base class template `Comparable<T>` that provides `operator<`, `operator>`, etc., using a virtual-like `compareTo` method implemented by the derived class. Use it to make `Rectangle` and `Circle` comparable.
+
+### Exercise 26.6 🔴
+Implement a **shared pointer cycle detector**. Given a graph of `std::shared_ptr` nodes, detect if there is a reference cycle using `std::weak_ptr`. Print the cycle path if found.
+
+### Exercise 28.5 🔴
+Write a **move-only type** `UniqueResource` that wraps a file descriptor (int). It should support move construction/assignment but delete copy construction/assignment. Use it in a `std::vector<UniqueResource>` and observe that `std::sort` fails — then fix it by providing a custom comparator that compares by value, not by moving.

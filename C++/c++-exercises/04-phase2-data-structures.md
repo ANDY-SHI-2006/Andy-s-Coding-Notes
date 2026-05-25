@@ -89,3 +89,12 @@ Implement a **deque** (double-ended queue) using a doubly linked list. Provide `
 
 ### Exercise 15.5 🔴
 Implement a **sliding window maximum** algorithm using a deque. Given an array and window size `k`, find the maximum in each contiguous subarray of size `k`. Use a deque to store indices, maintaining elements in decreasing order. Example: `arr = [1,3,-1,-3,5,3,6,7]`, `k = 3` → output `[3,3,5,5,6,7]`.
+
+### Exercise 14.7 🔴
+Implement **Floyd's Cycle Detection Algorithm** (tortoise and hare) for a linked list. Write `bool hasCycle(Node* head)` that uses two pointers moving at different speeds. Also write `Node* detectCycleStart(Node* head)` that returns the node where the cycle begins.
+
+### Exercise 14.8 🔴
+Write a function `Node* mergeTwoSortedLists(Node* l1, Node* l2)` that merges two sorted singly linked lists into one sorted list. Do not allocate new nodes — reuse existing nodes.
+
+### Exercise 15.6 🔴
+Implement a **circular queue** using a fixed-size array. The queue wraps around the array. Provide `enqueue`, `dequeue`, `front`, `rear`, `isEmpty`, `isFull`. Track the number of elements explicitly rather than wasting one slot.

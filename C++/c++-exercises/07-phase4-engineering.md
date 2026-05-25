@@ -131,3 +131,15 @@ Create a `Config` struct with 5 fields (width, height, fullscreen, vsync, msaa).
 
 ### Exercise 34.5 🔴
 Write a simple **generator coroutine** that yields Fibonacci numbers indefinitely. Use `co_yield`. Consume the first 20 numbers in a range-based for loop. Compare the syntax and performance with a recursive generator function.
+
+### Exercise 31.5 🔴
+Write a CMake project with three targets: a static library `libmath`, a shared library `libutils`, and an executable `myapp` that links both. Use `target_link_libraries` with `PUBLIC`/`PRIVATE`/`INTERFACE` correctly. Ensure that headers from `libmath` are visible to `myapp` but headers from `libutils` are not.
+
+### Exercise 32.6 🔴
+Implement the **readers-writers problem**. Multiple threads can read simultaneously, but writers require exclusive access. Use `std::shared_mutex` (C++17) or a combination of mutex and condition variable. Ensure no writer starves.
+
+### Exercise 33.5 🔴
+Write a regex-based **simple SQL parser** that recognizes `SELECT column FROM table WHERE condition` patterns. Use capturing groups to extract the column, table, and condition. Support `AND` and `OR` in conditions.
+
+### Exercise 34.6 🔴
+Use ranges to implement a **lazy prime number generator**. Create an infinite range of integers starting from 2, filter primes using a sieve-like approach, and print the first 100 primes. Compare memory usage with eagerly generating all primes up to a limit.

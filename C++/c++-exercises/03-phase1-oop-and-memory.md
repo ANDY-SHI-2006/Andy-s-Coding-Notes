@@ -135,3 +135,15 @@ Implement a simple **memory pool allocator**. Create a `MemoryPool` class that:
 4. Tracks allocated vs free chunks
 
 Compare its performance against `new`/`delete` for allocating 1,000,000 small objects.
+
+### Exercise 10.9 🔴
+Implement a **copy-on-write (COW) string class** `CowString`. Multiple `CowString` objects can share the same underlying buffer. Only when one object tries to modify the buffer does it create a private copy. Use a reference count to track shared ownership.
+
+### Exercise 12.8 🔴
+Implement a **memory-efficient bitset** using a raw `char` array. Each bit represents a boolean flag. Provide:
+- `set(int index)`
+- `clear(int index)`
+- `get(int index)`
+- `count()` — number of set bits
+
+Support at least 1,000,000 bits using minimal memory.
