@@ -1333,6 +1333,77 @@ public:
 | Nested struct | `struct A { B member; };` | `struct Rect { Point tl; };` |
 | Pass by ref | `void f(const T& t)` | `void f(const Point& p)` |
 
+## 6.10 Union
+
+A `union` is a special class-like type where all members share the same memory location. At any given time, a union holds the value of exactly **one** of its members.
+
+### 6.10.1 Basic Syntax
+
+```cpp
+union Data {
+    int i;
+    double d;
+    char c[8];
+};
+
+Data data;
+data.i = 42;       // Union now holds an int
+std::cout << data.i;  // 42
+
+data.d = 3.14;     // Overwrites the int with a double
+std::cout << data.d;  // 3.14
+```
+
+### 6.10.2 Memory Layout
+
+```
+Union Data (size = 8 bytes — largest member)
+┌─────────────────────────┐
+│  int i (4 bytes)        │
+│  double d (8 bytes)     │ ← All members start at same address
+│  char c[8] (8 bytes)    │
+└─────────────────────────┘
+```
+
+> **Key Point:** `sizeof(union)` equals the size of its **largest member**, not the sum.
+
+### 6.10.3 Discriminated Union Pattern
+
+Since a union doesn't track which member is active, you need a separate "discriminator":
+
+```cpp
+struct Variant {
+    enum Type { INT, DOUBLE, CHAR } type;
+    union {
+        int i;
+        double d;
+        char c;
+    } value;
+};
+
+Variant v;
+v.type = Variant::INT;
+v.value.i = 42;
+
+// Always check the type before accessing:
+if (v.type == Variant::INT) {
+    std::cout << v.value.i;
+}
+```
+
+> **Modern Alternative:** For most use cases, prefer `std::variant` (C++17) — it is type-safe and handles the discriminator automatically (see Chapter 23).
+
+### 6.10.4 When to Use Union
+
+| Use Case | Recommendation |
+|----------|---------------|
+| Type-safe variant of known types | `std::variant` (C++17) |
+| Manual memory optimization | `union` with care |
+| Interpreting raw bytes | `std::bit_cast` (C++20) or `union` |
+| Low-level hardware interfaces | `union` is common |
+
+> **Caution:** Reading a union member other than the one most recently written is **undefined behavior** in C++ (unlike C, where it is implementation-defined). Always track which member is active.
+
 ---
 
 [← Previous: Operators](05-operators.md) | [Next: Input and Output →](07-input-and-output.md)

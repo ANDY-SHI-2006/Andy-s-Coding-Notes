@@ -1,4 +1,4 @@
-[← Previous: Multi-File Programming](31-multi-file-programming.md)
+[← Previous: Multi-File Programming](31-multi-file-programming.md) | [Next: Regular Expressions →](33-regular-expressions.md)
 
 # 32 Multi-Threading
 

@@ -43,6 +43,8 @@ A comprehensive C++ programming course covering single-file fundamentals, data s
 30. [OOP Advanced Topics](30-oop-advanced.md)
 31. [Multi-File Programming](31-multi-file-programming.md)
 32. [Multi-Threading](32-multi-threading.md)
+33. [Regular Expressions](33-regular-expressions.md)
+34. [C++20 Features](34-cpp20-features.md)
 
 ---
 
