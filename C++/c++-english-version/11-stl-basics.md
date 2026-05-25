@@ -1838,6 +1838,93 @@ for (int x : v) sum += x;
 int sum = accumulate(v.begin(), v.end(), 0);
 ```
 
+## 11.5 Map and Set
+
+### 11.5.1 Ordered Associative Containers
+
+`std::map` and `std::set` are implemented as **red-black trees** (self-balancing BST). Operations are $O(\log n)$.
+
+```cpp
+#include <map>
+#include <set>
+
+std::map<std::string, int> scores;
+scores["Alice"] = 95;
+scores["Bob"] = 87;
+
+for (const auto& [name, score] : scores) {  // C++17 structured binding
+    std::cout << name << ": " << score << "\n";
+}
+
+std::set<int> uniqueNumbers = {3, 1, 4, 1, 5};
+// uniqueNumbers contains {1, 3, 4, 5} — duplicates removed, sorted
+```
+
+### 11.5.2 Unordered Associative Containers
+
+`std::unordered_map` and `std::unordered_set` use **hash tables**. Average $O(1)$ lookup, but elements are not sorted.
+
+```cpp
+#include <unordered_map>
+
+std::unordered_map<std::string, std::string> capitals;
+capitals["France"] = "Paris";
+capitals["Japan"] = "Tokyo";
+
+auto it = capitals.find("Japan");
+if (it != capitals.end()) {
+    std::cout << it->second;  // "Tokyo"
+}
+```
+
+| Container | Underlying Structure | Order | Lookup | Use When |
+|-----------|---------------------|-------|--------|----------|
+| `map` / `set` | Red-black tree | Sorted | $O(\log n)$ | You need sorted iteration |
+| `unordered_map` / `unordered_set` | Hash table | Unordered | $O(1)$ avg | Speed matters, order doesn't |
+
+## 11.6 Queue, Deque, and Priority Queue
+
+### 11.6.1 Queue (`std::queue`)
+
+FIFO — First In, First Out:
+
+```cpp
+#include <queue>
+
+std::queue<int> q;
+q.push(10); q.push(20); q.push(30);
+std::cout << q.front();  // 10
+q.pop();                  // Removes 10
+```
+
+### 11.6.2 Deque (`std::deque`)
+
+Double-ended queue — efficient insertion/removal at **both ends**:
+
+```cpp
+#include <deque>
+
+std::deque<int> dq;
+dq.push_back(10);
+dq.push_front(5);   // O(1) — vector cannot do this efficiently
+dq.pop_front();
+```
+
+### 11.6.3 Priority Queue (`std::priority_queue`)
+
+Always returns the **largest** element (by default):
+
+```cpp
+#include <queue>
+
+std::priority_queue<int> pq;
+pq.push(30); pq.push(10); pq.push(50);
+std::cout << pq.top();  // 50
+pq.pop();               // Removes 50
+```
+
+> **Implementation Note:** `std::priority_queue` is typically implemented as a **heap** (see Chapter 20 for the underlying data structure).
+
 ---
 
-[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Advanced Topics →](12-advanced-topics.md)
+[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Pointers and Dynamic Memory →](12-pointers-and-dynamic-memory.md)
