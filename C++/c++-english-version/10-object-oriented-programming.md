@@ -156,4 +156,122 @@ void transfer(BankAcct& from, BankAcct& to, double amt) {
 
 > **Recommendation:** Pass large objects by reference to avoid copying
 
+## 10.8 Polymorphism and Virtual Functions
+
+Polymorphism — Greek for "many shapes" — allows objects of different classes to be treated uniformly through a common interface.
+
+### 10.8.1 The Problem: Static vs Dynamic Binding
+
+Without polymorphism, the compiler decides which function to call at compile time:
+
+```cpp
+class Animal {
+public:
+    void speak() { cout << "Some sound"; }
+};
+class Dog : public Animal {
+public:
+    void speak() { cout << "Woof!"; }
+};
+
+Animal* a = new Dog();
+a->speak();  // "Some sound" — calls Animal::speak, not Dog::speak!
+```
+
+### 10.8.2 Virtual Functions
+
+Add `virtual` to enable dynamic binding (runtime resolution):
+
+```cpp
+class Animal {
+public:
+    virtual void speak() { cout << "Some sound"; }
+};
+class Dog : public Animal {
+public:
+    void speak() override { cout << "Woof!"; }  // C++11 override keyword
+};
+
+Animal* a = new Dog();
+a->speak();  // "Woof!" — calls Dog::speak via vtable lookup
+```
+
+| Feature | Without `virtual` | With `virtual` |
+|---------|-------------------|----------------|
+| Binding | Static (compile-time) | Dynamic (runtime) |
+| Function called | Based on pointer type | Based on actual object type |
+| Mechanism | Direct call | vtable indirect call |
+
+### 10.8.3 Pure Virtual Functions and Abstract Classes
+
+A **pure virtual function** has no implementation in the base class, making the class **abstract** (cannot be instantiated):
+
+```cpp
+class Shape {
+public:
+    virtual double area() = 0;  // Pure virtual
+    virtual void draw() = 0;    // Pure virtual
+};
+
+class Circle : public Shape {
+public:
+    double area() override { return 3.14159 * r * r; }
+    void draw() override { /* draw circle */ }
+private:
+    double r;
+};
+```
+
+> **Key Concept:** An abstract class defines an **interface contract**. Every derived concrete class must implement all pure virtual functions.
+
+### 10.8.4 Virtual Destructors
+
+If a class has virtual functions, its destructor should be virtual:
+
+```cpp
+class Base {
+public:
+    virtual ~Base() { /* release base resources */ }
+};
+class Derived : public Base {
+public:
+    ~Derived() { /* release derived resources */ }
+};
+
+Base* b = new Derived();
+delete b;  // Calls Derived destructor, then Base destructor
+```
+
+> **Rule:** If a class has any `virtual` function, make the destructor `virtual`. Otherwise `delete` through a base pointer leaks derived resources.
+
+### 10.8.5 `override` and `final` (C++11)
+
+| Specifier | Purpose |
+|-----------|---------|
+| `override` | Compile-time check that the function overrides a base virtual function |
+| `final` | Prevents further overriding in derived classes |
+
+```cpp
+class Base {
+    virtual void foo();
+};
+class Derived : public Base {
+    void foo() override final;  // Overrides Base::foo, cannot be overridden again
+};
+```
+
+### 10.8.6 Summary
+
+```
+Base class with virtual functions
+        ↓
+Derived classes override behavior
+        ↓
+Client code uses Base* / Base&
+        ↓
+Actual object type decides which function runs
+```
+
+> **Key Concept:** Polymorphism decouples **what** you want done (the interface) from **how** it's done (the implementation). This is the foundation of design patterns like Strategy, Factory, and Observer.
+
 

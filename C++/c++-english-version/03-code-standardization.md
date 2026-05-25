@@ -549,6 +549,65 @@ AllowShortFunctionsOnASingleLine: false
 
 > **Tip:** Set up clang-format in your IDE to format on save. This ensures your code is always properly formatted without manual effort.
 
+## 3.6 Namespaces
+
+Namespaces prevent name collisions by grouping related identifiers under a unique prefix.
+
+### 3.6.1 Defining and Using Namespaces
+
+```cpp
+namespace geometry {
+    class Point {
+        double x, y;
+    public:
+        Point(double x, double y) : x(x), y(y) {}
+    };
+    double distance(const Point& a, const Point& b) {
+        return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+    }
+}
+
+// Usage:
+geometry::Point p1(0, 0);
+geometry::Point p2(3, 4);
+double d = geometry::distance(p1, p2);
+```
+
+### 3.6.2 The `using` Declaration vs `using namespace`
+
+| Approach | Scope | Risk |
+|----------|-------|------|
+| `using std::cout;` | Single identifier imported into current scope | Low |
+| `using namespace std;` | All identifiers from namespace imported | **High** — name collisions |
+
+```cpp
+using std::cout;      // OK: only cout is accessible without std::
+using namespace std;  // Risky: brings everything from std into global scope
+```
+
+> **Best Practice:** Never use `using namespace std;` in header files. In source files, prefer explicit `std::` or targeted `using` declarations.
+
+### 3.6.3 Anonymous Namespaces
+
+An anonymous namespace limits visibility to the current translation unit (equivalent to `static` for global variables):
+
+```cpp
+namespace {
+    int internalCounter = 0;  // Only visible in this .cpp file
+    void helper() { /* ... */ }
+}
+```
+
+### 3.6.4 Nested and Inline Namespaces (C++17)
+
+```cpp
+namespace graphics::rendering {  // C++17 nested namespace shorthand
+    class Shader { /* ... */ };
+}
+```
+
+> **Key Concept:** Namespaces are C++'s primary tool for **modular organization**. They replace the need for long prefixed names (e.g., `MyLib_ClassName`) with a clean hierarchical structure.
+
 ---
 
-[←Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Definitions, Declarations and Statements →](04-variable-basics.md)
+[← Previous: The Preprocessor](02-the-preprocessor.md) | [Next: Variable Basics →](04-variable-basics.md)
