@@ -387,7 +387,90 @@ Variable Declaration
         �?        └── Type is complex? ──�?auto or structured binding (C++17)
 ```
 
+## 23.2 Type-Safe Containers for Uncertainty (C++17)
 
+### 23.2.1 `std::optional` — A Value That May Not Exist
 
+`std::optional<T>` represents a value that may or may not be present — a safer alternative to sentinel values or raw pointers:
 
-[�?Previous: Advanced Topics](12-advanced-topics.md) | [Next: Data Structures →](14-data-structures.md)
+```cpp
+#include <optional>
+
+std::optional<int> maybeParse(const std::string& s) {
+    try {
+        return std::stoi(s);
+    } catch (...) {
+        return std::nullopt;  // Explicitly "no value"
+    }
+}
+
+auto result = maybeParse("42");
+if (result) {                    // Check if value exists
+    std::cout << *result;        // Dereference to get value
+}
+
+auto bad = maybeParse("hello");
+if (!bad) {
+    std::cout << "No valid integer";
+}
+```
+
+> **Use `std::optional` when:** A function may fail to return a value, and `null`/`nullptr` would be ambiguous or unsafe.
+
+### 23.2.2 `std::variant` — A Type-Safe Union
+
+`std::variant<T1, T2, ...>` holds exactly one of several specified types, with type safety enforced at compile time:
+
+```cpp
+#include <variant>
+#include <string>
+
+std::variant<int, double, std::string> value;
+value = 42;           // Holds int
+value = 3.14;         // Now holds double
+value = "hello";      // Now holds string
+
+// Access — must check which type is active:
+if (std::holds_alternative<int>(value)) {
+    std::cout << std::get<int>(value);
+}
+
+// Or use std::visit to handle all cases:
+std::visit([](auto&& arg) {
+    std::cout << arg;
+}, value);
+```
+
+> **Use `std::variant` when:** A value can be one of several distinct types, and you want compile-time type safety (unlike C-style `union`).
+
+### 23.2.3 `std::any` — Type-Erased Container
+
+`std::any` can hold **any** type, with type information preserved at runtime:
+
+```cpp
+#include <any>
+
+std::any data = 42;              // Holds int
+data = std::string("hello");     // Now holds string
+data = 3.14;                     // Now holds double
+
+// Retrieval requires knowing the original type:
+try {
+    int i = std::any_cast<int>(data);  // Throws std::bad_any_cast if wrong
+} catch (const std::bad_any_cast& e) {
+    std::cout << "Wrong type!";
+}
+```
+
+> **Use `std::any` when:** You truly need to store any type (e.g., generic config systems, serialization), but prefer `std::variant` when the type set is known.
+
+### 23.2.4 Comparison Table
+
+| Feature | `std::optional<T>` | `std::variant<T1, T2...>` | `std::any` |
+|---------|-------------------|---------------------------|------------|
+| **Holds** | One type or nothing | Exactly one of several types | Any single type |
+| **Type safety** | Compile-time | Compile-time | Runtime (type erased) |
+| **Overhead** | Minimal (bool + T) | Size of largest type + discriminator | Heap allocation + typeinfo |
+| **Use when** | Value may be absent | Value is one of known types | Type is unknown at compile time |
+
+[← Previous: Graph Algorithms](22-graph-algorithms.md) | [Next: Templates and Generics →](24-templates-and-generics.md)

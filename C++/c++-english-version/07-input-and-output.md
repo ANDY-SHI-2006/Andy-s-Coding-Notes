@@ -1298,6 +1298,85 @@ outFile << "New line appended" << endl;
 outFile.close();
 ```
 
+## 7.4 Time and Duration (`std::chrono`, C++11)
+
+The `<chrono>` library provides type-safe, portable time handling — no more manual arithmetic with `time_t` or platform-specific APIs.
+
+### 7.4.1 Duration
+
+A `duration` represents a time span with a specific precision:
+
+```cpp
+#include <chrono>
+
+std::chrono::seconds s(5);
+std::chrono::milliseconds ms = std::chrono::seconds(3);  // 3000 ms
+std::chrono::minutes min = std::chrono::seconds(120);    // 2 min
+
+// Arithmetic
+auto total = std::chrono::seconds(10) + std::chrono::milliseconds(500);  // 10500 ms
+```
+
+Common duration types:
+
+| Type | Precision |
+|------|-----------|
+| `std::chrono::nanoseconds` | $10^{-9}$ s |
+| `std::chrono::microseconds` | $10^{-6}$ s |
+| `std::chrono::milliseconds` | $10^{-3}$ s |
+| `std::chrono::seconds` | 1 s |
+| `std::chrono::minutes` | 60 s |
+| `std::chrono::hours` | 3600 s |
+
+### 7.4.2 Clocks
+
+`std::chrono` provides three clocks:
+
+```cpp
+// system_clock: wall-clock time (can be adjusted by OS)
+auto now = std::chrono::system_clock::now();
+
+// steady_clock: monotonic, never decreases (best for measuring intervals)
+auto start = std::chrono::steady_clock::now();
+// ... do work ...
+auto end = std::chrono::steady_clock::now();
+
+// high_resolution_clock: alias for the clock with the finest granularity
+```
+
+### 7.4.3 Measuring Elapsed Time
+
+```cpp
+#include <chrono>
+#include <iostream>
+
+auto start = std::chrono::steady_clock::now();
+
+// Code to benchmark:
+for (int i = 0; i < 1000000; ++i) {
+    volatile int x = i * i;
+}
+
+auto end = std::chrono::steady_clock::now();
+auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+std::cout << "Elapsed: " << elapsed.count() << " ms\n";
+```
+
+> **Best Practice:** Always use `steady_clock` for timing intervals. `system_clock` can jump forward or backward due to NTP adjustments or daylight saving time.
+
+### 7.4.4 Time Points and Conversion
+
+```cpp
+// Get current time as time_point
+auto now = std::chrono::system_clock::now();
+
+// Convert to time_t for C-style formatting
+std::time_t t = std::chrono::system_clock::to_time_t(now);
+std::cout << std::ctime(&t);  // "Mon Jan 15 10:30:00 2024"
+```
+
+> **Key Concept:** `std::chrono` replaces raw integer time arithmetic with **strongly typed durations**. You cannot accidentally add seconds to milliseconds without explicit conversion — the compiler catches the mistake.
+
 ---
 
 [← Previous: Data Types](06-data-types.md) | [Next: Conditional Execution →](08-conditional-execution.md)
