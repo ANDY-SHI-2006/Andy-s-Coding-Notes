@@ -125,12 +125,17 @@ except EOFError:
 When the user presses Enter without typing anything, `input()` returns an empty string `""` (which is falsy). Use `or` to provide a fallback in one line.
 
 ```python
+# If the user enters nothing, "" is falsy, so "Anonymous" is used
 name = input("Name: ") or "Anonymous"
 print(f"Hello, {name}!")
 
-# Combined with strip
+# .strip() prevents spaces from counting as input
 command = input("> ").strip() or "help"
 ```
+
+**How `or` works here:** it returns the left value if truthy, otherwise the right.
+- `"Alice" or "Anonymous"` → `"Alice"`
+- `"" or "Anonymous"` → `"Anonymous"`
 
 ### 3.2.4 Secure Input with `getpass`
 
