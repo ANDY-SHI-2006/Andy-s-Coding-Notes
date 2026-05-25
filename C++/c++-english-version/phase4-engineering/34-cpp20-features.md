@@ -1,4 +1,4 @@
-[← Previous: Regular Expressions](33-regular-expressions.md) | [Return to Index](README.md)
+[← Previous: Regular Expressions](33-regular-expressions.md) | [Return to Index](../README.md)
 
 # 34 C++20 Features
 
@@ -173,4 +173,4 @@ int main() {
 
 > **Key Concept:** C++20 doesn't add features you couldn't do before — it makes common patterns **shorter, safer, and faster to compile**. The spaceship operator and ranges alone eliminate hundreds of lines of boilerplate in a typical codebase.
 
-[← Previous: Regular Expressions](33-regular-expressions.md) | [Next: Algorithmic Paradigms →](35-algorithmic-paradigms.md)
+[← Previous: Regular Expressions](33-regular-expressions.md) | [Next: Algorithmic Paradigms →](../phase5-advanced-algorithms/35-algorithmic-paradigms.md)

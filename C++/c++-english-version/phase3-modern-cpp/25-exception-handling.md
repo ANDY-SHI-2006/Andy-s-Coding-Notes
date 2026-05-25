@@ -184,4 +184,4 @@ public:
 
 > **Modern C++**: Use exceptions for error handling, but prefer RAII (smart pointers, etc.) to avoid needing explicit cleanup in catch blocks.
 
-[�?Previous: Data Structures](14-data-structures.md) | [Next: Smart Pointers →](16-smart-pointers.md)
+[← Previous: Templates and Generics](24-templates-and-generics.md) | [Next: Smart Pointers →](26-smart-pointers.md)

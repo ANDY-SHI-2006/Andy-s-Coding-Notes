@@ -1,4 +1,4 @@
-[← Previous: Linear-Time Sorting & Selection](44-linear-time-sorting.md) | [Return to Index](README.md)
+[← Previous: Linear-Time Sorting & Selection](44-linear-time-sorting.md) | [Return to Index](../README.md)
 
 # 45 Combinatorics, Probability & Advanced Math
 ## Permutations, Expectations & Competitive Math *(Bonus Chapter)*
@@ -234,4 +234,4 @@ The best programmers are not those who know the most algorithms, but those who c
 
 **Continue your journey.** The exercises for Phase 5 provide problems spanning all chapters. Work through them, review the solutions critically, and return to these notes when you need a refresher.
 
-[← Previous: Linear-Time Sorting & Selection](44-linear-time-sorting.md) | [Return to Index](README.md)
+[← Previous: Linear-Time Sorting & Selection](44-linear-time-sorting.md) | [Return to Index](../README.md)

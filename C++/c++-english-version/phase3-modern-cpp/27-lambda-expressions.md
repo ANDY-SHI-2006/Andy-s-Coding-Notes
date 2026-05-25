@@ -266,4 +266,4 @@ auto f6 = [x]() mutable { return ++x; };
 
 > **Modern C++**: Lambdas are the preferred way to write short, inline functions, especially for STL algorithms and callbacks.
 
-[�?Previous: Smart Pointers](16-smart-pointers.md) | [Next: Move Semantics →](18-move-semantics.md)
+[← Previous: Smart Pointers](26-smart-pointers.md) | [Next: Move Semantics →](28-move-semantics.md)

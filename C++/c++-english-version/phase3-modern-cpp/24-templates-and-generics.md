@@ -189,3 +189,5 @@ Concepts (C++20)       | Constrained generic interfaces
 ```
 
 > **Key Concept:** Templates trade **compile time** for **runtime performance and type safety**. There is zero runtime overhead — every template instantiation becomes a concrete type-specialized function or class after compilation.
+
+[← Previous: Modern C++ Variable Features](23-modern-cpp-variables.md) | [Next: Exception Handling →](25-exception-handling.md)

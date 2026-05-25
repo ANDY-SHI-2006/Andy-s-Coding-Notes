@@ -274,3 +274,5 @@ thread_local             | Per-thread global state
 | Spurious wakeup | Use predicate form of `condition_variable::wait()` |
 
 > **Key Concept:** Concurrency adds **non-determinism** to your program. Every shared resource must be protected, and every synchronization primitive must be paired with a clear ownership model.
+
+[← Previous: Multi-File Programming](31-multi-file-programming.md) | [Next: Regular Expressions →](33-regular-expressions.md)

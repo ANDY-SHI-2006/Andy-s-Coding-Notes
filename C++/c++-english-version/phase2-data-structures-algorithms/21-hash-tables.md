@@ -10,13 +10,13 @@ Arrays provide O(1) access by index, but searching by value takes O(n). What if 
 
 **Hash Function**: Maps keys to array indices
 ```
-hash(key) �?index
+hash(key) -> index
 ```
 
 ## 21.2 Hash Functions
 
 A good hash function:
-- Is deterministic (same key �?same index)
+- Is deterministic (same key -> same index)
 - Distributes keys uniformly
 - Is fast to compute
 - Minimizes collisions
@@ -56,7 +56,7 @@ size_t hashKey(const T& key, size_t tableSize) {
 | Uniformity | Keys should spread evenly across table |
 | Determinism | Same input always produces same output |
 | Efficiency | Fast computation |
-| Avalanche | Small input change �?large output change |
+| Avalanche | Small input change -> large output change |
 
 ## 21.3 Collision Resolution
 
@@ -471,4 +471,4 @@ public:
 | BST | O(log n) | O(log n) | Ordered |
 | **Hash Table** | **O(1)** | **O(1)** | Unordered, fast |
 
-[�?Previous: Heap and Priority Queue](24-heap-priority-queue.md) | [Next: Graph Algorithms →](26-graph-algorithms.md)
+[← Previous: Heap and Priority Queue](20-heap-priority-queue.md) | [Next: Graph Algorithms →](22-graph-algorithms.md)

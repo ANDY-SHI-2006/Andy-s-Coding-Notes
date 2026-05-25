@@ -270,3 +270,5 @@ Everything in one file     Headers declare interface
 | CMake | Cross-platform build orchestration |
 
 > **Key Concept:** Multi-file programming is about **separation of interface and implementation**. Headers declare *what* is available; source files define *how* it works; the linker resolves *where* everything lives.
+
+[← Previous: OOP Advanced Topics](30-oop-advanced.md) | [Next: Multi-Threading →](32-multi-threading.md)

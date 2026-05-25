@@ -1,4 +1,4 @@
-[← Previous: Hash Tables](21-hash-tables.md) | [Next: Modern C++ Variable Features →](23-modern-cpp-variables.md)
+[← Previous: Hash Tables](21-hash-tables.md) | [Next: Modern C++ Variable Features →](../phase3-modern-cpp/23-modern-cpp-variables.md)
 
 # 22 Graph Algorithms
 
@@ -625,4 +625,4 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 5. **Union-Find** for connectivity and MST problems
 6. **Topological sort** for dependency resolution
 
-[�?Previous: Hash Tables](25-hash-tables.md) | [Return to Index](README.md)
+[← Previous: Hash Tables](21-hash-tables.md) | [Next: Modern C++ Variable Features →](../phase3-modern-cpp/23-modern-cpp-variables.md)

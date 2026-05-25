@@ -1,4 +1,4 @@
-[← Previous: Move Semantics](28-move-semantics.md) | [Next: Object-Oriented Programming Advanced Topics →](30-oop-advanced.md)
+[← Previous: Move Semantics](../phase3-modern-cpp/28-move-semantics.md) | [Next: Object-Oriented Programming Advanced Topics →](30-oop-advanced.md)
 
 # 29 Variable Advanced Topics
 
@@ -1278,3 +1278,5 @@ constexpr int square(int x) {          // constexpr function
 
 constexpr int result = square(5);      // —Computed at compile time
 ```
+
+[← Previous: Move Semantics](../phase3-modern-cpp/28-move-semantics.md) | [Next: OOP Advanced Topics →](30-oop-advanced.md)

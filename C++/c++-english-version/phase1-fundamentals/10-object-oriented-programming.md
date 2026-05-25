@@ -274,4 +274,4 @@ Actual object type decides which function runs
 
 > **Key Concept:** Polymorphism decouples **what** you want done (the interface) from **how** it's done (the implementation). This is the foundation of design patterns like Strategy, Factory, and Observer.
 
-
+[← Previous: Functions](09-functions.md) | [Next: STL Basics →](11-stl-basics.md)

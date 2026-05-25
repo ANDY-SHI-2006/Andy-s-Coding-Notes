@@ -286,3 +286,5 @@ class SmartPhone : public Camera, public Phone {};
 | Multiple Inheritance | Prefer composition; use `virtual` inheritance to solve diamond |
 
 > **Key Concept:** Advanced OOP features give you fine-grained control over object behavior, but they also introduce complexity. Master the fundamentals before relying heavily on these tools.
+
+[← Previous: Variable Advanced Topics](29-variable-advanced-topics.md) | [Next: Multi-File Programming →](31-multi-file-programming.md)

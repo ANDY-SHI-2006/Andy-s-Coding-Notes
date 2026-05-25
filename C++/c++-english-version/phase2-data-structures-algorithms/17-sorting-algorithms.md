@@ -488,4 +488,4 @@ void hybridSort(int arr[], int left, int right) {
 | Worst-case matters | Merge Sort, Heap Sort |
 | Linked lists | Merge Sort |
 
-[→Previous: Algorithm Analysis](20-algorithm-analysis.md) | [Next: Recursion →](22-recursion.md)
+[← Previous: Algorithm Analysis](16-algorithm-analysis.md) | [Next: Recursion →](18-recursion.md)

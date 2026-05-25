@@ -1,4 +1,4 @@
-[← Previous: STL Basics](11-stl-basics.md) | [Next: Abstract Data Types →](13-abstract-data-types.md)
+[← Previous: STL Basics](11-stl-basics.md) | [Next: Abstract Data Types →](../phase2-data-structures-algorithms/13-abstract-data-types.md)
 
 # 12 Pointers and Dynamic Memory
 
@@ -149,3 +149,5 @@ foo(nullptr); // Unambiguous: calls foo(char*)
 ```
 
 > **Best Practice:** Always use `nullptr` instead of `NULL` or `0` for null pointers.
+
+[← Previous: STL Basics](11-stl-basics.md) | [Next: Abstract Data Types →](../phase2-data-structures-algorithms/13-abstract-data-types.md)

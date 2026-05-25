@@ -448,4 +448,4 @@ returnType solve(problem) {
 }
 ```
 
-[→Previous: Sorting Algorithms](21-sorting-algorithms.md) | [Next: Trees →](23-trees.md)
+[← Previous: Sorting Algorithms](17-sorting-algorithms.md) | [Next: Trees →](19-trees.md)

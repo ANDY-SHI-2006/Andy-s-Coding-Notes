@@ -1,4 +1,4 @@
-[← Previous: 12 Pointers And Dynamic Memory](12-pointers-and-dynamic-memory.md) | [Next: Data Structures →](14-data-structures.md)
+[← Previous: 12 Pointers And Dynamic Memory](../phase1-fundamentals/12-pointers-and-dynamic-memory.md) | [Next: Data Structures →](14-data-structures.md)
 
 # 13 Abstract Data Types
 
@@ -40,14 +40,14 @@ An ADT is a collection of data together with a set of operations on that data.
 
 ```
      User Program
-          �?          �?uses
-          �?    ┌─────────────�?    �?  ADT       �? �?Specification (Interface)
-    �? Operations �?   - Methods signatures
-    �? (Public)   �?   - Pre/Post conditions
-    └──────┬──────�?           �?    ───────┼───────  �?Wall of Abstraction
-           �?    ┌──────▼──────�?    │Implementation�? �?Hidden details
-    �? - Data Structure
-    �? - Algorithms  �?    �? - Private     �?    └─────────────�?```
+          ?           -> uses
+             |  ────────────------    |  ADT        | Specification (Interface)
+    | Operations |   - Methods signatures
+    | (Public)   |   - Pre/Post conditions
+    |---------|           ?    ───────┼───────  ?Wall of Abstraction
+              |  ──────▼──────?    │Implementation? ?Hidden details
+    | - Data Structure
+    | - Algorithms  |    | - Private     ?    └─────────────?```
 
 **Rules:**
 - Users can only interact through the specified operations
@@ -158,7 +158,7 @@ int main() {
     std::cout << c3.toString() << std::endl;  // "4.00 + 6.00i"
     
     // User cannot access real/imag directly:
-    // c3.real = 5;  // �?Compile error: private member
+    // c3.real = 5;  // Compile error: private member
     
     return 0;
 }
@@ -230,7 +230,7 @@ Users don't need to know internal representation to use these types effectively.
 
 **Remember:**
 - ADT = Data + Operations
-- Specification �?Implementation
+- Specification - Implementation
 - Users depend only on specification
 - Implementation can change without affecting users
 
@@ -248,4 +248,4 @@ The List ADT is a fundamental abstract data type that represents an ordered coll
 
 
 
-[�?Previous: Functions](09-functions.md) | [Next: STL →](11-stl.md)
+[← Previous: 12 Pointers And Dynamic Memory](../phase1-fundamentals/12-pointers-and-dynamic-memory.md) | [Next: Data Structures →](14-data-structures.md)

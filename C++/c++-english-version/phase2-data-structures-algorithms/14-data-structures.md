@@ -601,7 +601,7 @@ void List::remove(int index)
 
 ## 14.9 Variations of Linked List
 
-The linked list implementation shown above is known as a **singly linked list** �?each node has one pointer (a single link).
+The linked list implementation shown above is known as a **singly linked list** - each node has one pointer (a single link).
 
 Many other variations exist:
 
@@ -772,7 +772,7 @@ There is an extra node at the beginning of the list:
 head --> [dummy|*] --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
 ```
 
-> **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case �?no need for separate head-insertion or head-deletion logic.
+> **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case - no need for separate head-insertion or head-deletion logic.
 
 
 ## 14.10 Template List ADT
@@ -947,10 +947,10 @@ This section on List ADT implementations covers:
 
 | Aspect | Array-Based | Linked List-Based |
 |--------|-------------|-------------------|
-| **Retrieval** | O(1) �?direct access | O(n) �?must traverse |
-| **Insertion** | O(n) �?must shift | O(1) �?if position known |
-| **Deletion** | O(n) �?must shift | O(1) �?if position known |
-| **Size** | Fixed (MAXSIZE) | Dynamic �?grows as needed |
+| **Retrieval** | O(1) - direct access | O(n) - must traverse |
+| **Insertion** | O(n) - must shift | O(1) - if position known |
+| **Deletion** | O(n) - must shift | O(1) - if position known |
+| **Size** | Fixed (MAXSIZE) | Dynamic - grows as needed |
 | **Memory** | Contiguous, may waste space | Non-contiguous, extra pointer overhead |
 
 > **Key Takeaway:** Choose array-based for fast random access and fixed-size collections. Choose linked list for dynamic collections with frequent insertions and deletions.
@@ -960,4 +960,4 @@ This section on List ADT implementations covers:
 
 
 
-[�?Previous: Modern C++ Variables](13-modern-cpp-variables.md) | [Next: Exception Handling →](15-exception-handling.md)
+[← Previous: Abstract Data Types](13-abstract-data-types.md) | [Next: Queue ADT →](15-queue.md)

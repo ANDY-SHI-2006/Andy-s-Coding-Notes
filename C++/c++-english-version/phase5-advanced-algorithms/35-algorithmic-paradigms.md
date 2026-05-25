@@ -1,4 +1,4 @@
-[← Previous: C++20 Features](34-cpp20-features.md) | [Next: Backtracking & Search Optimization →](36-backtracking-search-optimization.md)
+[← Previous: C++20 Features](../phase4-engineering/34-cpp20-features.md) | [Next: Backtracking & Search Optimization →](36-backtracking-search-optimization.md)
 
 # 35 Algorithmic Paradigms
 ## Enumeration, Simulation, Greedy & Divide and Conquer
@@ -355,4 +355,4 @@ Start
 - **Chapter 37**: Overlapping subproblems lead us to dynamic programming.
 - **Chapter 44**: QuickSelect uses D&C to find order statistics in linear time.
 
-[← Previous: C++20 Features](34-cpp20-features.md) | [Next: Backtracking & Search Optimization →](36-backtracking-search-optimization.md)
+[← Previous: C++20 Features](../phase4-engineering/34-cpp20-features.md) | [Next: Backtracking & Search Optimization →](36-backtracking-search-optimization.md)

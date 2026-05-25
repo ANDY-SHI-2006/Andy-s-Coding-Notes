@@ -1,4 +1,4 @@
-[← Previous: Graph Algorithms](22-graph-algorithms.md) | [Next: Templates and Generics →](24-templates-and-generics.md)
+[← Previous: Graph Algorithms](../phase2-data-structures-algorithms/22-graph-algorithms.md) | [Next: Templates and Generics →](24-templates-and-generics.md)
 
 # 23 Modern C++ Variable Features
 
@@ -35,7 +35,7 @@ auto func = [](int x) { return x * x; };
 
 **auto Limitations:**
 - Must initialize: `auto x;` is an error!
-- Prefer `=` over braces: `auto x = 5;` �? `auto x{5};` may have surprises
+- Prefer `=` over braces: `auto x = 5;` ? `auto x{5};` may have surprises
 
 ### 23.1.2 decltype (C++11)
 
@@ -131,7 +131,7 @@ using Callback = void(*)(int);       // Clearer syntax
 ```
 
 **Why use type aliases?**
-- **Simplify long names**: `std::map<std::string, std::vector<int>>` �?`StringToIntVectorMap`
+- **Simplify long names**: `std::map<std::string, std::vector<int>>` ?`StringToIntVectorMap`
 - **Platform independence**: `using int32 = int;` can change to `int32_t`
 - **Easy to modify**: Change alias definition, all uses update
 
@@ -282,8 +282,8 @@ Warns if the return value of a function is discarded. Applied to:
 [[nodiscard]] int* allocateBuffer(size_t size);
 
 void example() {
-    allocateBuffer(100);        // �?WARNING: ignoring nodiscard return value
-    auto ptr = allocateBuffer(100);  // �?OK: using the result
+    allocateBuffer(100);        // WARNING: ignoring nodiscard return value
+    auto ptr = allocateBuffer(100);  // ?OK: using the result
     delete[] ptr;
 }
 ```
@@ -300,7 +300,7 @@ struct [[nodiscard]] ErrorCode {
 ErrorCode openFile(const char* path);  // Caller must check result
 
 void test() {
-    openFile("data.txt");       // �?WARNING
+    openFile("data.txt");       // ?WARNING
     if (auto err = openFile("data.txt"); !err.success()) {
         // handle error
     }
@@ -379,12 +379,12 @@ void example() {
 
 ```
 Variable Declaration
-        �?        ├── Global? ──�?Use inline (C++17) or extern + single definition
-        �?        ├── Local to function? ──�?Automatic storage (default)
-        �?        ├── Must persist across calls? ──�?static local
-        �?        ├── Large / runtime-sized? ──�?Dynamic + smart pointer
-        �?        ├── Constant value? ──�?constexpr (compile-time) or const (runtime)
-        �?        └── Type is complex? ──�?auto or structured binding (C++17)
+        |        ├── Global? ──?Use inline (C++17) or extern + single definition
+        |        ├── Local to function? ──?Automatic storage (default)
+        |        ├── Must persist across calls? ──?static local
+        |        ├── Large / runtime-sized? ──?Dynamic + smart pointer
+        |        ├── Constant value? ──?constexpr (compile-time) or const (runtime)
+        |        └── Type is complex? ──?auto or structured binding (C++17)
 ```
 
 ## 23.2 Type-Safe Containers for Uncertainty (C++17)
@@ -473,4 +473,4 @@ try {
 | **Overhead** | Minimal (bool + T) | Size of largest type + discriminator | Heap allocation + typeinfo |
 | **Use when** | Value may be absent | Value is one of known types | Type is unknown at compile time |
 
-[← Previous: Graph Algorithms](22-graph-algorithms.md) | [Next: Templates and Generics →](24-templates-and-generics.md)
+[← Previous: Graph Algorithms](../phase2-data-structures-algorithms/22-graph-algorithms.md) | [Next: Templates and Generics →](24-templates-and-generics.md)

@@ -1,4 +1,4 @@
-[← Previous: Lambda Expressions](27-lambda-expressions.md) | [Next: Variable Advanced Topics →](29-variable-advanced-topics.md)
+[← Previous: Lambda Expressions](27-lambda-expressions.md) | [Next: Variable Advanced Topics →](../phase4-engineering/29-variable-advanced-topics.md)
 
 # 28 Move Semantics
 
@@ -230,4 +230,4 @@ for (int i = 0; i < 1000; ++i) {
 
 > **Modern C++**: Use move semantics to avoid unnecessary copies. Most of the time, it happens automatically—just write natural code and let the compiler optimize!
 
-[�?Previous: Lambda](17-lambda-expressions.md) | [Next: Queue ADT →](19-queue.md)
+[← Previous: Lambda Expressions](27-lambda-expressions.md) | [Next: Variable Advanced Topics →](../phase4-engineering/29-variable-advanced-topics.md)

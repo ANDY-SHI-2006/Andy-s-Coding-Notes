@@ -673,4 +673,4 @@ Both produce the same sequence, confirming the palindrome.
 - Need fairness/order preservation? →Queue
 - Need reverse order/backtracking? → Stack
 
-[← Previous: Move Semantics](18-move-semantics.md) | [Next: Algorithm Analysis →](20-algorithm-analysis.md)
+[← Previous: Data Structures](14-data-structures.md) | [Next: Algorithm Analysis →](16-algorithm-analysis.md)

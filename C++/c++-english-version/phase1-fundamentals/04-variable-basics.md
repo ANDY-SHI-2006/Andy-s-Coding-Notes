@@ -505,4 +505,4 @@ for (const auto& num : numbers) {     // No copy, cannot modify
 - Value known at compile time —Use `constexpr`
 - Value determined at runtime —Use `const`
 - Just want to prevent modification —Use `const`
-
+[← Previous: Code Standardization](03-code-standardization.md) | [Next: Operators →](05-operators.md)

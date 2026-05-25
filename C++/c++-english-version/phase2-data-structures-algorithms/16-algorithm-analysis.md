@@ -492,4 +492,4 @@ O(n!)       <── Impossible (avoid for n > 15)
 For n = 1,000:
 - O(log n): ~10 operations ✔- O(n): 1,000 operations ✔- O(n²): 1,000,000 operations ⚠️
 - O(2ⁿ): More operations than atoms in the universe ❌
-[→Previous: Queue ADT](19-queue.md) | [Next: Sorting Algorithms →](21-sorting-algorithms.md)
+[← Previous: Queue ADT](15-queue.md) | [Next: Sorting Algorithms →](17-sorting-algorithms.md)
