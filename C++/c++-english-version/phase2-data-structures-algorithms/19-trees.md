@@ -74,6 +74,26 @@ struct BinaryTreeNode {
 | **Balanced** | Height difference between subtrees <= 1 |
 | **Degenerate** | Each node has only one child (like linked list) |
 
+### Array Representation of Complete Binary Trees
+
+A **complete binary tree** can be stored efficiently in an array without pointers. For a node at index `i` (0-indexed):
+
+| Relationship | Index |
+|-------------|-------|
+| **Parent** | `(i - 1) / 2` |
+| **Left child** | `2 * i + 1` |
+| **Right child** | `2 * i + 2` |
+
+If using 1-indexed arrays (common in textbook pseudocode):
+
+| Relationship | Index |
+|-------------|-------|
+| **Parent** | `i / 2` |
+| **Left child** | `2 * i` |
+| **Right child** | `2 * i + 1` |
+
+This representation is the foundation for **heaps** (Chapter 20) and **segment trees** (Section 19.9).
+
 ## 19.3 Binary Tree Traversals
 
 ### Depth-First Traversals
@@ -211,6 +231,31 @@ public:
 | Search | O(log n) | O(n) |
 | Insert | O(log n) | O(n) |
 | Delete | O(log n) | O(n) |
+
+### Saving and Restoring a BST
+
+**Serialize to original shape**: Use **pre-order traversal** to write nodes to a file, then rebuild by inserting nodes in that order.
+
+**Serialize to balanced shape**: Use **in-order traversal** to obtain a sorted array of keys, then recursively rebuild a balanced BST:
+1. Take the **middle element** as the root.
+2. Recursively build the left subtree from the left half.
+3. Recursively build the right subtree from the right half.
+
+```cpp
+BinaryTreeNode* buildBalanced(vector<int>& keys, int left, int right) {
+    if (left > right) return nullptr;
+    int mid = left + (right - left) / 2;
+    BinaryTreeNode* node = new BinaryTreeNode(keys[mid]);
+    node->left = buildBalanced(keys, left, mid - 1);
+    node->right = buildBalanced(keys, mid + 1, right);
+    return node;
+}
+
+// Usage: inorder traversal yields sorted keys, then:
+// BinaryTreeNode* balancedRoot = buildBalanced(sortedKeys, 0, n-1);
+```
+
+This guarantees `h = O(log n)`.
 
 ## 19.5 Self-Balancing BSTs
 
@@ -392,6 +437,32 @@ BinaryTreeNode* findLCA(BinaryTreeNode* root, int n1, int n2) {
 
 Binary trees representing arithmetic expressions.
 
+### Structure
+
+- **Leaf nodes** store **operands** (numbers).
+- **Internal nodes** and the **root** store **operators**.
+
+For expression `(3 + 4) * 5`:
+
+```
+        *
+       / \
+      +   5
+     / \
+    3   4
+```
+
+### Constructing an Expression Tree
+
+Given a **fully parenthesized infix expression**, the operator with the lowest precedence (or the last operator outside any parentheses) becomes the root. Its left and right sub-expressions become the left and right subtrees.
+
+Example: `((a + b) * (c - d))`
+1. The outermost operator is `*`, so it becomes the root.
+2. Left subtree: `(a + b)` → root is `+`, children are `a` and `b`.
+3. Right subtree: `(c - d)` → root is `-`, children are `c` and `d`.
+
+### Evaluating an Expression Tree
+
 ```cpp
 // Infix: (3 + 4) * 5
 // Postfix: 3 4 + 5 *
@@ -414,6 +485,8 @@ int evaluate(BinaryTreeNode* root) {
     return 0;
 }
 ```
+
+> **Key Insight**: Operator precedence is encoded by the tree structure. Operators closer to the root are evaluated later. No explicit precedence rules are needed during evaluation.
 
 ## 19.8 Trie (Prefix Tree)
 
@@ -530,5 +603,9 @@ public:
 3. **Self-balancing**: Rotations maintain O(log n) operations
 4. **Traversals**: Pre/In/Post-order, Level-order
 5. **Applications**: Searching, expression evaluation, autocomplete, range queries
+
+### Further Reading
+
+- **Lecture Notes**: [Lecture 12: Trees](../lecture-notes/lecture-12-trees.md) — Westlake University, Spring 2026. Covers expression tree construction, array-based tree representation, and BST serialization with detailed pseudocode.
 
 [← Previous: Recursion](18-recursion.md) | [Next: Heap and Priority Queue →](20-heap-priority-queue.md)
