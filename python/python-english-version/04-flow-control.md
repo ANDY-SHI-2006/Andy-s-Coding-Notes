@@ -44,16 +44,28 @@ else:
 
 **Short-Circuit Evaluation:**
 
-`and` / `or` in conditions are evaluated left-to-right and stop as soon as the result is determined. Use this for safe attribute access.
+`and` / `or` are evaluated left-to-right and stop as soon as the result is determined.
 
 ```python
 # Safe: obj.name is only evaluated if obj is not None
 if obj is not None and obj.name == "Alice":
     print(obj.name)
-
-# Safe: fallback_value is only evaluated if value is falsy
-result = value or fallback_value
 ```
+
+**Default value with `or`:**
+
+`or` returns the left operand if it is truthy, otherwise the right. This is a common idiom for providing fallbacks.
+
+```python
+# If value is falsy (None, "", 0, []), use fallback instead
+result = value or fallback_value
+
+# Practical example
+timeout = user_config or 30        # 30 if user_config is None/0/""
+name = input("Name: ") or "Guest"  # "Guest" if user presses Enter
+```
+
+> See also: [3.2.3](03-user-interaction.md#323-default-value-for-empty-input) for `input()` with `or`.
 
 ### 4.1.2 Ternary Operator
 
