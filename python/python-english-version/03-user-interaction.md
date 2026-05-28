@@ -100,24 +100,23 @@ height = float(input("Enter your height (m): "))
 `input()` always returns a string. Always validate before converting to avoid crashes.
 
 ```python
-# Safe integer input
+# Safe integer input (one-shot)
 try:
     num = int(input("Enter a number: "))
 except ValueError:
     print("Invalid input. Please enter a valid integer.")
     num = 0
 
+# Loop until valid (most common pattern)
+while True:
+    try:
+        num = int(input("Enter a number: "))
+        break
+    except ValueError:
+        print("Invalid input. Try again.")
+
 # Chain conversion (common but unsafe without validation)
 num = int(input("Enter a number: "))  # Crashes on "abc"
-```
-
-**Handling EOF:** `input()` raises `EOFError` when it encounters end-of-file (Unix: Ctrl+D, Windows: Ctrl+Z).
-
-```python
-try:
-    line = input()
-except EOFError:
-    print("Input closed")
 ```
 
 ### 3.2.3 Default Value for Empty Input
@@ -142,11 +141,15 @@ command = input("> ").strip() or "help"
 Use `getpass.getpass()` for password or sensitive input. Characters are not echoed to the terminal.
 
 ```python
-from getpass import getpass
+from getpass import getpass, getuser
 
 password = getpass("Enter password: ")
 # Characters typed are hidden
+
+username = getuser()  # Get current login name (OS-dependent)
 ```
+
+> **Note:** `getpass()` may not work in some IDEs (e.g., VS Code terminal). Use a real terminal or command line instead.
 
 ### 3.2.5 Safe Parsing with `ast.literal_eval`
 
@@ -178,6 +181,15 @@ value = ast.literal_eval(input())  # Only parses literals
 
 Read multiple lines until EOF or an empty line.
 
+**EOF** (end-of-file): `input()` raises `EOFError` when input is closed (Unix: Ctrl+D, Windows: Ctrl+Z).
+
+```python
+try:
+    line = input()
+except EOFError:
+    print("Input closed")
+```
+
 ```python
 # Read until EOF (Unix: Ctrl+D, Windows: Ctrl+Z)
 import sys
@@ -185,10 +197,7 @@ lines = sys.stdin.read()
 
 # Read until empty line
 lines = []
-while True:
-    line = input()
-    if line == "":
-        break
+while (line := input()):
     lines.append(line)
 ```
 
