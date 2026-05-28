@@ -152,6 +152,10 @@ password = getpass("Enter password: ")
 
 > **Never use `eval()` on untrusted input.** `eval()` executes arbitrary code and is a severe security risk.
 
+`eval()` treats the input string as Python code and runs it. A malicious user could input `__import__('os').system('rm -rf /')` and `eval()` would actually execute that command.
+
+`ast.literal_eval()` only converts strings into basic data types (lists, dicts, numbers, strings). It never runs code — it only parses literals. If the input is not a literal, it raises an error.
+
 ```python
 # DANGEROUS — do not use
 result = eval(input())  # User can input malicious code
@@ -160,6 +164,15 @@ result = eval(input())  # User can input malicious code
 import ast
 value = ast.literal_eval(input())  # Only parses literals
 ```
+
+**Comparison:**
+
+| Input string | `eval()` | `ast.literal_eval()` |
+|-------------|----------|---------------------|
+| `"[1, 2, 3]"` | ✅ List `[1, 2, 3]` | ✅ List `[1, 2, 3]` |
+| `"{1: 'a'}"` | ✅ Dict `{1: 'a'}` | ✅ Dict `{1: 'a'}` |
+| `"1 + 1"` | ✅ Runs math → `2` | ❌ Raises `ValueError` |
+| `"__import__('os').system('rm -rf /')"` | ❌ Executes command | ❌ Raises `ValueError` |
 
 ### 3.2.6 Multi-line Input
 
