@@ -1,4 +1,4 @@
-﻿# AI ALGORITHM DATA English Version
+# AI ALGORITHM DATA English Version
 
 Content to be added.
 

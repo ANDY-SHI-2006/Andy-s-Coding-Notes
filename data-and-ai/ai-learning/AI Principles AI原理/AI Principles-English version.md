@@ -2882,3 +2882,449 @@ Results feedback for model refinement
 - Ensuring ethical and responsible use
 - Prioritizing large-scale data generation for under-studied contexts
 
+
+
+---
+
+# 12 Classic Agent Works
+
+> **Source:** SCI 1003 Class 12, Dr. Chi Zhang @ Westlake AGI Lab  
+> This chapter provides deep dives into landmark agent systems—AutoGPT, Generative Agents, MetaGPT, and AppAgent—and outlines the course team project requirements. Each case study illustrates a different facet of agent design: open-ended goal pursuit, social simulation, structured multi-role collaboration, and GUI-level interaction.
+
+---
+
+## Part A: Landmark Agent Systems
+
+## 12.1 AutoGPT
+
+### 12.1.1 Background: From Answering to Doing
+
+AutoGPT represents the shift from **question-answering** to **goal-driven execution**. Users no longer specify every step; they provide an end goal. The agent must decide what to search, write, and do next. This exposes new problems: plan drift, tool failure, and runaway cost.
+
+### 12.1.2 Core Idea: The User Gives Only the Goal
+
+A typical AutoGPT setup looks like this:
+
+```
+Name: ResearchGPT
+Role: autonomous research assistant
+Goals:
+  1. research AI agent applications in education in 2026
+  2. identify 5 representative projects
+  3. produce a lecture-handout outline
+Constraints:
+  - cite sources
+  - save notes to workspace
+  - stop when enough evidence is collected
+```
+
+**Three-step decomposition:**
+
+| Step | Action |
+|------|--------|
+| **1. Decompose** | Break the goal into search, filtering, synthesis, and writing |
+| **2. Use tools** | Browse pages, read files, draft text, and update memory |
+| **3. Self-check** | Decide whether the current evidence is enough or more is needed |
+
+> **Key Point:** The prompt is not the answer; it defines an **executable target state**.
+
+### 12.1.3 Method: The Minimal Control Loop
+
+AutoGPT's core is a closed loop of prompt, tools, and state:
+
+```
+1. Thought
+   The LLM states its current understanding, subgoal, and rationale.
+
+2. Command
+   It selects one available action: search, read file, write file, etc.
+
+3. Observation
+   The system returns tool results to the LLM as the next observation.
+
+4. Memory
+   Important facts are written into workspace or memory to avoid repeated search.
+```
+
+> **Key Concept:** The core is not one prompt; it is the **closed loop** of prompt, tools, and state.
+
+### 12.1.4 Tool Layer
+
+| Tool | Function |
+|------|----------|
+| **Browser / Search** | Search information, open web pages, extract text for research |
+| **File System** | Create working folders, write notes, persist intermediate results |
+| **Code / Shell** | Run scripts and process data (introduces security risks) |
+| **Plugin / API** | Connect email, calendars, databases, business systems |
+
+> **Key Point:** A larger action space means more capability, and also more need for boundaries and audit.
+
+### 12.1.5 Memory Design
+
+| Type | Function |
+|------|----------|
+| **Working memory** | Short-term context stores recent observations and decisions |
+| **Long-term memory** | Stores goals, facts, file paths, intermediate conclusions |
+
+> **Trade-off:** Good memory reduces repeated search, but it can also preserve mistakes.
+
+### 12.1.6 Failure Mode: Goal Drift and Over-Looping
+
+**Example failure trace:**
+
+```
+User goal: write a competitor analysis
+Round 1: search competitors
+Round 2: search more competitors
+Round 3: search market reports
+Round 4: search news
+Round 5: search again...
+```
+
+| Aspect | Detail |
+|--------|--------|
+| **Symptom** | Keeps searching and never moves into writing or convergence |
+| **Cause** | Goal is too broad, evaluator is weak, tool results are noisy |
+| **Fix** | Decompose the task, set a budget, require checkable artifacts each round |
+
+### 12.1.7 Best Practice: Goals as Artifacts
+
+Turn a broad goal into **checkable artifacts**:
+
+```
+Task: prepare materials for Lecture 1 on agents
+Deliverables:
+  1. source_list.md
+  2. 5-slide outline.md
+  3. open_questions.md
+
+Budget:
+  - max 6 tool calls
+  - every call must update one deliverable
+  - stop after all files exist
+```
+
+> **Key Concept:** Completion is defined by whether the files exist and contain enough content. Writing goals as artifacts is usually more reliable than writing them as wishes.
+
+### 12.1.8 AutoGPT Takeaways
+
+| Aspect | Insight |
+|--------|---------|
+| **Strengths** | General goals, open tools, fast prototyping, powerful product imagination |
+| **Weaknesses** | Weak evaluation, loops, hallucination, goal drift, budget burn |
+| **Method lesson** | Turn prompts into control protocols and tool calls into auditable actions |
+| **Influence** | Many later frameworks add roles, documents, environment constraints, and evaluation on top |
+
+> **One-line memory:** AutoGPT made "LLMs can act on their own" into a runnable engineering idea.
+
+## 12.2 Generative Agents (Smallville)
+
+### 12.2.1 Background: From Scripted NPCs to Generated Social Behavior
+
+Traditional game NPCs rely on hand-written scripts with limited coverage. LLMs can generate open language, but need long-term state to stay consistent. Generative Agents aim to let a group of agents interact naturally in one environment.
+
+### 12.2.2 Task Setup: Continuous Daily Life
+
+Each character has a home, job, relationships, and current plan. The environment provides observable events (who is where, what was said). The output is the next natural-language behavior, then mapped into town actions.
+
+### 12.2.3 Memory Stream
+
+Every observation is written into a **stream of events**. Retrieval combines:
+
+| Factor | Role |
+|--------|------|
+| **Recency** | Recent events are more accessible |
+| **Importance** | Significant events are prioritized |
+| **Relevance** | Events related to current context are retrieved |
+
+> **Key Concept:** The agent does not need to stuff all history into the prompt. The memory stream supplies retrieved facts on demand.
+
+### 12.2.4 Reflection: Compressing Memories into Beliefs
+
+```
+1. Observe    → Record environmental events and conversations
+2. Score      → Assign importance to memories
+3. Ask        → Generate higher-level questions ("what is my relationship with this person?")
+4. Summarize  → Synthesize related memories into a new reflection memory
+```
+
+> **Key Point:** Reflection helps agents form reusable explanations, not just remember facts.
+
+### 12.2.5 Planning: From Daily Schedule to Immediate Action
+
+| Level | Function |
+|-------|----------|
+| **Daily plan** | Coarse schedule: breakfast, work, rest |
+| **Hourly plan** | Break schedule into hourly segments |
+| **Reactive update** | Locally revise plan when new events occur |
+| **Action output** | Output next concrete behavior or dialogue |
+
+> **Key Concept:** Planning is not a rigid script; it gives stability while allowing interruptions.
+
+### 12.2.6 Dialogue Generation
+
+The system first retrieves memories related to the people, place, and event. The prompt includes:
+- Persona
+- Current environment
+- Retrieved memories
+
+The LLM replies in a way that fits the character's relationships and history.
+
+### 12.2.7 Experimental Result
+
+| Architecture | Behavior Believability |
+|-------------|------------------------|
+| **Full architecture** | Highest |
+| No reflection | Lower |
+| No planning | Lower |
+| No memory | Worst |
+
+> **Conclusion:** Believable behavior is not just the LLM; memory, reflection, and planning support it together.
+
+## 12.3 MetaGPT
+
+### 12.3.1 Background: From One Agent to a Software Company
+
+Complex software cannot be completed reliably from one prompt. Real teams rely on roles, reviews, and documents to pass information. MetaGPT imports these engineering workflows into a multi-agent framework.
+
+> **Key Question:** Why can't multiple LLM agents simply free-chat in a group chat?
+
+### 12.3.2 SOP: Turning Collaboration from Chat into Process
+
+**Standard Operating Procedures (SOPs)** constrain collaboration:
+
+- Each role knows what to read and what to produce
+- Intermediate artifacts connect the workflow instead of free-form chat memory
+- SOPs reduce role confusion and duplicated work
+
+### 12.3.3 Role Design
+
+| Role | Responsibility |
+|------|----------------|
+| **Product Manager** | Clarify requirements; produce PRDs, user stories, constraints |
+| **Architect** | Decompose modules, design interfaces, set technical structure |
+| **Engineer** | Implement code according to design; handle dependencies and files |
+| **QA / Reviewer** | Generate tests, inspect defects, feed back revisions |
+
+> **Key Concept:** The value of roles is **constrained perspective**: each role owns its artifact.
+
+### 12.3.4 Intermediate Documents as Interface
+
+PRDs, system designs, task lists, and code files are **checkable artifacts**. Later roles read earlier artifacts instead of guessing requirements again. Documents make multi-round, multi-role collaboration traceable.
+
+### 12.3.5 Message Pool Architecture
+
+| Feature | Function |
+|---------|----------|
+| **Structured messages** | Carry sender, receiver, content type, artifact path |
+| **Selective subscription** | Roles only attend to messages relevant to their responsibility |
+| **Action trigger** | After receiving prerequisite artifacts, a role runs its Action |
+| **Persist artifacts** | Results are written as files or documents for later roles |
+
+> **Key Point:** The key to multi-agent systems is not more talking, but **routing and artifact contracts**.
+
+### 12.3.6 Experimental Result
+
+| Approach | Code Task Performance |
+|----------|----------------------|
+| Single model / simple baseline | Lower |
+| Multi-role without strong SOP | Improved |
+| **MetaGPT with SOP** | **Higher** |
+
+> **Conclusion:** Making the process explicit matters more than merely adding agents.
+
+### 12.3.7 MetaGPT Takeaways
+
+| Aspect | Insight |
+|--------|---------|
+| **Core contribution** | Organize software development with roles, SOPs, structured messages, and document artifacts |
+| **Value** | Break complex tasks into checkable and traceable intermediate results |
+| **Method lesson** | Agent collaboration needs interfaces, not free-form chat |
+
+> **One-line memory:** MetaGPT makes an agent team look like an engineering process, not a lively group chat.
+
+## 12.4 AppAgent
+
+### 12.4.1 Background: Agents as Smartphone Users
+
+Many real user tasks happen inside mobile apps: maps, email, video, shopping, music, reviews. APIs may not be open, and web automation may not apply. A GUI-level agent is closer to ordinary users' operation world.
+
+### 12.4.2 Task Setup
+
+Input a goal (e.g., finding an email in Gmail or searching a place on Maps). Each step receives the current screenshot and interactive elements. The output is one action; after execution, the next round begins.
+
+### 12.4.3 Input Representation: Multimodal State
+
+| Modality | Information |
+|----------|-------------|
+| **Screenshot** | Visual context: icons, text, layout |
+| **XML** | Interactive elements and their attributes |
+| **Overlay IDs** | Numbered elements on the screenshot so the model can reference them |
+
+### 12.4.4 Action Space
+
+AppAgent uses deliberately human-like basic gestures:
+
+| Action | Description |
+|--------|-------------|
+| **Tap(element)** | Tap a numbered element to open, select, or confirm |
+| **Long_press(element)** | Long-press to trigger menus or special selection |
+| **Swipe(element, direction, dist)** | Swipe to browse lists or switch pages |
+| **Text / Back / Exit** | Input text, go back, or end the task |
+
+> **Key Point:** A small action space reduces parsing difficulty and makes experiments more controllable.
+
+### 12.4.5 Two-Phase Learning
+
+| Phase | What Happens |
+|-------|-------------|
+| **Exploration** | Agent autonomously taps and swipes, observing before/after screens. Records each element's function into an app-specific document |
+| **Demonstration** | Human demonstrates task completion; system records UI element functions (not fixed trajectories) |
+
+> **Key Concept:** The document records **UI element functions**, not a fixed trajectory. This improves generalization to similar tasks or UI changes.
+
+### 12.4.6 Deployment Prompt Structure
+
+Each prompt includes:
+- Current screen (screenshot + interactive elements)
+- Generated app document
+- Action schema
+
+The model outputs: **Observation → Thought → Action → Summary**. Summary acts as short-term memory; Exit marks completion.
+
+### 12.4.7 Experimental Results
+
+Success rates over 45 tasks:
+
+| Method | Success Rate |
+|--------|-------------|
+| GPT-4 baseline | 2.2% |
+| AppAgent (no doc) | 48.9% |
+| Auto exploration | 73.3% |
+| Watching demos | 84.4% |
+| **Manual doc** | **95.6%** |
+
+> **Conclusion:** Long-term GUI knowledge is extremely valuable, especially app-specific documents. As task steps increase, the gap widens—document-assisted methods maintain higher success in long action chains.
+
+---
+
+## Part B: Course Team Project Briefing
+
+## 12.5 Project Overview
+
+### 12.5.1 Objective
+
+Design and implement an **original AI application** that leverages techniques introduced in this course, including foundation models, generative AI, or agent-based systems.
+
+### 12.5.2 Core Requirements
+
+| # | Requirement | Detail |
+|---|-------------|--------|
+| **1** | **Innovation First** | Focus on a novel use case—not a reproduction of commonly seen demos or existing products |
+| **2** | **Technology Integration** | Go beyond calling a single API or model. Combine multiple AI components (LLM reasoning, generation, perception) |
+| **3** | **Team Collaboration** | Reflect a reasonable workload for a 4-person team with clear division of tasks |
+
+### 12.5.3 Proposal Examples
+
+**Example 1: Multi-Agent System for Real-World Problem Solving**
+- Emphasizes decentralized intelligence and task decomposition
+- Distinct agent roles + coordination + a novel scenario
+- Can integrate LLM-based planning, agent communication protocols, tool-using agents
+
+**Example 2: Creative Generative AI Workflow**
+- Design a generative AI pipeline using ComfyUI or WebUI
+- Combine multiple generative models into a customized, multi-step workflow
+- Scenarios: personalized image generation/editing, video synthesis, LLM-enabled semantic control
+
+## 12.6 Grading Policy
+
+### 12.6.1 Team-Level Evaluation (100%)
+
+| Component | Weight | Criteria |
+|-----------|--------|----------|
+| **Technical Report** | 30% | Clarity, structure, depth of analysis, quality of writing |
+| **Presentation** | 30% | Effectiveness of communication, visual aids, delivery, Q&A ability |
+| **Technical Quality** | 40% | Problem difficulty (10%), creativity of approach (10%), completeness (10%), amount of work (10%) |
+
+### 12.6.2 Individual Contribution Evaluation
+
+Each student submits a confidential peer evaluation:
+
+| Rating | Adjustment | Condition |
+|--------|-----------|-----------|
+| **Significantly above average** | +5% bonus | At least two teammates independently select this option |
+| **Roughly average** | 0% (full team score) | Default if consensus is not reached |
+| **Significantly below average** | -10% penalty | At least two teammates independently select this option |
+
+## 12.7 Presentation Guidelines
+
+- **Duration:** 10-minute slides presentation in English + 5-minute Q&A
+- **Advised sections:**
+  1. **Motivation** — reason for choosing the topic and its importance
+  2. **Methodology** — approach and techniques used
+  3. **Demonstration** — live demo, video, or suitable format showcasing functionality
+  4. **Experimental Results** — results on real-world or simulated datasets
+  5. **Summary and Conclusion** — achievements, lessons learned, future improvements
+
+## 12.8 Technical Report Guidelines
+
+### 12.8.1 Overall Structure
+
+```
+01 Introduction      → Context, motivation, proposed solution, contributions
+02 Related Work     → Relevant AI technologies, related applications, comparison/positioning
+03 Method           → System overview, key components, algorithms, implementation details
+04 Experiments      → Setup, qualitative results, quantitative evaluation, ablation study
+05 Conclusion       → Summary and future directions
+```
+
+### 12.8.2 Introduction Structure
+
+1. **Background** — broader area, enough context for unfamiliar readers
+2. **Motivation & Problem Statement** — why interesting/challenging, what is missing
+3. **Proposed Solution (Overview)** — high-level summary, key AI techniques used
+4. **Contributions / Achievements** — 2–3 bullet points of main contributions
+
+### 12.8.3 Method Section Best Practices
+
+- Start with a high-level system diagram
+- Break down into major components/modules
+- Include mathematical formulations if applicable
+- Add pseudocode or flowchart for agent systems
+- Mention tools, models, APIs, platforms used
+
+### 12.8.4 Experiment Section Best Practices
+
+| Aspect | What to Include |
+|--------|----------------|
+| **Setup** | Task/scenario, datasets, prompts, test inputs, runtime environment |
+| **Qualitative Results** | Example outputs with explanation of what they demonstrate |
+| **Quantitative Evaluation** | Numerical metrics in tables or charts |
+| **Ablation Study** | Compare with/without key components to demonstrate necessity |
+
+> **Key Point:** Evidence should show that the method works **and** why the design choices matter.
+
+## 12.9 Tutorial: Multi-Agent Discussion
+
+### 12.9.1 Purpose
+
+Showcase collaboration among purpose-driven LLM agents with distinct personalities.
+
+### 12.9.2 Key Concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Agent personalities** | Each agent adopts a specific alignment/perspective (e.g., Lawful Good, Chaotic Neutral, Lawful Evil) |
+| **Turn-based discussion** | Each turn selects a speaker, invokes an LLM, records the response for the next step |
+| **StateGraph orchestration** | Graph-based state machine manages conversation flow |
+
+### 12.9.3 Setup
+
+- **Defined rounds:** Structured turns with speaker selection
+- **Expected outcome:** Diverse perspectives converging on a team activity plan
+
+> **Key Concept:** Three purpose-driven agents discuss the same task from different perspectives, demonstrating how role-defined agents produce richer, more balanced decisions than a single model.
+
+---
+
+> **Best Practice (Agent Systems):** Read an agent as a **message transcript**, not as code. The important object is the sequence of visible messages: user prompt, assistant tool request, tool observation, final answer. This applies to AutoGPT's loop, MetaGPT's document handoffs, and AppAgent's screen-action pairs alike.
