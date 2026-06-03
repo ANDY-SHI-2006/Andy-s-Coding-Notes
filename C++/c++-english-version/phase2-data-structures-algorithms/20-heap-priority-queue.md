@@ -39,6 +39,20 @@ int left(int i) { return 2 * i + 1; }
 int right(int i) { return 2 * i + 2; }
 ```
 
+### Heap vs BST
+
+Both heaps and BSTs are binary trees, but they serve different purposes:
+
+| Property | Heap | BST |
+|----------|------|-----|
+| Structure | Complete binary tree | Binary search tree |
+| Ordering | Parent >= children (max-heap) | Left < Root < Right |
+| Purpose | Efficient max/min access | Efficient search |
+| Search tree? | **No** | **Yes** |
+| Shape | Always complete | Depends on insertion order |
+
+> **Key distinction**: A heap is not a search tree. You cannot efficiently search for an arbitrary key in a heap.
+
 ## 20.2 Max Heap Implementation
 
 ```cpp
@@ -142,6 +156,27 @@ void buildHeap(vector<int>& arr) {
 }
 ```
 
+### Why Build Heap Is O(n)
+
+A naive analysis suggests `O(n log n)` — `n/2` calls to `heapify`, each `O(log n)`. But a level-by-level count reveals `O(n)`:
+
+| Level (from bottom) | Nodes | heapify Calls | Work per Call |
+|---------------------|-------|---------------|---------------|
+| 2 | `n/4` | `n/4` | `O(2)` |
+| 3 | `n/8` | `n/8` | `O(3)` |
+| 4 | `n/16` | `n/16` | `O(4)` |
+| ... | ... | ... | ... |
+
+Total work:
+```
+T(n) = 2 * n/2^2 + 3 * n/2^3 + 4 * n/2^4 + ...
+     < n * (2/2^2 + 3/2^3 + 4/2^4 + ...)
+     < n * (3/2)
+     = O(n)
+```
+
+The series `Σ k/2^k` converges to `2`, bounding the total by a constant multiple of `n`.
+
 ## 20.4 Heap Sort
 
 ```cpp
@@ -160,6 +195,25 @@ void heapSort(vector<int>& arr) {
 }
 ```
 
+### How It Works
+
+Heapsort maintains a partition of the array into two regions:
+
+1. **Build phase**: Transform the entire array into a max-heap.
+2. **Extraction phase**: In step `k` (for `k = 1` to `n`):
+   - **Heap region**: `a[0 ... n-k]` — unsorted, maintains heap property
+   - **Sorted region**: `a[n-k+1 ... n-1]` — elements in final sorted position
+   - Swap `a[0]` (current maximum) with `a[n-k]`
+   - Restore heap property on the reduced heap region
+
+```
+Initial:  [ heap region: entire array ]
+Step 1:   [ heap region n-1 ] | [ max ]
+Step 2:   [ heap region n-2 ] | [ 2nd max | max ]
+...
+Final:    [ min | ... | 2nd max | max ]
+```
+
 | Property | Value |
 |----------|-------|
 | Time | O(n log n) - all cases |
@@ -169,6 +223,17 @@ void heapSort(vector<int>& arr) {
 ## 20.5 Priority Queue
 
 A priority queue is an abstract data type where each element has a priority. Highest priority element is served first.
+
+### Simple Implementations
+
+Before using a heap, consider two naive approaches:
+
+| Implementation | Insert | Remove Max | Notes |
+|---------------|--------|------------|-------|
+| **Unsorted array/list** | `O(1)` | `O(n)` | Fast insert, slow extraction |
+| **Sorted array/list** | `O(n)` | `O(1)` | Slow insert, fast extraction |
+
+Neither is ideal when both operations are frequent. A **heap** achieves `O(log n)` for both, giving the best overall performance.
 
 ### STL Priority Queue
 
@@ -517,5 +582,9 @@ private:
 - **Statistics**: Running median, top-k
 - **Data compression**: Huffman coding
 - **External sorting**: k-way merge
+
+### Further Reading
+
+- **Lecture Notes**: [Lecture 13: Priority Queue and Heap](../lecture-notes/lecture-13-priority-queue-heap.md) — Westlake University, Spring 2026. Covers heap vs BST comparison, detailed heapify pseudocode, build-heap `O(n)` proof, and sort-vs-heap top-k analysis.
 
 [← Previous: Trees](19-trees.md) | [Next: Hash Tables →](21-hash-tables.md)
