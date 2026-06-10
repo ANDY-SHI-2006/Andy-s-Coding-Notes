@@ -26,6 +26,33 @@ A graph G = (V, E) consists of:
 | **Complete** | Every vertex connected to every other |
 | **Bipartite** | Vertices can be divided into two sets |
 
+### Important Terminology
+
+| Term | Definition |
+|------|------------|
+| **Path** | A sequence of edges from one vertex to another |
+| **Simple path** | A path that never visits the same vertex twice |
+| **Length of a path** | Number of edges in the path |
+| **Cycle** | A path that begins and ends at the same vertex |
+| **Simple cycle** | A simple path that is also a cycle |
+| **Connected graph** | There is a path between every pair of vertices |
+| **Connected component** | A maximal connected subgraph |
+
+### Graph Applications
+
+Graphs model relationships across many domains:
+
+| Domain | Problem | Graph Concept |
+|--------|---------|---------------|
+| Travel planning | Shortest route between cities | Shortest path |
+| Logistics | Visit all cities with minimum cost | TSP |
+| Internet routing | Best packet route from A to B | Shortest path |
+| Course planning | Order subjects satisfying prerequisites | Topological sort |
+| Epidemic studies | Track disease spread | Connectivity |
+| Biology | Protein interaction networks | Graph clustering |
+| VLSI design | Chip layout optimization | Graph partitioning |
+| Job scheduling | Task ordering with dependencies | Topological sort |
+
 ### Graph Representations
 
 #### Adjacency Matrix
@@ -152,6 +179,38 @@ void bfs(const vector<vector<int>>& adj, int start) {
 }
 ```
 
+### BFS Tree and Levels
+
+BFS naturally builds a **BFS tree** rooted at the start vertex. Track parents to reconstruct the tree, and track `level` to compute the shortest distance (in number of edges) from the source.
+
+```cpp
+vector<int> bfsLevels(const vector<vector<int>>& adj, int start) {
+    int n = adj.size();
+    vector<bool> visited(n, false);
+    vector<int> level(n, -1);
+    vector<int> parent(n, -1);
+    queue<int> q;
+
+    visited[start] = true;
+    level[start] = 0;
+    q.push(start);
+
+    while (!q.empty()) {
+        int curr = q.front(); q.pop();
+
+        for (int neighbor : adj[curr]) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                level[neighbor] = level[curr] + 1;
+                parent[neighbor] = curr;
+                q.push(neighbor);
+            }
+        }
+    }
+    return level;  // shortest edge distance from start
+}
+```
+
 **Applications:**
 - Shortest path in unweighted graphs
 - Level-order traversal
@@ -259,7 +318,17 @@ vector<vector<int>> floydWarshall(vector<vector<int>>& dist) {
 | Bellman-Ford | Weighted, negative edges | O(V × E) | Yes |
 | Floyd-Warshall | All-pairs shortest path | O(V³) | Yes |
 
-## 22.4 Minimum Spanning Tree
+## 22.4 Spanning Trees in Unweighted Graphs
+
+A **spanning tree** of a connected, undirected graph is a subgraph that:
+- Contains all vertices of the original graph
+- Is connected
+- Contains no cycles
+- Has exactly `V - 1` edges
+
+Any traversal (BFS or DFS) produces a spanning tree from the tree edges used to discover new vertices. In an unweighted graph, every spanning tree has the same total weight, so any BFS/DFS tree is a valid spanning tree.
+
+## 22.5 Minimum Spanning Tree
 
 ### Kruskal's Algorithm
 
@@ -352,7 +421,7 @@ int prim(const vector<vector<pair<int,int>>>& graph) {
 // Time: O((V + E) log V), Space: O(V)
 ```
 
-## 22.5 Topological Sort
+## 22.6 Topological Sort
 
 Ordering of vertices in a DAG such that for every edge (u, v), u comes before v.
 
@@ -419,7 +488,7 @@ vector<int> topologicalSortDFS(const vector<vector<int>>& adj) {
 }
 ```
 
-## 22.6 Cycle Detection
+## 22.7 Cycle Detection
 
 ### Undirected Graph
 
@@ -478,7 +547,7 @@ bool hasCycleDirected(const vector<vector<int>>& adj) {
 }
 ```
 
-## 22.7 Strongly Connected Components
+## 22.8 Strongly Connected Components
 
 Tarjan's Algorithm for finding SCCs in directed graphs.
 
@@ -525,7 +594,7 @@ vector<vector<int>> findSCC(const vector<vector<int>>& adj) {
 }
 ```
 
-## 22.8 Common Graph Problems
+## 22.9 Common Graph Problems
 
 ### Number of Islands
 
@@ -588,7 +657,7 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 }
 ```
 
-## 22.9 Summary
+## 22.10 Summary
 
 ### Algorithm Selection Guide
 
@@ -624,5 +693,9 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 4. **Dijkstra** for shortest path with positive weights
 5. **Union-Find** for connectivity and MST problems
 6. **Topological sort** for dependency resolution
+
+### Further Reading
+
+- **Lecture Notes**: [Lecture 15: Graphs](../lecture-notes/lecture-15-graphs.md) — Westlake University, Spring 2026. Covers graph terminology, representations, BFS tree/levels, DFS, topological sort, MST with Prim's, and Dijkstra shortest paths.
 
 [← Previous: Hash Tables](21-hash-tables.md) | [Next: Modern C++ Variable Features →](../phase3-modern-cpp/23-modern-cpp-variables.md)

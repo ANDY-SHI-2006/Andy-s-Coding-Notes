@@ -13,6 +13,19 @@ Arrays provide O(1) access by index, but searching by value takes O(n). What if 
 hash(key) -> index
 ```
 
+### Direct Addressing Table
+
+Before hashing, a **direct addressing table** stores values at the key itself. If keys are integers in a small dense range `[0, m-1]`, an array of size `m` works perfectly:
+
+```
+exists[m]  // all false initially
+insert(N): exists[N] = true
+delete(N): exists[N] = false
+find(N):   return exists[N]
+```
+
+This gives `O(1)` time but only works for small, dense integer keys. For sparse keys or non-integer keys (e.g., strings), we need a **hash table** that maps arbitrary keys into a smaller index range.
+
 ## 21.2 Hash Functions
 
 A good hash function:
@@ -46,6 +59,55 @@ size_t hashString(const string& key, size_t tableSize) {
 template<typename T>
 size_t hashKey(const T& key, size_t tableSize) {
     return std::hash<T>{}(key) % tableSize;
+}
+```
+
+### Perfect Hashing
+
+A **perfect hash function** maps every key to a unique index with **no collisions**. This is possible only when the entire set of keys is known in advance, such as the reserved keywords in a programming language.
+
+### Division Method
+
+The most common integer hash function:
+```
+h(key) = key % m
+```
+
+Choosing the table size `m` matters:
+- Avoid `m = 10^n`: hash becomes the last `n` digits.
+- Avoid `m = 2^n`: hash becomes the last `n` bits.
+- **Best practice**: choose `m` as a **prime** close to a power of two. This reduces patterns caused by real-world data.
+
+### Multiplication Method
+
+```
+h(key) = floor(m * (key * A mod 1))
+```
+
+Where `A` is a fractional constant (commonly the golden ratio conjugate `≈ 0.618`). This method avoids relying on the modulo of a power of two and works well when `m` itself is a power of two.
+
+### String Hashing Pitfalls
+
+A naive string hash that simply sums character codes is vulnerable:
+
+```cpp
+// BAD: anagrams collide
+size_t badHash(const string& s) {
+    size_t sum = 0;
+    for (char c : s) sum += c;
+    return sum % tableSize;
+}
+```
+
+For example, `"Lee Chin Tan"`, `"Chen Le Tian"`, and `"Chan Tin Lee"` may all hash to the same value. A better approach uses a base multiplier so character positions matter:
+
+```cpp
+size_t betterHash(const string& s) {
+    size_t hash = 0;
+    for (char c : s) {
+        hash = hash * 37 + c;
+    }
+    return hash % tableSize;
 }
 ```
 
@@ -145,6 +207,13 @@ public:
 
 All entries stored in table itself. On collision, probe for next empty slot.
 
+Because open addressing stores entries directly in the table, deletion cannot simply clear a slot — doing so would break probe sequences for other keys. Instead, each slot has three states:
+- **Occupied**: currently holds a key-value pair
+- **Deleted**: previously held a key but was removed; can be reused for insertion, but must be treated as non-empty during searches
+- **Empty**: never used
+
+This technique is called **lazy deletion**.
+
 #### Linear Probing
 
 ```cpp
@@ -223,12 +292,26 @@ Reduces clustering by probing with quadratic increments:
 idx = (hash(key) + c1*i + c2*i*i) % tableSize;
 ```
 
+**Theorem**: If `α < 0.5` and the table size `m` is prime, quadratic probing is guaranteed to find an empty slot.
+
 #### Double Hashing
 
 Uses second hash function for probe sequence:
 ```cpp
 idx = (hash1(key) + i * hash2(key)) % tableSize;
 ```
+
+The second hash function `h2(key)` must never evaluate to `0`, and its step size should be relatively prime to `m`. A common choice is:
+```cpp
+h2(key) = R - (key % R);  // R is a prime smaller than m
+```
+
+### Clustering
+
+| Type | Description |
+|------|-------------|
+| **Primary clustering** | Long runs of occupied slots build up around home addresses. Common in linear probing. |
+| **Secondary clustering** | Keys that share the same home address also share the same probe sequence. Occurs in quadratic probing and to some extent in all open-addressing schemes except double hashing. |
 
 ### Comparison of Collision Resolution
 
@@ -470,5 +553,21 @@ public:
 | Sorted Array | O(log n) | O(n) | Binary search |
 | BST | O(log n) | O(log n) | Ordered |
 | **Hash Table** | **O(1)** | **O(1)** | Unordered, fast |
+
+### Hash Table vs BST
+
+| Feature | Hashing | BST |
+|---------|---------|-----|
+| Average search | O(1) | O(log n) |
+| Worst-case search | O(n) with poor hashing | O(log n) if balanced |
+| Ordered traversal | Expensive or impossible | O(n) |
+| Range search | Poor | Good |
+| Min / max | Poor | O(log n) or O(1) with augmentation |
+
+Use a **hash table** when you only need fast exact-key lookups (caching, counting, deduplication). Use a **BST** when you need ordered data, range queries, or guaranteed worst-case bounds.
+
+### Further Reading
+
+- **Lecture Notes**: [Lecture 14: Hashing](../lecture-notes/lecture-14-hashing.md) — Westlake University, Spring 2026. Covers direct addressing, division/multiplication hash methods, collision resolution, clustering, and hashing vs BST.
 
 [← Previous: Heap and Priority Queue](20-heap-priority-queue.md) | [Next: Graph Algorithms →](22-graph-algorithms.md)
