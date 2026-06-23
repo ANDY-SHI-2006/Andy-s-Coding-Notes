@@ -87,6 +87,36 @@ public:
 - Use exceptions for underflow/overflow conditions
 - Template-based for type-generic implementation
 
+### Lecture 10 Specification
+
+The Lecture 10 interface uses a standalone `Queue<T>` template with the following operations (see Lecture 10 pages 006–008):
+
+```cpp
+template <typename T>
+class Queue {
+public:
+    Queue();                           // Default constructor
+    bool isEmpty() const;              // Check if empty
+    int size() const;                  // Get number of elements
+
+    void enqueue(const T& newItem);    // Add item to the back
+    void dequeue();                    // Remove front item
+    void dequeue(T& queueFront);       // Remove and return front item
+    void getFront(T& queueFront) const; // Inspect front item without removal
+
+    // Exception for error handling
+    class QueueException {
+    public:
+        QueueException(const string& msg) : message(msg) {}
+        string what() const { return message; }
+    private:
+        string message;
+    };
+};
+```
+
+> **Lecture 10 note:** The private implementation section is intentionally omitted because it depends on the underlying representation (linked list or array). Mutating accessors (`enqueue`, `dequeue`, `getFront`) throw `QueueException` on underflow/overflow.
+
 ## 15.3 Array-Based Implementation
 
 ### Basic Array Queue
@@ -208,6 +238,105 @@ After enqueue(50):  [ _ | 20 | 30 | 40 | 50 ]
 After enqueue(60):  [ 60 | 20 | 30 | 40 | 50 ]
                     front=1, rear=0  (wrapped around!)
 ```
+
+### 15.3.2 Lecture 10 Circular Array Implementation
+
+Lecture 10 uses a fixed-size circular array with constant `MAX_QUEUE = 50`. It tracks three integers: `front`, `back`, and `count` (see Lecture 10 pages 020–024).
+
+```cpp
+template <typename T>
+class Queue {
+public:
+    Queue();
+    bool isEmpty() const;
+    int size() const;
+
+    void enqueue(const T& newItem);
+    void dequeue();
+    void dequeue(T& queueFront);
+    void getFront(T& queueFront) const;
+
+    class QueueException { /* ... */ };
+
+private:
+    static const int MAX_QUEUE = 50;   // Fixed capacity
+    T items[MAX_QUEUE];                // Static array storage
+    int front;                         // Index of front element
+    int back;                          // Index of rear element
+    int count;                         // Current number of elements
+};
+```
+
+**Constructor**
+
+```cpp
+template <typename T>
+Queue<T>::Queue() : front(0), back(MAX_QUEUE - 1), count(0) {}
+```
+
+**`isEmpty()`**
+
+```cpp
+template <typename T>
+bool Queue<T>::isEmpty() const {
+    return count == 0;
+}
+```
+
+**`enqueue(const T& newItem)`**
+
+```cpp
+template <typename T>
+void Queue<T>::enqueue(const T& newItem) {
+    if (count == MAX_QUEUE) {
+        throw QueueException("queue full on enqueue");
+    }
+    back = (back + 1) % MAX_QUEUE;
+    items[back] = newItem;
+    ++count;
+}
+```
+
+**`dequeue()` (no return value)**
+
+```cpp
+template <typename T>
+void Queue<T>::dequeue() {
+    if (isEmpty()) {
+        throw QueueException("empty queue on dequeue");
+    }
+    front = (front + 1) % MAX_QUEUE;
+    --count;
+}
+```
+
+**`dequeue(T& queueFront)` (returns front value)**
+
+```cpp
+template <typename T>
+void Queue<T>::dequeue(T& queueFront) {
+    if (isEmpty()) {
+        throw QueueException("empty queue on dequeue");
+    }
+    queueFront = items[front];
+    front = (front + 1) % MAX_QUEUE;
+    --count;
+}
+```
+
+**`getFront(T& queueFront) const`**
+
+```cpp
+template <typename T>
+void Queue<T>::getFront(T& queueFront) const {
+    if (isEmpty()) {
+        throw QueueException("empty queue on getFront");
+    }
+    queueFront = items[front];
+}
+```
+
+> **C-style vs. modern C++ note:** The fixed `MAX_QUEUE` and static array reflect the traditional textbook implementation. For modern C++, prefer `std::vector<T>` or `std::deque<T>` as the underlying storage, or simply use `std::queue<T>` directly.
 
 ## 15.4 Linked List-Based Implementation
 
@@ -407,6 +536,8 @@ if (!q1.empty()) {
 
 **Important:** `pop()` returns void—use `front()` first to get the value!
 
+> **Note on `back()`:** `back()` returns a reference to the last element but does **not** remove it. To remove the rear element, you must `pop()` from the front—`std::queue` does not support efficient rear removal by design.
+
 ## 15.6 Queue Applications
 
 ### Application 1: Breadth-First Search (BFS)
@@ -605,6 +736,41 @@ int main() {
 | **Stack** | LIFO | r → a → d → a → r |
 
 Both produce the same sequence, confirming the palindrome.
+
+#### Lecture 10 Version: `palindrome()`
+
+Lecture 10 presents a direct palindrome checker that pushes every character onto both a stack and a queue, then compares the reversed and original orderings (see Lecture 10 page 029):
+
+```cpp
+#include <queue>
+#include <stack>
+#include <string>
+using namespace std;
+
+bool palindrome(string input) {
+    stack<char> s;
+    queue<char> q;
+
+    // Push every character into both structures
+    for (char c : input) {
+        s.push(c);
+        q.push(c);
+    }
+
+    // Compare reversed order (stack) with original order (queue)
+    while (!q.empty()) {
+        if (s.top() != q.front()) {
+            return false;   // Mismatch found
+        }
+        s.pop();
+        q.pop();
+    }
+
+    return true;   // All characters matched
+}
+```
+
+> **C-style vs. modern C++ note:** The Lecture 10 version processes the raw string, so spaces, punctuation, and case affect the result. The `isPalindrome()` implementation earlier filters non-alphabetic characters and normalizes case, which is more robust for real-world text. Both versions demonstrate the same core idea: a queue preserves input order while a stack reverses it.
 
 > **Note:** This is an educational demonstration of LIFO vs FIFO. In practice, a two-pointer approach is more space-efficient: compare `text[i]` with `text[n-1-i]`.
 

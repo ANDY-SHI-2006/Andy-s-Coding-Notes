@@ -58,6 +58,8 @@ You might think: "Why not just measure the wall-clock time?" In practice, exact 
 
 > **Example:** The same sorting algorithm might take 2 ms on a desktop with optimized C++ code, but 200 ms on an interpreted language. The **algorithm itself** hasn't changed — only the environment has.
 
+As Lecture 10 emphasizes, even measuring wall-clock time or inserting timing code is still tied to the **implementation language**, the particular **data set**, and the **computer hardware**. These dependencies make direct comparisons between two algorithms unreliable, and they mean we would like to know the behavior **before** coding or execution. A poor design can lead to very long execution no matter how fast the machine is.
+
 **Asymptotic analysis solves this** by counting operations independently of hardware and language. It answers: "How does runtime grow as input grows?" rather than "How many seconds does it take?"
 
 ## 16.2 Time Complexity
@@ -82,6 +84,10 @@ As n grows large, the constant factors and lower-order terms become insignifican
 ## 16.3 Big-O Notation
 
 Big-O notation describes the upper bound of growth rate, focusing on the dominant term as n →∞
+
+> **Formal definition (Lecture 10, page 044):** An algorithm A is **O(f(n))** if there exist a constant **k** and a positive integer **n₀** such that A requires **no more than** **k·f(n)** time units for all **n ≥ n₀**.
+
+Graphically, once the problem size is larger than n₀, the running time of A is bounded from above by the curve k·f(n). The constant k and threshold n₀ are not unique; many valid pairs can establish the same bound.
 
 ### Common Complexities (Ordered by Growth)
 
@@ -114,6 +120,38 @@ Drop constants and lower-order terms:
 - `100n log n + 50n` →**O(n log n)**
 - `2ⁿ + n³` → **O(2ⁿ)**
 - `5` →**O(1)**
+
+### 16.3.1 Lecture 10 Example: Finding n₀ and k
+
+**Claim:** Algorithm A with running time `2n² + 100n` is **O(n²)**.
+
+**Proof:** For `n > 100`, the lower-order term `100n` is smaller than `n²`, so
+
+```text
+2n² + 100n < 2n² + n² = 3n²   for all n > 100
+```
+
+Choose `k = 3` and `n₀ = 100` (or any larger value). Then A requires no more than `3n²` time units for all `n ≥ n₀`. Therefore,
+
+```text
+2n² + 100n = O(n²)
+```
+
+> In Big-O notation we do **not** keep coefficients inside `f(n)`. Saying A is `O(2n²)` or `O(3n²)` is not the standard form, because the multiplier can always be absorbed into the constant `k`.
+
+### 16.3.2 Lecture 10 Growth Rate Terminology
+
+Lecture 10 uses the following names for the most common growth terms:
+
+| Notation | Terminology | Behavior when input doubles |
+|----------|-------------|----------------------------|
+| **O(1)** | **Constant time** | Independent of `n` |
+| **O(n)** | **Linear time** | Execution time roughly doubles |
+| **O(n²)** | **Quadratic time** | Execution time roughly quadruples |
+| **O(n³)** | **Cubic time** | Execution time roughly multiplies by 8 |
+| **O(2ⁿ)** | **Exponential time** | Execution time increases very rapidly |
+
+These descriptions are a quick way to reason about scalability. For example, a quadratic algorithm on `n = 1000` is already doing about a million units of work, while an exponential algorithm quickly becomes infeasible.
 
 ## 16.4 Analyzing Common Structures
 
@@ -373,6 +411,25 @@ int sequentialSearch(int arr[], int n, int target) {
 
 > **General rule:** A loop of `n` iterations where each iteration does O(1) work leads to **O(n)** time complexity. This is an example of **worst-case analysis**.
 
+#### Lecture 10 C-style variant
+
+The lecture slides present the same idea with a C-style array and an exception for "not found":
+
+```cpp
+// Lecture 10, page 054
+int seqSearch(int a[], int len, int x) {
+    for (int i = 0; i < len; i++) {
+        if (a[i] == x)
+            return i;
+    }
+    throw ItemNotFound("Not found");
+}
+```
+
+The loop body costs at most some constant `c₁` and the outside work costs at most `c₂`. With at most `n` iterations, the worst-case time is again `c₁·n + c₂ = O(n)`.
+
+> **Modern C++ note:** In production code you would usually pass a `std::span<const int>` or `const std::vector<int>&`, use `std::find` (or `std::ranges::find` in C++20), and return `std::optional<std::size_t>` rather than throwing on "not found".
+
 ### Example 6: Binary Search ("Alive Elements" Derivation)
 
 Binary search requires a **sorted array** and repeatedly halves the search range:
@@ -413,6 +470,33 @@ k = log₂(n)
 **Result:** Binary search takes **O(log n)** time.
 
 > **General rule:** When the search domain is reduced by a constant fraction each iteration, the complexity is **O(log n)**.
+
+#### Lecture 10 C-style variant
+
+The slides also give the iterative binary search in C-style form (page 057):
+
+```cpp
+// Lecture 10, page 057
+int binSearch(int a[], int len, int x) {
+    int mid, low = 0;
+    int high = len - 1;
+
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (x == a[mid])
+            return mid;
+        else if (x > a[mid])
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    throw ItemNotFound("Not found");
+}
+```
+
+As in the earlier derivation, the outside work is at most `c₁`, each iteration is at most `c₂`, and the number of iterations is at most `log₂(n)`. Hence the worst-case time is `c₁ + c₂·log₂(n) = O(log n)`.
+
+> **Modern C++ note:** For sorted data, prefer `std::lower_bound` or `std::ranges::lower_bound` on a `std::vector`/`std::span`; compare the returned iterator to `end()` instead of throwing an exception.
 
 ### Example 7: Why Growth Rate Matters (Numerical Comparison)
 
