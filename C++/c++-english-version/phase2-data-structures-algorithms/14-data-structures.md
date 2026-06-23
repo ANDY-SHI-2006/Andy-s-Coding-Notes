@@ -112,6 +112,36 @@ public:
 ```
 
 
+### 14.2.1 Lecture 07 Exception Classes (Alternative Form)
+
+The lecture notes (page 41) introduce a lighter, C-style pair of exception classes that do **not** inherit from `std::exception`. They store only a `std::string` message and expose it through `getMessage()`.
+
+```cpp
+#include <string>
+using namespace std;
+
+class ListException {
+public:
+    ListException(const string& message = "List Exception")
+        : message(message) {}
+    string getMessage() const { return message; }
+private:
+    string message;
+};
+
+class ListIndexOutOfRangeException {
+public:
+    ListIndexOutOfRangeException(const string& message = "Index Exception")
+        : message(message) {}
+    string getMessage() const { return message; }
+private:
+    string message;
+};
+```
+
+> **Modern C++ note:** In contemporary code you would normally derive from `std::exception` and override `what()` (as shown in Section 14.2). Dynamic exception specifications such as `throw(ListException)` are deprecated in C++11 and removed in C++17; they are preserved in the lecture code below to match the slides.
+
+
 ## 14.3 Array-Based Implementation
 
 Arrays are a straightforward choice for implementing List ADT.
@@ -181,6 +211,120 @@ void List::replace(int index, ItemType item) {
 ```
 
 
+### 14.3.1 Lecture 07 Array Implementation with 1-Based Indexing
+
+The lecture implements the List ADT in `ListA.h` using a fixed-size array and exposing **1-based positions** to the user. Internally the array is still 0-based, so a private helper `translate(index)` maps `index - 1`.
+
+**Header (`ListA.h`):**
+
+```cpp
+#pragma once
+#include <string>
+using namespace std;
+
+const int MAX_LIST = 50;
+typedef int ListItemType;
+
+class ListException {          // as defined in Section 14.2.1
+public:
+    ListException(const string& message = "List Exception")
+        : message(message) {}
+    string getMessage() const { return message; }
+private:
+    string message;
+};
+
+class ListIndexOutOfRangeException {  // as defined in Section 14.2.1
+public:
+    ListIndexOutOfRangeException(const string& message = "Index Exception")
+        : message(message) {}
+    string getMessage() const { return message; }
+private:
+    string message;
+};
+
+class List {
+public:
+    List();
+    bool isEmpty() const;
+    int getLength() const;
+
+    void insert(int index, const ListItemType& newItem)
+        throw(ListException, ListIndexOutOfRangeException);
+    void remove(int index)
+        throw(ListIndexOutOfRangeException);
+    void retrieve(int index, ListItemType& dataItem) const
+        throw(ListIndexOutOfRangeException);
+
+private:
+    ListItemType items[MAX_LIST];
+    int size;
+    int translate(int index) const;
+};
+```
+
+**Implementation:**
+
+```cpp
+#include "ListA.h"
+
+List::List() : size(0) {}
+
+bool List::isEmpty() const { return size == 0; }
+int List::getLength() const { return size; }
+
+int List::translate(int index) const {
+    return index - 1;  // 1-based user position -> 0-based array index
+}
+
+void List::retrieve(int index, ListItemType& dataItem) const
+    throw(ListIndexOutOfRangeException)
+{
+    if (index < 1 || index > size)
+        throw ListIndexOutOfRangeException("Bad Index");
+    else
+        dataItem = items[translate(index)];
+}
+
+void List::insert(int index, const ListItemType& newItem)
+    throw(ListException, ListIndexOutOfRangeException)
+{
+    if (size >= MAX_LIST)
+        throw ListException("List Full!");
+
+    if (index < 1 || index > size + 1)
+        throw ListIndexOutOfRangeException("Bad Index");
+
+    // Shift elements to the right to make room
+    for (int pos = size; pos >= index; --pos)
+        items[translate(pos + 1)] = items[translate(pos)];
+
+    items[translate(index)] = newItem;
+    ++size;
+}
+
+void List::remove(int index)
+    throw(ListIndexOutOfRangeException)
+{
+    if (index < 1 || index > size)
+        throw ListIndexOutOfRangeException("Bad Index");
+
+    // Shift elements to the left to close the gap
+    for (int pos = index + 1; pos <= size; ++pos)
+        items[translate(pos - 1)] = items[translate(pos)];
+
+    --size;
+}
+```
+
+> **Key differences from Section 14.3:**
+> - User-facing positions are **1-based**: valid indices are `1 … size` (and `size + 1` for insertion).
+> - `retrieve` returns the value through a reference parameter instead of as a return value.
+> - The array capacity constant is named `MAX_LIST` rather than `MAXSIZE`.
+>
+> **Modern C++ note:** Today you would usually use `std::vector<ListItemType>` instead of a raw array, keep indices 0-based, and drop the `throw(...)` specification lists.
+
+
 ## 14.4 Array Implementation Efficiency Analysis
 
 **Time Complexity:**
@@ -233,6 +377,41 @@ int main() {
     return 0;
 }
 ```
+
+
+### 14.5.1 Lecture 07 Sample User Program (1-Based Indexing)
+
+Page 51 of the lecture shows a client program that catches both `ListException` and `ListIndexOutOfRangeException` and prints their messages with `getMessage()`.
+
+```cpp
+#include <iostream>
+#include "ListA.h"
+using namespace std;
+
+int main() {
+    List aList;
+    ListItemType rItem;
+
+    try {
+        aList.insert(1, 20);       // List: [20]
+        aList.retrieve(1, rItem);  // rItem == 20
+        cout << "Retrieved item: " << rItem << endl;
+
+        // Example that triggers an index exception
+        aList.retrieve(5, rItem);  // invalid 1-based position
+    }
+    catch (ListIndexOutOfRangeException& e) {
+        cerr << "Index error: " << e.getMessage() << endl;
+    }
+    catch (ListException& e) {
+        cerr << "List error: " << e.getMessage() << endl;
+    }
+
+    return 0;
+}
+```
+
+> **C-style detail:** The exceptions are caught by reference, but their messages are accessed with `e.getMessage()` rather than `e.what()`, because the Lecture 07 exception classes do not inherit from `std::exception`.
 
 
 ## 14.6 When to Use Array Implementation
