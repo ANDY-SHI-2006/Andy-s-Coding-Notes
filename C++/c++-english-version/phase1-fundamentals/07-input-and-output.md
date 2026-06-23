@@ -1377,6 +1377,265 @@ std::cout << std::ctime(&t);  // "Mon Jan 15 10:30:00 2024"
 
 > **Key Concept:** `std::chrono` replaces raw integer time arithmetic with **strongly typed durations**. You cannot accidentally add seconds to milliseconds without explicit conversion — the compiler catches the mistake.
 
+## 7.5 The `std::string` Class
+
+C++ provides an object-oriented string type in `<string>`. Unlike C-style `char[]` arrays, `std::string` manages its own memory, grows automatically, and supports convenient operators.
+
+### 7.5.1 Header and Basic Constructors
+
+```cpp
+#include <string>
+using namespace std;
+
+string str1;            // Default constructor: empty string
+string str2("xyz");     // Construct from C-string literal
+string str3(cstr);      // Construct from a char array
+```
+
+**Common constructors:**
+
+| Constructor | Example | Result |
+|-------------|---------|--------|
+| `string s;` | `string s;` | Empty string |
+| `string s(cstr);` | `string s("abc");` | `s == "abc"` |
+| `string s(s2);` | `string s2(s1);` | Copy of `s1` |
+
+### 7.5.2 Operators
+
+| Operator | Meaning | C-style equivalent |
+|----------|---------|-------------------|
+| `=` | Assign a string or C-string | `strcpy` |
+| `+` | Concatenate two strings | `strcat` |
+| `==`, `!=`, `<`, `>`, `<=`, `>=` | Lexicographic comparison | `strcmp` |
+| `[i]` | Access character at index `i` | `s[i]` on `char[]` |
+
+```cpp
+string s1, s2("xyz");
+s1 = "abc";
+cout << s1 + s2;        // abcxyz
+if (s1 < s2) { }        // true, because "abc" < "xyz"
+cout << s1[0];          // 'a'
+```
+
+### 7.5.3 Useful Member Functions
+
+| Function | Description |
+|----------|-------------|
+| `s.size()` / `s.length()` | Number of characters |
+| `s.at(i)` | Character at `i` (bounds-checked) |
+| `s.substr(pos, n)` | Substring of length `n` starting at `pos` |
+| `s.c_str()` | Returns a C-style `const char*` |
+
+```cpp
+string str = "abcdefgh";
+cout << str.size();          // 8
+cout << str[4];              // 'e'
+cout << str.at(4);           // 'e'
+cout << str.substr(2, 5);    // cdefg
+```
+
+### 7.5.4 C-String Conversion
+
+```cpp
+char cstr[20] = "C String";
+string str;
+
+str = cstr;                  // C-string -> string
+strcpy(cstr, str.c_str());   // string -> C-string (needs <cstring>)
+```
+
+### 7.5.5 Input and Output
+
+`>>` reads one whitespace-delimited token; `getline()` reads until the newline character.
+
+```cpp
+string word, line;
+
+cin >> word;                 // Reads a single word
+getline(cin, line);          // Reads a whole line
+```
+
+**C-style equivalent:**
+
+```cpp
+char cstr[80];
+cin >> cstr;                 // One word
+cin.getline(cstr, 80);       // One line, up to 79 characters
+```
+
+### 7.5.6 Tokenization with `find_first_of`
+
+`find_first_of(delimiters, pos)` finds the first occurrence of any delimiter character starting at `pos`. It returns `string::npos` if none is found.
+
+```cpp
+string str = "One#Two$Three$";
+string delims = "#$";
+
+size_t start = 0;
+size_t end = str.find_first_of(delims, start);
+
+while (end != string::npos) {
+    cout << str.substr(start, end - start) << endl;
+    start = end + 1;
+    end = str.find_first_of(delims, start);
+}
+if (start < str.size()) {
+    cout << str.substr(start) << endl;
+}
+```
+
+**C-style equivalent** using `strtok` (modifies the source string):
+
+```cpp
+char s[] = "One#Two$Three$";
+const char* delim = "#$";
+char* token = strtok(s, delim);
+while (token != nullptr) {
+    cout << token << endl;
+    token = strtok(nullptr, delim);
+}
+```
+
+## 7.6 File Streams: `get()` vs `>>` and `getline()` Pitfalls
+
+The extraction operator `>>` and member function `get()` behave differently when reading files.
+
+### 7.6.1 `>>` Skips Whitespace
+
+`>>` automatically skips leading spaces, tabs, and newlines, then reads until the next whitespace.
+
+```cpp
+ifstream readFile("input.txt");
+int x;
+while (readFile >> x) {       // Reads integers, skipping whitespace
+    cout << x << "*";
+}
+```
+
+### 7.6.2 `get()` Reads Every Character
+
+`get()` reads the next character, including whitespace and newlines.
+
+```cpp
+ifstream readFile("input.txt");
+char c;
+while (readFile.get(c)) {     // Reads every character
+    cout << c << "*";
+}
+```
+
+### 7.6.3 Reading Strings: `>>` vs `getline()`
+
+`>>` reads only one word into a `string`; `getline()` reads an entire line.
+
+```cpp
+ifstream readFile("input.txt");
+string word;
+while (readFile >> word) {          // One word at a time
+    cout << word << "*";
+}
+
+// or, line by line:
+string line;
+while (getline(readFile, line)) {   // Whole line; newline is consumed but not stored
+    cout << line << "*" << endl;
+}
+```
+
+### 7.6.4 Mixing `>>` and `getline()`
+
+After `>>` reads a value, the trailing newline remains in the stream. The next `getline()` will then read an empty line.
+
+```cpp
+ifstream readFile("test.txt");   // file: "1\n4 5 6"
+int i;
+string x;
+
+readFile >> i;          // i = 1, newline '\n' is left in the stream
+getline(readFile, x);   // x is empty (reads the leftover newline)
+```
+
+**Remedy:** consume the leftover newline with an extra `getline()`.
+
+```cpp
+readFile >> i;
+getline(readFile, x);   // discard the leftover newline
+getline(readFile, x);   // x = "4 5 6"
+```
+
+## 7.7 Parsing Variable-Length Lines with `istringstream`
+
+When input does not follow a fixed pattern, read a whole line with `getline()` and then parse the line using `istringstream`.
+
+### 7.7.1 Example: Equation Coefficients
+
+Suppose `coefficient.dat` contains one equation per line, with a variable number of coefficients:
+
+```
+2 3
+4 5 6
+```
+
+A line with two numbers represents a linear equation; a line with three numbers represents a quadratic equation.
+
+```cpp
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+    ifstream inputFile("coefficient.dat");
+    string s;
+
+    while (getline(inputFile, s)) {
+        istringstream is(s);
+        vector<double> coef;
+        double value;
+
+        while (is >> value) {
+            coef.push_back(value);
+        }
+
+        if (coef.size() == 2) {
+            cout << "Linear equation: " << coef[0] << "x + " << coef[1] << endl;
+        } else if (coef.size() == 3) {
+            cout << "Quadratic equation: " << coef[0] << "x^2 + "
+                 << coef[1] << "x + " << coef[2] << endl;
+        }
+    }
+    return 0;
+}
+```
+
+### 7.7.2 C-Style Equivalent
+
+The same idea can be implemented with `fgets` and `sscanf`:
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE* fp = fopen("coefficient.dat", "r");
+    char line[256];
+    double a, b, c;
+    int n;
+
+    while (fgets(line, sizeof(line), fp)) {
+        n = sscanf(line, "%lf %lf %lf", &a, &b, &c);
+        if (n == 2) {
+            printf("Linear: %gx + %g\n", a, b);
+        } else if (n == 3) {
+            printf("Quadratic: %gx^2 + %gx + %g\n", a, b, c);
+        }
+    }
+    fclose(fp);
+    return 0;
+}
+```
+
 ---
 
 [← Previous: Data Types](06-data-types.md) | [Next: Conditional Execution →](08-conditional-execution.md)

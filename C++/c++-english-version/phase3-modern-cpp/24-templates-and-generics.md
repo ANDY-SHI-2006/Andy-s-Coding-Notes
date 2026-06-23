@@ -50,6 +50,51 @@ void print(const char* str) {  // Specialized overload
 }
 ```
 
+### 24.1.4 Lecture 05 Example: `maximum<T>`
+
+The lecture slides use a `maximum` function to illustrate how a single template definition replaces multiple type-specific versions.
+
+**C-style (non-template) limitation:**
+
+```cpp
+int maximum(const int& left, const int& right) {
+    return (left > right) ? left : right;
+}
+
+// maximum(3.14159, 0.1);  // Error: expects const int&
+```
+
+**Template version:**
+
+```cpp
+template <typename T>
+T maximum(const T& left, const T& right) {
+    return (left > right) ? left : right;
+}
+```
+
+`typename T` means `T` stands for a type name; the concrete type is supplied later. The compiler generates a separate concrete function for each distinct type used.
+
+**Explicit type usage:**
+
+```cpp
+char  maxChar  = maximum<char>('a', '!');
+int   maxInt   = maximum<int>(6, -1);
+float maxFloat = maximum<float>(3.1415f, 0.1f);
+```
+
+**Implicit type deduction:**
+
+When the compiler can infer `T` from the arguments, the angle brackets may be omitted:
+
+```cpp
+char  maxChar  = maximum('a', '!');      // T = char
+int   maxInt   = maximum(6, -1);         // T = int
+float maxFloat = maximum(3.1415f, 0.1f); // T = float
+```
+
+> **Ambiguity note:** `maximum(3.1415, 1234)` mixes `double` and `int`, so template argument deduction fails because `T` cannot be both types simultaneously. Cast one argument or supply the type explicitly, e.g. `maximum<double>(3.1415, 1234)`.
+
 ## 24.2 Class Templates
 
 ### 24.2.1 Generic Container Example
@@ -83,6 +128,128 @@ public:
 
 Pair<int, std::string> student(1, "Alice");
 ```
+
+### 24.2.3 Lecture 05 Example: `Pair<T1, T2>` and the Inclusion Model
+
+A non-template `Pair` class for integers is straightforward but must be duplicated for other types:
+
+```cpp
+class Pair {
+    int _first;
+    int _second;
+public:
+    Pair(int a, int b) : _first(a), _second(b) {}
+    int getFirst() const  { return _first; }
+    int getSecond() const { return _second; }
+};
+```
+
+**Single-type class template:**
+
+```cpp
+template <typename T>
+class Pair {
+    T _first;
+    T _second;
+public:
+    Pair(T a, T b) : _first(a), _second(b) {}
+    T getFirst() const  { return _first; }
+    T getSecond() const { return _second; }
+};
+
+Pair<int>    intPair(4, 6);
+Pair<float>  coordinate(1.23f, -2.54f);
+Pair<char*>  name("Harry", "Potter");   // C-style string pair
+```
+
+For class templates, the type arguments must always be explicit; `Pair intPair(4, 6);` is illegal.
+
+**Multiple type parameters:**
+
+```cpp
+template <typename T1, typename T2>
+class Pair {
+private:
+    T1 _first;
+    T2 _second;
+public:
+    Pair(T1 a, T2 b) : _first(a), _second(b) {}
+    T1 getFirst() const  { return _first; }
+    T2 getSecond() const { return _second; }
+};
+
+Pair<int, const char*> example(123, "hello");
+```
+
+**The inclusion model:**
+
+Templates are not ordinary compiled code; the compiler needs the full template definition visible in every translation unit that uses it to generate concrete instantiations. Therefore, template classes and functions are usually organized with the **inclusion model**: put the declaration *and* implementation in the same header file.
+
+`Pair.h` — declaration with definitions at the end:
+
+```cpp
+#ifndef PAIR_H
+#define PAIR_H
+
+template <typename T1, typename T2>
+class Pair {
+private:
+    T1 _first;
+    T2 _second;
+public:
+    Pair(T1 a, T2 b);
+    T1 getFirst() const;
+    T2 getSecond() const;
+};
+
+template <typename T1, typename T2>
+Pair<T1, T2>::Pair(T1 a, T2 b)
+    : _first(a), _second(b) {}
+
+template <typename T1, typename T2>
+T1 Pair<T1, T2>::getFirst() const {
+    return _first;
+}
+
+template <typename T1, typename T2>
+T2 Pair<T1, T2>::getSecond() const {
+    return _second;
+}
+
+#endif
+```
+
+Alternatively, define the members inline inside the class:
+
+```cpp
+#ifndef PAIR_H
+#define PAIR_H
+
+template <typename T1, typename T2>
+class Pair {
+private:
+    T1 _first;
+    T2 _second;
+public:
+    Pair(T1 a, T2 b) : _first(a), _second(b) {}
+    T1 getFirst() const  { return _first; }
+    T2 getSecond() const { return _second; }
+};
+
+#endif
+```
+
+A user program simply includes the header:
+
+```cpp
+#include "Pair.h"
+
+int main() {
+    Pair<int, const char*> example(123, "hello");
+}
+```
+
+> **Not recommended:** Splitting a template class into a `.h` declaration and a `.cpp` implementation and then including only the `.cpp` file works in some lecture examples, but it defeats the purpose of the header/interface model and is fragile in real projects. Prefer the inclusion model for templates.
 
 ## 24.3 Non-Type Template Parameters
 

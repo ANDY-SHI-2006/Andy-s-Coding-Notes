@@ -83,6 +83,97 @@ namespace math {
 | Template | Header file | Multiple TUs allowed (implicitly inline) |
 | `constexpr` variable | Header file | Multiple TUs allowed (implicitly inline in C++17) |
 
+### 31.2.4 Lecture 05 Example: `BankAcct` Modular Design
+
+The lecture slides use a simple bank-account class to show the classic C++ split into header, implementation, and user files.
+
+**`BankAcct.h`** — declaration only:
+
+```cpp
+#ifndef BANKACCT_H
+#define BANKACCT_H
+
+class BankAcct {
+private:
+    int    _acctNum;
+    double _balance;
+public:
+    BankAcct(int aNum);
+    BankAcct(int aNum, double amt);
+    int  withdraw(double amount);
+    void deposit(double amount);
+};
+
+#endif
+```
+
+**`BankAcct.cpp`** — implementation:
+
+```cpp
+#include "BankAcct.h"
+
+BankAcct::BankAcct(int aNum) {
+    _acctNum = aNum;
+    _balance = 0.0;
+}
+
+BankAcct::BankAcct(int aNum, double amt) {
+    _acctNum = aNum;
+    _balance = amt;
+}
+
+int BankAcct::withdraw(double amount) {
+    if (_balance < amount) {
+        return 0;   // failure
+    }
+    _balance -= amount;
+    return 1;       // success
+}
+
+void BankAcct::deposit(double amount) {
+    _balance += amount;
+}
+```
+
+**`TestBankAcct.cpp`** — user program:
+
+```cpp
+#include <iostream>
+#include "BankAcct.h"
+using namespace std;
+
+int main() {
+    BankAcct ba1(1234, 300.50);
+    BankAcct ba2(9999, 1001.40);
+
+    ba1.withdraw(100.00);
+    ba2.withdraw(100.00);
+
+    return 0;
+}
+```
+
+**Single-command compilation:**
+
+```bash
+g++ -Wall TestBankAcct.cpp BankAcct.cpp
+```
+
+**Separate compilation:**
+
+```bash
+g++ -Wall -c BankAcct.cpp          # produces BankAcct.o
+g++ -Wall TestBankAcct.cpp BankAcct.o
+```
+
+Because `BankAcct.o` is already compiled, future programs that reuse the class only need to be linked against it:
+
+```bash
+g++ -Wall anotherProgram.cpp BankAcct.o
+```
+
+This mirrors the build pipeline described in §31.1: preprocess, compile each translation unit, then link.
+
 ## 31.3 Header Guards and Include Guards
 
 ### 31.3.1 `#pragma once`

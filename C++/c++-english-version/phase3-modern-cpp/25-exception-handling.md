@@ -69,6 +69,16 @@ try {
 }
 ```
 
+### 25.2.4 Baseball Analogy for throw/catch
+
+A useful analogy from the lecture slides frames exception handling like a game of catch:
+
+- The function or class that detects an error **throws** the exception (the pitcher throws the ball).
+- The calling code that knows how to recover **catches** the exception (the fielder catches the ball).
+- If the exception is never caught, it propagates up the call stack until the program is terminated — the ball “hits you in the face” and the program crashes.
+
+This separation lets low-level code report problems without deciding how to handle them.
+
 ## 25.3 Standard Exception Classes
 
 C++ provides a hierarchy of exception classes in `<stdexcept>`:
@@ -95,6 +105,88 @@ try {
     cout << "Index error: " << e.what() << endl;
 }
 ```
+
+### 25.3.1 User-Defined Exception Class: `DivideByZeroException`
+
+For small programs, throwing a built-in type such as `std::string` can be enough. For larger programs, define a dedicated exception class so callers receive structured information.
+
+**Lecture 05 C-style version:**
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+class DivideByZeroException {
+private:
+    string message;
+public:
+    DivideByZeroException() : message("Divide By Zero Exception") {}
+    string getMessage() const { return message; }
+};
+
+double divide(double a, double b) throw(DivideByZeroException) {
+    if (b == 0) {
+        throw DivideByZeroException();
+    }
+    return a / b;
+}
+```
+
+> **Note:** The `throw(...)` dynamic exception specifier shown above documents the exception type but is deprecated in modern C++ (removed in C++17). Prefer `noexcept` or simply omit the specifier.
+
+**Execution-flow trace:**
+
+For input `3.5 4.5`:
+
+```text
+Before Divide()
+1.94444
+After try-catch
+```
+
+For input `3.5 0`:
+
+```text
+Before Divide()
+Before checking
+In Catch Block
+Divide By Zero Exception
+After try-catch
+```
+
+When `b == 0`, control jumps from the `throw` directly to the matching `catch`; statements after the `throw` inside `divide` and statements after the call inside `try` are skipped.
+
+**Modern C++ version:**
+
+Derive from `std::exception` and override `what()`:
+
+```cpp
+#include <stdexcept>
+
+class DivideByZeroException : public std::exception {
+public:
+    const char* what() const noexcept override {
+        return "Divide By Zero Exception";
+    }
+};
+
+double divide(double a, double b) {
+    if (b == 0) {
+        throw DivideByZeroException();
+    }
+    return a / b;
+}
+
+// Usage
+try {
+    cout << divide(a, b) << endl;
+} catch (const DivideByZeroException& e) {
+    cout << e.what() << endl;
+}
+```
+
+Catching by `const` reference avoids slicing and works cleanly with polymorphic exception hierarchies.
 
 ## 25.4 noexcept Specifier
 

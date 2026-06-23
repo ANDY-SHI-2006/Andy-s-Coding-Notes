@@ -577,6 +577,155 @@ v.push_back(6);  // May invalidate all iterators!
 
 > **Warning:** Insertions (`push_back`, `insert`) may invalidate iterators when reallocation occurs. Use `reserve()` to prevent this when possible.
 
+### 11.1.11 Vector Constructors (Lecture 05 Reference)
+
+Pages 117–119 summarize the most common `vector` constructors.
+
+| Constructor | Description | Example |
+|-------------|-------------|---------|
+| `vector<T> v;` | Empty vector | `vector<int> v;` |
+| `vector<T> v(n);` | `n` default-constructed elements | `vector<int> v(10);` // ten 0s |
+| `vector<T> v(n, tObj);` | `n` copies of `tObj` | `vector<int> v(5, 1);` // five 1s |
+| `vector<T> v(v2);` | Exact copy of `v2` | `vector<int> v2(v1);` |
+| `vector<T> v(sIter, eIter);` | Copies elements from `[sIter, eIter)` | `vector<int> v(arr, arr + 3);` |
+
+```cpp
+int ia[] = {1, 2, 3, 4, 5};
+vector<int> intV(ia, ia + 3);   // {1, 2, 3}
+```
+
+### 11.1.12 Vector Methods Reference (Lecture 05)
+
+Pages 120–121 group `vector` methods into element access and iterator-based operations.
+
+**Element access / size:**
+
+| Method | Description |
+|--------|-------------|
+| `v.size()` | Number of elements |
+| `v.empty()` | `true` if no elements |
+| `v.clear()` | Remove all elements |
+| `v.front()` | Reference to first element |
+| `v.back()` | Reference to last element |
+| `v.at(i)` | Element at `i` (bounds-checked) |
+| `v[i]` | Element at `i` (no check) |
+| `v.push_back(x)` | Append `x` to the end |
+| `v.pop_back()` | Remove the last element |
+
+**Iterator-based methods:**
+
+| Method | Description |
+|--------|-------------|
+| `v.begin()` | Iterator to first element |
+| `v.end()` | Iterator past the last element |
+| `v.insert(iter, x)` | Insert `x` before `iter` |
+| `v.erase(iter)` | Remove element at `iter` |
+
+### 11.1.13 Pointer-as-Iterator Analogy
+
+An iterator behaves like a pointer that walks through an array. The following two loops are conceptually identical.
+
+**C-style (raw pointer):**
+
+```cpp
+int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+int* p;
+
+for (p = a; p != a + 9; ++p) {
+    cout << *p << " ";
+}
+```
+
+**Modern C++ (`vector` iterator):**
+
+```cpp
+vector<int> a = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+for (auto it = a.begin(); it != a.end(); ++it) {
+    cout << *it << " ";
+}
+```
+
+### 11.1.14 Iterator Invalidation
+
+Inserting or erasing elements can invalidate existing iterators. Always reset an iterator before using it again.
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> intV;
+    for (int i = 0; i < 5; ++i) {
+        intV.push_back(i);    // {0, 1, 2, 3, 4}
+    }
+
+    vector<int>::iterator myIter = intV.begin();
+    intV.insert(myIter, 123);          // {123, 0, 1, 2, 3, 4}
+    // myIter is now invalid!
+
+    myIter = intV.begin();             // reset
+    ++myIter;                          // points to 0
+    intV.erase(myIter);                // {123, 1, 2, 3, 4}
+
+    myIter = intV.begin();             // reset again
+    ++myIter;                          // points to 1
+    cout << *myIter << endl;           // prints 1
+
+    return 0;
+}
+```
+
+### 11.1.15 Reverse Iterators
+
+Reverse iterators traverse a container from the last element toward the first.
+
+```
+c.begin()        c.end()
+   |                |
+   v                v
+   [0] [1] [2] [3] [4]
+   ^                ^
+   |                |
+c.rbegin()       c.rend()
+```
+
+- `rbegin()` points to the last element.
+- `rend()` points one position before the first element.
+- Incrementing a reverse iterator moves backward through the container.
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void printReverse(vector<int>& iV) {
+    vector<int>::reverse_iterator rIter;
+    for (rIter = iV.rbegin(); rIter != iV.rend(); ++rIter) {
+        cout << *rIter << " ";
+    }
+}
+
+int main() {
+    vector<int> v;
+    for (int i = 0; i < 5; ++i) {
+        v.push_back(i);    // {0, 1, 2, 3, 4}
+    }
+    printReverse(v);       // 4 3 2 1 0
+    return 0;
+}
+```
+
+**C-style equivalent:**
+
+```cpp
+int a[] = {0, 1, 2, 3, 4};
+for (int* p = a + 4; p >= a; --p) {
+    cout << *p << " ";
+}
+```
+
 ## 11.2 Stack
 
 A **stack** is a specialized linear data structure that follows the **Last-In-First-Out (LIFO)** principle. Unlike general lists where elements can be accessed, inserted, or removed at any position, stacks restrict all operations to one end—the **top**.
