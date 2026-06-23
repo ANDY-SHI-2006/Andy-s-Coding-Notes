@@ -107,6 +107,31 @@ deg = rad * 180 / PI;
 | `cosh(x)` | Hyperbolic cosine | (e^x + e^(-x)) / 2 |
 | `tanh(x)` | Hyperbolic tangent | sinh(x) / cosh(x) |
 
+### 9.1.1.6 Inverse Hyperbolic Functions
+
+The C standard library also provides inverse hyperbolic functions in `<cmath>`:
+
+| Function | Description | Domain | Formula |
+|----------|-------------|--------|---------|
+| `asinh(x)` | Inverse hyperbolic sine | all real `x` | `ln(x + sqrt(x^2 + 1))` |
+| `acosh(x)` | Inverse hyperbolic cosine | `x >= 1` | `ln(x + sqrt(x^2 - 1))` |
+| `atanh(x)` | Inverse hyperbolic tangent | `|x| < 1` | `0.5 * ln((1+x)/(1-x))` |
+
+**Reciprocal inverse hyperbolic functions** (not in the standard library) can be computed from logarithms:
+
+```cpp
+// acoth(x)  for |x| > 1
+acoth = 0.5 * log((x + 1) / (x - 1));
+
+// asech(x)  for 0 < x <= 1
+asech = log((1 + sqrt(1 - x*x)) / x);
+
+// acsch(x)  for x != 0
+acsch = log((1 + sqrt(1 + x*x)) / fabs(x));
+```
+
+> **Note:** Always respect the mathematical domain. Calling `acosh` with `x < 1` or `atanh` with `|x| >= 1` produces undefined behavior or NaN.
+
 ### 9.1.2 <cstdlib> Functions
 
 > **Header:** `#include <cstdlib> (C++ style) or `#include <stdlib.h> (C style)

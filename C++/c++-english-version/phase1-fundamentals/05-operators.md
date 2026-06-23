@@ -975,6 +975,73 @@ New freezing temperature in degrees F = 28.8
 
 > **Key Takeaway:** Always validate program output against a hand-worked example before considering the implementation correct.
 
+### 5.13.2 Worked Example: UDF Aircraft Velocity and Acceleration
+
+This example combines `scanf`/`printf`, mathematical expressions, and the engineering problem-solving workflow.
+
+#### Problem
+
+An unducted-fan (UDF) turboprop engine is tested on a 20,000-kg aircraft. The aircraft is cruising at 180 m/s when thrust is increased from 40,000 N to 60,000 N. For the first ~120 seconds after the power change, the motion can be modeled by:
+
+```
+velocity = 0.00001·time³ − 0.00488·time² + 0.75795·time + 181.3566
+acceleration = 3 − 0.000062·velocity²
+```
+
+Write a program that reads an elapsed time in seconds and prints the corresponding velocity (m/s) and acceleration (m/s²).
+
+#### Input / Output
+
+- **Input:** Elapsed time in seconds (`double`)
+- **Outputs:** Velocity (m/s) and acceleration (m/s²)
+
+#### Hand Example
+
+For `time = 50`:
+
+```
+velocity = 0.00001(50)³ − 0.00488(50)² + 0.75795(50) + 181.3566
+         ≈ 208.304
+acceleration = 3 − 0.000062(208.304)²
+             ≈ 0.310
+```
+
+#### C++ Implementation
+
+```cpp
+#include <cstdio>
+#include <cmath>
+
+int main() {
+    double time, velocity, acceleration;
+
+    printf("Enter elapsed time in seconds: ");
+    scanf("%lf", &time);
+
+    velocity = 0.00001 * pow(time, 3)
+             - 0.00488 * pow(time, 2)
+             + 0.75795 * time
+             + 181.3566;
+
+    acceleration = 3.0 - 0.000062 * pow(velocity, 2);
+
+    printf("Velocity = %8.3f m/s\n", velocity);
+    printf("Acceleration = %8.3f m/s^2\n", acceleration);
+
+    return 0;
+}
+```
+
+#### Sample Run
+
+```text
+Enter elapsed time in seconds: 50
+Velocity =  208.304 m/s
+Acceleration =    0.310 m/s^2
+```
+
+> **Key Takeaway:** Validate the program output against the hand-worked example first; only then test other values.
+
 ---
 
 [← Previous: Variable Basics](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
