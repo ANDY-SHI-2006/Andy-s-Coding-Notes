@@ -278,6 +278,44 @@ double rand_float(double a, double b) {
 
 // Usage: rand_float(0.0, 1.0) gives 0.0 to 1.0
 ```
+
+**Equivalent Macros (from Lecture 04):**
+
+The same helpers can also be written as parameterized macros. Parenthesize every argument and the whole expression to avoid precedence problems.
+
+```c
+#define rand_int(a, b)  ((rand() % ((b) - (a) + 1)) + (a))
+#define rand_float(a, b) (((double)rand() / RAND_MAX) * ((b) - (a)) + (a))
+```
+
+> **Caution:** Macros perform textual substitution, so arguments may be evaluated more than once. For example, `rand_int(x++, y++)` expands incorrectly because `x++` and `y++` appear multiple times. Prefer `inline` functions or `constexpr` helpers in modern C++.
+
+**Complete Lecture Example: Seeded Random Integers**
+
+This is the `chapter4_2` program from the Lecture 04 slides. It reads a seed and prints ten random integers.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+    unsigned int seed;
+    int k;
+
+    printf("Enter a positive integer seed value: \n");
+    scanf("%u", &seed);
+    srand(seed);
+
+    printf("Random Numbers: \n");
+    for (k = 1; k <= 10; k++)
+        printf("%i ", rand());
+    printf("\n");
+
+    return 0;
+}
+```
+
 ### 9.1.3 <random> Functions
 
 > **Header:** `#include <random> (C++11 and later)
@@ -1218,7 +1256,208 @@ void func() {
 }
 ```
 
-### 9.2.6 Inline Functions
+### 9.2.6 Worked Example: Modularizing the Sinc Function
+
+The Lecture 04 slides use the normalized sinc function as a running example to show how a monolithic program can be refactored into modular functions. The mathematical definition is:
+
+```text
+sinc(x) = sin(πx) / (πx),  with sinc(0) = 1
+```
+
+The task is to read interval endpoints `a` and `b`, then print 21 evenly spaced values of `sinc(x)` from `a` to `b`.
+
+#### Solution 1: Everything in `main`
+
+**C style (slide):**
+
+```c
+#include <stdio.h>
+#include <math.h>
+#define PI 3.141593
+
+int main(void)
+{
+    int k;
+    double a, b, x_incr, new_x, sinc_x;
+
+    printf("Enter endpoints a and b (a<b): \n");
+    scanf("%lf %lf", &a, &b);
+    x_incr = (b - a) / 20;
+
+    for (k = 0; k <= 20; k++)
+    {
+        new_x = a + k * x_incr;
+        if (fabs(new_x) < 0.0001)
+            sinc_x = 1.0;
+        else
+            sinc_x = sin(PI * new_x) / (PI * new_x);
+        printf("%f %f \n", new_x, sinc_x);
+    }
+
+    return 0;
+}
+```
+
+**Modern C++ style:**
+
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <numbers>
+
+int main()
+{
+    double a = 0.0, b = 0.0;
+    std::cout << "Enter endpoints a and b (a<b):\n";
+    std::cin >> a >> b;
+
+    const double pi = std::numbers::pi;
+    const double x_incr = (b - a) / 20.0;
+
+    for (int k = 0; k <= 20; k++) {
+        double new_x = a + k * x_incr;
+        double sinc_x = (std::fabs(new_x) < 0.0001)
+            ? 1.0
+            : std::sin(pi * new_x) / (pi * new_x);
+        std::cout << std::fixed << std::setprecision(6)
+                  << new_x << ' ' << sinc_x << '\n';
+    }
+
+    return 0;
+}
+```
+
+#### Solution 4: Fully Modular with Prototypes
+
+**C style (slide):**
+
+```c
+#include <stdio.h>
+#include <math.h>
+#define PI 3.141593
+#define NUM_ROWS 21
+
+/* Function prototypes */
+double sinc(double x);
+void printTable(double a, double b, int n);
+
+int main(void)
+{
+    double a, b;
+
+    printf("Enter endpoints a and b (a<b): \n");
+    scanf("%lf %lf", &a, &b);
+    printTable(a, b, NUM_ROWS);
+
+    return 0;
+}
+
+/*------------------------------------------------------------*/
+/* This function evaluates the sinc function.                 */
+double sinc(double x)
+{
+    if (fabs(x) < 0.0001)
+        return 1.0;
+    else
+        return sin(PI * x) / (PI * x);
+}
+
+/*------------------------------------------------------------*/
+/* This function outputs the table of sinc values.            */
+void printTable(double a, double b, int n)
+{
+    int k;
+    double new_x, x_incr = (b - a) / (n - 1);
+
+    printf("x and sinc(x) \n");
+    for (k = 0; k < n; k++)
+    {
+        new_x = a + k * x_incr;
+        printf("%f %f \n", new_x, sinc(new_x));
+    }
+}
+```
+
+**Modern C++ style:**
+
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <numbers>
+
+constexpr int NUM_ROWS = 21;
+
+double sinc(double x);
+void printTable(double a, double b, int n);
+
+int main()
+{
+    double a = 0.0, b = 0.0;
+    std::cout << "Enter endpoints a and b (a<b):\n";
+    std::cin >> a >> b;
+    printTable(a, b, NUM_ROWS);
+    return 0;
+}
+
+double sinc(double x)
+{
+    constexpr double pi = std::numbers::pi;
+    return (std::fabs(x) < 0.0001)
+        ? 1.0
+        : std::sin(pi * x) / (pi * x);
+}
+
+void printTable(double a, double b, int n)
+{
+    const double x_incr = (b - a) / (n - 1);
+    std::cout << "x and sinc(x)\n";
+    for (int k = 0; k < n; k++) {
+        double new_x = a + k * x_incr;
+        std::cout << std::fixed << std::setprecision(6)
+                  << new_x << ' ' << sinc(new_x) << '\n';
+    }
+}
+```
+
+> **Key Takeaway:** The modular version separates input, computation, and output. Each function has one responsibility, making the code easier to read, test, and reuse.
+
+### 9.2.7 Modular Design Principles
+
+Breaking a program into functions is not just a syntax choice; it is a problem-solving strategy. The Lecture 04 slides summarize the benefits as follows.
+
+#### Divide and Conquer
+
+- Complex problems are easier to solve when broken into smaller, self-contained pieces.
+- A **decomposition outline** is a list of sequentially executed steps that solves the problem. Each step often becomes a function call in `main`.
+
+#### Reusability
+
+- A carefully tested function can be reused in new programs without retesting.
+- Libraries (such as the C standard library) are collections of reusable functions.
+- Reusable modules reduce program length because repeated steps are replaced by a single function call.
+
+#### Abstraction and Black Boxes
+
+- A well-designed function hides its implementation details. The caller only needs to know:
+  - What inputs it expects.
+  - What output it produces.
+  - What side effects (if any) it has.
+- This is sometimes called viewing a module as a **black box**: specify input/output without worrying about internal mechanics.
+- Abstraction reduces development time and improves quality because programmers can build on trusted components.
+
+#### Summary of Advantages
+
+| Advantage | Effect |
+|-----------|--------|
+| Separate development | Modules can be written and tested independently, even by different programmers. |
+| Easier testing | Each module is smaller than the whole program. |
+| Reuse | Tested modules do not need retesting before reuse. |
+| Shorter programs | Repeated code is replaced by function calls. |
+| Abstraction | Callers use functions without knowing internal details. |
+
+### 9.2.8 Inline Functions
 
 **What is `inline`?**
 
@@ -1257,6 +1496,78 @@ int main() {
 **Modern C++ note:**
 
 Modern compilers automatically inline small functions even without the `inline` keyword. Explicit `inline` is still useful in header files to avoid multiple-definition errors, but for optimization purposes, the compiler usually knows best.
+
+## 9.3 Preprocessor Macros
+
+The C preprocessor can define **macros** that are expanded by textual substitution before compilation. Macros are often used for constants and small functions, but modern C++ prefers `constexpr`, `const`, and `inline` functions when possible.
+
+### 9.3.1 Object-Like Macros
+
+A simple macro with no parameters is replaced everywhere it appears:
+
+```c
+#define PI 3.141593
+#define NUM_ROWS 21
+```
+
+### 9.3.2 Function-Like Macros
+
+Macros can also take parameters. The Lecture 04 slides emphasize that **every argument and the entire macro body must be parenthesized**.
+
+**Correct macro:**
+
+```c
+#define degrees1_F(x) (((x) * (9.0 / 5.0)) + 32)
+```
+
+**Incorrect macro (missing parentheses):**
+
+```c
+#define degrees2_F(x) (x * (9.0 / 5.0) + 32)
+```
+
+With a simple variable, both seem to work:
+
+```c
+double temp = 25.0;
+max_temp1 = degrees1_F(temp);  // ((temp) * (9.0/5.0) + 32)  → 77.0
+max_temp2 = degrees2_F(temp);  // temp * (9.0/5.0) + 32      → 77.0
+```
+
+But with an expression argument, the incorrect version fails:
+
+```c
+max_temp1 = degrees1_F(temp + 10);  // ((temp+10)*(9.0/5.0)+32)  → 95.0  ✓
+max_temp2 = degrees2_F(temp + 10);  // temp+10*(9.0/5.0)+32      → 69.0  ✗
+```
+
+The second expansion is parsed as `temp + (10 * 9.0/5.0) + 32`, not `(temp + 10) * 9.0/5.0 + 32`.
+
+> **Rule:** Parenthesize every macro argument and the complete replacement text to prevent operator-precedence bugs.
+
+### 9.3.3 Multi-Argument Macros
+
+```c
+#define area_tri(base, height) (0.5 * (base) * (height))
+```
+
+Usage:
+
+```c
+double area = area_tri(3.0, 4.0);  // expands to (0.5 * (3.0) * (4.0)) → 6.0
+```
+
+### 9.3.4 Macros vs. Inline Functions
+
+| Feature | Macro | `inline` Function |
+|---------|-------|-------------------|
+| Type checking | None | Full |
+| Argument evaluation | May evaluate multiple times | Evaluated once |
+| Scope | Global text substitution | Respects namespaces and scopes |
+| Debuggability | Hard (expanded code) | Easy |
+| Modern C++ recommendation | Avoid | Prefer |
+
+> **Recommendation:** Use macros only when required by legacy code or course constraints. For new C++ code, prefer `inline` functions, `constexpr` variables, and templates.
 
 ---
 
