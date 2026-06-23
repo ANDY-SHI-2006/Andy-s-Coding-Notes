@@ -496,6 +496,7 @@ C++ distinguishes uppercase and lowercase letters.
 - Avoid single-letter names except for loop counters (`i`, `j`, `k`)
 - Be consistent with one style throughout your project
 - **Follow your team's existing conventions** ←consistency is more important than any single style
+- **Encode units when applicable**: `temp_F`, `degrees_F`, `theta_rad`, `theta_deg` make the variable's physical meaning immediately clear
 
 ## 3.5 Automated Code Formatting
 

@@ -209,7 +209,141 @@ vector<int> v{10, 5};  // 2 elements: use {}
 
 > **Use brace initialization `{}` by default.** It prevents narrowing, eliminates ambiguity, and provides a consistent syntax across all types. Switch to `()` only when you specifically need the fill constructor behavior for containers.
 
-## 4.3 Variable Scope, Lifetime, and Visibility
+## 4.3 Memory Snapshots and the Variable-as-Mailbox Analogy
+
+A useful mental model for variables is a **mailbox**: the variable name is the label on the mailbox, and the value is the letter inside it. Two different mailboxes can hold copies of the same letter, and a mailbox may be empty (uninitialized) before a value is placed inside.
+
+### Memory Snapshot Example
+
+After executing:
+
+```cpp
+double x1 = 1, y1 = 5, x2 = 4, y2 = 7,
+       side_1, side_2, distance;
+```
+
+A memory snapshot looks like this:
+
+| Variable | Value | Note |
+|----------|-------|------|
+| `x1` | `1` | initialized |
+| `y1` | `5` | initialized |
+| `x2` | `4` | initialized |
+| `y2` | `7` | initialized |
+| `side_1` | `?` | uninitialized (garbage value) |
+| `side_2` | `?` | uninitialized (garbage value) |
+| `distance` | `?` | uninitialized (garbage value) |
+
+> **Key Point:** Uninitialized variables do **not** contain zero automatically. Their values are unspecified until you assign to them.
+
+### Assignment Copies Values
+
+When one variable is assigned to another, the value is copied. The original variable keeps its own value.
+
+```cpp
+double rate;
+rate = state_tax;   // rate now holds a copy of state_tax's value
+```
+
+Read `=` as "is assigned the value of". If `state_tax` is `0.06`, then after the assignment both `rate` and `state_tax` are `0.06`, but they are still independent mailboxes.
+
+## 4.4 Numeric Literals, Precision, and Range
+
+### Numeric Data Type Hierarchy
+
+C++ numeric types can be ordered by their usual conversion rank (high to low):
+
+```
+long double > double > float > long > int > short
+```
+
+**Rule of thumb:** moving a value to a **higher** rank is safe; moving it to a **lower** rank may lose information.
+
+```cpp
+int a = 12.8;   // a becomes 12 — the fractional part is truncated, not rounded
+```
+
+### Scientific and Exponential Notation
+
+Floating-point literals can be written in scientific notation using `e` or `E` to separate the mantissa from the exponent.
+
+| Mathematical form | C++ literal |
+|-------------------|-------------|
+| 2.56 × 10¹ | `2.56e1` |
+| -4.0 × 10⁻³ | `-4.0e-3` |
+| 1.5 × 10⁰ | `1.5e0` |
+
+### Literal Suffixes
+
+| Literal | Default type | With suffix | Forced type |
+|---------|--------------|-------------|-------------|
+| `2.3` | `double` | `2.3F` | `float` |
+| `2.3` | `double` | `2.3L` | `long double` |
+| `42` | `int` | `42U` | `unsigned int` |
+| `42` | `int` | `42LL` | `long long` |
+
+### Precision and Range
+
+- **Precision**: the number of meaningful digits in the mantissa.
+- **Range**: the span from the smallest to the largest representable magnitude, determined by the exponent.
+
+Limited precision and range can be insufficient for some engineering problems. For example, the distance from Mars to the Sun is about `141,517,510` miles, or `1.4151751 × 10⁸`. Storing it with only two digits of precision would lose most of the information.
+
+### Common Type Limits (typical modern systems)
+
+| Type | Minimum | Maximum | Size (bytes) |
+|------|---------|---------|--------------|
+| `bool` | `false` (0) | `true` (1) | 1 |
+| `char` | `-128` | `127` | 1 |
+| `unsigned char` | `0` | `255` | 1 |
+| `short` | `-32,768` | `32,767` | 2 |
+| `unsigned short` | `0` | `65,535` | 2 |
+| `int` | `-2,147,483,648` | `2,147,483,647` | 4 |
+| `unsigned int` | `0` | `4,294,967,295` | 4 |
+| `long long` | `-9,223,372,036,854,775,808` | `9,223,372,036,854,775,807` | 8 |
+| `unsigned long long` | `0` | `18,446,744,073,709,551,615` | 8 |
+| `float` | ≈ ±1.18 × 10⁻³⁸ | ≈ ±3.4 × 10³⁸ | 4 |
+| `double` | ≈ ±2.23 × 10⁻³⁰⁸ | ≈ ±1.80 × 10³⁰⁸ | 8 |
+
+> **Note:** Exact limits are platform-dependent. You can query them programmatically with `<climits>` for integers and `<cfloat>` for floating-point types.
+
+## 4.5 Character Data and ASCII
+
+All information in a computer is stored as binary. A `char` value is simply a small integer that the compiler can interpret as a character using an encoding scheme. C++ assumes **ASCII** in most environments.
+
+### Common ASCII Values
+
+| Character | Decimal value |
+|-----------|---------------|
+| `\n` (newline) | 10 |
+| `'0'` | 48 |
+| `'9'` | 57 |
+| `'A'` | 65 |
+| `'Z'` | 90 |
+| `'a'` | 97 |
+| `'z'` | 122 |
+
+### Character Constants vs Integer Values
+
+Character constants are enclosed in single quotes: `'A'`, `'3'`. The same bits can be printed as a character or as an integer.
+
+```cpp
+char ch = 'a';
+int i = 97;
+
+printf("%c %c\n", ch, i);  // prints: a a
+printf("%i %i\n", ch, i);  // prints: 97 97
+```
+
+**Common Pitfall:** The character `'3'` has integer value `51`, not `3`.
+
+```cpp
+char c = '3';
+int n = 3;
+// c == n is false, because c stores 51 internally
+```
+
+## 4.6 Variable Scope, Lifetime, and Visibility
 
 Variables have **scope** (where visible), **lifetime** (when created/destroyed), and **visibility rules** that determine how names are resolved.
 

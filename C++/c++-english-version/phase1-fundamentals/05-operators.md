@@ -177,6 +177,48 @@ double result4 = pow(x, -1);     // 1/x
 | `a * a` | Fastest | Small fixed exponents: a^2, a^3 |
 | `pow(a, b)` | Slower | Variable/fractional: a^b, sqrt(a) |
 
+### 5.2.5 Mixed Operations and Type Promotion
+
+When an expression involves operands of different numeric types, the lower-rank type is **promoted** to the higher-rank type before the operation is performed.
+
+```cpp
+int a = 9;
+double b = 4.0;
+
+auto result1 = a / 4;     // int / int → int: 2
+auto result2 = a / 4.0;   // int promoted to double → double: 2.25
+auto result3 = a + b;     // int promoted to double → double: 13.0
+```
+
+**Promotion hierarchy** (low to high):
+```
+short → int → long → float → double → long double
+```
+
+> **Tip:** If you want floating-point division, make at least one operand floating-point. Otherwise integer division truncates the result.
+
+### 5.2.6 Overflow and Underflow
+
+Numeric types have finite ranges. If a computation produces a value outside that range, the behavior depends on the type and platform.
+
+**Overflow** occurs when a result is too large to store:
+
+```cpp
+float x = 2.5e30f;
+float y = 1.0e30f;
+float z = x * y;   // Should be 2.5e60, but exceeds float range → overflow
+```
+
+**Underflow** occurs when a result is too close to zero to represent:
+
+```cpp
+float x = 2.5e-30f;
+float y = 1.0e30f;
+float z = x / y;   // Should be 2.5e-60, but is too small → underflow
+```
+
+For signed integer overflow the behavior is **undefined**; for floating-point it is usually defined by IEEE 754 but the exact result is system-dependent. Choose types with enough range and precision for your problem.
+
 ## 5.3 Increment and Decrement Operators
 
 The `++` (increment) and `--` (decrement) operators increase or decrease a variable by 1.
@@ -852,6 +894,87 @@ int result = a*b + b/c*d;  // Clearer structure
 int result = a * b + b / c * d;  // Also valid, but less clear
 ```
 
+## 5.13 Worked Example: Linear Interpolation
+
+This example combines arithmetic operators, C-style I/O, and an engineering problem-solving workflow.
+
+### Problem
+
+Estimate the freezing point of sea water at a given salinity using **linear interpolation**. Salinity is measured in parts per thousand (ppt).
+
+| Salinity (ppt) | Freezing Point (°F) |
+|----------------|---------------------|
+| 0 (fresh water)| 32.0 |
+| 10 | 31.1 |
+| 20 | 30.1 |
+| 30 | 29.1 |
+| 35 | 28.6 |
+
+### Engineering Workflow
+
+1. **State the problem clearly.**
+2. **Describe inputs and outputs.**
+3. **Work a hand example.**
+4. **Develop an algorithm before coding.**
+5. **Implement and test against the hand example.**
+
+### Interpolation Formula
+
+For a target salinity `b` between two known points `(a, f(a))` and `(c, f(c))`:
+
+```
+f(b) = f(a) + (b - a) / (c - a) * [f(c) - f(a)]
+```
+
+### Hand Example
+
+Given `a = 30`, `f(a) = 29.1`, `c = 35`, `f(c) = 28.6`, find `f(33)`:
+
+```
+f(33) = 29.1 + (33 - 30) / (35 - 30) * (28.6 - 29.1)
+      = 29.1 + 3 / 5 * (-0.5)
+      = 29.1 - 0.3
+      = 28.8
+```
+
+### C++ Implementation
+
+```cpp
+#include <cstdio>
+
+int main() {
+    double a, f_a, c, f_c, b, f_b;
+
+    printf("Please enter first salinity value and freezing point\n");
+    scanf("%lf %lf", &a, &f_a);
+
+    printf("Please enter second salinity value and freezing point\n");
+    scanf("%lf %lf", &c, &f_c);
+
+    printf("Please enter new salinity value\n");
+    scanf("%lf", &b);
+
+    f_b = f_a + (b - a) / (c - a) * (f_c - f_a);
+
+    printf("New freezing temperature in degrees F = %4.1f\n", f_b);
+    return 0;
+}
+```
+
+### Sample Run
+
+```text
+Please enter first salinity value and freezing point
+30 29.1
+Please enter second salinity value and freezing point
+35 28.6
+Please enter new salinity value
+33
+New freezing temperature in degrees F = 28.8
+```
+
+> **Key Takeaway:** Always validate program output against a hand-worked example before considering the implementation correct.
+
 ---
 
-[←Previous: Definitions, Declarations and Statements](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)
+[← Previous: Variable Basics](04-variable-basics.md) | [Next: Data Types →](06-data-types.md)

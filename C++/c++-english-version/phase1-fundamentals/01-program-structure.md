@@ -2,6 +2,33 @@
 
 # 1 Program Structure
 
+## 1.0 Why C++?
+
+C++ is one of the most influential programming languages in systems programming, game engines, high-performance computing, and embedded systems. Understanding why we use it helps set the stage for the rest of the course.
+
+### What Makes C++ Distinctive
+
+| Feature | Benefit |
+|---------|---------|
+| **Power and efficiency** | Direct access to hardware with minimal runtime overhead |
+| **Multi-paradigm** | Supports procedural, object-oriented, generic, and functional programming |
+| **C compatibility** | Loosely includes C as a subset, so learning C++ teaches much of C |
+| **Industry relevance** | Used in operating systems, browsers, game engines, financial systems, and CUDA/GPU programming |
+
+### C++ and Python: A Common Partnership
+
+A typical modern workflow uses **Python** for high-level orchestration and **C++** for performance-critical kernels. For example, a machine-learning training script in Python may call a CUDA kernel written in C++ to perform the heavy numerical computation.
+
+```cpp
+// C++ side: high-performance kernel (simplified)
+__global__ void vectorAdd(float* a, float* b, float* c, int n) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < n) c[i] = a[i] + b[i];
+}
+```
+
+> **Key Takeaway:** C++ is the language of choice when you need fine-grained control over memory and performance while still having access to high-level abstractions.
+
 ## 1.1 The Translation Unit Model
 
 ### 1.1.1 From Source to Executable
@@ -89,7 +116,56 @@ double area = 3.14159 * ((r) * (r));
 
 The preprocessor is covered in detail in [Chapter 2](02-the-preprocessor.md).
 
-### 1.1.4 Common Header Files Reference
+### 1.1.4 C-Style Console I/O
+
+Although this course prefers modern C++ streams (`<iostream>`), many lecture examples, lab starter files, and legacy resources use **C-style I/O**. Being able to read and write both styles is essential.
+
+### `printf` — Formatted Output
+
+```cpp
+#include <cstdio>
+
+int main() {
+    int age = 20;
+    double distance = 12.3456;
+    char grade = 'A';
+
+    printf("Age: %d, Grade: %c\n", age, grade);
+    printf("Distance: %5.2f\n", distance);  // width 5, 2 decimal places
+    return 0;
+}
+```
+
+### Common Format Specifiers
+
+| Specifier | Type | Example output |
+|-----------|------|----------------|
+| `%d` or `%i` | `int` | `42` |
+| `%f` | `float` / `double` | `3.140000` |
+| `%5.2f` | `double` with width/precision | `  3.14` |
+| `%lf` | `double` for `scanf` | — |
+| `%c` | `char` | `A` |
+| `%s` | C-string | `hello` |
+
+### `scanf` — Formatted Input
+
+```cpp
+#include <cstdio>
+
+int main() {
+    double radius;
+    printf("Enter radius: ");
+    scanf("%lf", &radius);   // & is required for non-string variables
+
+    double area = 3.14159 * radius * radius;
+    printf("Area = %5.2f\n", area);
+    return 0;
+}
+```
+
+> **Best Practice:** Prefer `<iostream>` for new C++ code, but learn C-style I/O because you will encounter it in lecture slides, lab exercises, and existing codebases.
+
+## 1.1.5 Common Header Files Reference
 
 This section provides a comprehensive reference for C and C++ standard library headers. The C++ standard library includes a C compatibility layer (`<cxxx>` headers) and C++-specific headers.
 
