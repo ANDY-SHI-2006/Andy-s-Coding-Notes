@@ -343,15 +343,15 @@ int n = 3;
 // c == n is false, because c stores 51 internally
 ```
 
-## 4.6 Variable Scope, Lifetime, and Visibility
+## 4.7 Variable Scope, Lifetime, and Visibility
 
 Variables have **scope** (where visible), **lifetime** (when created/destroyed), and **visibility rules** that determine how names are resolved.
 
-### 4.3.1 Scope and Visibility
+### 4.7.1 Scope and Visibility
 
 Scope determines where a variable can be accessed. C++ has several scope types:
 
-#### 4.3.1.1 Block Scope (Local)
+#### 4.7.1.1 Block Scope (Local)
 
 Variables declared inside a block `{}` are only visible within that block.
 
@@ -369,7 +369,7 @@ void func() {
 // x not available here
 ```
 
-#### 4.3.1.2 Namespace Scope
+#### 4.7.1.2 Namespace Scope
 
 Variables in a namespace are visible throughout that namespace and wherever the namespace is accessible.
 
@@ -390,7 +390,7 @@ using namespace math;
 double y = pi;
 ```
 
-#### 4.3.1.3 Class Scope
+#### 4.7.1.3 Class Scope
 
 Members of a class have class scope and are accessed via the class instance or scope resolution operator.
 
@@ -409,7 +409,7 @@ public:
 int Counter::totalCount = 0;  // Definition outside class
 ```
 
-#### 4.3.1.4 Global (File) Scope
+#### 4.7.1.4 Global (File) Scope
 
 Variables declared outside all functions and classes have global scope, visible throughout the translation unit.
 
@@ -425,7 +425,7 @@ namespace {
 }
 ```
 
-### 4.3.2 Variable Shadowing (Name Hiding)
+### 4.7.2 Variable Shadowing (Name Hiding)
 
 When an inner scope declares a variable with the same name as an outer scope, the inner variable **shadows** (hides) the outer one.
 
@@ -482,13 +482,13 @@ void setValue(int value) {     // Parameter shadows global
 }
 ```
 
-### 4.3.3 Lifetime and Storage Duration
+### 4.7.3 Lifetime and Storage Duration
 
 Lifetime determines when variables are created and destroyed. While **scope** defines where a variable is visible, **lifetime** defines how long it exists in memory. They are related but distinct concepts.
 
 > **Key Insight**: A variable can be out of scope (not visible) but still alive (not destroyed), as seen with `static` local variables.
 
-#### 4.3.3.1 Overview of Storage Durations
+#### 4.7.3.1 Overview of Storage Durations
 
 C++ defines three fundamental storage durations:
 
@@ -498,7 +498,7 @@ C++ defines three fundamental storage durations:
 | **Static** | Data Segment | Program start | Program end | Global, `static` variables |
 | **Dynamic** | Heap | `new` called | `delete` called | Heap objects |
 
-#### 4.3.3.2 Automatic Storage Duration
+#### 4.7.3.2 Automatic Storage Duration
 
 Variables with automatic storage duration are created when execution enters their scope and destroyed when execution exits.
 
@@ -535,7 +535,7 @@ int* ptr = badFunction();
 
 > **Rule**: Never return pointers or references to automatic (local) variables.
 
-#### 4.3.3.5 Lifetime Summary and Best Practices
+#### 4.7.3.3 Lifetime Summary and Best Practices
 
 **Quick Selection Guide:**
 
@@ -555,11 +555,11 @@ int* ptr = badFunction();
 4. **Avoid Global Static**: Minimize global variables to reduce coupling and side effects
 5. **Never Return Dangling References**: Always ensure returned pointers/references point to valid memory
 
-## 4.4 Constants: const and constexpr
+## 4.8 Constants: const and constexpr
 
 Constants are variables whose values cannot be modified.
 
-### 4.4.1 const (Runtime Constant)
+### 4.8.1 const (Runtime Constant)
 
 `const` means the value cannot be changed after initialization.
 
@@ -625,7 +625,7 @@ for (const auto& num : numbers) {     // No copy, cannot modify
 
 **Key Insight**: Prefer `const T&` over `T` for large read-only parameters.
 
-### 4.4.3 const vs constexpr: When to Use?
+### 4.8.2 const vs constexpr: When to Use?
 
 | Feature | const | constexpr |
 |---------|-------|-----------|
