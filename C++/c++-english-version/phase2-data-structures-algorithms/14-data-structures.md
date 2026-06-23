@@ -611,6 +611,36 @@ ListNode* findValue(ListItemType value) const
 }
 ```
 
+#### findValue: Searching by Value
+
+Lecture 08 also introduces a value-based search helper. Instead of stopping at a fixed index, `findValue` walks the list with `prev` and `cur` until it finds a node whose `element` equals the requested value or reaches the end of the list.
+
+```cpp
+ListNode* findValue(ListItemType value) const
+/* Purpose: Return pointer to a node with value indicated in list */
+{
+    ListNode *prev, *cur;
+
+    prev = NULL;
+    cur = Head of List;
+
+    while (not found && cur is not NULL) {
+        if (cur->element == value) {
+            found = true;
+        } else {
+            prev = cur;
+            cur = cur->next;
+        }
+    }
+
+    return cur;
+}
+```
+
+> **C-style detail:** The pseudocode above uses the slide convention `while (not found && cur is not NULL)`. In real C/C++ you would declare `bool found = false;` before the loop and write `while (!found && cur != NULL)`.
+>
+> **Modern C++ note:** In production code, prefer returning an iterator or `std::optional<T>` instead of a raw pointer. If the list owns the nodes, avoid exposing internal pointers to clients; wrap the search in public methods such as `bool contains(const T& value)` or `bool find(const T& value, T& result)`.
+
 ### 14.8.7 C++ Specification (Linked List)
 
 ```cpp
@@ -777,6 +807,9 @@ void List::remove(int index)
 } // end remove
 ```
 
+> **Lecture 08 safety detail:** Setting `cur->next = NULL` before `delete cur` is defensive programming. It severs the deleted node from the rest of the list so that the destructor cannot accidentally follow a dangling pointer and delete the remaining nodes. Setting `cur = NULL` afterwards prevents any later use of the freed pointer.
+>
+> **Modern C++ note:** With `std::unique_ptr` or `std::shared_ptr`, you do not write `delete` manually. Resetting or reassigning the smart pointer removes the link and frees the node automatically.
 
 ## 14.9 Variations of Linked List
 
@@ -803,6 +836,21 @@ Some variations can be combined:
 - The last node takes the longest time to reach
 - Doubly Linked List facilitates movement in both directions
 - Simplifies most of the methods
+
+The diagram below illustrates the limitation that motivates a doubly linked list. In a singly linked list, once you have moved past a node there is no way to go back; reaching the last node also requires a full traversal from `head`.
+
+```
+Singly linked list: previous-node access is impossible,
+                    and the last node is the farthest from head.
+
+head --> [a0] --> [a1] --> [a2] --> [a3] --> NULL
+          ^                              ^
+          |                              |
+        start                    farthest node
+                                   (must traverse all)
+```
+
+A doubly linked list removes this restriction by adding a `prev` pointer in each node.
 
 **Node Structure:**
 
@@ -952,6 +1000,62 @@ head --> [dummy|*] --> [a0|*] --> [a1|*] --> [a2|*] --> [a3|NULL]
 ```
 
 > **Key Point:** With a dummy head node, every insertion/deletion can be treated as the general case - no need for separate head-insertion or head-deletion logic.
+
+**Why the special cases disappear:**
+
+Without a dummy head node, position 1 is the first real node. Inserting or deleting at position 1 therefore requires updating `head` directly:
+
+```cpp
+// Without dummy head: special case for insertion at position 1
+if (index == 1) {
+    newPtr->next = head;
+    head = newPtr;          // must update the list pointer
+} else {
+    ListNode *prev = find(index - 1);
+    newPtr->next = prev->next;
+    prev->next = newPtr;
+}
+```
+
+With a dummy head node, the dummy always occupies position 0 and the first real element is at position 1. Consequently, *every* valid position has a predecessor node, even position 1 (its predecessor is the dummy). The `if (index == 1)` branch disappears:
+
+```cpp
+// With dummy head: the same code handles position 1 and every other position
+ListNode *prev = find(index - 1);   // prev is the dummy node when index == 1
+newPtr->next = prev->next;
+prev->next = newPtr;
+// head never changes; only dummy->next is updated
+```
+
+The same idea applies to `remove`. Without a dummy head you must special-case deletion of the first node:
+
+```cpp
+// Without dummy head: special case for deletion at position 1
+if (index == 1) {
+    cur = head;
+    head = head->next;      // must update the list pointer
+} else {
+    ListNode *prev = find(index - 1);
+    cur = prev->next;
+    prev->next = cur->next;
+}
+```
+
+With a dummy head node, deleting position 1 is identical to deleting any other position:
+
+```cpp
+// With dummy head: the same code handles position 1 and every other position
+ListNode *prev = find(index - 1);   // prev is the dummy node when index == 1
+ListNode *cur = prev->next;
+prev->next = cur->next;
+cur->next = NULL;
+delete cur;
+cur = NULL;
+```
+
+> **Trade-off:** A dummy head node consumes one extra node and one extra pointer dereference per operation, but it removes the head-position special cases and usually makes the code shorter and less error-prone.
+>
+> **Modern C++ note:** The C++ standard library's `std::list` internally uses a sentinel node (similar to a dummy head) so that operations at the front and back do not need special-case code. `std::forward_list`, by contrast, does not use a sentinel; it therefore requires separate logic for operations at the front of the list.
 
 
 ## 14.10 Template List ADT
