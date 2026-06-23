@@ -804,6 +804,47 @@ public:
 - Exception class for error conditions (popping from empty stack)
 - Template-based for type-generic implementation
 
+### 11.2.2.2 Lecture 09 ADT Specification
+
+The lecture slides separate the exception class into its own header and expose a `getTop(T&)` accessor (rather than returning a reference). This style mirrors the `ListException` pattern used earlier in the course.
+
+**`StackException.h`**
+```cpp
+#include <string>
+using namespace std;
+
+class StackException {
+public:
+    StackException(const string& message) : msg(message) {}
+    string what() const { return msg; }
+private:
+    string msg;
+};
+```
+
+> **Modern C++ note:** `throw(StackException)` is an older *dynamic exception specification*. It was deprecated in C++11 and removed in C++17. New code should either omit it or use `noexcept` where appropriate. The examples below preserve the lecture’s original form for accuracy.
+
+**`Stack.h` — template interface (pages 007–008)**
+```cpp
+#include "StackException.h"
+
+template<typename T>
+class Stack {
+public:
+    Stack();
+    bool isEmpty() const;
+    int size() const;
+    void push(const T& newItem) throw (StackException);
+    void pop() throw (StackException);
+    void pop(T& stackTop) throw (StackException);
+    void getTop(T& stackTop) const throw (StackException);
+private:
+    // implementation dependent
+};
+```
+
+Because `Stack<T>` is a template, its full implementation is normally placed in the same header file (or an included `.cpp` template file) so the compiler can instantiate it for any `T`.
+
 ## 11.2.3 Stack Implementations
 
 There are multiple ways to implement a stack, each with trade-offs:
@@ -812,6 +853,7 @@ There are multiple ways to implement a stack, each with trade-offs:
 |---------------|---------------------|------|------|
 | **Array-based** | Fixed-size array | Fast, no overhead, cache-friendly | Fixed capacity, resizing needed |
 | **Linked List** | Linked list | Dynamic size, no capacity limit | Extra memory for pointers, cache misses |
+| **List ADT** | Reused linked-list ADT | Reuses tested code, O(1) head ops | Extra layer of exception translation |
 | **STL Vector** | Dynamic array (vector) | Automatic resizing, rich interface | Slight overhead compared to raw array |
 
 ### 11.2.3.1 Array-Based Implementation
@@ -1005,16 +1047,172 @@ public:
 - Automatic resizing when capacity is exceeded
 - `back()` and `pop_back()` are O(1) amortized
 
-### 11.2.3.4 Implementation Comparison
+### 11.2.3.4 List-ADT-Based Implementation
 
-| Aspect | Array-Based | Linked List | STL Vector |
-|--------|-------------|-------------|------------|
-| **Memory** | Contiguous | Scattered (pointers) | Contiguous |
-| **Push** | O(1) amortized* | O(1) | O(1) amortized |
-| **Pop** | O(1) | O(1) | O(1) |
-| **Cache efficiency** | Excellent | Poor | Excellent |
-| **Memory overhead** | Low | High (pointers) | Low |
-| **Implementation complexity** | Medium | Medium | Low |
+This implementation reuses the `List<T>` ADT built earlier in the course. The stack is a thin wrapper: the **top** of the stack is mapped to **position 1 (the head)** of the list, because linked-list head operations are O(1).
+
+**Key design decisions:**
+- `push(x)` → `items.insert(1, x)`
+- `pop()` / `pop(top)` → `items.remove(1)`
+- `getTop(top)` → `items.retrieve(1, top)`
+- List-specific exceptions are caught and re-thrown as `StackException` with stack-level messages.
+
+```cpp
+#include "ListTP.h"     // previously built List<T> ADT
+#include "StackException.h"
+
+template<typename T>
+class Stack {
+public:
+    Stack();
+    bool isEmpty() const;
+    int size() const;
+    void push(const T& newItem) throw (StackException);
+    void pop() throw (StackException);
+    void pop(T& stackTop) throw (StackException);
+    void getTop(T& stackTop) const throw (StackException);
+private:
+    List<T> items;
+};
+```
+
+```cpp
+template<typename T>
+Stack<T>::Stack() { }
+
+template<typename T>
+bool Stack<T>::isEmpty() const {
+    return items.isEmpty();
+}
+
+template<typename T>
+int Stack<T>::size() const {
+    return items.getLength();
+}
+
+template<typename T>
+void Stack<T>::push(const T& newItem) throw (StackException) {
+    try {
+        items.insert(1, newItem);
+    } catch (ListException e) {
+        throw StackException("Stack is full on push");
+    } catch (ListIndexOutOfRangeException e) {
+        throw StackException("Cannot push item");
+    }
+}
+
+template<typename T>
+void Stack<T>::getTop(T& stackTop) const throw (StackException) {
+    try {
+        items.retrieve(1, stackTop);
+    } catch (ListIndexOutOfRangeException e) {
+        throw StackException("Stack empty on getTop");
+    }
+}
+
+template<typename T>
+void Stack<T>::pop() throw (StackException) {
+    try {
+        items.remove(1);
+    } catch (ListIndexOutOfRangeException e) {
+        throw StackException("Stack is empty on pop");
+    }
+}
+
+template<typename T>
+void Stack<T>::pop(T& stackTop) throw (StackException) {
+    try {
+        items.retrieve(1, stackTop);
+        items.remove(1);
+    } catch (ListIndexOutOfRangeException e) {
+        throw StackException("Stack is empty on pop");
+    }
+}
+```
+
+> **Why position 1?** A singly-linked list stores a direct pointer to its head. Inserting or removing at the tail would require traversing the entire list, making every `push`/`pop` O(n). Using the head keeps all stack operations O(1).
+
+### 11.2.3.5 STL vector-Based Implementation (Lecture 09)
+
+The same `Stack<T>` interface can be implemented on top of `std::vector<T>`. Here the **top** of the stack is the **last element** of the vector (index `size() - 1`).
+
+```cpp
+#include <vector>
+#include "StackException.h"
+using namespace std;
+
+template<typename T>
+class Stack {
+public:
+    Stack();
+    bool isEmpty() const;
+    int size() const;
+    void push(const T& newItem) throw (StackException);
+    void pop() throw (StackException);
+    void pop(T& stackTop) throw (StackException);
+    void getTop(T& stackTop) const throw (StackException);
+private:
+    vector<T> items;
+};
+```
+
+```cpp
+template<typename T>
+Stack<T>::Stack() { }
+
+template<typename T>
+bool Stack<T>::isEmpty() const {
+    return items.empty();
+}
+
+template<typename T>
+int Stack<T>::size() const {
+    return static_cast<int>(items.size());
+}
+
+template<typename T>
+void Stack<T>::push(const T& newItem) throw (StackException) {
+    items.push_back(newItem);
+}
+
+template<typename T>
+void Stack<T>::getTop(T& stackTop) const throw (StackException) {
+    if (items.empty()) {
+        throw StackException("Stack is empty on getTop");
+    }
+    stackTop = items.back();
+}
+
+template<typename T>
+void Stack<T>::pop() throw (StackException) {
+    if (items.empty()) {
+        throw StackException("Stack is empty on pop");
+    }
+    items.pop_back();
+}
+
+template<typename T>
+void Stack<T>::pop(T& stackTop) throw (StackException) {
+    if (items.empty()) {
+        throw StackException("Stack is empty on pop");
+    }
+    stackTop = items.back();
+    items.pop_back();
+}
+```
+
+> **Modern C++ note:** `std::vector` manages its own memory, so the implementation is short and exception-safe. `items.back()` is undefined behavior on an empty vector, which is why we guard it with `items.empty()` and throw our own `StackException`.
+
+### 11.2.3.6 Implementation Comparison
+
+| Aspect | Array-Based | Linked List | List ADT | STL Vector |
+|--------|-------------|-------------|----------|------------|
+| **Memory** | Contiguous | Scattered (pointers) | Scattered (pointers) | Contiguous |
+| **Push** | O(1) amortized* | O(1) | O(1) | O(1) amortized |
+| **Pop** | O(1) | O(1) | O(1) | O(1) |
+| **Cache efficiency** | Excellent | Poor | Poor | Excellent |
+| **Memory overhead** | Low | High (pointers) | High (pointers) | Low |
+| **Implementation complexity** | Medium | Medium | Low | Low |
 
 *Array-based requires manual resizing; STL vector handles this automatically.
 
@@ -1069,6 +1267,33 @@ while (!s.empty()) {
 // Or assign a new empty stack
 s = stack<int>();
 ```
+
+### 11.2.4.3 `top()` Returns a Reference
+
+A key difference between the custom `Stack<T>` specification and `std::stack` is that `std::stack::top()` returns `T&` (a reference to the top element). This lets you modify the top value in place.
+
+**Example from page 027:**
+```cpp
+#include <stack>
+#include <iostream>
+using namespace std;
+
+int main() {
+    stack<int> s;
+    s.push(5);
+    int &j = s.top();   // j aliases the element 5
+    s.push(3);          // new top is 3; j still refers to the older element
+    j++;                // modifies the previously pushed 5 → now 6
+
+    cout << s.top() << endl;  // prints 3
+    s.pop();
+    cout << s.top() << endl;  // prints 6
+
+    return 0;
+}
+```
+
+> **C-style note:** Treating `top()` as a reference is similar to returning a pointer to the last array element. The danger is the same: if the container reallocates (e.g., another `push` grows the underlying `deque`/`vector`), the reference may become invalid. Modern C++ containers provide this convenience, but you must avoid storing the reference across mutating operations.
 
 ## 11.2.5 Stack Applications
 
@@ -1143,6 +1368,93 @@ public:
 };
 ```
 
+**Lecture 09 implementation (`ToH.h`, `ToH.cpp`, `main()`) — pages 033–036**
+
+This version uses a single `ToH` class with an array of three `std::stack<int>` objects and an interactive driver.
+
+**`ToH.h`**
+```cpp
+#include <stack>
+using namespace std;
+
+class ToH {
+public:
+    ToH(unsigned int nDiscs = 10);
+    bool move(int from, int to);
+    void display();
+private:
+    stack<int> _poles[3];
+    unsigned int _nDiscs;
+};
+```
+
+**`ToH.cpp`**
+```cpp
+#include "ToH.h"
+#include <iostream>
+using namespace std;
+
+ToH::ToH(unsigned int nDiscs) : _nDiscs(nDiscs) {
+    // Build the initial tower on pole 0 (A)
+    for (int i = _nDiscs; i > 0; i--) {
+        _poles[0].push(i);
+    }
+}
+
+bool ToH::move(int from, int to) {
+    // Validate pole indices
+    if (from < 0 || from > 2 || to < 0 || to > 2) {
+        return false;
+    }
+    // Source must not be empty
+    if (_poles[from].empty()) {
+        return false;
+    }
+    // Cannot place a larger disc on a smaller disc
+    if (!_poles[to].empty() && _poles[from].top() > _poles[to].top()) {
+        return false;
+    }
+
+    _poles[to].push(_poles[from].top());
+    _poles[from].pop();
+    return true;
+}
+
+void ToH::display() {
+    // Display is left as an exercise.
+}
+```
+
+**`main.cpp`**
+```cpp
+#include "ToH.h"
+#include <iostream>
+using namespace std;
+
+int main() {
+    ToH t(3);
+    t.display();
+
+    int from, to;
+    while (true) {
+        cin >> from >> to;
+        if (from == -1) {
+            break;
+        }
+        if (t.move(from, to)) {
+            cout << "Move ok!" << endl;
+        } else {
+            cout << "Cannot move!!" << endl;
+        }
+        t.display();
+    }
+
+    return 0;
+}
+```
+
+> **C-style note:** In the driver, `-1` is used as a sentinel value to quit the input loop. This is a common idiom when reading until EOF or a special marker is not convenient.
+
 ### 11.2.5.2 Application 2: Bracket Matching
 
 **Problem**: Check if brackets in an expression are properly matched.
@@ -1198,6 +1510,49 @@ bool checkBrackets(const string& expression) {
 // checkBrackets("{[x + 2(i-4)]")      → false (missing })
 // checkBrackets("{[x + 2)(i-4)]}")    → false (mismatched )
 ```
+
+**Lecture 09 implementation — pages 038–041**
+
+The lecture version pushes the *matching closing bracket* for every opening bracket. This makes the matching check a single equality test when a closing bracket is encountered.
+
+```cpp
+#include <stack>
+#include <string>
+using namespace std;
+
+bool check_bracket(string input) {
+    stack<char> sc;
+    bool ok = true;
+
+    for (int i = 0; i < input.length(); i++) {
+        char current = input[i];
+
+        if (current == '{' || current == '[' || current == '(') {
+            switch (current) {
+                case '{': sc.push('}'); break;
+                case '[': sc.push(']'); break;
+                case '(': sc.push(')'); break;
+            }
+        } else if (current == '}' || current == ']' || current == ')') {
+            if (sc.empty()) {
+                ok = false;          // missing opening bracket
+            } else {
+                if (sc.top() == current) {
+                    sc.pop();
+                } else {
+                    ok = false;      // mismatched bracket types
+                }
+            }
+        }
+    }
+
+    return sc.empty() && ok;
+}
+```
+
+**Why push the closing bracket?** It lets the code compare `sc.top() == current` directly, instead of maintaining a separate mapping from opening to closing brackets. Both approaches are O(n) time and O(n) space.
+
+> **Modern C++ note:** Prefer `const string&` for the parameter to avoid copying, and use a range-based `for (char c : input)` loop for readability. The lecture version uses an index loop to match the slide code exactly.
 
 **Time Complexity**: O(n) where n is the length of the expression
 **Space Complexity**: O(n) in the worst case (all opening brackets)
@@ -1292,6 +1647,60 @@ private:
 - When hitting a dead end, popping returns to the most recent decision point
 - This is depth-first search (DFS) using an explicit stack
 
+**Lecture 09 formulation — pages 043–052**
+
+The maze is modeled as an `N × N` 2D array. Each square stores its `(row, column)` coordinate and remembers which directions have not yet been tried. The traveled path is stored as a **stack of coordinates**.
+
+**Direction enum:**
+```cpp
+enum Direction { Up, Left, Down, Right, NoDir };
+```
+
+The order matters: the algorithm tries directions in the order **Up → Left → Down → Right** (skipping blocked or already-visited squares). `NoDir` means every direction from the current square has been exhausted.
+
+**DFS + stack backtracking pseudocode:**
+```text
+Path = empty
+done = false
+Path.push(coordinate of S)
+
+while (Path is not empty && not done):
+    CurSq = Path.top()
+    NewDir = CurSq.getUnvisitedDir()
+
+    if (NewDir == NoDir):
+        Path.pop()              // dead end: backtrack
+    else:
+        NewSq = CurSq.move(NewDir)
+        Path.push(coordinate of NewSq)
+        if (NewSq == E):
+            done = true         // reached exit
+```
+
+> **C-style note:** This is the same depth-first search pattern you would write recursively using the call stack; the explicit `Path` stack lets us control the traversal order and inspect the current path at any time.
+
+**Test-run walkthrough (8 × 8 maze, pages 047–052):**
+
+| Step | Action | Path stack (top on right) |
+|------|--------|---------------------------|
+| 1 | Start at `S = (2, 0)` | `(2,0)` |
+| 2 | Move right to `(2, 1)` | `(2,0), (2,1)` |
+| 3 | Move down to `(3, 1)` | `(2,0), (2,1), (3,1)` |
+| 4 | Move right to `(3, 2)` | `(2,0), (2,1), (3,1), (3,2)` |
+| 5 | Move right to `(3, 3)` — first fork | `(2,0), (2,1), (3,1), (3,2), (3,3)` |
+| 6 | From `(3, 3)`, try **Up** first to `(2, 3)` | `…, (3,3), (2,3)` |
+| 7 | Continue to `(1, 3)` — another fork | `…, (2,3), (1,3)` |
+| 8 | From `(1, 3)`, **Up** is blocked; try **Left** to `(1, 2)` | `…, (1,3), (1,2)` |
+| 9 | Move left to `(0, 2)` — dead end | `…, (1,2), (0,2)` |
+| 10 | Backtrack: pop until returning to `(1, 3)` | `…, (1,3)` |
+| 11 | From `(1, 3)`, try **Right** to `(1, 4)` | `…, (1,3), (1,4)` |
+| … | Continue exploring/backtracking as needed | … |
+| final | Reach exit `E = (5, 7)` | `…, (5,7)` |
+
+The red regions in the lecture diagram mark squares that were visited and then abandoned during backtracking. The algorithm is guaranteed to find `E` if any path exists, because it systematically explores every reachable branch before giving up.
+
+> **Modern C++ note:** In production code you would usually mark squares as `visited` (as the implementation above does) to avoid cycles, and you might store the predecessor of each square for path reconstruction. The lecture pseudocode focuses on the stack-based backtracking idea itself.
+
 ### 11.2.5.4 Other Applications
 
 | Application | How Stack is Used |
@@ -1363,6 +1772,7 @@ T& getAndPop() {
 **Implementation Options:**
 - **Array**: Fast, cache-friendly, fixed capacity
 - **Linked List**: Dynamic size, extra memory overhead
+- **List ADT**: Reuses an existing linked-list ADT; top mapped to list head
 - **STL Vector**: Automatic resizing, easiest to use
 - **STL Stack**: Container adaptor, standard interface
 
