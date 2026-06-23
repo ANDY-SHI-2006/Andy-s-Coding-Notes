@@ -317,7 +317,101 @@ if (a > 0) {
 
 > **Note:** `{}` serves as the **code block delimiter** — it clearly defines the boundaries of the statement block that belongs to each `if`, `else`, or other control structure.
 
-### 8.2.6 The Conditional (Ternary) Operator
+### 8.2.6 Worked Examples from Lecture Slides
+
+These two examples come from the Lecture 03 slides. They are shown first in the **C style used in class** (`printf`/`scanf`) and then in a **modern C++ style**.
+
+#### 8.2.6.1 Piecewise Velocity Formula
+
+A value is computed differently depending on whether the distance is at most 30.
+
+**C style (slide):**
+
+```c
+#include <stdio.h>
+
+int main() {
+    double d, velocity;
+    scanf("%lf", &d);
+
+    if (d <= 30.0) {
+        velocity = 0.425 + 0.00175 * d * d;
+    } else {
+        velocity = 0.625 + 0.12 * d - 0.0025 * d * d;
+    }
+
+    printf("velocity = %f\n", velocity);
+    return 0;
+}
+```
+
+**Modern C++ style:**
+
+```cpp
+#include <iostream>
+
+int main() {
+    double d = 0.0;
+    std::cin >> d;
+
+    double velocity = (d <= 30.0)
+        ? 0.425 + 0.00175 * d * d
+        : 0.625 + 0.12 * d - 0.0025 * d * d;
+
+    std::cout << "velocity = " << velocity << '\n';
+    return 0;
+}
+```
+
+#### 8.2.6.2 Guarding Division by a Near-Zero Denominator
+
+Instead of checking `denominator == 0`, check whether the absolute value is smaller than a small tolerance.
+
+**C style (slide):**
+
+```c
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    double numerator, denominator;
+    scanf("%lf %lf", &numerator, &denominator);
+
+    if (fabs(denominator) < 0.0001) {
+        printf("Denominator close to zero\n");
+    } else {
+        double fraction = numerator / denominator;
+        printf("%f\n", fraction);
+    }
+
+    return 0;
+}
+```
+
+**Modern C++ style:**
+
+```cpp
+#include <iostream>
+#include <cmath>
+#include <limits>
+
+int main() {
+    double numerator = 0.0, denominator = 0.0;
+    std::cin >> numerator >> denominator;
+
+    constexpr double EPSILON = 0.0001;
+    if (std::fabs(denominator) < EPSILON) {
+        std::cout << "Denominator close to zero\n";
+    } else {
+        double fraction = numerator / denominator;
+        std::cout << fraction << '\n';
+    }
+
+    return 0;
+}
+```
+
+### 8.2.7 The Conditional (Ternary) Operator
 
 A compact form for simple if-else. See also [4.8 Ternary Conditional Operator](#48-ternary-conditional-operator) for detailed syntax and precedence.
 
@@ -748,7 +842,29 @@ for (;;) {             // all parts omitted, equivalent to while(true)
 }
 ```
 
-#### 8.5.3.4 Range-based for Loop (C++11)
+#### 8.5.3.4 Iteration Count Formula
+
+For a count-controlled loop that starts at `initial`, ends at `final`, and steps by `increment`, the number of times the body executes is:
+
+```
+executions = floor((final - initial) / increment) + 1
+```
+
+If the result is not positive, the loop body is skipped.
+
+**Example:**
+
+```cpp
+for (int k = 5; k <= 83; k += 4) {
+    // body
+}
+```
+
+`floor((83 - 5) / 4) + 1 = floor(78 / 4) + 1 = 19 + 1 = 20` executions.
+
+The actual values of `k` are `5, 9, 13, ..., 81`. The value `85` is never used because the condition `k <= 83` would be false.
+
+#### 8.5.3.5 Range-based for Loop (C++11)
 
 For iterating over containers without explicit index.
 
@@ -836,6 +952,144 @@ for (int i = 1; i <= 5; i++) {
 5       10      15      20      25
 ```
 
+### 8.5.5 Worked Example: Degree-to-Radian Table (Three Loop Styles)
+
+The Lecture 03 slides print a conversion table from 0° to 360° in steps of 10°. Below is the same program written with `while`, `do/while`, and `for`. Each version is shown in the **C style from the slides** and in a **modern C++ style**.
+
+> Formula: `radians = degrees * PI / 180`
+
+#### Using `while`
+
+**C style (slide):**
+
+```c
+#include <stdio.h>
+#define PI 3.141593
+
+int main() {
+    int degrees = 0;
+    double radians;
+
+    while (degrees <= 360) {
+        radians = degrees * PI / 180;
+        printf("%6i %9.6f\n", degrees, radians);
+        degrees += 10;
+    }
+
+    return 0;
+}
+```
+
+**Modern C++ style:**
+
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <numbers>   // C++20 std::numbers::pi
+
+int main() {
+    const double pi = std::numbers::pi;
+
+    int degrees = 0;
+    while (degrees <= 360) {
+        double radians = degrees * pi / 180.0;
+        std::cout << std::setw(6) << degrees
+                  << std::setw(10) << std::fixed << std::setprecision(6)
+                  << radians << '\n';
+        degrees += 10;
+    }
+
+    return 0;
+}
+```
+
+#### Using `do/while`
+
+**C style (slide):**
+
+```c
+#include <stdio.h>
+#define PI 3.141593
+
+int main() {
+    int degrees = 0;
+    double radians;
+
+    do {
+        radians = degrees * PI / 180;
+        printf("%6i %9.6f\n", degrees, radians);
+        degrees += 10;
+    } while (degrees <= 360);
+
+    return 0;
+}
+```
+
+**Modern C++ style:**
+
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <numbers>
+
+int main() {
+    const double pi = std::numbers::pi;
+
+    int degrees = 0;
+    do {
+        double radians = degrees * pi / 180.0;
+        std::cout << std::setw(6) << degrees
+                  << std::setw(10) << std::fixed << std::setprecision(6)
+                  << radians << '\n';
+        degrees += 10;
+    } while (degrees <= 360);
+
+    return 0;
+}
+```
+
+#### Using `for`
+
+**C style (slide):**
+
+```c
+#include <stdio.h>
+#define PI 3.141593
+
+int main() {
+    int degrees;
+    double radians;
+
+    for (degrees = 0; degrees <= 360; degrees += 10) {
+        radians = degrees * PI / 180;
+        printf("%6i %9.6f\n", degrees, radians);
+    }
+
+    return 0;
+}
+```
+
+**Modern C++ style:**
+
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <numbers>
+
+int main() {
+    const double pi = std::numbers::pi;
+
+    for (int degrees = 0; degrees <= 360; degrees += 10) {
+        double radians = degrees * pi / 180.0;
+        std::cout << std::setw(6) << degrees
+                  << std::setw(10) << std::fixed << std::setprecision(6)
+                  << radians << '\n';
+    }
+
+    return 0;
+}
+```
+
 ## 8.6 Jump Statements
 
 ### 8.6.1 The break Statement
@@ -886,6 +1140,60 @@ for (int i = 0; i < 10; i++) {
 |-----------|--------|
 | `break` | Exit the loop/switch immediately |
 | `continue` | Skip to next iteration of the loop |
+
+### 8.6.3 Worked Example: `break` vs `continue` in Input Summation
+
+The Lecture 03 slides compare `break` and `continue` using the same input-summing problem. Both versions read up to 20 numbers, but behave differently when a value greater than `10.0` is encountered.
+
+#### Version A — `break`: stop at the first large value
+
+```cpp
+#include <iostream>
+
+int main() {
+    double x = 0.0;
+    double sum = 0.0;
+
+    for (int k = 1; k <= 20; k++) {
+        std::cin >> x;
+        if (x > 10.0) {
+            break;          // exit the loop immediately
+        }
+        sum += x;
+    }
+
+    std::cout << "Sum = " << sum << '\n';
+    return 0;
+}
+```
+
+**Result:** the sum includes only values read **before** the first value greater than `10.0`.
+
+#### Version B — `continue`: skip large values but keep reading
+
+```cpp
+#include <iostream>
+
+int main() {
+    double x = 0.0;
+    double sum = 0.0;
+
+    for (int k = 1; k <= 20; k++) {
+        std::cin >> x;
+        if (x > 10.0) {
+            continue;       // skip the rest of this iteration
+        }
+        sum += x;
+    }
+
+    std::cout << "Sum = " << sum << '\n';
+    return 0;
+}
+```
+
+**Result:** the loop still reads all 20 values, but values greater than `10.0` are excluded from the sum.
+
+> **Slide note:** The original slide used `scanf`/`printf`. The logic above is identical; only the input/output style is modernized.
 
 ## 8.7 Loop Comparison and Selection
 
