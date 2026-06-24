@@ -10,6 +10,23 @@ A recursive solution consists of:
 1. **Base case(s)**: Simplest instance(s) that can be solved directly
 2. **Recursive case**: Break problem into smaller subproblems, call self
 
+### Wind-up and Unwind Phases
+
+Every recursive execution has two phases:
+
+1. **Wind-up phase**: The function keeps calling itself with a smaller subproblem until it reaches the base case.
+2. **Unwind phase**: The base-case result returns to the previous caller, and each pending caller finishes its computation as the stack unwinds.
+
+Using `factorial(3)` as an example:
+
+```
+Wind-up:  factorial(3) → factorial(2) → factorial(1) → factorial(0)
+                                                          base case
+Unwind:   6            ← 2            ← 1            ← 1
+```
+
+The wind-up builds a chain of suspended calls; the unwind completes them in reverse order.
+
 ### Factorial Example
 
 ```cpp
@@ -85,6 +102,63 @@ int fibonacciMemo(int n) {
 }
 ```
 
+#### Fibonacci: Rabbit Population Motivation
+
+Fibonacci numbers model a rabbit population where:
+- Start with one pair in month 1 and one pair in month 2.
+- Each pair gives birth to a new pair starting in month 3 and every month thereafter.
+- Rabbits never die.
+
+This produces the sequence `1, 1, 2, 3, 5, 8, 13, ...`, so the number of pairs in month `N` is:
+
+```
+Rabbit(N) = Rabbit(N - 1) + Rabbit(N - 2)
+Rabbit(1) = 1,  Rabbit(2) = 1
+```
+
+A C-style implementation uses base case `n <= 2`:
+
+```cpp
+int fibo(int n) {
+    if (n <= 2) return 1;          // base: months 1 and 2
+    return fibo(n - 1) + fibo(n - 2); // recursive: births plus existing
+}
+```
+
+The recursive tree for `fibo(6)` shows many duplicated subcalls:
+
+```
+                          fibo(6)
+                  ________/       \______
+                 /                           \
+            fibo(5)                         fibo(4)
+           /       \                       /       \
+       fibo(4)     fibo(3)             fibo(3)     fibo(2)
+       /   \        /   \               /   \
+   fibo(3) fibo(2) fibo(2) fibo(1) fibo(2) fibo(1)
+   /   \
+fibo(2) fibo(1)
+```
+
+The same values (`fibo(3)`, `fibo(2)`, `fibo(1)`) are recomputed many times. An iterative O(n) version avoids this redundancy:
+
+```cpp
+int fiboIterative(int n) {
+    if (n <= 2) return 1;
+    int prev1 = 1;   // month n-1
+    int prev2 = 1;   // month n-2
+    int cur = 1;
+    for (int j = 3; j <= n; ++j) {
+        cur = prev1 + prev2;
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    return cur;
+}
+```
+
+> **Modern C++ note:** Prefer `std::vector<int>` for memoization or an iterative loop; the naive recursive form is fine for teaching recursion but is exponential in time.
+
 ### Power Calculation
 
 ```cpp
@@ -127,6 +201,28 @@ int choose(int n, int k) {
 
 // Example: choose(4, 2) = choose(3, 1) + choose(3, 2)
 //                        = 3 + 3 = 6
+```
+
+#### Lecture 11 choose(4,2) Execution Trace
+
+Using the recursive relation `C(n, k) = C(n - 1, k - 1) + C(n - 1, k)`:
+
+```
+                         C(4, 2)
+                  ________/   \______
+                 /                   \
+            C(3, 1)                 C(3, 2)
+           /       \               /       \
+       C(2, 0)   C(2, 1)       C(2, 1)   C(2, 2)
+                  /   \         /   \
+             C(1, 0) C(1,1) C(1,0) C(1,1)
+
+Base cases return 1:
+C(2,0)=1  C(1,0)=1  C(1,1)=1  C(2,2)=1
+C(2,1) = C(1,0) + C(1,1) = 1 + 1 = 2
+C(3,1) = C(2,0) + C(2,1) = 1 + 2 = 3
+C(3,2) = C(2,1) + C(2,2) = 2 + 1 = 3
+C(4,2) = C(3,1) + C(3,2) = 3 + 3 = 6
 ```
 
 > **Performance Note:** This naive recursive solution has exponential time complexity due to repeated calculations of the same subproblems (e.g., `choose(2,1)` is computed multiple times). Use **memoization** or **dynamic programming** for efficient computation in practice.
@@ -219,7 +315,7 @@ struct Node {
     Node* next;
 };
 
-// Print list recursively
+// Print list recursively (forward)
 void printList(Node* head) {
     if (head == nullptr) return;  // Base case
     
@@ -249,6 +345,34 @@ void deleteList(Node* head) {
     delete head;             // Then delete current
 }
 ```
+
+#### Lecture 11 Style: C-Style Forward and Reverse Printing
+
+Lecture 11 uses a `ListNode` with an `item` field and `NULL` checks. The logic is identical to the modern C++ version above; the difference is mostly style:
+
+```cpp
+// C-style forward print: process first, then recurse
+void printLL(ListNode* n) {
+    if (n != NULL) {
+        cout << n->item << " ";  // process current node
+        printLL(n->next);        // then process the rest
+    }
+}
+
+// C-style reverse print: recurse first, then process
+void printLLReverse(ListNode* n) {
+    if (n != NULL) {
+        printLLReverse(n->next); // go to the end first
+        cout << n->item << " ";  // print on the unwind phase
+    }
+}
+```
+
+For list `[5, 8, 9]`:
+- `printLL` outputs `5 8 9` (forward order).
+- `printLLReverse` outputs `9 8 5` (reverse order).
+
+> **Modern C++ note:** Use `nullptr` instead of `NULL`, and prefer `struct Node { int data; Node* next; };` or `std::unique_ptr`/iterator-based traversal in production code to avoid manual memory management.
 
 ## 18.6 Backtracking
 

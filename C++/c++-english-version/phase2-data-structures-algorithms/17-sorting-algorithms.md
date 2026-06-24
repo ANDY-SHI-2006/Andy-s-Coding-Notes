@@ -50,6 +50,28 @@ void bubbleSort(int arr[], int n) {
 | Space | O(1) |
 | Stable | Yes |
 
+#### Bubble Sort 2.0 (Early Termination Optimization)
+
+Lecture 11 adds an early-termination flag to bubble sort. If a complete pass performs no swaps, the array is already sorted and the algorithm returns immediately.
+
+```cpp
+void bubbleSort2(int a[], int N) {
+    for (int i = 0; i < N; ++i) {
+        bool is_sorted = true;
+        for (int j = 1; j < N - i; ++j) {
+            if (a[j - 1] > a[j]) {
+                swap(a[j - 1], a[j]);
+                is_sorted = false;
+            }
+        }
+        if (is_sorted) return;
+    }
+}
+```
+
+- **Best case:** `O(n)` when the input is already sorted.
+- **Worst case:** still `O(n²)` (e.g., reverse-sorted input).
+
 ### Selection Sort
 
 Finds the minimum element and places it at the beginning, repeating for remaining elements.
@@ -307,6 +329,50 @@ void radixSort(int arr[], int n) {
 | Stable | Yes |
 | Requirement | Fixed-width integers/strings |
 
+#### Lecture 11 Radix Sort Using Queues
+
+Lecture 11 implements radix sort with an array of FIFO queues. On each pass it distributes the items by the current digit, then collects the queues in digit order.
+
+```cpp
+#include <queue>
+#include <vector>
+using namespace std;
+
+void distribute(vector<int>& v, queue<int> digitQ[], int power) {
+    for (int i = 0; i < v.size(); ++i) {
+        int digit = (v[i] / power) % 10;
+        digitQ[digit].push(v[i]);
+    }
+}
+
+void collect(queue<int> digitQ[], vector<int>& v) {
+    int i = 0;
+    for (int digit = 0; digit < 10; ++digit) {
+        while (!digitQ[digit].empty()) {
+            v[i++] = digitQ[digit].front();
+            digitQ[digit].pop();
+        }
+    }
+}
+
+void radixSortQueues(vector<int>& v, int d) {
+    int power = 1;
+    queue<int> digitQueue[10];
+    for (int pass = 0; pass < d; ++pass) {
+        distribute(v, digitQueue, power);
+        collect(digitQueue, v);
+        power *= 10;
+    }
+}
+```
+
+- `d` = maximum number of digits.
+- **Time complexity:** `O(d · n)`.
+- **Stable:** queues preserve FIFO order within each bucket.
+- **Not in-place:** requires `O(n)` extra space for the queues.
+
+> **Modern C++ note:** Prefer `std::array<std::queue<int>, 10>` to a raw array of queues, and pass containers by reference (`const` or non-`const` as appropriate).
+
 ## 17.4 Algorithm Comparison
 
 | Algorithm | Best | Average | Worst | Space | Stable |
@@ -319,6 +385,28 @@ void radixSort(int arr[], int n) {
 | Heap Sort | O(n log n) | O(n log n) | O(n log n) | O(1) | No |
 | Counting Sort | O(n + k) | O(n + k) | O(n + k) | O(n + k) | Yes |
 | Radix Sort | O(dn) | O(dn) | O(dn) | O(n + k) | Yes |
+
+### 17.4.1 Lecture 11 Sorting Properties
+
+**In-place sorting** means an algorithm needs only `O(1)` additional extra space.
+
+- **In-place:** Selection Sort, Insertion Sort, Bubble Sort, Quick Sort.
+- **Not in-place:** Merge Sort (needs `O(n)` temporary storage) and Radix Sort (needs queues or count arrays).
+
+**Stable sorting** preserves the original relative order of elements with equal keys. Stability is important when sorting records by multiple fields; for example, if students are first sorted alphabetically and then re-sorted by tutorial group, a stable sort keeps the alphabetical order within each group.
+
+| Algorithm | In-Place? | Stable? |
+|-----------|-----------|---------|
+| Selection Sort | Yes | No |
+| Insertion Sort | Yes | Yes |
+| Bubble Sort / Bubble Sort 2.0 | Yes | Yes |
+| Merge Sort | No | Yes |
+| Quick Sort | Yes | No |
+| Radix Sort | No | Yes |
+
+**Counter-examples (Lecture 11 pp. 088):**
+- **Selection Sort** and **Quick Sort** are not stable.
+- Sorting `[5a, 3, 5b, 1]` with a non-stable algorithm can produce `[1, 3, 5b, 5a]`, losing the original order of the two `5`s.
 
 ## 17.5 Choosing the Right Sort
 
@@ -429,6 +517,53 @@ stable_sort(accounts.begin(), accounts.end(),
         return a.owner < b.owner;           // Then alphabetical
     });
 ```
+
+#### Lecture 11 BankAcct Comparator Example
+
+Lecture 11 uses a `BankAcct` class with private data members and standalone comparator functions:
+
+```cpp
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+class BankAcct {
+public:
+    BankAcct(int ac, double bl) : _acctNum(ac), _balance(bl) {}
+    double getBalance() { return _balance; }
+private:
+    double _balance;
+    int _acctNum;
+};
+
+// C-style free-function comparators
+bool poorer(BankAcct a, BankAcct b) {
+    return a.getBalance() < b.getBalance();
+}
+
+bool richer(BankAcct a, BankAcct b) {
+    return a.getBalance() > b.getBalance();
+}
+
+// Usage
+vector<BankAcct> vba;
+vba.push_back(BankAcct(1001, 500.0));
+vba.push_back(BankAcct(1002, 1200.0));
+vba.push_back(BankAcct(1003, 300.0));
+
+sort(vba.begin(), vba.end(), poorer);  // ascending by balance
+// sort(vba.begin(), vba.end(), richer); // descending by balance
+```
+
+> **Modern C++ note:** Pass objects by `const` reference in comparators to avoid copies:
+>
+> ```cpp
+> bool poorer(const BankAcct& a, const BankAcct& b) {
+>     return a.getBalance() < b.getBalance();
+> }
+> ```
+>
+> If you own the class, you can also overload `operator<` or use `operator<=>` (C++20) so that `std::sort` works without an explicit comparator.
 
 ## 17.6 Practical Considerations
 
