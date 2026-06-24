@@ -23,6 +23,17 @@ A tree is a hierarchical data structure consisting of nodes connected by edges, 
 | **Level** | All nodes at the same depth |
 | **Subtree** | Tree formed by a node and its descendants |
 
+> **Lecture 12 conventions**: The root is at **level 1**; the **height** of a tree is the **maximum level** of any node; the **size** of a tree is the total number of nodes.
+
+### Tree Applications
+
+Trees naturally represent hierarchical relationships:
+
+- **File systems**: directories and drives form a tree, e.g. `Desktop → My Computer → C:, D:, H:, I:`.
+- **Arithmetic expressions**: an expression such as `(a+b) * (a-b) + 2` can be drawn as a binary expression tree where operands are leaves and operators are internal nodes.
+- **Organization charts**: employees and their direct reports.
+- **Parse trees**: compilers represent the grammatical structure of source code as a tree.
+
 ### Tree Node Structure
 
 ```cpp
@@ -50,6 +61,42 @@ struct TreeNode {
 ## 19.2 Binary Trees
 
 A binary tree is a tree where each node has at most two children (left and right).
+
+> An **n-ary tree** generalizes this idea: each node has at most *n* children. A binary tree is the special case where `n = 2`.
+
+### Tree Implementations
+
+Trees are usually implemented in one of two ways.
+
+**Reference-based (pointer-based):** each node stores its data and pointers/references to its children. A missing child is represented by `nullptr`/`nil`.
+
+```cpp
+class TreeNode {
+    TreeItemType item;
+    TreeNode* left;
+    TreeNode* right;
+};
+
+class BinaryTree {
+    TreeNode* root;
+};
+```
+
+**Array-based with index pointers:** nodes are stored in an array and children are referenced by array indices. A `-1` or similar sentinel means "no child". This is useful when the maximum size is known and pointer overhead should be avoided.
+
+```cpp
+class TreeNode {
+    TreeItemType item;
+    int left;   // index of left child, -1 if none
+    int right;  // index of right child, -1 if none
+};
+
+class BinaryTree {
+    std::vector<TreeNode> tree;
+    int root;   // index of the root node
+    int free;   // head of a free-slot list for reuse
+};
+```
 
 ### Binary Tree Node
 
@@ -144,6 +191,29 @@ void levelOrder(BinaryTreeNode* root) {
 }
 ```
 
+### Traversal Example
+
+For the following tree (used in Lecture 12):
+
+```
+        1
+       / \
+      2   3
+     / \  / \
+    4   5 6  7
+       / \ \
+      8   9 0
+```
+
+The traversal results are:
+
+| Traversal | Order | Result |
+|-----------|-------|--------|
+| **Pre-order** | Node → Left → Right | `1 2 4 5 8 9 3 6 0 7` |
+| **In-order** | Left → Node → Right | `4 2 8 5 9 1 6 0 3 7` |
+| **Post-order** | Left → Right → Node | `4 8 9 5 2 0 6 7 3 1` |
+| **Level-order** | Top-to-bottom, left-to-right | `1 2 3 4 5 6 7 8 9 0` |
+
 ### Traversal Applications
 
 | Traversal | Use Case |
@@ -156,6 +226,38 @@ void levelOrder(BinaryTreeNode* root) {
 ## 19.4 Binary Search Trees (BST)
 
 BST property: Left subtree values < root < right subtree values.
+
+### Validating a BST
+
+A common mistake is to check only the immediate children. The property must hold for **every subtree**: for every node `X`, all keys in its left subtree must be smaller than `X` and all keys in its right subtree must be larger than `X`.
+
+For example, the following tree rooted at `1` is **not** a BST because `4` is in the left subtree of `2` but `4 > 2`, and `0` is in the right subtree of the root but `0 < 1`:
+
+```
+        1
+       / \
+      2   3
+     / \  / \
+    4   5 6  7
+       / \ \
+      8   9 0
+```
+
+A valid BST (root `5`) and its in-order traversal:
+
+```
+        5
+       / \
+      3   8
+     / \  / \
+    1  4 6  9
+   / \    \
+  0   2    7
+```
+
+In-order: `0 1 2 3 4 5 6 7 8 9`.
+
+BSTs can store any comparable keys, including strings, which are ordered lexicographically (e.g. `Jane` > `Bob` > `Alan`).
 
 ### BST Operations
 
@@ -224,6 +326,26 @@ public:
 };
 ```
 
+The search operation can also be written iteratively:
+
+```cpp
+BinaryTreeNode* searchIterative(BinaryTreeNode* node, int val) {
+    while (node) {
+        if (val == node->data) return node;
+        node = (val < node->data) ? node->left : node->right;
+    }
+    return nullptr;
+}
+```
+
+### BST Deletion Cases
+
+Deleting a node from a BST falls into three cases (illustrated in Lecture 12 on the tree `5(3(1(.,2),4), 8(7,9))`):
+
+1. **Leaf node** (e.g. delete `4`): simply remove it.
+2. **One child** (e.g. delete `7`, which has only a left child `6`): bypass the node by attaching its child directly to its parent.
+3. **Two children** (e.g. delete `5`): replace the node's value with the **minimum value in its right subtree** (`findMin(node->right)`), then recursively delete that minimum from the right subtree. This preserves the BST ordering because the successor is the smallest value larger than the deleted node.
+
 ### BST Complexity
 
 | Operation | Average | Worst (degenerate) |
@@ -256,6 +378,20 @@ BinaryTreeNode* buildBalanced(vector<int>& keys, int left, int right) {
 ```
 
 This guarantees `h = O(log n)`.
+
+### Treesort
+
+A BST can be used to sort an array of keys:
+
+1. Insert every element into a BST.
+2. Perform an **in-order traversal** to retrieve the keys in sorted order.
+
+| Case | Time Complexity |
+|------|-----------------|
+| Average | O(n log n) |
+| Worst (degenerate / already sorted input) | O(n²) |
+
+The worst case occurs when insertions produce a skewed tree, e.g. inserting keys in increasing or decreasing order.
 
 ## 19.5 Self-Balancing BSTs
 
@@ -606,6 +742,6 @@ public:
 
 ### Further Reading
 
-- **Lecture Notes**: [Lecture 12: Trees](../lecture-notes/lecture-12-trees.md) — Westlake University, Spring 2026. Covers expression tree construction, array-based tree representation, and BST serialization with detailed pseudocode.
+- **Lecture 12: Trees** — Westlake University, Spring 2026. Covers tree terminology, reference-based and array-based implementations, the four traversals with concrete sequences, expression trees, and BST operations (search, insert, delete) with detailed pseudocode. The key points have been integrated into this chapter.
 
 [← Previous: Recursion](18-recursion.md) | [Next: Heap and Priority Queue →](20-heap-priority-queue.md)
