@@ -194,7 +194,11 @@ match status:
 
 ##### 4.1.4.1.6 Variable Name Trap
 
-A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. Writing `case HTTP_OK:` is effectively `HTTP_OK = status` — it assigns the matched value to `HTTP_OK`. Use literal values or dotted names for comparison.
+A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. 
+
+Writing `case HTTP_OK:` is effectively `HTTP_OK = status` — it assigns the matched value to `HTTP_OK`. 
+
+Use literal values or dotted names for comparison.
 
 ```python
 HTTP_OK = 200
@@ -211,17 +215,9 @@ match status:
 
 Match by structure and bind variables.
 
-**Variable Scope:** Variables bound in a `case` pattern remain accessible **after** the `match` statement.
+##### 4.1.4.2.1 Tuple Matching
 
 ```python
-match point:
-    case (x, y):
-        pass
-print(x, y)   # x and y are accessible here
-```
-
-```python
-# Tuple matching
 point = (3, 0)
 
 match point:
@@ -233,8 +229,11 @@ match point:
         print(f"On y-axis at {y}")
     case (x, y):
         print(f"Point at ({x}, {y})")
+```
 
-# List matching with unpacking
+##### 4.1.4.2.2 List Matching
+
+```python
 items = [1, 2, 3]
 
 match items:
@@ -248,7 +247,18 @@ match items:
         print(f"First: {first}, Rest: {rest}")
 ```
 
-**`as` Pattern:**
+##### 4.1.4.2.3 Variable Scope
+
+Variables bound in a `case` pattern remain accessible **after** the `match` statement.
+
+```python
+match point:
+    case (x, y):
+        pass
+print(x, y)   # x and y are accessible here
+```
+
+##### 4.1.4.2.4 `as` Pattern
 
 Capture the entire matched value alongside its components.
 
