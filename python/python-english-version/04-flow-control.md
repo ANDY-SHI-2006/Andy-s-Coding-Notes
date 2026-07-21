@@ -398,7 +398,7 @@ for char in "hello":
 
 Generate a sequence of numbers.
 
-**Syntax:**
+##### 4.2.1.2.1 Syntax
 
 ```python
 range(stop)
@@ -411,6 +411,8 @@ range(start, stop, step)
 | `start` | Starting value (inclusive) | `0` |
 | `stop` | Ending value (**exclusive**) | required |
 | `step` | Increment or decrement | `1` |
+
+##### 4.2.1.2.2 Basic Examples
 
 ```python
 for i in range(5):           # 0, 1, 2, 3, 4
@@ -425,7 +427,7 @@ for i in range(10, 0, -1):   # 10, 9, ..., 1
 
 > **Note:** `range()` returns a lazy iterator, not a list. `range(10**9)` uses almost no memory until iterated.
 
-**`reversed()`:**
+##### 4.2.1.2.3 `reversed()`
 
 Iterate over a sequence in reverse order without modifying it.
 
