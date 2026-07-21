@@ -213,7 +213,7 @@ Identity operators compare memory addresses (identity), not just values.
 
 The `id()` function returns the memory address (identity) of an object. `id(x) == id(y)` is equivalent to `x is y`.
 
-`==` compares **values** (equality). `is` compares **memory addresses** (identity).
+`==` compares **values** (equality) by calling `__eq__`. `is` and `id()` compare **memory addresses** (identity), not value.
 
 ```python
 a = [1, 2, 3]
