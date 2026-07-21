@@ -16,11 +16,13 @@
 | `%` | Modulo (remainder) | `5 % 2` | `1` |
 | `**` | Exponentiation | `2 ** 3` | `8` |
 
-- All basic arithmetic operators (`+`, `-`, `*`, `/`, `//`, `%`, `**`) work with both **integers** and **floats**.
-- With two `int`s, `+`, `-`, `*`, `//`, `%`, and `**` return an `int`; `/` always returns a `float`.
-- If any operand is a `float`, the result is usually a `float`.
-- **Floor division (`//`) with floats:** rounds the result **down** to the nearest whole number, but returns it as a `float`.
-- **Modulo (`%`) with floats:** returns the remainder using the same floor-division rule, also as a `float`.
+> **Note:**
+>
+> - All basic arithmetic operators (`+`, `-`, `*`, `/`, `//`, `%`, `**`) work with both **integers** and **floats**.
+> - With two `int`s, `+`, `-`, `*`, `//`, `%`, and `**` return an `int`; `/` always returns a `float`.
+> - If any operand is a `float`, the result is usually a `float`.
+> - **Floor division (`//`) with floats:** rounds the result **down** to the nearest whole number, but returns it as a `float`.
+> - **Modulo (`%`) with floats:** returns the remainder using the same floor-division rule, also as a `float**.
 
 ```python
 # Division always returns float
