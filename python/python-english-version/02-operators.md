@@ -6,15 +6,15 @@
 
 ### 2.1.1 Basic Arithmetic
 
-| Operator | Description | Example | Result |
-|----------|-------------|---------|--------|
-| `+` | Addition | `5 + 3` | `8` |
-| `-` | Subtraction | `5 - 3` | `2` |
-| `*` | Multiplication | `5 * 3` | `15` |
-| `/` | Division (float) | `5 / 2` | `2.5` |
-| `//` | Floor division | `5 // 2` | `2` |
-| `%` | Modulo (remainder) | `5 % 2` | `1` |
-| `**` | Exponentiation | `2 ** 3` | `8` |
+| Operator | Description | Example | Result | Int | Float |
+|----------|-------------|---------|--------|-----|-------|
+| `+` | Addition | `5 + 3` | `8` | ✓ | ✓ |
+| `-` | Subtraction | `5 - 3` | `2` | ✓ | ✓ |
+| `*` | Multiplication | `5 * 3` | `15` | ✓ | ✓ |
+| `/` | Division (float) | `5 / 2` | `2.5` | ✓ | ✓ |
+| `//` | Floor division | `5 // 2` | `2` | ✓ | ✓ |
+| `%` | Modulo (remainder) | `5 % 2` | `1` | ✓ | ✓ |
+| `**` | Exponentiation | `2 ** 3` | `8` | ✓ | ✓ |
 
 ```python
 # Division always returns float
