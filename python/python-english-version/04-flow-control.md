@@ -119,15 +119,6 @@ if x > 0: print("positive")
 
 Python 3.10+ feature for matching data structures against patterns.
 
-**Variable Scope:** Variables bound in a `case` pattern remain accessible **after** the `match` statement.
-
-```python
-match point:
-    case (x, y):
-        pass
-print(x, y)   # x and y are accessible here
-```
-
 **When to Use `match` vs `if`:**
 
 | Scenario | Preferred | Reason |
@@ -137,6 +128,22 @@ print(x, y)   # x and y are accessible here
 | Destructuring data (tuples, lists) | `match` | Pattern binding is concise |
 | Range comparisons (`>`, `<`) | `if` | Guards in `match` are less readable |
 | Python < 3.10 | `if` | `match` is not available |
+
+#### 4.1.4.1 Basic Value Matching
+
+```python
+status = 200
+
+match status:
+    case 200:
+        print("OK")
+    case 404:
+        print("Not Found")
+    case 500:
+        print("Server Error")
+    case _:
+        print("Unknown status")
+```
 
 **Execution Order:** Cases are checked top-to-bottom. The first matching `case` executes, and the rest are skipped. Place `_` (wildcard) last, or it will shadow all branches below it.
 
@@ -153,22 +160,6 @@ match status:
         print("OK")
     case Status.OK:     # ✅ Dotted name comparison
         print("OK")
-```
-
-#### 4.1.4.1 Basic Value Matching
-
-```python
-status = 200
-
-match status:
-    case 200:
-        print("OK")
-    case 404:
-        print("Not Found")
-    case 500:
-        print("Server Error")
-    case _:
-        print("Unknown status")
 ```
 
 **OR Pattern:** Match multiple values with `|`.
@@ -207,6 +198,15 @@ match status:
 #### 4.1.4.2 Sequence Matching (List / Tuple)
 
 Match by structure and bind variables.
+
+**Variable Scope:** Variables bound in a `case` pattern remain accessible **after** the `match` statement.
+
+```python
+match point:
+    case (x, y):
+        pass
+print(x, y)   # x and y are accessible here
+```
 
 ```python
 # Tuple matching
