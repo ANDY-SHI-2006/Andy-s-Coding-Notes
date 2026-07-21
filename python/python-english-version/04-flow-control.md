@@ -443,18 +443,23 @@ for char in reversed("hello"):   # 'o', 'l', 'l', 'e', 'h'
 
 Get both the index and the value while iterating.
 
+##### 4.2.1.3.1 Basic Usage
+
 ```python
 fruits = ["apple", "banana", "cherry"]
 
 for i, fruit in enumerate(fruits):
     print(f"{i}: {fruit}")
+```
 
-# Custom start index
+##### 4.2.1.3.2 Custom Start Index
+
+```python
 for i, fruit in enumerate(fruits, start=1):
     print(f"{i}. {fruit}")
 ```
 
-**Key points:**
+##### 4.2.1.3.3 Key Points
 
 - `enumerate()` yields `(index, value)` tuples. `list(enumerate(["a", "b"]))` gives `[(0, "a"), (1, "b")]`.
 - The `start` parameter changes the beginning index. It is often used with `1` for human-friendly numbering.
