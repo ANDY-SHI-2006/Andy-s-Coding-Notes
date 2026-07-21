@@ -294,6 +294,19 @@ match nums:
 ```
 
 > **Note:** Each `case` body can contain multiple statements on separate lines. The examples above put `print` on the same line only to save space in the notes.
+>
+> ```python
+> # Equivalent multi-line version
+> match age:
+>     case n if n < 13:
+>         print("Child")
+>     case n if n < 20:
+>         print("Teenager")
+>     case n if n < 65:
+>         print("Adult")
+>     case _:
+>         print("Senior")
+> ```
 
 #### 4.1.4.4 Dictionary Matching
 
