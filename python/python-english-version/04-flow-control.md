@@ -131,6 +131,8 @@ Python 3.10+ feature for matching data structures against patterns.
 
 #### 4.1.4.1 Basic Value Matching
 
+##### 4.1.4.1.1 Basic Syntax
+
 ```python
 status = 200
 
@@ -145,24 +147,17 @@ match status:
         print("Unknown status")
 ```
 
-**Execution Order:** Cases are checked top-to-bottom. The first matching `case` executes, and the rest are skipped. Place `_` (wildcard) last, or it will shadow all branches below it.
+##### 4.1.4.1.2 Execution Order
 
-**No Match:** If no `case` matches and there is no `_`, the `match` statement does nothing — no error, no warning.
+Cases are checked top-to-bottom. The first matching `case` executes, and the rest are skipped. Place `_` (wildcard) last, or it will shadow all branches below it.
 
-**Variable Name Trap:** A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. Use literal values or dotted names for comparison.
+##### 4.1.4.1.3 No Match
 
-```python
-HTTP_OK = 200
-match status:
-    case HTTP_OK:       # ❌ Binds 'HTTP_OK', does NOT compare to 200
-        print("OK")
-    case 200:           # ✅ Literal comparison
-        print("OK")
-    case Status.OK:     # ✅ Dotted name comparison
-        print("OK")
-```
+If no `case` matches and there is no `_`, the `match` statement does nothing — no error, no warning.
 
-**OR Pattern:** Match multiple values with `|`.
+##### 4.1.4.1.4 OR Pattern
+
+Match multiple values with `|`.
 
 ```python
 match status:
@@ -174,7 +169,7 @@ match status:
         print("Other")
 ```
 
-**Enum Matching:**
+##### 4.1.4.1.5 Enum Matching
 
 Match `Enum` members for safer, more readable code.
 
@@ -193,6 +188,21 @@ match status:
         print("Missing")
     case Status.ERROR:
         print("Failed")
+```
+
+##### 4.1.4.1.6 Variable Name Trap
+
+A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. Use literal values or dotted names for comparison.
+
+```python
+HTTP_OK = 200
+match status:
+    case HTTP_OK:       # ❌ Binds 'HTTP_OK', does NOT compare to 200
+        print("OK")
+    case 200:           # ✅ Literal comparison
+        print("OK")
+    case Status.OK:     # ✅ Dotted name comparison
+        print("OK")
 ```
 
 #### 4.1.4.2 Sequence Matching (List / Tuple)
