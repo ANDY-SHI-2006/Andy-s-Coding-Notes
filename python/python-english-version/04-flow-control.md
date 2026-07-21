@@ -171,7 +171,9 @@ match status:
 
 ##### 4.1.4.1.5 Enum Matching
 
-Match `Enum` members for safer, more readable code. Conceptually, this is equivalent to checking `status == Status.OK`, `status == Status.NOT_FOUND`, etc. with `if` / `elif`, but `match` makes the branches clearer.
+Match `Enum` members for safer, more readable code. 
+
+Conceptually, this is equivalent to checking `status == Status.OK`, `status == Status.NOT_FOUND`, etc. with `if` / `elif`, but `match` makes the branches clearer.
 
 ```python
 from enum import Enum
@@ -192,7 +194,7 @@ match status:
 
 ##### 4.1.4.1.6 Variable Name Trap
 
-A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. Use literal values or dotted names for comparison.
+A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. Writing `case HTTP_OK:` is effectively `HTTP_OK = status` — it assigns the matched value to `HTTP_OK`. Use literal values or dotted names for comparison.
 
 ```python
 HTTP_OK = 200
