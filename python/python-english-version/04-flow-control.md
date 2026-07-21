@@ -398,7 +398,13 @@ for char in "hello":
 
 Generate a sequence of numbers.
 
-**Syntax:** `range(stop)`, `range(start, stop)`, `range(start, stop, step)`
+**Syntax:**
+
+```python
+range(stop)
+range(start, stop)
+range(start, stop, step)
+```
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
