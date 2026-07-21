@@ -142,6 +142,21 @@ print(0 or "")         # "" (all falsy, returns last)
 name = user_input or "Anonymous"
 ```
 
+**Common patterns:**
+
+- **Default value:** `value or default` returns `default` when `value` is empty or falsy.
+  ```python
+  name = input("Name: ") or "Anonymous"
+  ```
+- **Guard before access:** `obj and obj.method()` avoids calling a method on a falsy or `None` value.
+  ```python
+  user and user.name
+  ```
+- **Pick the first available value:** `first or second or third` returns the first truthy option.
+  ```python
+  port = env_port or config_port or 8080
+  ```
+
 ## 2.4 Assignment Operators
 
 | Operator | Example                | Equivalent to                       |
