@@ -478,15 +478,45 @@ for i, fruit in enumerate(fruits, start=1):
 
 Iterate over multiple sequences in parallel. Stops at the shortest sequence.
 
+##### 4.2.1.4.1 Basic Usage
+
 ```python
 names = ["Alice", "Bob", "Charlie"]
 scores = [85, 92, 78]
 
 for name, score in zip(names, scores):
     print(f"{name}: {score}")
+# Output:
+# Alice: 85
+# Bob: 92
+# Charlie: 78
 ```
 
-**Transpose with `zip(*matrix)`:**
+##### 4.2.1.4.2 Unequal Lengths
+
+When the sequences have different lengths, `zip()` stops at the shortest one.
+
+```python
+a = [1, 2, 3]
+b = ['a', 'b']
+list(zip(a, b))  # [(1, 'a'), (2, 'b')]
+```
+
+##### 4.2.1.4.3 Filling with `zip_longest`
+
+Use `itertools.zip_longest` to keep iterating until the longest sequence is exhausted. Missing values are filled with `None` by default, or with `fillvalue`.
+
+```python
+from itertools import zip_longest
+
+list(zip_longest([1, 2, 3], ['a', 'b']))
+# [(1, 'a'), (2, 'b'), (3, None)]
+
+list(zip_longest([1, 2, 3], ['a', 'b'], fillvalue='?'))
+# [(1, 'a'), (2, 'b'), (3, '?')]
+```
+
+##### 4.2.1.4.4 Transpose with `zip(*matrix)`
 
 Use the unpacking operator `*` with `zip` to transpose rows and columns.
 
@@ -495,7 +525,9 @@ matrix = [[1, 2, 3], [4, 5, 6]]
 cols = list(zip(*matrix))   # [(1, 4), (2, 5), (3, 6)]
 ```
 
-**Note:** `zip()` returns a one-time iterator. Once exhausted, it cannot be iterated again.
+##### 4.2.1.4.5 One-Time Iterator
+
+`zip()` returns a one-time iterator. Once exhausted, it cannot be iterated again.
 
 ```python
 z = zip([1, 2], ['a', 'b'])
