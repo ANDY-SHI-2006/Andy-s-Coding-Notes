@@ -135,9 +135,12 @@ print(f"Hello, {name}!")
 command = input("> ").strip() or "help"
 ```
 
-**How `or` works here:** it returns the left value if truthy, otherwise the right.
-- `"Alice" or "Anonymous"` → `"Alice"`
-- `"" or "Anonymous"` → `"Anonymous"`
+**How `or` works here:** `or` is a short-circuit operator. It returns the left operand if it is truthy; otherwise it returns the right operand. The result is one of the original values, not just `True` or `False`.
+
+- `"Alice" or "Anonymous"` → `"Alice"` (left side is truthy)
+- `"" or "Anonymous"` → `"Anonymous"` (left side is falsy, so fallback is used)
+
+This means `input("Name: ") or "Anonymous"` is equivalent to writing an `if` statement that checks whether the input is empty and then assigns the default value.
 
 ### 3.2.4 Secure Input with `getpass`
 
