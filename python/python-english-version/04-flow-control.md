@@ -454,6 +454,13 @@ for i, fruit in enumerate(fruits, start=1):
     print(f"{i}. {fruit}")
 ```
 
+**Key points:**
+
+- `enumerate()` yields `(index, value)` tuples. `list(enumerate(["a", "b"]))` gives `[(0, "a"), (1, "b")]`.
+- The `start` parameter changes the beginning index. It is often used with `1` for human-friendly numbering.
+- Conceptually, it is similar to `zip(range(len(iterable)), iterable)`, but `enumerate()` is more readable and Pythonic.
+- Like `range()`, it returns a lazy iterator, not a list.
+
 #### 4.2.1.4 `zip()`
 
 Iterate over multiple sequences in parallel. Stops at the shortest sequence.
