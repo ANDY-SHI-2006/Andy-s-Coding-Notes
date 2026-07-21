@@ -398,6 +398,8 @@ for char in "hello":
 
 Generate a sequence of numbers.
 
+**Syntax:** `range(stop)`, `range(start, stop)`, `range(start, stop, step)`
+
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `start` | Starting value (inclusive) | `0` |
