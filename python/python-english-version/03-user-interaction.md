@@ -40,7 +40,8 @@ print(3)                 # Output: 1 2 3
 
 ### 3.1.4 `file` and `flush` Parameters
 
-In practice, `file` lets you redirect output away from the screen and into a file or another stream, which is useful for logging. `flush` forces the output to appear immediately instead of waiting for the buffer to fill, which is useful for progress indicators or real-time monitoring.
+- `file`: redirect output away from the screen into a file or stream, useful for **logging**.
+- `flush`: force output to appear immediately instead of waiting for the buffer to fill, useful for **progress indicators** and **real-time monitoring**.
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
