@@ -587,6 +587,8 @@ print(target)   # 'c' — last value remains
 
 Repeats a block of code as long as a condition remains `True`.
 
+#### 4.2.2.1 Basic Syntax
+
 ```python
 count = 0
 while count < 5:
@@ -602,7 +604,7 @@ print("Access granted")
 
 **Caution:** Ensure the condition eventually becomes `False`, or the loop runs forever.
 
-**`while True` + `break` Pattern**
+#### 4.2.2.2 `while True` + `break` Pattern
 
 Use `while True` for loops where the exit condition is determined inside the loop body.
 
