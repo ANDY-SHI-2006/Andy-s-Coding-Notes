@@ -171,7 +171,7 @@ match status:
 
 ##### 4.1.4.1.5 Enum Matching
 
-Match `Enum` members for safer, more readable code.
+Match `Enum` members for safer, more readable code. Conceptually, this is equivalent to checking `status == Status.OK`, `status == Status.NOT_FOUND`, etc. with `if` / `elif`, but `match` makes the branches clearer.
 
 ```python
 from enum import Enum
