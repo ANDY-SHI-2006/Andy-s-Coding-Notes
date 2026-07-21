@@ -341,12 +341,14 @@ Floating-point arithmetic can produce unexpected results due to binary represent
 0.1 + 0.2 == 0.3    # False (0.30000000000000004)
 ```
 
-**`round()` uses banker's rounding** (round half to even):
+**`round()` uses banker's rounding** (round half to even): when a number is exactly halfway between two integers, it rounds to the nearest even number. This avoids bias in large datasets and matches the IEEE 754 floating-point standard.
 
 ```python
-round(2.5)   # 2
-round(3.5)   # 4
+round(2.5)   # 2  (nearest even integer)
+round(3.5)   # 4  (nearest even integer)
 ```
+
+> **Note:** floats are stored in binary, so values like `2.05` are not exactly `2.05`. That can make `round(2.05, 1)` return `2.0` instead of `2.1`.
 
 For exact decimal arithmetic, use `decimal.Decimal`:
 
