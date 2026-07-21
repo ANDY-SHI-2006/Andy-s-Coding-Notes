@@ -183,6 +183,15 @@ value = ast.literal_eval(input())  # Only parses literals
 | `"1 + 1"` | ✅ Runs math → `2` | ❌ Raises `ValueError` |
 | `"__import__('os').system('rm -rf /')"` | ❌ Executes command | ❌ Raises `ValueError` |
 
+**Why not just use `int()`?**
+
+`int()` only converts a single numeric string. If you need to accept richer data structures like lists or dicts, you need something more flexible. `eval()` can parse any literal and even run expressions, but it executes arbitrary code, so it is unsafe for user input. `ast.literal_eval()` sits in the middle: it recognizes the same basic data types as `eval()` (lists, dicts, numbers, strings, booleans, `None`), but it never runs code, so it is safe to use on untrusted input.
+
+```python
+int("42")                     # 42, but only works for single integers
+ast.literal_eval("[1, 2, 3]") # [1, 2, 3], safe for richer structures
+```
+
 ### 3.2.6 Multi-line Input
 
 Read multiple lines until EOF or an empty line.
