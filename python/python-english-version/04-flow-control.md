@@ -293,6 +293,8 @@ match nums:
         print(f"Sum {a+b+c} <= 10")
 ```
 
+> **Note:** Each `case` body can contain multiple statements on separate lines. The examples above put `print` on the same line only to save space in the notes.
+
 #### 4.1.4.4 Dictionary Matching
 
 Match dictionaries by key structure.
