@@ -450,6 +450,10 @@ fruits = ["apple", "banana", "cherry"]
 
 for i, fruit in enumerate(fruits):
     print(f"{i}: {fruit}")
+# Output:
+# 0: apple
+# 1: banana
+# 2: cherry
 ```
 
 ##### 4.2.1.3.2 Custom Start Index
@@ -457,6 +461,10 @@ for i, fruit in enumerate(fruits):
 ```python
 for i, fruit in enumerate(fruits, start=1):
     print(f"{i}. {fruit}")
+# Output:
+# 1. apple
+# 2. banana
+# 3. cherry
 ```
 
 ##### 4.2.1.3.3 Key Points
