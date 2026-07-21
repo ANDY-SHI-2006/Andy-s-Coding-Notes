@@ -161,9 +161,11 @@ username = getuser()  # Get current login name (OS-dependent)
 
 > **Never use `eval()` on untrusted input.** `eval()` executes arbitrary code and is a severe security risk.
 
-`eval()` treats the input string as Python code and runs it. A malicious user could input `__import__('os').system('rm -rf /')` and `eval()` would actually execute that command.
-
-`ast.literal_eval()` only converts strings into basic data types (lists, dicts, numbers, strings). It never runs code — it only parses literals. If the input is not a literal, it raises an error.
+- `eval()` treats the input string as Python code and runs it.
+  - A malicious user could input `__import__('os').system('rm -rf /')` and `eval()` would actually execute that command.
+- `ast.literal_eval()` only converts strings into basic data types (lists, dicts, numbers, strings).
+  - It never runs code — it only parses literals.
+  - If the input is not a literal, it raises an error.
 
 ```python
 # DANGEROUS — do not use
