@@ -6,25 +6,33 @@
 
 ### 2.1.1 Basic Arithmetic
 
-| Operator | Description | Example | Result | Int | Float |
-|----------|-------------|---------|--------|-----|-------|
-| `+` | Addition | `5 + 3` | `8` | ✓ | ✓ |
-| `-` | Subtraction | `5 - 3` | `2` | ✓ | ✓ |
-| `*` | Multiplication | `5 * 3` | `15` | ✓ | ✓ |
-| `/` | Division (float) | `5 / 2` | `2.5` | ✓ | ✓ |
-| `//` | Floor division | `5 // 2` | `2` | ✓ | ✓ |
-| `%` | Modulo (remainder) | `5 % 2` | `1` | ✓ | ✓ |
-| `**` | Exponentiation | `2 ** 3` | `8` | ✓ | ✓ |
+| Operator | Description | Example | Result |
+|----------|-------------|---------|--------|
+| `+` | Addition | `5 + 3` | `8` |
+| `-` | Subtraction | `5 - 3` | `2` |
+| `*` | Multiplication | `5 * 3` | `15` |
+| `/` | Division (float) | `5 / 2` | `2.5` |
+| `//` | Floor division | `5 // 2` | `2` |
+| `%` | Modulo (remainder) | `5 % 2` | `1` |
+| `**` | Exponentiation | `2 ** 3` | `8` |
+
+All basic arithmetic operators work with both **integers** and **floats**. With two `int`s, `+`, `-`, `*`, `//`, `%`, and `**` return an `int`; `/` always returns a `float`. If any operand is a `float`, the result is usually a `float`.
+
+**Floor division (`//`) and modulo (`%`) with floats:** `//` still rounds the result **down** to the nearest whole number, and `%` returns the remainder using the same floor-division rule. Both return a `float` when given `float` operands.
 
 ```python
 # Division always returns float
-print(10 / 2)    # 5.0
+print(10 / 2)      # 5.0
 
 # Floor division discards decimal
-print(10 // 3)   # 3
+print(10 // 3)     # 3
 
 # Modulo for cyclical operations
-print(17 % 5)    # 2
+print(17 % 5)      # 2
+
+# Floor division and modulo with floats
+print(5.5 // 2.0)  # 2.0  (floor of 2.75)
+print(5.5 % 2.0)   # 1.5  (5.5 - 2.0 * 2.0)
 ```
 
 ### 2.1.2 Negative Modulo
