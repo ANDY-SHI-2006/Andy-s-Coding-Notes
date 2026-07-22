@@ -78,9 +78,9 @@ print(x is z)   # True  (same object)
 - Comparing with `None`: `if x is None`
 - Checking if two references point to the exact same object.
 
-## 1.5 Variables and Assignment
+## 1.3 Variables and Assignment
 
-### 1.5.1 Dynamic Typing
+### 1.3.1 Dynamic Typing
 
 Python does not require type declarations. The type of a variable is inferred from the value assigned to it. A variable can be reassigned to a different type at any time without error.
 
@@ -92,7 +92,7 @@ x = "hello"     # str (reassigned, no error)
 type(x)         # <class 'str'>
 ```
 
-### 1.5.2 Multiple Assignment
+### 1.3.2 Multiple Assignment
 
 Python allows assigning values to multiple variables in one statement. The right-hand side is evaluated first, then the values are assigned to the names on the left.
 
@@ -102,7 +102,7 @@ a, b = 1, 2   # a=1, b=2
 
 This pattern covers unpacking, chain assignment, swap, and extended unpacking, which are detailed below.
 
-### 1.5.3 Unpacking
+### 1.3.3 Unpacking
 
 Assigns multiple values to multiple variables in a single statement.
 
@@ -110,7 +110,7 @@ Assigns multiple values to multiple variables in a single statement.
 a, b = 1, 2
 ```
 
-### 1.5.4 Chain Assignment
+### 1.3.4 Chain Assignment
 
 Binds multiple names to the same object.
 
@@ -118,7 +118,7 @@ Binds multiple names to the same object.
 a = b = 0
 ```
 
-### 1.5.5 Swap
+### 1.3.5 Swap
 
 Exchanges two values without a temporary variable.
 
@@ -126,7 +126,7 @@ Exchanges two values without a temporary variable.
 a, b = b, a
 ```
 
-### 1.5.6 Extended Unpacking
+### 1.3.6 Extended Unpacking
 
 Captures the remainder into a list.
 
@@ -134,9 +134,9 @@ Captures the remainder into a list.
 first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 ```
 
-## 1.6 Comments
+## 1.4 Comments
 
-### 1.6.1 Single-line Comments
+### 1.4.1 Single-line Comments
 
 Use `#` to start a single-line comment. Everything after `#` on the same line is ignored by the interpreter.
 
@@ -145,7 +145,7 @@ Use `#` to start a single-line comment. Everything after `#` on the same line is
 x = 10  # Inline comment
 ```
 
-### 1.6.2 Multi-line Comments
+### 1.4.2 Multi-line Comments
 
 Python has no formal multi-line comment syntax. Triple quotes `'''` or `"""` create string literals; when not assigned to a variable, the interpreter discards them. The standard use case is **docstrings**.
 
@@ -160,7 +160,7 @@ def greet():
     return "Hello"
 ```
 
-## 1.7 Variable Naming
+## 1.5 Variable Naming
 
 Variable names should clearly describe their purpose. Avoid single-letter names except for loop counters.
 
