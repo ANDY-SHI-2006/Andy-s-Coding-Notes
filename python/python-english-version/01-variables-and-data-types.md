@@ -37,7 +37,6 @@ hello.py  --compile-->  __pycache__/hello.cpython-312.pyc  --run-->  Python VM
 
 **Note:** Python is both interpreted and compiled — the interpreter handles the compilation step for you.
 
-
 ## 1.2 Variables and Objects
 
 In Python, a variable is just a **name** (or reference) that points to an object in memory. Assignment never copies data; it binds a name to an object.
@@ -50,7 +49,7 @@ print(id(a)) # e.g., 140735... (same as b)
 print(id(b))
 ```
 
-**Reassignment creates a new object:**
+### 1.2.1 Reassignment
 
 ```python
 a = 10
@@ -59,7 +58,7 @@ a = 20          # a now points to a different integer object
 print(id(a))    # different address
 ```
 
-**`is` vs `==`:**
+### 1.2.2 Identity vs Equality
 
 - `==` compares values.
 - `is` compares identity (memory address).
@@ -75,14 +74,84 @@ z = x
 print(x is z)   # True  (same object)
 ```
 
-**Use `is` only for:**
+### 1.2.3 When to Use `is`
 - Comparing with `None`: `if x is None`
 - Checking if two references point to the exact same object.
 
+## 1.3 Memory Interning Basics
 
-## 1.3 Variables and Assignment
+Python sometimes reuses the same immutable object for small, commonly used values. This is called **interning**.
 
-### 1.3.1 Dynamic Typing
+### 1.3.1 Small Integer Cache
+
+Integers between -5 and 256 are cached at startup. Variables with the same value in this range usually refer to the same object.
+
+```python
+a = 100
+b = 100
+print(a is b)   # True (cached)
+
+x = 1000
+y = 1000
+print(x is y)   # False (not guaranteed; may be True in some REPLs)
+```
+
+### 1.3.2 String Interning
+
+Some strings are automatically interned, especially those that look like identifiers.
+
+```python
+a = "hello"
+b = "hello"
+print(a is b)   # often True
+
+x = "hello world"
+y = "hello world"
+print(x is y)   # usually False (not interned)
+```
+
+**Important:** Do not rely on `is` for value comparison. Use `==`.
+
+## 1.4 Garbage Collection Intro
+
+Python manages memory automatically using **reference counting** and a **cyclic garbage collector**.
+
+### 1.4.1 Reference Counting
+
+Every object keeps track of how many names or containers refer to it. When the count drops to zero, the memory is freed.
+
+```python
+x = [1, 2, 3]
+y = x       # reference count increases
+x = None    # one reference removed
+y = None    # reference count drops to 0; list is freed
+```
+
+### 1.4.2 `del` and References
+
+```python
+x = [1, 2, 3]
+del x       # Removes the name x, not the object itself
+```
+
+### 1.4.3 Cyclic References
+
+If two objects reference each other, their reference counts never reach zero. Python's cyclic GC periodically detects and cleans these up.
+
+```python
+a = []
+b = []
+a.append(b)
+b.append(a)
+
+# Without cyclic GC, a and b would never be freed.
+```
+
+**Note:** You rarely need to interact with the garbage collector directly. Just be aware that objects stay alive as long as something references them.
+
+## 1.5 Variables and Assignment
+
+### 1.5.1 Dynamic Typing
 
 Python does not require type declarations. The type of a variable is inferred from the value assigned to it. A variable can be reassigned to a different type at any time without error.
 
@@ -94,11 +163,11 @@ x = "hello"     # str (reassigned, no error)
 type(x)         # <class 'str'>
 ```
 
-### 1.3.2 Multiple Assignment
+### 1.5.2 Multiple Assignment
 
 Python supports several forms of multiple assignment.
 
-**Unpacking**
+### 1.5.3 Unpacking
 
 Assigns multiple values to multiple variables in a single statement.
 
@@ -106,7 +175,7 @@ Assigns multiple values to multiple variables in a single statement.
 a, b = 1, 2
 ```
 
-**Chain Assignment**
+### 1.5.4 Chain Assignment
 
 Binds multiple names to the same object.
 
@@ -114,7 +183,7 @@ Binds multiple names to the same object.
 a = b = 0
 ```
 
-**Swap**
+### 1.5.5 Swap
 
 Exchanges two values without a temporary variable.
 
@@ -122,7 +191,7 @@ Exchanges two values without a temporary variable.
 a, b = b, a
 ```
 
-**Extended Unpacking**
+### 1.5.6 Extended Unpacking
 
 Captures the remainder into a list.
 
@@ -130,10 +199,9 @@ Captures the remainder into a list.
 first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 ```
 
+## 1.6 Comments
 
-## 1.4 Comments
-
-### 1.4.1 Single-line Comments
+### 1.6.1 Single-line Comments
 
 Use `#` to start a single-line comment. Everything after `#` on the same line is ignored by the interpreter.
 
@@ -142,7 +210,7 @@ Use `#` to start a single-line comment. Everything after `#` on the same line is
 x = 10  # Inline comment
 ```
 
-### 1.4.2 Multi-line Comments
+### 1.6.2 Multi-line Comments
 
 Python has no formal multi-line comment syntax. Triple quotes `'''` or `"""` create string literals; when not assigned to a variable, the interpreter discards them. The standard use case is **docstrings**.
 
@@ -157,8 +225,7 @@ def greet():
     return "Hello"
 ```
 
-
-## 1.5 Variable Naming
+## 1.7 Variable Naming
 
 Variable names should clearly describe their purpose. Avoid single-letter names except for loop counters.
 
@@ -171,8 +238,7 @@ Variable names should clearly describe their purpose. Avoid single-letter names 
 
 > **Note:** Python has no `const` keyword. `UPPER_SNAKE_CASE` indicates "do not modify" by programmer discipline; the value remains mutable at runtime.
 
-
-## 1.6 Type Annotations
+## 1.8 Type Annotations
 
 Python is **dynamically typed** — a variable's type is determined at runtime, and you can reassign it to a different type anytime. This is flexible but can make large codebases hard to understand.
 
@@ -184,7 +250,7 @@ Python is **dynamically typed** — a variable's type is determined at runtime, 
 
 Think of type annotations as **high-quality comments that machines can read**.
 
-### 1.6.1 Basic Syntax
+### 1.8.1 Basic Syntax
 
 Attach a type to a name with a colon `:`.
 
@@ -213,7 +279,7 @@ def log(message: str) -> None:
 | `-> str` | Function return | This function returns a `str` |
 | `-> None` | Function return | This function returns nothing |
 
-### 1.6.2 Common Types
+### 1.8.2 Common Types
 
 **Basic types:** `int`, `float`, `str`, `bool`, `None`
 
@@ -292,7 +358,7 @@ class Point:
 p = Point(3, 4)  # __init__ generated automatically from annotations
 ```
 
-### 1.6.3 Runtime Behavior
+### 1.8.3 Runtime Behavior
 
 Type hints are **not enforced** at runtime. The interpreter ignores them completely.
 
@@ -328,12 +394,11 @@ print(typing.get_type_hints(add))
 - ✅ Complex data structures
 - ❌ Don't over-annotate trivial cases like `i: int = 0` where the type is obvious
 
-
-## 1.7 Integer Type
+## 1.9 Integer Type
 
 Python integers have unlimited precision; there is no overflow.
 
-### 1.7.1 Number Bases
+### 1.9.1 Number Bases
 
 | Prefix | Base | Valid Digits | Example | Value | Why It Matters |
 |--------|------|-------------|---------|-------|----------------|
@@ -360,7 +425,7 @@ int('FF', 16)        # 255  (prefix optional)
 hex(255)[2:].upper() # 'FF'
 ```
 
-**Common pitfalls:**
+### 1.9.2 Common Pitfalls
 
 - `hex()` always returns lowercase; it does not zero-pad.
 - `int(x, base)` expects a **string**. `int(0xff, 16)` raises `TypeError` because `0xff` is already an `int`.
@@ -370,7 +435,7 @@ hex(255)[2:].upper() # 'FF'
   int('10')      # 10
   ```
 
-**Formatted output (fixed width, zero-padded):**
+### 1.9.3 Formatted Output
 
 ```python
 x = 5
@@ -381,7 +446,7 @@ f'{x:02x}'       # '05'           (2-digit hex, lowercase)
 f'{255:02X}'     # 'FF'           (2-digit hex, uppercase)
 ```
 
-### 1.7.2 Underscore Separators
+### 1.9.4 Underscore Separators
 
 Use underscore separators `_` for readability (Python 3.6+).
 
@@ -389,10 +454,9 @@ Use underscore separators `_` for readability (Python 3.6+).
 million = 1_000_000  # Same as 1000000
 ```
 
+## 1.10 Float Type
 
-## 1.8 Float Type
-
-### 1.8.1 Scientific Notation
+### 1.10.1 Scientific Notation
 
 Floats can be written in scientific notation for very large or very small numbers. The exponent marker `e` or `E` is case-insensitive.
 
@@ -401,7 +465,7 @@ x = 9.9e2      # 9.9 × 10² = 990.0
 y = 3.14E-2    # 3.14 × 10⁻² = 0.0314
 ```
 
-### 1.8.2 Special Values
+### 1.10.2 Special Values
 
 Floats support infinity and not-a-number.
 
@@ -416,7 +480,7 @@ math.isinf(float('inf'))   # True
 math.isnan(float('nan'))   # True
 ```
 
-### 1.8.3 Precision Trap
+### 1.10.3 Precision Trap
 
 Floating-point arithmetic can produce unexpected results due to binary representation limitations.
 
@@ -441,12 +505,11 @@ from decimal import Decimal
 Decimal('0.1') + Decimal('0.2') == Decimal('0.3')  # True
 ```
 
-
-## 1.9 String Type
+## 1.11 String Type
 
 A string is an immutable sequence of characters. Single quotes `' '` and double quotes `" "` are interchangeable.
 
-### 1.9.1 Escape Sequences
+### 1.11.1 Escape Sequences
 
 | Sequence | Meaning |
 |----------|---------|
@@ -461,7 +524,7 @@ print("Line 1\nLine 2")   # Two lines
 print("Tab\there")        # Tab separation
 ```
 
-### 1.9.2 Raw Strings
+### 1.11.2 Raw Strings
 
 Prefix a string with `r` to create a raw string. Backslashes are treated as literal characters, which is useful for Windows file paths and regular expressions.
 
@@ -473,7 +536,7 @@ path = "C:\\Users\\EDY\\Desktop\\demo.py"
 path = r"C:\Users\EDY\Desktop\demo.py"
 ```
 
-### 1.9.3 Multi-line Strings
+### 1.11.3 Multi-line Strings
 
 Triple quotes `'''` or `"""` preserve line breaks and formatting. They are commonly used for docstrings and long text blocks.
 
@@ -483,7 +546,7 @@ multi-line string
 that spans several lines"""
 ```
 
-### 1.9.4 String Operations
+### 1.11.4 String Operations
 
 ```python
 # Concatenation
@@ -499,7 +562,7 @@ count = len("hello")              # 5
 found = "he" in "hello"           # True
 ```
 
-### 1.9.5 Immutability
+### 1.11.5 Immutability
 
 Strings cannot be modified in place. Any operation that appears to change a string creates a new one.
 
@@ -510,10 +573,9 @@ s = "hello"
 s = "H" + s[1:]   # Creates a new string: 'Hello'
 ```
 
+## 1.12 Boolean Type
 
-## 1.10 Boolean Type
-
-### 1.10.1 Boolean Values
+### 1.12.1 Boolean Values
 
 The Boolean type has only two values: `True` and `False`. Capitalization matters; `true` and `false` are invalid. Boolean values are the result of comparisons and logical operations.
 
@@ -522,7 +584,7 @@ flag = True
 result = 5 > 3   # True
 ```
 
-### 1.10.2 Truthy and Falsy
+### 1.12.2 Truthy and Falsy
 
 In a boolean context, the following values evaluate to `False`. Everything else evaluates to `True`.
 
@@ -537,7 +599,7 @@ In a boolean context, the following values evaluate to `False`. Everything else 
 | `None` | NoneType |
 | `set()` | Empty set |
 
-### 1.10.3 `bool()` Constructor
+### 1.12.3 `bool()` Constructor
 
 Explicitly convert any value to a Boolean.
 
@@ -550,10 +612,9 @@ bool([])        # False
 bool([1, 2])    # True
 ```
 
+## 1.13 None Type
 
-## 1.11 None Type
-
-### 1.11.1 None Value
+### 1.13.1 None Value
 
 `None` represents the absence of a value, similar to `null` in other languages. Functions without an explicit `return` statement yield `None`.
 
@@ -564,7 +625,7 @@ def do_nothing():
 result = do_nothing()  # result is None
 ```
 
-### 1.11.2 Comparison with `is`
+### 1.13.2 Comparison with `is`
 
 Always use `is` or `is not` to compare with `None`. Using `==` works but is not idiomatic.
 
@@ -580,10 +641,9 @@ if value == None:
     pass
 ```
 
+## 1.14 Type Conversion
 
-## 1.12 Type Conversion
-
-### 1.12.1 Conversion Functions
+### 1.14.1 Conversion Functions
 
 | Function | Converts to | Failure Mode |
 |----------|-------------|--------------|
@@ -595,7 +655,7 @@ if value == None:
 | `list(x)` | List | `TypeError` if not iterable |
 | `tuple(x)` | Tuple | `TypeError` if not iterable |
 
-### 1.12.2 Conversion Examples
+### 1.14.2 Conversion Examples
 
 ```python
 int("42")       # 42
@@ -612,79 +672,5 @@ bool("hello")   # True
 # Common pattern: convert user input
 age = int(input("Enter age: "))
 ```
-
-
-## 1.13 Memory Interning Basics
-
-Python sometimes reuses the same immutable object for small, commonly used values. This is called **interning**.
-
-**Small integer cache:**
-
-Integers between -5 and 256 are cached at startup. Variables with the same value in this range usually refer to the same object.
-
-```python
-a = 100
-b = 100
-print(a is b)   # True (cached)
-
-x = 1000
-y = 1000
-print(x is y)   # False (not guaranteed; may be True in some REPLs)
-```
-
-**String interning:**
-
-Some strings are automatically interned, especially those that look like identifiers.
-
-```python
-a = "hello"
-b = "hello"
-print(a is b)   # often True
-
-x = "hello world"
-y = "hello world"
-print(x is y)   # usually False (not interned)
-```
-
-**Important:** Do not rely on `is` for value comparison. Use `==`.
-
-
-## 1.14 Garbage Collection Intro
-
-Python manages memory automatically using **reference counting** and a **cyclic garbage collector**.
-
-**Reference counting:**
-
-Every object keeps track of how many names or containers refer to it. When the count drops to zero, the memory is freed.
-
-```python
-x = [1, 2, 3]
-y = x       # reference count increases
-x = None    # one reference removed
-y = None    # reference count drops to 0; list is freed
-```
-
-**`del` removes a reference:**
-
-```python
-x = [1, 2, 3]
-del x       # Removes the name x, not the object itself
-```
-
-**Cyclic references:**
-
-If two objects reference each other, their reference counts never reach zero. Python's cyclic GC periodically detects and cleans these up.
-
-```python
-a = []
-b = []
-a.append(b)
-b.append(a)
-
-# Without cyclic GC, a and b would never be freed.
-```
-
-**Note:** You rarely need to interact with the garbage collector directly. Just be aware that objects stay alive as long as something references them.
-
 
 [Next: Data Types →](02-data-types.md)
