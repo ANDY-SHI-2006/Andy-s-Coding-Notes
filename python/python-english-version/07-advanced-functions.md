@@ -118,7 +118,7 @@ products = ["iPhone_8000", "Mi_4000", "Huawei_10000"]
 sorted(products, key=lambda x: int(x.split("_")[1]))  # ['Mi_4000', 'iPhone_8000', 'Huawei_10000']
 ```
 
-**Note:** For basic sorting syntax and comparison with `.sort()`, see [2.17 `sorted()` vs `.sort()`](02-data-types.md#217-sorted-vs-sort).
+**Note:** For basic sorting syntax and comparison with `.sort()`, see [2.11 `sorted()` vs `.sort()`](02-data-types.md#211-sorted-vs-sort).
 
 ### 7.2.5 `any()` and `all()`
 

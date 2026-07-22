@@ -5,8 +5,8 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 ## Table of Contents
 
 ### Part 1: Python Fundamentals
-1. [Variables and Data Types](01-variables-and-data-types.md) — *Variables, comments, naming conventions, type annotations*
-2. [Data Types](02-data-types.md) — *int, float, str, bool, None, list, tuple, set, dict, mutability, copying*
+1. [Variables and Data Types](01-variables-and-data-types.md) — *Variables, Python runtime basics, comments, naming, type annotations, basic types*
+2. [Data Types](02-data-types.md) — *Sequences, sets, dictionaries, mutability, copying*
 3. [Operators](03-operators.md) — *Arithmetic, comparison, logical, assignment, identity, membership*
 4. [User Interaction](04-user-interaction.md) — *print(), input(), f-strings, formatting*
 5. [Flow Control](05-flow-control.md) — *if/else, ternary operator, for, while, break, continue*

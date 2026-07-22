@@ -1,295 +1,16 @@
-[← Previous: Variables and Data Types](01-variables-and-data-types.md) | [Next: Operators →](03-operators.md)
+[← Previous: Variables and Python Basics](01-variables-and-data-types.md) | [Next: Operators →](03-operators.md)
 
 # 2 Data Types
 
-This chapter covers Python's built-in data types and the operations that apply to them.
+This chapter covers compound and container data types: strings, lists, tuples, ranges, sets, and dictionaries, plus the operations that apply to them.
 
-## 2.1 Integer Type
-
-Python integers have unlimited precision; there is no overflow.
-
-### 2.1.1 Number Bases
-
-| Prefix | Base | Valid Digits | Example | Value | Why It Matters |
-|--------|------|-------------|---------|-------|----------------|
-| `0b` | 2 | `0-1` | `0b1010` | `10` | Bitwise ops, flag masks |
-| `0o` | 8 | `0-7` | `0o755` | `493` | Unix file permissions |
-| `0x` | 16 | `0-9`, `a-f`/`A-F` | `0xFF` | `255` | Colors, memory addresses, bytes |
-
-**Convert to string (with prefix):**
-
-```python
-bin(10)    # '0b1010'
-oct(493)   # '0o755'
-hex(255)   # '0xff'   ← always lowercase
-```
-
-**Convert from string to integer:**
-
-```python
-int('1010', 2)       # 10
-int('0o755', 8)      # 493
-int('0xff', 16)      # 255
-int('FF', 16)        # 255  (prefix optional)
-
-hex(255)[2:].upper() # 'FF'
-```
-
-**Common pitfalls:**
-
-- `hex()` always returns lowercase; it does not zero-pad.
-- `int(x, base)` expects a **string**. `int(0xff, 16)` raises `TypeError` because `0xff` is already an `int`.
-- A prefix-less string must have `base` passed explicitly; otherwise it is parsed as decimal:
-  ```python
-  int('10', 2)   # 2
-  int('10')      # 10
-  ```
-
-**Formatted output (fixed width, zero-padded):**
-
-```python
-x = 5
-
-bin(x)[2:]       # '101'          (strip prefix)
-f'{x:08b}'       # '00000101'     (8-bit binary)
-f'{x:02x}'       # '05'           (2-digit hex, lowercase)
-f'{255:02X}'     # 'FF'           (2-digit hex, uppercase)
-```
-
-### 2.1.2 Underscore Separators
-
-Use underscore separators `_` for readability (Python 3.6+).
-
-```python
-million = 1_000_000  # Same as 1000000
-```
-
-## 2.2 Float Type
-
-### 2.2.1 Scientific Notation
-
-Floats can be written in scientific notation for very large or very small numbers. The exponent marker `e` or `E` is case-insensitive.
-
-```python
-x = 9.9e2      # 9.9 × 10² = 990.0
-y = 3.14E-2    # 3.14 × 10⁻² = 0.0314
-```
-
-### 2.2.2 Special Values
-
-Floats support infinity and not-a-number.
-
-```python
-import math
-
-positive_inf = float('inf')
-negative_inf = float('-inf')
-not_a_number = float('nan')
-
-math.isinf(float('inf'))   # True
-math.isnan(float('nan'))   # True
-```
-
-### 2.2.3 Precision Trap
-
-Floating-point arithmetic can produce unexpected results due to binary representation limitations.
-
-```python
-0.1 + 0.2 == 0.3    # False (0.30000000000000004)
-```
-
-**`round()` uses banker's rounding** (round half to even): when a number is exactly halfway between two integers, it rounds to the nearest even number. This avoids bias in large datasets and matches the IEEE 754 floating-point standard.
-
-```python
-round(2.5)   # 2  (nearest even integer)
-round(3.5)   # 4  (nearest even integer)
-```
-
-**Note:** floats are stored in binary, so values like `2.05` are not exactly `2.05`. That can make `round(2.05, 1)` return `2.0` instead of `2.1`.
-
-For exact decimal arithmetic, use `decimal.Decimal`:
-
-```python
-from decimal import Decimal
-
-Decimal('0.1') + Decimal('0.2') == Decimal('0.3')  # True
-```
-
-## 2.3 String Type
-
-A string is an immutable sequence of characters. Single quotes `' '` and double quotes `" "` are interchangeable.
-
-### 2.3.1 Escape Sequences
-
-| Sequence | Meaning |
-|----------|---------|
-| `\n` | Newline |
-| `\t` | Tab |
-| `\\` | Backslash |
-| `\'` | Single quote |
-| `\"` | Double quote |
-
-```python
-print("Line 1\nLine 2")   # Two lines
-print("Tab\there")        # Tab separation
-```
-
-### 2.3.2 Raw Strings
-
-Prefix a string with `r` to create a raw string. Backslashes are treated as literal characters, which is useful for Windows file paths and regular expressions.
-
-```python
-# Without raw string
-path = "C:\\Users\\EDY\\Desktop\\demo.py"
-
-# With raw string
-path = r"C:\Users\EDY\Desktop\demo.py"
-```
-
-### 2.3.3 Multi-line Strings
-
-Triple quotes `'''` or `"""` preserve line breaks and formatting. They are commonly used for docstrings and long text blocks.
-
-```python
-text = """This is a
-multi-line string
-that spans several lines"""
-```
-
-### 2.3.4 String Operations
-
-```python
-# Concatenation
-full = "Hello" + " " + "World"   # 'Hello World'
-
-# Repetition
-line = "-" * 20                   # '--------------------'
-
-# Length
-count = len("hello")              # 5
-
-# Membership
-found = "he" in "hello"           # True
-```
-
-### 2.3.5 Immutability
-
-Strings cannot be modified in place. Any operation that appears to change a string creates a new one.
-
-```python
-s = "hello"
-# s[0] = "H"     # TypeError: 'str' object does not support item assignment
-
-s = "H" + s[1:]   # Creates a new string: 'Hello'
-```
-
-## 2.4 Boolean Type
-
-### 2.4.1 Boolean Values
-
-The Boolean type has only two values: `True` and `False`. Capitalization matters; `true` and `false` are invalid. Boolean values are the result of comparisons and logical operations.
-
-```python
-flag = True
-result = 5 > 3   # True
-```
-
-### 2.4.2 Truthy and Falsy
-
-In a boolean context, the following values evaluate to `False`. Everything else evaluates to `True`.
-
-| Value | Type |
-|-------|------|
-| `0` | Integer zero |
-| `0.0` | Float zero |
-| `""` | Empty string |
-| `[]` | Empty list |
-| `{}` | Empty dict |
-| `()` | Empty tuple |
-| `None` | NoneType |
-| `set()` | Empty set |
-
-### 2.4.3 `bool()` Constructor
-
-Explicitly convert any value to a Boolean.
-
-```python
-bool(0)         # False
-bool(1)         # True
-bool("")        # False
-bool("hello")   # True
-bool([])        # False
-bool([1, 2])    # True
-```
-
-## 2.5 None Type
-
-### 2.5.1 None Value
-
-`None` represents the absence of a value, similar to `null` in other languages. Functions without an explicit `return` statement yield `None`.
-
-```python
-def do_nothing():
-    pass
-
-result = do_nothing()  # result is None
-```
-
-### 2.5.2 Comparison with `is`
-
-Always use `is` or `is not` to compare with `None`. Using `==` works but is not idiomatic.
-
-```python
-value = None
-
-# Correct
-if value is None:
-    pass
-
-# Incorrect (not Pythonic)
-if value == None:
-    pass
-```
-
-## 2.6 Type Conversion
-
-### 2.6.1 Conversion Functions
-
-| Function | Converts to | Failure Mode |
-|----------|-------------|--------------|
-| `int(x)` | Integer | `ValueError` if not parseable |
-| `float(x)` | Float | `ValueError` if not parseable |
-| `complex(x)` | Complex number | `ValueError` if not parseable |
-| `str(x)` | String | Rarely fails |
-| `bool(x)` | Boolean | Never fails (uses truthiness) |
-| `list(x)` | List | `TypeError` if not iterable |
-| `tuple(x)` | Tuple | `TypeError` if not iterable |
-
-### 2.6.2 Conversion Examples
-
-```python
-int("42")       # 42
-int(3.14)       # 3 (truncates toward zero)
-int("abc")      # ValueError
-
-float("3.14")   # 3.14
-complex("3+4j") # (3+4j)
-
-str(100)        # "100"
-bool(0)         # False
-bool("hello")   # True
-
-# Common pattern: convert user input
-age = int(input("Enter age: "))
-```
-
-## 2.7 String Basics
+## 2.1 String Basics
 
 - Immutable sequence of characters
 - Single quotes `' '` or double quotes `" "` both work
 - Triple quotes for multi-line strings
 
-### 2.7.1 Indexing
+### 2.1.1 Indexing
 
 Access individual characters by position (0-based).
 
@@ -299,11 +20,11 @@ print(text[0])   # 'P'
 print(text[-1])  # 'n' (last character)
 ```
 
-### 2.7.2 Slicing
+### 2.1.2 Slicing
 
 Extract a substring using `[start:stop:step]`.
 
-#### 2.7.2.1 Basic Slicing
+#### 2.1.2.1 Basic Slicing
 
 `[start:stop]` extracts elements from `start` up to, but **not including**, `stop`. Omitting `start` defaults to `0`; omitting `stop` defaults to the end.
 
@@ -315,7 +36,7 @@ print(text[2:])    # 'thon' (stop defaults to end)
 print(text[:])     # 'Python' (full copy)
 ```
 
-#### 2.7.2.2 Step Slicing
+#### 2.1.2.2 Step Slicing
 
 `[::step]` skips elements by the given step.
 
@@ -325,7 +46,7 @@ print(text[::2])   # 'Pto' (every 2nd character)
 print(text[1::2])  # 'yhn' (every 2nd from index 1)
 ```
 
-#### 2.7.2.3 Reversing
+#### 2.1.2.3 Reversing
 
 A negative step iterates backward. `[::-1]` is the common idiom for reversing a sequence.
 
@@ -334,7 +55,7 @@ text = "Python"
 print(text[::-1])  # 'nohtyP'
 ```
 
-### 2.7.3 Immutability
+### 2.1.3 Immutability
 
 Strings cannot be modified in-place.
 
@@ -344,12 +65,12 @@ s = "hello"
 s = "H" + s[1:]  # Create a new string
 ```
 
-## 2.8 List Basics
+## 2.2 List Basics
 
 - Ordered, mutable collection
 - Can hold mixed types
 
-### 2.8.1 Creating Lists
+### 2.2.1 Creating Lists
 
 ```python
 empty = []
@@ -357,7 +78,7 @@ numbers = [1, 2, 3, 4, 5]
 mixed = [1, "hello", 3.14, True]
 ```
 
-### 2.8.2 Indexing and Slicing
+### 2.2.2 Indexing and Slicing
 
 Same syntax as strings.
 
@@ -369,7 +90,7 @@ print(fruits[1:3])   # ['banana', 'cherry']
 print(fruits[::-1])  # ['date', 'cherry', 'banana', 'apple']
 ```
 
-### 2.8.3 Mutability
+### 2.2.3 Mutability
 
 Lists can be modified after creation.
 
@@ -379,19 +100,19 @@ fruits[0] = "avocado"   # Modify element
 print(fruits)           # ['avocado', 'banana']
 ```
 
-## 2.9 Tuple Basics
+## 2.3 Tuple Basics
 
 - Ordered, immutable collection
 - Faster and safer than lists for fixed data
 
-### 2.9.1 Creating Tuples
+### 2.3.1 Creating Tuples
 
 ```python
 point = (3, 4)
 single = (5,)  # Trailing comma required for single element
 ```
 
-### 2.9.2 Indexing and Immutability
+### 2.3.2 Indexing and Immutability
 
 Indexing works like lists, but tuples cannot be modified after creation.
 
@@ -402,7 +123,7 @@ print(point[0])  # 3
 # point[0] = 10  # TypeError: tuples are immutable
 ```
 
-### 2.9.3 Mutable Element Trap
+### 2.3.3 Mutable Element Trap
 
 A tuple is immutable only at the top level. If it contains a mutable object like a list, that nested object can still be changed.
 
@@ -413,11 +134,11 @@ t[1].append(4)     # But the list inside can be modified
 print(t)           # (1, [2, 3, 4])
 ```
 
-### 2.9.4 Tuple Unpacking
+### 2.3.4 Tuple Unpacking
 
 Unpack tuples directly in `for` loops and assignments.
 
-#### 2.9.4.1 Unpacking in `for` Loops
+#### 2.3.4.1 Unpacking in `for` Loops
 
 ```python
 pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
@@ -426,20 +147,20 @@ for num, letter in pairs:
     print(f"{num}: {letter}")
 ```
 
-#### 2.9.4.2 Swapping Values
+#### 2.3.4.2 Swapping Values
 
 ```python
 a, b = 1, 2
 a, b = b, a   # a=2, b=1
 ```
 
-#### 2.9.4.3 Extended Unpacking
+#### 2.3.4.3 Extended Unpacking
 
 ```python
 first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
 ```
 
-## 2.10 `range` as a Sequence
+## 2.4 `range` as a Sequence
 
 `range` produces a sequence of numbers efficiently without storing them all in memory.
 
@@ -450,7 +171,7 @@ print(r[2])         # 2
 print(r[1:4])       # range(1, 4)
 ```
 
-## 2.11 Common Sequence Operations
+## 2.5 Common Sequence Operations
 
 These operations work on strings, lists, tuples, and ranges.
 
@@ -464,9 +185,9 @@ These operations work on strings, lists, tuples, and ranges.
 | `s.index(x)` | First index of x | `[1,2,3].index(2)` → `1` |
 | `s.count(x)` | Count occurrences | `"banana".count("a")` → `3` |
 
-## 2.12 String Methods
+## 2.6 String Methods
 
-### 2.12.1 `find()`
+### 2.6.1 `find()`
 
 | Method | Returns | Not Found | Parameters |
 |--------|---------|-----------|------------|
@@ -479,7 +200,7 @@ str1.find("a")           # -1 (not found)
 str1.find("y", 2)        # 5 (start from index 2)
 ```
 
-### 2.12.2 `index()`
+### 2.6.2 `index()`
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -491,7 +212,7 @@ str1.index("y")          # 1
 # str1.index("a")        # ValueError
 ```
 
-### 2.12.3 `count()`
+### 2.6.3 `count()`
 
 | Method | Returns |
 |--------|---------|
@@ -503,7 +224,7 @@ str1.count("y")          # 4
 str1.count("on")         # 3
 ```
 
-### 2.12.4 `lower()` and `upper()`
+### 2.6.4 `lower()` and `upper()`
 
 | Method | Description |
 |--------|-------------|
@@ -515,7 +236,7 @@ str1.count("on")         # 3
 "Hello".upper()          # "HELLO"
 ```
 
-### 2.12.5 `split()`
+### 2.6.5 `split()`
 
 | Method | Description | Default Delimiter |
 |--------|-------------|-------------------|
@@ -527,7 +248,7 @@ str1.count("on")         # 3
 "".split()               # []
 ```
 
-### 2.12.6 `replace()`
+### 2.6.6 `replace()`
 
 | Method | Description | Note |
 |--------|-------------|------|
@@ -538,7 +259,7 @@ str1.count("on")         # 3
 "hello".replace('l', 'x', 1)   # "hexlo" (only first 1)
 ```
 
-### 2.12.7 `join()`
+### 2.6.7 `join()`
 
 | Method | Description |
 |--------|-------------|
@@ -554,7 +275,7 @@ str1.count("on")         # 3
 | String → List | `split()` |
 | List → String | `join()` |
 
-### 2.12.8 `strip()`
+### 2.6.8 `strip()`
 
 | Method | Description |
 |--------|-------------|
@@ -567,9 +288,9 @@ str1.count("on")         # 3
 "###hello###".strip("#")  # "hello"
 ```
 
-## 2.13 Comparison Operations
+## 2.7 Comparison Operations
 
-### 2.13.1 ASCII and Unicode Code Points
+### 2.7.1 ASCII and Unicode Code Points
 
 - `ord(char)`: Returns the Unicode code point (integer) of a character
 - `chr(int)`: Returns the character represented by a code point
@@ -584,12 +305,12 @@ print(chr(65))    # 'A'
 # 'a' (97) - 'A' (65) = 32
 ```
 
-### 2.13.2 Comparing Numbers
+### 2.7.2 Comparing Numbers
 
 - Numbers are compared by their numeric values
 - Integers and floats can be compared directly
 
-### 2.13.3 Comparing Strings
+### 2.7.3 Comparing Strings
 
 String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
 
@@ -622,7 +343,7 @@ Uppercase letters have smaller code points than lowercase letters:
 print(max("Cat", "cat"))  # Output: "cat" ('c' > 'C')
 ```
 
-### 2.13.4 Custom Comparison Rules
+### 2.7.4 Custom Comparison Rules
 
 Use the `key` parameter to specify custom comparison logic:
 
@@ -636,12 +357,12 @@ print(max("Apple", "banana", key=str.lower))
 # Output: "banana" (compare as lowercase: 'b' > 'a')
 ```
 
-### 2.13.5 Mixed Type Limitations
+### 2.7.5 Mixed Type Limitations
 
 - Cannot directly compare strings with numbers
 - `max(1, "a")` raises `TypeError`
 
-### 2.13.6 Key Summary
+### 2.7.6 Key Summary
 
 | Comparison Type | Method | Notes |
 |----------------|--------|-------|
@@ -650,9 +371,9 @@ print(max("Apple", "banana", key=str.lower))
 | Case sensitivity | Uppercase < Lowercase | `'Z'` (90) < `'a'` (97) |
 | Custom rule | Use `key` parameter | `key=len`, `key=str.lower` |
 
-## 2.14 List Operations
+## 2.8 List Operations
 
-### 2.14.1 Add
+### 2.8.1 Add
 
 | Method | Syntax | Description | Notes |
 |--------|--------|-------------|-------|
@@ -680,7 +401,7 @@ names.extend("Bob")       # ['Alice', 'B', 'o', 'b']  ← not ["Alice", "Bob"]!
 names.extend(["Bob"])     # ['Alice', 'Bob']
 ```
 
-### 2.14.2 Delete
+### 2.8.2 Delete
 
 | Method | Syntax | Description | Error if Invalid |
 |--------|--------|-------------|----------------|
@@ -696,7 +417,7 @@ list1.remove("Bob")               # Remove by value
 list1.clear()                     # []
 ```
 
-### 2.14.3 Update
+### 2.8.3 Update
 
 ```python
 list1 = ["Alice", "Bob"]
@@ -704,7 +425,7 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 # list1[100] = "x"                # IndexError: out of range
 ```
 
-### 2.14.4 Query
+### 2.8.4 Query
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -718,7 +439,7 @@ print(list1.count(2))             # 2
 # list1.index(99)                 # ValueError
 ```
 
-## 2.15 Tuple Operations
+## 2.9 Tuple Operations
 
 Tuples are **immutable**, so only query methods are available (no add/delete/update).
 
@@ -734,7 +455,7 @@ print(tuple1.count(11))      # 1
 # tuple1.index(66)           # ValueError: 66 is not in tuple
 ```
 
-## 2.16 List Comprehensions
+## 2.10 List Comprehensions
 
 **Only available for lists** — A flexible and powerful way to create lists concisely.
 
@@ -759,7 +480,7 @@ print(list3)  # [2, 4, 6, 8, 10]
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
 
-## 2.17 `sorted()` vs `.sort()`
+## 2.11 `sorted()` vs `.sort()`
 
 **`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
@@ -793,9 +514,9 @@ sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
 
-## 2.18 Sets
+## 2.12 Sets
 
-### 2.18.1 Properties
+### 2.12.1 Properties
 
 | Property | Description |
 |----------|-------------|
@@ -818,7 +539,7 @@ list1 = [1, 2, 3, 4, 1, 2, 3, 4]
 unique_list = list(set(list1))  # [1, 2, 3, 4]
 ```
 
-### 2.18.2 Operations
+### 2.12.2 Operations
 
 | Operator | Meaning | Example |
 |----------|---------|---------|
@@ -861,7 +582,7 @@ for item in set1:        # Only way to traverse
 print("Alice" in set1)   # True
 ```
 
-### 2.18.3 Subset and Superset
+### 2.12.3 Subset and Superset
 
 | Method | Description | Example |
 |--------|-------------|---------|
@@ -878,7 +599,7 @@ print(a >= b)       # True  (superset operator)
 print(a.isdisjoint({4, 5}))  # True
 ```
 
-### 2.18.4 `frozenset`
+### 2.12.4 `frozenset`
 
 Immutable version of a set. Can be used as dictionary keys or elements of another set.
 
@@ -890,9 +611,9 @@ frozen = frozenset([1, 2, 3])
 registry = {frozenset({"a", "b"}): "group A"}
 ```
 
-## 2.19 Dictionaries
+## 2.13 Dictionaries
 
-### 2.19.1 Methods
+### 2.13.1 Methods
 
 | Operation | Method/Syntax | Description | Error if Invalid |
 |-----------|---------------|-------------|----------------|
@@ -973,7 +694,7 @@ print(dict1.get("language", "en"))  # "en" (custom default)
 dict1.get("unknown")                # None (no error)
 ```
 
-### 2.19.2 Iteration
+### 2.13.2 Iteration
 
 | # | Method | Iterates Over | Use Case |
 |---|--------|---------------|----------|
@@ -1002,7 +723,7 @@ for name, code in dict1.items():
     print(f"{name}: {code}")
 ```
 
-### 2.19.3 Nested Dictionaries
+### 2.13.3 Nested Dictionaries
 
 **Structure:** Key can be any immutable type; Value can be any type (including dict).
 
@@ -1034,7 +755,7 @@ for info in students.values():
 print(gender_count)                 # {'F': 2, 'M': 1}
 ```
 
-### 2.19.4 Dictionary Comprehensions
+### 2.13.4 Dictionary Comprehensions
 
 Concise way to create dictionaries.
 
@@ -1054,7 +775,7 @@ gradebook = {name: score for name, score in zip(names, scores)}
 # {'Alice': 85, 'Bob': 90, 'Charlie': 78}
 ```
 
-### 2.19.5 Merge Operators (Python 3.9+)
+### 2.13.5 Merge Operators (Python 3.9+)
 
 | Operator | Description | In-place |
 |----------|-------------|----------|
@@ -1069,7 +790,7 @@ print(a | b)    # {'x': 1, 'y': 3, 'z': 4} — new dict, b wins on conflict
 a |= b          # a is now {'x': 1, 'y': 3, 'z': 4}
 ```
 
-### 2.19.6 `collections.defaultdict`
+### 2.13.6 `collections.defaultdict`
 
 Automatically provides a default value for missing keys.
 
@@ -1088,7 +809,7 @@ for word in words:
 print(groups)   # {'a': ['apple', 'apricot'], 'b': ['banana'], 'c': ['cherry']}
 ```
 
-### 2.19.7 `collections.Counter`
+### 2.13.7 `collections.Counter`
 
 Specialized dict for counting hashable objects.
 
@@ -1104,9 +825,9 @@ print(counts.most_common(2))  # [('apple', 3), ('banana', 2)]
 
 **Note:** Dictionary iteration order is guaranteed to match insertion order (Python 3.7+).
 
-## 2.20 Mutable and Immutable Types
+## 2.14 Mutable and Immutable Types
 
-### 2.20.1 Definition
+### 2.14.1 Definition
 
 **Mutable Types:** Lists, Dictionaries, Sets, Bytearrays, and custom objects with mutable attributes
 
@@ -1118,7 +839,7 @@ print(counts.most_common(2))  # [('apple', 3), ('banana', 2)]
 - Cannot be modified after creation
 - Attempting to modify actually creates a **new object** with a different memory address
 
-### 2.20.2 Examples
+### 2.14.2 Examples
 
 ```python
 # Mutable: list, dict, set
@@ -1143,7 +864,7 @@ a = 2000              # Reassignment creates a new integer object
 print(id(a))          # Different address
 ```
 
-### 2.20.3 Identity vs Equality
+### 2.14.3 Identity vs Equality
 
 ```python
 # Lists with same values are different objects
@@ -1160,18 +881,18 @@ print(t1 == t2)         # True (same values)
 print(t1 is t2)         # Not guaranteed; often False for larger values
 ```
 
-### 2.20.4 Summary
+### 2.14.4 Summary
 
 | Type      | Examples                                                                        | Can Modify? | Memory Address       |
 | --------- | ------------------------------------------------------------------------------- | ----------- | -------------------- |
 | Mutable   | `list`, `dict`, `set`, `bytearray`, custom objects                              | Yes         | Stays same           |
 | Immutable | `int`, `str`, `tuple`, `bool`, `float`, `frozenset`, `bytes`, `complex`, `None` | No          | Changes (new object) |
 
-## 2.21 Assignment, Shallow Copy, and Deep Copy
+## 2.15 Assignment, Shallow Copy, and Deep Copy
 
 Shallow and deep copies apply to any mutable container: lists, dictionaries, sets, bytearrays, and custom objects with mutable attributes. Immutable types (`int`, `str`, `tuple`, `frozenset`, `bytes`) do not need copying because they cannot be modified.
 
-### 2.21.1 Assignment vs Shallow Copy vs Deep Copy
+### 2.15.1 Assignment vs Shallow Copy vs Deep Copy
 
 | Operation | What Happens | Nested Objects |
 |-----------|--------------|----------------|
@@ -1179,7 +900,7 @@ Shallow and deep copies apply to any mutable container: lists, dictionaries, set
 | `b = copy.copy(a)` | Creates a **new container** | Shared |
 | `b = copy.deepcopy(a)` | Creates a **new container** and recursively copies everything | Independent |
 
-### 2.21.2 Examples
+### 2.15.2 Examples
 
 ```python
 import copy
@@ -1225,4 +946,4 @@ print(s1)  # {1, 2, 3}
 print(s2)  # {1, 2, 3, 4}
 ```
 
-[← Previous: Variables and Data Types](01-variables-and-data-types.md) | [Next: Operators →](03-operators.md)
+[← Previous: Variables and Python Basics](01-variables-and-data-types.md) | [Next: Operators →](03-operators.md)
