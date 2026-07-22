@@ -1,10 +1,10 @@
-[← Previous: Exception Handling](12-exception-handling.md)
+[← Previous: Exception Handling](11-exception-handling.md)
 
-# 13 Modules and Packages
+# 12 Modules and Packages
 
-## 13.1 Importing Modules
+## 12.1 Importing Modules
 
-### 13.1.1 Basic Import
+### 12.1.1 Basic Import
 
 Use `import` to load a module. Use `from ... import` to load specific names.
 
@@ -21,7 +21,7 @@ import numpy as np
 from datetime import datetime as dt
 ```
 
-### 13.1.2 Import Rules
+### 12.1.2 Import Rules
 
 | Syntax | Effect | Recommendation |
 |--------|--------|----------------|
@@ -42,7 +42,7 @@ from typing import Optional
 from math import *   # sqrt, pi, sin, cos... all dumped into global namespace
 ```
 
-## 13.2 Module Search Path
+## 12.2 Module Search Path
 
 Python searches for modules in this order:
 
@@ -56,7 +56,7 @@ import sys
 print(sys.path)   # List of search directories
 ```
 
-## 13.3 `__name__ == "__main__"`
+## 12.3 `__name__ == "__main__"`
 
 Code inside this guard only runs when the file is executed directly, not when imported as a module.
 
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
 **Best Practice:** Always wrap executable code in `if __name__ == "__main__":` to make modules reusable.
 
-## 13.4 pip and PyPI
+## 12.4 pip and PyPI
 
 `pip` is Python's package installer. PyPI (Python Package Index) is the public repository.
 
@@ -100,7 +100,7 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
-## 13.5 Virtual Environments
+## 12.5 Virtual Environments
 
 A virtual environment is an isolated Python environment for each project.
 
@@ -120,11 +120,11 @@ deactivate
 
 **Why use venv?** Different projects may need different versions of the same package. Venv prevents version conflicts.
 
-## 13.6 Standard Library Quick Reference
+## 12.6 Standard Library Quick Reference
 
 Python's standard library is extensive. Below are the most commonly used modules.
 
-### 13.6.1 `os` — Operating System Interface
+### 12.6.1 `os` — Operating System Interface
 
 ```python
 import os
@@ -142,7 +142,7 @@ os.remove("file.txt")    # Delete file
 os.system("python --version")   # Runs command in subshell
 ```
 
-### 13.6.2 `sys` — System-Specific Parameters
+### 12.6.2 `sys` — System-Specific Parameters
 
 ```python
 import sys
@@ -154,7 +154,7 @@ sys.platform      # Platform identifier ('win32', 'darwin', 'linux')
 sys.version       # Python version information string
 ```
 
-### 13.6.3 `datetime` — Date and Time
+### 12.6.3 `datetime` — Date and Time
 
 ```python
 from datetime import datetime, timedelta
@@ -170,7 +170,7 @@ future = now + timedelta(days=7)
 print(future)
 ```
 
-### 13.6.4 `random` — Random Numbers
+### 12.6.4 `random` — Random Numbers
 
 ```python
 import random
@@ -197,7 +197,7 @@ random.sample(elements, k=2)   # Example: ['C', 'A']
 | `choices()` | With | Allowed | Yes | Lottery, weighted selection |
 | `sample()` | Without | Not allowed | No | Draw without replacement |
 
-### 13.6.5 `re` — Regular Expressions
+### 12.6.5 `re` — Regular Expressions
 
 ```python
 import re
@@ -209,7 +209,7 @@ re.findall(r"\d+", "a1b2c3")   # Find all matches: ['1', '2', '3']
 re.sub(r"\d+", "X", "a1b2")    # Replace: 'aXbX'
 ```
 
-### 13.6.6 `pprint` — Pretty Printing
+### 12.6.6 `pprint` — Pretty Printing
 
 The `pprint` module formats complex data structures (especially nested dicts and lists) with automatic indentation and line wrapping, making them far more readable than standard `print()`.
 
@@ -246,4 +246,4 @@ printer.pprint(data)
 
 **When to use:** Any time you need to inspect nested data structures during debugging.
 
-[← Previous: Exception Handling](12-exception-handling.md)
+[← Previous: Exception Handling](11-exception-handling.md)

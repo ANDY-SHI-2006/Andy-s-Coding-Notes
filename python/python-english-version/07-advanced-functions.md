@@ -1,8 +1,8 @@
-[← Previous: Functions](07-functions.md) | [Next: Closures and Decorators →](09-closures-and-decorators.md)
+[← Previous: Functions](06-functions.md) | [Next: Closures and Decorators →](08-closures-and-decorators.md)
 
-# 8 Advanced Functions
+# 7 Advanced Functions
 
-## 8.1 Lambda Anonymous Functions
+## 7.1 Lambda Anonymous Functions
 
 | Feature | Description |
 |---------|-------------|
@@ -26,9 +26,9 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 
 **Note:** Lambda doesn't improve performance; use `def` for complex logic.
 
-## 8.2 Higher-Order Functions
+## 7.2 Higher-Order Functions
 
-### 8.2.1 Introduction
+### 7.2.1 Introduction
 
 **Higher-Order Function:** Takes function as argument or returns function.
 
@@ -38,7 +38,7 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 | `filter()` | Select elements matching condition |
 | `sorted()` | Sort with custom key |
 
-### 8.2.2 `map()`
+### 7.2.2 `map()`
 
 | Feature | Description |
 |---------|-------------|
@@ -64,7 +64,7 @@ mapped = map(int, nums)
 print(mapped)               # <map object at 0x...>  (not a list yet)
 ```
 
-### 8.2.3 `filter()`
+### 7.2.3 `filter()`
 
 | Feature | Description |
 |---------|-------------|
@@ -88,7 +88,7 @@ users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 17}]
 list(filter(lambda u: u["age"] >= 18, users))
 ```
 
-### 8.2.4 `sorted()` with Key
+### 7.2.4 `sorted()` with Key
 
 | Feature | Description |
 |---------|-------------|
@@ -118,9 +118,9 @@ products = ["iPhone_8000", "Mi_4000", "Huawei_10000"]
 sorted(products, key=lambda x: int(x.split("_")[1]))  # ['Mi_4000', 'iPhone_8000', 'Huawei_10000']
 ```
 
-**Note:** For basic sorting syntax and comparison with `.sort()`, see [5.10 `sorted()` vs `.sort()`](05-sequences-and-slicing.md#510-sorted-vs-sort).
+**Note:** For basic sorting syntax and comparison with `.sort()`, see [2.17 `sorted()` vs `.sort()`](02-data-types.md#217-sorted-vs-sort).
 
-### 8.2.5 `any()` and `all()`
+### 7.2.5 `any()` and `all()`
 
 | Function | Returns `True` when | Example |
 |----------|--------------------|---------|
@@ -141,7 +141,7 @@ any([])                      # False
 all([])                      # True  (vacuously true)
 ```
 
-### 8.2.6 `reduce()`
+### 7.2.6 `reduce()`
 
 Cumulatively apply a function to reduce an iterable to a single value.
 
@@ -152,7 +152,7 @@ reduce(lambda a, b: a + b, [1, 2, 3, 4])   # 10
 reduce(lambda a, b: a * b, [1, 2, 3, 4])   # 24
 ```
 
-### 8.2.7 `partial()`
+### 7.2.7 `partial()`
 
 Create a new function with pre-filled arguments.
 
@@ -171,7 +171,7 @@ square(5)   # 25
 cube(3)     # 27
 ```
 
-## 8.3 Iterators
+## 7.3 Iterators
 
 | Method | Description |
 |--------|-------------|
@@ -198,7 +198,7 @@ for item in lst:            # Calls iter(), then next() repeatedly
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
-### 8.3.1 How `for` Loops Work Under the Hood
+### 7.3.1 How `for` Loops Work Under the Hood
 
 A `for` loop is syntactic sugar for this iterator protocol pattern:
 
@@ -228,7 +228,7 @@ except StopIteration:
     print("Done")
 ```
 
-### 8.3.2 `itertools` Overview
+### 7.3.2 `itertools` Overview
 
 Built-in module for efficient iteration patterns.
 
@@ -252,7 +252,7 @@ for key, group in itertools.groupby(data, key=lambda x: x[0]):
     print(key, list(group))   # A [(A,1), (A,2)]  B [(B,3), (B,4)]
 ```
 
-## 8.4 Generators
+## 7.4 Generators
 
 | Feature | Description |
 |---------|-------------|
@@ -284,7 +284,7 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-### 8.4.1 Generator Execution Flow
+### 7.4.1 Generator Execution Flow
 
 When a generator function is called, it does **not** execute the function body immediately. Instead, it returns a generator object. The body executes only when `next()` is called, and it **pauses** at each `yield`, resuming from that exact point on the next `next()` call.
 
@@ -307,7 +307,7 @@ print(next(g))              # Step 3: resumed again → 30
 
 **Key insight:** `yield` is both an output point and a checkpoint. The generator remembers its local variables and execution position between calls.
 
-### 8.4.2 Generator Expression vs List Comprehension
+### 7.4.2 Generator Expression vs List Comprehension
 
 Syntax differs by only one character, but behavior is very different:
 
@@ -337,7 +337,7 @@ print(list(squares_gen))  # [0, 1, 4, 9, 16]
 - Use **list comprehension** when you need random access or multiple passes
 - Use **generator expression** for large/infinite sequences or single-pass pipelines
 
-### 8.4.3 Generator Methods
+### 7.4.3 Generator Methods
 
 Generators support communication with the caller.
 
@@ -363,7 +363,7 @@ acc.send(5)         # total = 15
 acc.close()         # Clean shutdown
 ```
 
-### 8.4.4 `yield from`
+### 7.4.4 `yield from`
 
 Delegate iteration to a sub-generator.
 
@@ -380,4 +380,4 @@ def main_generator():
 list(main_generator())   # ['start', 1, 2, 'end']
 ```
 
-[← Previous: Functions](07-functions.md) | [Next: Closures and Decorators →](09-closures-and-decorators.md)
+[← Previous: Functions](06-functions.md) | [Next: Closures and Decorators →](08-closures-and-decorators.md)

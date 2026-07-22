@@ -1,8 +1,8 @@
-[← Previous: Advanced Functions](08-advanced-functions.md) | [Next: File Operations →](10-file-operations.md)
+[← Previous: Advanced Functions](07-advanced-functions.md) | [Next: File Operations →](09-file-operations.md)
 
-# 9 Closures and Decorators
+# 8 Closures and Decorators
 
-## 9.1 Closures
+## 8.1 Closures
 
 **Closure:** A nested function that references variables from its enclosing scope and is returned from the outer function.
 
@@ -29,11 +29,11 @@ c2 = counter()              # Independent closure
 c2()                        # 1
 ```
 
-## 9.2 Decorators
+## 8.2 Decorators
 
 **Decorator:** A function that wraps another function to extend its behavior without modifying it.
 
-### 9.2.0 Why Decorators? (Evolution)
+### 8.2.0 Why Decorators? (Evolution)
 
 Suppose you need to measure execution time for multiple functions. Without decorators, you have three bad options:
 
@@ -95,7 +95,7 @@ login()                 # Identical behavior to Approach 3
 
 **Key benefit:** Decorators add functionality without changing the original function's source code or its calling convention.
 
-### 9.2.1 Decorator 1.0 (Basic Template)
+### 8.2.1 Decorator 1.0 (Basic Template)
 
 ```python
 def decorator(func):
@@ -120,7 +120,7 @@ def greet():
     print("Hello")
 ```
 
-### 9.2.2 Decorator 2.0 (With Parameters)
+### 8.2.2 Decorator 2.0 (With Parameters)
 
 ```python
 def timer(func):
@@ -141,7 +141,7 @@ def slow_function(n):
 slow_function(1)            # Measures and prints execution time
 ```
 
-### 9.2.3 Decorator Final Version (Preserves Return Value)
+### 8.2.3 Decorator Final Version (Preserves Return Value)
 
 ```python
 # Universal decorator template
@@ -166,7 +166,7 @@ def view_profile(user):
     return user["profile"]
 ```
 
-### 9.2.4 Preserving Metadata with `functools.wraps`
+### 8.2.4 Preserving Metadata with `functools.wraps`
 
 Without `@wraps`, the decorated function loses its name and docstring.
 
@@ -189,7 +189,7 @@ print(say_hello.__name__)       # say_hello (not wrapper)
 print(say_hello.__doc__)        # Greet the user.
 ```
 
-### 9.2.5 Stacked Decorators
+### 8.2.5 Stacked Decorators
 
 Multiple decorators can be applied to a single function. They execute from bottom to top.
 
@@ -203,7 +203,7 @@ def my_function():
 # my_function = decorator_b(decorator_a(my_function))
 ```
 
-### 9.2.6 Parametric Decorators
+### 8.2.6 Parametric Decorators
 
 A decorator that accepts its own parameters. Requires a factory function.
 
@@ -224,7 +224,7 @@ def greet(name):
 greet("Alice")   # Prints 3 times
 ```
 
-### 9.2.7 Class Decorators
+### 8.2.7 Class Decorators
 
 Decorators can also be applied to classes.
 
@@ -247,7 +247,7 @@ db2 = Database()
 print(db1 is db2)   # True — same instance
 ```
 
-### 9.2.8 `@property`
+### 8.2.8 `@property`
 
 Turn a method into an attribute-like accessor.
 
@@ -271,7 +271,7 @@ print(c.radius)     # 5 (calls getter)
 c.radius = 10       # Calls setter
 ```
 
-### 9.2.9 `@classmethod` and `@staticmethod`
+### 8.2.9 `@classmethod` and `@staticmethod`
 
 | Decorator | First param | Use case |
 |-----------|-------------|----------|
@@ -295,7 +295,7 @@ p = Person.from_dict({"name": "Alice"})
 print(Person.is_adult(20))   # True
 ```
 
-### 9.2.10 Practical Example: Login Check Decorator
+### 8.2.10 Practical Example: Login Check Decorator
 
 A common real-world use case: restrict function execution based on login status.
 
@@ -328,7 +328,7 @@ transfer_money(True, 100)   # 💰 Transferring $100...
 
 **Key pattern:** The decorator intercepts the call, checks a condition, and either blocks execution or proceeds to the original function. This pattern is widely used in web frameworks (Flask, Django) for authentication and authorization.
 
-### 9.2.11 Practical Example: Logging Decorator
+### 8.2.11 Practical Example: Logging Decorator
 
 A logging decorator records function calls — useful for debugging and monitoring.
 
@@ -361,4 +361,4 @@ greet("Alice", greeting="Hi")
 
 **Real-world tip:** In production, replace `print()` with a proper logging framework like Python's `logging` module.
 
-[← Previous: Advanced Functions](08-advanced-functions.md) | [Next: File Operations →](10-file-operations.md)
+[← Previous: Advanced Functions](07-advanced-functions.md) | [Next: File Operations →](09-file-operations.md)

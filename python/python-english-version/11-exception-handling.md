@@ -1,8 +1,8 @@
-[← Previous: Object-Oriented Programming](11-object-oriented-programming.md) | [Next: Modules and Packages →](13-modules-and-packages.md) | [Next: Modules and Packages →](13-modules-and-packages.md)
+[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Modules and Packages →](12-modules-and-packages.md)
 
-# 12 Exception Handling
+# 11 Exception Handling
 
-## 12.1 Common Exceptions
+## 11.1 Common Exceptions
 
 | Exception | Cause |
 |-----------|-------|
@@ -32,7 +32,7 @@ def demo_exceptions():
     "1" + 2                     # Can't add str and int
 ```
 
-## 12.2 Exception Hierarchy
+## 11.2 Exception Hierarchy
 
 Python exceptions form a class hierarchy. Catching a parent class catches all its subclasses.
 
@@ -54,7 +54,7 @@ BaseException
 
 **Best Practice:** Catch the most specific exception possible.
 
-## 12.3 Exception Handling Syntax
+## 11.3 Exception Handling Syntax
 
 | Syntax | Purpose |
 |--------|---------|
@@ -83,7 +83,7 @@ except (ValueError, TypeError):
     print("Invalid input")
 ```
 
-### 12.3.1 Nested `try/except`
+### 11.3.1 Nested `try/except`
 
 You can nest `try` blocks. The inner `except` handles errors from the inner block; if it doesn't catch the exception, it propagates to the outer `except`.
 
@@ -107,7 +107,7 @@ except Exception:
 
 **Use case:** Inner blocks handle expected, local errors; outer blocks handle unexpected, broader failures.
 
-### 12.3.2 Execution Flow
+### 11.3.2 Execution Flow
 
 ```
 try:
@@ -131,9 +131,9 @@ finally:
 3. If no exception → `else` executes
 4. `finally` always executes last
 
-## 12.4 Best Practices
+## 11.4 Best Practices
 
-### 12.4.1 Be Specific
+### 11.4.1 Be Specific
 
 ```python
 # Bad - catches everything including SystemExit and KeyboardInterrupt
@@ -151,7 +151,7 @@ except FileNotFoundError:
     print("File missing")
 ```
 
-### 12.4.2 Don't Silence Exceptions Blindly
+### 11.4.2 Don't Silence Exceptions Blindly
 
 ```python
 # Bad - hides bugs
@@ -168,7 +168,7 @@ except ValueError as e:
     raise                   # Re-raise if caller should know
 ```
 
-## 12.5 `raise`
+## 11.5 `raise`
 
 | Feature | Description |
 |---------|-------------|
@@ -193,7 +193,7 @@ def validate_age(age):
         raise ValidationError("Age cannot be negative")
 ```
 
-### 12.5.1 Practical Example: Custom Exception with Context
+### 11.5.1 Practical Example: Custom Exception with Context
 
 A custom exception with a descriptive message makes debugging much easier. Inherit from `Exception` (or a more specific built-in exception) and pass the error details to `super().__init__()`.
 
@@ -228,7 +228,7 @@ except FutureYearError as e:
 # Current year: 2025
 ```
 
-### 12.5.2 Exception Chaining
+### 11.5.2 Exception Chaining
 
 `raise ... from ...` attaches the original exception as the cause, preserving full traceback information.
 
@@ -239,7 +239,7 @@ except ValueError as e:
     raise RuntimeError("Conversion failed") from e
 ```
 
-## 12.6 `assert`
+## 11.6 `assert`
 
 | Feature | Description |
 |---------|-------------|
@@ -264,7 +264,7 @@ class Stack:
 - **Assertion**: Internal bug check, can be disabled
 - **Exception**: Expected error cases, always handled
 
-## 12.7 Context Managers
+## 11.7 Context Managers
 
 The `with` statement ensures cleanup code runs even if exceptions occur.
 
@@ -312,7 +312,7 @@ with managed_resource("db_connection") as res:
     print(f"Using {res}")
 ```
 
-## 12.8 `warnings` Module
+## 11.8 `warnings` Module
 
 Issue non-fatal warnings without stopping execution.
 
@@ -326,4 +326,4 @@ warnings.warn("This feature is deprecated", DeprecationWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 ```
 
-[← Previous: Object-Oriented Programming](11-object-oriented-programming.md) | [Next: Modules and Packages →](13-modules-and-packages.md)
+[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Modules and Packages →](12-modules-and-packages.md)

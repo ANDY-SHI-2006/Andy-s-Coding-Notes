@@ -1,8 +1,8 @@
-[← Previous: Closures and Decorators](09-closures-and-decorators.md) | [Next: Object-Oriented Programming →](11-object-oriented-programming.md)
+[← Previous: Closures and Decorators](08-closures-and-decorators.md) | [Next: Object-Oriented Programming →](10-object-oriented-programming.md)
 
-# 10 File Operations
+# 9 File Operations
 
-## 10.1 Opening Files
+## 9.1 Opening Files
 
 ```python
 # Syntax: open(file, mode='r', encoding=None)
@@ -22,7 +22,7 @@ file = open("data.txt", mode="r", encoding="utf-8")
 - **Relative:** `"./file.txt"` or `"../data/file.txt"`
 - **Absolute:** `"C:/Users/name/file.txt"` (use `/` for cross-platform)
 
-## 10.2 Reading Files
+## 9.2 Reading Files
 
 | Method | Description |
 |--------|-------------|
@@ -51,7 +51,7 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
     print(f.tell())             # 6
 ```
 
-### 10.2.1 `seek()` and `tell()`
+### 9.2.1 `seek()` and `tell()`
 
 Control the file cursor position.
 
@@ -70,7 +70,7 @@ with open("data.txt", encoding="utf-8") as f:
     print(f.read(3))   # First 3 chars again
 ```
 
-## 10.3 Writing Files
+## 9.3 Writing Files
 
 ```python
 # Write (overwrite)
@@ -83,7 +83,7 @@ with open("log.txt", "a", encoding="utf-8") as f:
     f.write("New entry\n")
 ```
 
-## 10.4 Closing Files
+## 9.4 Closing Files
 
 **Always close files to free system resources:**
 
@@ -99,7 +99,7 @@ with open("file.txt") as f:
 # File automatically closed
 ```
 
-## 10.5 Binary Files
+## 9.5 Binary Files
 
 ```python
 # Copy image file
@@ -108,7 +108,7 @@ with open("photo.jpg", "rb") as src:
         dst.write(src.read())
 ```
 
-## 10.6 JSON Strings
+## 9.6 JSON Strings
 
 | Function | Purpose |
 |----------|---------|
@@ -135,7 +135,7 @@ with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
-### 10.6.1 CSV Handling
+### 9.6.1 CSV Handling
 
 ```python
 import csv
@@ -159,7 +159,7 @@ with open("data.csv", encoding="utf-8", newline="") as f:
         print(row["name"])  # Access by column name
 ```
 
-## 10.7 Character Encoding
+## 9.7 Character Encoding
 
 | Encoding | Description | Bytes per char |
 |----------|-------------|----------------|
@@ -172,7 +172,7 @@ with open("data.csv", encoding="utf-8", newline="") as f:
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
 
-### 10.7.1 Encoding Evolution
+### 9.7.1 Encoding Evolution
 
 Understanding why encodings exist helps prevent file-reading errors:
 
@@ -196,7 +196,7 @@ with open("chinese.txt", "w", encoding="utf-8") as f:
     f.write("中文")          # 6 bytes total (2 chars × 3 bytes)
 ```
 
-### 10.7.2 `seek()` with Multi-byte Characters
+### 9.7.2 `seek()` with Multi-byte Characters
 
 `seek()` moves the cursor by **bytes**, not characters. With UTF-8 Chinese text, you must seek to byte positions that align with character boundaries (multiples of 3 for Chinese).
 
@@ -210,7 +210,7 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
     # f.read(1)             # UnicodeDecodeError
 ```
 
-## 10.8 Modern Path Handling with `pathlib`
+## 9.8 Modern Path Handling with `pathlib`
 
 `pathlib` provides an object-oriented approach to filesystem paths.
 
@@ -241,7 +241,7 @@ for txt_file in data_dir.glob("*.txt"):
 | Read text | `open(p).read()` | `Path(p).read_text()` |
 | Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
 
-## 10.9 Temporary Files
+## 9.9 Temporary Files
 
 Use the `tempfile` module for short-lived files.
 
@@ -258,7 +258,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     print(tmpdir)       # Path to temp directory
 ```
 
-## 10.10 File Existence and Metadata
+## 9.10 File Existence and Metadata
 
 ```python
 import os
@@ -278,4 +278,4 @@ print(stat.st_size)                 # Size
 print(stat.st_mtime)                # Modification time
 ```
 
-[← Previous: Closures and Decorators](09-closures-and-decorators.md) | [Next: Object-Oriented Programming →](11-object-oriented-programming.md)
+[← Previous: Closures and Decorators](08-closures-and-decorators.md) | [Next: Object-Oriented Programming →](10-object-oriented-programming.md)

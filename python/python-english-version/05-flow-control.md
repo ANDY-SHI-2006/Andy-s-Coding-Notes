@@ -1,12 +1,12 @@
-[← Previous: User Interaction](03-user-interaction.md) | [Next: Sequences and Slicing →](05-sequences-and-slicing.md)
+[← Previous: User Interaction](04-user-interaction.md) | [Next: Functions →](06-functions.md)
 
-# 4 Flow Control
+# 5 Flow Control
 
 Programs execute statements in a specific order. By default, Python runs code from top to bottom (sequential execution). Flow control structures let you change this order based on conditions or repeat blocks of code.
 
-## 4.1 Branching Structure
+## 5.1 Branching Structure
 
-### 4.1.1 `if` / `elif` / `else`
+### 5.1.1 `if` / `elif` / `else`
 
 Execute code blocks conditionally. Python uses indentation to define block scope.
 
@@ -65,9 +65,9 @@ timeout = user_config or 30        # 30 if user_config is None/0/""
 name = input("Name: ") or "Guest"  # "Guest" if user presses Enter
 ```
 
-> See also: [3.2.3](03-user-interaction.md#323-default-value-for-empty-input) for `input()` with `or`.
+> See also: [4.2.3](04-user-interaction.md#423-default-value-for-empty-input) for `input()` with `or`.
 
-### 4.1.2 Ternary Operator
+### 5.1.2 Ternary Operator
 
 A concise way to write simple if-else statements in one line.
 
@@ -90,7 +90,7 @@ status = "adult" if age >= 18 else "minor"
 
 **Use Case:** Best for simple conditional assignments. For complex logic, use standard if-else for readability.
 
-### 4.1.3 Single-line `if` Statement
+### 5.1.3 Single-line `if` Statement
 
 Python allows simple `if` statements to be written on a single line.
 
@@ -115,7 +115,7 @@ if x > 0: print("positive")
 
 **Note:** Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
 
-### 4.1.4 `match` / `case` (Structural Pattern Matching)
+### 5.1.4 `match` / `case` (Structural Pattern Matching)
 
 Python 3.10+ feature for matching data structures against patterns.
 
@@ -129,9 +129,9 @@ Python 3.10+ feature for matching data structures against patterns.
 | Range comparisons (`>`, `<`) | `if` | Guards in `match` are less readable |
 | Python < 3.10 | `if` | `match` is not available |
 
-#### 4.1.4.1 Basic Value Matching
+#### 5.1.4.1 Basic Value Matching
 
-##### 4.1.4.1.1 Basic Syntax
+##### 5.1.4.1.1 Basic Syntax
 
 ```python
 status = 200
@@ -147,15 +147,15 @@ match status:
         print("Unknown status")
 ```
 
-##### 4.1.4.1.2 Execution Order
+##### 5.1.4.1.2 Execution Order
 
 Cases are checked top-to-bottom. The first matching `case` executes, and the rest are skipped. Place `_` (wildcard) last, or it will shadow all branches below it.
 
-##### 4.1.4.1.3 No Match
+##### 5.1.4.1.3 No Match
 
 If no `case` matches and there is no `_`, the `match` statement does nothing — no error, no warning.
 
-##### 4.1.4.1.4 OR Pattern
+##### 5.1.4.1.4 OR Pattern
 
 Match multiple values with `|`.
 
@@ -169,7 +169,7 @@ match status:
         print("Other")
 ```
 
-##### 4.1.4.1.5 Enum Matching
+##### 5.1.4.1.5 Enum Matching
 
 Match `Enum` members for safer, more readable code. 
 
@@ -192,7 +192,7 @@ match status:
         print("Failed")
 ```
 
-##### 4.1.4.1.6 Variable Name Trap
+##### 5.1.4.1.6 Variable Name Trap
 
 A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. 
 
@@ -211,11 +211,11 @@ match status:
         print("OK")
 ```
 
-#### 4.1.4.2 Sequence Matching (List / Tuple)
+#### 5.1.4.2 Sequence Matching (List / Tuple)
 
 Match by structure and bind variables.
 
-##### 4.1.4.2.1 Tuple Matching
+##### 5.1.4.2.1 Tuple Matching
 
 ```python
 point = (3, 0)
@@ -231,7 +231,7 @@ match point:
         print(f"Point at ({x}, {y})")
 ```
 
-##### 4.1.4.2.2 List Matching
+##### 5.1.4.2.2 List Matching
 
 ```python
 items = [1, 2, 3]
@@ -247,7 +247,7 @@ match items:
         print(f"First: {first}, Rest: {rest}")
 ```
 
-##### 4.1.4.2.3 Variable Scope
+##### 5.1.4.2.3 Variable Scope
 
 Variables bound in a `case` pattern remain accessible **after** the `match` statement.
 
@@ -258,7 +258,7 @@ match point:
 print(x, y)   # x and y are accessible here
 ```
 
-##### 4.1.4.2.4 `as` Pattern
+##### 5.1.4.2.4 `as` Pattern
 
 Capture the entire matched value alongside its components.
 
@@ -268,7 +268,7 @@ match point:
         print(f"Matched {pt} with x={x}, y={y}")
 ```
 
-#### 4.1.4.3 Guard Clause
+#### 5.1.4.3 Guard Clause
 
 A guard adds an `if` condition after `case` to filter matched values further.
 
@@ -308,7 +308,7 @@ match age:
         print("Senior")
 ```
 
-#### 4.1.4.4 Dictionary Matching
+#### 5.1.4.4 Dictionary Matching
 
 Match dictionaries by key structure.
 
@@ -324,7 +324,7 @@ match user:
         print("Empty dict")
 ```
 
-#### 4.1.4.5 Matching Data Classes
+#### 5.1.4.5 Matching Data Classes
 
 Match class instances by attribute structure.
 
@@ -349,7 +349,7 @@ match p:
 
 > **Note:** The `x: int` syntax inside `@dataclass` is a **type annotation** (type hint). It tells `@dataclass` what fields to generate and helps IDEs provide autocompletion. See [1.1.3](01-variables-and-data-types.md#113-type-annotations).
 
-#### 4.1.4.6 Wildcard `_`
+#### 5.1.4.6 Wildcard `_`
 
 `_` matches any value but does not bind it. Useful when you don't need the value.
 
@@ -377,11 +377,11 @@ match p:
         print("Not a point")
 ```
 
-## 4.2 Loop Structures
+## 5.2 Loop Structures
 
-### 4.2.1 `for` Loop
+### 5.2.1 `for` Loop
 
-#### 4.2.1.1 Basic Iteration
+#### 5.2.1.1 Basic Iteration
 
 Iterate over elements of an iterable.
 
@@ -394,11 +394,11 @@ for char in "hello":
     print(char)
 ```
 
-#### 4.2.1.2 `range()`
+#### 5.2.1.2 `range()`
 
 Generate a sequence of numbers.
 
-##### 4.2.1.2.1 Syntax
+##### 5.2.1.2.1 Syntax
 
 ```python
 range(stop)
@@ -412,7 +412,7 @@ range(start, stop, step)
 | `stop` | Ending value (**exclusive**) | required |
 | `step` | Increment or decrement | `1` |
 
-##### 4.2.1.2.2 Basic Examples
+##### 5.2.1.2.2 Basic Examples
 
 ```python
 for i in range(5):           # 0, 1, 2, 3, 4
@@ -427,7 +427,7 @@ for i in range(10, 0, -1):   # 10, 9, ..., 1
 
 > **Note:** `range()` returns a lazy iterator, not a list. `range(10**9)` uses almost no memory until iterated.
 
-##### 4.2.1.2.3 `reversed()`
+##### 5.2.1.2.3 `reversed()`
 
 Iterate over a sequence in reverse order without modifying it.
 
@@ -439,11 +439,11 @@ for char in reversed("hello"):   # 'o', 'l', 'l', 'e', 'h'
     print(char)
 ```
 
-#### 4.2.1.3 `enumerate()`
+#### 5.2.1.3 `enumerate()`
 
 Get both the index and the value while iterating.
 
-##### 4.2.1.3.1 Basic Usage
+##### 5.2.1.3.1 Basic Usage
 
 ```python
 fruits = ["apple", "banana", "cherry"]
@@ -456,7 +456,7 @@ for i, fruit in enumerate(fruits):
 # 2: cherry
 ```
 
-##### 4.2.1.3.2 Custom Start Index
+##### 5.2.1.3.2 Custom Start Index
 
 ```python
 for i, fruit in enumerate(fruits, start=1):
@@ -467,18 +467,18 @@ for i, fruit in enumerate(fruits, start=1):
 # 3. cherry
 ```
 
-##### 4.2.1.3.3 Key Points
+##### 5.2.1.3.3 Key Points
 
 - `enumerate()` yields `(index, value)` tuples. `list(enumerate(["a", "b"]))` gives `[(0, "a"), (1, "b")]`.
 - The `start` parameter changes the beginning index. It is often used with `1` for human-friendly numbering.
 - Conceptually, it is similar to `zip(range(len(iterable)), iterable)`, but `enumerate()` is more readable and Pythonic.
 - Like `range()`, it returns a lazy iterator, not a list.
 
-#### 4.2.1.4 `zip()`
+#### 5.2.1.4 `zip()`
 
 Iterate over multiple sequences in parallel. Stops at the shortest sequence.
 
-##### 4.2.1.4.1 Basic Usage
+##### 5.2.1.4.1 Basic Usage
 
 ```python
 names = ["Alice", "Bob", "Charlie"]
@@ -492,7 +492,7 @@ for name, score in zip(names, scores):
 # Charlie: 78
 ```
 
-##### 4.2.1.4.2 Unequal Lengths
+##### 5.2.1.4.2 Unequal Lengths
 
 When the sequences have different lengths, `zip()` stops at the shortest one.
 
@@ -502,7 +502,7 @@ b = ['a', 'b']
 list(zip(a, b))  # [(1, 'a'), (2, 'b')]
 ```
 
-##### 4.2.1.4.3 Filling with `zip_longest`
+##### 5.2.1.4.3 Filling with `zip_longest`
 
 Use `itertools.zip_longest` to keep iterating until the longest sequence is exhausted. Missing values are filled with `None` by default, or with `fillvalue`.
 
@@ -516,7 +516,7 @@ list(zip_longest([1, 2, 3], ['a', 'b'], fillvalue='?'))
 # [(1, 'a'), (2, 'b'), (3, '?')]
 ```
 
-##### 4.2.1.4.4 Transpose with `zip(*matrix)`
+##### 5.2.1.4.4 Transpose with `zip(*matrix)`
 
 Use the unpacking operator `*` with `zip` to transpose rows and columns.
 
@@ -525,7 +525,7 @@ matrix = [[1, 2, 3], [4, 5, 6]]
 cols = list(zip(*matrix))   # [(1, 4), (2, 5), (3, 6)]
 ```
 
-##### 4.2.1.4.5 One-Time Iterator
+##### 5.2.1.4.5 One-Time Iterator
 
 `zip()` returns a one-time iterator. Once exhausted, it cannot be iterated again.
 
@@ -535,7 +535,7 @@ list(z)  # [(1, 'a'), (2, 'b')]
 list(z)  # [] — already exhausted
 ```
 
-#### 4.2.1.5 Dictionary Iteration
+#### 5.2.1.5 Dictionary Iteration
 
 ```python
 data = {"a": 1, "b": 2, "c": 3}
@@ -553,7 +553,7 @@ for key, value in data.items():
     print(f"{key} = {value}")
 ```
 
-#### 4.2.1.6 Modifying a Sequence While Iterating
+#### 5.2.1.6 Modifying a Sequence While Iterating
 
 Do not add or remove items from a sequence while iterating over it. The iterator skips elements because indices shift.
 
@@ -569,7 +569,7 @@ for item in items[:]:
         items.remove(item)
 ```
 
-#### 4.2.1.7 Loop Variable Scope
+#### 5.2.1.7 Loop Variable Scope
 
 The loop variable remains accessible **after** the loop ends, holding the last assigned value. If the loop never executes, the variable is undefined.
 
@@ -583,11 +583,11 @@ for target in ["a", "b", "c"]:
 print(target)   # 'c' — last value remains
 ```
 
-### 4.2.2 `while` Loop
+### 5.2.2 `while` Loop
 
 Repeats a block of code as long as a condition remains `True`.
 
-#### 4.2.2.1 Basic Syntax
+#### 5.2.2.1 Basic Syntax
 
 ```python
 count = 0
@@ -604,7 +604,7 @@ print("Access granted")
 
 **Caution:** Ensure the condition eventually becomes `False`, or the loop runs forever.
 
-#### 4.2.2.2 `while True` + `break` Pattern
+#### 5.2.2.2 `while True` + `break` Pattern
 
 Use `while True` for loops where the exit condition is determined inside the loop body.
 
@@ -624,7 +624,7 @@ while True:
     process(data)
 ```
 
-### 4.2.3 `break` Statement
+### 5.2.3 `break` Statement
 
 Immediately exits the innermost loop.
 
@@ -648,7 +648,7 @@ for i in range(3):
 # Output: (0,0) (0,1) (0,2) (1,0) (2,0) (2,1) (2,2)
 ```
 
-### 4.2.4 `continue` Statement
+### 5.2.4 `continue` Statement
 
 Skips the rest of the current iteration and proceeds to the next.
 
@@ -662,7 +662,7 @@ for i in range(10):
 
 > **Note:** Like `break`, `continue` only affects the **innermost** loop in nested structures.
 
-### 4.2.5 Loop `else` Clause
+### 5.2.5 Loop `else` Clause
 
 The `else` block executes **only if the loop completed normally** (without hitting a `break`).
 
@@ -696,7 +696,7 @@ else:
     print("Too many failed attempts")
 ```
 
-### 4.2.6 `pass` Statement
+### 5.2.6 `pass` Statement
 
 A placeholder that does nothing. Used when a statement is syntactically required but no action is needed.
 
@@ -713,4 +713,4 @@ def my_function():
     pass
 ```
 
-[← Previous: User Interaction](03-user-interaction.md) | [Next: Sequences and Slicing →](05-sequences-and-slicing.md)
+[← Previous: User Interaction](04-user-interaction.md) | [Next: Functions →](06-functions.md)
