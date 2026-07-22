@@ -1003,25 +1003,11 @@ client.close()
 | Network broadcast, mass sending | UDP |
 | Gaming (high real-time) | UDP |
 
-## 2.6 UDP vs TCP API Comparison
-
-| Step | UDP | TCP |
-|------|-----|-----|
-| **Create socket** | `socket.SOCK_DGRAM` | `socket.SOCK_STREAM` |
-| **Server bind** | `server.bind((ip, port))` | `server.bind((ip, port))` |
-| **Server listen** | ❌ Not needed | `server.listen(n)` |
-| **Server accept** | ❌ Not needed | `conn, addr = server.accept()` |
-| **Send** | `socket.sendto(data, (ip, port))` | `socket.send(data)` |
-| **Receive** | `data, addr = socket.recvfrom(n)` | `data = socket.recv(n)` |
-| **Close** | `socket.close()` | `conn.close()` then `server.close()` |
-
-> **Key difference**: UDP `sendto`/`recvfrom` always carry the address; TCP `send`/`recv` don't need it because the connection is already established.
-
-## 2.7 TCP Sticky Packet Problem and Solutions
+## 2.6 TCP Sticky Packet Problem and Solutions
 
 TCP is a **stream-oriented** protocol. Unlike UDP, where each `send` corresponds to one datagram, TCP treats data as a continuous stream of bytes. The operating system uses **send and receive buffers** to manage this stream, which can lead to the **sticky packet** problem.
 
-### 2.7.1 How Sticky Packets Happen
+### 2.6.1 How Sticky Packets Happen
 
 When a client sends multiple small messages in quick succession, TCP may combine them into a single stream segment before sending. On the receiving side, `recv(n)` simply reads up to `n` bytes from the receive buffer, regardless of how many logical messages were sent.
 
@@ -1046,7 +1032,7 @@ This makes it impossible for the receiver to know where one message ends and the
 - **Sender side**: The OS may merge small messages to improve efficiency (Nagle's algorithm).
 - **Receiver side**: The receive buffer may contain multiple messages if the receiver is slower than the sender.
 
-### 2.7.2 Demonstrating the Problem
+### 2.6.2 Demonstrating the Problem
 
 ```python
 # server.py
@@ -1081,7 +1067,7 @@ print(f"Server reply: {msg.decode()}")
 client.close()
 ```
 
-### 2.7.3 Naive Workaround: Delay Between Sends
+### 2.6.3 Naive Workaround: Delay Between Sends
 
 Adding `time.sleep(1)` between sends can reduce the problem because the OS may send the first packet before the next message is written. However, this is **not reliable** and severely hurts performance.
 
@@ -1097,7 +1083,7 @@ client.send("456".encode())
 
 > ⚠️ Do **not** use this in production. It is only a quick demonstration fix.
 
-### 2.7.4 Proper Solution: Length-Prefix Header
+### 2.6.4 Proper Solution: Length-Prefix Header
 
 The standard solution is to send a **fixed-length header** that contains the size of the upcoming message. The receiver first reads the header, then reads exactly that many bytes.
 
@@ -1123,7 +1109,7 @@ print(length_tuple[0])   # 100
 
 > **Format `"i"`**: signed 4-byte integer. This gives a fixed header size of 4 bytes, supporting messages up to roughly 2 GB.
 
-### 2.7.5 Server and Client with Length-Prefix Protocol
+### 2.6.5 Server and Client with Length-Prefix Protocol
 
 ```python
 # server.py
@@ -1189,7 +1175,7 @@ while True:
 client.close()
 ```
 
-### 2.7.6 Reusable Helper Functions
+### 2.6.6 Reusable Helper Functions
 
 For real projects, it is cleaner to wrap the length-prefix logic in reusable functions.
 
@@ -1274,13 +1260,27 @@ while True:
 client.close()
 ```
 
-### 2.7.7 Important Notes
+### 2.6.7 Important Notes
 
 - The receiver should not use `recv(1024)` for arbitrary messages. It should read exactly the announced length, possibly in a loop if the data is large.
 - For production systems, consider using established protocols or libraries (e.g., HTTP, JSON-RPC, gRPC, `asyncio` streams, `struct` with network byte order `!i`).
 - `struct.pack("i", ...)` uses the machine's native byte order by default. For cross-platform communication, use `!i` (network byte order / big-endian).
 
 ---
+
+## 2.7 UDP vs TCP API Comparison
+
+| Step | UDP | TCP |
+|------|-----|-----|
+| **Create socket** | `socket.SOCK_DGRAM` | `socket.SOCK_STREAM` |
+| **Server bind** | `server.bind((ip, port))` | `server.bind((ip, port))` |
+| **Server listen** | ❌ Not needed | `server.listen(n)` |
+| **Server accept** | ❌ Not needed | `conn, addr = server.accept()` |
+| **Send** | `socket.sendto(data, (ip, port))` | `socket.send(data)` |
+| **Receive** | `data, addr = socket.recvfrom(n)` | `data = socket.recv(n)` |
+| **Close** | `socket.close()` | `conn.close()` then `server.close()` |
+
+> **Key difference**: UDP `sendto`/`recvfrom` always carry the address; TCP `send`/`recv` don't need it because the connection is already established.
 
 ## 2.8 Non-Blocking Sockets
 
