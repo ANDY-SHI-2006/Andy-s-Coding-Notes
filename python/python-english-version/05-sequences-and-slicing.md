@@ -100,30 +100,6 @@ fruits[0] = "avocado"   # Modify element
 print(fruits)           # ['avocado', 'banana']
 ```
 
-### 5.2.4 Copying Lists
-
-| Method | Behavior | Use Case |
-|--------|----------|----------|
-| `list.copy()` | Shallow copy | Explicit, readable |
-| `list[:]` | Shallow copy | Idiomatic slice |
-| `copy.deepcopy()` | Deep copy | Nested mutable objects |
-
-```python
-import copy
-
-original = [1, [2, 3]]
-shallow = original.copy()    # or original[:]
-deep = copy.deepcopy(original)
-
-# Shallow: nested object is shared
-shallow[1][0] = 99
-print(original)              # [1, [99, 3]] — affected!
-
-# Deep: fully independent
-deep[1][0] = 77
-print(original)              # [1, [99, 3]] — unaffected
-```
-
 ## 5.3 Tuple Basics
 
 - Ordered, immutable collection
@@ -224,7 +200,45 @@ print(t1 == t2)        # True (same values)
 | Mutable | `list`, `dict`, `set` | Yes | Stays same |
 | Immutable | `int`, `str`, `tuple`, `bool`, `float` | No | Changes (new object) |
 
-## 5.5 Common Sequence Operations
+## 5.5 Shallow Copy vs Deep Copy
+
+Shallow and deep copies apply to any mutable container: lists, dictionaries, sets, and custom objects with mutable attributes. Immutable types (`int`, `str`, `tuple`) do not need copying because they cannot be modified.
+
+| Function | Behavior | Use Case |
+|----------|----------|----------|
+| `copy.copy()` | Shallow copy: new container, but nested objects are shared | Top-level duplication is enough |
+| `copy.deepcopy()` | Deep copy: recursively copies everything | Fully independent copy needed |
+
+```python
+import copy
+
+original = [1, [2, 3]]
+shallow = copy.copy(original)    # or original.copy() / original[:]
+deep = copy.deepcopy(original)
+
+# Shallow: nested object is shared
+shallow[1][0] = 99
+print(original)              # [1, [99, 3]] — affected!
+
+# Deep: fully independent
+deep[1][0] = 77
+print(original)              # [1, [99, 3]] — unaffected
+```
+
+The same idea applies to dictionaries:
+
+```python
+original = {"a": [1, 2], "b": [3, 4]}
+shallow = original.copy()
+deep = copy.deepcopy(original)
+
+shallow["a"][0] = 99
+print(original["a"])         # [99, 2] — affected
+
+# deep["b"][0] = 77 would not affect original
+```
+
+## 5.6 Common Sequence Operations
 
 These operations work on strings, lists, tuples, and ranges.
 
@@ -247,9 +261,9 @@ print(r[2])         # 2
 print(r[1:4])       # range(1, 4)
 ```
 
-## 5.6 String Methods
+## 5.7 String Methods
 
-### 5.6.1 `find()`
+### 5.7.1 `find()`
 
 | Method | Returns | Not Found | Parameters |
 |--------|---------|-----------|------------|
@@ -262,7 +276,7 @@ str1.find("a")           # -1 (not found)
 str1.find("y", 2)        # 5 (start from index 2)
 ```
 
-### 5.6.2 `index()`
+### 5.7.2 `index()`
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -274,7 +288,7 @@ str1.index("y")          # 1
 # str1.index("a")        # ValueError
 ```
 
-### 5.6.3 `count()`
+### 5.7.3 `count()`
 
 | Method | Returns |
 |--------|---------|
@@ -286,7 +300,7 @@ str1.count("y")          # 4
 str1.count("on")         # 3
 ```
 
-### 5.6.4 `lower()` and `upper()`
+### 5.7.4 `lower()` and `upper()`
 
 | Method | Description |
 |--------|-------------|
@@ -298,7 +312,7 @@ str1.count("on")         # 3
 "Hello".upper()          # "HELLO"
 ```
 
-### 5.6.5 `split()`
+### 5.7.5 `split()`
 
 | Method | Description | Default Delimiter |
 |--------|-------------|-------------------|
@@ -310,7 +324,7 @@ str1.count("on")         # 3
 "".split()               # []
 ```
 
-### 5.6.6 `replace()`
+### 5.7.6 `replace()`
 
 | Method | Description | Note |
 |--------|-------------|------|
@@ -321,7 +335,7 @@ str1.count("on")         # 3
 "hello".replace('l', 'x', 1)   # "hexlo" (only first 1)
 ```
 
-### 5.6.7 `join()`
+### 5.7.7 `join()`
 
 | Method | Description |
 |--------|-------------|
@@ -337,7 +351,7 @@ str1.count("on")         # 3
 | String → List | `split()` |
 | List → String | `join()` |
 
-### 5.6.8 `strip()`
+### 5.7.8 `strip()`
 
 | Method | Description |
 |--------|-------------|
@@ -350,9 +364,9 @@ str1.count("on")         # 3
 "###hello###".strip("#")  # "hello"
 ```
 
-## 5.7 Comparison Operations
+## 5.8 Comparison Operations
 
-### 5.7.1 ASCII and Unicode Code Points
+### 5.8.1 ASCII and Unicode Code Points
 
 - `ord(char)`: Returns the Unicode code point (integer) of a character
 - `chr(int)`: Returns the character represented by a code point
@@ -367,12 +381,12 @@ print(chr(65))    # 'A'
 # 'a' (97) - 'A' (65) = 32
 ```
 
-### 5.7.2 Comparing Numbers
+### 5.8.2 Comparing Numbers
 
 - Numbers are compared by their numeric values
 - Integers and floats can be compared directly
 
-### 5.7.3 Comparing Strings
+### 5.8.3 Comparing Strings
 
 String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
 
@@ -405,7 +419,7 @@ Uppercase letters have smaller code points than lowercase letters:
 print(max("Cat", "cat"))  # Output: "cat" ('c' > 'C')
 ```
 
-### 5.7.4 Custom Comparison Rules
+### 5.8.4 Custom Comparison Rules
 
 Use the `key` parameter to specify custom comparison logic:
 
@@ -419,12 +433,12 @@ print(max("Apple", "banana", key=str.lower))
 # Output: "banana" (compare as lowercase: 'b' > 'a')
 ```
 
-### 5.7.5 Mixed Type Limitations
+### 5.8.5 Mixed Type Limitations
 
 - Cannot directly compare strings with numbers
 - `max(1, "a")` raises `TypeError`
 
-### 5.7.6 Key Summary
+### 5.8.6 Key Summary
 
 | Comparison Type | Method | Notes |
 |----------------|--------|-------|
@@ -433,9 +447,9 @@ print(max("Apple", "banana", key=str.lower))
 | Case sensitivity | Uppercase < Lowercase | `'Z'` (90) < `'a'` (97) |
 | Custom rule | Use `key` parameter | `key=len`, `key=str.lower` |
 
-## 5.8 List Operations
+## 5.9 List Operations
 
-### 5.8.1 Add
+### 5.9.1 Add
 
 | Method | Syntax | Description | Notes |
 |--------|--------|-------------|-------|
@@ -463,7 +477,7 @@ names.extend("Bob")       # ['Alice', 'B', 'o', 'b']  ← not ["Alice", "Bob"]!
 names.extend(["Bob"])     # ['Alice', 'Bob']
 ```
 
-### 5.8.2 Delete
+### 5.9.2 Delete
 
 | Method | Syntax | Description | Error if Invalid |
 |--------|--------|-------------|----------------|
@@ -479,7 +493,7 @@ list1.remove("Bob")               # Remove by value
 list1.clear()                     # []
 ```
 
-### 5.8.3 Update
+### 5.9.3 Update
 
 ```python
 list1 = ["Alice", "Bob"]
@@ -487,7 +501,7 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 # list1[100] = "x"                # IndexError: out of range
 ```
 
-### 5.8.4 Query
+### 5.9.4 Query
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -501,7 +515,7 @@ print(list1.count(2))             # 2
 # list1.index(99)                 # ValueError
 ```
 
-## 5.9 Tuple Operations
+## 5.10 Tuple Operations
 
 Tuples are **immutable**, so only query methods are available (no add/delete/update).
 
@@ -517,7 +531,7 @@ print(tuple1.count(11))      # 1
 # tuple1.index(66)           # ValueError: 66 is not in tuple
 ```
 
-## 5.10 List Comprehensions
+## 5.11 List Comprehensions
 
 **Only available for lists** — A flexible and powerful way to create lists concisely.
 
@@ -542,7 +556,7 @@ print(list3)  # [2, 4, 6, 8, 10]
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
 
-## 5.11 `sorted()` vs `.sort()`
+## 5.12 `sorted()` vs `.sort()`
 
 **`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
@@ -576,7 +590,7 @@ sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
 
-## 5.12 Iteration Helpers
+## 5.13 Iteration Helpers
 
 `enumerate()` and `zip()` are commonly used with `for` loops to iterate with indices or over multiple sequences. See [4.2.1 `for` Loop](04-flow-control.md#421-for-loop) for details.
 
