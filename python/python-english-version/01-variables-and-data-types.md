@@ -4,9 +4,7 @@
 
 ## 1.1 How Python Runs
 
-Python code can be executed in two main ways: interactively through a REPL, or by running a script file.
-
-**REPL (Read-Eval-Print Loop):**
+### 1.1.1 REPL
 
 Type `python` in the terminal to enter an interactive session. Each line is executed immediately and the result is printed.
 
@@ -18,7 +16,7 @@ Type `python` in the terminal to enter an interactive session. Each line is exec
 10
 ```
 
-**Script file:**
+### 1.1.2 Running a Script
 
 Save code in a `.py` file and run it with `python script.py`.
 
@@ -27,7 +25,7 @@ Save code in a `.py` file and run it with `python script.py`.
 print("Hello, World!")
 ```
 
-**Source -> Bytecode -> Virtual Machine:**
+### 1.1.3 Compilation and Execution
 
 Python source code is first compiled to bytecode (`.pyc` files), then executed by the Python virtual machine. This compilation happens automatically; you usually do not need to manage it manually.
 
@@ -35,7 +33,7 @@ Python source code is first compiled to bytecode (`.pyc` files), then executed b
 hello.py  --compile-->  __pycache__/hello.cpython-312.pyc  --run-->  Python VM
 ```
 
-**Note:** Python is both interpreted and compiled - the interpreter handles the compilation step for you.
+**Note:** Python is both interpreted and compiled — the interpreter handles the compilation step for you.
 
 
 ## 1.2 Variables and Objects
