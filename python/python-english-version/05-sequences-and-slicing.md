@@ -24,14 +24,35 @@ print(text[-1])  # 'n' (last character)
 
 Extract a substring using `[start:stop:step]`.
 
+#### 5.1.2.1 Basic Slicing
+
+`[start:stop]` extracts elements from `start` up to, but **not including**, `stop`. Omitting `start` defaults to `0`; omitting `stop` defaults to the end.
+
 ```python
 text = "Python"
 print(text[0:4])   # 'Pyth' (stop is exclusive)
 print(text[:4])    # 'Pyth' (start defaults to 0)
 print(text[2:])    # 'thon' (stop defaults to end)
 print(text[:])     # 'Python' (full copy)
+```
+
+#### 5.1.2.2 Step Slicing
+
+`[::step]` skips elements by the given step.
+
+```python
+text = "Python"
 print(text[::2])   # 'Pto' (every 2nd character)
-print(text[::-1])  # 'nohtyP' (reversed)
+print(text[1::2])  # 'yhn' (every 2nd from index 1)
+```
+
+#### 5.1.2.3 Reversing
+
+A negative step iterates backward. `[::-1]` is the common idiom for reversing a sequence.
+
+```python
+text = "Python"
+print(text[::-1])  # 'nohtyP'
 ```
 
 ### 5.1.3 Immutability
