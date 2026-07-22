@@ -4,6 +4,8 @@
 
 ## 1.1 How Python Runs
 
+Python code can be executed in two main ways: interactively through a REPL, or by running a script file. Both ultimately rely on the same compilation and execution pipeline.
+
 ### 1.1.1 REPL (Read-Eval-Print Loop)
 
 Type `python` in the terminal to enter an interactive session. Each line is executed immediately and the result is printed.
