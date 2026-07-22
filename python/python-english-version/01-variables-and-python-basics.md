@@ -92,25 +92,19 @@ x = "hello"     # str (reassigned, no error)
 type(x)         # <class 'str'>
 ```
 
-### 1.3.2 Multiple Assignment
+### 1.3.2 Multiple Assignment and Unpacking
 
-Python allows assigning values to multiple variables in one statement. The right-hand side is evaluated first, then the values are assigned to the names on the left.
-
-```python
-a, b = 1, 2   # a=1, b=2
-```
-
-This pattern covers unpacking, chain assignment, swap, and extended unpacking, which are detailed below.
-
-### 1.3.3 Unpacking
-
-Assigns multiple values to multiple variables in a single statement.
+Python allows assigning values to multiple variables in one statement. The right-hand side is evaluated first, packed into a tuple, and then unpacked into the names on the left.
 
 ```python
-a, b = 1, 2
+a, b = 1, 2          # a=1, b=2
+x, y = [1, 2]        # x=1, y=2 (unpack from list)
+first, second = "ab" # first='a', second='b' (unpack from string)
 ```
 
-### 1.3.4 Chain Assignment
+The same idea works with any iterable, and can be combined with chain assignment, swap, and extended unpacking shown below.
+
+### 1.3.3 Chain Assignment
 
 Binds multiple names to the same object.
 
@@ -118,7 +112,7 @@ Binds multiple names to the same object.
 a = b = 0
 ```
 
-### 1.3.5 Swap
+### 1.3.4 Swap
 
 Exchanges two values without a temporary variable.
 
@@ -126,7 +120,7 @@ Exchanges two values without a temporary variable.
 a, b = b, a
 ```
 
-### 1.3.6 Extended Unpacking
+### 1.3.5 Extended Unpacking
 
 Captures the remainder into a list.
 
