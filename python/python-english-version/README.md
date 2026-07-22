@@ -5,7 +5,7 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 ## Table of Contents
 
 ### Part 1: Python Fundamentals
-1. [Variables and Python Basics](01-variables-and-python-basics.md) — *Variables, Python runtime basics, comments, naming, type annotations*
+1. [Variables and Python Basics](01-variables-and-python-basics.md) — *Variables, Python runtime basics, comments, naming*
 2. [Basic Data Types](02-basic-data-types.md) — *Integer, float, string, boolean, None, type conversion*
 3. [Sequence Types](03-sequence-types.md) — *Strings, lists, tuples, ranges, sequence operations, comprehensions, sorting*
 4. [Mapping and Set Types](04-mapping-and-set-types.md) — *Sets, dictionaries, frozenset, Counter, defaultdict*
@@ -27,6 +27,9 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 14. [Exception Handling](14-exception-handling.md) — *try/except, raise, custom exceptions, assert*
 15. [Modules and Packages](15-modules-and-packages.md) — *import, pip, venv, standard library*
 
+### Appendix
+16. [Type Annotations](16-type-annotations.md) — *Type hints, Union, Optional, dataclass, mypy*
+
 ---
 
 ## Navigation
@@ -39,3 +42,4 @@ Each chapter contains navigation links at the top and bottom for easy browsing b
 - **Chapters 6-9**: Operators, Control Flow, and Functions
 - **Chapters 10-12**: Advanced Functions and File Operations
 - **Chapters 13-15**: OOP, Robustness, and Development Essentials
+- **Appendix**: Type Annotations

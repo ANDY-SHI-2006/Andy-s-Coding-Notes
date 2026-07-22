@@ -1,4 +1,4 @@
-[← Previous: Exception Handling](14-exception-handling.md)
+[← Previous: Exception Handling](14-exception-handling.md) | [Next: Type Annotations →](16-type-annotations.md)
 
 # 12 Modules and Packages
 
@@ -246,4 +246,4 @@ printer.pprint(data)
 
 **When to use:** Any time you need to inspect nested data structures during debugging.
 
-[← Previous: Exception Handling](14-exception-handling.md)
+[← Previous: Exception Handling](14-exception-handling.md) | [Next: Type Annotations →](16-type-annotations.md)
