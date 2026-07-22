@@ -165,7 +165,13 @@ type(x)         # <class 'str'>
 
 ### 1.5.2 Multiple Assignment
 
-Python supports several forms of multiple assignment.
+Python allows assigning values to multiple variables in one statement. The right-hand side is evaluated first, then the values are assigned to the names on the left.
+
+```python
+a, b = 1, 2   # a=1, b=2
+```
+
+This pattern covers unpacking, chain assignment, swap, and extended unpacking, which are detailed below.
 
 ### 1.5.3 Unpacking
 
