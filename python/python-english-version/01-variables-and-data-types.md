@@ -4,7 +4,7 @@
 
 ## 1.1 How Python Runs
 
-### 1.1.1 REPL
+### 1.1.1 REPL (Read-Eval-Print Loop)
 
 Type `python` in the terminal to enter an interactive session. Each line is executed immediately and the result is printed.
 
