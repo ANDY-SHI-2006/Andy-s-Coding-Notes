@@ -286,6 +286,6 @@ bool("hello")   # True
 age = int(input("Enter age: "))
 ```
 
-[Next: Data Types →](02-data-types.md)
+[Next: Data Types →](02-basic-data-types.md)
 
 [← Previous: Variables and Python Basics](01-variables-and-data-types.md) | [Next: Sequence Types →](03-sequence-types.md)

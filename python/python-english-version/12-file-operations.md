@@ -1,4 +1,4 @@
-[← Previous: Closures and Decorators](08-closures-and-decorators.md) | [Next: Object-Oriented Programming →](10-object-oriented-programming.md)
+[← Previous: Closures and Decorators](11-closures-and-decorators.md) | [Next: Object-Oriented Programming →](13-object-oriented-programming.md)
 
 # 9 File Operations
 
@@ -278,4 +278,4 @@ print(stat.st_size)                 # Size
 print(stat.st_mtime)                # Modification time
 ```
 
-[← Previous: Closures and Decorators](08-closures-and-decorators.md) | [Next: Object-Oriented Programming →](10-object-oriented-programming.md)
+[← Previous: Closures and Decorators](11-closures-and-decorators.md) | [Next: Object-Oriented Programming →](13-object-oriented-programming.md)

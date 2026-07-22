@@ -1,4 +1,4 @@
-[← Previous: Operators](03-operators.md) | [Next: Flow Control →](05-flow-control.md)
+[← Previous: Operators](06-operators.md) | [Next: Flow Control →](08-flow-control.md)
 
 # 4 User Interaction
 
@@ -475,4 +475,4 @@ print("Name: %(name)s, Age: %(age)d" % {"name": "Bob", "age": 25})
 | `format()` | `format(x, ".2f")` | Dynamic format strings |
 | `%` operator | `"%s" % name` | Legacy code only (not recommended) |
 
-[← Previous: Operators](03-operators.md) | [Next: Flow Control →](05-flow-control.md)
+[← Previous: Operators](06-operators.md) | [Next: Flow Control →](08-flow-control.md)

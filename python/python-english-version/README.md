@@ -5,24 +5,27 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 ## Table of Contents
 
 ### Part 1: Python Fundamentals
-1. [Variables and Data Types](01-variables-and-data-types.md) — *Variables, Python runtime basics, comments, naming, type annotations, basic types*
-2. [Data Types](02-data-types.md) — *Sequences, sets, dictionaries, mutability, copying*
-3. [Operators](03-operators.md) — *Arithmetic, comparison, logical, assignment, identity, membership*
-4. [User Interaction](04-user-interaction.md) — *print(), input(), f-strings, formatting*
-5. [Flow Control](05-flow-control.md) — *if/else, ternary operator, for, while, break, continue*
+1. [Variables and Python Basics](01-variables-and-data-types.md) — *Variables, Python runtime basics, comments, naming, type annotations*
+2. [Basic Data Types](02-basic-data-types.md) — *Integer, float, string, boolean, None, type conversion*
+3. [Sequence Types](03-sequence-types.md) — *Strings, lists, tuples, ranges, sequence operations, comprehensions, sorting*
+4. [Mapping and Set Types](04-mapping-and-set-types.md) — *Sets, dictionaries, frozenset, Counter, defaultdict*
+5. [Data Types Summary](05-data-types-summary.md) — *Mutable vs immutable, assignment, shallow copy, deep copy*
 
-### Part 2: Functions and Advanced Topics
-6. [Functions](06-functions.md) — *Defining, parameters, *args, **kwargs, scope, docstrings*
-7. [Advanced Functions](07-advanced-functions.md) — *Lambda, map, filter, iterators, generators*
-8. [Closures and Decorators](08-closures-and-decorators.md) — *Nested functions, wrappers, @syntax*
-9. [File Operations](09-file-operations.md) — *Open modes, read/write, JSON, encoding, pathlib*
+### Part 2: Operators, Control Flow, and Functions
+6. [Operators](06-operators.md) — *Arithmetic, comparison, logical, assignment, identity, membership*
+7. [User Interaction](07-user-interaction.md) — *print(), input(), f-strings, formatting*
+8. [Flow Control](08-flow-control.md) — *if/else, ternary operator, for, while, break, continue*
+9. [Functions](09-functions.md) — *Defining, parameters, *args, **kwargs, scope, docstrings*
 
-### Part 3: OOP & Robustness
-10. [Object-Oriented Programming](10-object-oriented-programming.md) — *Classes, inheritance, encapsulation, magic methods*
-11. [Exception Handling](11-exception-handling.md) — *try/except, raise, custom exceptions, assert*
+### Part 3: Advanced Functions and File Operations
+10. [Advanced Functions](10-advanced-functions.md) — *Lambda, map, filter, iterators, generators*
+11. [Closures and Decorators](11-closures-and-decorators.md) — *Nested functions, wrappers, @syntax*
+12. [File Operations](12-file-operations.md) — *Open modes, read/write, JSON, encoding, pathlib*
 
-### Part 4: Development Essentials
-12. [Modules and Packages](12-modules-and-packages.md) — *import, pip, venv, standard library*
+### Part 4: OOP, Robustness, and Development Essentials
+13. [Object-Oriented Programming](13-object-oriented-programming.md) — *Classes, inheritance, encapsulation, magic methods*
+14. [Exception Handling](14-exception-handling.md) — *try/except, raise, custom exceptions, assert*
+15. [Modules and Packages](15-modules-and-packages.md) — *import, pip, venv, standard library*
 
 ---
 
@@ -33,6 +36,6 @@ Each chapter contains navigation links at the top and bottom for easy browsing b
 ## Course Structure
 
 - **Chapters 1-5**: Python Fundamentals
-- **Chapters 6-9**: Functions and Advanced Topics
-- **Chapters 10-11**: OOP & Robustness
-- **Chapter 12**: Development Essentials
+- **Chapters 6-9**: Operators, Control Flow, and Functions
+- **Chapters 10-12**: Advanced Functions and File Operations
+- **Chapters 13-15**: OOP, Robustness, and Development Essentials

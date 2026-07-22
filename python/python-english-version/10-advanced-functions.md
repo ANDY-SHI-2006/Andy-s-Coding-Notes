@@ -1,4 +1,4 @@
-[← Previous: Functions](06-functions.md) | [Next: Closures and Decorators →](08-closures-and-decorators.md)
+[← Previous: Functions](09-functions.md) | [Next: Closures and Decorators →](11-closures-and-decorators.md)
 
 # 7 Advanced Functions
 
@@ -118,7 +118,7 @@ products = ["iPhone_8000", "Mi_4000", "Huawei_10000"]
 sorted(products, key=lambda x: int(x.split("_")[1]))  # ['Mi_4000', 'iPhone_8000', 'Huawei_10000']
 ```
 
-**Note:** For basic sorting syntax and comparison with `.sort()`, see [2.11 `sorted()` vs `.sort()`](02-data-types.md#211-sorted-vs-sort).
+**Note:** For basic sorting syntax and comparison with `.sort()`, see [2.11 `sorted()` vs `.sort()`](03-sequence-types.md#311-sorted-vs-sort).
 
 ### 7.2.5 `any()` and `all()`
 
@@ -380,4 +380,4 @@ def main_generator():
 list(main_generator())   # ['start', 1, 2, 'end']
 ```
 
-[← Previous: Functions](06-functions.md) | [Next: Closures and Decorators →](08-closures-and-decorators.md)
+[← Previous: Functions](09-functions.md) | [Next: Closures and Decorators →](11-closures-and-decorators.md)

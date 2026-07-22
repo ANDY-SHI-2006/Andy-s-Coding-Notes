@@ -1,4 +1,4 @@
-[← Previous: File Operations](09-file-operations.md) | [Next: Exception Handling →](11-exception-handling.md)
+[← Previous: File Operations](12-file-operations.md) | [Next: Exception Handling →](14-exception-handling.md)
 
 # 10 Object-Oriented Programming
 
@@ -552,4 +552,4 @@ p = Point(1, 2)
 
 **Trade-off:** `__slots__` removes `__dict__`, saving memory but preventing dynamic attribute assignment.
 
-[← Previous: File Operations](09-file-operations.md) | [Next: Exception Handling →](11-exception-handling.md)
+[← Previous: File Operations](12-file-operations.md) | [Next: Exception Handling →](14-exception-handling.md)

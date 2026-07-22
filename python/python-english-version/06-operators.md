@@ -1,4 +1,4 @@
-[← Previous: Data Types](02-data-types.md) | [Next: User Interaction →](04-user-interaction.md)
+[← Previous: Data Types](02-basic-data-types.md) | [Next: User Interaction →](07-user-interaction.md)
 
 # 3 Operators
 
@@ -376,7 +376,7 @@ else:
 
 Define custom behavior for operators on user-defined classes using special (magic) methods.
 
-> **Note:** This section uses classes and `self`, which are covered in [Chapter 10: Object-Oriented Programming](10-object-oriented-programming.md). Return here after reading that chapter for deeper understanding.
+> **Note:** This section uses classes and `self`, which are covered in [Chapter 10: Object-Oriented Programming](13-object-oriented-programming.md). Return here after reading that chapter for deeper understanding.
 
 | Operator | Magic Method | Example Trigger |
 |----------|--------------|-----------------|
@@ -414,4 +414,4 @@ v2 = Vector(3, 4)
 print(v1 + v2)   # Vector(4, 6)
 ```
 
-[← Previous: Data Types](02-data-types.md) | [Next: User Interaction →](04-user-interaction.md)
+[← Previous: Data Types](02-basic-data-types.md) | [Next: User Interaction →](07-user-interaction.md)

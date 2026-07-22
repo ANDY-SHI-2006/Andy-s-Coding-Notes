@@ -1,4 +1,4 @@
-[← Previous: User Interaction](04-user-interaction.md) | [Next: Functions →](06-functions.md)
+[← Previous: User Interaction](07-user-interaction.md) | [Next: Functions →](09-functions.md)
 
 # 5 Flow Control
 
@@ -65,7 +65,7 @@ timeout = user_config or 30        # 30 if user_config is None/0/""
 name = input("Name: ") or "Guest"  # "Guest" if user presses Enter
 ```
 
-> See also: [4.2.3](04-user-interaction.md#423-default-value-for-empty-input) for `input()` with `or`.
+> See also: [4.2.3](07-user-interaction.md#423-default-value-for-empty-input) for `input()` with `or`.
 
 ### 5.1.2 Ternary Operator
 
@@ -713,4 +713,4 @@ def my_function():
     pass
 ```
 
-[← Previous: User Interaction](04-user-interaction.md) | [Next: Functions →](06-functions.md)
+[← Previous: User Interaction](07-user-interaction.md) | [Next: Functions →](09-functions.md)

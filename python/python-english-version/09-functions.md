@@ -1,4 +1,4 @@
-[← Previous: Flow Control](05-flow-control.md) | [Next: Advanced Functions →](07-advanced-functions.md)
+[← Previous: Flow Control](08-flow-control.md) | [Next: Advanced Functions →](10-advanced-functions.md)
 
 # 6 Functions
 
@@ -369,4 +369,4 @@ triple = multiplier(3)      # Returns inner function
 triple(10)                  # 30
 ```
 
-[← Previous: Flow Control](05-flow-control.md) | [Next: Advanced Functions →](07-advanced-functions.md)
+[← Previous: Flow Control](08-flow-control.md) | [Next: Advanced Functions →](10-advanced-functions.md)

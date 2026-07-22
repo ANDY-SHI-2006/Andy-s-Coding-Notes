@@ -1,4 +1,4 @@
-[← Previous: Advanced Functions](07-advanced-functions.md) | [Next: File Operations →](09-file-operations.md)
+[← Previous: Advanced Functions](10-advanced-functions.md) | [Next: File Operations →](12-file-operations.md)
 
 # 8 Closures and Decorators
 
@@ -361,4 +361,4 @@ greet("Alice", greeting="Hi")
 
 **Real-world tip:** In production, replace `print()` with a proper logging framework like Python's `logging` module.
 
-[← Previous: Advanced Functions](07-advanced-functions.md) | [Next: File Operations →](09-file-operations.md)
+[← Previous: Advanced Functions](10-advanced-functions.md) | [Next: File Operations →](12-file-operations.md)

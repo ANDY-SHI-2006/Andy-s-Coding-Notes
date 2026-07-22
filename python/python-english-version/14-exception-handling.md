@@ -1,4 +1,4 @@
-[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Modules and Packages →](12-modules-and-packages.md)
+[← Previous: Object-Oriented Programming](13-object-oriented-programming.md) | [Next: Modules and Packages →](15-modules-and-packages.md)
 
 # 11 Exception Handling
 
@@ -326,4 +326,4 @@ warnings.warn("This feature is deprecated", DeprecationWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 ```
 
-[← Previous: Object-Oriented Programming](10-object-oriented-programming.md) | [Next: Modules and Packages →](12-modules-and-packages.md)
+[← Previous: Object-Oriented Programming](13-object-oriented-programming.md) | [Next: Modules and Packages →](15-modules-and-packages.md)
