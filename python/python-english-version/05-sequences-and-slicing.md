@@ -164,12 +164,12 @@ first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
 
 ### 5.4.1 Definition
 
-**Mutable Types:** Lists, Dictionaries, Sets
+**Mutable Types:** Lists, Dictionaries, Sets, Bytearrays, and custom objects with mutable attributes
 
 - Can be modified after creation
 - Internal values change, but **memory address remains the same**
 
-**Immutable Types:** Integers, Strings, Tuples, Booleans, Floats
+**Immutable Types:** Integers, Strings, Tuples, Booleans, Floats, Frozensets, Bytes, Complex numbers, and `None`
 
 - Cannot be modified after creation
 - Attempting to modify actually creates a **new object** with a different memory address
@@ -218,10 +218,10 @@ print(t1 is t2)         # Not guaranteed; often False for larger values
 
 ### 5.4.4 Summary
 
-| Type | Examples | Can Modify? | Memory Address |
-|------|----------|-------------|----------------|
-| Mutable | `list`, `dict`, `set` | Yes | Stays same |
-| Immutable | `int`, `str`, `tuple`, `bool`, `float` | No | Changes (new object) |
+| Type      | Examples                                                                        | Can Modify? | Memory Address       |
+| --------- | ------------------------------------------------------------------------------- | ----------- | -------------------- |
+| Mutable   | `list`, `dict`, `set`, `bytearray`, custom objects                              | Yes         | Stays same           |
+| Immutable | `int`, `str`, `tuple`, `bool`, `float`, `frozenset`, `bytes`, `complex`, `None` | No          | Changes (new object) |
 
 ## 5.5 Shallow Copy vs Deep Copy
 
