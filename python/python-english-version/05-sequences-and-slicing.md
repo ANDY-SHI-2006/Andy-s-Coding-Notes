@@ -162,6 +162,8 @@ first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
 
 ## 5.4 Mutable and Immutable Types
 
+### 5.4.1 Definition
+
 **Mutable Types:** Lists, Dictionaries, Sets
 
 - Can be modified after creation
@@ -172,45 +174,49 @@ first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
 - Cannot be modified after creation
 - Attempting to modify actually creates a **new object** with a different memory address
 
+### 5.4.2 Examples
+
 ```python
-# Mutable Example: List
+# Mutable: list, dict, set
 list1 = [1, 2, 3]
-print(id(list1))      # e.g., 140234567890
-list1.append(4)       # Modify the list
-print(list1)          # [1, 2, 3, 4]
-print(id(list1))      # Same address: 140234567890
-list1[1] = 666        # Modify element at index 1
-print(list1)          # [1, 666, 3, 4]
-print(id(list1))      # Still same address
+print(id(list1))
+list1.append(4)
+print(id(list1))      # Same address
 
-# Immutable Examples
+dict1 = {"a": 1}
+dict1["b"] = 2        # Same dict object, just updated
+
+# Immutable: tuple, string, int
 tuple1 = (1, 2, 3)
-# tuple1[1] = 666     # TypeError: tuples are immutable
+# tuple1[0] = 10      # TypeError
 
-str1 = 'abc'
-# str1[1] = 'd'       # TypeError: strings are immutable
+str1 = "hello"
+# str1[0] = "H"       # TypeError
 
-a = 10
-print(id(a))          # e.g., 140234567800
-a = 30                # Creates a NEW integer object
-print(id(a))          # Different address: 140234567900
+a = 1000
+print(id(a))
+a = 2000              # Reassignment creates a new integer object
+print(id(a))          # Different address
 ```
 
-**Identity vs Equality Comparison:**
+### 5.4.3 Identity vs Equality
 
 ```python
-# Lists (mutable) - different objects with same values
+# Lists with same values are different objects
 list1 = [1, 2, 3]
 list2 = [1, 2, 3]
-print(list1 is list2)  # False (different memory addresses)
-print(list1 == list2)  # True (same values)
+print(list1 is list2)   # False (different memory addresses)
+print(list1 == list2)   # True (same values)
 
-# Tuples (immutable) - may be interned (same object)
-t1 = (1, 2)
-t2 = (1, 2)
-print(t1 is t2)        # True (same memory address - interned)
-print(t1 == t2)        # True (same values)
+# Tuples with same values are equal, but may or may not be the same object
+# This depends on the Python implementation; do not rely on it.
+t1 = (1, 2, 1000)
+t2 = (1, 2, 1000)
+print(t1 == t2)         # True (same values)
+print(t1 is t2)         # Not guaranteed; often False for larger values
 ```
+
+### 5.4.4 Summary
 
 | Type | Examples | Can Modify? | Memory Address |
 |------|----------|-------------|----------------|
