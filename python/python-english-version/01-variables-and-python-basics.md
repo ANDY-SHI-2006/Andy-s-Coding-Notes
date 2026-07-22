@@ -394,3 +394,5 @@ print(typing.get_type_hints(add))
 - ✅ Complex data structures
 - ❌ Don't over-annotate trivial cases like `i: int = 0` where the type is obvious
 
+[Next: Basic Data Types →](02-basic-data-types.md)
+
