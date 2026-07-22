@@ -146,18 +146,66 @@ a, b = b, a   # a=2, b=1
 first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
 ```
 
-## 5.4 `range` as a Sequence
+## 5.4 Mutable and Immutable Types
 
-`range` produces a sequence of numbers efficiently without storing them all in memory.
+**Mutable Types:** Lists, Dictionaries, Sets
+
+- Can be modified after creation
+- Internal values change, but **memory address remains the same**
+
+**Immutable Types:** Integers, Strings, Tuples, Booleans, Floats
+
+- Cannot be modified after creation
+- Attempting to modify actually creates a **new object** with a different memory address
 
 ```python
-r = range(5)
-print(list(r))      # [0, 1, 2, 3, 4]
-print(r[2])         # 2
-print(r[1:4])       # range(1, 4)
+# Mutable Example: List
+list1 = [1, 2, 3]
+print(id(list1))      # e.g., 140234567890
+list1.append(4)       # Modify the list
+print(list1)          # [1, 2, 3, 4]
+print(id(list1))      # Same address: 140234567890
+list1[1] = 666        # Modify element at index 1
+print(list1)          # [1, 666, 3, 4]
+print(id(list1))      # Still same address
+
+# Immutable Examples
+tuple1 = (1, 2, 3)
+# tuple1[1] = 666     # TypeError: tuples are immutable
+
+str1 = 'abc'
+# str1[1] = 'd'       # TypeError: strings are immutable
+
+a = 10
+print(id(a))          # e.g., 140234567800
+a = 30                # Creates a NEW integer object
+print(id(a))          # Different address: 140234567900
 ```
 
+**Identity vs Equality Comparison:**
+
+```python
+# Lists (mutable) - different objects with same values
+list1 = [1, 2, 3]
+list2 = [1, 2, 3]
+print(list1 is list2)  # False (different memory addresses)
+print(list1 == list2)  # True (same values)
+
+# Tuples (immutable) - may be interned (same object)
+t1 = (1, 2)
+t2 = (1, 2)
+print(t1 is t2)        # True (same memory address - interned)
+print(t1 == t2)        # True (same values)
+```
+
+| Type | Examples | Can Modify? | Memory Address |
+|------|----------|-------------|----------------|
+| Mutable | `list`, `dict`, `set` | Yes | Stays same |
+| Immutable | `int`, `str`, `tuple`, `bool`, `float` | No | Changes (new object) |
+
 ## 5.5 Common Sequence Operations
+
+These operations work on strings, lists, tuples, and ranges.
 
 | Operation | Description | Example |
 |-----------|-------------|---------|
@@ -168,6 +216,15 @@ print(r[1:4])       # range(1, 4)
 | `min(s)` / `max(s)` | Smallest / largest | `max([1, 5, 3])` → `5` |
 | `s.index(x)` | First index of x | `[1,2,3].index(2)` → `1` |
 | `s.count(x)` | Count occurrences | `"banana".count("a")` → `3` |
+
+`range` produces a sequence of numbers efficiently without storing them all in memory.
+
+```python
+r = range(5)
+print(list(r))      # [0, 1, 2, 3, 4]
+print(r[2])         # 2
+print(r[1:4])       # range(1, 4)
+```
 
 ## 5.6 String Methods
 
@@ -272,9 +329,92 @@ str1.count("on")         # 3
 "###hello###".strip("#")  # "hello"
 ```
 
-## 5.7 List Operations
+## 5.7 Comparison Operations
 
-### 5.7.1 Add
+### 5.7.1 ASCII and Unicode Code Points
+
+- `ord(char)`: Returns the Unicode code point (integer) of a character
+- `chr(int)`: Returns the character represented by a code point
+
+```python
+print(ord('a'))   # 97
+print(ord('A'))   # 65 (uppercase letters come first)
+print(chr(98))    # 'b'
+print(chr(65))    # 'A'
+
+# Useful for case conversion math
+# 'a' (97) - 'A' (65) = 32
+```
+
+### 5.7.2 Comparing Numbers
+
+- Numbers are compared by their numeric values
+- Integers and floats can be compared directly
+
+### 5.7.3 Comparing Strings
+
+String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
+
+#### Single Character Comparison
+
+Compare characters by their Unicode code point values:
+
+```python
+print(max('a', 'A', 'z'))  # Output: 'z' (Unicode code point 122)
+print(ord('a'))            # 97 (Unicode code point)
+print(ord('A'))            # 65 (Unicode code point)
+```
+
+#### Multi-character Comparison
+
+Compare character by character from left to right until a difference is found:
+
+```python
+print(max("apple", "banana"))  # Output: "banana"
+
+# Comparison process:
+#   'a' vs 'b' → 'b' > 'a' → immediately returns "banana"
+```
+
+#### Case Sensitivity
+
+Uppercase letters have smaller code points than lowercase letters:
+
+```python
+print(max("Cat", "cat"))  # Output: "cat" ('c' > 'C')
+```
+
+### 5.7.4 Custom Comparison Rules
+
+Use the `key` parameter to specify custom comparison logic:
+
+```python
+# Compare by string length
+print(max(["Python", "C++", "Java"], key=len))
+# Output: "Python" (length 6)
+
+# Case-insensitive comparison
+print(max("Apple", "banana", key=str.lower))
+# Output: "banana" (compare as lowercase: 'b' > 'a')
+```
+
+### 5.7.5 Mixed Type Limitations
+
+- Cannot directly compare strings with numbers
+- `max(1, "a")` raises `TypeError`
+
+### 5.7.6 Key Summary
+
+| Comparison Type | Method | Notes |
+|----------------|--------|-------|
+| Single char | Unicode code point | `'a'` (97) > `'A'` (65) |
+| Multi-char | Left-to-right, first difference wins | `"banana"` > `"apple"` |
+| Case sensitivity | Uppercase < Lowercase | `'Z'` (90) < `'a'` (97) |
+| Custom rule | Use `key` parameter | `key=len`, `key=str.lower` |
+
+## 5.8 List Operations
+
+### 5.8.1 Add
 
 | Method | Syntax | Description | Notes |
 |--------|--------|-------------|-------|
@@ -302,7 +442,7 @@ names.extend("Bob")       # ['Alice', 'B', 'o', 'b']  ← not ["Alice", "Bob"]!
 names.extend(["Bob"])     # ['Alice', 'Bob']
 ```
 
-### 5.7.2 Delete
+### 5.8.2 Delete
 
 | Method | Syntax | Description | Error if Invalid |
 |--------|--------|-------------|----------------|
@@ -318,7 +458,7 @@ list1.remove("Bob")               # Remove by value
 list1.clear()                     # []
 ```
 
-### 5.7.3 Update
+### 5.8.3 Update
 
 ```python
 list1 = ["Alice", "Bob"]
@@ -326,7 +466,7 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 # list1[100] = "x"                # IndexError: out of range
 ```
 
-### 5.7.4 Query
+### 5.8.4 Query
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -340,7 +480,7 @@ print(list1.count(2))             # 2
 # list1.index(99)                 # ValueError
 ```
 
-## 5.8 Tuple Operations
+## 5.9 Tuple Operations
 
 Tuples are **immutable**, so only query methods are available (no add/delete/update).
 
@@ -356,7 +496,7 @@ print(tuple1.count(11))      # 1
 # tuple1.index(66)           # ValueError: 66 is not in tuple
 ```
 
-## 5.9 List Comprehensions
+## 5.10 List Comprehensions
 
 **Only available for lists** — A flexible and powerful way to create lists concisely.
 
@@ -381,7 +521,7 @@ print(list3)  # [2, 4, 6, 8, 10]
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
 
-## 5.10 `sorted()` vs `.sort()`
+## 5.11 `sorted()` vs `.sort()`
 
 **`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
@@ -415,166 +555,8 @@ sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
 
-## 5.11 Mutable and Immutable Types
-
-**Mutable Types:** Lists, Dictionaries, Sets
-
-- Can be modified after creation
-- Internal values change, but **memory address remains the same**
-
-**Immutable Types:** Integers, Strings, Tuples, Booleans, Floats
-
-- Cannot be modified after creation
-- Attempting to modify actually creates a **new object** with a different memory address
-
-```python
-# Mutable Example: List
-list1 = [1, 2, 3]
-print(id(list1))      # e.g., 140234567890
-list1.append(4)       # Modify the list
-print(list1)          # [1, 2, 3, 4]
-print(id(list1))      # Same address: 140234567890
-list1[1] = 666        # Modify element at index 1
-print(list1)          # [1, 666, 3, 4]
-print(id(list1))      # Still same address
-
-# Immutable Examples
-tuple1 = (1, 2, 3)
-# tuple1[1] = 666     # TypeError: tuples are immutable
-
-str1 = 'abc'
-# str1[1] = 'd'       # TypeError: strings are immutable
-
-a = 10
-print(id(a))          # e.g., 140234567800
-a = 30                # Creates a NEW integer object
-print(id(a))          # Different address: 140234567900
-```
-
-**Identity vs Equality Comparison:**
-
-```python
-# Lists (mutable) - different objects with same values
-list1 = [1, 2, 3]
-list2 = [1, 2, 3]
-print(list1 is list2)  # False (different memory addresses)
-print(list1 == list2)  # True (same values)
-
-# Tuples (immutable) - may be interned (same object)
-t1 = (1, 2)
-t2 = (1, 2)
-print(t1 is t2)        # True (same memory address - interned)
-print(t1 == t2)        # True (same values)
-```
-
-| Type | Examples | Can Modify? | Memory Address |
-|------|----------|-------------|----------------|
-| Mutable | `list`, `dict`, `set` | Yes | Stays same |
-| Immutable | `int`, `str`, `tuple`, `bool`, `float` | No | Changes (new object) |
-
-### 5.11.1 Shallow Copy vs Deep Copy
-
-`copy.copy()` creates a shallow copy (new container, but references to nested objects are shared). `copy.deepcopy()` creates a fully independent copy.
-
-```python
-import copy
-
-original = [[1, 2], [3, 4]]
-
-shallow = copy.copy(original)
-shallow[0][0] = 99
-print(original)  # [[99, 2], [3, 4]] — nested object shared!
-
-deep = copy.deepcopy(original)
-deep[0][0] = 100
-print(original)  # [[99, 2], [3, 4]] — original unchanged
-```
-
 ## 5.12 Iteration Helpers
 
 `enumerate()` and `zip()` are commonly used with `for` loops to iterate with indices or over multiple sequences. See [4.2.1 `for` Loop](04-flow-control.md#421-for-loop) for details.
-
-## 5.13 Comparison Operations
-
-### 5.13.1 ASCII and Unicode Code Points
-
-- `ord(char)`: Returns the Unicode code point (integer) of a character
-- `chr(int)`: Returns the character represented by a code point
-
-```python
-print(ord('a'))   # 97
-print(ord('A'))   # 65 (uppercase letters come first)
-print(chr(98))    # 'b'
-print(chr(65))    # 'A'
-
-# Useful for case conversion math
-# 'a' (97) - 'A' (65) = 32
-```
-
-### 5.13.2 Comparing Numbers
-
-- Numbers are compared by their numeric values
-- Integers and floats can be compared directly
-
-### 5.13.3 Comparing Strings
-
-String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
-
-#### Single Character Comparison
-
-Compare characters by their Unicode code point values:
-
-```python
-print(max('a', 'A', 'z'))  # Output: 'z' (Unicode code point 122)
-print(ord('a'))            # 97 (Unicode code point)
-print(ord('A'))            # 65 (Unicode code point)
-```
-
-#### Multi-character Comparison
-
-Compare character by character from left to right until a difference is found:
-
-```python
-print(max("apple", "banana"))  # Output: "banana"
-
-# Comparison process:
-#   'a' vs 'b' → 'b' > 'a' → immediately returns "banana"
-```
-
-#### Case Sensitivity
-
-Uppercase letters have smaller code points than lowercase letters:
-
-```python
-print(max("Cat", "cat"))  # Output: "cat" ('c' > 'C')
-```
-
-### 5.13.4 Custom Comparison Rules
-
-Use the `key` parameter to specify custom comparison logic:
-
-```python
-# Compare by string length
-print(max(["Python", "C++", "Java"], key=len))
-# Output: "Python" (length 6)
-
-# Case-insensitive comparison
-print(max("Apple", "banana", key=str.lower))
-# Output: "banana" (compare as lowercase: 'b' > 'a')
-```
-
-### 5.13.5 Mixed Type Limitations
-
-- Cannot directly compare strings with numbers
-- `max(1, "a")` raises `TypeError`
-
-### 5.13.6 Key Summary
-
-| Comparison Type | Method | Notes |
-|----------------|--------|-------|
-| Single char | Unicode code point | `'a'` (97) > `'A'` (65) |
-| Multi-char | Left-to-right, first difference wins | `"banana"` > `"apple"` |
-| Case sensitivity | Uppercase < Lowercase | `'Z'` (90) < `'a'` (97) |
-| Custom rule | Use `key` parameter | `key=len`, `key=str.lower` |
 
 [← Previous: Flow Control](04-flow-control.md) | [Next: Dictionaries and Sets →](06-dictionaries-and-sets.md)
