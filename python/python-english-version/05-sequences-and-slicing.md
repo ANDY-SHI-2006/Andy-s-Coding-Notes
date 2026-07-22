@@ -119,6 +119,15 @@ print(point[0])  # 3
 # point[0] = 10  # TypeError
 ```
 
+**⚠️ Trap:** A tuple is immutable only at the top level. If it contains a mutable object like a list, that nested object can still be changed.
+
+```python
+t = (1, [2, 3])
+# t[0] = 10        # TypeError: tuple item assignment not allowed
+t[1].append(4)     # But the list inside can be modified
+print(t)           # (1, [2, 3, 4])
+```
+
 ### 5.3.1 Tuple Unpacking
 
 Unpack tuples directly in `for` loops and assignments.
@@ -389,6 +398,14 @@ print(new_list)    # [-1, 0, 3, 11, 25, 99]  (ascending, default)
 # Descending order with reverse parameter
 new_list1 = sorted(list1, reverse=True)   # [99, 25, 11, 3, 0, -1]
 new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
+```
+
+Use the `key` parameter to define custom sort order. `key` receives each element and returns a value used for comparison.
+
+```python
+words = ["banana", "Apple", "cherry"]
+sorted(words, key=str.lower)   # ['Apple', 'banana', 'cherry'] (case-insensitive)
+sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 ```
 
 | Feature       | `sorted()`   | `.sort()`                  |
