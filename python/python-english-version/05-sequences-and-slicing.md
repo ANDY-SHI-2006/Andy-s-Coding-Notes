@@ -225,27 +225,37 @@ print(t1 is t2)         # Not guaranteed; often False for larger values
 
 ## 5.5 Shallow Copy vs Deep Copy
 
-Shallow and deep copies apply to any mutable container: lists, dictionaries, sets, and custom objects with mutable attributes. Immutable types (`int`, `str`, `tuple`) do not need copying because they cannot be modified.
+Shallow and deep copies apply to any mutable container: lists, dictionaries, sets, bytearrays, and custom objects with mutable attributes. Immutable types (`int`, `str`, `tuple`, `frozenset`, `bytes`) do not need copying because they cannot be modified.
 
-| Function | Behavior | Use Case |
-|----------|----------|----------|
-| `copy.copy()` | Shallow copy: new container, but nested objects are shared | Top-level duplication is enough |
-| `copy.deepcopy()` | Deep copy: recursively copies everything | Fully independent copy needed |
+### 5.5.1 Assignment vs Shallow Copy vs Deep Copy
+
+| Operation | What Happens | Nested Objects |
+|-----------|--------------|----------------|
+| `b = a` | Creates a new reference to the **same** object | Shared |
+| `b = copy.copy(a)` | Creates a **new container** | Shared |
+| `b = copy.deepcopy(a)` | Creates a **new container** and recursively copies everything | Independent |
+
+### 5.5.2 Examples
 
 ```python
 import copy
 
 original = [1, [2, 3]]
-shallow = copy.copy(original)    # or original.copy() / original[:]
+
+# Assignment: just another name for the same object
+ref = original
+ref[0] = 99
+print(original)              # [99, [2, 3]] — affected
+
+# Shallow copy: new list, but nested list is shared
+shallow = copy.copy(original)
+shallow[1][0] = 88
+print(original)              # [99, [88, 3]] — nested object affected
+
+# Deep copy: completely independent
 deep = copy.deepcopy(original)
-
-# Shallow: nested object is shared
-shallow[1][0] = 99
-print(original)              # [1, [99, 3]] — affected!
-
-# Deep: fully independent
 deep[1][0] = 77
-print(original)              # [1, [99, 3]] — unaffected
+print(original)              # [99, [88, 3]] — unaffected
 ```
 
 The same idea applies to dictionaries:
@@ -259,6 +269,16 @@ shallow["a"][0] = 99
 print(original["a"])         # [99, 2] — affected
 
 # deep["b"][0] = 77 would not affect original
+```
+
+Sets also have a `.copy()` method, which performs a shallow copy:
+
+```python
+s1 = {1, 2, 3}
+s2 = s1.copy()
+s2.add(4)
+print(s1)  # {1, 2, 3}
+print(s2)  # {1, 2, 3, 4}
 ```
 
 ## 5.6 Common Sequence Operations
