@@ -105,18 +105,27 @@ print(fruits)           # ['avocado', 'banana']
 - Ordered, immutable collection
 - Faster and safer than lists for fixed data
 
+### 5.3.1 Creating Tuples
+
 ```python
 point = (3, 4)
 single = (5,)  # Trailing comma required for single element
-
-# Indexing works like lists
-print(point[0])  # 3
-
-# Tuples are immutable
-# point[0] = 10  # TypeError
 ```
 
-**⚠️ Trap:** A tuple is immutable only at the top level. If it contains a mutable object like a list, that nested object can still be changed.
+### 5.3.2 Indexing and Immutability
+
+Indexing works like lists, but tuples cannot be modified after creation.
+
+```python
+point = (3, 4)
+print(point[0])  # 3
+
+# point[0] = 10  # TypeError: tuples are immutable
+```
+
+### 5.3.3 Mutable Element Trap
+
+A tuple is immutable only at the top level. If it contains a mutable object like a list, that nested object can still be changed.
 
 ```python
 t = (1, [2, 3])
@@ -125,7 +134,7 @@ t[1].append(4)     # But the list inside can be modified
 print(t)           # (1, [2, 3, 4])
 ```
 
-### 5.3.1 Tuple Unpacking
+### 5.3.4 Tuple Unpacking
 
 Unpack tuples directly in `for` loops and assignments.
 
