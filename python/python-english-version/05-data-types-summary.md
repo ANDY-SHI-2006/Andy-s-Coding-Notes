@@ -124,6 +124,4 @@ print(s1)  # {1, 2, 3}
 print(s2)  # {1, 2, 3, 4}
 ```
 
-[← Previous: Variables and Python Basics](01-variables-and-data-types.md) | [Next: Operators →](06-operators.md)
-
 [← Previous: Mapping and Set Types](04-mapping-and-set-types.md) | [Next: Operators →](06-operators.md)

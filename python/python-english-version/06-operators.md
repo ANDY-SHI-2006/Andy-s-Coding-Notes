@@ -1,4 +1,4 @@
-[← Previous: Data Types](02-basic-data-types.md) | [Next: User Interaction →](07-user-interaction.md)
+[← Previous: Data Types Summary](05-data-types-summary.md) | [Next: User Interaction →](07-user-interaction.md)
 
 # 3 Operators
 
@@ -414,4 +414,4 @@ v2 = Vector(3, 4)
 print(v1 + v2)   # Vector(4, 6)
 ```
 
-[← Previous: Data Types](02-basic-data-types.md) | [Next: User Interaction →](07-user-interaction.md)
+[← Previous: Data Types Summary](05-data-types-summary.md) | [Next: User Interaction →](07-user-interaction.md)
