@@ -138,17 +138,25 @@ print(t)           # (1, [2, 3, 4])
 
 Unpack tuples directly in `for` loops and assignments.
 
+#### 5.3.4.1 Unpacking in `for` Loops
+
 ```python
 pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
 
 for num, letter in pairs:
     print(f"{num}: {letter}")
+```
 
-# Swapping via unpacking
+#### 5.3.4.2 Swapping Values
+
+```python
 a, b = 1, 2
 a, b = b, a   # a=2, b=1
+```
 
-# Extended unpacking
+#### 5.3.4.3 Extended Unpacking
+
+```python
 first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
 ```
 
