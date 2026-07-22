@@ -490,43 +490,9 @@ deep[0][0] = 100
 print(original)  # [[99, 2], [3, 4]] — original unchanged
 ```
 
-## 5.12 `enumerate()` and `zip()`
+## 5.12 Iteration Helpers
 
-### 5.12.1 `enumerate()`
-
-Get both index and value while iterating.
-
-```python
-fruits = ["apple", "banana", "cherry"]
-
-# Without enumerate
-for i in range(len(fruits)):
-    print(i, fruits[i])
-
-# With enumerate
-for i, fruit in enumerate(fruits):
-    print(i, fruit)
-
-# Start from 1
-for i, fruit in enumerate(fruits, start=1):
-    print(i, fruit)
-```
-
-### 5.12.2 `zip()`
-
-Combine multiple iterables element-wise.
-
-```python
-names = ["Alice", "Bob", "Charlie"]
-scores = [85, 90, 78]
-
-for name, score in zip(names, scores):
-    print(f"{name}: {score}")
-
-# zip creates pairs
-print(list(zip(names, scores)))
-# [('Alice', 85), ('Bob', 90), ('Charlie', 78)]
-```
+`enumerate()` and `zip()` are commonly used with `for` loops to iterate with indices or over multiple sequences. See [4.2.1 `for` Loop](04-flow-control.md#421-for-loop) for details.
 
 ## 5.13 Comparison Operations
 
