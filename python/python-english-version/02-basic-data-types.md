@@ -1,4 +1,4 @@
-[← Previous: Variables and Python Basics](01-variables-and-data-types.md) | [Next: Sequence Types →](03-sequence-types.md)
+[← Previous: Variables and Python Basics](01-variables-and-python-basics.md) | [Next: Sequence Types →](03-sequence-types.md)
 
 # 2 Basic Data Types
 
@@ -286,4 +286,4 @@ bool("hello")   # True
 age = int(input("Enter age: "))
 ```
 
-[← Previous: Variables and Python Basics](01-variables-and-data-types.md) | [Next: Sequence Types →](03-sequence-types.md)
+[← Previous: Variables and Python Basics](01-variables-and-python-basics.md) | [Next: Sequence Types →](03-sequence-types.md)
