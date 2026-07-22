@@ -223,7 +223,7 @@ print(t1 is t2)         # Not guaranteed; often False for larger values
 | Mutable   | `list`, `dict`, `set`, `bytearray`, custom objects                              | Yes         | Stays same           |
 | Immutable | `int`, `str`, `tuple`, `bool`, `float`, `frozenset`, `bytes`, `complex`, `None` | No          | Changes (new object) |
 
-## 5.5 Shallow Copy vs Deep Copy
+## 5.5 Assignment, Shallow Copy, and Deep Copy
 
 Shallow and deep copies apply to any mutable container: lists, dictionaries, sets, bytearrays, and custom objects with mutable attributes. Immutable types (`int`, `str`, `tuple`, `frozenset`, `bytes`) do not need copying because they cannot be modified.
 
