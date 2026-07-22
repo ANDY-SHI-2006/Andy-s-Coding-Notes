@@ -124,4 +124,75 @@ print(s1)  # {1, 2, 3}
 print(s2)  # {1, 2, 3, 4}
 ```
 
+## 5.3 Memory Interning Basics
+
+Python sometimes reuses the same immutable object for small, commonly used values. This is called **interning**.
+
+### 5.3.1 Small Integer Cache
+
+Integers between -5 and 256 are cached at startup. Variables with the same value in this range usually refer to the same object.
+
+```python
+a = 100
+b = 100
+print(a is b)   # True (cached)
+
+x = 1000
+y = 1000
+print(x is y)   # False (not guaranteed; may be True in some REPLs)
+```
+
+### 5.3.2 String Interning
+
+Some strings are automatically interned, especially those that look like identifiers.
+
+```python
+a = "hello"
+b = "hello"
+print(a is b)   # often True
+
+x = "hello world"
+y = "hello world"
+print(x is y)   # usually False (not interned)
+```
+
+**Important:** Do not rely on `is` for value comparison. Use `==`.
+
+## 5.4 Garbage Collection Intro
+
+Python manages memory automatically using **reference counting** and a **cyclic garbage collector**.
+
+### 5.4.1 Reference Counting
+
+Every object keeps track of how many names or containers refer to it. When the count drops to zero, the memory is freed.
+
+```python
+x = [1, 2, 3]
+y = x       # reference count increases
+x = None    # one reference removed
+y = None    # reference count drops to 0; list is freed
+```
+
+### 5.4.2 `del` and References
+
+```python
+x = [1, 2, 3]
+del x       # Removes the name x, not the object itself
+```
+
+### 5.4.3 Cyclic References
+
+If two objects reference each other, their reference counts never reach zero. Python's cyclic GC periodically detects and cleans these up.
+
+```python
+a = []
+b = []
+a.append(b)
+b.append(a)
+
+# Without cyclic GC, a and b would never be freed.
+```
+
+**Note:** You rarely need to interact with the garbage collector directly. Just be aware that objects stay alive as long as something references them.
+
 [← Previous: Mapping and Set Types](04-mapping-and-set-types.md) | [Next: Operators →](06-operators.md)
