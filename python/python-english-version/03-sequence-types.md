@@ -436,16 +436,28 @@ print(t)           # (1, [2, 3, 4])
 
 Tuples are **immutable**, so only query methods are available (no add/delete/update).
 
+#### 3.3.2.1 `index()`
+
 | Method | Returns | Not Found |
 |--------|---------|-----------|
-| `index(x)` | Index of first match | ValueError |
-| `count(x)` | Count of occurrences | 0 |
+| `index(x)` | Index of first match | `ValueError` |
 
 ```python
 tuple1 = (11, 2, 34, 56, -100, 100)
 print(tuple1.index(11))      # 0
-print(tuple1.count(11))      # 1
 # tuple1.index(66)           # ValueError: 66 is not in tuple
+```
+
+#### 3.3.2.2 `count()`
+
+| Method | Returns |
+|--------|---------|
+| `count(x)` | Count of occurrences |
+
+```python
+tuple1 = (11, 2, 34, 56, -100, 100)
+print(tuple1.count(11))      # 1
+print(tuple1.count(99))      # 0
 ```
 
 ## 3.4 `range` as a Sequence
