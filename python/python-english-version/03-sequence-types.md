@@ -67,18 +67,13 @@ s = "H" + s[1:]  # Create a new string
 
 ### 3.1.2 String Methods
 
-| Method | Syntax | Description | Notes | Return |
-|--------|--------|-------------|-------|--------|
-| `find()` | `s.find(sub[, start[, end]])` | First index of substring | Returns `-1` if not found | `int` |
-| `index()` | `s.index(sub[, start[, end]])` | First index of substring | Raises `ValueError` if not found | `int` |
-| `count()` | `s.count(sub[, start[, end]])` | Count occurrences | Returns `0` if not found | `int` |
-| `lower()` / `upper()` | `s.lower()`, `s.upper()` | Case conversion | Returns a new string | `str` |
-| `split()` | `s.split(sep=None)` | Split into list | Default splits on whitespace | `list` |
-| `replace()` | `s.replace(old, new[, count])` | Replace substring | `count=-1` replaces all | `str` |
-| `join()` | `sep.join(iterable)` | Join iterable into string | Opposite of `split()` | `str` |
-| `strip()` | `s.strip([chars])` | Remove leading/trailing whitespace | Also `lstrip()` / `rstrip()` | `str` |
+Python strings come with a rich set of methods for searching, transforming, and manipulating text.
 
-#### 3.1.2.1 `find()`
+#### 3.1.2.1 Search & Count
+
+These methods locate or count substrings.
+
+##### 3.1.2.1.1 `find()`
 
 | Method | Returns | Not Found | Parameters |
 |--------|---------|-----------|------------|
@@ -91,7 +86,7 @@ str1.find("a")           # -1 (not found)
 str1.find("y", 2)        # 5 (start from index 2)
 ```
 
-#### 3.1.2.2 `index()`
+##### 3.1.2.1.2 `index()`
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
@@ -103,7 +98,7 @@ str1.index("y")          # 1
 # str1.index("a")        # ValueError
 ```
 
-#### 3.1.2.3 `count()`
+##### 3.1.2.1.3 `count()`
 
 | Method | Returns |
 |--------|---------|
@@ -115,7 +110,9 @@ str1.count("y")          # 4
 str1.count("on")         # 3
 ```
 
-#### 3.1.2.4 `lower()` and `upper()`
+#### 3.1.2.2 Case Conversion
+
+##### 3.1.2.2.1 `lower()` and `upper()`
 
 | Method | Description |
 |--------|-------------|
@@ -127,7 +124,11 @@ str1.count("on")         # 3
 "Hello".upper()          # "HELLO"
 ```
 
-#### 3.1.2.5 `split()`
+#### 3.1.2.3 Split & Join
+
+Convert between strings and lists.
+
+##### 3.1.2.3.1 `split()`
 
 | Method | Description | Default Delimiter |
 |--------|-------------|-------------------|
@@ -139,18 +140,7 @@ str1.count("on")         # 3
 "".split()               # []
 ```
 
-#### 3.1.2.6 `replace()`
-
-| Method | Description | Note |
-|--------|-------------|------|
-| `replace(old, new, count)` | Replace substring | Returns **new** string |
-
-```python
-"hello".replace('l', 'x')      # "hexxo"
-"hello".replace('l', 'x', 1)   # "hexlo" (only first 1)
-```
-
-#### 3.1.2.7 `join()`
+##### 3.1.2.3.2 `join()`
 
 | Method | Description |
 |--------|-------------|
@@ -166,7 +156,22 @@ str1.count("on")         # 3
 | String → List | `split()` |
 | List → String | `join()` |
 
-#### 3.1.2.8 `strip()`
+#### 3.1.2.4 Replace
+
+##### 3.1.2.4.1 `replace()`
+
+| Method | Description | Note |
+|--------|-------------|------|
+| `replace(old, new, count)` | Replace substring | Returns **new** string |
+
+```python
+"hello".replace('l', 'x')      # "hexxo"
+"hello".replace('l', 'x', 1)   # "hexlo" (only first 1)
+```
+
+#### 3.1.2.5 Trim
+
+##### 3.1.2.5.1 `strip()`
 
 | Method | Description |
 |--------|-------------|
