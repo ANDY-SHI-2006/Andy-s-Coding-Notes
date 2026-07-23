@@ -461,9 +461,9 @@ print(tuple1.count(99))      # 0
 
 ## 3.4 `range` as a Sequence
 
-`range` produces a sequence of numbers efficiently without storing them all in memory. It is **lazy** — values are generated on demand.
+### 3.4.1 Creating a `range`
 
-**Syntax:**
+`range` has three forms:
 
 - `range(stop)`: from `0` up to (but not including) `stop`
 - `range(start, stop)`: from `start` up to (but not including) `stop`
@@ -475,6 +475,17 @@ print(list(range(1, 5)))       # [1, 2, 3, 4]
 print(list(range(0, 10, 2)))   # [0, 2, 4, 6, 8]
 print(list(range(5, 0, -1)))   # [5, 4, 3, 2, 1]
 ```
+
+### 3.4.2 Lazy Evaluation & Memory
+
+`range` produces a sequence of numbers efficiently without storing them all in memory. It is **lazy** — values are generated on demand.
+
+```python
+r = range(1_000_000_000)  # Does not allocate a billion integers
+print(10 in r)            # True (checked without building the whole range)
+```
+
+### 3.4.3 Indexing, Slicing, and Membership
 
 Because `range` is a sequence, it supports indexing, slicing, membership tests, and `len()`:
 
