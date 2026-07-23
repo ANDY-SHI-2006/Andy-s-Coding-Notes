@@ -183,6 +183,8 @@ s = "hello"
 s = "H" + s[1:]   # Creates a new string: 'Hello'
 ```
 
+For more details on strings (indexing, slicing, methods, and comparison), see [3.1 String](03-sequence-types.md#31-string).
+
 
 ## 2.4 Boolean Type
 
