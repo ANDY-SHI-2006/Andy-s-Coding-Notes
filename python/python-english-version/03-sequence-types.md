@@ -134,11 +134,9 @@ t[1].append(4)     # But the list inside can be modified
 print(t)           # (1, [2, 3, 4])
 ```
 
-### 3.3.4 Tuple Unpacking
+### 3.3.4 Tuple Unpacking in Loops
 
-Unpack tuples directly in `for` loops and assignments.
-
-#### 3.3.4.1 Unpacking in `for` Loops
+Tuples are often unpacked directly in `for` loops when iterating over a sequence of pairs.
 
 ```python
 pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
@@ -146,20 +144,6 @@ pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
 for num, letter in pairs:
     print(f"{num}: {letter}")
 ```
-
-#### 3.3.4.2 Swapping Values
-
-```python
-a, b = 1, 2
-a, b = b, a   # a=2, b=1
-```
-
-#### 3.3.4.3 Extended Unpacking
-
-```python
-first, *rest = (1, 2, 3, 4)   # first=1, rest=[2, 3, 4]
-```
-
 
 ## 3.4 `range` as a Sequence
 
