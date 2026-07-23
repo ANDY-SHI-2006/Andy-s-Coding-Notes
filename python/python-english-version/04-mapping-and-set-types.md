@@ -14,31 +14,47 @@ A set is an unordered, mutable collection of unique elements.
 | **Mutability** | Can add/remove elements |
 | **Unordered** | No index access; elements have no fixed position |
 
+#### 4.1.1.1 Creating a Set
+
 ```python
-# Create set
-set1 = {1, 2, 3, 4, 1, 2, 3, 4}  # {1, 2, 3, 4} - duplicates removed
+set1 = {1, 2, 3, 4, 1, 2, 3, 4}
+print(set1)  # {1, 2, 3, 4} - duplicates removed
+```
 
-# Empty set (note: {} creates dict, not set)
-set2 = set()  # Correct way
+#### 4.1.1.2 Empty Set Trap
 
-# Set comprehension
-set3 = {i for i in range(1, 11)}  # {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+`{}` creates a dictionary, not a set. Use `set()` for an empty set.
 
-# Common use: remove duplicates from list
+```python
+empty_dict = {}       # dict
+empty_set = set()     # set
+```
+
+#### 4.1.1.3 Set Comprehension
+
+```python
+set3 = {i for i in range(1, 11)}
+print(set3)  # {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+```
+
+#### 4.1.1.4 Removing Duplicates from a List
+
+```python
 list1 = [1, 2, 3, 4, 1, 2, 3, 4]
-unique_list = list(set(list1))  # [1, 2, 3, 4]
+unique_list = list(set(list1))
+print(unique_list)  # [1, 2, 3, 4]
 ```
 
 ### 4.1.2 Set Operations
 
 #### 4.1.2.1 Set Operators
 
-| Operator | Meaning | Example |
-|----------|---------|---------|
-| `&` | Intersection (common elements) | `{1,2,3} & {2,3,4}` → `{2, 3}` |
-| `\|` | Union (all elements) | `{1,2,3} \| {2,3,4}` → `{1, 2, 3, 4}` |
-| `-` | Difference (in A but not B) | `{1,2,3} - {2,3,4}` → `{1}` |
-| `^` | Symmetric difference (in either set, not both) | `{1,2,3} ^ {2,3,4}` → `{1, 4}` |
+| Operator | Meaning                                        | Example                               |
+| -------- | ---------------------------------------------- | ------------------------------------- |
+| `&`      | Intersection (common elements)                 | `{1,2,3} & {2,3,4}` → `{2, 3}`        |
+| `\|`     | Union (all elements)                           | `{1,2,3} \| {2,3,4}` → `{1, 2, 3, 4}` |
+| `-`      | Difference (in A but not B)                    | `{1,2,3} - {2,3,4}` → `{1}`           |
+| `^`      | Symmetric difference (in either set, not both) | `{1,2,3} ^ {2,3,4}` → `{1, 4}`        |
 
 ```python
 a = {1, 2, 3}
