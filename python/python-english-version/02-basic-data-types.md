@@ -114,6 +114,25 @@ from decimal import Decimal
 Decimal('0.1') + Decimal('0.2') == Decimal('0.3')  # True
 ```
 
+### 2.2.4 Converting Between `float` and `int`
+
+`int()` truncates a float toward zero (not rounds). `float()` converts an integer to a float by adding `.0`.
+
+```python
+print(int(3.14))    # 3
+print(int(-3.14))   # -3 (truncates toward zero)
+print(int(3.99))    # 3
+
+print(float(5))     # 5.0
+print(float(0))     # 0.0
+```
+
+**Note:** To round to the nearest integer instead of truncating, use `round()`.
+
+```python
+print(round(3.6))   # 4
+print(round(2.5))   # 2 (banker's rounding)
+```
 
 ## 2.3 String Type
 
