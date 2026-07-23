@@ -475,7 +475,11 @@ print(4 in r)     # True
 print(len(r))     # 5
 ```
 
-## 3.5 Common Sequence Operations
+## 3.5 Working with Sequences
+
+These operations apply to strings, lists, tuples, and ranges in consistent ways.
+
+### 3.5.1 Common Sequence Operations
 
 These operations work on strings, lists, tuples, and most also on ranges.
 
@@ -500,9 +504,9 @@ print(r[1:4])      # range(2, 8, 2)
 # range * 2        # TypeError
 ```
 
-## 3.6 `sorted()` vs `.sort()`
+### 3.5.2 Sorting
 
-### 3.6.1 Built-in Function vs List Method
+#### 3.5.2.1 Built-in Function vs List Method
 
 **`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
@@ -528,7 +532,7 @@ new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
 
-### 3.6.2 Custom Comparison with `key`
+#### 3.5.2.2 Custom Comparison with `key`
 
 Use the `key` parameter to specify custom comparison logic. `key` receives each element and returns a value used for comparison.
 
@@ -546,9 +550,9 @@ sorted(words, key=str.lower)   # ['Apple', 'banana', 'cherry'] (case-insensitive
 sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 ```
 
-## 3.7 Sequence Unpacking
+### 3.5.3 Sequence Unpacking
 
-### 3.7.1 Unpacking from Iterables
+#### 3.5.3.1 Unpacking from Iterables
 
 The same syntax works with any iterable.
 
@@ -557,7 +561,7 @@ x, y = [1, 2]        # x=1, y=2
 first, second = "ab" # first='a', second='b'
 ```
 
-### 3.7.2 Mismatch Trap
+#### 3.5.3.2 Mismatch Trap
 
 The number of variables on the left must match the number of values on the right, unless you use `*` to capture the rest.
 
@@ -565,7 +569,7 @@ The number of variables on the left must match the number of values on the right
 # a, b = [1, 2, 3]  # ValueError: too many values to unpack
 ```
 
-### 3.7.3 Extended Unpacking
+#### 3.5.3.3 Extended Unpacking
 
 Use `*` to capture the remaining values into a list. The `*` can appear in any position.
 
@@ -575,7 +579,7 @@ first, *middle, last = [1, 2, 3, 4]         # first=1, middle=[2, 3], last=4
 *a, b = [1, 2, 3, 4]                        # a=[1, 2, 3], b=4
 ```
 
-### 3.7.4 Unpacking in `for` Loops
+#### 3.5.3.4 Unpacking in `for` Loops
 
 Unpacking works naturally in `for` loops when iterating over a sequence of tuples or lists.
 
