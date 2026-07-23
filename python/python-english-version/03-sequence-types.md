@@ -65,8 +65,6 @@ s = "hello"
 s = "H" + s[1:]  # Create a new string
 ```
 
-
-
 ### 3.1.2 String Methods
 
 #### 3.1.2.1 `find()`
@@ -170,8 +168,6 @@ str1.count("on")         # 3
 "###hello###".strip("#")  # "hello"
 ```
 
-
-
 ## 3.2 List
 
 ### 3.2.1 List Basics
@@ -208,8 +204,6 @@ fruits = ["apple", "banana"]
 fruits[0] = "avocado"   # Modify element
 print(fruits)           # ['avocado', 'banana']
 ```
-
-
 
 ### 3.2.2 List Operations
 
@@ -279,8 +273,6 @@ print(list1.count(2))             # 2
 # list1.index(99)                 # ValueError
 ```
 
-
-
 ### 3.2.3 List Comprehensions
 
 **Only available for lists** — A flexible and powerful way to create lists concisely.
@@ -305,8 +297,6 @@ print(list3)  # [2, 4, 6, 8, 10]
 - Wrap the entire expression in square brackets `[]`
 - Can include `if` conditions to filter items
 - More concise and often faster than using a traditional `for` loop
-
-
 
 ## 3.3 Tuple
 
@@ -344,7 +334,6 @@ t[1].append(4)     # But the list inside can be modified
 print(t)           # (1, [2, 3, 4])
 ```
 
-
 ### 3.3.2 Tuple Operations
 
 Tuples are **immutable**, so only query methods are available (no add/delete/update).
@@ -360,8 +349,6 @@ print(tuple1.index(11))      # 0
 print(tuple1.count(11))      # 1
 # tuple1.index(66)           # ValueError: 66 is not in tuple
 ```
-
-
 
 ## 3.4 `range` as a Sequence
 
@@ -390,8 +377,6 @@ print(4 in r)     # True
 print(len(r))     # 5
 ```
 
-
-
 ## 3.5 Common Sequence Operations
 
 These operations work on strings, lists, tuples, and ranges.
@@ -405,8 +390,6 @@ These operations work on strings, lists, tuples, and ranges.
 | `min(s)` / `max(s)` | Smallest / largest | `max([1, 5, 3])` → `5` |
 | `s.index(x)` | First index of x | `[1,2,3].index(2)` → `1` |
 | `s.count(x)` | Count occurrences | `"banana".count("a")` → `3` |
-
-
 
 ## 3.6 Comparison Operations
 
@@ -490,8 +473,6 @@ print(max("Apple", "banana", key=str.lower))
 | Case sensitivity | Uppercase < Lowercase | `'Z'` (90) < `'a'` (97) |
 | Custom rule | Use `key` parameter | `key=len`, `key=str.lower` |
 
-
-
 ## 3.7 `sorted()` vs `.sort()`
 
 **`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
@@ -525,7 +506,6 @@ sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 | Original list | Unchanged    | Modified in-place          |
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
-
 
 ## 3.8 Sequence Unpacking
 
