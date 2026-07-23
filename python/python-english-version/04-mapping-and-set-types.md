@@ -49,12 +49,12 @@ print(unique_list)  # [1, 2, 3, 4]
 
 #### 4.1.2.1 Set Operators
 
-| Operator | Meaning                                        | Example                           |
-| -------- | ---------------------------------------------- | --------------------------------- |
-| `&`      | Intersection (common elements)                 | {1,2,3} & {2,3,4} → {2, 3}        |
-| \|       | Union (all elements)                           | {1,2,3} \| {2,3,4} → {1, 2, 3, 4} |
-| `-`      | Difference (in A but not B)                    | {1,2,3} - {2,3,4} → {1}           |
-| `^`      | Symmetric difference (in either set, not both) | {1,2,3} ^ {2,3,4} → {1, 4}        |
+| Operator | Meaning                                        | Example                               |
+| -------- | ---------------------------------------------- | ------------------------------------- |
+| `&`      | Intersection (common elements)                 | `{1,2,3} & {2,3,4} → {2, 3}`          |
+| \|       | Union (all elements)                           | `{1,2,3}` \| `{2,3,4} → {1, 2, 3, 4}` |
+| `-`      | Difference (in A but not B)                    | `{1,2,3} - {2,3,4} → {1}`             |
+| `^`      | Symmetric difference (in either set, not both) | `{1,2,3} ^ {2,3,4} → {1, 4}`          |
 
 ```python
 a = {1, 2, 3}
@@ -190,22 +190,37 @@ registry = {frozenset({"a", "b"}): "group A"}
 
 A dictionary is a mutable mapping of key-value pairs. Keys must be unique and hashable (typically immutable types like strings, numbers, or tuples).
 
+#### 4.2.1.1 Creating a Dictionary
+
 ```python
-# Create a dict
 student = {"name": "Alice", "age": 20}
+print(student)  # {'name': 'Alice', 'age': 20}
+```
 
-# Empty dict
-empty = {}
-empty = dict()
+#### 4.2.1.2 Empty Dictionary
 
-# From keyword arguments
+```python
+empty = {}        # dict
+empty = dict()    # dict
+```
+
+#### 4.2.1.3 Creating from Keyword Arguments
+
+```python
 settings = dict(theme="dark", font_size=14)
+print(settings)  # {'theme': 'dark', 'font_size': 14}
+```
 
-# From two lists using zip()
+#### 4.2.1.4 Creating from Iterables
+
+Use `zip()` to pair two iterables into key-value pairs.
+
+```python
 names = ["Alice", "Bob", "Charlie"]
 scores = [85, 90, 78]
+
 gradebook = dict(zip(names, scores))
-# {'Alice': 85, 'Bob': 90, 'Charlie': 78}
+print(gradebook)  # {'Alice': 85, 'Bob': 90, 'Charlie': 78}
 ```
 
 ### 4.2.2 Dictionary Operations
