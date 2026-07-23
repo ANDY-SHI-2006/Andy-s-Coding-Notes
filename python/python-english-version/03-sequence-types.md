@@ -266,13 +266,14 @@ print(fruits)           # ['avocado', 'banana']
 
 ### 3.2.2 List Operations
 
-#### 3.2.2.1 Add
+#### 3.2.2.1 Add & Update
 
 | Method | Syntax | Description | Notes |
 |--------|--------|-------------|-------|
 | `append()` | `list.append(x)` | Add single element to end | - |
 | `insert()` | `list.insert(i, x)` | Insert at specific index | Index out of range → adds to end (robust) |
 | `extend()` | `list.extend(iter)` | Merge another iterable | Works with str, list, tuple |
+| Update by index | `list[i] = x` | Replace existing element | Index must be valid |
 
 ##### 3.2.2.1.1 `append()`
 
@@ -309,6 +310,14 @@ names.extend("Bob")   # ['Alice', 'B', 'o', 'b']  ← not ["Alice", "Bob"]!
 names.extend(["Bob"])  # ['Alice', 'Bob']
 ```
 
+##### 3.2.2.1.4 Update by Index
+
+```python
+list1 = ["Alice", "Bob"]
+list1[0] = "Charlie"   # ['Charlie', 'Bob']
+# list1[100] = "x"     # IndexError: out of range
+```
+
 #### 3.2.2.2 Delete
 
 | Method | Syntax | Description | Error if Invalid |
@@ -339,24 +348,14 @@ list1 = ["Alice", "Bob", "Charlie"]
 list1.clear()  # []
 ```
 
-#### 3.2.2.3 Update
-
-##### 3.2.2.3.1 Update by Index
-
-```python
-list1 = ["Alice", "Bob"]
-list1[0] = "Charlie"   # ['Charlie', 'Bob']
-# list1[100] = "x"     # IndexError: out of range
-```
-
-#### 3.2.2.4 Query
+#### 3.2.2.3 Query
 
 | Method | Returns | Not Found |
 |--------|---------|-----------|
 | `index(x)` | Index of first match | ValueError |
 | `count(x)` | Count of occurrences | 0 |
 
-##### 3.2.2.4.1 `index()`
+##### 3.2.2.3.1 `index()`
 
 ```python
 list1 = [1, 2, 3, 2]
@@ -364,7 +363,7 @@ print(list1.index(2))  # 1 (first occurrence)
 # list1.index(99)      # ValueError
 ```
 
-##### 3.2.2.4.2 `count()`
+##### 3.2.2.3.2 `count()`
 
 ```python
 list1 = [1, 2, 3, 2]
