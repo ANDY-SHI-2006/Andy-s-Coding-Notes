@@ -49,12 +49,12 @@ print(unique_list)  # [1, 2, 3, 4]
 
 #### 4.1.2.1 Set Operators
 
-| Operator | Meaning | Example |
-|----------|---------|---------|
-| `&` | Intersection (common elements) | {1,2,3} & {2,3,4} → {2, 3} |
-| \| | Union (all elements) | {1,2,3} \| {2,3,4} → {1, 2, 3, 4} |
-| `-` | Difference (in A but not B) | {1,2,3} - {2,3,4} → {1} |
-| `^` | Symmetric difference (in either set, not both) | {1,2,3} ^ {2,3,4} → {1, 4} |
+| Operator | Meaning                                        | Example                           |
+| -------- | ---------------------------------------------- | --------------------------------- |
+| `&`      | Intersection (common elements)                 | {1,2,3} & {2,3,4} → {2, 3}        |
+| \|       | Union (all elements)                           | {1,2,3} \| {2,3,4} → {1, 2, 3, 4} |
+| `-`      | Difference (in A but not B)                    | {1,2,3} - {2,3,4} → {1}           |
+| `^`      | Symmetric difference (in either set, not both) | {1,2,3} ^ {2,3,4} → {1, 4}        |
 
 ```python
 a = {1, 2, 3}
@@ -68,11 +68,11 @@ print(a ^ b)   # {1, 4}
 
 #### 4.1.2.2 Subset, Superset, and Disjoint
 
-| Method | Operator | Description | Example |
-|--------|----------|-------------|---------|
-| `a.issubset(b)` | `a <= b` | All elements of `a` are in `b` | `{1,2}.issubset({1,2,3})` → `True` |
+| Method            | Operator | Description                    | Example                              |
+| ----------------- | -------- | ------------------------------ | ------------------------------------ |
+| `a.issubset(b)`   | `a <= b` | All elements of `a` are in `b` | `{1,2}.issubset({1,2,3})` → `True`   |
 | `a.issuperset(b)` | `a >= b` | All elements of `b` are in `a` | `{1,2,3}.issuperset({1,2})` → `True` |
-| `a.isdisjoint(b)` | - | No common elements | `{1,2}.isdisjoint({3,4})` → `True` |
+| `a.isdisjoint(b)` | -        | No common elements             | `{1,2}.isdisjoint({3,4})` → `True`   |
 
 ```python
 a = {1, 2, 3}
@@ -406,8 +406,8 @@ gradebook = {name: score for name, score in zip(names, scores)}
 
 | Operator | Description | In-place |
 |----------|-------------|----------|
-| `\|` | Union: returns new dict | No |
-| `\|=` | Update: modifies left dict | Yes |
+| \| | Union: returns new dict | No |
+| \|= | Update: modifies left dict | Yes |
 
 ```python
 a = {"x": 1, "y": 2}
