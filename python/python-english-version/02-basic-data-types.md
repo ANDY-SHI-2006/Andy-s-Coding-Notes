@@ -286,4 +286,22 @@ bool("hello")   # True
 age = int(input("Enter age: "))
 ```
 
+
+## 2.7 Comparing Numbers
+
+### 2.7.1 Numeric Comparison
+
+Numbers are compared by their numeric values. Integers and floats can be compared directly.
+
+```python
+print(3 < 5.5)   # True
+print(2 == 2.0)  # True
+```
+
+### 2.7.2 Mixed Type Limitations
+
+- Cannot directly compare numbers with strings
+- `max(1, "a")` raises `TypeError`
+
+
 [← Previous: Variables and Python Basics](01-variables-and-python-basics.md) | [Next: Sequence Types →](03-sequence-types.md)

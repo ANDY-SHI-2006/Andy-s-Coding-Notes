@@ -184,6 +184,49 @@ Convert between strings and lists.
 "###hello###".strip("#")  # "hello"
 ```
 
+### 3.1.3 String Comparison
+
+String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
+
+#### 3.1.3.1 Code Points with `ord()` and `chr()`
+
+- `ord(char)`: returns the Unicode code point of a character
+- `chr(int)`: returns the character represented by a code point
+
+```python
+print(ord('a'))   # 97
+print(ord('A'))   # 65 (uppercase letters come first)
+print(chr(98))    # 'b'
+print(chr(65))    # 'A'
+```
+
+#### 3.1.3.2 Single Character Comparison
+
+Compare characters by their Unicode code point values:
+
+```python
+print(max('a', 'A', 'z'))  # 'z' (code point 122)
+```
+
+#### 3.1.3.3 Multi-character Comparison
+
+Compare character by character from left to right until a difference is found:
+
+```python
+print(max("apple", "banana"))  # "banana"
+
+# Comparison process:
+#   'a' vs 'b' → 'b' > 'a' → immediately returns "banana"
+```
+
+#### 3.1.3.4 Case Sensitivity
+
+Uppercase letters have smaller code points than lowercase letters:
+
+```python
+print(max("Cat", "cat"))  # "cat" ('c' > 'C')
+```
+
 ## 3.2 List
 
 ### 3.2.1 List Basics
@@ -457,89 +500,9 @@ print(r[1:4])      # range(2, 8, 2)
 # range * 2        # TypeError
 ```
 
-## 3.6 Comparison Operations
+## 3.6 `sorted()` vs `.sort()`
 
-### 3.6.1 Comparing Numbers
-
-Numbers are compared by their numeric values. Integers and floats can be compared directly.
-
-```python
-print(3 < 5.5)   # True
-print(2 == 2.0)  # True
-```
-
-### 3.6.2 Comparing Strings
-
-String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
-
-#### 3.6.2.1 Code Points with `ord()` and `chr()`
-
-- `ord(char)`: returns the Unicode code point of a character
-- `chr(int)`: returns the character represented by a code point
-
-```python
-print(ord('a'))   # 97
-print(ord('A'))   # 65 (uppercase letters come first)
-print(chr(98))    # 'b'
-print(chr(65))    # 'A'
-```
-
-#### 3.6.2.2 Single Character Comparison
-
-Compare characters by their Unicode code point values:
-
-```python
-print(max('a', 'A', 'z'))  # 'z' (code point 122)
-```
-
-#### 3.6.2.3 Multi-character Comparison
-
-Compare character by character from left to right until a difference is found:
-
-```python
-print(max("apple", "banana"))  # "banana"
-
-# Comparison process:
-#   'a' vs 'b' → 'b' > 'a' → immediately returns "banana"
-```
-
-#### 3.6.2.4 Case Sensitivity
-
-Uppercase letters have smaller code points than lowercase letters:
-
-```python
-print(max("Cat", "cat"))  # "cat" ('c' > 'C')
-```
-
-### 3.6.3 Custom Comparison Rules
-
-Use the `key` parameter to specify custom comparison logic:
-
-```python
-# Compare by string length
-print(max(["Python", "C++", "Java"], key=len))
-# Output: "Python" (length 6)
-
-# Case-insensitive comparison
-print(max("Apple", "banana", key=str.lower))
-# Output: "banana" (compare as lowercase: 'b' > 'a')
-```
-
-### 3.6.4 Mixed Type Limitations
-
-- Cannot directly compare strings with numbers
-- `max(1, "a")` raises `TypeError`
-
-### 3.6.5 Summary
-
-| Comparison Type | Method | Notes |
-|----------------|--------|-------|
-| Single char | Unicode code point | `'a'` (97) > `'A'` (65) |
-| Multi-char | Left-to-right, first difference wins | `"banana" > "apple"` |
-| Case sensitivity | Uppercase < Lowercase | `'Z'` (90) < `'a'` (97) |
-| Custom rule | Use `key` parameter | `key=len`, `key=str.lower` |
-
-## 3.7 `sorted()` vs `.sort()`
+### 3.6.1 Built-in Function vs List Method
 
 **`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
@@ -558,14 +521,6 @@ new_list1 = sorted(list1, reverse=True)   # [99, 25, 11, 3, 0, -1]
 new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 ```
 
-Use the `key` parameter to define custom sort order. `key` receives each element and returns a value used for comparison.
-
-```python
-words = ["banana", "Apple", "cherry"]
-sorted(words, key=str.lower)   # ['Apple', 'banana', 'cherry'] (case-insensitive)
-sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
-```
-
 | Feature       | `sorted()`   | `.sort()`                  |
 | ------------- | ------------ | -------------------------- |
 | Returns       | New list     | `None` (modifies original) |
@@ -573,9 +528,27 @@ sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
 
-## 3.8 Sequence Unpacking
+### 3.6.2 Custom Comparison with `key`
 
-### 3.8.1 Unpacking from Iterables
+Use the `key` parameter to specify custom comparison logic. `key` receives each element and returns a value used for comparison.
+
+```python
+# Compare by string length
+print(max(["Python", "C++", "Java"], key=len))
+# Output: "Python" (length 6)
+
+# Case-insensitive comparison
+print(max("Apple", "banana", key=str.lower))
+# Output: "banana" (compare as lowercase: 'b' > 'a')
+
+words = ["banana", "Apple", "cherry"]
+sorted(words, key=str.lower)   # ['Apple', 'banana', 'cherry'] (case-insensitive)
+sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
+```
+
+## 3.7 Sequence Unpacking
+
+### 3.7.1 Unpacking from Iterables
 
 The same syntax works with any iterable.
 
@@ -584,7 +557,7 @@ x, y = [1, 2]        # x=1, y=2
 first, second = "ab" # first='a', second='b'
 ```
 
-### 3.8.2 Mismatch Trap
+### 3.7.2 Mismatch Trap
 
 The number of variables on the left must match the number of values on the right, unless you use `*` to capture the rest.
 
@@ -592,7 +565,7 @@ The number of variables on the left must match the number of values on the right
 # a, b = [1, 2, 3]  # ValueError: too many values to unpack
 ```
 
-### 3.8.3 Extended Unpacking
+### 3.7.3 Extended Unpacking
 
 Use `*` to capture the remaining values into a list. The `*` can appear in any position.
 
@@ -602,7 +575,7 @@ first, *middle, last = [1, 2, 3, 4]         # first=1, middle=[2, 3], last=4
 *a, b = [1, 2, 3, 4]                        # a=[1, 2, 3], b=4
 ```
 
-### 3.8.4 Unpacking in `for` Loops
+### 3.7.4 Unpacking in `for` Loops
 
 Unpacking works naturally in `for` loops when iterating over a sequence of tuples or lists.
 
