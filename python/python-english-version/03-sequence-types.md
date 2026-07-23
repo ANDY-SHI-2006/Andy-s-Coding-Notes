@@ -522,5 +522,33 @@ sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
 
+## 3.12 Sequence Unpacking
+
+### 3.12.1 Unpacking from Iterables
+
+The same syntax works with any iterable.
+
+```python
+x, y = [1, 2]        # x=1, y=2
+first, second = "ab" # first='a', second='b'
+```
+
+### 3.12.2 Mismatch Trap
+
+The number of variables on the left must match the number of values on the right, unless you use `*` to capture the rest.
+
+```python
+# a, b = [1, 2, 3]  # ValueError: too many values to unpack
+```
+
+### 3.12.3 Extended Unpacking
+
+Use `*` to capture the remaining values into a list. The `*` can appear in any position.
+
+```python
+first, *rest = [1, 2, 3, 4]                 # first=1, rest=[2, 3, 4]
+first, *middle, last = [1, 2, 3, 4]         # first=1, middle=[2, 3], last=4
+*a, b = [1, 2, 3, 4]                        # a=[1, 2, 3], b=4
+```
 
 [← Previous: Basic Data Types](02-basic-data-types.md) | [Next: Mapping and Set Types →](04-mapping-and-set-types.md)
