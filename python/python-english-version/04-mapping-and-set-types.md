@@ -2,14 +2,16 @@
 
 # 4 Mapping and Set Types
 
-## 4.1 Sets
+## 4.1 Set
 
-### 4.1.1 Properties
+### 4.1.1 Set Basics
+
+A set is an unordered, mutable collection of unique elements.
 
 | Property | Description |
 |----------|-------------|
 | **Uniqueness** | No duplicate elements |
-| **Mutability** | Can add/remove elements (like lists) |
+| **Mutability** | Can add/remove elements |
 | **Unordered** | No index access; elements have no fixed position |
 
 ```python
@@ -27,67 +29,134 @@ list1 = [1, 2, 3, 4, 1, 2, 3, 4]
 unique_list = list(set(list1))  # [1, 2, 3, 4]
 ```
 
-### 4.1.2 Operations
+### 4.1.2 Set Operations
+
+#### 4.1.2.1 Set Operators
 
 | Operator | Meaning | Example |
 |----------|---------|---------|
 | `&` | Intersection (common elements) | `{1,2,3} & {2,3,4}` → `{2, 3}` |
 | `\|` | Union (all elements) | `{1,2,3} \| {2,3,4}` → `{1, 2, 3, 4}` |
 | `-` | Difference (in A but not B) | `{1,2,3} - {2,3,4}` → `{1}` |
-| `in` / `not in` | Membership test | `2 in {1,2,3}` → `True` |
-
-#### Methods
-
-| Operation | Method | Description | Error if Invalid |
-|-----------|--------|-------------|----------------|
-| Add | `add(x)` | Add single element | - |
-| Add multiple | `update(iter)` | Add from iterable | - |
-| Remove (random) | `pop()` | Remove arbitrary element | `KeyError` if empty |
-| Remove (specific) | `remove(x)` | Remove by value | `KeyError` if not found |
-| Safe remove | `discard(x)` | Remove if present | No error |
-| Clear | `clear()` | Remove all elements | - |
+| `^` | Symmetric difference (in either set, not both) | `{1,2,3} ^ {2,3,4}` → `{1, 4}` |
 
 ```python
-set1 = {"Alice", "Bob", "Charlie"}
-set1.add("David")                    # Add single
-set1.update(["Eve", "Frank"])        # Add multiple
-set1.pop()                           # Remove random
-set1.remove("Bob")                   # Remove specific
-set1.discard("Zoe")                  # No error if missing
-set1.clear()                         # Empty set
+a = {1, 2, 3}
+b = {2, 3, 4}
+
+print(a & b)   # {2, 3}
+print(a | b)   # {1, 2, 3, 4}
+print(a - b)   # {1}
+print(a ^ b)   # {1, 4}
 ```
 
-#### Iteration
+#### 4.1.2.2 Subset, Superset, and Disjoint
 
-Sets don't support index access. Use direct iteration only.
-
-```python
-set1 = {"Alice", "Bob", "Charlie"}
-for item in set1:        # Only way to traverse
-    print(item)
-
-# Membership check
-print("Alice" in set1)   # True
-```
-
-### 4.1.3 Subset and Superset
-
-| Method | Description | Example |
-|--------|-------------|---------|
-| `a.issubset(b)` | All elements of `a` are in `b` | `{1,2}.issubset({1,2,3})` → `True` |
-| `a.issuperset(b)` | All elements of `b` are in `a` | `{1,2,3}.issuperset({1,2})` → `True` |
-| `a.isdisjoint(b)` | No common elements | `{1,2}.isdisjoint({3,4})` → `True` |
+| Method | Operator | Description | Example |
+|--------|----------|-------------|---------|
+| `a.issubset(b)` | `a <= b` | All elements of `a` are in `b` | `{1,2}.issubset({1,2,3})` → `True` |
+| `a.issuperset(b)` | `a >= b` | All elements of `b` are in `a` | `{1,2,3}.issuperset({1,2})` → `True` |
+| `a.isdisjoint(b)` | - | No common elements | `{1,2}.isdisjoint({3,4})` → `True` |
 
 ```python
 a = {1, 2, 3}
 b = {1, 2}
 
-print(b <= a)       # True  (subset operator)
-print(a >= b)       # True  (superset operator)
-print(a.isdisjoint({4, 5}))  # True
+print(b <= a)                  # True
+print(a >= b)                  # True
+print(a.isdisjoint({4, 5}))    # True
 ```
 
-### 4.1.4 `frozenset`
+### 4.1.3 Set Methods
+
+#### 4.1.3.1 Add
+
+##### 4.1.3.1.1 `add()`
+
+Add a single element.
+
+```python
+set1 = {"Alice", "Bob"}
+set1.add("Charlie")
+print(set1)  # {'Alice', 'Bob', 'Charlie'} (order may vary)
+```
+
+##### 4.1.3.1.2 `update()`
+
+Add multiple elements from an iterable.
+
+```python
+set1 = {"Alice", "Bob"}
+set1.update(["Eve", "Frank"])
+print(set1)  # {'Alice', 'Bob', 'Eve', 'Frank'}
+```
+
+#### 4.1.3.2 Delete
+
+##### 4.1.3.2.1 `pop()`
+
+Remove and return an arbitrary element. Raises `KeyError` if the set is empty.
+
+```python
+set1 = {"Alice", "Bob", "Charlie"}
+item = set1.pop()  # Removes some element
+print(set1)
+```
+
+##### 4.1.3.2.2 `remove()`
+
+Remove a specific element. Raises `KeyError` if not found.
+
+```python
+set1 = {"Alice", "Bob", "Charlie"}
+set1.remove("Bob")
+print(set1)  # {'Alice', 'Charlie'}
+```
+
+##### 4.1.3.2.3 `discard()`
+
+Remove a specific element if present. No error if missing.
+
+```python
+set1 = {"Alice", "Bob"}
+set1.discard("Zoe")  # No error
+set1.discard("Bob")
+print(set1)  # {'Alice'}
+```
+
+##### 4.1.3.2.4 `clear()`
+
+Remove all elements.
+
+```python
+set1 = {"Alice", "Bob"}
+set1.clear()
+print(set1)  # set()
+```
+
+#### 4.1.3.3 Query
+
+##### 4.1.3.3.1 `in` / `not in`
+
+Membership test is the primary way to query a set.
+
+```python
+set1 = {"Alice", "Bob", "Charlie"}
+print("Alice" in set1)   # True
+print("Zoe" not in set1) # True
+```
+
+### 4.1.4 Iteration
+
+Sets don't support index access. Use direct iteration only.
+
+```python
+set1 = {"Alice", "Bob", "Charlie"}
+for item in set1:
+    print(item)
+```
+
+### 4.1.5 `frozenset`
 
 Immutable version of a set. Can be used as dictionary keys or elements of another set.
 
@@ -99,139 +168,192 @@ frozen = frozenset([1, 2, 3])
 registry = {frozenset({"a", "b"}): "group A"}
 ```
 
+## 4.2 Dictionary
 
-## 4.2 Dictionaries
+### 4.2.1 Dictionary Basics
 
-### 4.2.1 Methods
-
-| Operation | Method/Syntax | Description | Error if Invalid |
-|-----------|---------------|-------------|----------------|
-| Add/Update | `dict[key] = value` | Add if key not exists; Update if exists | - |
-| Delete | `del dict[key]` | Delete by key | `KeyError` |
-| Delete | `dict.pop(key)` | Delete by key, return value | `KeyError` |
-| Safe delete | `dict.pop(key, default)` | Delete with fallback | No error |
-| Clear | `dict.clear()` | Remove all items | - |
-| Query | `dict[key]` | Get value by key | `KeyError` |
-| Safe Query | `dict.get(key, default)` | Get value, return default if not found | - |
-| Set default | `dict.setdefault(key, default)` | Get or create key with default | - |
-| Update merge | `dict.update(other)` | Merge another dict or iterable of pairs | - |
-| Remove last | `dict.popitem()` | Remove and return last inserted item | `KeyError` if empty |
+A dictionary is a mutable mapping of key-value pairs. Keys must be unique and hashable (typically immutable types like strings, numbers, or tuples).
 
 ```python
-dict1 = {"Telecom": 10000, "Mobile": 10086, "Unicom": 10010}
+# Create a dict
+student = {"name": "Alice", "age": 20}
 
-# Add/Update
-dict1["Unicom"] = 10020        # Update existing key
-dict1["Broadcast"] = 10030     # Add new key
+# Empty dict
+empty = {}
+empty = dict()
 
-# Delete
-del dict1["Broadcast"]         # Delete by key
-dict1.pop("Mobile")            # Delete and return value
+# From keyword arguments
+settings = dict(theme="dark", font_size=14)
 
-# Safe operations
-print(dict1.get("Unknown", 0)) # 0 (default, no error)
-print(dict1.pop("Unknown", 0)) # 0 (default, no error)
-
-# Set default
-settings = {"theme": "dark"}
-settings.setdefault("font_size", 14)  # Adds key with value 14
-settings.setdefault("theme", "light") # Keeps existing "dark"
-
-# Update
-dict1.update({"Satellite": 10099})
+# From two lists using zip()
+names = ["Alice", "Bob", "Charlie"]
+scores = [85, 90, 78]
+gradebook = dict(zip(names, scores))
+# {'Alice': 85, 'Bob': 90, 'Charlie': 78}
 ```
 
-**Get All Keys/Values/Items:**
+### 4.2.2 Dictionary Operations
 
-| Method | Returns | Use Case |
-|--------|---------|----------|
-| `dict.keys()` | All keys | Iterate over keys |
-| `dict.values()` | All values | Iterate over values |
-| `dict.items()` | All (key, value) tuples | Iterate with unpacking |
+#### 4.2.2.1 Add & Update
+
+##### 4.2.2.1.1 `dict[key] = value`
+
+Add a new key or update an existing one.
+
+```python
+dict1 = {"Telecom": 10000, "Mobile": 10086}
+
+dict1["Unicom"] = 10010      # Add new key
+dict1["Mobile"] = 100861     # Update existing key
+print(dict1)
+```
+
+##### 4.2.2.1.2 `update()`
+
+Merge another dictionary or an iterable of key-value pairs.
+
+```python
+dict1 = {"A": 1}
+dict1.update({"B": 2, "C": 3})
+print(dict1)  # {'A': 1, 'B': 2, 'C': 3}
+
+dict1.update([("D", 4), ("E", 5)])
+print(dict1)  # {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5}
+```
+
+##### 4.2.2.1.3 `setdefault()`
+
+Get a value if the key exists; otherwise create the key with a default value.
+
+```python
+settings = {"theme": "dark"}
+settings.setdefault("font_size", 14)   # Adds key with value 14
+settings.setdefault("theme", "light")  # Keeps existing "dark"
+print(settings)  # {'theme': 'dark', 'font_size': 14}
+```
+
+#### 4.2.2.2 Delete
+
+##### 4.2.2.2.1 `del`
+
+Delete a key-value pair by key. Raises `KeyError` if the key does not exist.
+
+```python
+dict1 = {"A": 1, "B": 2}
+del dict1["A"]
+print(dict1)  # {'B': 2}
+```
+
+##### 4.2.2.2.2 `pop()`
+
+Delete a key and return its value. Accepts an optional default to avoid errors.
+
+```python
+dict1 = {"A": 1, "B": 2}
+value = dict1.pop("A")          # value = 1
+print(dict1)                    # {'B': 2}
+
+# Safe pop with default
+value = dict1.pop("Unknown", 0) # value = 0, no error
+```
+
+##### 4.2.2.2.3 `popitem()`
+
+Remove and return the last inserted key-value pair. Raises `KeyError` if empty.
+
+```python
+dict1 = {"A": 1, "B": 2}
+item = dict1.popitem()  # ('B', 2)
+print(dict1)            # {'A': 1}
+```
+
+##### 4.2.2.2.4 `clear()`
+
+Remove all items.
+
+```python
+dict1 = {"A": 1, "B": 2}
+dict1.clear()
+print(dict1)  # {}
+```
+
+#### 4.2.2.3 Query
+
+##### 4.2.2.3.1 `dict[key]`
+
+Direct access by key. Raises `KeyError` if the key does not exist.
+
+```python
+dict1 = {"A": 1, "B": 2}
+print(dict1["A"])  # 1
+# print(dict1["Z"])  # KeyError
+```
+
+##### 4.2.2.3.2 `get()`
+
+Safe access with a default value.
+
+```python
+dict1 = {"A": 1, "B": 2}
+print(dict1.get("A"))           # 1
+print(dict1.get("Z"))           # None
+print(dict1.get("Z", 0))        # 0
+```
+
+#### 4.2.2.4 Iteration
+
+##### 4.2.2.4.1 `keys()`
+
+Iterate over keys. `for key in dict` is equivalent to `for key in dict.keys()`.
 
 ```python
 dict1 = {"A": 1, "B": 2, "C": 3}
 
-# Keys
+for key in dict1:  # Same as dict1.keys()
+    print(key)     # A, B, C
+
 for key in dict1.keys():
-    print(key)               # A, B, C
+    print(key)     # A, B, C
+```
 
-# Values
+##### 4.2.2.4.2 `values()`
+
+Iterate over values.
+
+```python
+dict1 = {"A": 1, "B": 2, "C": 3}
 for value in dict1.values():
-    print(value)             # 1, 2, 3
+    print(value)  # 1, 2, 3
+```
 
-# Items (key, value) - with tuple unpacking
+##### 4.2.2.4.3 `items()`
+
+Iterate over key-value pairs with tuple unpacking.
+
+```python
+dict1 = {"A": 1, "B": 2, "C": 3}
 for key, value in dict1.items():
     print(f"{key}: {value}")  # A: 1, B: 2, C: 3
 ```
 
-**`dict.get()` - Safe Access:**
-
-```python
-# Syntax: dict.get(key, default=None)
-dict1 = {"theme": "dark", "font_size": 14}
-
-# Key exists → return value
-print(dict1.get("theme"))           # "dark"
-
-# Key not exists → return default (None if not specified)
-print(dict1.get("language"))        # None
-print(dict1.get("language", "en"))  # "en" (custom default)
-
-# Comparison: direct access vs get()
-# print(dict1["unknown"])           # KeyError
-dict1.get("unknown")                # None (no error)
-```
-
-### 4.2.2 Iteration
-
-| # | Method | Iterates Over | Use Case |
-|---|--------|---------------|----------|
-| 1 | `for key in dict` | Keys | Default, get key then access value |
-| 2 | `for key in dict.keys()` | Keys | Explicit, same as #1 |
-| 3 | `for value in dict.values()` | Values | Only need values |
-| 4 | `for key, value in dict.items()` | Key-value pairs | Most common, with unpacking |
-
-```python
-dict1 = {"Telecom": 10000, "Mobile": 10086, "Unicom": 10010}
-
-# Method 1: Iterate keys (default)
-for key in dict1:
-    print(key, dict1[key])
-
-# Method 2: Iterate keys (explicit)
-for key in dict1.keys():
-    print(key)
-
-# Method 3: Iterate values only
-for value in dict1.values():
-    print(value)
-
-# Method 4: Iterate items with unpacking (most common)
-for name, code in dict1.items():
-    print(f"{name}: {code}")
-```
-
 ### 4.2.3 Nested Dictionaries
 
-**Structure:** Key can be any immutable type; Value can be any type (including dict).
+Values can be any type, including other dictionaries.
 
 ```python
-# Nested structure: students with scores
 students = {
     "Alice": {"age": 18, "score": 80, "gender": "F"},
     "Bob": {"age": 19, "score": 90, "gender": "M"},
     "Charlie": {"age": 20, "score": 100, "gender": "F"}
 }
 
-# Access nested value
-print(students["Alice"]["score"])   # 80
+print(students["Alice"]["score"])  # 80
 
 # Extract data with loop
 score_dict = {}
 for name, info in students.items():
     score_dict[name] = info["score"]
-print(score_dict)                   # {'Alice': 80, 'Bob': 90, 'Charlie': 100}
+print(score_dict)  # {'Alice': 80, 'Bob': 90, 'Charlie': 100}
 
 # Calculate average
 avg_score = sum(score_dict.values()) / len(score_dict)
@@ -241,7 +363,7 @@ gender_count = {}
 for info in students.values():
     gender = info["gender"]
     gender_count[gender] = gender_count.get(gender, 0) + 1
-print(gender_count)                 # {'F': 2, 'M': 1}
+print(gender_count)  # {'F': 2, 'M': 1}
 ```
 
 ### 4.2.4 Dictionary Comprehensions
@@ -312,7 +434,28 @@ print(counts)              # Counter({'apple': 3, 'banana': 2, 'cherry': 1})
 print(counts.most_common(2))  # [('apple', 3), ('banana', 2)]
 ```
 
-**Note:** Dictionary iteration order is guaranteed to match insertion order (Python 3.7+).
+## 4.3 Common Concepts for Sets and Dictionaries
 
+### 4.3.1 Hashable Keys and Elements
+
+- Dictionary keys and set elements must be **hashable** (immutable types like `str`, `int`, `float`, `tuple`, `frozenset`).
+- Lists and dictionaries cannot be used as keys or set elements because they are mutable.
+
+```python
+valid = {("a", "b"): 1, 42: 2, "key": 3}  # OK
+# invalid = {["a"]: 1}                      # TypeError: unhashable type: 'list'
+```
+
+### 4.3.2 Insertion Order
+
+Both sets and dictionaries preserve insertion order in Python 3.7+.
+
+### 4.3.3 Use Case Comparison
+
+| Type | Best For | Key Property |
+|------|----------|--------------|
+| `set` | Membership testing, removing duplicates | Unordered unique elements |
+| `dict` | Key-value lookups, structured data | Fast key-based access |
+| `frozenset` | Immutable set, usable as dict key | Set semantics, hashable |
 
 [← Previous: Sequence Types](03-sequence-types.md) | [Next: Data Types Summary →](05-data-types-summary.md)
