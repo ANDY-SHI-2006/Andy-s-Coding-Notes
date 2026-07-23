@@ -215,24 +215,41 @@ print(fruits)           # ['avocado', 'banana']
 | `insert()` | `list.insert(i, x)` | Insert at specific index | Index out of range → adds to end (robust) |
 | `extend()` | `list.extend(iter)` | Merge another iterable | Works with str, list, tuple |
 
+##### 3.2.2.1.1 `append()`
+
 ```python
 list1 = ["Alice", "Bob"]
-list1.append("Charlie")           # ['Alice', 'Bob', 'Charlie']
-list1.insert(0, "David")          # ['David', 'Alice', 'Bob', 'Charlie']
-list1.insert(100, "Eve")          # Adds to end (no error)
-list1.extend([1, 2])              # ['David', ..., 'Charlie', 'Eve', 1, 2]
+list1.append("Charlie")
+print(list1)  # ['Alice', 'Bob', 'Charlie']
 ```
 
-**⚠️ Trap: `extend()` with a string iterates characters:**
+##### 3.2.2.1.2 `insert()`
+
+```python
+list1 = ["Alice", "Bob"]
+list1.insert(0, "David")
+print(list1)  # ['David', 'Alice', 'Bob']
+list1.insert(100, "Eve")  # Adds to end (no error)
+```
+
+##### 3.2.2.1.3 `extend()`
+
+```python
+list1 = ["Alice", "Bob"]
+list1.extend([1, 2])
+print(list1)  # ['Alice', 'Bob', 1, 2]
+```
+
+##### 3.2.2.1.4 Trap: `extend()` with a String
 
 Since strings are iterable, passing a string to `extend()` splits it into individual characters — often not what you want.
 
 ```python
 names = ["Alice"]
-names.extend("Bob")       # ['Alice', 'B', 'o', 'b']  ← not ["Alice", "Bob"]!
+names.extend("Bob")   # ['Alice', 'B', 'o', 'b']  ← not ["Alice", "Bob"]!
 
 # Correct: wrap in a list
-names.extend(["Bob"])     # ['Alice', 'Bob']
+names.extend(["Bob"])  # ['Alice', 'Bob']
 ```
 
 #### 3.2.2.2 Delete
@@ -243,20 +260,36 @@ names.extend(["Bob"])     # ['Alice', 'Bob']
 | `remove()` | `list.remove(x)` | Remove by value (first match) | ValueError if not found |
 | `clear()` | `list.clear()` | Remove all elements | - |
 
+##### 3.2.2.2.1 `pop()`
+
 ```python
 list1 = ["Alice", "Bob", "Charlie"]
-list1.pop()                       # Remove last, returns 'Charlie'
-list1.pop(0)                      # Remove index 0, returns 'Alice'
-list1.remove("Bob")               # Remove by value
-list1.clear()                     # []
+list1.pop()    # Remove last, returns 'Charlie'
+list1.pop(0)   # Remove index 0, returns 'Alice'
+```
+
+##### 3.2.2.2.2 `remove()`
+
+```python
+list1 = ["Alice", "Bob", "Charlie"]
+list1.remove("Bob")  # ['Alice', 'Charlie']
+```
+
+##### 3.2.2.2.3 `clear()`
+
+```python
+list1 = ["Alice", "Bob", "Charlie"]
+list1.clear()  # []
 ```
 
 #### 3.2.2.3 Update
 
+##### 3.2.2.3.1 Update by Index
+
 ```python
 list1 = ["Alice", "Bob"]
-list1[0] = "Charlie"              # ['Charlie', 'Bob']
-# list1[100] = "x"                # IndexError: out of range
+list1[0] = "Charlie"   # ['Charlie', 'Bob']
+# list1[100] = "x"     # IndexError: out of range
 ```
 
 #### 3.2.2.4 Query
@@ -266,11 +299,19 @@ list1[0] = "Charlie"              # ['Charlie', 'Bob']
 | `index(x)` | Index of first match | ValueError |
 | `count(x)` | Count of occurrences | 0 |
 
+##### 3.2.2.4.1 `index()`
+
 ```python
 list1 = [1, 2, 3, 2]
-print(list1.index(2))             # 1 (first occurrence)
-print(list1.count(2))             # 2
-# list1.index(99)                 # ValueError
+print(list1.index(2))  # 1 (first occurrence)
+# list1.index(99)      # ValueError
+```
+
+##### 3.2.2.4.2 `count()`
+
+```python
+list1 = [1, 2, 3, 2]
+print(list1.count(2))  # 2
 ```
 
 ### 3.2.3 List Comprehensions
