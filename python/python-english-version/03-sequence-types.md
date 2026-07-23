@@ -506,23 +506,30 @@ print(r[1:4])      # range(2, 8, 2)
 
 ### 3.5.2 Sorting
 
-#### 3.5.2.1 Built-in Function vs List Method
+#### 3.5.2.1 `sorted()`
 
-**`sorted()`**: A built-in function that sorts any sequence type, supports ascending and descending order, and **returns a new sequence** (original unchanged).
-
-**`.sort()`**: Modifies the list **in-place** (not recommended; use `sorted()` instead).
+A built-in function that sorts any iterable, supports ascending and descending order, and **returns a new sequence** (original unchanged).
 
 ```python
 list1 = [11, 25, 3, 0, -1, 99]
 
-# sorted() - built-in function, creates a new list
 new_list = sorted(list1)
 print(list1)       # [11, 25, 3, 0, -1, 99]  (original unchanged)
 print(new_list)    # [-1, 0, 3, 11, 25, 99]  (ascending, default)
 
-# Descending order with reverse parameter
-new_list1 = sorted(list1, reverse=True)   # [99, 25, 11, 3, 0, -1]
-new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
+# Descending order
+new_list_desc = sorted(list1, reverse=True)   # [99, 25, 11, 3, 0, -1]
+```
+
+#### 3.5.2.2 `.sort()`
+
+Modifies the list **in-place** and returns `None`. Use it only when you really want to change the original list.
+
+```python
+list1 = [11, 25, 3, 0, -1, 99]
+result = list1.sort()
+print(list1)    # [-1, 0, 3, 11, 25, 99]
+print(result)   # None
 ```
 
 | Feature       | `sorted()`   | `.sort()`                  |
@@ -532,22 +539,48 @@ new_list2 = sorted(list1, reverse=False)  # [-1, 0, 3, 11, 25, 99]
 | Works on      | Any iterable | Only lists                 |
 | Recommended   | Yes          | No                         |
 
-#### 3.5.2.2 Custom Comparison with `key`
+#### 3.5.2.3 Sorting Stability
 
-Use the `key` parameter to specify custom comparison logic. `key` receives each element and returns a value used for comparison.
+Python's sort is **stable**: equal elements keep their original relative order.
 
 ```python
-# Compare by string length
-print(max(["Python", "C++", "Java"], key=len))
-# Output: "Python" (length 6)
+items = [("apple", 1), ("banana", 2), ("apple", 3)]
+print(sorted(items))  # [('apple', 1), ('apple', 3), ('banana', 2)]
+# ('apple', 1) stays before ('apple', 3)
+```
+
+#### 3.5.2.4 Custom Comparison with `key`
+
+Use the `key` parameter to specify custom comparison logic. `key` receives each element and returns a value used for comparison. The original element is not changed.
+
+##### 3.5.2.4.1 Basic `key`
+
+```python
+# Compare by length
+print(max(["Python", "C++", "Java"], key=len))   # "Python"
 
 # Case-insensitive comparison
-print(max("Apple", "banana", key=str.lower))
-# Output: "banana" (compare as lowercase: 'b' > 'a')
+print(max("Apple", "banana", key=str.lower))       # "banana"
 
 words = ["banana", "Apple", "cherry"]
-sorted(words, key=str.lower)   # ['Apple', 'banana', 'cherry'] (case-insensitive)
-sorted(words, key=len)         # ['Apple', 'banana', 'cherry'] (by length)
+sorted(words, key=str.lower)   # ['Apple', 'banana', 'cherry']
+sorted(words, key=len)         # ['Apple', 'banana', 'cherry']
+```
+
+##### 3.5.2.4.2 Multi-level `key`
+
+Use a `tuple` to define primary and secondary sort criteria.
+
+```python
+students = [("Bob", 85), ("Alice", 90), ("Bob", 78)]
+
+# Sort by name, then by score
+sorted(students, key=lambda x: (x[0], x[1]))
+# [('Alice', 90), ('Bob', 78), ('Bob', 85)]
+
+# Sort by score descending, then by name ascending
+sorted(students, key=lambda x: (-x[1], x[0]))
+# [('Alice', 90), ('Bob', 85), ('Bob', 78)]
 ```
 
 ### 3.5.3 Sequence Unpacking
