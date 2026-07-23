@@ -147,13 +147,29 @@ for num, letter in pairs:
 
 ## 3.4 `range` as a Sequence
 
-`range` produces a sequence of numbers efficiently without storing them all in memory.
+`range` produces a sequence of numbers efficiently without storing them all in memory. It is **lazy** — values are generated on demand.
+
+**Syntax:**
+
+- `range(stop)`: from `0` up to (but not including) `stop`
+- `range(start, stop)`: from `start` up to (but not including) `stop`
+- `range(start, stop, step)`: from `start` to `stop` with a custom step
 
 ```python
-r = range(5)
-print(list(r))      # [0, 1, 2, 3, 4]
-print(r[2])         # 2
-print(r[1:4])       # range(1, 4)
+print(list(range(5)))          # [0, 1, 2, 3, 4]
+print(list(range(1, 5)))       # [1, 2, 3, 4]
+print(list(range(0, 10, 2)))   # [0, 2, 4, 6, 8]
+print(list(range(5, 0, -1)))   # [5, 4, 3, 2, 1]
+```
+
+Because `range` is a sequence, it supports indexing, slicing, membership tests, and `len()`:
+
+```python
+r = range(0, 10, 2)
+print(r[2])       # 4
+print(r[1:4])     # range(2, 8, 2)
+print(4 in r)     # True
+print(len(r))     # 5
 ```
 
 
