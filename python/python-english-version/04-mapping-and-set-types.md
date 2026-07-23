@@ -164,6 +164,8 @@ print("Zoe" not in set1) # True
 
 ### 4.1.4 Iteration
 
+#### 4.1.4.1 Direct Iteration
+
 Sets don't support index access. Use direct iteration only.
 
 ```python
@@ -419,10 +421,10 @@ gradebook = {name: score for name, score in zip(names, scores)}
 
 ### 4.2.5 Merge Operators (Python 3.9+)
 
-| Operator | Description | In-place |
-|----------|-------------|----------|
-| \| | Union: returns new dict | No |
-| \|= | Update: modifies left dict | Yes |
+| Operator | Description                | In-place |
+| -------- | -------------------------- | -------- |
+| \|       | Union: returns new dict    | No       |
+| \|=      | Update: modifies left dict | Yes      |
 
 ```python
 a = {"x": 1, "y": 2}
