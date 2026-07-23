@@ -288,6 +288,19 @@ bool("hello")   # True
 age = int(input("Enter age: "))
 ```
 
+### 2.6.3 Handling Conversion Errors
+
+Always validate user input before converting. Use `try/except` to handle invalid data gracefully.
+
+```python
+user_input = input("Enter a number: ")
+
+try:
+    value = int(user_input)
+    print(f"Converted: {value}")
+except ValueError:
+    print(f"'{user_input}' is not a valid integer")
+```
 
 ## 2.7 Comparing Numbers
 
