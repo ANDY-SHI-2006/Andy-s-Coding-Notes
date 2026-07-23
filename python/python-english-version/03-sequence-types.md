@@ -583,6 +583,25 @@ sorted(students, key=lambda x: (-x[1], x[0]))
 # [('Alice', 90), ('Bob', 85), ('Bob', 78)]
 ```
 
+#### 3.5.2.5 Finding Extremes with `max()` and `min()`
+
+`max()` and `min()` use the same comparison logic as `sorted()` and also support the `key` parameter.
+
+```python
+print(max([3, 1, 4, 1, 5]))           # 5
+print(min("banana"))                   # 'a' (smallest Unicode code point)
+print(max(["Python", "C++", "Java"], key=len))   # "Python"
+```
+
+**Edge cases:**
+- Empty sequence raises `ValueError`
+- Mixed types (e.g., `max(1, "a")`) raise `TypeError`
+
+```python
+# max([])        # ValueError: max() arg is an empty sequence
+# max(1, "a")    # TypeError: '>' not supported between instances of 'int' and 'str'
+```
+
 ### 3.5.3 Sequence Unpacking
 
 #### 3.5.3.1 Unpacking from Iterables
