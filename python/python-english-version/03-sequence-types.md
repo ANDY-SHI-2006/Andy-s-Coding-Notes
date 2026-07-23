@@ -67,6 +67,17 @@ s = "H" + s[1:]  # Create a new string
 
 ### 3.1.2 String Methods
 
+| Method | Syntax | Description | Notes | Return |
+|--------|--------|-------------|-------|--------|
+| `find()` | `s.find(sub[, start[, end]])` | First index of substring | Returns `-1` if not found | `int` |
+| `index()` | `s.index(sub[, start[, end]])` | First index of substring | Raises `ValueError` if not found | `int` |
+| `count()` | `s.count(sub[, start[, end]])` | Count occurrences | Returns `0` if not found | `int` |
+| `lower()` / `upper()` | `s.lower()`, `s.upper()` | Case conversion | Returns a new string | `str` |
+| `split()` | `s.split(sep=None)` | Split into list | Default splits on whitespace | `list` |
+| `replace()` | `s.replace(old, new[, count])` | Replace substring | `count=-1` replaces all | `str` |
+| `join()` | `sep.join(iterable)` | Join iterable into string | Opposite of `split()` | `str` |
+| `strip()` | `s.strip([chars])` | Remove leading/trailing whitespace | Also `lstrip()` / `rstrip()` | `str` |
+
 #### 3.1.2.1 `find()`
 
 | Method | Returns | Not Found | Parameters |
