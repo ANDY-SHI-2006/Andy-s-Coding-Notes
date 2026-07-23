@@ -127,10 +127,12 @@ The number of variables on the left must match the number of values on the right
 
 #### 1.3.2.4 Extended Unpacking
 
-Use `*` to capture the remaining values into a list.
+Use `*` to capture the remaining values into a list. The `*` can appear in any position.
 
 ```python
-first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
+first, *rest = [1, 2, 3, 4]                 # first=1, rest=[2, 3, 4]
+first, *middle, last = [1, 2, 3, 4]         # first=1, middle=[2, 3], last=4
+*a, b = [1, 2, 3, 4]                        # a=[1, 2, 3], b=4
 ```
 
 ### 1.3.3 Chain Assignment
@@ -140,6 +142,16 @@ Binds multiple names to the same object.
 ```python
 a = b = 0
 ```
+
+**⚠️ Trap with mutable objects:** Chain assignment creates multiple references to the same object, not independent copies.
+
+```python
+a = b = []
+a.append(1)
+print(b)  # [1] — b refers to the same list as a
+```
+
+With immutable objects like numbers or strings, this trap does not apply because reassignment creates a new object.
 
 ### 1.3.4 Swap
 
