@@ -240,9 +240,7 @@ list1.extend([1, 2])
 print(list1)  # ['Alice', 'Bob', 1, 2]
 ```
 
-##### 3.2.2.1.4 Trap: `extend()` with a String
-
-Since strings are iterable, passing a string to `extend()` splits it into individual characters — often not what you want.
+**Note:** Since strings are iterable, passing a string to `extend()` splits it into individual characters — often not what you want.
 
 ```python
 names = ["Alice"]
