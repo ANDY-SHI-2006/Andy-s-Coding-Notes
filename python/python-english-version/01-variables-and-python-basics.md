@@ -106,7 +106,7 @@ This is equivalent to creating a tuple on the right-hand side and unpacking it:
 a, b = (1, 2)  # comma creates a tuple
 ```
 
-For detailed unpacking rules, including unpacking from lists and strings and extended unpacking with `*`, see [3.12 Sequence Unpacking](03-sequence-types.md#312-sequence-unpacking).
+For detailed unpacking rules, including unpacking from lists and strings and extended unpacking with `*`, see [3.8 Sequence Unpacking](03-sequence-types.md#38-sequence-unpacking).
 
 ### 1.3.3 Chain Assignment
 
