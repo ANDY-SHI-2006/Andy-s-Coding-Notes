@@ -371,6 +371,8 @@ for key, value in dict1.items():
 
 ### 4.2.3 Nested Dictionaries
 
+#### 4.2.3.1 Accessing Nested Values
+
 Values can be any type, including other dictionaries.
 
 ```python
@@ -381,17 +383,26 @@ students = {
 }
 
 print(students["Alice"]["score"])  # 80
+```
 
-# Extract data with loop
+#### 4.2.3.2 Extracting Data
+
+Loop through a nested dictionary to build a flat dictionary.
+
+```python
 score_dict = {}
 for name, info in students.items():
     score_dict[name] = info["score"]
 print(score_dict)  # {'Alice': 80, 'Bob': 90, 'Charlie': 100}
+```
 
-# Calculate average
+#### 4.2.3.3 Aggregating Data
+
+Use a flat dictionary to count or summarize nested values.
+
+```python
 avg_score = sum(score_dict.values()) / len(score_dict)
 
-# Count by gender
 gender_count = {}
 for info in students.values():
     gender = info["gender"]
@@ -401,69 +412,97 @@ print(gender_count)  # {'F': 2, 'M': 1}
 
 ### 4.2.4 Dictionary Comprehensions
 
-Concise way to create dictionaries.
+#### 4.2.4.1 Basic Syntax
 
 ```python
-# Basic syntax: {key: value for item in iterable}
 squares = {x: x**2 for x in range(6)}
-# {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+print(squares)  # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+```
 
-# With condition
+#### 4.2.4.2 With Condition
+
+```python
 even_squares = {x: x**2 for x in range(10) if x % 2 == 0}
-# {0: 0, 2: 4, 4: 16, 6: 36, 8: 64}
+print(even_squares)  # {0: 0, 2: 4, 4: 16, 6: 36, 8: 64}
+```
 
-# From two lists using zip()
+#### 4.2.4.3 From Two Lists
+
+Use `zip()` to pair two iterables into key-value pairs.
+
+```python
 names = ["Alice", "Bob", "Charlie"]
 scores = [85, 90, 78]
+
 gradebook = {name: score for name, score in zip(names, scores)}
-# {'Alice': 85, 'Bob': 90, 'Charlie': 78}
+print(gradebook)  # {'Alice': 85, 'Bob': 90, 'Charlie': 78}
 ```
 
 ### 4.2.5 Merge Operators (Python 3.9+)
 
-| Operator | Description                | In-place |
-| -------- | -------------------------- | -------- |
-| \|       | Union: returns new dict    | No       |
-| \|=      | Update: modifies left dict | Yes      |
+#### 4.2.5.1 Union Operator `|`
+
+Returns a new dictionary. The right operand wins on key conflicts.
 
 ```python
 a = {"x": 1, "y": 2}
 b = {"y": 3, "z": 4}
 
-print(a | b)    # {'x': 1, 'y': 3, 'z': 4} — new dict, b wins on conflict
-a |= b          # a is now {'x': 1, 'y': 3, 'z': 4}
+print(a | b)  # {'x': 1, 'y': 3, 'z': 4}
+print(a)      # {'x': 1, 'y': 2} (unchanged)
+```
+
+#### 4.2.5.2 Update Operator `|=`
+
+Modifies the left dictionary in place.
+
+```python
+a = {"x": 1, "y": 2}
+b = {"y": 3, "z": 4}
+
+a |= b
+print(a)  # {'x': 1, 'y': 3, 'z': 4}
 ```
 
 ### 4.2.6 `collections.defaultdict`
 
-Automatically provides a default value for missing keys.
+#### 4.2.6.1 Default Value for Missing Keys
 
 ```python
 from collections import defaultdict
 
 counts = defaultdict(int)
-counts["apple"] += 1      # No KeyError; default 0 is used
+counts["apple"] += 1  # No KeyError; default 0 is used
+print(counts)  # defaultdict(<class 'int'>, {'apple': 1})
+```
 
-# Grouping by first letter
+#### 4.2.6.2 Grouping by Key
+
+```python
 words = ["apple", "apricot", "banana", "cherry"]
 groups = defaultdict(list)
+
 for word in words:
     groups[word[0]].append(word)
 
-print(groups)   # {'a': ['apple', 'apricot'], 'b': ['banana'], 'c': ['cherry']}
+print(groups)  # {'a': ['apple', 'apricot'], 'b': ['banana'], 'c': ['cherry']}
 ```
 
 ### 4.2.7 `collections.Counter`
 
-Specialized dict for counting hashable objects.
+#### 4.2.7.1 Creating a Counter
 
 ```python
 from collections import Counter
 
 items = ["apple", "banana", "apple", "cherry", "banana", "apple"]
 counts = Counter(items)
+print(counts)  # Counter({'apple': 3, 'banana': 2, 'cherry': 1})
+```
 
-print(counts)              # Counter({'apple': 3, 'banana': 2, 'cherry': 1})
+#### 4.2.7.2 `most_common()`
+
+```python
 print(counts.most_common(2))  # [('apple', 3), ('banana', 2)]
 ```
 
