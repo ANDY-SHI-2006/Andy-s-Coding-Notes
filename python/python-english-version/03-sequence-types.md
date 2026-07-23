@@ -434,17 +434,28 @@ print(len(r))     # 5
 
 ## 3.5 Common Sequence Operations
 
-These operations work on strings, lists, tuples, and ranges.
+These operations work on strings, lists, tuples, and most also on ranges.
 
-| Operation | Description | Example |
-|-----------|-------------|---------|
-| `len(s)` | Number of items | `len("hello")` → `5` |
-| `s1 + s2` | Concatenation | `"a" + "b"` → `"ab"` |
-| `s * n` | Repeat | `"ab" * 3` → `"ababab"` |
-| `x in s` | Membership | `'a' in "abc"` → `True` |
-| `min(s)` / `max(s)` | Smallest / largest | `max([1, 5, 3])` → `5` |
-| `s.index(x)` | First index of x | `[1,2,3].index(2)` → `1` |
-| `s.count(x)` | Count occurrences | `"banana".count("a")` → `3` |
+| Operation | Description | Example | Notes |
+|-----------|-------------|---------|-------|
+| `len(s)` | Number of items | `len("hello")` → `5` | Works on all sequences |
+| `s1 + s2` | Concatenation | `"a" + "b"` → `"ab"` | Operands must be the same type; `range` does not support |
+| `s * n` | Repeat | `"ab" * 3` → `"ababab"` | `range` does not support |
+| `x in s` | Membership test | `'a' in "abc"` → `True` | Works on all sequences |
+| `min(s)` / `max(s)` | Smallest / largest | `max([1, 5, 3])` → `5` | Requires comparable elements; mixed types raise `TypeError` |
+| `s.index(x)` | First index of x | `[1,2,3].index(2)` → `1` | Raises `ValueError` if not found |
+| `s.count(x)` | Count occurrences | `"banana".count("a")` → `3` | Returns `0` if not found |
+
+**Note:** `range` is a lazy sequence. It supports `len()`, `in`, indexing, slicing, `index()`, and `count()`, but it does **not** support `+` or `*`.
+
+```python
+r = range(0, 10, 2)
+print(len(r))      # 5
+print(4 in r)      # True
+print(r[1:4])      # range(2, 8, 2)
+# range + range    # TypeError
+# range * 2        # TypeError
+```
 
 ## 3.6 Comparison Operations
 
