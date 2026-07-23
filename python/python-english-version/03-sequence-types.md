@@ -138,6 +138,13 @@ Convert between strings and lists.
 "a b c".split()          # ['a', 'b', 'c']
 "a,b,c".split(",")       # ['a', 'b', 'c']
 "".split()               # []
+"".split(",")            # ['']  ← not []! empty string is a single element
+```
+
+**Note:** When the separator is specified but not found in a non-empty string, the result is a list containing the original string.
+
+```python
+"hello".split(",")       # ['hello']
 ```
 
 ##### 3.1.2.3.2 `join()`
