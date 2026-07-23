@@ -303,5 +303,17 @@ print(2 == 2.0)  # True
 - Cannot directly compare numbers with strings
 - `max(1, "a")` raises `TypeError`
 
+### 2.7.3 Chained Comparisons
+
+Python supports chained comparisons like mathematical notation. `a < b < c` is equivalent to `a < b and b < c`.
+
+```python
+print(1 < 2 < 3)   # True  (1 < 2 and 2 < 3)
+print(1 < 5 < 2)   # False (5 < 2 is False)
+print(1 < 3 > 2)   # True  (1 < 3 and 3 > 2)
+```
+
+**Note:** The middle value is only evaluated once, so chained comparisons are slightly more efficient than writing two separate comparisons.
+
 
 [← Previous: Variables and Python Basics](01-variables-and-python-basics.md) | [Next: Sequence Types →](03-sequence-types.md)
