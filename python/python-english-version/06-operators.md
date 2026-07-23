@@ -329,7 +329,7 @@ From highest to lowest precedence:
 | 6 | `<<`, `>>` | Bitwise shifts |
 | 7 | `&` | Bitwise AND |
 | 8 | `^` | Bitwise XOR |
-| 9 | `\|` | Bitwise OR |
+| 9 | \| | Bitwise OR |
 | 10 | `==`, `!=`, `>`, `<`, `>=`, `<=`, `is`, `is not`, `in`, `not in` | Comparisons, identity, membership |
 | 11 | `not` | Logical NOT |
 | 12 | `and` | Logical AND |
