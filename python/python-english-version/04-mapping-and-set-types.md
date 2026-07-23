@@ -8,11 +8,11 @@
 
 A set is an unordered, mutable collection of unique elements.
 
-| Property | Description |
-|----------|-------------|
-| **Uniqueness** | No duplicate elements |
-| **Mutability** | Can add/remove elements |
-| **Unordered** | No index access; elements have no fixed position |
+| Property       | Description                                      |
+| -------------- | ------------------------------------------------ |
+| **Uniqueness** | No duplicate elements                            |
+| **Mutability** | Can add/remove elements                          |
+| **Unordered**  | No index access; elements have no fixed position |
 
 #### 4.1.1.1 Creating a Set
 
@@ -49,12 +49,12 @@ print(unique_list)  # [1, 2, 3, 4]
 
 #### 4.1.2.1 Set Operators
 
-| Operator | Meaning                                        | Example                               |
-| -------- | ---------------------------------------------- | ------------------------------------- |
-| `&`      | Intersection (common elements)                 | `{1,2,3} & {2,3,4}` → `{2, 3}`        |
-| `\|`     | Union (all elements)                           | `{1,2,3} \| {2,3,4}` → `{1, 2, 3, 4}` |
-| `-`      | Difference (in A but not B)                    | `{1,2,3} - {2,3,4}` → `{1}`           |
-| `^`      | Symmetric difference (in either set, not both) | `{1,2,3} ^ {2,3,4}` → `{1, 4}`        |
+| Operator | Meaning | Example |
+|----------|---------|---------|
+| `&` | Intersection (common elements) | {1,2,3} & {2,3,4} → {2, 3} |
+| \| | Union (all elements) | {1,2,3} \| {2,3,4} → {1, 2, 3, 4} |
+| `-` | Difference (in A but not B) | {1,2,3} - {2,3,4} → {1} |
+| `^` | Symmetric difference (in either set, not both) | {1,2,3} ^ {2,3,4} → {1, 4} |
 
 ```python
 a = {1, 2, 3}
