@@ -134,17 +134,6 @@ t[1].append(4)     # But the list inside can be modified
 print(t)           # (1, [2, 3, 4])
 ```
 
-### 3.3.4 Tuple Unpacking in Loops
-
-Tuples are often unpacked directly in `for` loops when iterating over a sequence of pairs.
-
-```python
-pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
-
-for num, letter in pairs:
-    print(f"{num}: {letter}")
-```
-
 ## 3.4 `range` as a Sequence
 
 `range` produces a sequence of numbers efficiently without storing them all in memory. It is **lazy** — values are generated on demand.
@@ -548,6 +537,17 @@ Use `*` to capture the remaining values into a list. The `*` can appear in any p
 first, *rest = [1, 2, 3, 4]                 # first=1, rest=[2, 3, 4]
 first, *middle, last = [1, 2, 3, 4]         # first=1, middle=[2, 3], last=4
 *a, b = [1, 2, 3, 4]                        # a=[1, 2, 3], b=4
+```
+
+### 3.12.4 Unpacking in `for` Loops
+
+Unpacking works naturally in `for` loops when iterating over a sequence of tuples or lists.
+
+```python
+pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
+
+for num, letter in pairs:
+    print(f"{num}: {letter}")
 ```
 
 [← Previous: Basic Data Types](02-basic-data-types.md) | [Next: Mapping and Set Types →](04-mapping-and-set-types.md)
