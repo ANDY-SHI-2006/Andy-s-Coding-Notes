@@ -278,60 +278,59 @@ str1.count("on")         # 3
 
 ## 3.7 Comparison Operations
 
-### 3.7.1 ASCII and Unicode Code Points
+### 3.7.1 Comparing Numbers
 
-- `ord(char)`: Returns the Unicode code point (integer) of a character
-- `chr(int)`: Returns the character represented by a code point
+Numbers are compared by their numeric values. Integers and floats can be compared directly.
+
+```python
+print(3 < 5.5)   # True
+print(2 == 2.0)  # True
+```
+
+### 3.7.2 Comparing Strings
+
+String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
+
+#### 3.7.2.1 Code Points with `ord()` and `chr()`
+
+- `ord(char)`: returns the Unicode code point of a character
+- `chr(int)`: returns the character represented by a code point
 
 ```python
 print(ord('a'))   # 97
 print(ord('A'))   # 65 (uppercase letters come first)
 print(chr(98))    # 'b'
 print(chr(65))    # 'A'
-
-# Useful for case conversion math
-# 'a' (97) - 'A' (65) = 32
 ```
 
-### 3.7.2 Comparing Numbers
-
-- Numbers are compared by their numeric values
-- Integers and floats can be compared directly
-
-### 3.7.3 Comparing Strings
-
-String comparison is based on **Unicode code points** (ASCII is a subset of Unicode).
-
-#### Single Character Comparison
+#### 3.7.2.2 Single Character Comparison
 
 Compare characters by their Unicode code point values:
 
 ```python
-print(max('a', 'A', 'z'))  # Output: 'z' (Unicode code point 122)
-print(ord('a'))            # 97 (Unicode code point)
-print(ord('A'))            # 65 (Unicode code point)
+print(max('a', 'A', 'z'))  # 'z' (code point 122)
 ```
 
-#### Multi-character Comparison
+#### 3.7.2.3 Multi-character Comparison
 
 Compare character by character from left to right until a difference is found:
 
 ```python
-print(max("apple", "banana"))  # Output: "banana"
+print(max("apple", "banana"))  # "banana"
 
 # Comparison process:
 #   'a' vs 'b' → 'b' > 'a' → immediately returns "banana"
 ```
 
-#### Case Sensitivity
+#### 3.7.2.4 Case Sensitivity
 
 Uppercase letters have smaller code points than lowercase letters:
 
 ```python
-print(max("Cat", "cat"))  # Output: "cat" ('c' > 'C')
+print(max("Cat", "cat"))  # "cat" ('c' > 'C')
 ```
 
-### 3.7.4 Custom Comparison Rules
+### 3.7.3 Custom Comparison Rules
 
 Use the `key` parameter to specify custom comparison logic:
 
@@ -345,12 +344,12 @@ print(max("Apple", "banana", key=str.lower))
 # Output: "banana" (compare as lowercase: 'b' > 'a')
 ```
 
-### 3.7.5 Mixed Type Limitations
+### 3.7.4 Mixed Type Limitations
 
 - Cannot directly compare strings with numbers
 - `max(1, "a")` raises `TypeError`
 
-### 3.7.6 Key Summary
+### 3.7.5 Summary
 
 | Comparison Type | Method | Notes |
 |----------------|--------|-------|
