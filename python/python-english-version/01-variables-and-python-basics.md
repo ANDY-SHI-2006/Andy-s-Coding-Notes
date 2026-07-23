@@ -94,7 +94,9 @@ type(x)         # <class 'str'>
 
 ### 1.3.2 Multiple Assignment and Unpacking
 
-Python allows assigning multiple values to multiple variables in one statement. The right-hand side is evaluated first, then the values are assigned to the names on the left.
+#### 1.3.2.1 Basic Multiple Assignment
+
+Python allows assigning multiple values to multiple variables in one statement.
 
 ```python
 a, b = 1, 2   # a=1, b=2
@@ -106,17 +108,29 @@ This is equivalent to unpacking a tuple:
 a, b = (1, 2)  # comma creates a tuple
 ```
 
-The same syntax works with any iterable:
+#### 1.3.2.2 Unpacking from Iterables
+
+The same syntax works with any iterable.
 
 ```python
 x, y = [1, 2]        # x=1, y=2
 first, second = "ab" # first='a', second='b'
 ```
 
+#### 1.3.2.3 Mismatch Trap
+
 The number of variables on the left must match the number of values on the right, unless you use `*` to capture the rest.
 
 ```python
 # a, b = [1, 2, 3]  # ValueError: too many values to unpack
+```
+
+#### 1.3.2.4 Extended Unpacking
+
+Use `*` to capture the remaining values into a list.
+
+```python
+first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 ```
 
 ### 1.3.3 Chain Assignment
@@ -133,14 +147,6 @@ Exchanges two values without a temporary variable.
 
 ```python
 a, b = b, a
-```
-
-### 1.3.5 Extended Unpacking
-
-Captures the remainder into a list.
-
-```python
-first, *rest = [1, 2, 3, 4]  # first=1, rest=[2, 3, 4]
 ```
 
 ## 1.4 Comments
