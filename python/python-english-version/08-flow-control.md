@@ -4,9 +4,9 @@
 
 Programs execute statements in a specific order. By default, Python runs code from top to bottom (sequential execution). Flow control structures let you change this order based on conditions or repeat blocks of code.
 
-## 5.1 Branching Structure
+## 8.1 Branching Structure
 
-### 5.1.1 `if` / `elif` / `else`
+### 8.1.1 `if` / `elif` / `else`
 
 Execute code blocks conditionally. Python uses indentation to define block scope.
 
@@ -65,9 +65,9 @@ timeout = user_config or 30        # 30 if user_config is None/0/""
 name = input("Name: ") or "Guest"  # "Guest" if user presses Enter
 ```
 
-> See also: [4.2.3](07-user-interaction.md#423-default-value-for-empty-input) for `input()` with `or`.
+> See also: [7.2.3](07-user-interaction.md#723-default-value-for-empty-input) for `input()` with `or`.
 
-### 5.1.2 Ternary Operator
+### 8.1.2 Ternary Operator
 
 A concise way to write simple if-else statements in one line.
 
@@ -90,7 +90,7 @@ status = "adult" if age >= 18 else "minor"
 
 **Use Case:** Best for simple conditional assignments. For complex logic, use standard if-else for readability.
 
-### 5.1.3 Single-line `if` Statement
+### 8.1.3 Single-line `if` Statement
 
 Python allows simple `if` statements to be written on a single line.
 
@@ -115,7 +115,7 @@ if x > 0: print("positive")
 
 **Note:** Different from ternary operator. Single-line `if` only handles the "true" case, no else branch.
 
-### 5.1.4 `match` / `case` (Structural Pattern Matching)
+### 8.1.4 `match` / `case` (Structural Pattern Matching)
 
 Python 3.10+ feature for matching data structures against patterns.
 
@@ -129,7 +129,7 @@ Python 3.10+ feature for matching data structures against patterns.
 | Range comparisons (`>`, `<`) | `if` | Guards in `match` are less readable |
 | Python < 3.10 | `if` | `match` is not available |
 
-#### 5.1.4.1 Basic Value Matching
+#### 8.1.4.1 Basic Value Matching
 
 ##### 5.1.4.1.1 Basic Syntax
 
@@ -211,7 +211,7 @@ match status:
         print("OK")
 ```
 
-#### 5.1.4.2 Sequence Matching (List / Tuple)
+#### 8.1.4.2 Sequence Matching (List / Tuple)
 
 Match by structure and bind variables.
 
@@ -268,7 +268,7 @@ match point:
         print(f"Matched {pt} with x={x}, y={y}")
 ```
 
-#### 5.1.4.3 Guard Clause
+#### 8.1.4.3 Guard Clause
 
 A guard adds an `if` condition after `case` to filter matched values further.
 
@@ -308,7 +308,7 @@ match age:
         print("Senior")
 ```
 
-#### 5.1.4.4 Dictionary Matching
+#### 8.1.4.4 Dictionary Matching
 
 Match dictionaries by key structure.
 
@@ -324,7 +324,7 @@ match user:
         print("Empty dict")
 ```
 
-#### 5.1.4.5 Matching Data Classes
+#### 8.1.4.5 Matching Data Classes
 
 Match class instances by attribute structure.
 
@@ -349,7 +349,7 @@ match p:
 
 > **Note:** The `x: int` syntax inside `@dataclass` is a **type annotation** (type hint). It tells `@dataclass` what fields to generate and helps IDEs provide autocompletion. See [16 Type Annotations](16-type-annotations.md#16-type-annotations).
 
-#### 5.1.4.6 Wildcard `_`
+#### 8.1.4.6 Wildcard `_`
 
 `_` matches any value but does not bind it. Useful when you don't need the value.
 
@@ -377,11 +377,11 @@ match p:
         print("Not a point")
 ```
 
-## 5.2 Loop Structures
+## 8.2 Loop Structures
 
-### 5.2.1 `for` Loop
+### 8.2.1 `for` Loop
 
-#### 5.2.1.1 Basic Iteration
+#### 8.2.1.1 Basic Iteration
 
 Iterate over elements of an iterable.
 
@@ -394,7 +394,7 @@ for char in "hello":
     print(char)
 ```
 
-#### 5.2.1.2 `range()`
+#### 8.2.1.2 `range()`
 
 Generate a sequence of numbers.
 
@@ -439,7 +439,7 @@ for char in reversed("hello"):   # 'o', 'l', 'l', 'e', 'h'
     print(char)
 ```
 
-#### 5.2.1.3 `enumerate()`
+#### 8.2.1.3 `enumerate()`
 
 Get both the index and the value while iterating.
 
@@ -474,7 +474,7 @@ for i, fruit in enumerate(fruits, start=1):
 - Conceptually, it is similar to `zip(range(len(iterable)), iterable)`, but `enumerate()` is more readable and Pythonic.
 - Like `range()`, it returns a lazy iterator, not a list.
 
-#### 5.2.1.4 `zip()`
+#### 8.2.1.4 `zip()`
 
 Iterate over multiple sequences in parallel. Stops at the shortest sequence.
 
@@ -535,7 +535,7 @@ list(z)  # [(1, 'a'), (2, 'b')]
 list(z)  # [] — already exhausted
 ```
 
-#### 5.2.1.5 Dictionary Iteration
+#### 8.2.1.5 Dictionary Iteration
 
 ```python
 data = {"a": 1, "b": 2, "c": 3}
@@ -553,7 +553,7 @@ for key, value in data.items():
     print(f"{key} = {value}")
 ```
 
-#### 5.2.1.6 Modifying a Sequence While Iterating
+#### 8.2.1.6 Modifying a Sequence While Iterating
 
 Do not add or remove items from a sequence while iterating over it. The iterator skips elements because indices shift.
 
@@ -569,7 +569,7 @@ for item in items[:]:
         items.remove(item)
 ```
 
-#### 5.2.1.7 Loop Variable Scope
+#### 8.2.1.7 Loop Variable Scope
 
 The loop variable remains accessible **after** the loop ends, holding the last assigned value. If the loop never executes, the variable is undefined.
 
@@ -583,11 +583,11 @@ for target in ["a", "b", "c"]:
 print(target)   # 'c' — last value remains
 ```
 
-### 5.2.2 `while` Loop
+### 8.2.2 `while` Loop
 
 Repeats a block of code as long as a condition remains `True`.
 
-#### 5.2.2.1 Basic Syntax
+#### 8.2.2.1 Basic Syntax
 
 ```python
 count = 0
@@ -604,7 +604,7 @@ print("Access granted")
 
 **Caution:** Ensure the condition eventually becomes `False`, or the loop runs forever.
 
-#### 5.2.2.2 `while True` + `break` Pattern
+#### 8.2.2.2 `while True` + `break` Pattern
 
 Use `while True` for loops where the exit condition is determined inside the loop body.
 
@@ -624,7 +624,7 @@ while True:
     process(data)
 ```
 
-### 5.2.3 `break` Statement
+### 8.2.3 `break` Statement
 
 Immediately exits the innermost loop.
 
@@ -648,7 +648,7 @@ for i in range(3):
 # Output: (0,0) (0,1) (0,2) (1,0) (2,0) (2,1) (2,2)
 ```
 
-### 5.2.4 `continue` Statement
+### 8.2.4 `continue` Statement
 
 Skips the rest of the current iteration and proceeds to the next.
 
@@ -662,7 +662,7 @@ for i in range(10):
 
 > **Note:** Like `break`, `continue` only affects the **innermost** loop in nested structures.
 
-### 5.2.5 Loop `else` Clause
+### 8.2.5 Loop `else` Clause
 
 The `else` block executes **only if the loop completed normally** (without hitting a `break`).
 
@@ -696,7 +696,7 @@ else:
     print("Too many failed attempts")
 ```
 
-### 5.2.6 `pass` Statement
+### 8.2.6 `pass` Statement
 
 A placeholder that does nothing. Used when a statement is syntactically required but no action is needed.
 
