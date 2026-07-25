@@ -66,11 +66,11 @@ Shallow and deep copies apply to any mutable container: lists, dictionaries, set
 
 ### 5.2.1 Assignment vs Shallow Copy vs Deep Copy
 
-| Operation | What Happens | Nested Objects |
-|-----------|--------------|----------------|
-| `b = a` | Creates a new reference to the **same** object | Shared |
-| `b = copy.copy(a)` | Creates a **new container** | Shared |
-| `b = copy.deepcopy(a)` | Creates a **new container** and recursively copies everything | Independent |
+| Operation | What Happens | Nested Objects | Common Ways |
+|-----------|--------------|----------------|-------------|
+| `b = a` | Creates a new reference to the **same** object | Shared | Direct assignment |
+| `b = copy.copy(a)` | Creates a **new container** | Shared | `list[:]`, `list.copy()`, `dict.copy()`, `set.copy()` |
+| `b = copy.deepcopy(a)` | Creates a **new container** and recursively copies everything | Independent | `copy.deepcopy()` |
 
 ### 5.2.2 Examples
 
