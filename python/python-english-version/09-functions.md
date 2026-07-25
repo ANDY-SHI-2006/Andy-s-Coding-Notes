@@ -365,6 +365,13 @@ level_1()
 
 Use `global` when you need to modify a module-level variable. Use `nonlocal` when you need to modify a variable in an enclosing function scope.
 
+#### 9.7.2.3 Comparison
+
+| Keyword | Scope it modifies | Typical use case | Example |
+|---------|-------------------|------------------|---------|
+| `global` | Module-level (global) variable | Counters, configuration flags, shared state | `global count` |
+| `nonlocal` | Nearest enclosing (non-global) variable | Nested functions that need to modify outer locals | `nonlocal x` |
+
 ## 9.8 Docstrings
 
 Document your functions with triple-quoted strings immediately after the definition.
