@@ -145,49 +145,32 @@ These functions support a functional programming style. Unlike `map()` / `filter
 
 ### 10.3.1 `any()` and `all()`
 
-**Basic syntax:**
+**What they do:**
 
-```python
-any(iterable)   # True if at least one item is truthy
-all(iterable)   # True if every item is truthy
-```
-
-A value is **truthy** if it passes an `if` check. Common **falsy** values are `0`, `0.0`, `""`, `[]`, `{}`, `None`, and `False`. Everything else is truthy.
+- `any(iterable)` returns `True` if **at least one** item is truthy.
+- `all(iterable)` returns `True` if **every** item is truthy.
 
 ```python
 any([False, 0, "hello"])   # True  ("hello" is truthy)
-any([False, 0, ""])        # False (all falsy)
+any([False, 0, ""])      # False (nothing is truthy)
 
 all([1, 2, 3])             # True
 all([1, 0, 3])             # False (0 is falsy)
 ```
 
-Both functions check whether elements in an iterable meet a truthiness condition. They are especially useful with generator expressions because they stop at the first result that determines the answer (short-circuit evaluation).
+**Truthy and falsy values:**
 
-| Function | Returns `True` when | Empty input |
-|----------|--------------------|-------------|
-| `any(iterable)` | At least one element is truthy | `any([])` → `False` |
-| `all(iterable)` | All elements are truthy | `all([])` → `True` (vacuously true) |
+A value is **truthy** if it passes an `if` check. Common **falsy** values are `0`, `0.0`, `""`, `[]`, `{}`, `None`, and `False`. Everything else is truthy.
 
-**How they work:**
+**Using conditions:**
 
-- `any()` stops and returns `True` as soon as it finds the first truthy element.
-- `all()` stops and returns `False` as soon as it finds the first falsy element.
-- If the iterable is empty, `any()` returns `False` and `all()` returns `True`.
+In practice, you usually pass a generator expression so the condition is checked for each element.
 
 ```python
-# any() stops at first truthy value
 nums = [-1, -5, 3, -8]
-any(n > 0 for n in nums)     # True (stops at 3)
+any(n > 0 for n in nums)          # True  (3 is positive)
+all(n < 0 for n in nums)          # False (3 is not negative)
 
-# all() stops at first falsy value
-nums = [2, 4, 6, 7, 8]
-all(n % 2 == 0 for n in nums)   # False (stops at 7)
-```
-
-**Practical examples:**
-
-```python
 # Check if any user is an admin
 users = [{"name": "Alice", "role": "user"}, {"name": "Bob", "role": "admin"}]
 any(u["role"] == "admin" for u in users)   # True
@@ -195,27 +178,38 @@ any(u["role"] == "admin" for u in users)   # True
 # Check if all users are adults
 users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}]
 all(u["age"] >= 18 for u in users)   # True
-
-# Validate input: all fields must be non-empty
-fields = ["Alice", "20", "alice@example.com"]
-all(f.strip() for f in fields)   # True
-
-# Empty inputs
-any([])     # False
-all([])     # True
 ```
 
-**Common pitfall:** `all()` treats `0`, `""`, `None`, and empty containers as falsy. Make sure your condition explicitly checks what you intend.
+**Short-circuit evaluation:**
+
+Both functions stop early as soon as the result is determined.
+
+- `any()` stops at the first truthy element and returns `True`.
+- `all()` stops at the first falsy element and returns `False`.
 
 ```python
-nums = [1, 2, 3]
-all(nums)               # True (all non-zero)
+nums = [-1, -5, 3, -8]
+any(n > 0 for n in nums)     # True (stops at 3)
 
+nums = [2, 4, 6, 7, 8]
+all(n % 2 == 0 for n in nums)   # False (stops at 7)
+```
+
+**Empty inputs:**
+
+```python
+any([])     # False
+all([])     # True  (vacuously true)
+```
+
+**Common pitfall:**
+
+`all()` treats `0`, `""`, `None`, and empty containers as falsy. Be explicit about what you are checking.
+
+```python
 nums = [0, 1, 2]
-all(nums)               # False (0 is falsy)
-
-# Better: be explicit about the condition
-all(n >= 0 for n in nums)   # True
+all(nums)                    # False (0 is falsy)
+all(n >= 0 for n in nums)    # True  (explicit condition)
 ```
 
 ### 10.3.2 `reduce()`
