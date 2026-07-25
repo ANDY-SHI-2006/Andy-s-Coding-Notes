@@ -217,13 +217,13 @@ def fn(*args, *, b):   # SyntaxError
     pass
 ```
 
-| Section | Syntax | How to pass |
-| ------- | ------ | ----------- |
-| Positional-only | `a, b, /` | Only by position |
-| Positional or keyword (with optional default) | `c`, `d="value"` | By position or keyword |
-| Variable positional | `*args` | Collects extra positional args |
-| Keyword-only (with optional default) | `*, name` or `*args, name="value"` | Only by keyword |
-| Variable keyword | `**kwargs` | Collects extra keyword args |
+| Section                                       | Syntax                             | How to pass                    |
+| --------------------------------------------- | ---------------------------------- | ------------------------------ |
+| Positional-only                               | `a, b, /`                          | Only by position               |
+| Positional or keyword (with optional default) | `c`, `d="value"`                   | By position or keyword         |
+| Variable positional                           | `*args`                            | Collects extra positional args |
+| Keyword-only (with optional default)          | `*, name` or `*args, name="value"` | Only by keyword                |
+| Variable keyword                              | `**kwargs`                         | Collects extra keyword args    |
 
 ```python
 def demo(a, b, /, c, d="default", *, e, f="kw_only"):
@@ -239,10 +239,10 @@ demo(1, 2, 3, e="required")
 
 ## 9.5 Parameter Unpacking
 
-| Operation | Syntax | Description |
-|-----------|--------|-------------|
-| List/Tuple unpacking | `fn(*list)` | Unpack sequence as positional args |
-| Dict unpacking | `fn(**dict)` | Unpack dict as keyword args |
+| Operation            | Syntax       | Description                        |
+| -------------------- | ------------ | ---------------------------------- |
+| List/Tuple unpacking | `fn(*list)`  | Unpack sequence as positional args |
+| Dict unpacking       | `fn(**dict)` | Unpack dict as keyword args        |
 
 ```python
 def add(a, b, c):
@@ -309,10 +309,11 @@ Assignment changes the innermost scope where the name exists, unless you use `gl
 
 ### 9.7.2 `global` and `nonlocal`
 
-| Keyword | Purpose | Usage |
-|---------|---------|-------|
-| `global` | Modify a global variable from inside a function | `global x` |
-| `nonlocal` | Modify an outer (non-global) enclosing variable | `nonlocal x` |
+Use these keywords when you need to assign to a variable that lives outside the current function's local scope.
+
+#### 9.7.2.1 `global`
+
+Modify a module-level variable from inside a function.
 
 ```python
 count = 0                   # Global variable
@@ -321,7 +322,15 @@ def increment():
     global count            # Declare using global
     count += 1
 
-# nonlocal: for nested functions
+increment()
+print(count)                # 1
+```
+
+#### 9.7.2.2 `nonlocal`
+
+Modify an outer (non-global) enclosing variable, typically in nested functions.
+
+```python
 def outer():
     x = 10                  # Enclosing variable
     def inner():
@@ -330,7 +339,15 @@ def outer():
     inner()
     return x
 
-# nonlocal searches outward and stops at the first match
+print(outer())              # 11
+```
+
+**`nonlocal` lookup rule:**
+1. Search **outward** from the innermost enclosing scope
+2. Stop at the **first** matching variable name found
+3. If no match is found in any enclosing (non-global) scope → `SyntaxError`
+
+```python
 def level_1():
     x = "level_1"
     def level_2():
@@ -345,11 +362,6 @@ def level_1():
 
 level_1()
 ```
-
-**`nonlocal` lookup rule:**
-1. Search **outward** from the innermost enclosing scope
-2. Stop at the **first** matching variable name found
-3. If no match is found in any enclosing (non-global) scope → `SyntaxError`
 
 Use `global` when you need to modify a module-level variable. Use `nonlocal` when you need to modify a variable in an enclosing function scope.
 
