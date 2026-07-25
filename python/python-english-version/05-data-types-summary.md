@@ -72,7 +72,7 @@ Shallow and deep copies apply to any mutable container: lists, dictionaries, set
 | `b = copy.copy(a)` | Creates a **new container** | Shared | `list[:]`, `list.copy()`, `dict.copy()`, `set.copy()` |
 | `b = copy.deepcopy(a)` | Creates a **new container** and recursively copies everything | Independent | `copy.deepcopy()` |
 
-### 5.2.2 Examples
+### 5.2.2 List Example
 
 ```python
 import copy
@@ -95,25 +95,38 @@ deep[1][0] = 77
 print(original)              # [99, [88, 3]] — unaffected
 ```
 
-The same idea applies to dictionaries:
+### 5.2.3 Dictionary Example
 
 ```python
+import copy
+
 original = {"a": [1, 2], "b": [3, 4]}
+
+# Assignment
+ref = original
+ref["a"] = [9, 9]
+print(original)  # {'a': [9, 9], 'b': [3, 4]} — affected
+
+# Shallow copy: new dict, but nested lists are shared
 shallow = original.copy()
-deep = copy.deepcopy(original)
-
 shallow["a"][0] = 99
-print(original["a"])         # [99, 2] — affected
+print(original)  # {'a': [99, 2], 'b': [3, 4]} — nested object affected
 
-# deep["b"][0] = 77 would not affect original
+# Deep copy: completely independent
+deep = copy.deepcopy(original)
+deep["a"][0] = 77
+print(original)  # {'a': [99, 2], 'b': [3, 4]} — unaffected
 ```
 
-Sets also have a `.copy()` method, which performs a shallow copy:
+### 5.2.4 Set Example
+
+Sets can only contain hashable elements, so nested objects are not allowed. The `.copy()` method performs a shallow copy.
 
 ```python
 s1 = {1, 2, 3}
 s2 = s1.copy()
 s2.add(4)
+
 print(s1)  # {1, 2, 3}
 print(s2)  # {1, 2, 3, 4}
 ```
