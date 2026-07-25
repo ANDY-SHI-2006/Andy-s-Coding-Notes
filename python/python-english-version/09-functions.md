@@ -6,11 +6,17 @@
 
 Every function in Python has three core components:
 
+### 9.1.1 The Three Core Elements
+
 | Element | Role | Example |
 |---------|------|---------|
 | **Name** | Identifier + address in memory | `def greet():` → `greet` is the name |
 | **Parameters** | Input variables (formal) / arguments (actual) | `(name, age)` |
 | **Return Value** | Output sent back to the caller | `return result` |
+
+### 9.1.2 Function Names Are References
+
+A function name is just a reference to a function object in memory. You can assign it to another variable, and both names point to the same function.
 
 ```python
 def add(a, b):          # name = "add", parameters = (a, b)
@@ -25,7 +31,8 @@ my_add = add            # Both names point to the same function
 print(my_add(2, 3))     # 5
 ```
 
-**Key rules about return values:**
+### 9.1.3 Return Value Rules
+
 1. Whatever follows `return` becomes the return value
 2. `return` immediately ends function execution — code after it does not run
 3. If no `return` is present, the function implicitly returns `None`
