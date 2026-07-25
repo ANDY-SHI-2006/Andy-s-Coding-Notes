@@ -180,7 +180,7 @@ count += 5   # count is now 15
 
 The walrus operator assigns a value **inside an expression** and returns that value. Unlike `=`, which is a statement, `:=` is an expression and can be used where statements are not allowed.
 
-**`=` vs `:=`:**
+#### 6.4.1.1 `=` vs `:=`
 
 | Feature | `=` | `:=` |
 |---------|-----|------|
@@ -189,7 +189,7 @@ The walrus operator assigns a value **inside an expression** and returns that va
 | Can use in `if`/`while` | No | Yes |
 | Python version | All | 3.8+ |
 
-**Common Patterns:**
+#### 6.4.1.2 Common Patterns
 
 ```python
 # Pattern 1: while loop with input
@@ -208,7 +208,9 @@ if (match := re.search(r"\d+", text)):
     print(match.group())
 ```
 
-**Limitation:** `:=` cannot be used as a standalone statement. It must appear inside an expression context.
+#### 6.4.1.3 Limitation
+
+`:=` cannot be used as a standalone statement. It must appear inside an expression context.
 
 ```python
 x := 1       # SyntaxError
