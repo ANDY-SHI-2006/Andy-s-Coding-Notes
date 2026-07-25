@@ -435,4 +435,25 @@ def apply(func: Callable[[int], int], value: int) -> int:
     return func(value)
 ```
 
+
+## 9.9 Recursion
+
+A function that calls itself. Must have a **base case** to terminate.
+
+```python
+def factorial(n):
+    if n <= 1:           # Base case
+        return 1
+    return n * factorial(n - 1)  # Recursive case
+
+factorial(5)  # 120
+```
+
+**Note:** Python has a recursion depth limit (~1000 by default). Use iteration for deep recursion.
+
+```python
+import sys
+sys.getrecursionlimit()   # 1000 (default)
+```
+
 [← Previous: Flow Control](08-flow-control.md) | [Next: Advanced Functions →](10-advanced-functions.md)
