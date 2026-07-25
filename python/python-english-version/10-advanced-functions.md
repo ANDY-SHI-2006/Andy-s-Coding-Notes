@@ -145,6 +145,23 @@ These functions support a functional programming style. Unlike `map()` / `filter
 
 ### 10.3.1 `any()` and `all()`
 
+**Basic syntax:**
+
+```python
+any(iterable)   # True if at least one item is truthy
+all(iterable)   # True if every item is truthy
+```
+
+A value is **truthy** if it passes an `if` check. Common **falsy** values are `0`, `0.0`, `""`, `[]`, `{}`, `None`, and `False`. Everything else is truthy.
+
+```python
+any([False, 0, "hello"])   # True  ("hello" is truthy)
+any([False, 0, ""])        # False (all falsy)
+
+all([1, 2, 3])             # True
+all([1, 0, 3])             # False (0 is falsy)
+```
+
 Both functions check whether elements in an iterable meet a truthiness condition. They are especially useful with generator expressions because they stop at the first result that determines the answer (short-circuit evaluation).
 
 | Function | Returns `True` when | Empty input |
