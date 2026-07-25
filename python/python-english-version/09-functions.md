@@ -1,8 +1,8 @@
 [← Previous: Flow Control](08-flow-control.md) | [Next: Advanced Functions →](10-advanced-functions.md)
 
-# 6 Functions
+# 9 Functions
 
-## 6.0 Function Anatomy (The Three Elements)
+## 9.1 Function Anatomy (The Three Elements)
 
 Every function in Python has three core components:
 
@@ -31,9 +31,9 @@ print(my_add(2, 3))     # 5
 3. If no `return` is present, the function implicitly returns `None`
 4. `return` without a value also returns `None`
 
-## 6.1 Function Parameters
+## 9.2 Function Parameters
 
-### 6.1.1 Formal Parameters Definition
+### 9.2.1 Formal Parameters Definition
 
 | Parameter Type | Syntax | Description |
 |---------------|--------|-------------|
@@ -49,7 +49,7 @@ greet("Alice")           # Hello, Alice!
 greet("Bob", "Hi")       # Hi, Bob!
 ```
 
-### 6.1.2 Actual Arguments Passing
+### 9.2.2 Actual Arguments Passing
 
 | Passing Type | Syntax | Description |
 |-------------|--------|-------------|
@@ -66,7 +66,7 @@ info(name="Bob", age=25, gender="M")      # Keyword
 info("Charlie", gender="F", age=30)       # Mixed
 ```
 
-### 6.1.3 Keyword-Only Arguments
+### 9.2.3 Keyword-Only Arguments
 
 Arguments after a bare `*` must be passed by keyword.
 
@@ -79,7 +79,7 @@ greet("Alice", greeting="Hi")  # OK
 # greet("Alice", "Hi")      # TypeError: positional argument after *
 ```
 
-### 6.1.4 Positional-Only Arguments (Python 3.8+)
+### 9.2.4 Positional-Only Arguments (Python 3.8+)
 
 Arguments before a `/` must be passed positionally.
 
@@ -91,9 +91,9 @@ divide(10, 2)       # OK
 # divide(a=10, b=2) # TypeError: positional-only argument passed as keyword
 ```
 
-## 6.2 Variable Parameters
+## 9.3 Variable Parameters
 
-### 6.2.1 Variable Positional Parameters `*args`
+### 9.3.1 Variable Positional Parameters `*args`
 
 | Feature | Description |
 |---------|-------------|
@@ -117,7 +117,7 @@ info(1, 2)                  # a=1, b=2, rest=()
 info(1, 2, 3, 4, 5)         # a=1, b=2, rest=(3, 4, 5)
 ```
 
-### 6.2.2 Variable Keyword Parameters `**kwargs`
+### 9.3.2 Variable Keyword Parameters `**kwargs`
 
 | Feature | Description |
 |---------|-------------|
@@ -142,9 +142,8 @@ universal(1, 2, 3, name="Alice", age=20)
 # Keyword: {'name': 'Alice', 'age': 20}
 ```
 
-## 6.3 Summary
+## 9.4 Summary
 
-### 6.3.1 Parameter Order
 ```python
 def fn(regular, default=val, *args, **kwargs):
     pass
@@ -157,7 +156,7 @@ def fn(regular, default=val, *args, **kwargs):
 | `*args` | Variable positional | `def fn(*args)` |
 | `**kwargs` | Variable keyword | `def fn(**kwargs)` |
 
-## 6.4 Parameter Unpacking
+## 9.5 Parameter Unpacking
 
 | Operation | Syntax | Description |
 |-----------|--------|-------------|
@@ -175,7 +174,7 @@ data = {"a": 1, "b": 2, "c": 3}
 print(add(**data))          # Equivalent to add(a=1, b=2, c=3)
 ```
 
-## 6.5 Function Return Values
+## 9.6 Function Return Values
 
 | Feature | Description |
 |---------|-------------|
@@ -195,7 +194,7 @@ def stats(x, y):
 sum_val, diff = stats(10, 3)  # Unpacking
 ```
 
-## 6.6 Scope
+## 9.7 Scope
 
 | Keyword | Purpose | Usage |
 |---------|---------|-------|
@@ -241,7 +240,7 @@ level_1()
 
 Use `global` when you need to modify a module-level variable. Use `nonlocal` when you need to modify a variable in an enclosing function scope.
 
-## 6.7 Docstrings
+## 9.8 Docstrings
 
 Document your functions with triple-quoted strings immediately after the definition.
 
@@ -263,7 +262,7 @@ def calculate_area(length, width):
 print(calculate_area.__doc__)
 ```
 
-## 6.8 Type Hints
+## 9.9 Type Hints
 
 Optional annotations that improve code clarity and IDE support.
 
@@ -282,7 +281,6 @@ user: dict[str, int] = {"age": 20}
 
 **Note:** Python remains dynamically typed. Type hints are checked by external tools (like `mypy`), not at runtime.
 
-### 6.8.1 Advanced Type Annotations
 
 Import from the `typing` module for complex type declarations.
 
@@ -302,7 +300,7 @@ def apply(func: Callable[[int], int], value: int) -> int:
     return func(value)
 ```
 
-## 6.9 Recursion
+## 9.10 Recursion
 
 A function that calls itself. Must have a **base case** to terminate.
 
@@ -322,7 +320,7 @@ import sys
 sys.getrecursionlimit()   # 1000 (default)
 ```
 
-## 6.10 `__main__` Guard
+## 9.11 `__main__` Guard
 
 Code inside `if __name__ == "__main__":` only runs when the file is executed directly, not when it is imported as a module.
 
@@ -334,7 +332,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## 6.11 Advanced Usage
+## 9.12 Advanced Usage
 
 Functions in Python are first-class objects:
 
