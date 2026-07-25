@@ -58,6 +58,8 @@ q, r = divmod(17, 5)   # q=3, r=2
 
 ## 6.2 Comparison Operators
 
+### 6.2.1 Basic Comparison
+
 | Operator | Description | Example | Result |
 |----------|-------------|---------|--------|
 | `==` | Equal to | `5 == 5` | `True` |
@@ -72,7 +74,7 @@ age = 20
 print(age >= 18)  # True
 ```
 
-### 6.2.1 Chain Comparison
+### 6.2.2 Chain Comparison
 
 Python supports chaining comparisons for readability. The intermediate value is evaluated only once.
 
@@ -156,28 +158,29 @@ print(0 or "")         # "" (all falsy, returns last)
 
 ## 6.4 Assignment Operators
 
-| Operator | Example                | Equivalent to                       |
-| -------- | ---------------------- | ----------------------------------- |
-| `=`      | `x = 5`                | `x = 5`                             |
-| `+=`     | `x += 3`               | `x = x + 3`                         |
-| `-=`     | `x -= 3`               | `x = x - 3`                         |
-| `*=`     | `x *= 3`               | `x = x * 3`                         |
-| `/=`     | `x /= 3`               | `x = x / 3`                         |
-| `//=`    | `x //= 3`              | `x = x // 3`                        |
-| `%=`     | `x %= 3`               | `x = x % 3`                         |
-| `**=`    | `x **= 3`              | `x = x ** 3`                        |
-| `:=`     | `if (n := len(s)) > 5` | Expression assignment (Python 3.8+) |
+### 6.4.1 Augmented Assignment
+
+| Operator | Example | Equivalent to |
+|----------|---------|---------------|
+| `=` | `x = 5` | `x = 5` |
+| `+=` | `x += 3` | `x = x + 3` |
+| `-=` | `x -= 3` | `x = x - 3` |
+| `*=` | `x *= 3` | `x = x * 3` |
+| `/=` | `x /= 3` | `x = x / 3` |
+| `//=` | `x //= 3` | `x = x // 3` |
+| `%=` | `x %= 3` | `x = x % 3` |
+| `**=` | `x **= 3` | `x = x ** 3` |
 
 ```python
 count = 10
 count += 5   # count is now 15
 ```
 
-### 6.4.1 Walrus Operator `:=`
+### 6.4.2 Walrus Operator `:=`
 
 The walrus operator assigns a value **inside an expression** and returns that value. Unlike `=`, which is a statement, `:=` is an expression and can be used where statements are not allowed.
 
-#### 6.4.1.1 `=` vs `:=`
+#### 6.4.2.1 `=` vs `:=`
 
 | Feature | `=` | `:=` |
 |---------|-----|------|
@@ -186,7 +189,7 @@ The walrus operator assigns a value **inside an expression** and returns that va
 | Can use in `if`/`while` | No | Yes |
 | Python version | All | 3.8+ |
 
-#### 6.4.1.2 Common Patterns
+#### 6.4.2.2 Common Patterns
 
 - **While loop with input:** assigns the input to `line` and checks it in one expression.
   ```python
@@ -211,7 +214,7 @@ The walrus operator assigns a value **inside an expression** and returns that va
       print(match.group())
   ```
 
-#### 6.4.1.3 Limitation
+#### 6.4.2.3 Limitation
 
 `:=` cannot be used as a standalone statement. It must appear inside an expression context.
 
@@ -222,18 +225,14 @@ x := 1       # SyntaxError
 
 ## 6.5 Identity Operators
 
+### 6.5.1 `is` and `is not`
+
 Identity operators compare memory addresses (identity), not just values.
 
 | Operator | Description | Example |
 |----------|-------------|---------|
 | `is` | Returns `True` if both operands refer to the same object in memory | `x is y` |
 | `is not` | Returns `True` if operands refer to different objects | `x is not y` |
-
-### 6.5.1 `id()` Function
-
-The `id()` function returns the memory address (identity) of an object. `id(x) == id(y)` is equivalent to `x is y`.
-
-`==` compares **values** (equality) by calling `__eq__`. `is` and `id()` compare **memory addresses** (identity), not value.
 
 ```python
 a = [1, 2, 3]
@@ -243,10 +242,20 @@ c = a
 print(a == b)   # True - same values
 print(a is b)   # False - different objects in memory
 print(a is c)   # True - same object (c references a)
-print(id(a))    # Memory address of a
 ```
 
 **Note:** For interning (small integer cache, string interning), see [5.3 Memory Interning](05-data-types-summary.md#53-memory-interning-basics).
+
+### 6.5.2 `id()` Function
+
+The `id()` function returns the memory address (identity) of an object. `id(x) == id(y)` is equivalent to `x is y`.
+
+`==` compares **values** (equality) by calling `__eq__`. `is` and `id()` compare **memory addresses** (identity), not value.
+
+```python
+a = [1, 2, 3]
+print(id(a))    # Memory address of a
+```
 
 ## 6.6 Membership Operators
 
