@@ -91,53 +91,29 @@ info(name="Bob", age=25, gender="M")      # Keyword
 info("Charlie", gender="F", age=30)       # Mixed
 ```
 
-### 9.2.4 Restricting Arguments: `/` and `*`
+### 9.2.4 Positional-Only Arguments: `/`
 
-Python lets you control whether arguments must be passed positionally or by keyword.
+Arguments before a `/` must be passed positionally.
 
 ```python
-def divide(a, b, /):        # a, b are positional-only
+def divide(a, b, /):
     return a / b
 
-def greet(name, *, greeting="Hello"):   # greeting is keyword-only
+divide(10, 2)       # OK
+# divide(a=10, b=2) # TypeError: positional-only argument passed as keyword
+```
+
+### 9.2.5 Keyword-Only Arguments: `*`
+
+Arguments after a bare `*` must be passed by keyword.
+
+```python
+def greet(name, *, greeting="Hello"):
     print(f"{greeting}, {name}!")
 
-divide(10, 2)              # OK
-# divide(a=10, b=2)        # TypeError: positional-only argument passed as keyword
-
-greet("Alice")             # OK
+greet("Alice")              # OK
 greet("Alice", greeting="Hi")  # OK
-# greet("Alice", "Hi")     # TypeError: positional argument after *
-```
-
-### 9.2.5 Complete Parameter Order
-
-Python 3 functions can combine all parameter styles. The full order is:
-
-```python
-def fn(pos_only, /, pos_or_kwd, default="value", *args, kwd_only, **kwargs):
-    pass
-```
-
-| Section               | Syntax                  | How to pass                      |
-| --------------------- | ----------------------- | -------------------------------- |
-| Positional-only       | `a, b, /`               | Only by position                 |
-| Positional or keyword | `c, d`                  | By position or keyword           |
-| Default values        | `e="value"`             | Optional, by position or keyword |
-| Variable positional   | `*args`                 | Collects extra positional args   |
-| Keyword-only          | `*, name` or `*args, name` | Only by keyword               |
-| Variable keyword      | `**kwargs`              | Collects extra keyword args      |
-
-```python
-def demo(a, b, /, c, d="default", *, e, f="kw_only"):
-    print(f"a={a}, b={b}, c={c}, d={d}, e={e}, f={f}")
-
-# a, b: positional-only
-# c: positional or keyword
-# d: default, positional or keyword
-# e, f: keyword-only
-demo(1, 2, 3, e="required")
-# a=1, b=2, c=3, d=default, e=required, f=kw_only
+# greet("Alice", "Hi")      # TypeError: positional argument after *
 ```
 
 ### 9.2.6 Mutable Default Argument Trap
@@ -221,19 +197,33 @@ universal(1, 2, 3, name="Alice", age=20)
 
 ## 9.4 Summary
 
+Python 3 functions combine all parameter styles in this order:
+
 ```python
-def fn(pos_only, /, pos_or_kwd, default="val", *args, kwd_only, **kwargs):
+def fn(pos_only, /, pos_or_kwd, default="value", *args, kwd_only, **kwargs):
     pass
 ```
 
-| Type | Purpose | Example |
-|------|---------|---------|
-| Positional-only | Must be passed by position | `def fn(a, b, /)` |
-| Regular | Required positional or keyword | `def fn(a, b)` |
-| Default | Optional with default | `def fn(a=10)` |
-| `*args` | Variable positional | `def fn(*args)` |
-| Keyword-only | Must be passed by keyword | `def fn(*, a)` |
-| `**kwargs` | Variable keyword | `def fn(**kwargs)` |
+| Section               | Syntax                     | How to pass                      |
+| --------------------- | -------------------------- | -------------------------------- |
+| Positional-only       | `a, b, /`                  | Only by position                 |
+| Positional or keyword | `c, d`                     | By position or keyword           |
+| Default values        | `e="value"`                | Optional, by position or keyword |
+| Variable positional   | `*args`                    | Collects extra positional args   |
+| Keyword-only          | `*, name` or `*args, name` | Only by keyword                  |
+| Variable keyword      | `**kwargs`                 | Collects extra keyword args      |
+
+```python
+def demo(a, b, /, c, d="default", *, e, f="kw_only"):
+    print(f"a={a}, b={b}, c={c}, d={d}, e={e}, f={f}")
+
+# a, b: positional-only
+# c: positional or keyword
+# d: default, positional or keyword
+# e, f: keyword-only
+demo(1, 2, 3, e="required")
+# a=1, b=2, c=3, d=default, e=required, f=kw_only
+```
 
 ## 9.5 Parameter Unpacking
 
