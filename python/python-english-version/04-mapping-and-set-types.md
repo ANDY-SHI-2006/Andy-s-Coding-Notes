@@ -150,9 +150,7 @@ set1.clear()
 print(set1)  # set()
 ```
 
-#### 4.1.3.3 Query
-
-##### 4.1.3.3.1 `in` / `not in`
+#### 4.1.3.3 `in` / `not in`
 
 Membership test is the primary way to query a set.
 
@@ -163,8 +161,6 @@ print("Zoe" not in set1) # True
 ```
 
 ### 4.1.4 Iteration
-
-#### 4.1.4.1 Direct Iteration
 
 Sets don't support index access. Use direct iteration only.
 
