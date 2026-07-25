@@ -44,9 +44,10 @@ Use `lambda` for short, throwaway functions. Use `def` for anything complex.
 
 ### 10.2.1 What Are Higher-Order Functions?
 
-A **higher-order function** either:
-- Takes another function as an argument, or
-- Returns a function as its result.
+A **higher-order function** is a function that does at least one of the following:
+
+- **Takes another function as an argument**
+- **Returns a function as its result**
 
 Python's most common built-in higher-order functions:
 
