@@ -1,6 +1,6 @@
 [← Previous: User Interaction](07-user-interaction.md) | [Next: Functions →](09-functions.md)
 
-# 5 Flow Control
+# 8 Flow Control
 
 Programs execute statements in a specific order. By default, Python runs code from top to bottom (sequential execution). Flow control structures let you change this order based on conditions or repeat blocks of code.
 
@@ -131,7 +131,7 @@ Python 3.10+ feature for matching data structures against patterns.
 
 #### 8.1.4.1 Basic Value Matching
 
-##### 5.1.4.1.1 Basic Syntax
+##### 8.1.4.1.1 Basic Syntax
 
 ```python
 status = 200
@@ -147,15 +147,15 @@ match status:
         print("Unknown status")
 ```
 
-##### 5.1.4.1.2 Execution Order
+##### 8.1.4.1.2 Execution Order
 
 Cases are checked top-to-bottom. The first matching `case` executes, and the rest are skipped. Place `_` (wildcard) last, or it will shadow all branches below it.
 
-##### 5.1.4.1.3 No Match
+##### 8.1.4.1.3 No Match
 
 If no `case` matches and there is no `_`, the `match` statement does nothing — no error, no warning.
 
-##### 5.1.4.1.4 OR Pattern
+##### 8.1.4.1.4 OR Pattern
 
 Match multiple values with `|`.
 
@@ -169,7 +169,7 @@ match status:
         print("Other")
 ```
 
-##### 5.1.4.1.5 Enum Matching
+##### 8.1.4.1.5 Enum Matching
 
 Match `Enum` members for safer, more readable code. 
 
@@ -192,7 +192,7 @@ match status:
         print("Failed")
 ```
 
-##### 5.1.4.1.6 Variable Name Trap
+##### 8.1.4.1.6 Variable Name Trap
 
 A bare name in `case` always acts as a **capture variable** (binds the matched value), not a value comparison. 
 
@@ -215,7 +215,7 @@ match status:
 
 Match by structure and bind variables.
 
-##### 5.1.4.2.1 Tuple Matching
+##### 8.1.4.2.1 Tuple Matching
 
 ```python
 point = (3, 0)
@@ -231,7 +231,7 @@ match point:
         print(f"Point at ({x}, {y})")
 ```
 
-##### 5.1.4.2.2 List Matching
+##### 8.1.4.2.2 List Matching
 
 ```python
 items = [1, 2, 3]
@@ -247,7 +247,7 @@ match items:
         print(f"First: {first}, Rest: {rest}")
 ```
 
-##### 5.1.4.2.3 Variable Scope
+##### 8.1.4.2.3 Variable Scope
 
 Variables bound in a `case` pattern remain accessible **after** the `match` statement.
 
@@ -258,7 +258,7 @@ match point:
 print(x, y)   # x and y are accessible here
 ```
 
-##### 5.1.4.2.4 `as` Pattern
+##### 8.1.4.2.4 `as` Pattern
 
 Capture the entire matched value alongside its components.
 
@@ -398,7 +398,7 @@ for char in "hello":
 
 Generate a sequence of numbers.
 
-##### 5.2.1.2.1 Syntax
+##### 8.2.1.2.1 Syntax
 
 ```python
 range(stop)
@@ -412,7 +412,7 @@ range(start, stop, step)
 | `stop` | Ending value (**exclusive**) | required |
 | `step` | Increment or decrement | `1` |
 
-##### 5.2.1.2.2 Basic Examples
+##### 8.2.1.2.2 Basic Examples
 
 ```python
 for i in range(5):           # 0, 1, 2, 3, 4
@@ -427,7 +427,7 @@ for i in range(10, 0, -1):   # 10, 9, ..., 1
 
 > **Note:** `range()` returns a lazy iterator, not a list. `range(10**9)` uses almost no memory until iterated.
 
-##### 5.2.1.2.3 `reversed()`
+##### 8.2.1.2.3 `reversed()`
 
 Iterate over a sequence in reverse order without modifying it.
 
@@ -443,7 +443,7 @@ for char in reversed("hello"):   # 'o', 'l', 'l', 'e', 'h'
 
 Get both the index and the value while iterating.
 
-##### 5.2.1.3.1 Basic Usage
+##### 8.2.1.3.1 Basic Usage
 
 ```python
 fruits = ["apple", "banana", "cherry"]
@@ -456,7 +456,7 @@ for i, fruit in enumerate(fruits):
 # 2: cherry
 ```
 
-##### 5.2.1.3.2 Custom Start Index
+##### 8.2.1.3.2 Custom Start Index
 
 ```python
 for i, fruit in enumerate(fruits, start=1):
@@ -467,7 +467,7 @@ for i, fruit in enumerate(fruits, start=1):
 # 3. cherry
 ```
 
-##### 5.2.1.3.3 Key Points
+##### 8.2.1.3.3 Key Points
 
 - `enumerate()` yields `(index, value)` tuples. `list(enumerate(["a", "b"]))` gives `[(0, "a"), (1, "b")]`.
 - The `start` parameter changes the beginning index. It is often used with `1` for human-friendly numbering.
@@ -478,7 +478,7 @@ for i, fruit in enumerate(fruits, start=1):
 
 Iterate over multiple sequences in parallel. Stops at the shortest sequence.
 
-##### 5.2.1.4.1 Basic Usage
+##### 8.2.1.4.1 Basic Usage
 
 ```python
 names = ["Alice", "Bob", "Charlie"]
@@ -492,7 +492,7 @@ for name, score in zip(names, scores):
 # Charlie: 78
 ```
 
-##### 5.2.1.4.2 Unequal Lengths
+##### 8.2.1.4.2 Unequal Lengths
 
 When the sequences have different lengths, `zip()` stops at the shortest one.
 
@@ -502,7 +502,7 @@ b = ['a', 'b']
 list(zip(a, b))  # [(1, 'a'), (2, 'b')]
 ```
 
-##### 5.2.1.4.3 Filling with `zip_longest`
+##### 8.2.1.4.3 Filling with `zip_longest`
 
 Use `itertools.zip_longest` to keep iterating until the longest sequence is exhausted. Missing values are filled with `None` by default, or with `fillvalue`.
 
@@ -516,7 +516,7 @@ list(zip_longest([1, 2, 3], ['a', 'b'], fillvalue='?'))
 # [(1, 'a'), (2, 'b'), (3, '?')]
 ```
 
-##### 5.2.1.4.4 Transpose with `zip(*matrix)`
+##### 8.2.1.4.4 Transpose with `zip(*matrix)`
 
 Use the unpacking operator `*` with `zip` to transpose rows and columns.
 
@@ -525,7 +525,7 @@ matrix = [[1, 2, 3], [4, 5, 6]]
 cols = list(zip(*matrix))   # [(1, 4), (2, 5), (3, 6)]
 ```
 
-##### 5.2.1.4.5 One-Time Iterator
+##### 8.2.1.4.5 One-Time Iterator
 
 `zip()` returns a one-time iterator. Once exhausted, it cannot be iterated again.
 
