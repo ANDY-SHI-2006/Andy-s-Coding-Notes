@@ -195,12 +195,17 @@ universal(1, 2, 3, name="Alice", age=20)
 # Keyword: {'name': 'Alice', 'age': 20}
 ```
 
-## 9.4 Summary
+## 9.4 Parameter Order Cheat Sheet
 
 Python 3 functions combine all parameter styles in this order:
 
 ```python
+# With variable positional collection
 def fn(pos_only, /, pos_or_kwd, default="value", *args, kwd_only, **kwargs):
+    pass
+
+# With bare * (keyword-only, but no *args collection)
+def fn2(pos_only, /, pos_or_kwd, *, kwd_only, **kwargs):
     pass
 ```
 
