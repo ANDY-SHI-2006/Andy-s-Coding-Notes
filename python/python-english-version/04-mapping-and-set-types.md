@@ -256,9 +256,27 @@ Get a value if the key exists; otherwise create the key with a default value.
 
 ```python
 settings = {"theme": "dark"}
-settings.setdefault("font_size", 14)   # Adds key with value 14
-settings.setdefault("theme", "light")  # Keeps existing "dark"
+
+# Key does not exist -> insert and return default
+value = settings.setdefault("font_size", 14)
+print(value)     # 14
 print(settings)  # {'theme': 'dark', 'font_size': 14}
+
+# Key already exists -> return existing value, do not overwrite
+value = settings.setdefault("theme", "light")
+print(value)     # 'dark'
+print(settings)  # {'theme': 'dark', 'font_size': 14}
+```
+
+**Practical use:** initialize a counter without `collections.Counter`.
+
+```python
+counts = {}
+for word in ["apple", "banana", "apple", "cherry", "banana", "apple"]:
+    counts.setdefault(word, 0)
+    counts[word] += 1
+
+print(counts)  # {'apple': 3, 'banana': 2, 'cherry': 1}
 ```
 
 #### 4.2.2.2 Delete
