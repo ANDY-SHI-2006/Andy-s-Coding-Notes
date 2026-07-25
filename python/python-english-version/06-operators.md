@@ -137,9 +137,6 @@ print(3 and 5)         # 5 (all truthy, returns last)
 print(3 or 0)          # 3 (stops at 3)
 print(0 or "" or 7)    # 7
 print(0 or "")         # "" (all falsy, returns last)
-
-# Common pattern: default value
-name = user_input or "Anonymous"
 ```
 
 **Common patterns:**
@@ -191,22 +188,28 @@ The walrus operator assigns a value **inside an expression** and returns that va
 
 #### 6.4.1.2 Common Patterns
 
-```python
-# Pattern 1: while loop with input
-while (line := input()) != "quit":
-    print(f"You entered: {line}")
+- **While loop with input:** assigns the input to `line` and checks it in one expression.
+  ```python
+  while (line := input()) != "quit":
+      print(f"You entered: {line}")
+  ```
 
-# Pattern 2: if with reused value
-if (n := len(data)) > 10:
-    print(f"Too long: {n} items")
+- **Reused value in `if`:** compute a value once and use it for both the condition and the body.
+  ```python
+  if (n := len(data)) > 10:
+      print(f"Too long: {n} items")
+  ```
 
-# Pattern 3: list comprehension without duplicate computation
-results = [y for x in data if (y := f(x)) > 0]
+- **List comprehension without duplicate computation:** assign an intermediate result and filter on it.
+  ```python
+  results = [y for x in data if (y := f(x)) > 0]
+  ```
 
-# Pattern 4: regex match with reuse
-if (match := re.search(r"\d+", text)):
-    print(match.group())
-```
+- **Regex match with reuse:** capture the match object and use it immediately.
+  ```python
+  if (match := re.search(r"\d+", text)):
+      print(match.group())
+  ```
 
 #### 6.4.1.3 Limitation
 
