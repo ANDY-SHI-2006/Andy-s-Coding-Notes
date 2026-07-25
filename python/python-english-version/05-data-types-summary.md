@@ -6,15 +6,9 @@
 
 ### 5.1.1 Definition
 
-**Mutable Types:** Lists, Dictionaries, Sets, Bytearrays, and custom objects with mutable attributes
+**Mutable** objects can be modified after creation. Their internal values change, but their memory address stays the same.
 
-- Can be modified after creation
-- Internal values change, but **memory address remains the same**
-
-**Immutable Types:** Integers, Strings, Tuples, Booleans, Floats, Frozensets, Bytes, Complex numbers, and `None`
-
-- Cannot be modified after creation
-- Attempting to modify actually creates a **new object** with a different memory address
+**Immutable** objects cannot be modified after creation. Any operation that appears to modify them actually creates a new object with a different memory address.
 
 ### 5.1.2 Examples
 
