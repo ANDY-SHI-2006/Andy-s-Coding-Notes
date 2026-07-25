@@ -217,14 +217,13 @@ def fn(*args, *, b):   # SyntaxError
     pass
 ```
 
-| Section               | Syntax                     | How to pass                      |
-| --------------------- | -------------------------- | -------------------------------- |
-| Positional-only       | `a, b, /`                  | Only by position                 |
-| Positional or keyword | `c, d`                     | By position or keyword           |
-| Default values        | `e="value"`                | Optional, by position or keyword |
-| Variable positional   | `*args`                    | Collects extra positional args   |
-| Keyword-only          | `*, name` or `*args, name` | Only by keyword                  |
-| Variable keyword      | `**kwargs`                 | Collects extra keyword args      |
+| Section | Syntax | How to pass |
+| ------- | ------ | ----------- |
+| Positional-only | `a, b, /` | Only by position |
+| Positional or keyword (with optional default) | `c`, `d="value"` | By position or keyword |
+| Variable positional | `*args` | Collects extra positional args |
+| Keyword-only (with optional default) | `*, name` or `*args, name="value"` | Only by keyword |
+| Variable keyword | `**kwargs` | Collects extra keyword args |
 
 ```python
 def demo(a, b, /, c, d="default", *, e, f="kw_only"):
