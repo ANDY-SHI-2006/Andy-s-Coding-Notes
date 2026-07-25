@@ -467,39 +467,66 @@ if __name__ == "__main__":
     main()
 ```
 
-## 9.11 Advanced Usage
+## 9.11 First-Class Functions
 
-Functions in Python are first-class objects:
+Functions in Python are first-class objects: they can be assigned, passed, returned, and stored like any other value.
 
-| Feature | Description | Example |
-|---------|-------------|---------|
-| Assign to variable | Function can be referenced | `f = print` |
-| Pass as argument | Function as parameter | `map(fn, list)` |
-| Return from function | Function as return value | `return inner` |
-| Store in container | Function in list/dict | `[1, 2, fn]` |
+### 9.11.1 Assign to a Variable
+
+A function name is just a reference. You can assign it to another variable.
 
 ```python
-# 1. Reference
 def greet():
     print("Hello")
 
 my_func = greet
 my_func()                   # Calls greet()
+```
 
-# 2. Pass as argument
+### 9.11.2 Pass as an Argument
+
+Functions can be passed to other functions, enabling flexible behavior.
+
+```python
 def apply(func, value):
     return func(value)
 
 apply(len, "hello")         # 5
+apply(str.upper, "abc")     # "ABC"
+```
 
-# 3. Return function
+### 9.11.3 Return from a Function
+
+Functions can create and return other functions. This is the basis of closures and decorators.
+
+```python
 def multiplier(n):
     def inner(x):
         return x * n
     return inner
 
-triple = multiplier(3)      # Returns inner function
+triple = multiplier(3)        # Returns inner function
 triple(10)                  # 30
+```
+
+### 9.11.4 Store in a Container
+
+Functions can be stored in lists, dictionaries, and other data structures.
+
+```python
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+operations = {
+    "+": add,
+    "-": subtract,
+}
+
+operations["+"](5, 3)       # 8
+operations["-"](5, 3)       # 2
 ```
 
 [← Previous: Flow Control](08-flow-control.md) | [Next: Advanced Functions →](10-advanced-functions.md)
