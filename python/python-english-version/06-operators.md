@@ -1,10 +1,10 @@
 [← Previous: Data Types Summary](05-data-types-summary.md) | [Next: User Interaction →](07-user-interaction.md)
 
-# 3 Operators
+# 6 Operators
 
-## 3.1 Arithmetic Operators
+## 6.1 Arithmetic Operators
 
-### 3.1.1 Basic Arithmetic
+### 6.1.1 Basic Arithmetic
 
 | Operator | Description | Example | Result |
 |----------|-------------|---------|--------|
@@ -39,7 +39,7 @@ print(5.5 // 2.0)  # 2.0  (floor of 2.75)
 print(5.5 % 2.0)   # 1.5  (5.5 - 2.0 * 2.0)
 ```
 
-### 3.1.2 Negative Modulo
+### 6.1.2 Negative Modulo
 
 Python's `%` always returns a non-negative result when the divisor is positive.
 
@@ -48,7 +48,7 @@ print(-5 % 3)    # 1  (not -2)
 print(5 % -3)    # -1 (sign follows divisor)
 ```
 
-### 3.1.3 `divmod()`
+### 6.1.3 `divmod()`
 
 Returns both the quotient and remainder in one call.
 
@@ -56,7 +56,7 @@ Returns both the quotient and remainder in one call.
 q, r = divmod(17, 5)   # q=3, r=2
 ```
 
-## 3.2 Comparison Operators
+## 6.2 Comparison Operators
 
 | Operator | Description | Example | Result |
 |----------|-------------|---------|--------|
@@ -72,7 +72,7 @@ age = 20
 print(age >= 18)  # True
 ```
 
-### 3.2.1 Chain Comparison
+### 6.2.1 Chain Comparison
 
 Python supports chaining comparisons for readability. The intermediate value is evaluated only once.
 
@@ -86,7 +86,7 @@ print(1 < x < 10)     # True
 print(1 < 2 < 3 < 4)  # True
 ```
 
-## 3.3 Logical Operators
+## 6.3 Logical Operators
 
 | Operator | Description | Example | Result |
 |----------|-------------|---------|--------|
@@ -100,7 +100,7 @@ income = 50000
 print(age >= 18 and income > 30000)  # True
 ```
 
-### 3.3.1 Truthiness
+### 6.3.1 Truthiness
 
 Values that evaluate to `False` in a boolean context:
 
@@ -123,7 +123,7 @@ if not name:
     print("Name is empty")  # This prints
 ```
 
-### 3.3.2 Short-circuit Evaluation
+### 6.3.2 Short-circuit Evaluation
 
 `and` returns the **first falsy value** it encounters, or the **last value** if all are truthy. `or` returns the **first truthy value**, or the **last value** if all are falsy. In both cases, the result is one of the original operands, not necessarily a boolean `True` or `False`.
 
@@ -157,7 +157,7 @@ name = user_input or "Anonymous"
   port = env_port or config_port or 8080
   ```
 
-## 3.4 Assignment Operators
+## 6.4 Assignment Operators
 
 | Operator | Example                | Equivalent to                       |
 | -------- | ---------------------- | ----------------------------------- |
@@ -176,7 +176,7 @@ count = 10
 count += 5   # count is now 15
 ```
 
-### 3.4.1 Walrus Operator `:=`
+### 6.4.1 Walrus Operator `:=`
 
 The walrus operator assigns a value **inside an expression** and returns that value. Unlike `=`, which is a statement, `:=` is an expression and can be used where statements are not allowed.
 
@@ -215,7 +215,7 @@ x := 1       # SyntaxError
 (x := 1)     # OK — parentheses create expression context
 ```
 
-## 3.5 Identity Operators
+## 6.5 Identity Operators
 
 Identity operators compare memory addresses (identity), not just values.
 
@@ -224,7 +224,7 @@ Identity operators compare memory addresses (identity), not just values.
 | `is` | Returns `True` if both operands refer to the same object in memory | `x is y` |
 | `is not` | Returns `True` if operands refer to different objects | `x is not y` |
 
-### 3.5.1 `id()` Function
+### 6.5.1 `id()` Function
 
 The `id()` function returns the memory address (identity) of an object. `id(x) == id(y)` is equivalent to `x is y`.
 
@@ -241,21 +241,9 @@ print(a is c)   # True - same object (c references a)
 print(id(a))    # Memory address of a
 ```
 
-### 3.5.2 Interning
+**Note:** For interning (small integer cache, string interning), see [5.3 Memory Interning](05-data-types-summary.md#53-memory-interning-basics).
 
-Python caches small integers (`-5` to `256`) and empty strings at startup, so `is` may return `True` for equal values in these ranges. Do not rely on this behavior; always use `==` for value comparison and `is` only for `None` checks.
-
-```python
-a = 256
-b = 256
-print(a is b)   # True (cached)
-
-c = 257
-d = 257
-print(c is d)   # False (not cached)
-```
-
-## 3.6 Membership Operators
+## 6.6 Membership Operators
 
 | Operator | Description | Example |
 |----------|-------------|---------|
@@ -274,7 +262,7 @@ print("name" in {"name": "Alice", "age": 20})  # True
 print("he" in "hello")  # True
 ```
 
-## 3.7 Bitwise Operators
+## 6.7 Bitwise Operators
 
 Bitwise operators work on integers at the binary level. Do not confuse `&` and `|` with logical `and`/`or`.
 
@@ -315,7 +303,7 @@ print(bool(permissions & WRITE))  # True
 permissions &= ~WRITE
 ```
 
-## 3.8 Operator Precedence
+## 6.8 Operator Precedence
 
 From highest to lowest precedence:
 
@@ -339,7 +327,7 @@ From highest to lowest precedence:
 
 > **Best Practice:** Use parentheses to make precedence explicit. Do not rely on memorizing the full table.
 
-## 3.9 Ternary Operator
+## 6.9 Ternary Operator
 
 A concise conditional expression in a single line.
 
@@ -372,7 +360,7 @@ else:
     result = "C"
 ```
 
-## 3.10 Operator Overloading
+## 6.10 Operator Overloading
 
 Define custom behavior for operators on user-defined classes using special (magic) methods.
 
