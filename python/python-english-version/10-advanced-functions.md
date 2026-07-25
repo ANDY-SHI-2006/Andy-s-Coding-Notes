@@ -4,18 +4,26 @@
 
 ## 10.1 Lambda Anonymous Functions
 
-| Feature | Description |
-|---------|-------------|
-| Syntax | `lambda params: expression` |
-| Limitation | Single expression only, no statements |
-| Use case | Short, throwaway functions |
+A `lambda` is a small, anonymous function written as a single expression.
+
+### 10.1.1 Syntax and Basic Usage
 
 ```python
-# Basic lambda
+# lambda parameters: expression
 square = lambda x: x ** 2
 square(5)                   # 25
 
-# Common use: as argument
+# Equivalent to:
+def square(x):
+    return x ** 2
+```
+
+### 10.1.2 Common Use Cases
+
+Lambdas are most useful as short arguments to higher-order functions.
+
+```python
+# Sort with custom key
 pairs = [(1, 'one'), (2, 'two'), (3, 'three')]
 pairs.sort(key=lambda x: x[1])  # Sort by second element
 
@@ -24,7 +32,13 @@ list(map(lambda x: x * 2, [1, 2, 3]))      # [2, 4, 6]
 list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 ```
 
-**Note:** Lambda doesn't improve performance; use `def` for complex logic.
+### 10.1.3 Limitations
+
+- **Single expression only** — no statements, no assignments, no loops
+- **No type hints or docstrings**
+- **Hard to debug** — lambdas have no meaningful name in tracebacks
+
+Use `lambda` for short, throwaway functions. Use `def` for anything complex.
 
 ## 10.2 Higher-Order Functions
 
