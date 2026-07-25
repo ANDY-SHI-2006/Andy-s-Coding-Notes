@@ -372,7 +372,9 @@ Use `global` when you need to modify a module-level variable. Use `nonlocal` whe
 | `global` | Module-level (global) variable | Counters, configuration flags, shared state | `global count` |
 | `nonlocal` | Nearest enclosing (non-global) variable | Nested functions that need to modify outer locals | `nonlocal x` |
 
-## 9.8 Docstrings
+## 9.8 Function Documentation and Type Hints
+
+### 9.8.1 Docstrings
 
 Document your functions with triple-quoted strings immediately after the definition.
 
@@ -394,7 +396,7 @@ def calculate_area(length, width):
 print(calculate_area.__doc__)
 ```
 
-## 9.9 Type Hints
+### 9.8.2 Type Hints
 
 Optional annotations that improve code clarity and IDE support.
 
@@ -433,7 +435,7 @@ def apply(func: Callable[[int], int], value: int) -> int:
     return func(value)
 ```
 
-## 9.10 Recursion
+## 9.9 Recursion
 
 A function that calls itself. Must have a **base case** to terminate.
 
@@ -453,7 +455,7 @@ import sys
 sys.getrecursionlimit()   # 1000 (default)
 ```
 
-## 9.11 `__main__` Guard
+## 9.10 `__main__` Guard
 
 Code inside `if __name__ == "__main__":` only runs when the file is executed directly, not when it is imported as a module.
 
@@ -465,7 +467,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## 9.12 Advanced Usage
+## 9.11 Advanced Usage
 
 Functions in Python are first-class objects:
 
