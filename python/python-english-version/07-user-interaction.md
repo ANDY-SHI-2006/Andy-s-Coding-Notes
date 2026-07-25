@@ -2,9 +2,9 @@
 
 # 7 User Interaction
 
-## 4.1 `print()` Function
+## 7.1 `print()` Function
 
-### 4.1.1 Syntax
+### 7.1.1 Syntax
 
 ```python
 print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
@@ -18,7 +18,7 @@ print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
 | `file` | Output stream | `sys.stdout` |
 | `flush` | Force flush the stream | `False` |
 
-### 4.1.2 `sep` Parameter
+### 7.1.2 `sep` Parameter
 
 Specifies the separator between multiple values. Default is a space `' '`.
 
@@ -28,7 +28,7 @@ print(1, 2, 3, sep='+')  # Output: 1+2+3
 print(1, 2, 3, sep='\n') # Output: each on new line
 ```
 
-### 4.1.3 `end` Parameter
+### 7.1.3 `end` Parameter
 
 Specifies what to print at the end. Default is a newline `'\n'`.
 
@@ -38,7 +38,7 @@ print(2, end=' ')        # Space instead of newline
 print(3)                 # Output: 1 2 3
 ```
 
-### 4.1.4 `file` and `flush` Parameters
+### 7.1.4 `file` and `flush` Parameters
 
 - `file`: redirect output away from the screen into a file or stream, useful for **logging**.
 - `flush`: force output to appear immediately instead of waiting for the buffer to fill, useful for **progress indicators** and **real-time monitoring**.
@@ -57,7 +57,7 @@ with open("output.txt", "w") as f:
 print("Loading...", end="", flush=True)
 ```
 
-### 4.1.5 Return Value
+### 7.1.5 Return Value
 
 `print()` always returns `None`. It cannot be used as part of an expression.
 
@@ -66,7 +66,7 @@ result = print("hello")   # Prints "hello"
 print(result)             # None
 ```
 
-### 4.1.6 Combined `sep` and `end` Patterns
+### 7.1.6 Combined `sep` and `end` Patterns
 
 Practical one-liners using both parameters together.
 
@@ -79,9 +79,9 @@ for i in range(5):
     print(i, end=" ", flush=True)   # 0 1 2 3 4
 ```
 
-## 4.2 `input()` Function
+## 7.2 `input()` Function
 
-### 4.2.1 Basic Input
+### 7.2.1 Basic Input
 
 Reads a line from the user as a **string**. The trailing newline is stripped. Optional prompt message. Must convert to numeric types manually.
 
@@ -98,7 +98,7 @@ print(f"Next year you will be {age + 1}")
 height = float(input("Enter your height (m): "))
 ```
 
-### 4.2.2 Input Validation
+### 7.2.2 Input Validation
 
 `input()` always returns a string. Always validate before converting to avoid crashes.
 
@@ -122,7 +122,7 @@ while True:
 num = int(input("Enter a number: "))  # Crashes on "abc"
 ```
 
-### 4.2.3 Default Value for Empty Input
+### 7.2.3 Default Value for Empty Input
 
 When the user presses Enter without typing anything, `input()` returns an empty string `""` (which is falsy). Use `or` to provide a fallback in one line.
 
@@ -142,7 +142,7 @@ command = input("> ").strip() or "help"
 
 This means `input("Name: ") or "Anonymous"` is equivalent to writing an `if` statement that checks whether the input is empty and then assigns the default value.
 
-### 4.2.4 Secure Input with `getpass`
+### 7.2.4 Secure Input with `getpass`
 
 Use `getpass.getpass()` for password or sensitive input. Characters are not echoed to the terminal.
 
@@ -157,7 +157,7 @@ username = getuser()  # Get current login name (OS-dependent)
 
 > **Note:** `getpass()` may not work in some IDEs (e.g., VS Code terminal). Use a real terminal or command line instead.
 
-### 4.2.5 Safe Parsing with `ast.literal_eval`
+### 7.2.5 Safe Parsing with `ast.literal_eval`
 
 > **Never use `eval()` on untrusted input.** `eval()` executes arbitrary code and is a severe security risk.
 
@@ -197,7 +197,7 @@ int("42")                     # 42, but only works for single integers
 ast.literal_eval("[1, 2, 3]") # [1, 2, 3], safe for richer structures
 ```
 
-### 4.2.6 Multi-line Input
+### 7.2.6 Multi-line Input
 
 Read multiple lines until EOF or an empty line.
 
@@ -221,9 +221,9 @@ while (line := input()):
     lines.append(line)
 ```
 
-## 4.3 String Formatting
+## 7.3 String Formatting
 
-### 4.3.1 f-strings (Recommended)
+### 7.3.1 f-strings (Recommended)
 
 Prefix string with `f` or `F`. Embed expressions inside `{}`. Available in Python 3.6+.
 
@@ -238,7 +238,7 @@ pi = 3.14159265
 print(f"Pi = {pi:.2f}")  # Pi = 3.14
 ```
 
-### 4.3.2 Format Specifiers
+### 7.3.2 Format Specifiers
 
 Format specifiers follow a consistent syntax inside the `{}`:
 
@@ -248,7 +248,7 @@ Format specifiers follow a consistent syntax inside the `{}`:
 
 Each component is optional. Order matters only in that `fill` must precede `align`.
 
-#### 4.3.2.1 Fill
+#### 7.3.2.1 Fill
 
 Any single character placed before `align` to pad empty space. Must be paired with an alignment specifier.
 
@@ -261,7 +261,7 @@ f"{42:05d}"       # '00042'
 f"{42:0=5d}"      # '00042'   (equivalent explicit form)
 ```
 
-#### 4.3.2.2 Alignment
+#### 7.3.2.2 Alignment
 
 Controls positioning within the field width. Align is always preceded by a width value.
 
@@ -287,7 +287,7 @@ f"{'hi':^10}"     # '    hi    '   (center, width 10)
 f"{-42:0=10}"     # '-000000042'   (pad between sign and digits)
 ```
 
-#### 4.3.2.3 Sign
+#### 7.3.2.3 Sign
 
 Controls how positive and negative numbers are displayed.
 
@@ -303,7 +303,7 @@ f"{3: d}"         # ' 3'
 f"{-3:d}"         # '-3'
 ```
 
-#### 4.3.2.4 Alternate Form (`#`)
+#### 7.3.2.4 Alternate Form (`#`)
 
 Changes the default output format to an alternate representation.
 
@@ -329,7 +329,7 @@ f"{1.0:g}"         # '1'         (default removes it)
 f"{1.0:#g}"        # '1.00000'   (# keeps trailing zeros)
 ```
 
-#### 4.3.2.5 Width
+#### 7.3.2.5 Width
 
 Sets the minimum field size. If the value is shorter, padding is applied according to alignment.
 
@@ -338,7 +338,7 @@ f"{'hi':10}"      # 'hi        '   (width 10, strings default left-align)
 f"{42:10d}"       # '        42'   (numbers default right-align)
 ```
 
-#### 4.3.2.6 Grouping
+#### 7.3.2.6 Grouping
 
 Inserts separators between digits for readability.
 
@@ -352,7 +352,7 @@ f"{1000000:,}"    # '1,000,000'
 f"{1000000:_}"    # '1_000_000'
 ```
 
-#### 4.3.2.7 Precision
+#### 7.3.2.7 Precision
 
 `.n` sets decimal places for numbers or maximum length for strings.
 
@@ -372,7 +372,7 @@ f"{'hello':.3}"   # 'hel'
 
 > **Floating-point trap:** Some decimals cannot be represented exactly in binary. For example, `f"{2.675:.2f}"` produces `'2.67'` instead of `'2.68'` because `2.675` is stored as slightly less than the true value.
 
-#### 4.3.2.8 Type
+#### 7.3.2.8 Type
 
 Declares the output format.
 
@@ -395,7 +395,7 @@ f"{255:b}"        # '11111111'
 f"{255:x}"        # 'ff'
 ```
 
-#### 4.3.2.9 Combining Components
+#### 7.3.2.9 Combining Components
 
 Build complex formats by concatenating components in the same order as the syntax template.
 
@@ -410,7 +410,7 @@ f"{1234.5:+#12,.2f}"   # '   +1,234.50'
 f"{-42:*<+8x}"         # '-2a****'
 ```
 
-### 4.3.3 `str.format()`
+### 7.3.3 `str.format()`
 
 Alternative for older Python versions or complex formatting. The same format specifiers work inside `{}`.
 
@@ -429,7 +429,7 @@ print("{:.2f}".format(3.14159))        # 3.14
 print("{:>10}".format("hi"))           # "        hi"
 ```
 
-### 4.3.4 `format()` Built-in Function
+### 7.3.4 `format()` Built-in Function
 
 The `format()` function applies a format specifier to a single value. Useful when you have the value and the format string separately.
 
@@ -442,7 +442,7 @@ print(format(value, spec))   # 3.14
 print(f"{value:.2f}")        # 3.14
 ```
 
-### 4.3.5 `%` Formatting (Legacy)
+### 7.3.5 `%` Formatting (Legacy)
 
 The `%` operator is the original Python formatting style from C's `printf`. It is still found in legacy code but is **not recommended** for new projects.
 
@@ -466,7 +466,7 @@ print("Name: %(name)s, Age: %(age)d" % {"name": "Bob", "age": 25})
 
 > **Not recommended for new code.** Use f-strings instead.
 
-### 4.3.6 Comparison
+### 7.3.6 Comparison
 
 | Method | Example | When to Use |
 |--------|---------|-------------|
