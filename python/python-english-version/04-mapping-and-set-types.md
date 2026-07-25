@@ -150,7 +150,7 @@ set1.clear()
 print(set1)  # set()
 ```
 
-#### 4.1.3.3 `in` / `not in`
+#### 4.1.3.3 Query
 
 Membership test is the primary way to query a set.
 
