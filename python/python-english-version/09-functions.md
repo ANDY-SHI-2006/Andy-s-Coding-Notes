@@ -40,13 +40,29 @@ print(my_add(2, 3))     # 5
 
 ## 9.2 Function Parameters
 
-### 9.2.1 Formal Parameters Definition
+### 9.2.1 Parameters vs Arguments
+
+Two related terms are easy to mix up:
+
+- **Parameters** are the variables listed in the function **definition**.
+- **Arguments** are the actual values passed in the function **call**.
+
+```python
+def greet(name):          # `name` is a parameter
+    print(f"Hello, {name}!")
+
+greet("Alice")          # "Alice" is an argument
+```
+
+### 9.2.2 Required and Default Parameters
+
+When you define a function, you can make parameters required or optional.
 
 | Parameter Type | Syntax | Description |
 |---------------|--------|-------------|
-| Regular | `def fn(a, b)` | Required, positional |
-| Default | `def fn(a=10)` | Optional, uses default if not provided |
-| Mixed | `def fn(a, b=10)` | Regular params must precede default params |
+| Required | `def fn(a, b)` | Must be provided when called |
+| Default | `def fn(a=10)` | Optional, uses default if omitted |
+| Mixed | `def fn(a, b=10)` | Required params must precede default params |
 
 ```python
 def greet(name, greeting="Hello"):  # name: required, greeting: optional
@@ -56,7 +72,9 @@ greet("Alice")           # Hello, Alice!
 greet("Bob", "Hi")       # Hi, Bob!
 ```
 
-### 9.2.2 Actual Arguments Passing
+### 9.2.3 Positional and Keyword Arguments
+
+When you call a function, you can pass arguments by position or by name.
 
 | Passing Type | Syntax | Description |
 |-------------|--------|-------------|
@@ -73,60 +91,26 @@ info(name="Bob", age=25, gender="M")      # Keyword
 info("Charlie", gender="F", age=30)       # Mixed
 ```
 
-### 9.2.3 Keyword-Only Arguments
+### 9.2.4 Restricting Arguments: `/` and `*`
 
-Arguments after a bare `*` must be passed by keyword.
-
-```python
-def greet(name, *, greeting="Hello"):
-    print(f"{greeting}, {name}!")
-
-greet("Alice")              # OK
-greet("Alice", greeting="Hi")  # OK
-# greet("Alice", "Hi")      # TypeError: positional argument after *
-```
-
-### 9.2.4 Positional-Only Arguments (Python 3.8+)
-
-Arguments before a `/` must be passed positionally.
+Python lets you control whether arguments must be passed positionally or by keyword.
 
 ```python
-def divide(a, b, /):
+def divide(a, b, /):        # a, b are positional-only
     return a / b
 
-divide(10, 2)       # OK
-# divide(a=10, b=2) # TypeError: positional-only argument passed as keyword
+def greet(name, *, greeting="Hello"):   # greeting is keyword-only
+    print(f"{greeting}, {name}!")
+
+divide(10, 2)              # OK
+# divide(a=10, b=2)        # TypeError: positional-only argument passed as keyword
+
+greet("Alice")             # OK
+greet("Alice", greeting="Hi")  # OK
+# greet("Alice", "Hi")     # TypeError: positional argument after *
 ```
 
-### 9.2.5 Mutable Default Argument Trap
-
-Default argument values are evaluated **once** when the function is defined, not each time the function is called. Using a mutable object (like a `list` or `dict`) as a default can cause unexpected sharing between calls.
-
-```python
-# WRONG: mutable default shared across calls
-def append_item(value, items=[]):
-    items.append(value)
-    return items
-
-print(append_item(1))  # [1]
-print(append_item(2))  # [1, 2]  ← unexpectedly keeps previous value
-```
-
-The safe pattern is to use `None` as the default and create a new mutable object inside the function.
-
-```python
-# CORRECT: create a new list each call
-def append_item(value, items=None):
-    if items is None:
-        items = []
-    items.append(value)
-    return items
-
-print(append_item(1))  # [1]
-print(append_item(2))  # [2]
-```
-
-### 9.2.6 Complete Parameter Order
+### 9.2.5 Complete Parameter Order
 
 Python 3 functions can combine all parameter styles. The full order is:
 
@@ -154,6 +138,34 @@ def demo(a, b, /, c, d="default", *, e, f="kw_only"):
 # e, f: keyword-only
 demo(1, 2, 3, e="required")
 # a=1, b=2, c=3, d=default, e=required, f=kw_only
+```
+
+### 9.2.6 Mutable Default Argument Trap
+
+Default argument values are evaluated **once** when the function is defined, not each time the function is called. Using a mutable object (like a `list` or `dict`) as a default can cause unexpected sharing between calls.
+
+```python
+# WRONG: mutable default shared across calls
+def append_item(value, items=[]):
+    items.append(value)
+    return items
+
+print(append_item(1))  # [1]
+print(append_item(2))  # [1, 2]  ← unexpectedly keeps previous value
+```
+
+The safe pattern is to use `None` as the default and create a new mutable object inside the function.
+
+```python
+# CORRECT: create a new list each call
+def append_item(value, items=None):
+    if items is None:
+        items = []
+    items.append(value)
+    return items
+
+print(append_item(1))  # [1]
+print(append_item(2))  # [2]
 ```
 
 ## 9.3 Variable Parameters
