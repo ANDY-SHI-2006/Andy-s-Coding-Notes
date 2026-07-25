@@ -145,6 +145,8 @@ These functions support a functional programming style. Unlike `map()` / `filter
 
 ### 10.3.1 `any()` and `all()`
 
+#### 10.3.1.1 Basic Usage
+
 `any(iterable)` returns `True` if at least one item is truthy. `all(iterable)` returns `True` if every item is truthy.
 
 ```python
@@ -156,6 +158,8 @@ all([1, 0, 3])             # False (0 is falsy)
 ```
 
 A value is **truthy** if it passes an `if` check. Common falsy values are `0`, `0.0`, `""`, `[]`, `{}`, `None`, and `False`.
+
+#### 10.3.1.2 With Conditions
 
 Most of the time you pass a generator expression to check a condition for each element.
 
@@ -173,12 +177,23 @@ users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}]
 all(u["age"] >= 18 for u in users)   # True
 ```
 
-Both functions use short-circuit evaluation: `any()` stops at the first truthy element, and `all()` stops at the first falsy element. For empty inputs, `any([])` returns `False` and `all([])` returns `True`.
+#### 10.3.1.3 Short-Circuit and Empty Inputs
+
+Both functions stop early. `any()` stops at the first truthy element, and `all()` stops at the first falsy element.
 
 ```python
+nums = [-1, -5, 3, -8]
+any(n > 0 for n in nums)     # True (stops at 3)
+
+nums = [2, 4, 6, 7, 8]
+all(n % 2 == 0 for n in nums)   # False (stops at 7)
+
+# Empty inputs
 any([])     # False
 all([])     # True
 ```
+
+#### 10.3.1.4 Common Pitfall
 
 `all()` treats `0`, `""`, `None`, and empty containers as falsy, so write the condition explicitly when checking non-boolean values.
 
