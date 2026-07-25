@@ -1,6 +1,6 @@
 [← Previous: Operators](06-operators.md) | [Next: Flow Control →](08-flow-control.md)
 
-# 4 User Interaction
+# 7 User Interaction
 
 ## 4.1 `print()` Function
 
