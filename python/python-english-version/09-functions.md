@@ -126,6 +126,36 @@ print(append_item(1))  # [1]
 print(append_item(2))  # [2]
 ```
 
+### 9.2.6 Complete Parameter Order
+
+Python 3 functions can combine all parameter styles. The full order is:
+
+```python
+def fn(pos_only, /, pos_or_kwd, default="value", *args, kwd_only, **kwargs):
+    pass
+```
+
+| Section | Syntax | How to pass |
+|---------|--------|-------------|
+| Positional-only | `a, b, /` | Only by position |
+| Positional or keyword | `c, d` | By position or keyword |
+| Default values | `e="value"` | Optional, by position or keyword |
+| Variable positional | `*args` | Collects extra positional args |
+| Keyword-only | `*, f` or after `*args` | Only by keyword |
+| Variable keyword | `**kwargs` | Collects extra keyword args |
+
+```python
+def demo(a, b, /, c, d="default", *, e, f="kw_only"):
+    print(f"a={a}, b={b}, c={c}, d={d}, e={e}, f={f}")
+
+# a, b: positional-only
+# c: positional or keyword
+# d: default, positional or keyword
+# e, f: keyword-only
+demo(1, 2, 3, e="required")
+# a=1, b=2, c=3, d=default, e=required, f=kw_only
+```
+
 ## 9.3 Variable Parameters
 
 ### 9.3.1 Variable Positional Parameters `*args`
@@ -180,15 +210,17 @@ universal(1, 2, 3, name="Alice", age=20)
 ## 9.4 Summary
 
 ```python
-def fn(regular, default=val, *args, **kwargs):
+def fn(pos_only, /, pos_or_kwd, default="val", *args, kwd_only, **kwargs):
     pass
 ```
 
 | Type | Purpose | Example |
 |------|---------|---------|
-| Regular | Required positional | `def fn(a, b)` |
+| Positional-only | Must be passed by position | `def fn(a, b, /)` |
+| Regular | Required positional or keyword | `def fn(a, b)` |
 | Default | Optional with default | `def fn(a=10)` |
 | `*args` | Variable positional | `def fn(*args)` |
+| Keyword-only | Must be passed by keyword | `def fn(*, a)` |
 | `**kwargs` | Variable keyword | `def fn(**kwargs)` |
 
 ## 9.5 Parameter Unpacking
