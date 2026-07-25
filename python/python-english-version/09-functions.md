@@ -209,6 +209,14 @@ def fn2(pos_only, /, pos_or_kwd, *, kwd_only, **kwargs):
     pass
 ```
 
+**Note:** `*args` and a bare `*` are mutually exclusive — they occupy the same syntactic position. You can use one or the other, but not both in the same function signature.
+
+```python
+# Invalid: cannot have both *args and bare *
+def fn(*args, *, b):   # SyntaxError
+    pass
+```
+
 | Section               | Syntax                     | How to pass                      |
 | --------------------- | -------------------------- | -------------------------------- |
 | Positional-only       | `a, b, /`                  | Only by position                 |
