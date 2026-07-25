@@ -145,23 +145,60 @@ These functions support a functional programming style. Unlike `map()` / `filter
 
 ### 10.3.1 `any()` and `all()`
 
-| Function | Returns `True` when | Example |
-|----------|--------------------|---------|
-| `any(iterable)` | At least one element is truthy | `any([0, 1, 0])` → `True` |
-| `all(iterable)` | All elements are truthy | `all([1, 2, 3])` → `True` |
+Both functions check whether elements in an iterable meet a truthiness condition. They are especially useful with generator expressions because they stop at the first result that determines the answer (short-circuit evaluation).
+
+| Function | Returns `True` when | Empty input |
+|----------|--------------------|-------------|
+| `any(iterable)` | At least one element is truthy | `any([])` → `False` |
+| `all(iterable)` | All elements are truthy | `all([])` → `True` (vacuously true) |
+
+**How they work:**
+
+- `any()` stops and returns `True` as soon as it finds the first truthy element.
+- `all()` stops and returns `False` as soon as it finds the first falsy element.
+- If the iterable is empty, `any()` returns `False` and `all()` returns `True`.
 
 ```python
-# Check if any number is positive
+# any() stops at first truthy value
 nums = [-1, -5, 3, -8]
-any(n > 0 for n in nums)     # True
+any(n > 0 for n in nums)     # True (stops at 3)
+
+# all() stops at first falsy value
+nums = [2, 4, 6, 7, 8]
+all(n % 2 == 0 for n in nums)   # False (stops at 7)
+```
+
+**Practical examples:**
+
+```python
+# Check if any user is an admin
+users = [{"name": "Alice", "role": "user"}, {"name": "Bob", "role": "admin"}]
+any(u["role"] == "admin" for u in users)   # True
 
 # Check if all users are adults
 users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}]
 all(u["age"] >= 18 for u in users)   # True
 
+# Validate input: all fields must be non-empty
+fields = ["Alice", "20", "alice@example.com"]
+all(f.strip() for f in fields)   # True
+
 # Empty inputs
-any([])                      # False
-all([])                      # True  (vacuously true)
+any([])     # False
+all([])     # True
+```
+
+**Common pitfall:** `all()` treats `0`, `""`, `None`, and empty containers as falsy. Make sure your condition explicitly checks what you intend.
+
+```python
+nums = [1, 2, 3]
+all(nums)               # True (all non-zero)
+
+nums = [0, 1, 2]
+all(nums)               # False (0 is falsy)
+
+# Better: be explicit about the condition
+all(n >= 0 for n in nums)   # True
 ```
 
 ### 10.3.2 `reduce()`
