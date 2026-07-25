@@ -1,8 +1,70 @@
 [← Previous: Advanced Functions](10-advanced-functions.md) | [Next: File Operations →](12-file-operations.md)
 
-# 8 Closures and Decorators
+# 11 Closures and Decorators
 
-## 8.1 Closures
+## 11.1 First-Class Functions
+
+Functions in Python are first-class objects: they can be assigned, passed, returned, and stored like any other value.
+
+### 11.1.1 Assign to a Variable
+
+A function name is just a reference. You can assign it to another variable.
+
+```python
+def greet():
+    print("Hello")
+
+my_func = greet
+my_func()                   # Calls greet()
+```
+
+### 11.1.2 Pass as an Argument
+
+Functions can be passed to other functions, enabling flexible behavior.
+
+```python
+def apply(func, value):
+    return func(value)
+
+apply(len, "hello")         # 5
+apply(str.upper, "abc")     # "ABC"
+```
+
+### 11.1.3 Return from a Function
+
+Functions can create and return other functions. This is the basis of closures and decorators.
+
+```python
+def multiplier(n):
+    def inner(x):
+        return x * n
+    return inner
+
+triple = multiplier(3)        # Returns inner function
+triple(10)                  # 30
+```
+
+### 11.1.4 Store in a Container
+
+Functions can be stored in lists, dictionaries, and other data structures.
+
+```python
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+operations = {
+    "+": add,
+    "-": subtract,
+}
+
+operations["+"](5, 3)       # 8
+operations["-"](5, 3)       # 2
+```
+
+## 11.2 Closures
 
 **Closure:** A nested function that references variables from its enclosing scope and is returned from the outer function.
 
@@ -29,11 +91,11 @@ c2 = counter()              # Independent closure
 c2()                        # 1
 ```
 
-## 8.2 Decorators
+## 11.3 Decorators
 
 **Decorator:** A function that wraps another function to extend its behavior without modifying it.
 
-### 8.2.0 Why Decorators? (Evolution)
+### 11.3.0 Why Decorators? (Evolution)
 
 Suppose you need to measure execution time for multiple functions. Without decorators, you have three bad options:
 
@@ -95,7 +157,7 @@ login()                 # Identical behavior to Approach 3
 
 **Key benefit:** Decorators add functionality without changing the original function's source code or its calling convention.
 
-### 8.2.1 Decorator 1.0 (Basic Template)
+### 11.3.1 Decorator 1.0 (Basic Template)
 
 ```python
 def decorator(func):
@@ -120,7 +182,7 @@ def greet():
     print("Hello")
 ```
 
-### 8.2.2 Decorator 2.0 (With Parameters)
+### 11.3.2 Decorator 2.0 (With Parameters)
 
 ```python
 def timer(func):
@@ -141,7 +203,7 @@ def slow_function(n):
 slow_function(1)            # Measures and prints execution time
 ```
 
-### 8.2.3 Decorator Final Version (Preserves Return Value)
+### 11.3.3 Decorator Final Version (Preserves Return Value)
 
 ```python
 # Universal decorator template
@@ -166,7 +228,7 @@ def view_profile(user):
     return user["profile"]
 ```
 
-### 8.2.4 Preserving Metadata with `functools.wraps`
+### 11.3.4 Preserving Metadata with `functools.wraps`
 
 Without `@wraps`, the decorated function loses its name and docstring.
 
@@ -189,7 +251,7 @@ print(say_hello.__name__)       # say_hello (not wrapper)
 print(say_hello.__doc__)        # Greet the user.
 ```
 
-### 8.2.5 Stacked Decorators
+### 11.3.5 Stacked Decorators
 
 Multiple decorators can be applied to a single function. They execute from bottom to top.
 
@@ -203,7 +265,7 @@ def my_function():
 # my_function = decorator_b(decorator_a(my_function))
 ```
 
-### 8.2.6 Parametric Decorators
+### 11.3.6 Parametric Decorators
 
 A decorator that accepts its own parameters. Requires a factory function.
 
@@ -224,7 +286,7 @@ def greet(name):
 greet("Alice")   # Prints 3 times
 ```
 
-### 8.2.7 Class Decorators
+### 11.3.7 Class Decorators
 
 Decorators can also be applied to classes.
 
@@ -247,7 +309,7 @@ db2 = Database()
 print(db1 is db2)   # True — same instance
 ```
 
-### 8.2.8 `@property`
+### 11.3.8 `@property`
 
 Turn a method into an attribute-like accessor.
 
@@ -271,7 +333,7 @@ print(c.radius)     # 5 (calls getter)
 c.radius = 10       # Calls setter
 ```
 
-### 8.2.9 `@classmethod` and `@staticmethod`
+### 11.3.9 `@classmethod` and `@staticmethod`
 
 | Decorator | First param | Use case |
 |-----------|-------------|----------|
@@ -295,7 +357,7 @@ p = Person.from_dict({"name": "Alice"})
 print(Person.is_adult(20))   # True
 ```
 
-### 8.2.10 Practical Example: Login Check Decorator
+### 11.3.10 Practical Example: Login Check Decorator
 
 A common real-world use case: restrict function execution based on login status.
 
@@ -328,7 +390,7 @@ transfer_money(True, 100)   # 💰 Transferring $100...
 
 **Key pattern:** The decorator intercepts the call, checks a condition, and either blocks execution or proceeds to the original function. This pattern is widely used in web frameworks (Flask, Django) for authentication and authorization.
 
-### 8.2.11 Practical Example: Logging Decorator
+### 11.3.11 Practical Example: Logging Decorator
 
 A logging decorator records function calls — useful for debugging and monitoring.
 

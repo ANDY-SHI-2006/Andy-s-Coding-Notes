@@ -22,69 +22,7 @@ import sys
 sys.getrecursionlimit()   # 1000 (default)
 ```
 
-## 10.2 First-Class Functions
-
-Functions in Python are first-class objects: they can be assigned, passed, returned, and stored like any other value.
-
-### 10.2.1 Assign to a Variable
-
-A function name is just a reference. You can assign it to another variable.
-
-```python
-def greet():
-    print("Hello")
-
-my_func = greet
-my_func()                   # Calls greet()
-```
-
-### 10.2.2 Pass as an Argument
-
-Functions can be passed to other functions, enabling flexible behavior.
-
-```python
-def apply(func, value):
-    return func(value)
-
-apply(len, "hello")         # 5
-apply(str.upper, "abc")     # "ABC"
-```
-
-### 10.2.3 Return from a Function
-
-Functions can create and return other functions. This is the basis of closures and decorators.
-
-```python
-def multiplier(n):
-    def inner(x):
-        return x * n
-    return inner
-
-triple = multiplier(3)        # Returns inner function
-triple(10)                  # 30
-```
-
-### 10.2.4 Store in a Container
-
-Functions can be stored in lists, dictionaries, and other data structures.
-
-```python
-def add(a, b):
-    return a + b
-
-def subtract(a, b):
-    return a - b
-
-operations = {
-    "+": add,
-    "-": subtract,
-}
-
-operations["+"](5, 3)       # 8
-operations["-"](5, 3)       # 2
-```
-
-## 10.3 Lambda Anonymous Functions
+## 10.2 Lambda Anonymous Functions
 
 | Feature | Description |
 |---------|-------------|
@@ -108,9 +46,9 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 
 **Note:** Lambda doesn't improve performance; use `def` for complex logic.
 
-## 10.4 Higher-Order Functions
+## 10.3 Higher-Order Functions
 
-### 10.4.1 Introduction
+### 10.3.1 Introduction
 
 **Higher-Order Function:** Takes function as argument or returns function.
 
@@ -120,7 +58,7 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 | `filter()` | Select elements matching condition |
 | `sorted()` | Sort with custom key |
 
-### 10.4.2 `map()`
+### 10.3.2 `map()`
 
 | Feature | Description |
 |---------|-------------|
@@ -146,7 +84,7 @@ mapped = map(int, nums)
 print(mapped)               # <map object at 0x...>  (not a list yet)
 ```
 
-### 10.4.3 `filter()`
+### 10.3.3 `filter()`
 
 | Feature | Description |
 |---------|-------------|
@@ -170,7 +108,7 @@ users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 17}]
 list(filter(lambda u: u["age"] >= 18, users))
 ```
 
-### 10.4.4 `sorted()` with Key
+### 10.3.4 `sorted()` with Key
 
 | Feature | Description |
 |---------|-------------|
@@ -202,7 +140,7 @@ sorted(products, key=lambda x: int(x.split("_")[1]))  # ['Mi_4000', 'iPhone_8000
 
 **Note:** For basic sorting syntax and comparison with `.sort()`, see [3.7 `sorted()` vs `.sort()`](03-sequence-types.md#37-sorted-vs-sort).
 
-### 10.4.5 `any()` and `all()`
+### 10.3.5 `any()` and `all()`
 
 | Function | Returns `True` when | Example |
 |----------|--------------------|---------|
@@ -223,7 +161,7 @@ any([])                      # False
 all([])                      # True  (vacuously true)
 ```
 
-### 10.4.6 `reduce()`
+### 10.3.6 `reduce()`
 
 Cumulatively apply a function to reduce an iterable to a single value.
 
@@ -234,7 +172,7 @@ reduce(lambda a, b: a + b, [1, 2, 3, 4])   # 10
 reduce(lambda a, b: a * b, [1, 2, 3, 4])   # 24
 ```
 
-### 10.4.7 `partial()`
+### 10.3.7 `partial()`
 
 Create a new function with pre-filled arguments.
 
@@ -253,7 +191,7 @@ square(5)   # 25
 cube(3)     # 27
 ```
 
-## 10.5 Iterators
+## 10.4 Iterators
 
 | Method | Description |
 |--------|-------------|
@@ -280,7 +218,7 @@ for item in lst:            # Calls iter(), then next() repeatedly
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
-### 10.5.1 How `for` Loops Work Under the Hood
+### 10.4.1 How `for` Loops Work Under the Hood
 
 A `for` loop is syntactic sugar for this iterator protocol pattern:
 
@@ -310,7 +248,7 @@ except StopIteration:
     print("Done")
 ```
 
-### 10.5.2 `itertools` Overview
+### 10.4.2 `itertools` Overview
 
 Built-in module for efficient iteration patterns.
 
@@ -334,7 +272,7 @@ for key, group in itertools.groupby(data, key=lambda x: x[0]):
     print(key, list(group))   # A [(A,1), (A,2)]  B [(B,3), (B,4)]
 ```
 
-## 10.6 Generators
+## 10.5 Generators
 
 | Feature | Description |
 |---------|-------------|
@@ -366,7 +304,7 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-### 10.6.1 Generator Execution Flow
+### 10.5.1 Generator Execution Flow
 
 When a generator function is called, it does **not** execute the function body immediately. Instead, it returns a generator object. The body executes only when `next()` is called, and it **pauses** at each `yield`, resuming from that exact point on the next `next()` call.
 
@@ -389,7 +327,7 @@ print(next(g))              # Step 3: resumed again → 30
 
 **Key insight:** `yield` is both an output point and a checkpoint. The generator remembers its local variables and execution position between calls.
 
-### 10.6.2 Generator Expression vs List Comprehension
+### 10.5.2 Generator Expression vs List Comprehension
 
 Syntax differs by only one character, but behavior is very different:
 
@@ -419,7 +357,7 @@ print(list(squares_gen))  # [0, 1, 4, 9, 16]
 - Use **list comprehension** when you need random access or multiple passes
 - Use **generator expression** for large/infinite sequences or single-pass pipelines
 
-### 10.6.3 Generator Methods
+### 10.5.3 Generator Methods
 
 Generators support communication with the caller.
 
@@ -445,7 +383,7 @@ acc.send(5)         # total = 15
 acc.close()         # Clean shutdown
 ```
 
-### 10.6.4 `yield from`
+### 10.5.4 `yield from`
 
 Delegate iteration to a sub-generator.
 
