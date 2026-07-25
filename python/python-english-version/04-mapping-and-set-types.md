@@ -524,17 +524,28 @@ print(counts.most_common(2))  # [('apple', 3), ('banana', 2)]
 
 ### 4.3.1 Hashable Keys and Elements
 
-- Dictionary keys and set elements must be **hashable** (immutable types like `str`, `int`, `float`, `tuple`, `frozenset`).
-- Lists and dictionaries cannot be used as keys or set elements because they are mutable.
+Dictionary keys and set elements must be **hashable** because dict and set are implemented as hash tables. Immutable built-in types such as `str`, `int`, `float`, `tuple`, and `frozenset` are hashable; mutable types such as `list`, `dict`, and `set` are not.
+
+A tuple is hashable only if **all** of its elements are hashable. A tuple containing a list is not hashable, even though the tuple itself is immutable.
 
 ```python
-valid = {("a", "b"): 1, 42: 2, "key": 3}  # OK
-# invalid = {["a"]: 1}                      # TypeError: unhashable type: 'list'
+valid = {("a", "b"): 1, 42: 2, "key": 3}       # OK
+# invalid = {["a"]: 1}                           # TypeError: unhashable type: 'list'
+# invalid = {("a", [1]): 1}                      # TypeError: unhashable type: 'list'
+
+print(hash("hello"))       # int
+print(hash((1, 2, 3)))     # int
+# print(hash([1, 2, 3]))   # TypeError: unhashable type: 'list'
 ```
 
 ### 4.3.2 Insertion Order
 
-Both sets and dictionaries preserve insertion order in Python 3.7+.
+Sets and dictionaries preserve insertion order in Python 3.7+. In Python 3.6 this was already true for `dict` in CPython but not part of the language specification. In Python 3.5 and earlier, order was not guaranteed.
+
+```python
+d = {"a": 1, "b": 2, "c": 3}
+print(list(d.keys()))  # ['a', 'b', 'c'] (order preserved)
+```
 
 ### 4.3.3 Use Case Comparison
 
@@ -543,5 +554,19 @@ Both sets and dictionaries preserve insertion order in Python 3.7+.
 | `set` | Membership testing, removing duplicates | Unordered unique elements |
 | `dict` | Key-value lookups, structured data | Fast key-based access |
 | `frozenset` | Immutable set, usable as dict key | Set semantics, hashable |
+
+### 4.3.4 Time Complexity
+
+Dict and set use hash tables, so lookup, insertion, and deletion are on average **O(1)**. Searching a list or tuple is **O(n)**.
+
+```python
+# O(1) membership test
+s = set(range(1000000))
+print(999999 in s)   # True (fast)
+
+# O(n) membership test
+lst = list(range(1000000))
+print(999999 in lst) # True (slower)
+```
 
 [← Previous: Sequence Types](03-sequence-types.md) | [Next: Data Types Summary →](05-data-types-summary.md)
