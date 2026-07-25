@@ -91,6 +91,34 @@ divide(10, 2)       # OK
 # divide(a=10, b=2) # TypeError: positional-only argument passed as keyword
 ```
 
+### 9.2.5 Mutable Default Argument Trap
+
+Default argument values are evaluated **once** when the function is defined, not each time the function is called. Using a mutable object (like a `list` or `dict`) as a default can cause unexpected sharing between calls.
+
+```python
+# WRONG: mutable default shared across calls
+def append_item(value, items=[]):
+    items.append(value)
+    return items
+
+print(append_item(1))  # [1]
+print(append_item(2))  # [1, 2]  ← unexpectedly keeps previous value
+```
+
+The safe pattern is to use `None` as the default and create a new mutable object inside the function.
+
+```python
+# CORRECT: create a new list each call
+def append_item(value, items=None):
+    if items is None:
+        items = []
+    items.append(value)
+    return items
+
+print(append_item(1))  # [1]
+print(append_item(2))  # [2]
+```
+
 ## 9.3 Variable Parameters
 
 ### 9.3.1 Variable Positional Parameters `*args`
@@ -196,10 +224,42 @@ sum_val, diff = stats(10, 3)  # Unpacking
 
 ## 9.7 Scope
 
+### 9.7.1 LEGB Rule
+
+Python resolves names using the **LEGB** order, from innermost to outermost:
+
+| Scope | Description | Example |
+|-------|-------------|---------|
+| **L**ocal | Inside the current function | Variables defined in the function |
+| **E**nclosing | In the nearest enclosing function | Variables in nested outer functions |
+| **G**lobal | At module level | Variables defined in the module |
+| **B**uilt-in | Python's built-in names | `print`, `len`, `str`, etc. |
+
+```python
+x = "global"
+
+def outer():
+    x = "enclosing"
+
+    def inner():
+        x = "local"
+        print(x)  # local
+
+    inner()
+    print(x)      # enclosing
+
+outer()
+print(x)          # global
+```
+
+Assignment changes the innermost scope where the name exists, unless you use `global` or `nonlocal` to target a different scope.
+
+### 9.7.2 `global` and `nonlocal`
+
 | Keyword | Purpose | Usage |
 |---------|---------|-------|
-| `global` | Modify global variable from inner scope | `global x` |
-| `nonlocal` | Modify outer (non-global) enclosing variable | `nonlocal x` |
+| `global` | Modify a global variable from inside a function | `global x` |
+| `nonlocal` | Modify an outer (non-global) enclosing variable | `nonlocal x` |
 
 ```python
 count = 0                   # Global variable
@@ -281,6 +341,7 @@ user: dict[str, int] = {"age": 20}
 
 **Note:** Python remains dynamically typed. Type hints are checked by external tools (like `mypy`), not at runtime.
 
+**See also:** [16 Type Annotations](16-type-annotations.md) for a more detailed discussion.
 
 Import from the `typing` module for complex type declarations.
 
