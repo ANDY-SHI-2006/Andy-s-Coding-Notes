@@ -237,32 +237,39 @@ cube(3)     # 27
 
 ## 10.5 Iterators
 
-| Method | Description |
-|--------|-------------|
-| `__iter__()` | Returns iterator object |
-| `__next__()` | Returns next element; raises `StopIteration` when done |
-| `iter(obj)` | Built-in equivalent to `__iter__()` |
-| `next(obj)` | Built-in equivalent to `__next__()` |
+### 10.5.1 Iterator Protocol
+
+Python's iteration protocol relies on two methods:
+
+| Method | Role |
+|--------|------|
+| `__iter__()` | Called to get an iterator from an iterable. On an iterator itself, it returns `self`. |
+| `__next__()` | Returns the next item. Raises `StopIteration` when there are no more items. |
+
+Built-in functions `iter()` and `next()` call these dunder methods for you.
 
 ```python
 lst = [1, 2, 3]
-it = iter(lst)              # Create iterator
+it = iter(lst)              # Calls lst.__iter__()
 
-next(it)                    # 1
+next(it)                    # 1  (calls it.__next__())
 next(it)                    # 2
 next(it)                    # 3
 # next(it)                  # StopIteration exception
-
-# for loop uses iterator internally
-for item in lst:            # Calls iter(), then next() repeatedly
-    print(item)
 ```
 
 **Iterable vs Iterator:**
-- **Iterable:** Has `__iter__()` (can be looped multiple times)
-- **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
-### 10.5.1 How `for` Loops Work Under the Hood
+- **Iterable:** Has `__iter__()` and can be looped over multiple times. Lists, tuples, strings, dicts, and sets are iterables.
+- **Iterator:** Has both `__iter__()` and `__next__()`. Iterators are one-time use — once exhausted, they do not reset.
+
+```python
+# for loop uses iterator internally
+for item in lst:            # Calls iter(lst), then next() repeatedly
+    print(item)
+```
+
+### 10.5.2 How `for` Loops Work Under the Hood
 
 A `for` loop is syntactic sugar for this iterator protocol pattern:
 
@@ -279,7 +286,7 @@ while True:
         break
 ```
 
-**Key insight:** The `for` loop automatically handles `StopIteration`, which is why you never see this exception in normal loop usage. When you exhaust an iterator manually with `next()`, you must catch (or allow) `StopIteration` yourself.
+The `for` loop automatically handles `StopIteration`, which is why you never see this exception in normal loop usage. When you exhaust an iterator manually with `next()`, you must catch (or allow) `StopIteration` yourself.
 
 ```python
 it = iter([1, 2, 3])
@@ -292,7 +299,7 @@ except StopIteration:
     print("Done")
 ```
 
-### 10.5.2 `itertools` Overview
+### 10.5.3 `itertools` Overview
 
 Built-in module for efficient iteration patterns.
 
