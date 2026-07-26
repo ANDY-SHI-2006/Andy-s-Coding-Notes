@@ -492,7 +492,11 @@ print(FlyingDog.__bases__)  # (<class '__main__.Dog'>, <class '__main__.CanFly'>
 
 ## 10.13 Abstract Base Classes
 
-Enforce that subclasses implement specific methods.
+Abstract base classes (ABCs) let you define a common interface that subclasses must implement. A class inheriting from an ABC must override every abstract method; otherwise, it cannot be instantiated.
+
+### 10.13.1 Defining an Abstract Class
+
+Use `ABC` as the base class and mark methods with `@abstractmethod`.
 
 ```python
 from abc import ABC, abstractmethod
@@ -502,18 +506,48 @@ class Shape(ABC):
     def area(self):
         pass
 
+    @abstractmethod
+    def perimeter(self):
+        pass
+```
+
+### 10.13.2 Concrete Subclasses
+
+A concrete subclass must implement every abstract method inherited from the ABC.
+
+```python
 class Rectangle(Shape):
-    def __init__(self, w, h):
-        self.w = w
-        self.h = h
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
 
     def area(self):
-        return self.w * self.h
+        return self.width * self.height
 
-# s = Shape()         # TypeError: Can't instantiate abstract class
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+
 r = Rectangle(3, 4)
-print(r.area())     # 12
+print(r.area())        # 12
+print(r.perimeter())   # 14
 ```
+
+If a subclass misses an abstract method, instantiating it raises an error:
+
+```python
+class BadRectangle(Shape):
+    pass
+
+# b = BadRectangle()   # TypeError: Can't instantiate abstract class
+```
+
+### 10.13.3 When to Use ABCs
+
+Use abstract base classes when:
+
+- You want to enforce a shared interface across multiple subclasses.
+- You are designing a plugin system or framework where users must implement specific hooks.
+- You want to document the required methods of a class hierarchy explicitly.
 
 ## 10.14 `__slots__`
 
