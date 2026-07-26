@@ -168,7 +168,6 @@ def register():
 def measure(func):
     start = time.time()
     func()
-    time.sleep(1)
     print(f"Time: {time.time() - start:.2f}s")
 
 measure(login)      # Works, but changes how you call the function
@@ -181,7 +180,6 @@ def timer(func):
     def wrapper():
         start = time.time()
         func()
-        time.sleep(1)
         print(f"Time: {time.time() - start:.2f}s")
     return wrapper
 
@@ -227,12 +225,15 @@ def greet():
     print("Hello")
 ```
 
+**Note:** If the wrapper does not call `func()`, the original function never executes. This is sometimes intentional (e.g., blocking access), but usually a bug.
+
 ### 11.3.3 Decorator 2.0 (With Parameters)
 
 ```python
+import time
+
 def timer(func):
     def wrapper(*args, **kwargs):   # Accept any arguments
-        import time
         start = time.time()
         result = func(*args, **kwargs)  # Pass arguments to original
         print(f"Time: {time.time() - start:.2f}s")
@@ -241,7 +242,6 @@ def timer(func):
 
 @timer
 def slow_function(n):
-    import time
     time.sleep(n)
     return "Done"
 
@@ -330,6 +330,8 @@ def greet(name):
 
 greet("Alice")   # Prints 3 times
 ```
+
+**Note:** This implementation returns only the result of the final call. Use it for functions with side effects (like printing); if you need to collect all return values, store them in a list inside the wrapper.
 
 ### 11.3.8 Class Decorators
 
