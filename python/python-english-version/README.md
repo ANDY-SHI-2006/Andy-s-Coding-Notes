@@ -26,9 +26,10 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 13. [Object-Oriented Programming](13-object-oriented-programming.md) — *Classes, inheritance, encapsulation, magic methods*
 14. [Exception Handling](14-exception-handling.md) — *try/except, raise, custom exceptions, assert*
 15. [Modules and Packages](15-modules-and-packages.md) — *import, pip, venv, standard library*
+16. [functools](16-functools.md) — *wraps, partial, reduce, lru_cache, total_ordering*
 
 ### Appendix
-16. [Type Annotations](16-type-annotations.md) — *Type hints, Union, Optional, dataclass, mypy*
+17. [Type Annotations](17-type-annotations.md) — *Type hints, Union, Optional, dataclass, mypy*
 
 ---
 
@@ -41,5 +42,5 @@ Each chapter contains navigation links at the top and bottom for easy browsing b
 - **Chapters 1-5**: Python Fundamentals
 - **Chapters 6-9**: Operators, Control Flow, and Functions
 - **Chapters 10-12**: Advanced Functions and File Operations
-- **Chapters 13-15**: OOP, Robustness, and Development Essentials
+- **Chapters 13-16**: OOP, Robustness, and Development Essentials
 - **Appendix**: Type Annotations

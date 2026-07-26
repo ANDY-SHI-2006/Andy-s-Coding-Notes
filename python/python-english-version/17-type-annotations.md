@@ -1,6 +1,6 @@
-[← Previous: Modules and Packages](15-modules-and-packages.md)
+[← Previous: functools](16-functools.md)
 
-# 16 Type Annotations
+# 17 Type Annotations
 
 Python is **dynamically typed** — a variable's type is determined at runtime, and you can reassign it to a different type anytime. This is flexible but can make large codebases hard to understand.
 
@@ -157,4 +157,4 @@ print(typing.get_type_hints(add))
 - ❌ Don't over-annotate trivial cases like `i: int = 0` where the type is obvious
 
 
-[← Previous: Modules and Packages](15-modules-and-packages.md)
+[← Previous: functools](16-functools.md)
