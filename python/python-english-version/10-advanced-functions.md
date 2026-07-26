@@ -335,8 +335,11 @@ A generator is an iterator that produces values on demand instead of storing the
 | Behavior | Lazy evaluation, produces values one at a time |
 | Memory | Efficient for large or infinite sequences |
 
+#### 10.6.1.1 Generator Functions
+
+Use `yield` inside a function to create a generator. Each `yield` pauses execution and returns one value.
+
 ```python
-# Generator function
 def countdown(n):
     while n > 0:
         yield n             # Pause and return value
@@ -344,11 +347,26 @@ def countdown(n):
 
 for num in countdown(5):    # 5, 4, 3, 2, 1
     print(num)
+```
 
-# Generator expression (like list comprehension with parentheses)
-gen = (x ** 2 for x in range(1000000))  # Doesn't store all values
+#### 10.6.1.2 Generator Expressions
 
-# Infinite sequence
+A generator expression looks like a list comprehension but uses parentheses. It produces values lazily instead of building a full list.
+
+```python
+# Does NOT create a list in memory
+gen = (x ** 2 for x in range(1000000))
+
+# Values are produced one at a time when iterated
+for value in gen:
+    pass
+```
+
+#### 10.6.1.3 Infinite Sequences
+
+Generators can run forever because they compute values on demand.
+
+```python
 def fibonacci():
     a, b = 0, 1
     while True:
