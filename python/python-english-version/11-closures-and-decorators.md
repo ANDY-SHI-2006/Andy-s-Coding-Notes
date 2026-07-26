@@ -408,12 +408,9 @@ print(c.radius)     # 5 (calls getter)
 c.radius = 10       # Calls setter
 ```
 
-### 11.5.2 `@classmethod` and `@staticmethod`
+### 11.5.2 `@classmethod`
 
-| Decorator | First param | Use case |
-|-----------|-------------|----------|
-| `@classmethod` | `cls` | Factory methods, alternative constructors |
-| `@staticmethod` | None | Utility functions related to class |
+A `@classmethod` receives the class itself as the first argument (`cls`) instead of an instance. It is commonly used to create alternative constructors or factory methods.
 
 ```python
 class Person:
@@ -422,14 +419,30 @@ class Person:
 
     @classmethod
     def from_dict(cls, data):
+        """Create a Person from a dictionary."""
         return cls(data["name"])
+
+p = Person.from_dict({"name": "Alice"})
+print(p.name)   # Alice
+```
+
+### 11.5.3 `@staticmethod`
+
+A `@staticmethod` does not receive `self` or `cls`. It is a regular function that happens to live inside a class namespace, typically used for utility logic related to the class.
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
     @staticmethod
     def is_adult(age):
+        """Check if an age qualifies as an adult."""
         return age >= 18
 
-p = Person.from_dict({"name": "Alice"})
 print(Person.is_adult(20))   # True
+print(Person.is_adult(16))   # False
 ```
 
 ## 11.6 Practical Examples
