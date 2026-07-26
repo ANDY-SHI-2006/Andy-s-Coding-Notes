@@ -386,7 +386,28 @@ print(db1 is db2)   # True — same instance
 
 ### 11.5.1 `@property`
 
-Turn a method into an attribute-like accessor.
+`@property` turns a method into an attribute-like accessor, so you can read or write it using dot syntax while still running custom logic behind the scenes.
+
+#### 11.5.1.1 Getter
+
+A getter lets you access a computed or protected attribute as if it were a regular attribute.
+
+```python
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        return self._radius
+
+c = Circle(5)
+print(c.radius)     # 5 (calls the getter)
+```
+
+#### 11.5.1.2 Setter
+
+Use `@attr.setter` to run validation or side effects when the attribute is assigned.
 
 ```python
 class Circle:
@@ -404,8 +425,30 @@ class Circle:
         self._radius = value
 
 c = Circle(5)
-print(c.radius)     # 5 (calls getter)
-c.radius = 10       # Calls setter
+c.radius = 10       # Calls the setter
+print(c.radius)     # 10
+```
+
+#### 11.5.1.3 Deleter
+
+Use `@attr.deleter` to run cleanup code when the attribute is deleted with `del`.
+
+```python
+class Person:
+    def __init__(self, name):
+        self._name = name
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.deleter
+    def name(self):
+        print("Deleting name...")
+        del self._name
+
+p = Person("Alice")
+del p.name          # Calls the deleter
 ```
 
 ### 11.5.2 `@classmethod`
@@ -444,6 +487,41 @@ class Person:
 print(Person.is_adult(20))   # True
 print(Person.is_adult(16))   # False
 ```
+
+### 11.5.4 `@dataclass`
+
+`@dataclass` (from the `dataclasses` module) automatically generates `__init__`, `__repr__`, `__eq__`, and other boilerplate methods for classes that mainly store data.
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: int
+    y: int
+
+p1 = Point(1, 2)
+p2 = Point(1, 2)
+
+print(p1)        # Point(x=1, y=2)
+print(p1 == p2)  # True
+```
+
+It can also generate comparison methods, make fields immutable, or provide default values:
+
+```python
+from dataclasses import dataclass
+
+@dataclass(order=True, frozen=True)
+class Item:
+    name: str
+    price: float = 0.0
+
+items = [Item("Apple", 1.5), Item("Banana", 0.5)]
+print(sorted(items))   # Sorted by name, then price
+```
+
+**When to use:** Use `@dataclass` for simple data containers instead of writing `__init__`, `__repr__`, and `__eq__` by hand.
 
 ## 11.6 Practical Examples
 
