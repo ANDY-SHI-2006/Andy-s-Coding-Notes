@@ -201,37 +201,7 @@ all(n >= 0 for n in nums)    # True
 
 ## 10.4 `functools` Functional Utilities
 
-These functions come from the `functools` module in the standard library.
-
-### 10.4.1 `reduce()`
-
-Cumulatively apply a function to reduce an iterable to a single value.
-
-```python
-from functools import reduce
-
-reduce(lambda a, b: a + b, [1, 2, 3, 4])   # 10
-reduce(lambda a, b: a * b, [1, 2, 3, 4])   # 24
-```
-
-### 10.4.2 `partial()`
-
-Create a new function with pre-filled arguments.
-
-```python
-from functools import partial
-
-# Base function
-def power(base, exponent):
-    return base ** exponent
-
-# Create specialized functions
-square = partial(power, exponent=2)
-cube = partial(power, exponent=3)
-
-square(5)   # 25
-cube(3)     # 27
-```
+Python's `functools` module provides several tools for functional programming, including `reduce()` and `partial()`. For details and examples, see [16 `functools`](16-functools.md).
 
 ## 10.5 Iterators
 

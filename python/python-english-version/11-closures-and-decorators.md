@@ -285,26 +285,9 @@ def view_profile(user):
 
 ### 11.3.5 Preserving Metadata with `functools.wraps`
 
-Without `@wraps`, the decorated function loses its name and docstring.
+When you write a decorator, the wrapper function replaces the original function's metadata such as `__name__` and `__doc__`. Use `@functools.wraps(func)` on the wrapper to copy those attributes back.
 
-```python
-import functools
-
-def my_decorator(func):
-    @functools.wraps(func)      # Preserves name, docstring, etc.
-    def wrapper(*args, **kwargs):
-        """Wrapper docstring"""
-        return func(*args, **kwargs)
-    return wrapper
-
-@my_decorator
-def say_hello():
-    """Greet the user."""
-    print("Hello!")
-
-print(say_hello.__name__)       # say_hello (not wrapper)
-print(say_hello.__doc__)        # Greet the user.
-```
+For details and examples, see [16.2 Preserving Metadata with `@functools.wraps`](16-functools.md#162-preserving-metadata-with-functoolswraps).
 
 ## 11.4 Advanced Decorator Patterns
 
