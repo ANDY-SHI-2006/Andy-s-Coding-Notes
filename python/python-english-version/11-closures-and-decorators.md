@@ -326,7 +326,38 @@ def greet(name):
 greet("Alice")   # Prints 3 times
 ```
 
-**Note:** This implementation returns only the result of the final call. Use it for functions with side effects (like printing); if you need to collect all return values, store them in a list inside the wrapper.
+**Note:** This implementation returns only the result of the final call. This works fine for functions with side effects (like printing), but it loses earlier return values.
+
+```python
+import random
+
+@repeat(3)
+def roll():
+    return random.randint(1, 6)
+
+result = roll()
+# result holds only the 3rd roll; the first two are discarded
+```
+
+If you need to keep every result, collect them in a list inside the wrapper:
+
+```python
+def repeat_all(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            results = []
+            for _ in range(times):
+                results.append(func(*args, **kwargs))
+            return results
+        return wrapper
+    return decorator
+
+@repeat_all(3)
+def roll():
+    return random.randint(1, 6)
+
+print(roll())   # e.g., [4, 1, 6]
+```
 
 ### 11.4.3 Class Decorators
 
