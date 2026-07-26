@@ -325,11 +325,15 @@ for key, group in itertools.groupby(data, key=lambda x: x[0]):
 
 ## 10.6 Generators
 
+### 10.6.1 Generator Functions and Expressions
+
+A generator is an iterator that produces values on demand instead of storing them all in memory.
+
 | Feature | Description |
 |---------|-------------|
-| Definition | Function with `yield` or generator expression |
-| Behavior | Lazy evaluation, produces values on demand |
-| Memory | Efficient for large/infinite sequences |
+| Definition | Function with `yield` or a generator expression |
+| Behavior | Lazy evaluation, produces values one at a time |
+| Memory | Efficient for large or infinite sequences |
 
 ```python
 # Generator function
@@ -355,7 +359,7 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-### 10.6.1 Generator Execution Flow
+### 10.6.2 Generator Execution Flow
 
 When a generator function is called, it does **not** execute the function body immediately. Instead, it returns a generator object. The body executes only when `next()` is called, and it **pauses** at each `yield`, resuming from that exact point on the next `next()` call.
 
@@ -378,7 +382,7 @@ print(next(g))              # Step 3: resumed again → 30
 
 **Key insight:** `yield` is both an output point and a checkpoint. The generator remembers its local variables and execution position between calls.
 
-### 10.6.2 Generator Expression vs List Comprehension
+### 10.6.3 Generator Expression vs List Comprehension
 
 Syntax differs by only one character, but behavior is very different:
 
@@ -408,7 +412,7 @@ print(list(squares_gen))  # [0, 1, 4, 9, 16]
 - Use **list comprehension** when you need random access or multiple passes
 - Use **generator expression** for large/infinite sequences or single-pass pipelines
 
-### 10.6.3 Generator Methods
+### 10.6.4 Generator Methods
 
 Generators support communication with the caller.
 
@@ -434,7 +438,7 @@ acc.send(5)         # total = 15
 acc.close()         # Clean shutdown
 ```
 
-### 10.6.4 `yield from`
+### 10.6.5 `yield from`
 
 Delegate iteration to a sub-generator.
 
