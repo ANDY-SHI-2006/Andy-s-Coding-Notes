@@ -144,7 +144,9 @@ funcs[2]()   # 2
 
 Suppose you need to measure execution time for multiple functions. Without decorators, you have three bad options:
 
-**Approach 1: Duplicate code** — violates DRY principle.
+#### 11.3.1.1 Problem: Duplicate Code
+
+The straightforward way is to add timing logic to every function. This violates the DRY principle.
 
 ```python
 import time
@@ -162,7 +164,9 @@ def register():
     print(f"Time: {time.time() - start:.2f}s")
 ```
 
-**Approach 2: Extract common code** — better, but still need to manually call the wrapper.
+#### 11.3.1.2 Step 1: Extract a Helper
+
+Move the common timing code into a helper function. Better, but now you must call `measure(func)` instead of `func()`.
 
 ```python
 def measure(func):
@@ -173,7 +177,9 @@ def measure(func):
 measure(login)      # Works, but changes how you call the function
 ```
 
-**Approach 3: Closure + return inner function** — the decorator pattern.
+#### 11.3.1.3 Step 2: Return a Wrapper
+
+Use a closure to return a new function that looks like the original but adds timing around it.
 
 ```python
 def timer(func):
@@ -187,7 +193,9 @@ login = timer(login)    # Replaces login with wrapped version
 login()                 # Looks like normal call, but has timing
 ```
 
-**Approach 4: `@` syntax sugar** — same as Approach 3, cleaner to write.
+#### 11.3.1.4 Step 3: Use `@` Syntax
+
+The `@` syntax is just a cleaner way to write `login = timer(login)`.
 
 ```python
 @timer
@@ -195,10 +203,12 @@ def login():
     print("Login logic")
     time.sleep(1)
 
-login()                 # Identical behavior to Approach 3
+login()                 # Identical behavior to Step 2
 ```
 
-**Key benefit:** Decorators add functionality without changing the original function's source code or its calling convention.
+#### 11.3.1.5 Key Benefit
+
+Decorators add functionality without changing the original function's source code or its calling convention.
 
 ### 11.3.2 Decorator 1.0 (Basic Template)
 
