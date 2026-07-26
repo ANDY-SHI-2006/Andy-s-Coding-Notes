@@ -136,7 +136,7 @@ funcs[1]()   # 1
 funcs[2]()   # 2
 ```
 
-## 11.3 Decorators
+## 11.3 Decorator Basics
 
 **Decorator:** A function that wraps another function to extend its behavior without modifying it.
 
@@ -306,7 +306,9 @@ print(say_hello.__name__)       # say_hello (not wrapper)
 print(say_hello.__doc__)        # Greet the user.
 ```
 
-### 11.3.6 Stacked Decorators
+## 11.4 Advanced Decorator Patterns
+
+### 11.4.1 Stacked Decorators
 
 Multiple decorators can be applied to a single function. They execute from bottom to top.
 
@@ -320,7 +322,7 @@ def my_function():
 # my_function = decorator_b(decorator_a(my_function))
 ```
 
-### 11.3.7 Parametric Decorators
+### 11.4.2 Parametric Decorators
 
 A decorator that accepts its own parameters. Requires a factory function.
 
@@ -343,7 +345,7 @@ greet("Alice")   # Prints 3 times
 
 **Note:** This implementation returns only the result of the final call. Use it for functions with side effects (like printing); if you need to collect all return values, store them in a list inside the wrapper.
 
-### 11.3.8 Class Decorators
+### 11.4.3 Class Decorators
 
 Decorators can also be applied to classes.
 
@@ -366,7 +368,9 @@ db2 = Database()
 print(db1 is db2)   # True — same instance
 ```
 
-### 11.3.9 `@property`
+## 11.5 Common Built-in Decorators
+
+### 11.5.1 `@property`
 
 Turn a method into an attribute-like accessor.
 
@@ -390,7 +394,7 @@ print(c.radius)     # 5 (calls getter)
 c.radius = 10       # Calls setter
 ```
 
-### 11.3.10 `@classmethod` and `@staticmethod`
+### 11.5.2 `@classmethod` and `@staticmethod`
 
 | Decorator | First param | Use case |
 |-----------|-------------|----------|
@@ -414,7 +418,9 @@ p = Person.from_dict({"name": "Alice"})
 print(Person.is_adult(20))   # True
 ```
 
-### 11.3.11 Practical Example: Login Check Decorator
+## 11.6 Practical Examples
+
+### 11.6.1 Login Check Decorator
 
 A common real-world use case: restrict function execution based on login status.
 
@@ -447,7 +453,7 @@ transfer_money(True, 100)   # 💰 Transferring $100...
 
 **Key pattern:** The decorator intercepts the call, checks a condition, and either blocks execution or proceeds to the original function. This pattern is widely used in web frameworks (Flask, Django) for authentication and authorization.
 
-### 11.3.12 Practical Example: Logging Decorator
+### 11.6.2 Logging Decorator
 
 A logging decorator records function calls — useful for debugging and monitoring.
 
