@@ -523,6 +523,10 @@ print(sorted(items))   # Sorted by name, then price
 
 **When to use:** Use `@dataclass` for simple data containers instead of writing `__init__`, `__repr__`, and `__eq__` by hand.
 
+### 11.5.5 `@abstractmethod`
+
+`@abstractmethod` (from the `abc` module) marks a method that must be implemented by subclasses. It is mainly used when designing class hierarchies and interfaces. For details and examples, see [10.13 Abstract Base Classes](13-object-oriented-programming.md#1013-abstract-base-classes).
+
 ## 11.6 Practical Examples
 
 ### 11.6.1 Login Check Decorator
