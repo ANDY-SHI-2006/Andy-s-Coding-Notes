@@ -66,6 +66,8 @@ operations["-"](5, 3)       # 2
 
 ## 11.2 Closures
 
+### 11.2.1 Definition
+
 **Closure:** A nested function that references variables from its enclosing scope and is returned from the outer function.
 
 | Condition | Description |
@@ -91,11 +93,54 @@ c2 = counter()              # Independent closure
 c2()                        # 1
 ```
 
+### 11.2.2 Factory Functions with State
+
+Closures let you create functions that carry their own private state. Each call to the factory produces an independent closure.
+
+```python
+def make_multiplier(n):
+    def multiply(x):
+        return x * n        # n is captured from enclosing scope
+    return multiply
+
+double = make_multiplier(2)
+triple = make_multiplier(3)
+
+double(5)   # 10
+triple(5)   # 15
+```
+
+### 11.2.3 Trap: Late Binding
+
+When closures are created inside a loop, they capture the **variable name**, not the value at the time of creation. All closures end up seeing the final value.
+
+```python
+funcs = []
+for i in range(3):
+    funcs.append(lambda: i)   # All closures reference the same i
+
+funcs[0]()   # 2 (not 0)
+funcs[1]()   # 2
+funcs[2]()   # 2
+```
+
+**Fix:** Bind the current value as a default argument, which is evaluated at definition time.
+
+```python
+funcs = []
+for i in range(3):
+    funcs.append(lambda x=i: x)   # x captures current value of i
+
+funcs[0]()   # 0
+funcs[1]()   # 1
+funcs[2]()   # 2
+```
+
 ## 11.3 Decorators
 
 **Decorator:** A function that wraps another function to extend its behavior without modifying it.
 
-### 11.3.0 Why Decorators? (Evolution)
+### 11.3.1 Why Decorators? (Evolution)
 
 Suppose you need to measure execution time for multiple functions. Without decorators, you have three bad options:
 
@@ -157,7 +202,7 @@ login()                 # Identical behavior to Approach 3
 
 **Key benefit:** Decorators add functionality without changing the original function's source code or its calling convention.
 
-### 11.3.1 Decorator 1.0 (Basic Template)
+### 11.3.2 Decorator 1.0 (Basic Template)
 
 ```python
 def decorator(func):
@@ -182,7 +227,7 @@ def greet():
     print("Hello")
 ```
 
-### 11.3.2 Decorator 2.0 (With Parameters)
+### 11.3.3 Decorator 2.0 (With Parameters)
 
 ```python
 def timer(func):
@@ -203,7 +248,7 @@ def slow_function(n):
 slow_function(1)            # Measures and prints execution time
 ```
 
-### 11.3.3 Decorator Final Version (Preserves Return Value)
+### 11.3.4 Decorator Final Version (Preserves Return Value)
 
 ```python
 # Universal decorator template
@@ -228,7 +273,7 @@ def view_profile(user):
     return user["profile"]
 ```
 
-### 11.3.4 Preserving Metadata with `functools.wraps`
+### 11.3.5 Preserving Metadata with `functools.wraps`
 
 Without `@wraps`, the decorated function loses its name and docstring.
 
@@ -251,7 +296,7 @@ print(say_hello.__name__)       # say_hello (not wrapper)
 print(say_hello.__doc__)        # Greet the user.
 ```
 
-### 11.3.5 Stacked Decorators
+### 11.3.6 Stacked Decorators
 
 Multiple decorators can be applied to a single function. They execute from bottom to top.
 
@@ -265,7 +310,7 @@ def my_function():
 # my_function = decorator_b(decorator_a(my_function))
 ```
 
-### 11.3.6 Parametric Decorators
+### 11.3.7 Parametric Decorators
 
 A decorator that accepts its own parameters. Requires a factory function.
 
@@ -286,7 +331,7 @@ def greet(name):
 greet("Alice")   # Prints 3 times
 ```
 
-### 11.3.7 Class Decorators
+### 11.3.8 Class Decorators
 
 Decorators can also be applied to classes.
 
@@ -309,7 +354,7 @@ db2 = Database()
 print(db1 is db2)   # True — same instance
 ```
 
-### 11.3.8 `@property`
+### 11.3.9 `@property`
 
 Turn a method into an attribute-like accessor.
 
@@ -333,7 +378,7 @@ print(c.radius)     # 5 (calls getter)
 c.radius = 10       # Calls setter
 ```
 
-### 11.3.9 `@classmethod` and `@staticmethod`
+### 11.3.10 `@classmethod` and `@staticmethod`
 
 | Decorator | First param | Use case |
 |-----------|-------------|----------|
@@ -357,7 +402,7 @@ p = Person.from_dict({"name": "Alice"})
 print(Person.is_adult(20))   # True
 ```
 
-### 11.3.10 Practical Example: Login Check Decorator
+### 11.3.11 Practical Example: Login Check Decorator
 
 A common real-world use case: restrict function execution based on login status.
 
@@ -390,7 +435,7 @@ transfer_money(True, 100)   # 💰 Transferring $100...
 
 **Key pattern:** The decorator intercepts the call, checks a condition, and either blocks execution or proceeds to the original function. This pattern is widely used in web frameworks (Flask, Django) for authentication and authorization.
 
-### 11.3.11 Practical Example: Logging Decorator
+### 11.3.12 Practical Example: Logging Decorator
 
 A logging decorator records function calls — useful for debugging and monitoring.
 
