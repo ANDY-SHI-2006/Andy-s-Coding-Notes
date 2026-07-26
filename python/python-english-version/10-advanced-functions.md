@@ -139,9 +139,7 @@ sorted(products, key=lambda x: int(x.split("_")[1]))  # ['Mi_4000', 'iPhone_8000
 
 **Note:** For basic sorting syntax and comparison with `.sort()`, see [3.5.2 Sorting](03-sequence-types.md#352-sorting).
 
-## 10.3 Functional Utilities
-
-These functions support a functional programming style. Unlike `map()` / `filter()` / `sorted()`, `any()` and `all()` work directly with iterables rather than taking a function argument.
+## 10.3 Built-in Functional Checks
 
 ### 10.3.1 `any()` and `all()`
 
@@ -203,7 +201,11 @@ all(nums)                    # False (0 is falsy)
 all(n >= 0 for n in nums)    # True
 ```
 
-### 10.3.2 `reduce()`
+## 10.4 `functools` Functional Utilities
+
+These functions come from the `functools` module in the standard library.
+
+### 10.4.1 `reduce()`
 
 Cumulatively apply a function to reduce an iterable to a single value.
 
@@ -214,7 +216,7 @@ reduce(lambda a, b: a + b, [1, 2, 3, 4])   # 10
 reduce(lambda a, b: a * b, [1, 2, 3, 4])   # 24
 ```
 
-### 10.3.3 `partial()`
+### 10.4.2 `partial()`
 
 Create a new function with pre-filled arguments.
 
@@ -233,7 +235,7 @@ square(5)   # 25
 cube(3)     # 27
 ```
 
-## 10.4 Iterators
+## 10.5 Iterators
 
 | Method | Description |
 |--------|-------------|
@@ -260,7 +262,7 @@ for item in lst:            # Calls iter(), then next() repeatedly
 - **Iterable:** Has `__iter__()` (can be looped multiple times)
 - **Iterator:** Has `__iter__()` AND `__next__()` (one-time use)
 
-### 10.4.1 How `for` Loops Work Under the Hood
+### 10.5.1 How `for` Loops Work Under the Hood
 
 A `for` loop is syntactic sugar for this iterator protocol pattern:
 
@@ -290,7 +292,7 @@ except StopIteration:
     print("Done")
 ```
 
-### 10.4.2 `itertools` Overview
+### 10.5.2 `itertools` Overview
 
 Built-in module for efficient iteration patterns.
 
@@ -314,7 +316,7 @@ for key, group in itertools.groupby(data, key=lambda x: x[0]):
     print(key, list(group))   # A [(A,1), (A,2)]  B [(B,3), (B,4)]
 ```
 
-## 10.5 Generators
+## 10.6 Generators
 
 | Feature | Description |
 |---------|-------------|
@@ -346,7 +348,7 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-### 10.5.1 Generator Execution Flow
+### 10.6.1 Generator Execution Flow
 
 When a generator function is called, it does **not** execute the function body immediately. Instead, it returns a generator object. The body executes only when `next()` is called, and it **pauses** at each `yield`, resuming from that exact point on the next `next()` call.
 
@@ -369,7 +371,7 @@ print(next(g))              # Step 3: resumed again → 30
 
 **Key insight:** `yield` is both an output point and a checkpoint. The generator remembers its local variables and execution position between calls.
 
-### 10.5.2 Generator Expression vs List Comprehension
+### 10.6.2 Generator Expression vs List Comprehension
 
 Syntax differs by only one character, but behavior is very different:
 
@@ -399,7 +401,7 @@ print(list(squares_gen))  # [0, 1, 4, 9, 16]
 - Use **list comprehension** when you need random access or multiple passes
 - Use **generator expression** for large/infinite sequences or single-pass pipelines
 
-### 10.5.3 Generator Methods
+### 10.6.3 Generator Methods
 
 Generators support communication with the caller.
 
@@ -425,7 +427,7 @@ acc.send(5)         # total = 15
 acc.close()         # Clean shutdown
 ```
 
-### 10.5.4 `yield from`
+### 10.6.4 `yield from`
 
 Delegate iteration to a sub-generator.
 
