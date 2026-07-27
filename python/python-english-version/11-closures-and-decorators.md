@@ -361,7 +361,24 @@ print(roll())   # e.g., [4, 1, 6]
 
 ### 11.4.3 Class Decorators
 
-Decorators can also be applied to classes.
+#### 11.4.3.1 What Are Class Decorators?
+
+Just as function decorators receive and return functions, class decorators receive and return classes. The syntax is the same:
+
+```python
+@my_decorator
+class MyClass:
+    pass
+
+# Equivalent to:
+# MyClass = my_decorator(MyClass)
+```
+
+A class decorator is useful when you want to modify class creation behavior, enforce rules across many classes, or share state between instances.
+
+#### 11.4.3.2 Example: Singleton Pattern
+
+A singleton ensures that only one instance of a class exists. The decorator stores the instance in a closure and returns it on subsequent calls.
 
 ```python
 def singleton(cls):
@@ -380,6 +397,34 @@ class Database:
 db1 = Database()
 db2 = Database()
 print(db1 is db2)   # True — same instance
+```
+
+#### 11.4.3.3 Example: Auto-Registration
+
+Class decorators can also register classes automatically. This pattern is common in plugin systems, command dispatchers, and factory registries.
+
+```python
+registry = {}
+
+def register(cls):
+    registry[cls.__name__] = cls
+    return cls
+
+@register
+class Dog:
+    def speak(self):
+        return "Woof"
+
+@register
+class Cat:
+    def speak(self):
+        return "Meow"
+
+print(registry)
+# {'Dog': <class 'Dog'>, 'Cat': <class 'Cat'>}
+
+animal = registry["Dog"]()
+print(animal.speak())   # Woof
 ```
 
 ## 11.5 Common Built-in Decorators
