@@ -767,12 +767,4 @@ greet("Alice", greeting="Hi")
 
 **Real-world tip:** In production, replace `print()` with a proper logging framework like Python's `logging` module.
 
-## 13.7 Summary
-
-- **First-class functions** are the foundation: functions can be assigned, passed, returned, and stored.
-- **Closures** capture variables from enclosing scopes and let functions carry private state.
-- **Decorators** wrap functions or classes to extend behavior without changing their source code.
-- Parametric decorators and class decorators give you configurable and class-level wrapping power.
-- Built-in decorators like `@property`, `@classmethod`, `@staticmethod`, `@dataclass`, and `@abstractmethod` solve common class design problems.
-
 [← Previous: Object-Oriented Programming](12-object-oriented-programming.md) | [Next: Exception Handling →](14-exception-handling.md)
