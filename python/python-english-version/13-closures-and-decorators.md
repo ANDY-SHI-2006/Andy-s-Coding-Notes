@@ -536,23 +536,46 @@ del p.name          # Calls the deleter
 
 A `@classmethod` receives the class itself as the first argument (`cls`) instead of an instance. It is commonly used to create alternative constructors or factory methods.
 
+#### 13.5.2.1 Why Use `@classmethod`?
+
+Sometimes you need more than one way to create an object. Instead of overloading `__init__`, use a class method as a factory.
+
 ```python
 class Person:
-    def __init__(self, name):
+    def __init__(self, name, age):
         self.name = name
+        self.age = age
 
     @classmethod
-    def from_dict(cls, data):
-        """Create a Person from a dictionary."""
-        return cls(data["name"])
+    def from_birth_year(cls, name, year):
+        """Create a Person from a birth year."""
+        return cls(name, 2026 - year)
 
-p = Person.from_dict({"name": "Alice"})
-print(p.name)   # Alice
+p = Person.from_birth_year("Alice", 1990)
+print(p.name, p.age)   # Alice 36
 ```
+
+#### 13.5.2.2 Inheritance Benefit
+
+Using `cls(...)` instead of hardcoding the class name makes subclassing work correctly.
+
+```python
+class Employee(Person):
+    pass
+
+e = Employee.from_birth_year("Bob", 1995)
+print(type(e))   # <class '__main__.Employee'>
+```
+
+If `from_birth_year` had used `Person(...)` instead of `cls(...)`, `e` would have been a `Person`, not an `Employee`.
 
 ### 13.5.3 `@staticmethod`
 
-A `@staticmethod` does not receive `self` or `cls`. It is a regular function that happens to live inside a class namespace, typically used for utility logic related to the class.
+A `@staticmethod` does not receive `self` or `cls`. It is a regular function that lives inside a class namespace, typically used for utility logic related to the class.
+
+#### 13.5.3.1 Why Use `@staticmethod`?
+
+You could write the same logic as a module-level function, but putting it inside the class signals that the function belongs to the class's domain. It also keeps related code together.
 
 ```python
 class Person:
@@ -569,9 +592,48 @@ print(Person.is_adult(20))   # True
 print(Person.is_adult(16))   # False
 ```
 
+#### 13.5.3.2 `@staticmethod` vs Module-Level Function
+
+Both work, but the static method makes the relationship explicit:
+
+```python
+# Module-level function
+def is_adult(age):
+    return age >= 18
+
+# Static method: clearly tied to Person
+class Person:
+    @staticmethod
+    def is_adult(age):
+        return age >= 18
+```
+
+#### 13.5.3.3 It Is More Than a Declaration
+
+`@staticmethod` actually changes how Python calls the method. Without it, calling `Person.is_adult(20)` would fail because Python would try to pass the class as the first argument.
+
 ### 13.5.4 `@dataclass`
 
 `@dataclass` (from the `dataclasses` module) automatically generates `__init__`, `__repr__`, `__eq__`, and other boilerplate methods for classes that mainly store data.
+
+#### 13.5.4.1 Why Use `@dataclass`?
+
+Without it, a simple data container requires a lot of repetitive code:
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return f"Point(x={self.x}, y={self.y})"
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+```
+
+With `@dataclass`, the same class becomes:
 
 ```python
 from dataclasses import dataclass
@@ -588,15 +650,23 @@ print(p1)        # Point(x=1, y=2)
 print(p1 == p2)  # True
 ```
 
-It can also generate comparison methods, make fields immutable, or provide default values:
+#### 13.5.4.2 Common Options
+
+| Option | Effect |
+|--------|--------|
+| `frozen=True` | Instances become immutable after creation |
+| `order=True` | Generates comparison methods (`<`, `<=`, `>`, `>=`) |
+| `default=...` | Provides a default value for a field |
+| `field(...)` | Fine-grained control over a single field |
 
 ```python
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass(order=True, frozen=True)
 class Item:
     name: str
     price: float = 0.0
+    tags: list = field(default_factory=list)
 
 items = [Item("Apple", 1.5), Item("Banana", 0.5)]
 print(sorted(items))   # Sorted by name, then price
