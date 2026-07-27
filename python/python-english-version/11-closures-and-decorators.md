@@ -388,7 +388,29 @@ print(db1 is db2)   # True — same instance
 
 `@property` turns a method into an attribute-like accessor, so you can read or write it using dot syntax while still running custom logic behind the scenes.
 
-#### 11.5.1.1 Getter
+#### 11.5.1.1 Why Use `@property`?
+
+If you expose an attribute directly, anyone can assign an invalid value:
+
+```python
+class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+
+c = Circle(5)
+c.radius = -10      # No error, but a circle cannot have a negative radius
+```
+
+You could add getter and setter methods, but then accessing the value feels awkward:
+
+```python
+print(c.get_radius())   # Less natural than c.radius
+c.set_radius(10)        # Less natural than c.radius = 10
+```
+
+`@property` solves both problems: it lets you use simple dot syntax while still running validation or computation behind the scenes.
+
+#### 11.5.1.2 Getter
 
 A getter lets you access a computed or protected attribute as if it were a regular attribute.
 
@@ -405,7 +427,7 @@ c = Circle(5)
 print(c.radius)     # 5 (calls the getter)
 ```
 
-#### 11.5.1.2 Setter
+#### 11.5.1.3 Setter
 
 Use `@attr.setter` to run validation or side effects when the attribute is assigned.
 
@@ -429,7 +451,7 @@ c.radius = 10       # Calls the setter
 print(c.radius)     # 10
 ```
 
-#### 11.5.1.3 Deleter
+#### 11.5.1.4 Deleter
 
 Use `@attr.deleter` to run cleanup code when the attribute is deleted with `del`.
 
