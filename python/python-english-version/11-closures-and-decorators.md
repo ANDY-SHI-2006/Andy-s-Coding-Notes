@@ -307,18 +307,30 @@ def my_function():
 
 ### 11.4.2 Parametric Decorators
 
-A decorator that accepts its own parameters. Requires a factory function.
+A parametric decorator is a decorator that accepts its own arguments. Because `@decorator(arg)` is executed before the function is defined, it must return another decorator that then wraps the function. This requires an extra factory layer.
+
+#### 11.4.2.1 Why Parametric Decorators?
+
+Sometimes you want the decorator itself to be configurable. For example, you might want to repeat a function 3 times in one place and 5 times in another. Without parameters, you would need to write a separate decorator for each case.
+
+#### 11.4.2.2 Factory Pattern
+
+A parametric decorator has three nested levels:
 
 ```python
-def repeat(times):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
+def repeat(times):              # Level 1: receives decorator arguments
+    def decorator(func):        # Level 2: receives the function to wrap
+        def wrapper(*args, **kwargs):   # Level 3: runs when the function is called
             for _ in range(times):
                 result = func(*args, **kwargs)
             return result
         return wrapper
     return decorator
+```
 
+#### 11.4.2.3 Example: Repeating a Function
+
+```python
 @repeat(3)
 def greet(name):
     print(f"Hello, {name}!")
@@ -326,7 +338,9 @@ def greet(name):
 greet("Alice")   # Prints 3 times
 ```
 
-**Note:** This implementation returns only the result of the final call. This works fine for functions with side effects (like printing), but it loses earlier return values.
+#### 11.4.2.4 Handling Return Values
+
+The simple `repeat` implementation returns only the result of the final call. This works for side effects like printing, but it discards earlier results.
 
 ```python
 import random
