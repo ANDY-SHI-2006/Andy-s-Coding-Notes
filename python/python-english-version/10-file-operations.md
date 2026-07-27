@@ -24,6 +24,8 @@ file = open("data.txt", mode="r", encoding="utf-8")
 
 ## 10.2 Reading Files
 
+### 10.2.1 Reading Methods
+
 | Method | Description |
 |--------|-------------|
 | `read()` | Read entire file |
@@ -34,8 +36,15 @@ file = open("data.txt", mode="r", encoding="utf-8")
 ```python
 with open("data.txt", encoding="utf-8") as f:
     content = f.read()          # Entire file
-    f.seek(0)                   # Reset cursor to beginning
     lines = f.readlines()       # List of lines
+```
+
+The most common way to process a file line by line is with a `for` loop:
+
+```python
+with open("data.txt", encoding="utf-8") as f:
+    for line in f:
+        print(line.strip())   # strip() removes trailing newline
 ```
 
 **⚠️ Character vs Byte:** `read(n)` reads **n characters**, not n bytes. This is usually what you want, but be aware that with UTF-8 encoding, one Chinese character occupies **3 bytes** on disk. The file cursor (`tell()`) moves by bytes, while `read(n)` counts characters.
@@ -51,7 +60,7 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
     print(f.tell())             # 6
 ```
 
-### 10.2.1 `seek()` and `tell()`
+### 10.2.2 Cursor Control
 
 Control the file cursor position.
 
@@ -135,7 +144,7 @@ with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
-### 10.6.1 CSV Handling
+## 10.7 CSV Handling
 
 ```python
 import csv
@@ -159,7 +168,7 @@ with open("data.csv", encoding="utf-8", newline="") as f:
         print(row["name"])  # Access by column name
 ```
 
-## 10.7 Character Encoding
+## 10.8 Character Encoding
 
 | Encoding | Description | Bytes per char |
 |----------|-------------|----------------|
@@ -172,7 +181,7 @@ with open("data.csv", encoding="utf-8", newline="") as f:
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
 
-### 10.7.1 Encoding Evolution
+### 10.8.1 Encoding Evolution
 
 Understanding why encodings exist helps prevent file-reading errors:
 
@@ -196,7 +205,7 @@ with open("chinese.txt", "w", encoding="utf-8") as f:
     f.write("中文")          # 6 bytes total (2 chars × 3 bytes)
 ```
 
-### 10.7.2 `seek()` with Multi-byte Characters
+### 10.8.2 `seek()` with Multi-byte Characters
 
 `seek()` moves the cursor by **bytes**, not characters. With UTF-8 Chinese text, you must seek to byte positions that align with character boundaries (multiples of 3 for Chinese).
 
@@ -210,7 +219,7 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
     # f.read(1)             # UnicodeDecodeError
 ```
 
-## 10.8 Modern Path Handling with `pathlib`
+## 10.9 Modern Path Handling with `pathlib`
 
 `pathlib` provides an object-oriented approach to filesystem paths.
 
@@ -241,7 +250,7 @@ for txt_file in data_dir.glob("*.txt"):
 | Read text | `open(p).read()` | `Path(p).read_text()` |
 | Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
 
-## 10.9 Temporary Files
+## 10.10 Temporary Files
 
 Use the `tempfile` module for short-lived files.
 
@@ -258,7 +267,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     print(tmpdir)       # Path to temp directory
 ```
 
-## 10.10 File Existence and Metadata
+## 10.11 File Existence and Metadata
 
 ```python
 import os
@@ -277,5 +286,28 @@ stat = os.stat("file.txt")
 print(stat.st_size)                 # Size
 print(stat.st_mtime)                # Modification time
 ```
+
+## 10.12 Common File Errors
+
+File operations often fail for predictable reasons. Handle them explicitly instead of letting the program crash.
+
+```python
+try:
+    with open("missing.txt", encoding="utf-8") as f:
+        content = f.read()
+except FileNotFoundError:
+    print("File does not exist.")
+except PermissionError:
+    print("No permission to read the file.")
+except UnicodeDecodeError:
+    print("Encoding mismatch — try a different encoding.")
+```
+
+| Error | Cause | Typical Fix |
+|-------|-------|-------------|
+| `FileNotFoundError` | Path does not exist | Check path or use `Path.exists()` first |
+| `PermissionError` | Insufficient permissions | Run with proper privileges or change file permissions |
+| `UnicodeDecodeError` | Wrong encoding | Specify `encoding="utf-8"` or detect encoding |
+| `IsADirectoryError` | Tried to open a directory as a file | Use `os.listdir()` or `Path.iterdir()` instead |
 
 [← Previous: Functions](09-functions.md) | [Next: Advanced Functions →](11-advanced-functions.md)
