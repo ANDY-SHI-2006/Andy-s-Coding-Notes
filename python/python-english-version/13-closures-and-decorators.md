@@ -676,7 +676,28 @@ print(sorted(items))   # Sorted by name, then price
 
 ### 13.5.5 `@abstractmethod`
 
-`@abstractmethod` (from the `abc` module) marks a method that must be implemented by subclasses. It is mainly used when designing class hierarchies and interfaces. For details and examples, see [12.13 Abstract Base Classes](12-object-oriented-programming.md#1213-abstract-base-classes).
+`@abstractmethod` (from the `abc` module) marks a method that must be implemented by subclasses. It is mainly used when designing class hierarchies and interfaces.
+
+A class containing at least one abstract method cannot be instantiated. Subclasses must override every abstract method before they can be created as objects.
+
+```python
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def speak(self):
+        pass
+
+class Dog(Animal):
+    def speak(self):
+        return "Woof"
+
+# animal = Animal()   # TypeError: Can't instantiate abstract class
+dog = Dog()
+print(dog.speak())    # Woof
+```
+
+For more details and the full ABC workflow, see [12.13 Abstract Base Classes](12-object-oriented-programming.md#1213-abstract-base-classes).
 
 ## 13.6 Practical Examples
 
@@ -745,5 +766,13 @@ greet("Alice", greeting="Hi")
 ```
 
 **Real-world tip:** In production, replace `print()` with a proper logging framework like Python's `logging` module.
+
+## 13.7 Summary
+
+- **First-class functions** are the foundation: functions can be assigned, passed, returned, and stored.
+- **Closures** capture variables from enclosing scopes and let functions carry private state.
+- **Decorators** wrap functions or classes to extend behavior without changing their source code.
+- Parametric decorators and class decorators give you configurable and class-level wrapping power.
+- Built-in decorators like `@property`, `@classmethod`, `@staticmethod`, `@dataclass`, and `@abstractmethod` solve common class design problems.
 
 [← Previous: Object-Oriented Programming](12-object-oriented-programming.md) | [Next: Exception Handling →](14-exception-handling.md)
