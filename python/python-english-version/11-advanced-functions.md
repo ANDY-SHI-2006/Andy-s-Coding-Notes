@@ -1,12 +1,12 @@
-[← Previous: Functions](09-functions.md) | [Next: Closures and Decorators →](11-closures-and-decorators.md)
+[← Previous: File Operations](10-file-operations.md) | [Next: Object-Oriented Programming →](12-object-oriented-programming.md)
 
-# 10 Advanced Functions
+# 11 Advanced Functions
 
-## 10.1 Lambda Anonymous Functions
+## 11.1 Lambda Anonymous Functions
 
 A `lambda` is a small, anonymous function written as a single expression.
 
-### 10.1.1 Syntax and Basic Usage
+### 11.1.1 Syntax and Basic Usage
 
 ```python
 # lambda parameters: expression
@@ -18,7 +18,7 @@ def square(x):
     return x ** 2
 ```
 
-### 10.1.2 Common Use Cases
+### 11.1.2 Common Use Cases
 
 Lambdas are most useful as short arguments to higher-order functions.
 
@@ -32,7 +32,7 @@ list(map(lambda x: x * 2, [1, 2, 3]))      # [2, 4, 6]
 list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 ```
 
-### 10.1.3 Limitations
+### 11.1.3 Limitations
 
 - **Single expression only** — no statements, no assignments, no loops
 - **No type hints or docstrings**
@@ -40,9 +40,9 @@ list(filter(lambda x: x > 0, [-1, 2, 3]))  # [2, 3]
 
 Use `lambda` for short, throwaway functions. Use `def` for anything complex.
 
-## 10.2 Higher-Order Functions
+## 11.2 Higher-Order Functions
 
-### 10.2.1 What Are Higher-Order Functions?
+### 11.2.1 What Are Higher-Order Functions?
 
 A **higher-order function** is a function that does at least one of the following:
 
@@ -57,7 +57,7 @@ Python's most common built-in higher-order functions:
 | `filter()` | Select elements matching condition |
 | `sorted()` | Sort with custom key |
 
-### 10.2.2 `map()`
+### 11.2.2 `map()`
 
 | Feature | Description |
 |---------|-------------|
@@ -83,7 +83,7 @@ mapped = map(int, nums)
 print(mapped)               # <map object at 0x...>  (not a list yet)
 ```
 
-### 10.2.3 `filter()`
+### 11.2.3 `filter()`
 
 | Feature | Description |
 |---------|-------------|
@@ -107,7 +107,7 @@ users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 17}]
 list(filter(lambda u: u["age"] >= 18, users))
 ```
 
-### 10.2.4 `sorted()` with Key
+### 11.2.4 `sorted()` with Key
 
 | Feature | Description |
 |---------|-------------|
@@ -139,9 +139,9 @@ sorted(products, key=lambda x: int(x.split("_")[1]))  # ['Mi_4000', 'iPhone_8000
 
 **Note:** For basic sorting syntax and comparison with `.sort()`, see [3.5.2 Sorting](03-sequence-types.md#352-sorting).
 
-## 10.3 `any()` and `all()`
+## 11.3 `any()` and `all()`
 
-### 10.3.1 Basic Usage
+### 11.3.1 Basic Usage
 
 `any(iterable)` returns `True` if at least one item is truthy. `all(iterable)` returns `True` if every item is truthy.
 
@@ -155,7 +155,7 @@ all([1, 0, 3])             # False (0 is falsy)
 
 A value is **truthy** if it passes an `if` check. Common falsy values are `0`, `0.0`, `""`, `[]`, `{}`, `None`, and `False`.
 
-### 10.3.2 With Conditions
+### 11.3.2 With Conditions
 
 Most of the time you pass a generator expression to check a condition for each element.
 
@@ -173,7 +173,7 @@ users = [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}]
 all(u["age"] >= 18 for u in users)   # True
 ```
 
-### 10.3.3 Short-Circuit and Empty Inputs
+### 11.3.3 Short-Circuit and Empty Inputs
 
 Both functions stop early. `any()` stops at the first truthy element, and `all()` stops at the first falsy element.
 
@@ -189,7 +189,7 @@ any([])     # False
 all([])     # True
 ```
 
-### 10.3.4 Common Pitfall
+### 11.3.4 Common Pitfall
 
 `all()` treats `0`, `""`, `None`, and empty containers as falsy, so write the condition explicitly when checking non-boolean values.
 
@@ -199,13 +199,13 @@ all(nums)                    # False (0 is falsy)
 all(n >= 0 for n in nums)    # True
 ```
 
-## 10.4 `functools` Functional Utilities
+## 11.4 `functools` Functional Utilities
 
 Python's `functools` module provides several tools for functional programming, including `reduce()` and `partial()`. For details and examples, see [16 `functools`](16-functools.md).
 
-## 10.5 Iterators
+## 11.5 Iterators
 
-### 10.5.1 Iterator Protocol
+### 11.5.1 Iterator Protocol
 
 Python's iteration protocol relies on two methods:
 
@@ -237,7 +237,7 @@ for item in lst:            # Calls iter(lst), then next() repeatedly
     print(item)
 ```
 
-### 10.5.2 How `for` Loops Work Under the Hood
+### 11.5.2 How `for` Loops Work Under the Hood
 
 A `for` loop is syntactic sugar for this iterator protocol pattern:
 
@@ -267,7 +267,7 @@ except StopIteration:
     print("Done")
 ```
 
-### 10.5.3 `itertools` Overview
+### 11.5.3 `itertools` Overview
 
 Built-in module for efficient iteration patterns.
 
@@ -291,9 +291,9 @@ for key, group in itertools.groupby(data, key=lambda x: x[0]):
     print(key, list(group))   # A [(A,1), (A,2)]  B [(B,3), (B,4)]
 ```
 
-## 10.6 Generators
+## 11.6 Generators
 
-### 10.6.1 Generator Functions and Expressions
+### 11.6.1 Generator Functions and Expressions
 
 A generator is an iterator that produces values on demand instead of storing them all in memory.
 
@@ -303,7 +303,7 @@ A generator is an iterator that produces values on demand instead of storing the
 | Behavior | Lazy evaluation, produces values one at a time |
 | Memory | Efficient for large or infinite sequences |
 
-#### 10.6.1.1 Generator Functions
+#### 11.6.1.1 Generator Functions
 
 Use `yield` inside a function to create a generator. Each `yield` pauses execution and returns one value.
 
@@ -317,7 +317,7 @@ for num in countdown(5):    # 5, 4, 3, 2, 1
     print(num)
 ```
 
-#### 10.6.1.2 Generator Expressions
+#### 11.6.1.2 Generator Expressions
 
 A generator expression looks like a list comprehension but uses parentheses. It produces values lazily instead of building a full list.
 
@@ -330,7 +330,7 @@ for value in gen:
     pass
 ```
 
-#### 10.6.1.3 Infinite Sequences
+#### 11.6.1.3 Infinite Sequences
 
 Generators can run forever because they compute values on demand.
 
@@ -345,7 +345,7 @@ fib = fibonacci()
 [next(fib) for _ in range(10)]  # First 10 Fibonacci numbers
 ```
 
-### 10.6.2 Generator Execution Flow
+### 11.6.2 Generator Execution Flow
 
 When a generator function is called, it does **not** execute the function body immediately. Instead, it returns a generator object. The body executes only when `next()` is called, and it **pauses** at each `yield`, resuming from that exact point on the next `next()` call.
 
@@ -368,7 +368,7 @@ print(next(g))              # Step 3: resumed again → 30
 
 **Key insight:** `yield` is both an output point and a checkpoint. The generator remembers its local variables and execution position between calls.
 
-### 10.6.3 Generator Expression vs List Comprehension
+### 11.6.3 Generator Expression vs List Comprehension
 
 Syntax differs by only one character, but behavior is very different:
 
@@ -398,7 +398,7 @@ print(list(squares_gen))  # [0, 1, 4, 9, 16]
 - Use **list comprehension** when you need random access or multiple passes
 - Use **generator expression** for large/infinite sequences or single-pass pipelines
 
-### 10.6.4 Generator Methods
+### 11.6.4 Generator Methods
 
 Generators support communication with the caller.
 
@@ -424,7 +424,7 @@ acc.send(5)         # total = 15
 acc.close()         # Clean shutdown
 ```
 
-### 10.6.5 `yield from`
+### 11.6.5 `yield from`
 
 Delegate iteration to a sub-generator.
 
@@ -441,4 +441,4 @@ def main_generator():
 list(main_generator())   # ['start', 1, 2, 'end']
 ```
 
-[← Previous: Functions](09-functions.md) | [Next: Closures and Decorators →](11-closures-and-decorators.md)
+[← Previous: File Operations](10-file-operations.md) | [Next: Object-Oriented Programming →](12-object-oriented-programming.md)

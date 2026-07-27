@@ -378,7 +378,7 @@ else:
 
 Define custom behavior for operators on user-defined classes using special (magic) methods.
 
-> **Note:** This section uses classes and `self`, which are covered in [Chapter 10: Object-Oriented Programming](13-object-oriented-programming.md). Return here after reading that chapter for deeper understanding.
+> **Note:** This section uses classes and `self`, which are covered in [Chapter 12: Object-Oriented Programming](12-object-oriented-programming.md). Return here after reading that chapter for deeper understanding.
 
 | Operator | Magic Method | Example Trigger |
 |----------|--------------|-----------------|

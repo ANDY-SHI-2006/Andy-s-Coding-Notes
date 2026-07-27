@@ -40,7 +40,7 @@ print(greet.__name__)   # greet
 print(greet.__doc__)    # Say hello.
 ```
 
-**When to use:** Always inside custom decorators. See also [11.3.5 Preserving Metadata with `functools.wraps`](11-closures-and-decorators.md#1135-preserving-metadata-with-functoolswraps).
+**When to use:** Always inside custom decorators. See also [13.3.5 Preserving Metadata with `functools.wraps`](13-closures-and-decorators.md#1335-preserving-metadata-with-functoolswraps).
 
 ## 16.3 Fixing Arguments with `functools.partial`
 

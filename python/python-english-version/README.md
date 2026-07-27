@@ -17,13 +17,13 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 8. [Flow Control](08-flow-control.md) — *if/else, ternary operator, for, while, break, continue*
 9. [Functions](09-functions.md) — *Defining, parameters, *args, **kwargs, scope, docstrings*
 
-### Part 3: Advanced Functions and File Operations
-10. [Advanced Functions](10-advanced-functions.md) — *Lambda, map, filter, iterators, generators*
-11. [Closures and Decorators](11-closures-and-decorators.md) — *Nested functions, wrappers, @syntax*
-12. [File Operations](12-file-operations.md) — *Open modes, read/write, JSON, encoding, pathlib*
+### Part 3: File Operations, Advanced Functions, and Object-Oriented Programming
+10. [File Operations](10-file-operations.md) — *Open modes, read/write, JSON, encoding, pathlib*
+11. [Advanced Functions](11-advanced-functions.md) — *Lambda, map, filter, iterators, generators*
+12. [Object-Oriented Programming](12-object-oriented-programming.md) — *Classes, inheritance, encapsulation, magic methods*
 
-### Part 4: OOP, Robustness, and Development Essentials
-13. [Object-Oriented Programming](13-object-oriented-programming.md) — *Classes, inheritance, encapsulation, magic methods*
+### Part 4: Closures, Decorators, and Development Essentials
+13. [Closures and Decorators](13-closures-and-decorators.md) — *Nested functions, wrappers, @syntax*
 14. [Exception Handling](14-exception-handling.md) — *try/except, raise, custom exceptions, assert*
 15. [Modules and Packages](15-modules-and-packages.md) — *import, pip, venv, standard library*
 16. [functools](16-functools.md) — *wraps, partial, reduce, lru_cache, total_ordering*
@@ -41,6 +41,7 @@ Each chapter contains navigation links at the top and bottom for easy browsing b
 
 - **Chapters 1-5**: Python Fundamentals
 - **Chapters 6-9**: Operators, Control Flow, and Functions
-- **Chapters 10-12**: Advanced Functions and File Operations
-- **Chapters 13-16**: OOP, Robustness, and Development Essentials
+- **Chapter 10**: File Operations
+- **Chapters 11-12**: Advanced Functions and Object-Oriented Programming
+- **Chapters 13-16**: Closures, Decorators, Robustness, and Development Essentials
 - **Appendix**: Type Annotations

@@ -1,8 +1,8 @@
-[← Previous: File Operations](12-file-operations.md) | [Next: Exception Handling →](14-exception-handling.md)
+[← Previous: Advanced Functions](11-advanced-functions.md) | [Next: Closures and Decorators →](13-closures-and-decorators.md)
 
-# 10 Object-Oriented Programming
+# 12 Object-Oriented Programming
 
-## 10.1 Class Attributes
+## 12.1 Class Attributes
 
 | Feature | Description |
 |---------|-------------|
@@ -19,7 +19,7 @@ s = Student()
 print(s.school)             # Access via instance
 ```
 
-## 10.2 Instance Attributes
+## 12.2 Instance Attributes
 
 | Feature | Description |
 |---------|-------------|
@@ -37,7 +37,7 @@ s1 = Student("Alice", 20)
 s2 = Student("Bob", 21)     # Each has independent name/age
 ```
 
-## 10.3 Instance Methods
+## 12.3 Instance Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -60,7 +60,7 @@ s = Student("Alice", 95)
 print(s.get_grade())            # "A"
 ```
 
-## 10.4 Class Methods
+## 12.4 Class Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -98,7 +98,7 @@ class Demo:
         # print(self.instance_attr) # ❌ Error — no self in class method
 ```
 
-## 10.5 Static Methods
+## 12.5 Static Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -117,7 +117,7 @@ print(MathUtils.add(3, 5))      # 8 (no instance needed)
 
 **Key insight:** A static method is essentially a plain function that happens to live inside a class namespace. It has no access to `self` (instance) or `cls` (class). Use it when the logic is related to the class conceptually but does not need any class or instance data.
 
-### 10.5.1 Instance vs Class vs Static Methods
+### 12.5.1 Instance vs Class vs Static Methods
 
 | Aspect | Instance Method | Class Method | Static Method |
 |--------|----------------|--------------|---------------|
@@ -129,7 +129,7 @@ print(MathUtils.add(3, 5))      # 8 (no instance needed)
 | Can call class methods? | ✅ Yes | ✅ Yes | ❌ No |
 | Typical use | Object behavior | Factory / counters | Utility functions |
 
-## 10.6 Special Methods (Magic Methods)
+## 12.6 Special Methods (Magic Methods)
 
 | Method | Purpose | Triggered by |
 |--------|---------|--------------|
@@ -157,7 +157,7 @@ v = Vector(1, 2)
 print(v)                        # Vector(1, 2)
 ```
 
-### 10.6.1 `__repr__` vs `__str__`
+### 12.6.1 `__repr__` vs `__str__`
 
 | Method | Purpose | Called by | Fallback |
 |--------|---------|-----------|----------|
@@ -183,13 +183,13 @@ print(p)           # (1, 2)     — __str__
 print(repr(p))     # Point(1, 2) — __repr__
 ```
 
-### 10.6.2 Comparison Methods
+### 12.6.2 Comparison Methods
 
 Implement rich comparison operators (`__eq__`, `__lt__`, `__le__`, `__gt__`, `__ge__`). If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the rest automatically.
 
 For details and examples, see [16.6 `@functools.total_ordering`](16-functools.md#166-auto-generating-comparisons-with-functoolstotal_ordering).
 
-### 10.6.3 Callable Objects
+### 12.6.3 Callable Objects
 
 Make an instance callable like a function.
 
@@ -205,7 +205,7 @@ triple = Multiplier(3)
 print(triple(5))   # 15
 ```
 
-## 10.7 Inheritance
+## 12.7 Inheritance
 
 Inheritance lets a class acquire attributes and methods from another class.
 
@@ -229,7 +229,7 @@ d = Dog("Buddy")
 print(d.speak())                # Buddy says woof!
 ```
 
-## 10.8 `super()`
+## 12.8 `super()`
 
 Call a method from the parent class.
 
@@ -248,7 +248,7 @@ s = Student("Alice", 20, "S001")
 print(s.name)                       # Alice (from Person)
 ```
 
-### 10.8.1 Method Override with `super()`
+### 12.8.1 Method Override with `super()`
 
 When a subclass redefines a parent method, `super()` lets you reuse the parent's implementation before adding custom behavior.
 
@@ -276,7 +276,7 @@ s.cook()
 
 **Rule of thumb:** Call `super().method()` when you want to *extend* parent behavior. Omit it when you want to *completely replace* it.
 
-## 10.9 Encapsulation
+## 12.9 Encapsulation
 
 Python uses naming conventions to indicate intended visibility.
 
@@ -309,7 +309,7 @@ Unlike Java or C++, Python cannot truly hide attributes. Both `_name` and `__nam
 
 This is sometimes described as "keeping honest people honest." The goal is to communicate intent to other programmers, not to enforce security. If you need actual access control, use property getters/setters or design your API carefully.
 
-## 10.10 Property Decorator
+## 12.10 Property Decorator
 
 Expose a method as an attribute.
 
@@ -366,7 +366,7 @@ class BankAccount:
 
 **Best practice:** Use the same method name for both `@property` getter and `@<name>.setter`. This ensures consistency and makes the property behave like a real attribute.
 
-## 10.11 Duck Typing and Polymorphism
+## 12.11 Duck Typing and Polymorphism
 
 Python uses **duck typing**: an object's fitness for use is determined by the presence of required methods/attributes, not by its type.
 
@@ -387,7 +387,7 @@ animal_sound(Dog())   # Woof!
 animal_sound(Cat())   # Meow!
 ```
 
-### 10.11.1 Type Introspection
+### 12.11.1 Type Introspection
 
 | Function | Purpose |
 |----------|---------|
@@ -431,7 +431,7 @@ type(dog) is Mammal       # False  ← type() does NOT check inheritance
 - `isinstance(obj, Class)` → checks inheritance chain (usually preferred)
 - `type(obj) is Class` → checks exact type only (ignores inheritance)
 
-## 10.12 Multiple Inheritance and MRO
+## 12.12 Multiple Inheritance and MRO
 
 A class can inherit from multiple parents. Python uses **Method Resolution Order (C3 linearization)** to determine which method runs.
 
@@ -452,7 +452,7 @@ d.move()            # Flying — Flyer comes first in MRO
 print(Duck.__mro__) # (<class 'Duck'>, <class 'Flyer'>, <class 'Swimmer'>, <class 'object'>)
 ```
 
-### 10.12.1 Inspecting Inheritance with `__bases__` and `__base__`
+### 12.12.1 Inspecting Inheritance with `__bases__` and `__base__`
 
 Python provides special attributes on classes for introspecting their inheritance:
 
@@ -490,11 +490,11 @@ print(FlyingDog.__bases__)  # (<class '__main__.Dog'>, <class '__main__.CanFly'>
 
 **Note:** `__base__` only shows the *first* parent. For the complete hierarchy, use `__mro__` or `__bases__`.
 
-## 10.13 Abstract Base Classes
+## 12.13 Abstract Base Classes
 
 Abstract base classes (ABCs) let you define a common interface that subclasses must implement. A class inheriting from an ABC must override every abstract method; otherwise, it cannot be instantiated.
 
-### 10.13.1 Defining an Abstract Class
+### 12.13.1 Defining an Abstract Class
 
 Use `ABC` as the base class and mark methods with `@abstractmethod`.
 
@@ -511,7 +511,7 @@ class Shape(ABC):
         pass
 ```
 
-### 10.13.2 Concrete Subclasses
+### 12.13.2 Concrete Subclasses
 
 A concrete subclass must implement every abstract method inherited from the ABC.
 
@@ -541,7 +541,7 @@ class BadRectangle(Shape):
 # b = BadRectangle()   # TypeError: Can't instantiate abstract class
 ```
 
-### 10.13.3 When to Use ABCs
+### 12.13.3 When to Use ABCs
 
 Use abstract base classes when:
 
@@ -549,7 +549,7 @@ Use abstract base classes when:
 - You are designing a plugin system or framework where users must implement specific hooks.
 - You want to document the required methods of a class hierarchy explicitly.
 
-## 10.14 `__slots__`
+## 12.14 `__slots__`
 
 Restrict allowed attributes to save memory and prevent typos.
 
@@ -567,4 +567,4 @@ p = Point(1, 2)
 
 **Trade-off:** `__slots__` removes `__dict__`, saving memory but preventing dynamic attribute assignment.
 
-[← Previous: File Operations](12-file-operations.md) | [Next: Exception Handling →](14-exception-handling.md)
+[← Previous: Advanced Functions](11-advanced-functions.md) | [Next: Closures and Decorators →](13-closures-and-decorators.md)

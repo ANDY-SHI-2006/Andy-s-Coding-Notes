@@ -1,4 +1,4 @@
-[← Previous: Flow Control](08-flow-control.md) | [Next: Advanced Functions →](10-advanced-functions.md)
+[← Previous: Flow Control](08-flow-control.md) | [Next: File Operations →](10-file-operations.md)
 
 # 9 Functions
 
@@ -456,4 +456,4 @@ import sys
 sys.getrecursionlimit()   # 1000 (default)
 ```
 
-[← Previous: Flow Control](08-flow-control.md) | [Next: Advanced Functions →](10-advanced-functions.md)
+[← Previous: Flow Control](08-flow-control.md) | [Next: File Operations →](10-file-operations.md)
