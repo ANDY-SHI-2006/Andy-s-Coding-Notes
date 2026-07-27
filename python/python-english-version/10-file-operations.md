@@ -2,27 +2,44 @@
 
 # 10 File Operations
 
-## 10.1 Opening Files
+## 10.1 Opening and Closing Files
+
+Always use the `with` statement to open files. It automatically closes the file even if an error occurs.
 
 ```python
-# Syntax: open(file, mode='r', encoding=None)
-file = open("data.txt", mode="r", encoding="utf-8")
+with open("data.txt", encoding="utf-8") as f:
+    content = f.read()
+# File is closed here
 ```
+
+If you open a file manually, you must call `close()`:
+
+```python
+f = open("data.txt", encoding="utf-8")
+content = f.read()
+f.close()
+```
+
+Forgetting to close files can leak system resources, especially in long-running programs. The `with` statement is the recommended pattern.
+
+### 10.1.1 File Modes
 
 | Mode | Description |
 |------|-------------|
 | `"r"` | Read (default) |
 | `"w"` | Write (overwrite, create if not exists) |
 | `"a"` | Append (create if not exists) |
+| `"x"` | Create and write; fail if file already exists |
 | `"r+"` | Read and write |
 | `"w+"` | Write and read (truncate first) |
 | `"rb"`, `"wb"` | Binary mode |
 
-**Path Types:**
-- **Relative:** `"./file.txt"` or `"../data/file.txt"`
-- **Absolute:** `"C:/Users/name/file.txt"` (use `/` for cross-platform)
+### 10.1.2 Path Types
 
-## 10.2 Reading Files
+- **Relative:** `"./file.txt"` or `"../data/file.txt"` — relative to the current working directory.
+- **Absolute:** `"C:/Users/name/file.txt"` — use `/` for cross-platform compatibility.
+
+## 10.2 Reading and Writing Files
 
 ### 10.2.1 Reading Methods
 
@@ -31,13 +48,39 @@ file = open("data.txt", mode="r", encoding="utf-8")
 | `read()` | Read entire file |
 | `read(n)` | Read n characters |
 | `readline()` | Read one line |
-| `readlines()` | Read all lines into list |
+| `readlines()` | Read all lines into a list |
 
 ```python
 with open("data.txt", encoding="utf-8") as f:
-    content = f.read()          # Entire file
+    content = f.read()          # Entire file as one string
     lines = f.readlines()       # List of lines
 ```
+
+**⚠️ Character vs Byte:** `read(n)` reads **n characters**, not n bytes. With UTF-8, one Chinese character uses 3 bytes on disk, but `read(1)` still returns one character.
+
+```python
+with open("chinese.txt", "w", encoding="utf-8") as f:
+    f.write("中文")             # 2 characters, 6 bytes on disk
+
+with open("chinese.txt", "r", encoding="utf-8") as f:
+    print(f.read(1))            # "中" — 1 character
+    print(f.tell())             # 3 — cursor position in bytes
+```
+
+### 10.2.2 Writing and Appending
+
+```python
+# Write (overwrite or create)
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("Hello World\n")
+    f.writelines(["Line 1\n", "Line 2\n"])
+
+# Append
+with open("log.txt", "a", encoding="utf-8") as f:
+    f.write("New entry\n")
+```
+
+### 10.2.3 Line Iteration
 
 The most common way to process a file line by line is with a `for` loop:
 
@@ -47,22 +90,11 @@ with open("data.txt", encoding="utf-8") as f:
         print(line.strip())   # strip() removes trailing newline
 ```
 
-**⚠️ Character vs Byte:** `read(n)` reads **n characters**, not n bytes. This is usually what you want, but be aware that with UTF-8 encoding, one Chinese character occupies **3 bytes** on disk. The file cursor (`tell()`) moves by bytes, while `read(n)` counts characters.
+This is memory-efficient because only one line is loaded at a time, unlike `read()` which loads the entire file.
 
-```python
-with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")             # 2 characters, 6 bytes on disk
+### 10.2.4 Cursor Control
 
-with open("chinese.txt", "r", encoding="utf-8") as f:
-    print(f.read(1))            # "中" — 1 character (3 bytes internally)
-    print(f.tell())             # 3 — cursor position in bytes
-    print(f.read(1))            # "文" — next character
-    print(f.tell())             # 6
-```
-
-### 10.2.2 Cursor Control
-
-Control the file cursor position.
+Control the file cursor position with `seek()` and `tell()`.
 
 | Method | Description |
 |--------|-------------|
@@ -79,72 +111,60 @@ with open("data.txt", encoding="utf-8") as f:
     print(f.read(3))   # First 3 chars again
 ```
 
-## 10.3 Writing Files
+## 10.3 Binary Files
+
+Binary mode reads and writes raw bytes. Use it for non-text files like images, audio, or serialized binary data.
 
 ```python
-# Write (overwrite)
-with open("output.txt", "w", encoding="utf-8") as f:
-    f.write("Hello World\n")
-    f.writelines(["Line 1\n", "Line 2\n"])
-
-# Append
-with open("log.txt", "a", encoding="utf-8") as f:
-    f.write("New entry\n")
-```
-
-## 10.4 Closing Files
-
-**Always close files to free system resources:**
-
-```python
-# Method 1: Manual close
-f = open("file.txt")
-# ... operations ...
-f.close()
-
-# Method 2: Context manager (recommended) - auto closes
-with open("file.txt") as f:
-    content = f.read()
-# File automatically closed
-```
-
-## 10.5 Binary Files
-
-```python
-# Copy image file
+# Copy an image file byte by byte
 with open("photo.jpg", "rb") as src:
     with open("copy.jpg", "wb") as dst:
         dst.write(src.read())
 ```
 
-## 10.6 JSON Strings
+**Text vs Binary:**
+- Text mode (`"r"`, `"w"`) handles encoding/decoding automatically.
+- Binary mode (`"rb"`, `"wb"`) works with `bytes` objects and does not interpret encoding.
+
+```python
+with open("data.bin", "wb") as f:
+    f.write(b"\x00\x01\x02")
+
+with open("data.bin", "rb") as f:
+    data = f.read()
+    print(data)   # b'\x00\x01\x02'
+```
+
+## 10.4 Common File Formats
+
+### 10.4.1 JSON
 
 | Function | Purpose |
 |----------|---------|
 | `json.dumps(obj)` | Python object → JSON string |
 | `json.loads(string)` | JSON string → Python object |
+| `json.dump(obj, f)` | Python object → file |
+| `json.load(f)` | File → Python object |
 
 ```python
 import json
 
-# Serialize (Python → JSON)
 data = {"name": "Alice", "age": 25}
+
+# Serialize to string
 json_str = json.dumps(data, ensure_ascii=False)
 # '{"name": "Alice", "age": 25}'
 
-# Deserialize (JSON → Python)
-parsed = json.loads(json_str)
-# {'name': 'Alice', 'age': 25}
-
-# Direct file operations
+# Serialize to file
 with open("data.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False)
 
+# Deserialize from file
 with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
-## 10.7 CSV Handling
+### 10.4.2 CSV
 
 ```python
 import csv
@@ -161,14 +181,24 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
     writer.writerow(["name", "age"])
     writer.writerow(["Alice", 20])
 
-# DictReader / DictWriter
+# DictReader — access by column name
 with open("data.csv", encoding="utf-8", newline="") as f:
     reader = csv.DictReader(f)
     for row in reader:
-        print(row["name"])  # Access by column name
+        print(row["name"])
 ```
 
-## 10.8 Character Encoding
+**Tip:** Always pass `newline=""` when opening CSV files to prevent extra blank rows on Windows.
+
+## 10.5 Character Encoding
+
+### 10.5.1 Why Encoding Matters
+
+A file is just a sequence of bytes. Encoding determines how those bytes are interpreted as characters. Using the wrong encoding produces garbled text or `UnicodeDecodeError`.
+
+**Rule of thumb:** Always specify `encoding="utf-8"` when opening text files. Python defaults to the system's locale encoding, which varies by OS and can cause errors.
+
+### 10.5.2 Common Encodings
 
 | Encoding | Description | Bytes per char |
 |----------|-------------|----------------|
@@ -181,45 +211,55 @@ with open("data.csv", encoding="utf-8", newline="") as f:
 - 1 KB = 1024 Bytes
 - 1 MB = 1024 KB
 
-### 10.8.1 Encoding Evolution
-
-Understanding why encodings exist helps prevent file-reading errors:
-
-1. **ASCII (1963):** 7 bits, 128 characters. Covers English letters, digits, and basic symbols. Insufficient for any other language.
-
-2. **GBK (China):** Extension of ASCII. English = 1 byte, Chinese = 2 bytes. Widely used in legacy Chinese Windows systems.
-
-3. **Unicode:** A universal character set assigning a unique number to every character in every language. UTF-8, UTF-16, and UTF-32 are different ways to encode these numbers into bytes.
-
-4. **UTF-8 (recommended):** Variable-length encoding. ASCII characters = 1 byte, most others = 2-4 bytes. Chinese characters typically use **3 bytes**. Backward-compatible with ASCII.
-
-**Rule of thumb:** Always specify `encoding="utf-8"` when opening files. Python defaults to the system's locale encoding, which varies by OS and can cause `UnicodeDecodeError`.
-
 ```python
-# ASCII — 1 byte per character
-print(ord('A'))             # 65  (ASCII code point)
-print(chr(65))              # 'A' (character from code point)
+# ASCII code point
+print(ord('A'))   # 65
+print(chr(65))    # 'A'
 
-# UTF-8 — Chinese uses 3 bytes per character
+# UTF-8 Chinese uses 3 bytes per character
 with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")          # 6 bytes total (2 chars × 3 bytes)
+    f.write("中文")   # 6 bytes total (2 chars × 3 bytes)
 ```
 
-### 10.8.2 `seek()` with Multi-byte Characters
+### 10.5.3 `seek()` with Multi-byte Characters
 
 `seek()` moves the cursor by **bytes**, not characters. With UTF-8 Chinese text, you must seek to byte positions that align with character boundaries (multiples of 3 for Chinese).
 
 ```python
 with open("chinese.txt", "r", encoding="utf-8") as f:
     f.read()                # "中文" — cursor at end
-    f.seek(3)               # Move to byte 3 (start of second Chinese char)
-    print(f.read(1))        # "文" — reads one character
+    f.seek(3)               # Move to byte 3 (start of second char)
+    print(f.read(1))        # "文"
 
     # f.seek(1)             # ❌ Bad — lands in middle of a 3-byte character
     # f.read(1)             # UnicodeDecodeError
 ```
 
-## 10.9 Modern Path Handling with `pathlib`
+## 10.6 Working Directory and Paths
+
+The current working directory is where Python looks for relative paths.
+
+```python
+import os
+from pathlib import Path
+
+print(os.getcwd())          # Current working directory
+print(Path.cwd())           # Same, using pathlib
+
+# Change working directory
+os.chdir("../data")
+```
+
+To make paths robust across operating systems, use `pathlib` or `os.path.join`:
+
+```python
+from pathlib import Path
+
+file_path = Path("data") / "records.json"
+print(file_path)            # data/records.json on all platforms
+```
+
+## 10.7 Modern Path Handling with `pathlib`
 
 `pathlib` provides an object-oriented approach to filesystem paths.
 
@@ -250,24 +290,7 @@ for txt_file in data_dir.glob("*.txt"):
 | Read text | `open(p).read()` | `Path(p).read_text()` |
 | Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
 
-## 10.10 Temporary Files
-
-Use the `tempfile` module for short-lived files.
-
-```python
-import tempfile
-
-# Temporary file (auto-deleted when closed)
-with tempfile.NamedTemporaryFile(mode="w", delete=True) as f:
-    f.write("temporary data")
-    print(f.name)       # Path to temp file
-
-# Temporary directory
-with tempfile.TemporaryDirectory() as tmpdir:
-    print(tmpdir)       # Path to temp directory
-```
-
-## 10.11 File Existence and Metadata
+## 10.8 File Existence and Metadata
 
 ```python
 import os
@@ -287,7 +310,24 @@ print(stat.st_size)                 # Size
 print(stat.st_mtime)                # Modification time
 ```
 
-## 10.12 Common File Errors
+## 10.9 Temporary Files
+
+Use the `tempfile` module for short-lived files.
+
+```python
+import tempfile
+
+# Temporary file (auto-deleted when closed)
+with tempfile.NamedTemporaryFile(mode="w", delete=True) as f:
+    f.write("temporary data")
+    print(f.name)       # Path to temp file
+
+# Temporary directory
+with tempfile.TemporaryDirectory() as tmpdir:
+    print(tmpdir)       # Path to temp directory
+```
+
+## 10.10 Common File Errors
 
 File operations often fail for predictable reasons. Handle them explicitly instead of letting the program crash.
 
