@@ -30,9 +30,11 @@ Forgetting to close files can leak system resources, especially in long-running 
 | `"w"` | Write (overwrite, create if not exists) |
 | `"a"` | Append (create if not exists) |
 | `"x"` | Create and write; fail if file already exists |
-| `"r+"` | Read and write |
-| `"w+"` | Write and read (truncate first) |
+| `"r+"` | Read and write; **does not truncate**; file must exist |
+| `"w+"` | Read and write; **truncates first**; creates if not exists |
 | `"rb"`, `"wb"` | Binary mode |
+
+**Key difference:** `"r+"` keeps existing content and requires the file to exist; `"w+"` clears the file first and creates it if missing.
 
 ### 10.1.2 Path Types
 
