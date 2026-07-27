@@ -4,6 +4,8 @@
 
 ## 10.1 Opening and Closing Files
 
+### 10.1.1 The `with` Statement
+
 Always use the `with` statement to open files. It automatically closes the file even if an error occurs.
 
 ```python
@@ -22,7 +24,7 @@ f.close()
 
 Forgetting to close files can leak system resources, especially in long-running programs. The `with` statement is the recommended pattern.
 
-### 10.1.1 File Modes
+### 10.1.2 File Modes
 
 | Mode | Description |
 |------|-------------|
@@ -36,55 +38,133 @@ Forgetting to close files can leak system resources, especially in long-running 
 
 **Key difference:** `"r+"` keeps existing content and requires the file to exist; `"w+"` clears the file first and creates it if missing.
 
-### 10.1.2 Path Types
+### 10.1.3 Path Types
 
 - **Relative:** `"./file.txt"` or `"../data/file.txt"` — relative to the current working directory.
 - **Absolute:** `"C:/Users/name/file.txt"` — use `/` for cross-platform compatibility.
 
-## 10.2 Reading and Writing Files
+### 10.1.4 Closing Files
+
+If you do not use `with`, call `f.close()` when done. This releases the file handle and system resources.
+
+```python
+f = open("data.txt", encoding="utf-8")
+# work with f
+f.close()
+```
+
+## 10.2 File Object Methods
 
 ### 10.2.1 Reading Methods
 
-| Method | Description |
-|--------|-------------|
-| `read()` | Read entire file |
-| `read(n)` | Read n characters |
-| `readline()` | Read one line |
-| `readlines()` | Read all lines into a list |
+These methods read data from a text file. They all operate on a file object opened in text mode.
+
+#### 10.2.1.1 `read()`
+
+| Method | Returns | Parameters |
+|--------|---------|------------|
+| `read()` | Entire file as a string | — |
+| `read(n)` | Up to `n` characters as a string | `n`: number of characters |
 
 ```python
 with open("data.txt", encoding="utf-8") as f:
-    content = f.read()          # Entire file as one string
-    lines = f.readlines()       # List of lines
+    content = f.read()      # Entire file as one string
 ```
 
-**⚠️ Character vs Byte:** `read(n)` reads **n characters**, not n bytes. With UTF-8, one Chinese character uses 3 bytes on disk, but `read(1)` still returns one character.
+**Character vs Byte:** `read(n)` reads **n characters**, not n bytes. With UTF-8, one Chinese character uses 3 bytes on disk, but `read(1)` still returns one character.
 
 ```python
 with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")             # 2 characters, 6 bytes on disk
+    f.write("中文")         # 2 characters, 6 bytes on disk
 
 with open("chinese.txt", "r", encoding="utf-8") as f:
-    print(f.read(1))            # "中" — 1 character
-    print(f.tell())             # 3 — cursor position in bytes
+    print(f.read(1))        # "中" — 1 character
+    print(f.tell())         # 3 — cursor position in bytes
 ```
 
-### 10.2.2 Writing and Appending
+#### 10.2.1.2 `readline()`
+
+| Method | Returns |
+|--------|---------|
+| `readline()` | One line from the file, including the trailing newline |
 
 ```python
-# Write (overwrite or create)
-with open("output.txt", "w", encoding="utf-8") as f:
-    f.write("Hello World\n")
-    f.writelines(["Line 1\n", "Line 2\n"])
-
-# Append
-with open("log.txt", "a", encoding="utf-8") as f:
-    f.write("New entry\n")
+with open("data.txt", encoding="utf-8") as f:
+    first_line = f.readline()
+    second_line = f.readline()
 ```
 
-### 10.2.3 Line Iteration
+#### 10.2.1.3 `readlines()`
 
-The most common way to process a file line by line is with a `for` loop:
+| Method | Returns |
+|--------|---------|
+| `readlines()` | All lines as a list of strings |
+
+```python
+with open("data.txt", encoding="utf-8") as f:
+    lines = f.readlines()
+```
+
+### 10.2.2 Writing Methods
+
+These methods write data to a file. They require a file opened in write (`"w"`, `"x"`) or append (`"a"`) mode.
+
+#### 10.2.2.1 `write()`
+
+| Method | Returns | Parameters |
+|--------|---------|------------|
+| `write(string)` | Number of characters written | `string`: text to write |
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("Hello World\n")
+```
+
+#### 10.2.2.2 `writelines()`
+
+| Method | Returns | Parameters |
+|--------|---------|------------|
+| `writelines(lines)` | `None` | `lines`: iterable of strings |
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.writelines(["Line 1\n", "Line 2\n"])
+```
+
+### 10.2.3 Cursor Control
+
+These methods control the position of the file cursor.
+
+#### 10.2.3.1 `tell()`
+
+| Method | Returns |
+|--------|---------|
+| `tell()` | Current cursor position in bytes |
+
+```python
+with open("data.txt", encoding="utf-8") as f:
+    f.read(5)
+    print(f.tell())   # 5
+```
+
+#### 10.2.3.2 `seek()`
+
+| Method | Parameters |
+|--------|------------|
+| `seek(offset, whence=0)` | `offset`: position; `whence`: reference point |
+
+`whence`: `0` = start (default), `1` = current, `2` = end.
+
+```python
+with open("data.txt", encoding="utf-8") as f:
+    f.read(5)
+    f.seek(0)              # Back to start
+    print(f.read(3))       # First 3 chars again
+```
+
+### 10.2.4 Line Iteration
+
+The most common way to process a file line by line is with a `for` loop.
 
 ```python
 with open("data.txt", encoding="utf-8") as f:
@@ -94,28 +174,37 @@ with open("data.txt", encoding="utf-8") as f:
 
 This is memory-efficient because only one line is loaded at a time, unlike `read()` which loads the entire file.
 
-### 10.2.4 Cursor Control
-
-Control the file cursor position with `seek()` and `tell()`.
-
-| Method | Description |
-|--------|-------------|
-| `tell()` | Return current cursor position |
-| `seek(offset, whence=0)` | Move cursor to position |
-
-`whence`: `0` = start (default), `1` = current, `2` = end.
-
-```python
-with open("data.txt", encoding="utf-8") as f:
-    f.read(5)          # Read first 5 chars
-    print(f.tell())    # 5
-    f.seek(0)          # Back to start
-    print(f.read(3))   # First 3 chars again
-```
-
 ## 10.3 Binary Files
 
 Binary mode reads and writes raw bytes. Use it for non-text files like images, audio, or serialized binary data.
+
+### 10.3.1 Binary Read Methods
+
+| Method | Description |
+|--------|-------------|
+| `read()` | Read all bytes |
+| `read(n)` | Read up to `n` bytes |
+
+```python
+with open("data.bin", "rb") as f:
+    data = f.read()
+```
+
+### 10.3.2 Binary Write Methods
+
+| Method | Description |
+|--------|-------------|
+| `write(bytes)` | Write a `bytes` object |
+
+```python
+with open("data.bin", "wb") as f:
+    f.write(b"\x00\x01\x02")
+```
+
+### 10.3.3 Text vs Binary
+
+- Text mode (`"r"`, `"w"`) handles encoding/decoding automatically.
+- Binary mode (`"rb"`, `"wb"`) works with `bytes` objects and does not interpret encoding.
 
 ```python
 # Copy an image file byte by byte
@@ -124,22 +213,9 @@ with open("photo.jpg", "rb") as src:
         dst.write(src.read())
 ```
 
-**Text vs Binary:**
-- Text mode (`"r"`, `"w"`) handles encoding/decoding automatically.
-- Binary mode (`"rb"`, `"wb"`) works with `bytes` objects and does not interpret encoding.
-
-```python
-with open("data.bin", "wb") as f:
-    f.write(b"\x00\x01\x02")
-
-with open("data.bin", "rb") as f:
-    data = f.read()
-    print(data)   # b'\x00\x01\x02'
-```
-
 ## 10.4 Common File Formats
 
-### 10.4.1 JSON
+### 10.4.1 JSON Functions
 
 | Function | Purpose |
 |----------|---------|
@@ -166,7 +242,13 @@ with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
-### 10.4.2 CSV
+### 10.4.2 CSV Functions
+
+| Function | Purpose |
+|----------|---------|
+| `csv.reader(f)` | Read rows as lists |
+| `csv.writer(f)` | Write rows from lists |
+| `csv.DictReader(f)` | Read rows as dicts |
 
 ```python
 import csv
@@ -241,27 +323,21 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
 
 The current working directory is where Python looks for relative paths.
 
+### 10.6.1 `os` Module Functions
+
+| Function | Purpose |
+|----------|---------|
+| `os.getcwd()` | Get current working directory |
+| `os.chdir(path)` | Change current working directory |
+
 ```python
 import os
-from pathlib import Path
 
 print(os.getcwd())          # Current working directory
-print(Path.cwd())           # Same, using pathlib
-
-# Change working directory
 os.chdir("../data")
 ```
 
-To make paths robust across operating systems, use `pathlib` or `os.path.join`:
-
-```python
-from pathlib import Path
-
-file_path = Path("data") / "records.json"
-print(file_path)            # data/records.json on all platforms
-```
-
-## 10.7 Modern Path Handling with `pathlib`
+### 10.6.2 `pathlib` Path Operations
 
 `pathlib` provides an object-oriented approach to filesystem paths.
 
@@ -275,46 +351,101 @@ file_path = data_dir / "records.json"   # Cross-platform path joining
 # Check existence
 if file_path.exists():
     print("File found")
-
-# Read/Write with pathlib
-file_path.write_text("Hello, pathlib!")
-content = file_path.read_text()
-
-# Iterate directory
-for txt_file in data_dir.glob("*.txt"):
-    print(txt_file.name)
 ```
 
-| Operation | `open()` style | `pathlib` style |
-|-----------|---------------|-----------------|
+## 10.7 Modern Path Handling with `pathlib`
+
+`pathlib` combines path construction and file operations in one object.
+
+### 10.7.1 Path Construction
+
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
 | Join paths | `os.path.join(a, b)` | `Path(a) / b` |
+
+```python
+from pathlib import Path
+
+file_path = Path("data") / "records.json"
+```
+
+### 10.7.2 File Operations with `pathlib`
+
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
 | Check exists | `os.path.exists(p)` | `Path(p).exists()` |
 | Read text | `open(p).read()` | `Path(p).read_text()` |
 | Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
 
+```python
+from pathlib import Path
+
+file_path = Path("data") / "output.txt"
+file_path.write_text("Hello, pathlib!")
+content = file_path.read_text()
+```
+
+### 10.7.3 Directory Iteration
+
+| Operation | `pathlib` style |
+|-----------|-----------------|
+| List files | `Path(dir).iterdir()` |
+| Pattern match | `Path(dir).glob("*.txt")` |
+
+```python
+from pathlib import Path
+
+data_dir = Path("data")
+for txt_file in data_dir.glob("*.txt"):
+    print(txt_file.name)
+```
+
 ## 10.8 File Existence and Metadata
+
+### 10.8.1 Existence Checks
+
+| Function | Purpose |
+|----------|---------|
+| `os.path.exists(path)` | Check if path exists |
+| `Path(path).exists()` | Same, using `pathlib` |
 
 ```python
 import os
 from pathlib import Path
 
-# Check existence
-os.path.exists("file.txt")          # True / False
-Path("file.txt").exists()           # True / False
+os.path.exists("file.txt")
+Path("file.txt").exists()
+```
 
-# Metadata
-os.path.getsize("file.txt")         # File size in bytes
-os.path.getmtime("file.txt")        # Last modification timestamp
+### 10.8.2 Metadata Methods
 
-# stat object
+| Function | Purpose |
+|----------|---------|
+| `os.path.getsize(path)` | File size in bytes |
+| `os.path.getmtime(path)` | Last modification timestamp |
+| `os.stat(path)` | Full stat object |
+
+```python
+import os
+
+print(os.path.getsize("file.txt"))
+print(os.path.getmtime("file.txt"))
+
 stat = os.stat("file.txt")
-print(stat.st_size)                 # Size
-print(stat.st_mtime)                # Modification time
+print(stat.st_size)
+print(stat.st_mtime)
 ```
 
 ## 10.9 Temporary Files
 
 Use the `tempfile` module for short-lived files.
+
+### 10.9.1 `tempfile` Functions
+
+| Function | Purpose |
+|----------|---------|
+| `NamedTemporaryFile(...)` | Create a temporary file |
+| `TemporaryDirectory()` | Create a temporary directory |
 
 ```python
 import tempfile
@@ -333,6 +464,15 @@ with tempfile.TemporaryDirectory() as tmpdir:
 
 File operations often fail for predictable reasons. Handle them explicitly instead of letting the program crash.
 
+### 10.10.1 Error Types and Handling
+
+| Error | Cause | Typical Fix |
+|-------|-------|-------------|
+| `FileNotFoundError` | Path does not exist | Check path or use `Path.exists()` first |
+| `PermissionError` | Insufficient permissions | Run with proper privileges or change file permissions |
+| `UnicodeDecodeError` | Wrong encoding | Specify `encoding="utf-8"` or detect encoding |
+| `IsADirectoryError` | Tried to open a directory as a file | Use `os.listdir()` or `Path.iterdir()` instead |
+
 ```python
 try:
     with open("missing.txt", encoding="utf-8") as f:
@@ -344,12 +484,5 @@ except PermissionError:
 except UnicodeDecodeError:
     print("Encoding mismatch — try a different encoding.")
 ```
-
-| Error | Cause | Typical Fix |
-|-------|-------|-------------|
-| `FileNotFoundError` | Path does not exist | Check path or use `Path.exists()` first |
-| `PermissionError` | Insufficient permissions | Run with proper privileges or change file permissions |
-| `UnicodeDecodeError` | Wrong encoding | Specify `encoding="utf-8"` or detect encoding |
-| `IsADirectoryError` | Tried to open a directory as a file | Use `os.listdir()` or `Path.iterdir()` instead |
 
 [← Previous: Functions](09-functions.md) | [Next: Advanced Functions →](11-advanced-functions.md)
