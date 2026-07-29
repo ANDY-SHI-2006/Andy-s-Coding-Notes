@@ -30,8 +30,21 @@ Forgetting to close files can leak system resources, especially in long-running 
 
 ### 10.1.2 Path Types
 
-- **Relative:** `"./file.txt"` or `"../data/file.txt"` — relative to the current working directory.
-- **Absolute:** `"C:/Users/name/file.txt"` — use `/` for cross-platform compatibility.
+- **Relative:** resolved from the current working directory.
+- **Absolute:** full path from the root.
+
+```python
+# Relative paths
+"./file.txt"
+"../data/file.txt"
+
+# Absolute paths
+"C:/Users/name/file.txt"     # Unix-style slash works on all platforms
+"C:\\Users\\name\\file.txt"  # Windows backslash, escaped
+r"C:\Users\name\file.txt"    # raw string, backslash is literal
+```
+
+**Note:** Relative paths depend on the current working directory. See [10.6 Working Directory and Paths](10-file-operations.md#106-working-directory-and-paths) for details.
 
 ### 10.1.3 File Modes
 
