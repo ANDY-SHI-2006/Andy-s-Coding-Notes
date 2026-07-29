@@ -28,24 +28,10 @@ f.close()
 
 Forgetting to close files can leak system resources, especially in long-running programs.
 
-### 10.1.2 The `with` Statement
+### 10.1.2 Path Types
 
-The `with` statement creates a context in which the file object is automatically closed when the block ends, even if an error occurs.
-
-```python
-with open("data.txt", encoding="utf-8") as f:
-    content = f.read()
-# File is closed here
-```
-
-Syntax:
-
-```python
-with open(file, mode, encoding) as variable:
-    # work with the file object
-```
-
-Because `with` guarantees cleanup, it is the recommended pattern for opening files.
+- **Relative:** `"./file.txt"` or `"../data/file.txt"` — relative to the current working directory.
+- **Absolute:** `"C:/Users/name/file.txt"` — use `/` for cross-platform compatibility.
 
 ### 10.1.3 File Modes
 
@@ -109,10 +95,35 @@ with open("photo.jpg", "rb") as f:
     data = f.read()
 ```
 
-### 10.1.4 Path Types
+### 10.1.4 Encoding
 
-- **Relative:** `"./file.txt"` or `"../data/file.txt"` — relative to the current working directory.
-- **Absolute:** `"C:/Users/name/file.txt"` — use `/` for cross-platform compatibility.
+Text files store bytes; `encoding` tells Python how to convert those bytes into characters. Always specify `encoding="utf-8"` when opening text files to avoid relying on the system default encoding.
+
+```python
+with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+```
+
+For more details about encodings, bytes, and common pitfalls, see [10.5 Character Encoding](10-file-operations.md#105-character-encoding).
+
+### 10.1.5 The `with` Statement
+
+The `with` statement creates a context in which the file object is automatically closed when the block ends, even if an error occurs.
+
+```python
+with open("data.txt", encoding="utf-8") as f:
+    content = f.read()
+# File is closed here
+```
+
+Syntax:
+
+```python
+with open(file, mode, encoding) as variable:
+    # work with the file object
+```
+
+Because `with` guarantees cleanup, it is the recommended pattern for opening files.
 
 ## 10.2 File Object Methods
 
