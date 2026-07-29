@@ -447,55 +447,102 @@ with open("photo.jpg", "rb") as src:
 
 ### 10.4.1 JSON Functions
 
+#### 10.4.1.1 `json.dumps()`
+
 | Function | Purpose |
 |----------|---------|
-| `json.dumps(obj)` | Python object → JSON string |
-| `json.loads(string)` | JSON string → Python object |
-| `json.dump(obj, f)` | Python object → file |
-| `json.load(f)` | File → Python object |
+| `json.dumps(obj, ...)` | Python object → JSON string |
+
+```python
+import json
+
+data = {"name": "Alice", "age": 25}
+json_str = json.dumps(data, ensure_ascii=False)
+# '{"name": "Alice", "age": 25}'
+```
+
+#### 10.4.1.2 `json.loads()`
+
+| Function | Purpose |
+|----------|---------|
+| `json.loads(string, ...)` | JSON string → Python object |
+
+```python
+import json
+
+json_str = '{"name": "Alice", "age": 25}'
+data = json.loads(json_str)
+```
+
+#### 10.4.1.3 `json.dump()`
+
+| Function | Purpose |
+|----------|---------|
+| `json.dump(obj, f, ...)` | Python object → file |
 
 ```python
 import json
 
 data = {"name": "Alice", "age": 25}
 
-# Serialize to string
-json_str = json.dumps(data, ensure_ascii=False)
-# '{"name": "Alice", "age": 25}'
-
-# Serialize to file
 with open("data.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False)
+```
 
-# Deserialize from file
+#### 10.4.1.4 `json.load()`
+
+| Function | Purpose |
+|----------|---------|
+| `json.load(f, ...)` | File → Python object |
+
+```python
+import json
+
 with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
 ### 10.4.2 CSV Functions
 
+#### 10.4.2.1 `csv.reader()`
+
 | Function | Purpose |
 |----------|---------|
 | `csv.reader(f)` | Read rows as lists |
+
+```python
+import csv
+
+with open("data.csv", encoding="utf-8", newline="") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)          # Each row is a list
+```
+
+#### 10.4.2.2 `csv.writer()`
+
+| Function | Purpose |
+|----------|---------|
 | `csv.writer(f)` | Write rows from lists |
+
+```python
+import csv
+
+with open("output.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["name", "age"])
+    writer.writerow(["Alice", 20])
+```
+
+#### 10.4.2.3 `csv.DictReader()`
+
+| Function | Purpose |
+|----------|---------|
 | `csv.DictReader(f)` | Read rows as dicts |
 
 ```python
 import csv
 
-# Read CSV
-with open("data.csv", encoding="utf-8", newline="") as f:
-    reader = csv.reader(f)
-    for row in reader:
-        print(row)          # Each row is a list
-
-# Write CSV
-with open("output.csv", "w", encoding="utf-8", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerow(["name", "age"])
-    writer.writerow(["Alice", 20])
-
-# DictReader — access by column name
 with open("data.csv", encoding="utf-8", newline="") as f:
     reader = csv.DictReader(f)
     for row in reader:
