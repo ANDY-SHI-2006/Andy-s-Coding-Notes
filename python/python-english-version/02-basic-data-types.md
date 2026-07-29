@@ -191,7 +191,31 @@ count = len("hello")              # 5
 found = "he" in "hello"           # True
 ```
 
-### 2.3.5 Immutability
+### 2.3.5 String Representation: `str()` vs `repr()`
+
+Both functions return a string version of an object, but they are designed for different audiences.
+
+| Function | Purpose | Best for |
+|----------|---------|----------|
+| `str()` | Human-readable representation | Displaying output to users |
+| `repr()` | Unambiguous, developer-focused representation | Debugging and logging |
+
+`repr()` shows escape characters and quotes explicitly, which makes hidden characters like newlines visible:
+
+```python
+text = "Line 1\nLine 2"
+
+print(str(text))
+# Line 1
+# Line 2
+
+print(repr(text))
+# 'Line 1\nLine 2'
+```
+
+**Tip:** Use `repr()` when you want to see exactly what a string contains, including whitespace and special characters.
+
+### 2.3.6 Immutability
 
 Strings cannot be modified in place. Any operation that appears to change a string creates a new one.
 
