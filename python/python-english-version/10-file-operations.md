@@ -30,21 +30,40 @@ Forgetting to close files can leak system resources, especially in long-running 
 
 ### 10.1.2 Path Types
 
-- **Relative:** resolved from the current working directory.
-- **Absolute:** full path from the root.
+#### 10.1.2.1 Relative Paths
+
+Relative paths are resolved from the current working directory.
 
 ```python
-# Relative paths
-"./file.txt"
-"../data/file.txt"
-
-# Absolute paths
-"C:/Users/name/file.txt"     # Unix-style slash works on all platforms
-"C:\\Users\\name\\file.txt"  # Windows backslash, escaped
-r"C:\Users\name\file.txt"    # raw string, backslash is literal
+"./file.txt"       # In the current directory
+"../data/file.txt" # One level up, then into data/
 ```
 
-**Note:** Relative paths depend on the current working directory. See [10.6 Working Directory and Paths](10-file-operations.md#106-working-directory-and-paths) for details.
+#### 10.1.2.2 Absolute Paths
+
+Absolute paths start from the root of the filesystem.
+
+```python
+"C:/Users/name/file.txt"   # Unix-style slash works on all platforms
+"/home/name/file.txt"      # Linux / macOS
+```
+
+Using `/` in paths is recommended for cross-platform compatibility.
+
+#### 10.1.2.3 Windows Backslash and Raw Strings
+
+Windows paths traditionally use `\`. In Python strings, `\` is an escape character, so Windows paths must either be escaped or written as raw strings.
+
+```python
+"C:\\Users\\name\\file.txt"  # Escaped backslashes
+r"C:\Users\name\file.txt"    # Raw string: backslash is literal
+```
+
+#### 10.1.2.4 Current Working Directory
+
+The starting point for all relative paths is the **current working directory**. If the program is run from a different directory, the same relative path may refer to a different file.
+
+For details on how to inspect or change the current working directory, see [10.6 Working Directory and Paths](10-file-operations.md#106-working-directory-and-paths).
 
 ### 10.1.3 File Modes
 
