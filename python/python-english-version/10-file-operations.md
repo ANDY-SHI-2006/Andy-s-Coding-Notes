@@ -314,16 +314,47 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
 
 | Method | Parameters |
 |--------|------------|
-| `seek(offset, whence=0)` | `offset`: position; `whence`: reference point |
+| `seek(offset, whence=0)` | `offset`: bytes to move; `whence`: reference point |
 
-`whence`: `0` = start (default), `1` = current, `2` = end.
+**Parameters:**
+
+| Parameter | Meaning | Values |
+|-----------|---------|--------|
+| `offset` | Number of bytes to move. Positive moves forward, negative moves backward. | Integer |
+| `whence` | Reference point for the move. | `0` = start (default), `1` = current position, `2` = end |
+
+**Examples for each `whence`:**
 
 ```python
-with open("data.txt", encoding="utf-8") as f:
+with open("data.txt", "rb") as f:
     f.read(5)
-    f.seek(0)              # Back to start
-    print(f.read(3))       # First 3 chars again
+
+    f.seek(0)       # whence=0: back to the start
+    f.seek(3, 0)    # whence=0: 3 bytes from the start
+    f.seek(-2, 1)   # whence=1: 2 bytes backward from current position
+    f.seek(0, 2)    # whence=2: move to the end of the file
 ```
+
+**Common patterns:**
+
+```python
+# Rewind to the beginning and re-read
+with open("data.txt", encoding="utf-8") as f:
+    first = f.read(5)
+    f.seek(0)
+    second = f.read(5)
+
+# Jump to the end of the file
+with open("data.txt", "rb") as f:
+    f.seek(0, 2)
+    print(f.tell())   # File size in bytes
+```
+
+**Text mode limitations:**
+
+In text mode, `seek()` moves by bytes but must land on character boundaries. `whence=1` and `whence=2` are usually only allowed with `offset=0` in text mode. For arbitrary byte offsets, open the file in binary mode (`"rb"`).
+
+For the special case of multi-byte characters (e.g., UTF-8 Chinese), see [10.5.3 `seek()` with Multi-byte Characters](10-file-operations.md#1053-seek-with-multi-byte-characters).
 
 ### 10.2.4 Line Iteration
 
