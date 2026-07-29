@@ -299,6 +299,17 @@ with open("data.txt", encoding="utf-8") as f:
     print(f.tell())   # 5
 ```
 
+**Note:** The position is counted in **bytes**, not characters. With UTF-8, one Chinese character uses 3 bytes, so `tell()` returns `3` after reading one Chinese character.
+
+```python
+with open("chinese.txt", "w", encoding="utf-8") as f:
+    f.write("中文")
+
+with open("chinese.txt", "r", encoding="utf-8") as f:
+    f.read(1)            # 中
+    print(f.tell())      # 3
+```
+
 #### 10.2.3.2 `seek()`
 
 | Method | Parameters |
