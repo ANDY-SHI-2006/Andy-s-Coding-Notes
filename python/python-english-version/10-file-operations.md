@@ -163,6 +163,14 @@ Because `with` guarantees cleanup, it is the recommended pattern for opening fil
 
 These methods read data from a text file. They all operate on a file object opened in text mode.
 
+Unless noted otherwise, the examples in this section assume `data.txt` contains:
+
+```text
+Line 1
+Line 2
+Line 3
+```
+
 #### 10.2.1.1 `read()`
 
 | Method | Returns | Parameters |
@@ -172,7 +180,10 @@ These methods read data from a text file. They all operate on a file object open
 
 ```python
 with open("data.txt", encoding="utf-8") as f:
-    content = f.read()      # Entire file as one string
+    content = f.read()
+
+print(repr(content))
+# 'Line 1\nLine 2\nLine 3\n'
 ```
 
 **Character vs Byte:** `read(n)` reads **n characters**, not n bytes. With UTF-8, one Chinese character uses 3 bytes on disk, but `read(1)` still returns one character.
@@ -182,7 +193,7 @@ with open("chinese.txt", "w", encoding="utf-8") as f:
     f.write("中文")         # 2 characters, 6 bytes on disk
 
 with open("chinese.txt", "r", encoding="utf-8") as f:
-    print(f.read(1))        # "中" — 1 character
+    print(repr(f.read(1)))  # '中' — 1 character
     print(f.tell())         # 3 — cursor position in bytes
 ```
 
@@ -194,8 +205,11 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
 
 ```python
 with open("data.txt", encoding="utf-8") as f:
-    first_line = f.readline()
-    second_line = f.readline()
+    first = f.readline()
+    second = f.readline()
+
+print(repr(first))   # 'Line 1\n'
+print(repr(second))  # 'Line 2\n'
 ```
 
 #### 10.2.1.3 `readlines()`
@@ -207,6 +221,9 @@ with open("data.txt", encoding="utf-8") as f:
 ```python
 with open("data.txt", encoding="utf-8") as f:
     lines = f.readlines()
+
+print(lines)
+# ['Line 1\n', 'Line 2\n', 'Line 3\n']
 ```
 
 ### 10.2.2 Writing Methods
