@@ -127,6 +127,8 @@ with open("photo.jpg", "rb") as f:
     data = f.read()
 ```
 
+For more details on binary read/write methods and the difference between text and binary mode, see [10.3 Binary Files](10-file-operations.md#103-binary-files).
+
 ### 10.1.4 Encoding
 
 Text files store bytes; `encoding` tells Python how to convert those bytes into characters. Always specify `encoding="utf-8"` when opening text files to avoid relying on the system default encoding.
