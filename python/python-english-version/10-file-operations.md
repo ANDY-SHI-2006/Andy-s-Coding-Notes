@@ -549,6 +549,22 @@ with open("data.csv", encoding="utf-8", newline="") as f:
         print(row["name"])
 ```
 
+#### 10.4.2.4 `csv.DictWriter()`
+
+| Function | Purpose |
+|----------|---------|
+| `csv.DictWriter(f, fieldnames)` | Write dicts as rows |
+
+```python
+import csv
+
+with open("output.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["name", "age"])
+    writer.writeheader()
+    writer.writerow({"name": "Alice", "age": 20})
+    writer.writerow({"name": "Bob", "age": 25})
+```
+
 **Tip:** Always pass `newline=""` when opening CSV files to prevent extra blank rows on Windows.
 
 ## 10.5 Character Encoding
