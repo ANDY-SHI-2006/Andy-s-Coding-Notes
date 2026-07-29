@@ -389,7 +389,22 @@ For the underlying iterator mechanism, see [11.5 Iterators](11-advanced-function
 
 Binary mode reads and writes raw bytes. Use it for non-text files like images, audio, or serialized binary data.
 
-### 10.3.1 Binary Read Methods
+### 10.3.1 Binary File Modes
+
+| Mode | Description |
+|------|-------------|
+| `"rb"` | Binary read. File must exist. |
+| `"wb"` | Binary write. Overwrites or creates. |
+| `"ab"` | Binary append. Creates if not exists. |
+| `"r+b"` | Binary read and write. Does not truncate. |
+| `"w+b"` | Binary read and write. Truncates first. |
+
+```python
+with open("photo.jpg", "rb") as f:
+    data = f.read()
+```
+
+### 10.3.2 Binary Read Methods
 
 | Method | Description |
 |--------|-------------|
@@ -401,7 +416,7 @@ with open("data.bin", "rb") as f:
     data = f.read()
 ```
 
-### 10.3.2 Binary Write Methods
+### 10.3.3 Binary Write Methods
 
 | Method | Description |
 |--------|-------------|
@@ -412,7 +427,7 @@ with open("data.bin", "wb") as f:
     f.write(b"\x00\x01\x02")
 ```
 
-### 10.3.3 Text vs Binary
+### 10.3.4 Text vs Binary
 
 | Aspect | Text Mode | Binary Mode |
 |--------|-----------|-------------|
