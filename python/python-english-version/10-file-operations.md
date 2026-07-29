@@ -241,7 +241,20 @@ with open("output.txt", "w", encoding="utf-8") as f:
     f.write("Hello World\n")
 ```
 
-**Note:** `write()` does not add a newline automatically. Without `\n`, consecutive writes appear on the same line:
+#### 10.2.2.2 `writelines()`
+
+| Method | Returns | Parameters |
+|--------|---------|------------|
+| `writelines(lines)` | `None` | `lines`: iterable of strings |
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.writelines(["Line 1\n", "Line 2\n"])
+```
+
+#### 10.2.2.3 No Automatic Newline
+
+Neither `write()` nor `writelines()` adds a newline automatically. If you omit `\n`, consecutive writes are concatenated on the same line.
 
 ```python
 with open("output.txt", "w", encoding="utf-8") as f:
@@ -250,8 +263,6 @@ with open("output.txt", "w", encoding="utf-8") as f:
 
 # File content: HelloWorld
 ```
-
-With `\n`:
 
 ```python
 with open("output.txt", "w", encoding="utf-8") as f:
@@ -263,15 +274,13 @@ with open("output.txt", "w", encoding="utf-8") as f:
 # World
 ```
 
-#### 10.2.2.2 `writelines()`
-
-| Method | Returns | Parameters |
-|--------|---------|------------|
-| `writelines(lines)` | `None` | `lines`: iterable of strings |
+The same applies to `writelines()`:
 
 ```python
 with open("output.txt", "w", encoding="utf-8") as f:
-    f.writelines(["Line 1\n", "Line 2\n"])
+    f.writelines(["Line 1", "Line 2"])
+
+# File content: Line 1Line 2
 ```
 
 ### 10.2.3 Cursor Control
