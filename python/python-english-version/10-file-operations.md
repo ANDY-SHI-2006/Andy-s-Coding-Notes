@@ -366,7 +366,22 @@ with open("data.txt", encoding="utf-8") as f:
         print(line.strip())   # strip() removes trailing newline
 ```
 
+**Why does this work?**
+
+A file object returned by `open()` is an **iterator**. When you use it in a `for` loop, Python repeatedly calls the equivalent of `readline()` until it reaches the end of the file:
+
+```python
+# What for line in f: does internally
+while True:
+    line = f.readline()
+    if not line:        # Empty string means end of file
+        break
+    # process line
+```
+
 This is memory-efficient because only one line is loaded at a time, unlike `read()` which loads the entire file.
+
+For the underlying iterator mechanism, see [11.5 Iterators](11-advanced-functions.md#115-iterators).
 
 ## 10.3 Binary Files
 
