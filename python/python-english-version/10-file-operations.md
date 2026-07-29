@@ -26,17 +26,65 @@ Forgetting to close files can leak system resources, especially in long-running 
 
 ### 10.1.2 File Modes
 
+#### 10.1.2.1 Read Mode
+
 | Mode | Description |
 |------|-------------|
-| `"r"` | Read (default) |
+| `"r"` | Read (default). File must exist. |
+
+```python
+with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+```
+
+#### 10.1.2.2 Write Modes
+
+| Mode | Description |
+|------|-------------|
 | `"w"` | Write (overwrite, create if not exists) |
 | `"a"` | Append (create if not exists) |
 | `"x"` | Create and write; fail if file already exists |
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("Hello\n")
+
+with open("log.txt", "a", encoding="utf-8") as f:
+    f.write("New entry\n")
+```
+
+#### 10.1.2.3 Read-Write Modes
+
+| Mode | Description |
+|------|-------------|
 | `"r+"` | Read and write; **does not truncate**; file must exist |
 | `"w+"` | Read and write; **truncates first**; creates if not exists |
-| `"rb"`, `"wb"` | Binary mode |
 
 **Key difference:** `"r+"` keeps existing content and requires the file to exist; `"w+"` clears the file first and creates it if missing.
+
+```python
+with open("data.txt", "r+", encoding="utf-8") as f:
+    f.seek(0)
+    f.write("NEW")     # Overwrites first 3 chars, keeps the rest
+
+with open("fresh.txt", "w+", encoding="utf-8") as f:
+    f.write("Hello")   # Creates or clears the file
+    f.seek(0)
+    print(f.read())    # "Hello"
+```
+
+#### 10.1.2.4 Binary Modes
+
+| Mode | Description |
+|------|-------------|
+| `"rb"` | Binary read. File must exist. |
+| `"wb"` | Binary write (overwrite or create). |
+| `"ab"` | Binary append. |
+
+```python
+with open("photo.jpg", "rb") as f:
+    data = f.read()
+```
 
 ### 10.1.3 Path Types
 
