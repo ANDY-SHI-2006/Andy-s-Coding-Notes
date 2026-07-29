@@ -414,8 +414,12 @@ with open("data.bin", "wb") as f:
 
 ### 10.3.3 Text vs Binary
 
-- Text mode (`"r"`, `"w"`) handles encoding/decoding automatically.
-- Binary mode (`"rb"`, `"wb"`) works with `bytes` objects and does not interpret encoding.
+| Aspect | Text Mode | Binary Mode |
+|--------|-----------|-------------|
+| Mode examples | `"r"`, `"w"`, `"a"` | `"rb"`, `"wb"`, `"ab"` |
+| Data type | `str` | `bytes` |
+| Encoding | Encoding/decoding applied automatically | No encoding interpretation |
+| Use case | Plain text files | Images, audio, serialized binary data |
 
 ```python
 # Copy an image file byte by byte
