@@ -4,9 +4,33 @@
 
 ## 10.1 Opening and Closing Files
 
-### 10.1.1 The `with` Statement
+### 10.1.1 The `open()` Function
 
-Always use the `with` statement to open files. It automatically closes the file even if an error occurs.
+`open()` is a built-in function that returns a file object.
+
+```python
+open(file, mode='r', encoding=None, ...)
+```
+
+| Parameter | Meaning |
+|-----------|---------|
+| `file` | Path to the file (string or `Path`) |
+| `mode` | How to open the file; default is `"r"` |
+| `encoding` | Text encoding; use `"utf-8"` for text files |
+
+If you open a file manually, you must call `close()` to release system resources:
+
+```python
+f = open("data.txt", "r", encoding="utf-8")
+content = f.read()
+f.close()
+```
+
+Forgetting to close files can leak system resources, especially in long-running programs.
+
+### 10.1.2 The `with` Statement
+
+The `with` statement creates a context in which the file object is automatically closed when the block ends, even if an error occurs.
 
 ```python
 with open("data.txt", encoding="utf-8") as f:
@@ -14,19 +38,18 @@ with open("data.txt", encoding="utf-8") as f:
 # File is closed here
 ```
 
-If you open a file manually, you must call `close()`:
+Syntax:
 
 ```python
-f = open("data.txt", encoding="utf-8")
-content = f.read()
-f.close()
+with open(file, mode, encoding) as variable:
+    # work with the file object
 ```
 
-Forgetting to close files can leak system resources, especially in long-running programs. The `with` statement is the recommended pattern.
+Because `with` guarantees cleanup, it is the recommended pattern for opening files.
 
-### 10.1.2 File Modes
+### 10.1.3 File Modes
 
-#### 10.1.2.1 Read Mode
+#### 10.1.3.1 Read Mode
 
 | Mode | Description |
 |------|-------------|
@@ -37,7 +60,7 @@ with open("data.txt", "r", encoding="utf-8") as f:
     content = f.read()
 ```
 
-#### 10.1.2.2 Write Modes
+#### 10.1.3.2 Write Modes
 
 | Mode | Description |
 |------|-------------|
@@ -53,7 +76,7 @@ with open("log.txt", "a", encoding="utf-8") as f:
     f.write("New entry\n")
 ```
 
-#### 10.1.2.3 Read-Write Modes
+#### 10.1.3.3 Read-Write Modes
 
 | Mode | Description |
 |------|-------------|
@@ -73,7 +96,7 @@ with open("fresh.txt", "w+", encoding="utf-8") as f:
     print(f.read())    # "Hello"
 ```
 
-#### 10.1.2.4 Binary Modes
+#### 10.1.3.4 Binary Modes
 
 | Mode | Description |
 |------|-------------|
@@ -86,20 +109,10 @@ with open("photo.jpg", "rb") as f:
     data = f.read()
 ```
 
-### 10.1.3 Path Types
+### 10.1.4 Path Types
 
 - **Relative:** `"./file.txt"` or `"../data/file.txt"` — relative to the current working directory.
 - **Absolute:** `"C:/Users/name/file.txt"` — use `/` for cross-platform compatibility.
-
-### 10.1.4 Closing Files
-
-If you do not use `with`, call `f.close()` when done. This releases the file handle and system resources.
-
-```python
-f = open("data.txt", encoding="utf-8")
-# work with f
-f.close()
-```
 
 ## 10.2 File Object Methods
 
