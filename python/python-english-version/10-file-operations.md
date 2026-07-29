@@ -534,7 +534,25 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
     writer.writerow(["Alice", 20])
 ```
 
-#### 10.4.2.3 `csv.DictReader()`
+#### 10.4.2.3 `csv.writerows()`
+
+| Function | Purpose |
+|----------|---------|
+| `csv.writerows(rows)` | Write multiple rows at once |
+
+```python
+import csv
+
+with open("output.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows([
+        ["name", "age"],
+        ["Alice", 20],
+        ["Bob", 25],
+    ])
+```
+
+#### 10.4.2.4 `csv.DictReader()`
 
 | Function | Purpose |
 |----------|---------|
@@ -549,7 +567,7 @@ with open("data.csv", encoding="utf-8", newline="") as f:
         print(row["name"])
 ```
 
-#### 10.4.2.4 `csv.DictWriter()`
+#### 10.4.2.5 `csv.DictWriter()`
 
 | Function | Purpose |
 |----------|---------|
