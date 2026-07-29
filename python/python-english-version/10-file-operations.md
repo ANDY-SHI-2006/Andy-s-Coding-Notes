@@ -241,6 +241,28 @@ with open("output.txt", "w", encoding="utf-8") as f:
     f.write("Hello World\n")
 ```
 
+**Note:** `write()` does not add a newline automatically. Without `\n`, consecutive writes appear on the same line:
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("Hello")
+    f.write("World")
+
+# File content: HelloWorld
+```
+
+With `\n`:
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("Hello\n")
+    f.write("World\n")
+
+# File content:
+# Hello
+# World
+```
+
 #### 10.2.2.2 `writelines()`
 
 | Method | Returns | Parameters |
