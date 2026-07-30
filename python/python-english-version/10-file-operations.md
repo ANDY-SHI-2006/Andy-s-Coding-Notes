@@ -734,16 +734,22 @@ All examples assume the script is running from inside `project/` or `project/scr
 
 ### 10.6.1 Working Directory
 
-There are two different "locations" to keep in mind:
+#### 10.6.1.1 Two Kinds of "Location"
+
+When working with files, you need to know two different directory concepts:
 
 - **Current working directory** (`cwd`): the directory from which the script was launched.
 - **Script directory**: the directory containing the script file (`demo.py`).
 
-| Operation                        | `os` style                                   | `pathlib` style                   |
-| -------------------------------- | -------------------------------------------- | --------------------------------- |
-| Get current working directory    | `os.getcwd()`                                | `Path.cwd()`                      |
-| Change current working directory | `os.chdir(path)`                             | No direct equivalent              |
-| Get script directory             | `os.path.dirname(os.path.abspath(__file__))` | `Path(__file__).resolve().parent` |
+These are often the same, but they can be different depending on where you run the script.
+
+#### 10.6.1.2 API Comparison
+
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
+| Get current working directory | `os.getcwd()` | `Path.cwd()` |
+| Change current working directory | `os.chdir(path)` | No direct equivalent |
+| Get script directory | `os.path.dirname(os.path.abspath(__file__))` | `Path(__file__).resolve().parent` |
 
 **Using `os`:**
 
@@ -771,7 +777,78 @@ script_dir = Path(__file__).resolve().parent
 print(script_dir)         # project/scripts
 ```
 
-**Note:** `__file__` is only available when running a saved script. It does not work in interactive shells or REPL.
+#### 10.6.1.3 Why the Working Directory Matters
+
+If a script opens a file using a relative path, the path is resolved from the current working directory, not from the script's location. This can cause the same script to behave differently depending on where you run it.
+
+Consider this project layout:
+
+```text
+project/
+├── scripts/
+│   └── demo.py
+└── data/
+    └── records.json
+```
+
+`demo.py` contains:
+
+```python
+with open("data/records.json", encoding="utf-8") as f:
+    content = f.read()
+```
+
+Run from `project/`:
+
+```bash
+python scripts/demo.py
+```
+
+- `cwd` is `project/`.
+- `data/records.json` exists. ✅
+
+Run from `project/scripts/`:
+
+```bash
+python demo.py
+```
+
+- `cwd` is `project/scripts/`.
+- The script looks for `project/scripts/data/records.json`, which does not exist. ❌
+
+This is why production code should not rely on the current working directory to locate resource files.
+
+#### 10.6.1.4 Best Practice: Locate Files Relative to the Script
+
+Build the path to resource files relative to the script directory instead of the working directory. This makes the script work no matter where it is launched from.
+
+**Using `os`:**
+
+```python
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
+
+with open(records, encoding="utf-8") as f:
+    content = f.read()
+```
+
+**Using `pathlib`:**
+
+```python
+from pathlib import Path
+
+script_dir = Path(__file__).resolve().parent
+records = script_dir.parent / "data" / "records.json"
+
+with open(records, encoding="utf-8") as f:
+    content = f.read()
+```
+
+#### 10.6.1.5 Note on `__file__`
+
+`__file__` is only available when running a saved script. It does not work in interactive shells or REPL, because there is no script file in those environments.
 
 ### 10.6.2 Path Construction
 
