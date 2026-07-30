@@ -356,7 +356,7 @@ with open("data.txt", "rb") as f:
 
 In text mode, `seek()` moves by bytes but must land on character boundaries. `whence=1` and `whence=2` are usually only allowed with `offset=0` in text mode. For arbitrary byte offsets, open the file in binary mode (`"rb"`).
 
-For the special case of multi-byte characters (e.g., UTF-8 Chinese), see [10.5.3 `seek()` with Multi-byte Characters](10-file-operations.md#1053-seek-with-multi-byte-characters).
+For the special case of multi-byte characters (e.g., UTF-8 Chinese), see [10.5.5 Byte Positions and Multi-byte Characters](10-file-operations.md#1055-byte-positions-and-multi-byte-characters).
 
 ### 10.2.4 Line Iteration
 
@@ -630,13 +630,50 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
 
 ## 10.5 Character Encoding
 
-### 10.5.1 Why Encoding Matters
+### 10.5.1 Strings vs Bytes
 
-A file is just a sequence of bytes. Encoding determines how those bytes are interpreted as characters. Using the wrong encoding produces garbled text or `UnicodeDecodeError`.
+In Python, text is stored as `str` objects — sequences of Unicode characters. Files, however, store raw **bytes**. Encoding is the rule that converts characters into bytes and back again.
+
+```python
+text = "中文"
+
+# Encode: str → bytes
+b = text.encode("utf-8")
+print(b)   # b'\xe4\xb8\xad\xe6\x96\x87'
+
+# Decode: bytes → str
+print(b.decode("utf-8"))   # 中文
+```
+
+The same characters produce different bytes under different encodings:
+
+```python
+"中文".encode("utf-8")   # b'\xe4\xb8\xad\xe6\x96\x87'  (6 bytes)
+"中文".encode("gbk")     # b'\xd6\xd0\xce\xc4'          (4 bytes)
+```
+
+**Storage units:**
+- 1 Byte = 8 bits
+- 1 KB = 1024 Bytes
+- 1 MB = 1024 KB
+
+### 10.5.2 Why Encoding Matters
+
+When you open a text file, Python must decode the bytes into a `str` using an encoding. If the encoding does not match the bytes on disk, the result is garbled text or a `UnicodeDecodeError`.
+
+```python
+# Write with GBK encoding
+with open("gbk.txt", "w", encoding="gbk") as f:
+    f.write("中文")
+
+# Read with UTF-8 encoding — mismatch!
+with open("gbk.txt", encoding="utf-8") as f:
+    content = f.read()   # UnicodeDecodeError
+```
 
 **Rule of thumb:** Always specify `encoding="utf-8"` when opening text files. Python defaults to the system's locale encoding, which varies by OS and can cause errors.
 
-### 10.5.2 Common Encodings
+### 10.5.3 Common Encodings
 
 | Encoding | Description | Bytes per char |
 |----------|-------------|----------------|
@@ -644,10 +681,11 @@ A file is just a sequence of bytes. Encoding determines how those bytes are inte
 | UTF-8 | Unicode, variable length | 1-4 (Chinese: 3) |
 | GBK | Chinese standard | 1 (EN), 2 (CN) |
 
-**Storage Units:**
-- 1 Byte = 8 bits
-- 1 KB = 1024 Bytes
-- 1 MB = 1024 KB
+UTF-8 is the modern standard. It is backward-compatible with ASCII and supports all Unicode characters, making it the safest choice for most text files.
+
+### 10.5.4 Code Points with `ord()` and `chr()`
+
+Every Unicode character has a numeric code point. `ord()` returns the code point of a character; `chr()` converts a code point back to a character.
 
 ```python
 # ASCII code point
@@ -659,9 +697,9 @@ with open("chinese.txt", "w", encoding="utf-8") as f:
     f.write("中文")   # 6 bytes total (2 chars × 3 bytes)
 ```
 
-### 10.5.3 `seek()` with Multi-byte Characters
+### 10.5.5 Byte Positions and Multi-byte Characters
 
-`seek()` moves the cursor by **bytes**, not characters. With UTF-8 Chinese text, you must seek to byte positions that align with character boundaries (multiples of 3 for Chinese).
+`seek()` moves the cursor by **bytes**, not characters. For any multi-byte encoding — not just UTF-8 Chinese — you must seek to byte positions that align with character boundaries.
 
 ```python
 with open("chinese.txt", "r", encoding="utf-8") as f:
