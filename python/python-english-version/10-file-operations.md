@@ -739,6 +739,12 @@ There are two different "locations" to keep in mind:
 - **Current working directory** (`cwd`): the directory from which the script was launched.
 - **Script directory**: the directory containing the script file (`demo.py`).
 
+| Operation                        | `os` style                                   | `pathlib` style                   |
+| -------------------------------- | -------------------------------------------- | --------------------------------- |
+| Get current working directory    | `os.getcwd()`                                | `Path.cwd()`                      |
+| Change current working directory | `os.chdir(path)`                             | No direct equivalent              |
+| Get script directory             | `os.path.dirname(os.path.abspath(__file__))` | `Path(__file__).resolve().parent` |
+
 **Using `os`:**
 
 ```python
@@ -770,6 +776,11 @@ print(script_dir)         # project/scripts
 ### 10.6.2 Path Construction
 
 Build a path to `data/records.json` relative to the script directory. From `project/scripts/demo.py`, the `data` directory is one level up.
+
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
+| Join paths | `os.path.join(a, b, ...)` | `Path(a) / b / ...` |
+| Normalize a path | `os.path.normpath(p)` | `Path(p).resolve()` |
 
 **Using `os`:**
 
