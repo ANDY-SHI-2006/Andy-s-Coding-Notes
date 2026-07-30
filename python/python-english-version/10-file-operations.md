@@ -516,11 +516,13 @@ with open("data.json", encoding="utf-8") as f:
 
 ### 10.4.2 CSV Functions
 
-#### 10.4.2.1 `csv.reader()`
+**Note:** Always pass `newline=""` when opening CSV files to prevent extra blank rows on Windows.
+
+#### 10.4.2.1 Reading CSV as Lists: `csv.reader()`
 
 | Function | Purpose |
 |----------|---------|
-| `csv.reader(f)` | Read rows as lists |
+| `csv.reader(f)` | Read rows as lists of strings |
 
 ```python
 import csv
@@ -531,11 +533,15 @@ with open("data.csv", encoding="utf-8", newline="") as f:
         print(row)          # Each row is a list
 ```
 
-#### 10.4.2.2 `csv.writer()`
+#### 10.4.2.2 Writing CSV from Lists
 
-| Function | Purpose |
-|----------|---------|
-| `csv.writer(f)` | Write rows from lists |
+`csv.writer(f)` returns a writer object. The actual writing is done by its `.writerow()` and `.writerows()` methods.
+
+| Function / Method | Purpose |
+|-------------------|---------|
+| `csv.writer(f)` | Create a writer object |
+| `writer.writerow(row)` | Write one row from a list |
+| `writer.writerows(rows)` | Write multiple rows from a list of lists |
 
 ```python
 import csv
@@ -544,31 +550,14 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(["name", "age"])
     writer.writerow(["Alice", 20])
+    writer.writerows([["Bob", 25], ["Carol", 30]])
 ```
 
-#### 10.4.2.3 `csv.writerows()`
+#### 10.4.2.3 Reading CSV as Dicts: `csv.DictReader()`
 
 | Function | Purpose |
 |----------|---------|
-| `csv.writerows(rows)` | Write multiple rows at once |
-
-```python
-import csv
-
-with open("output.csv", "w", encoding="utf-8", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerows([
-        ["name", "age"],
-        ["Alice", 20],
-        ["Bob", 25],
-    ])
-```
-
-#### 10.4.2.4 `csv.DictReader()`
-
-| Function | Purpose |
-|----------|---------|
-| `csv.DictReader(f)` | Read rows as dicts |
+| `csv.DictReader(f)` | Read rows as dicts using the first row as field names |
 
 ```python
 import csv
@@ -576,14 +565,19 @@ import csv
 with open("data.csv", encoding="utf-8", newline="") as f:
     reader = csv.DictReader(f)
     for row in reader:
-        print(row["name"])
+        print(row["name"])  # Access by column name
 ```
 
-#### 10.4.2.5 `csv.DictWriter()`
+#### 10.4.2.4 Writing CSV from Dicts
 
-| Function | Purpose |
-|----------|---------|
-| `csv.DictWriter(f, fieldnames)` | Write dicts as rows |
+`csv.DictWriter(f, fieldnames)` returns a DictWriter object. You must call `.writeheader()` first, then `.writerow()` or `.writerows()`.
+
+| Function / Method | Purpose |
+|-------------------|---------|
+| `csv.DictWriter(f, fieldnames)` | Create a DictWriter object |
+| `writer.writeheader()` | Write the header row |
+| `writer.writerow(row)` | Write one row from a dict |
+| `writer.writerows(rows)` | Write multiple rows from a list of dicts |
 
 ```python
 import csv
@@ -592,10 +586,11 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
     writer = csv.DictWriter(f, fieldnames=["name", "age"])
     writer.writeheader()
     writer.writerow({"name": "Alice", "age": 20})
-    writer.writerow({"name": "Bob", "age": 25})
+    writer.writerows([
+        {"name": "Bob", "age": 25},
+        {"name": "Carol", "age": 30},
+    ])
 ```
-
-**Tip:** Always pass `newline=""` when opening CSV files to prevent extra blank rows on Windows.
 
 ## 10.5 Character Encoding
 
