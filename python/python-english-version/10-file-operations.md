@@ -758,20 +758,28 @@ print(script_dir)         # project/scripts
 
 Build a path to `data/records.json` relative to the script directory. From `project/scripts/demo.py`, the `data` directory is one level up.
 
+**Using `os`:**
+
 ```python
 import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
+
+print(records)        # project\data\records.json (Windows)
+                      # project/data/records.json (Linux/macOS)
+```
+
+**Using `pathlib`:**
+
+```python
 from pathlib import Path
 
 script_dir = Path(__file__).resolve().parent
+records = script_dir.parent / "data" / "records.json"
 
-# pathlib style
-records_path = script_dir.parent / "data" / "records.json"
-
-# os style
-records_path_os = os.path.join(script_dir.parent, "data", "records.json")
-
-print(records_path)       # project/data/records.json
-print(records_path_os)    # same string
+print(records)        # project\data\records.json (Windows)
+                      # project/data/records.json (Linux/macOS)
 ```
 
 Using `Path` with `/` is recommended for modern code because it works the same way on Windows, Linux, and macOS.
@@ -786,21 +794,31 @@ Check whether the path exists and what kind of object it is.
 | Is file? | `os.path.isfile(p)` | `Path(p).is_file()` |
 | Is directory? | `os.path.isdir(p)` | `Path(p).is_dir()` |
 
+**Using `os`:**
+
 ```python
 import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
+data_dir = os.path.dirname(records)
+
+print(os.path.exists(records))    # True
+print(os.path.isfile(records))    # True
+print(os.path.isdir(data_dir))    # True
+```
+
+**Using `pathlib`:**
+
+```python
 from pathlib import Path
 
 records = Path(__file__).resolve().parent.parent / "data" / "records.json"
 data_dir = records.parent
 
-os.path.exists(records)   # True
-records.exists()          # True
-
-os.path.isfile(records)   # True
-records.is_file()         # True
-
-os.path.isdir(data_dir)   # True
-data_dir.is_dir()         # True
+print(records.exists())           # True
+print(records.is_file())            # True
+print(data_dir.is_dir())            # True
 ```
 
 ### 10.6.4 File Metadata
@@ -813,33 +831,62 @@ Get the size and last modification time of `records.json`.
 | Get modification time | `os.path.getmtime(p)` | `Path(p).stat().st_mtime` |
 | Full metadata | `os.stat(p)` | `Path(p).stat()` |
 
+**Using `os`:**
+
 ```python
 import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
+
+print(os.path.getsize(records))      # e.g., 27
+print(os.path.getmtime(records))     # e.g., 1712345678.0
+
+stat = os.stat(records)
+print(stat.st_size)                  # e.g., 27 (size in bytes)
+print(stat.st_mtime)                 # e.g., 1712345678.0 (last modification)
+```
+
+**Using `pathlib`:**
+
+```python
 from pathlib import Path
 
 records = Path(__file__).resolve().parent.parent / "data" / "records.json"
 
-print(os.path.getsize(records))      # e.g., 27
-print(records.stat().st_size)        # same value
-
-print(os.path.getmtime(records))     # e.g., 1712345678.0
-print(records.stat().st_mtime)       # same value
-
-stat = os.stat(records)
-print(stat.st_size)                  # Size in bytes
-print(stat.st_mtime)                 # Last modification timestamp
+print(records.stat().st_size)        # e.g., 27
+print(records.stat().st_mtime)       # e.g., 1712345678.0
 ```
 
-### 10.6.5 File Operations with `pathlib`
+### 10.6.5 File Operations
 
-`pathlib` can read and write the records file without calling `open()` directly.
+Read from and write to the records file.
 
-| Operation | `pathlib` style |
-|-----------|-----------------|
-| Read text | `Path(p).read_text()` |
-| Write text | `Path(p).write_text(s)` |
-| Read bytes | `Path(p).read_bytes()` |
-| Write bytes | `Path(p).write_bytes(b)` |
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
+| Read text | `open(p).read()` | `Path(p).read_text()` |
+| Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
+| Read bytes | `open(p, 'rb').read()` | `Path(p).read_bytes()` |
+| Write bytes | `open(p, 'wb').write(b)` | `Path(p).write_bytes(b)` |
+
+**Using `open()`:**
+
+```python
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
+
+with open(records, encoding="utf-8") as f:
+    content = f.read()
+print(content)        # {"name": "Alice", "age": 25}
+
+# Write updated content
+with open(records, "w", encoding="utf-8") as f:
+    f.write('{"name": "Bob", "age": 30}')
+```
+
+**Using `pathlib`:**
 
 ```python
 from pathlib import Path
@@ -847,7 +894,7 @@ from pathlib import Path
 records = Path(__file__).resolve().parent.parent / "data" / "records.json"
 
 content = records.read_text(encoding="utf-8")
-print(content)   # {"name": "Alice", "age": 25}
+print(content)        # {"name": "Alice", "age": 25}
 
 # Write updated content
 records.write_text('{"name": "Bob", "age": 30}', encoding="utf-8")
@@ -857,10 +904,34 @@ records.write_text('{"name": "Bob", "age": 30}', encoding="utf-8")
 
 List all files in the `data` directory and match JSON files.
 
-| Operation | `pathlib` style |
-|-----------|-----------------|
-| List directory | `Path(dir).iterdir()` |
-| Pattern match | `Path(dir).glob("*.json")` |
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
+| List directory | `os.listdir(dir)` | `Path(dir).iterdir()` |
+| Pattern match | `glob.glob(pattern)` | `Path(dir).glob("*.json")` |
+
+**Using `os` and `glob`:**
+
+```python
+import os
+import glob
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.normpath(os.path.join(script_dir, "..", "data"))
+
+# List all entries
+for entry in os.listdir(data_dir):
+    print(entry)
+# records.json
+# records_backup.json
+
+# Match JSON files only
+for json_file in glob.glob(os.path.join(data_dir, "*.json")):
+    print(os.path.basename(json_file))
+# records.json
+# records_backup.json
+```
+
+**Using `pathlib`:**
 
 ```python
 from pathlib import Path
