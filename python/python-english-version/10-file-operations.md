@@ -744,12 +744,12 @@ import os
 from pathlib import Path
 
 # Where the script was launched from
-print(os.getcwd())
-print(Path.cwd())
+print(os.getcwd())        # e.g., C:\Users\Andy\project
+print(Path.cwd())         # e.g., C:\Users\Andy\project
 
 # Where the script file itself is located
 script_dir = Path(__file__).resolve().parent
-print(script_dir)            # project/scripts
+print(script_dir)         # project/scripts
 ```
 
 **Note:** `__file__` is only available when running a saved script. It does not work in interactive shells or REPL.
@@ -819,15 +819,15 @@ from pathlib import Path
 
 records = Path(__file__).resolve().parent.parent / "data" / "records.json"
 
-print(os.path.getsize(records))
+print(os.path.getsize(records))      # e.g., 27
 print(records.stat().st_size)        # same value
 
-print(os.path.getmtime(records))
+print(os.path.getmtime(records))     # e.g., 1712345678.0
 print(records.stat().st_mtime)       # same value
 
 stat = os.stat(records)
-print(stat.st_size)                 # Size in bytes
-print(stat.st_mtime)                # Last modification timestamp
+print(stat.st_size)                  # Size in bytes
+print(stat.st_mtime)                 # Last modification timestamp
 ```
 
 ### 10.6.5 File Operations with `pathlib`
