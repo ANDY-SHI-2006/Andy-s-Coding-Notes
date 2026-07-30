@@ -745,6 +745,22 @@ These are often the same, but they can be different depending on where you run t
 
 #### 10.6.1.2 API Comparison
 
+The examples below assume this project layout and that the script is launched from the `project/` directory:
+
+```text
+project/
+├── scripts/
+│   └── demo.py
+└── data/
+    └── records.json
+```
+
+```shell
+python scripts/demo.py
+```
+
+Therefore, the current working directory is `project/`, while the script itself lives in `project/scripts/`.
+
 | Operation | `os` style | `pathlib` style |
 |-----------|-----------|-----------------|
 | Get current working directory | `os.getcwd()` | `Path.cwd()` |
