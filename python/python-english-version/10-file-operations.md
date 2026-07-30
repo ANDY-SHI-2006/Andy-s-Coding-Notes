@@ -758,13 +758,34 @@ Using `Path` with `/` is recommended for modern code because it works the same w
 
 ### 10.6.3 Path Information
 
-Check whether a path exists and inspect its properties.
+Check whether a path exists and what kind of object it is.
 
 | Operation | `os` style | `pathlib` style |
 |-----------|-----------|-----------------|
 | Check exists | `os.path.exists(p)` | `Path(p).exists()` |
 | Is file? | `os.path.isfile(p)` | `Path(p).is_file()` |
 | Is directory? | `os.path.isdir(p)` | `Path(p).is_dir()` |
+
+```python
+import os
+from pathlib import Path
+
+os.path.exists("file.txt")
+Path("file.txt").exists()
+
+os.path.isfile("file.txt")
+Path("file.txt").is_file()
+
+os.path.isdir("data")
+Path("data").is_dir()
+```
+
+### 10.6.4 File Metadata
+
+Get size and modification time for a path.
+
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
 | Get size | `os.path.getsize(p)` | `Path(p).stat().st_size` |
 | Get modification time | `os.path.getmtime(p)` | `Path(p).stat().st_mtime` |
 | Full metadata | `os.stat(p)` | `Path(p).stat()` |
@@ -773,22 +794,22 @@ Check whether a path exists and inspect its properties.
 import os
 from pathlib import Path
 
-# Existence checks
-os.path.exists("file.txt")
-Path("file.txt").exists()
-
-# Metadata
+# Size and modification time
 print(os.path.getsize("file.txt"))
-print(os.path.getmtime("file.txt"))
+print(Path("file.txt").stat().st_size)
 
+print(os.path.getmtime("file.txt"))
+print(Path("file.txt").stat().st_mtime)
+
+# Full stat object
 stat = os.stat("file.txt")
 print(stat.st_size)   # Size in bytes
 print(stat.st_mtime)  # Last modification timestamp
 ```
 
-### 10.6.4 pathlib File Operations
+### 10.6.5 File Operations with `pathlib`
 
-`pathlib` can also read, write, and list files without calling `open()` directly.
+`pathlib` can read and write files without calling `open()` directly.
 
 | Operation | `pathlib` style |
 |-----------|-----------------|
@@ -796,8 +817,6 @@ print(stat.st_mtime)  # Last modification timestamp
 | Write text | `Path(p).write_text(s)` |
 | Read bytes | `Path(p).read_bytes()` |
 | Write bytes | `Path(p).write_bytes(b)` |
-| List directory | `Path(dir).iterdir()` |
-| Pattern match | `Path(dir).glob("*.txt")` |
 
 ```python
 from pathlib import Path
@@ -805,13 +824,32 @@ from pathlib import Path
 file_path = Path("data") / "output.txt"
 file_path.write_text("Hello, pathlib!")
 content = file_path.read_text()
+```
 
-# Iterate directory
+### 10.6.6 Directory Iteration
+
+List files and match patterns using `pathlib`.
+
+| Operation | `pathlib` style |
+|-----------|-----------------|
+| List directory | `Path(dir).iterdir()` |
+| Pattern match | `Path(dir).glob("*.txt")` |
+
+```python
+from pathlib import Path
+
+# List all entries in a directory
+for entry in Path("data").iterdir():
+    print(entry.name)
+
+# Match files by pattern
 for txt_file in Path("data").glob("*.txt"):
     print(txt_file.name)
 ```
 
-### 10.6.5 `os.path` vs `pathlib`
+### 10.6.7 `os.path` vs `pathlib`
+
+Both modules solve the same problems. `pathlib` is the modern, object-oriented approach.
 
 | Operation | `os.path` | `pathlib` |
 |-----------|-----------|-----------|
@@ -823,8 +861,6 @@ for txt_file in Path("data").glob("*.txt"):
 | Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
 | List directory | `os.listdir(dir)` | `Path(dir).iterdir()` |
 | Pattern match | `glob.glob("*.txt")` | `Path(dir).glob("*.txt")` |
-
-Both work, but `pathlib` is the modern, object-oriented approach.
 
 ## 10.7 Temporary Files
 
