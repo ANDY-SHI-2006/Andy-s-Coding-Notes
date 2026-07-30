@@ -713,52 +713,72 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
 
 ## 10.6 Paths and File Metadata
 
-This section covers how to work with filesystem paths, inspect files, and perform simple file operations using both `os.path` and `pathlib`.
+This section uses one shared scenario: a project with the following layout:
+
+```text
+project/
+├── scripts/
+│   └── demo.py
+└── data/
+    ├── records.json
+    └── records_backup.json
+```
+
+`data/records.json` contains:
+
+```json
+{"name": "Alice", "age": 25}
+```
+
+All examples assume the script is running from inside `project/` or `project/scripts/`. Where the script file itself is located matters when you need to build reliable paths to data files.
 
 ### 10.6.1 Working Directory
 
-The current working directory is the starting point for relative paths.
+There are two different "locations" to keep in mind:
 
-| Function | Purpose |
-|----------|---------|
-| `os.getcwd()` | Get current working directory |
-| `os.chdir(path)` | Change current working directory |
-| `Path.cwd()` | Get current working directory using `pathlib` |
+- **Current working directory** (`cwd`): the directory from which the script was launched.
+- **Script directory**: the directory containing the script file (`demo.py`).
 
 ```python
 import os
 from pathlib import Path
 
-print(os.getcwd())    # Current working directory
-print(Path.cwd())     # Same, using pathlib
+# Where the script was launched from
+print(os.getcwd())
+print(Path.cwd())
 
-os.chdir("../data")
+# Where the script file itself is located
+script_dir = Path(__file__).resolve().parent
+print(script_dir)            # project/scripts
 ```
+
+**Note:** `__file__` is only available when running a saved script. It does not work in interactive shells or REPL.
 
 ### 10.6.2 Path Construction
 
-Build paths in a cross-platform way.
-
-| Operation | `os` style | `pathlib` style |
-|-----------|-----------|-----------------|
-| Join paths | `os.path.join(a, b)` | `Path(a) / b` |
+Build a path to `data/records.json` relative to the script directory. From `project/scripts/demo.py`, the `data` directory is one level up.
 
 ```python
 import os
 from pathlib import Path
 
-# os style
-path = os.path.join("data", "records.json")
+script_dir = Path(__file__).resolve().parent
 
 # pathlib style
-path = Path("data") / "records.json"
+records_path = script_dir.parent / "data" / "records.json"
+
+# os style
+records_path_os = os.path.join(script_dir.parent, "data", "records.json")
+
+print(records_path)       # project/data/records.json
+print(records_path_os)    # same string
 ```
 
 Using `Path` with `/` is recommended for modern code because it works the same way on Windows, Linux, and macOS.
 
 ### 10.6.3 Path Information
 
-Check whether a path exists and what kind of object it is.
+Check whether the path exists and what kind of object it is.
 
 | Operation | `os` style | `pathlib` style |
 |-----------|-----------|-----------------|
@@ -770,19 +790,22 @@ Check whether a path exists and what kind of object it is.
 import os
 from pathlib import Path
 
-os.path.exists("file.txt")
-Path("file.txt").exists()
+records = Path(__file__).resolve().parent.parent / "data" / "records.json"
+data_dir = records.parent
 
-os.path.isfile("file.txt")
-Path("file.txt").is_file()
+os.path.exists(records)   # True
+records.exists()          # True
 
-os.path.isdir("data")
-Path("data").is_dir()
+os.path.isfile(records)   # True
+records.is_file()         # True
+
+os.path.isdir(data_dir)   # True
+data_dir.is_dir()         # True
 ```
 
 ### 10.6.4 File Metadata
 
-Get size and modification time for a path.
+Get the size and last modification time of `records.json`.
 
 | Operation | `os` style | `pathlib` style |
 |-----------|-----------|-----------------|
@@ -794,22 +817,22 @@ Get size and modification time for a path.
 import os
 from pathlib import Path
 
-# Size and modification time
-print(os.path.getsize("file.txt"))
-print(Path("file.txt").stat().st_size)
+records = Path(__file__).resolve().parent.parent / "data" / "records.json"
 
-print(os.path.getmtime("file.txt"))
-print(Path("file.txt").stat().st_mtime)
+print(os.path.getsize(records))
+print(records.stat().st_size)        # same value
 
-# Full stat object
-stat = os.stat("file.txt")
-print(stat.st_size)   # Size in bytes
-print(stat.st_mtime)  # Last modification timestamp
+print(os.path.getmtime(records))
+print(records.stat().st_mtime)       # same value
+
+stat = os.stat(records)
+print(stat.st_size)                 # Size in bytes
+print(stat.st_mtime)                # Last modification timestamp
 ```
 
 ### 10.6.5 File Operations with `pathlib`
 
-`pathlib` can read and write files without calling `open()` directly.
+`pathlib` can read and write the records file without calling `open()` directly.
 
 | Operation | `pathlib` style |
 |-----------|-----------------|
@@ -821,35 +844,45 @@ print(stat.st_mtime)  # Last modification timestamp
 ```python
 from pathlib import Path
 
-file_path = Path("data") / "output.txt"
-file_path.write_text("Hello, pathlib!")
-content = file_path.read_text()
+records = Path(__file__).resolve().parent.parent / "data" / "records.json"
+
+content = records.read_text(encoding="utf-8")
+print(content)   # {"name": "Alice", "age": 25}
+
+# Write updated content
+records.write_text('{"name": "Bob", "age": 30}', encoding="utf-8")
 ```
 
 ### 10.6.6 Directory Iteration
 
-List files and match patterns using `pathlib`.
+List all files in the `data` directory and match JSON files.
 
 | Operation | `pathlib` style |
 |-----------|-----------------|
 | List directory | `Path(dir).iterdir()` |
-| Pattern match | `Path(dir).glob("*.txt")` |
+| Pattern match | `Path(dir).glob("*.json")` |
 
 ```python
 from pathlib import Path
 
-# List all entries in a directory
-for entry in Path("data").iterdir():
-    print(entry.name)
+data_dir = Path(__file__).resolve().parent.parent / "data"
 
-# Match files by pattern
-for txt_file in Path("data").glob("*.txt"):
-    print(txt_file.name)
+# List all entries
+for entry in data_dir.iterdir():
+    print(entry.name)
+# records.json
+# records_backup.json
+
+# Match JSON files only
+for json_file in data_dir.glob("*.json"):
+    print(json_file.name)
+# records.json
+# records_backup.json
 ```
 
 ### 10.6.7 `os.path` vs `pathlib`
 
-Both modules solve the same problems. `pathlib` is the modern, object-oriented approach.
+All the operations above can be done with either module. `pathlib` is the modern, object-oriented approach.
 
 | Operation | `os.path` | `pathlib` |
 |-----------|-----------|-----------|
