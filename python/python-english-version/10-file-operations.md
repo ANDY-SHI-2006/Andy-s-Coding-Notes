@@ -516,7 +516,9 @@ with open("data.json", encoding="utf-8") as f:
 
 ### 10.4.2 CSV Functions
 
-**Note:** When opening CSV files, always pass `newline=""`. On Windows, the default text mode translates `\n` to `\r\n` when writing. The `csv` module already writes `\r\n` line endings, so the translation produces `\r\r\n`, resulting in a blank row between every data row.
+#### 10.4.2.1 Why Use `newline=""`?
+
+When opening CSV files, always pass `newline=""`. On Windows, the default text mode translates `\n` to `\r\n` when writing. The `csv` module already writes `\r\n` line endings, so the translation produces `\r\r\n`, resulting in a blank row between every data row.
 
 ```python
 # Without newline="" on Windows, you may get:
@@ -534,7 +536,16 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
 
 Using `newline=""` disables this automatic translation and lets the `csv` module control line endings. This is safe on Linux and macOS as well, so use it for all CSV file operations.
 
-#### 10.4.2.1 Reading CSV as Lists: `csv.reader()`
+The read and write examples below assume a CSV file with the following content:
+
+```text
+name,age
+Alice,20
+Bob,25
+Carol,30
+```
+
+#### 10.4.2.2 Reading CSV as Lists: `csv.reader()`
 
 | Function | Purpose |
 |----------|---------|
@@ -546,10 +557,15 @@ import csv
 with open("data.csv", encoding="utf-8", newline="") as f:
     reader = csv.reader(f)
     for row in reader:
-        print(row)          # Each row is a list
+        print(row)
+
+# ['name', 'age']
+# ['Alice', '20']
+# ['Bob', '25']
+# ['Carol', '30']
 ```
 
-#### 10.4.2.2 Writing CSV from Lists
+#### 10.4.2.3 Writing CSV from Lists
 
 `csv.writer(f)` returns a writer object. The actual writing is done by its `.writerow()` and `.writerows()` methods.
 
@@ -569,7 +585,7 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
     writer.writerows([["Bob", 25], ["Carol", 30]])
 ```
 
-#### 10.4.2.3 Reading CSV as Dicts: `csv.DictReader()`
+#### 10.4.2.4 Reading CSV as Dicts: `csv.DictReader()`
 
 | Function | Purpose |
 |----------|---------|
@@ -581,10 +597,14 @@ import csv
 with open("data.csv", encoding="utf-8", newline="") as f:
     reader = csv.DictReader(f)
     for row in reader:
-        print(row["name"])  # Access by column name
+        print(row)
+
+# {'name': 'Alice', 'age': '20'}
+# {'name': 'Bob', 'age': '25'}
+# {'name': 'Carol', 'age': '30'}
 ```
 
-#### 10.4.2.4 Writing CSV from Dicts
+#### 10.4.2.5 Writing CSV from Dicts
 
 `csv.DictWriter(f, fieldnames)` returns a DictWriter object. You must call `.writeheader()` first, then `.writerow()` or `.writerows()`.
 
