@@ -739,12 +739,25 @@ There are two different "locations" to keep in mind:
 - **Current working directory** (`cwd`): the directory from which the script was launched.
 - **Script directory**: the directory containing the script file (`demo.py`).
 
+**Using `os`:**
+
 ```python
 import os
-from pathlib import Path
 
 # Where the script was launched from
 print(os.getcwd())        # e.g., C:\Users\Andy\project
+
+# Change the current working directory
+os.chdir("../data")
+print(os.getcwd())        # e.g., C:\Users\Andy\data
+```
+
+**Using `pathlib`:**
+
+```python
+from pathlib import Path
+
+# Where the script was launched from
 print(Path.cwd())         # e.g., C:\Users\Andy\project
 
 # Where the script file itself is located
