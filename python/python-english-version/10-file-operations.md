@@ -516,7 +516,23 @@ with open("data.json", encoding="utf-8") as f:
 
 ### 10.4.2 CSV Functions
 
-**Note:** Always pass `newline=""` when opening CSV files to prevent extra blank rows on Windows.
+**Note:** When opening CSV files, always pass `newline=""`. On Windows, the default text mode translates `\n` to `\r\n` when writing. The `csv` module already writes `\r\n` line endings, so the translation produces `\r\r\n`, resulting in a blank row between every data row.
+
+```python
+# Without newline="" on Windows, you may get:
+# name,age
+#
+# Alice,20
+#
+# Bob,25
+
+# Correct:
+with open("output.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows([["name", "age"], ["Alice", 20], ["Bob", 25]])
+```
+
+Using `newline=""` disables this automatic translation and lets the `csv` module control line endings. This is safe on Linux and macOS as well, so use it for all CSV file operations.
 
 #### 10.4.2.1 Reading CSV as Lists: `csv.reader()`
 
