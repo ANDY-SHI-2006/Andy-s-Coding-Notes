@@ -773,11 +773,11 @@ Therefore, the current working directory is `project/`, while the script itself 
 import os
 
 # Where the script was launched from
-print(os.getcwd())        # e.g., C:\Users\Andy\project
+print(os.getcwd())        # C:\Users\Andy\project
 
 # Change the current working directory
 os.chdir("../data")
-print(os.getcwd())        # e.g., C:\Users\Andy\data
+print(os.getcwd())        # C:\Users\Andy\data
 ```
 
 **Using `pathlib`:**
@@ -786,11 +786,11 @@ print(os.getcwd())        # e.g., C:\Users\Andy\data
 from pathlib import Path
 
 # Where the script was launched from
-print(Path.cwd())         # e.g., C:\Users\Andy\project
+print(Path.cwd())         # C:\Users\Andy\project
 
 # Where the script file itself is located
 script_dir = Path(__file__).resolve().parent
-print(script_dir)         # project/scripts
+print(script_dir)         # C:\Users\Andy\project\scripts
 ```
 
 #### 10.6.1.3 Why the Working Directory Matters
