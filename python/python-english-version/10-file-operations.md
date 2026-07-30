@@ -63,7 +63,7 @@ r"C:\Users\name\file.txt"    # Raw string: backslash is literal
 
 The starting point for all relative paths is the **current working directory**. If the program is run from a different directory, the same relative path may refer to a different file.
 
-For details on how to inspect or change the current working directory, see [10.6 Working Directory and Paths](10-file-operations.md#106-working-directory-and-paths).
+For details on how to inspect or change the current working directory, see [10.6 Paths and File Metadata](10-file-operations.md#106-paths-and-file-metadata).
 
 ### 10.1.3 File Modes
 
@@ -711,63 +711,93 @@ with open("chinese.txt", "r", encoding="utf-8") as f:
     # f.read(1)             # UnicodeDecodeError
 ```
 
-## 10.6 Working Directory and Paths
+## 10.6 Paths and File Metadata
 
-The current working directory is where Python looks for relative paths.
+This section covers how to work with filesystem paths, inspect files, and perform simple file operations using both `os.path` and `pathlib`.
 
-### 10.6.1 `os` Module Functions
+### 10.6.1 Working Directory
+
+The current working directory is the starting point for relative paths.
 
 | Function | Purpose |
 |----------|---------|
 | `os.getcwd()` | Get current working directory |
 | `os.chdir(path)` | Change current working directory |
+| `Path.cwd()` | Get current working directory using `pathlib` |
 
 ```python
 import os
+from pathlib import Path
 
-print(os.getcwd())          # Current working directory
+print(os.getcwd())    # Current working directory
+print(Path.cwd())     # Same, using pathlib
+
 os.chdir("../data")
 ```
 
-### 10.6.2 `pathlib` Path Operations
+### 10.6.2 Path Construction
 
-`pathlib` provides an object-oriented approach to filesystem paths.
-
-```python
-from pathlib import Path
-
-# Create path objects
-data_dir = Path("data")
-file_path = data_dir / "records.json"   # Cross-platform path joining
-
-# Check existence
-if file_path.exists():
-    print("File found")
-```
-
-## 10.7 Modern Path Handling with `pathlib`
-
-`pathlib` combines path construction and file operations in one object.
-
-### 10.7.1 Path Construction
+Build paths in a cross-platform way.
 
 | Operation | `os` style | `pathlib` style |
 |-----------|-----------|-----------------|
 | Join paths | `os.path.join(a, b)` | `Path(a) / b` |
 
 ```python
+import os
 from pathlib import Path
 
-file_path = Path("data") / "records.json"
+# os style
+path = os.path.join("data", "records.json")
+
+# pathlib style
+path = Path("data") / "records.json"
 ```
 
-### 10.7.2 File Operations with `pathlib`
+Using `Path` with `/` is recommended for modern code because it works the same way on Windows, Linux, and macOS.
+
+### 10.6.3 Path Information
+
+Check whether a path exists and inspect its properties.
 
 | Operation | `os` style | `pathlib` style |
 |-----------|-----------|-----------------|
 | Check exists | `os.path.exists(p)` | `Path(p).exists()` |
-| Read text | `open(p).read()` | `Path(p).read_text()` |
-| Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
+| Is file? | `os.path.isfile(p)` | `Path(p).is_file()` |
+| Is directory? | `os.path.isdir(p)` | `Path(p).is_dir()` |
+| Get size | `os.path.getsize(p)` | `Path(p).stat().st_size` |
+| Get modification time | `os.path.getmtime(p)` | `Path(p).stat().st_mtime` |
+| Full metadata | `os.stat(p)` | `Path(p).stat()` |
+
+```python
+import os
+from pathlib import Path
+
+# Existence checks
+os.path.exists("file.txt")
+Path("file.txt").exists()
+
+# Metadata
+print(os.path.getsize("file.txt"))
+print(os.path.getmtime("file.txt"))
+
+stat = os.stat("file.txt")
+print(stat.st_size)   # Size in bytes
+print(stat.st_mtime)  # Last modification timestamp
+```
+
+### 10.6.4 pathlib File Operations
+
+`pathlib` can also read, write, and list files without calling `open()` directly.
+
+| Operation | `pathlib` style |
+|-----------|-----------------|
+| Read text | `Path(p).read_text()` |
+| Write text | `Path(p).write_text(s)` |
+| Read bytes | `Path(p).read_bytes()` |
+| Write bytes | `Path(p).write_bytes(b)` |
+| List directory | `Path(dir).iterdir()` |
+| Pattern match | `Path(dir).glob("*.txt")` |
 
 ```python
 from pathlib import Path
@@ -775,64 +805,32 @@ from pathlib import Path
 file_path = Path("data") / "output.txt"
 file_path.write_text("Hello, pathlib!")
 content = file_path.read_text()
-```
 
-### 10.7.3 Directory Iteration
-
-| Operation | `pathlib` style |
-|-----------|-----------------|
-| List files | `Path(dir).iterdir()` |
-| Pattern match | `Path(dir).glob("*.txt")` |
-
-```python
-from pathlib import Path
-
-data_dir = Path("data")
-for txt_file in data_dir.glob("*.txt"):
+# Iterate directory
+for txt_file in Path("data").glob("*.txt"):
     print(txt_file.name)
 ```
 
-## 10.8 File Existence and Metadata
+### 10.6.5 `os.path` vs `pathlib`
 
-### 10.8.1 Existence Checks
+| Operation | `os.path` | `pathlib` |
+|-----------|-----------|-----------|
+| Join paths | `os.path.join(a, b)` | `Path(a) / b` |
+| Check exists | `os.path.exists(p)` | `Path(p).exists()` |
+| Is file? | `os.path.isfile(p)` | `Path(p).is_file()` |
+| Get size | `os.path.getsize(p)` | `Path(p).stat().st_size` |
+| Read text | `open(p).read()` | `Path(p).read_text()` |
+| Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
+| List directory | `os.listdir(dir)` | `Path(dir).iterdir()` |
+| Pattern match | `glob.glob("*.txt")` | `Path(dir).glob("*.txt")` |
 
-| Function | Purpose |
-|----------|---------|
-| `os.path.exists(path)` | Check if path exists |
-| `Path(path).exists()` | Same, using `pathlib` |
+Both work, but `pathlib` is the modern, object-oriented approach.
 
-```python
-import os
-from pathlib import Path
-
-os.path.exists("file.txt")
-Path("file.txt").exists()
-```
-
-### 10.8.2 Metadata Methods
-
-| Function | Purpose |
-|----------|---------|
-| `os.path.getsize(path)` | File size in bytes |
-| `os.path.getmtime(path)` | Last modification timestamp |
-| `os.stat(path)` | Full stat object |
-
-```python
-import os
-
-print(os.path.getsize("file.txt"))
-print(os.path.getmtime("file.txt"))
-
-stat = os.stat("file.txt")
-print(stat.st_size)
-print(stat.st_mtime)
-```
-
-## 10.9 Temporary Files
+## 10.7 Temporary Files
 
 Use the `tempfile` module for short-lived files.
 
-### 10.9.1 `tempfile` Functions
+### 10.7.1 `tempfile` Functions
 
 | Function | Purpose |
 |----------|---------|
@@ -852,11 +850,11 @@ with tempfile.TemporaryDirectory() as tmpdir:
     print(tmpdir)       # Path to temp directory
 ```
 
-## 10.10 Common File Errors
+## 10.8 Common File Errors
 
 File operations often fail for predictable reasons. Handle them explicitly instead of letting the program crash.
 
-### 10.10.1 Error Types and Handling
+### 10.8.1 Error Types and Handling
 
 | Error | Cause | Typical Fix |
 |-------|-------|-------------|
