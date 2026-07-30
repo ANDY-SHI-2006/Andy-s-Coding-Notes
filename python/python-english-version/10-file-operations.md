@@ -461,6 +461,18 @@ json_str = json.dumps(data, ensure_ascii=False)
 # '{"name": "Alice", "age": 25}'
 ```
 
+**`ensure_ascii` parameter:**
+
+- `True` (default): non-ASCII characters are escaped as `\uXXXX` sequences, so the output is pure ASCII.
+- `False`: non-ASCII characters are written as-is, which is more readable for Chinese and other Unicode text.
+
+```python
+data = {"name": "中文"}
+
+json.dumps(data)                      # '{"name": "\\u4e2d\\u6587"}'
+json.dumps(data, ensure_ascii=False)  # '{"name": "中文"}'
+```
+
 #### 10.4.1.2 `json.loads()`
 
 | Function | Purpose |
