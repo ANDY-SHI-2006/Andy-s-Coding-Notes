@@ -371,6 +371,26 @@ c.radius = 10           # Uses setter
 print(c.area)           # 314.159
 ```
 
+**Read-only property example:**
+
+A property without a setter is read-only. This is useful for computed values that depend on other attributes.
+
+```python
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    @property
+    def area(self):
+        return self.width * self.height
+
+r = Rectangle(4, 5)
+print(r.area)   # 20
+
+# r.area = 100  # AttributeError: can't set attribute
+```
+
 **Important: `@<name>.setter` requires `@property` first.**
 
 You cannot define a setter without first defining the corresponding getter with `@property`. Python needs to know the property exists before it can attach a setter to it.
