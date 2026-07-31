@@ -2,6 +2,12 @@
 
 # 14 Exception Handling
 
+An **exception** is an event that disrupts the normal flow of a program. Examples include dividing by zero, opening a missing file, or passing an invalid value to a function. If an exception is not handled, the program prints an error message and stops.
+
+**Exception handling** lets you catch these events, decide what to do, and keep the program running or fail gracefully. The main tool is the `try/except` block: code inside `try` is watched for errors, and `except` blocks define how to respond to specific errors.
+
+Good exception handling makes code more robust and easier to debug by separating normal logic from error handling.
+
 ## 14.1 Common Exceptions
 
 | Exception | Cause |
