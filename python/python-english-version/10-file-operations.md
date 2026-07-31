@@ -1079,6 +1079,13 @@ for json_file in data_dir.glob("*.json"):
 # records_backup.json
 ```
 
+**Key difference in return types:**
+
+- `os.listdir()` returns a list of **strings** (entry names).
+- `Path.iterdir()` yields **Path objects**, which is why the example uses `.name` to extract the entry name.
+
+Similarly, `glob.glob()` returns strings, while `Path.glob()` yields Path objects.
+
 ### 10.6.8 `os.path` vs `pathlib`
 
 All the operations above can be done with either module. `pathlib` is the modern, object-oriented approach.
