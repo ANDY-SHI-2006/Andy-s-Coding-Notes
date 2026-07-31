@@ -675,4 +675,53 @@ p = Point(1, 2)
 
 **Trade-off:** `__slots__` removes `__dict__`, saving memory but preventing dynamic attribute assignment.
 
+## 12.15 Composition vs Inheritance
+
+Inheritance is useful for "is-a" relationships: a `Dog` *is an* `Animal`. Composition is better for "has-a" relationships: a `Car` *has an* `Engine`.
+
+In composition, an object contains other objects as attributes and delegates work to them. This often produces more flexible code than deep inheritance hierarchies.
+
+**Inheritance approach:**
+
+```python
+class ElectricVehicle:
+    def move(self):
+        print("Moving on electric power")
+
+class ElectricCar(ElectricVehicle):
+    pass
+```
+
+**Composition approach:**
+
+```python
+class ElectricEngine:
+    def move(self):
+        print("Moving on electric power")
+
+class Car:
+    def __init__(self):
+        self.engine = ElectricEngine()
+
+    def move(self):
+        self.engine.move()
+
+c = Car()
+c.move()   # Moving on electric power
+```
+
+**When to prefer composition:**
+
+- The relationship is "has-a" rather than "is-a".
+- You want to change behavior at runtime by swapping components.
+- You want to avoid fragile base classes and tight coupling.
+
+**When to use inheritance:**
+
+- The relationship is genuinely "is-a".
+- Subclasses need to reuse and specialize most of the parent behavior.
+- The hierarchy is shallow and stable.
+
+A common guideline: **favor composition over inheritance** when you are unsure.
+
 [← Previous: Advanced Functions](11-advanced-functions.md) | [Next: Closures and Decorators →](13-closures-and-decorators.md)
