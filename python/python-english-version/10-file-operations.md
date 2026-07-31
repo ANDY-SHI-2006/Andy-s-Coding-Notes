@@ -1145,6 +1145,18 @@ File operations often fail for predictable reasons. Handle them explicitly inste
 | `UnicodeDecodeError` | Wrong encoding | Specify `encoding="utf-8"` or detect encoding |
 | `IsADirectoryError` | Tried to open a directory as a file | Use `os.listdir()` or `Path.iterdir()` instead |
 
+All of the above inherit from `OSError`, so you can catch them together when the specific type does not matter:
+
+```python
+try:
+    with open("data.txt", encoding="utf-8") as f:
+        content = f.read()
+except OSError:
+    print("Failed to read the file.")
+```
+
+Catching specific exceptions is usually better because it lets you give a precise error message or recovery action.
+
 ```python
 try:
     with open("missing.txt", encoding="utf-8") as f:
@@ -1156,5 +1168,19 @@ except PermissionError:
 except UnicodeDecodeError:
     print("Encoding mismatch — try a different encoding.")
 ```
+
+**Defensive check:** If you are not sure a file exists, check first or use `Path`:
+
+```python
+from pathlib import Path
+
+p = Path("data.txt")
+if p.exists():
+    content = p.read_text(encoding="utf-8")
+else:
+    print("File does not exist.")
+```
+
+For the `try/except` statement itself, see [07.4 Exception Handling](07-control-flow.md#74-exception-handling).
 
 [← Previous: Functions](09-functions.md) | [Next: Advanced Functions →](11-advanced-functions.md)
