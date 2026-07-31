@@ -261,9 +261,20 @@ def divide(a, b):
 
 # Use for internal logic validation
 class Stack:
+    def __init__(self):
+        self.items = []
+
+    def push(self, item):
+        self.items.append(item)
+
     def pop(self):
         assert len(self.items) > 0, "Stack is empty"  # Should not happen if used correctly
         return self.items.pop()
+
+s = Stack()
+s.push(1)
+print(s.pop())   # 1
+# s.pop()        # AssertionError: Stack is empty
 ```
 
 **Assertion vs Exception:**
