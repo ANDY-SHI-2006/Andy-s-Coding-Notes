@@ -305,6 +305,27 @@ def my_function():
 # my_function = decorator_b(decorator_a(my_function))
 ```
 
+**Order matters when decorators transform the same object.** The decorator closest to the method runs first. For example, to make an abstract property you must write `@property` above `@abstractmethod`, because `@abstractmethod` needs to wrap the property object returned by `@property`.
+
+```python
+from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
+    @property
+    @abstractmethod
+    def wheels(self):
+        pass
+
+class Bicycle(Vehicle):
+    @property
+    def wheels(self):
+        return 2
+
+print(Bicycle().wheels)   # 2
+```
+
+If you reverse the order (`@abstractmethod` above `@property`), the method is still an ordinary function when `@abstractmethod` runs, so the resulting object will not be a property.
+
 ### 13.4.2 Parametric Decorators
 
 A parametric decorator is a decorator that accepts its own arguments. Because `@decorator(arg)` is executed before the function is defined, it must return another decorator that then wraps the function. This requires an extra factory layer.
