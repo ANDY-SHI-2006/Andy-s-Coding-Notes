@@ -12,7 +12,7 @@ Python is **dynamically typed** — a variable's type is determined at runtime, 
 
 Think of type annotations as **high-quality comments that machines can read**.
 
-## 16.1 Basic Syntax
+## 17.1 Basic Syntax
 
 Attach a type to a name with a colon `:`.
 
@@ -41,7 +41,7 @@ def log(message: str) -> None:
 | `-> str` | Function return | This function returns a `str` |
 | `-> None` | Function return | This function returns nothing |
 
-## 16.2 Common Types
+## 17.2 Common Types
 
 **Basic types:** `int`, `float`, `str`, `bool`, `None`
 
@@ -120,7 +120,7 @@ class Point:
 p = Point(3, 4)  # __init__ generated automatically from annotations
 ```
 
-## 16.3 Runtime Behavior
+## 17.3 Runtime Behavior
 
 Type hints are **not enforced** at runtime. The interpreter ignores them completely.
 
