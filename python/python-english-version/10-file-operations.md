@@ -1095,25 +1095,44 @@ All the operations above can be done with either module, but they represent two 
 
 ### 10.7.1 Temporary Files
 
-Use the `tempfile` module for short-lived files.
+Use the `tempfile` module for short-lived files and directories that are cleaned up automatically.
 
 | Function | Purpose |
 |----------|---------|
-| `NamedTemporaryFile(...)` | Create a temporary file |
+| `TemporaryFile(...)` | Create an unnamed temporary file (no visible path) |
+| `NamedTemporaryFile(...)` | Create a temporary file with a visible path |
 | `TemporaryDirectory()` | Create a temporary directory |
+
+Common parameters:
+
+| Parameter | Meaning |
+|-----------|---------|
+| `mode` | File mode such as `"w"`, `"wb"` |
+| `suffix` | Filename suffix such as `".txt"` |
+| `prefix` | Filename prefix |
+| `dir` | Directory where the temporary file is created |
+| `delete` | For `NamedTemporaryFile`, delete on close (`True` by default) |
 
 ```python
 import tempfile
 
-# Temporary file (auto-deleted when closed)
-with tempfile.NamedTemporaryFile(mode="w", delete=True) as f:
+# Unnamed temporary file (no file path, auto-deleted when closed)
+with tempfile.TemporaryFile(mode="w+") as f:
     f.write("temporary data")
-    print(f.name)       # Path to temp file
+    f.seek(0)
+    print(f.read())     # temporary data
+
+# Named temporary file (has a path, auto-deleted by default)
+with tempfile.NamedTemporaryFile(mode="w", delete=True, suffix=".txt") as f:
+    f.write("temporary data")
+    print(f.name)       # C:\Users\Andy\AppData\Local\Temp\tmp<random>.txt
 
 # Temporary directory
 with tempfile.TemporaryDirectory() as tmpdir:
-    print(tmpdir)       # Path to temp directory
+    print(tmpdir)       # C:\Users\Andy\AppData\Local\Temp\tmp<random>
 ```
+
+**Note:** `TemporaryFile` is safer when you only need a file-like object, because it has no visible path on most systems. Use `NamedTemporaryFile` only when another program or API needs to access the file by path.
 
 ### 10.7.2 Common File Errors
 
