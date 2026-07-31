@@ -2,6 +2,16 @@
 
 # 12 Object-Oriented Programming
 
+Object-oriented programming (OOP) is a way to organize code by grouping related data and behavior into **classes**. A class is a blueprint; from it you create **objects** (also called **instances**).
+
+The core ideas of OOP are:
+
+- **Encapsulation:** Bundle data (attributes) and behavior (methods) together, and control access to internal state.
+- **Inheritance:** Create new classes based on existing ones, reusing and extending behavior.
+- **Polymorphism:** Use different objects through a common interface, so the same code can work with different types.
+
+Classes in Python are defined with the `class` keyword. Methods are functions defined inside a class; the first parameter is usually `self`, which refers to the instance being operated on.
+
 ## 12.1 Class Attributes
 
 | Feature | Description |
