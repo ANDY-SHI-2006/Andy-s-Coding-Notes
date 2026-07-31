@@ -1091,7 +1091,9 @@ All the operations above can be done with either module, but they represent two 
 
 `pathlib` is generally recommended for modern Python code because paths are objects with methods like `.exists()`, `.read_text()`, and `.glob()`, rather than strings passed through multiple function calls.
 
-## 10.7 Temporary Files
+## 10.7 Practical File Handling
+
+### 10.7.1 Temporary Files
 
 Use the `tempfile` module for short-lived files.
 
@@ -1113,7 +1115,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     print(tmpdir)       # Path to temp directory
 ```
 
-## 10.8 Common File Errors
+### 10.7.2 Common File Errors
 
 File operations often fail for predictable reasons. Handle them explicitly instead of letting the program crash.
 
