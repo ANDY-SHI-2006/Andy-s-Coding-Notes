@@ -84,7 +84,7 @@ class Student:
 
     def __init__(self, name):
         self.name = name
-        Student.count += 1
+        self.__class__.count += 1    # Update the class attribute through the instance
 
     @classmethod
     def get_count(cls):         # Class method
