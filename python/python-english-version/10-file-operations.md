@@ -945,7 +945,48 @@ print(records.stat().st_size)        # 28
 print(records.stat().st_mtime)       # 1712345678.0
 ```
 
-### 10.6.5 File Operations
+### 10.6.5 Creating and Deleting Files/Directories
+
+Create and remove directories and files using either module.
+
+| Operation | `os` style | `pathlib` style |
+|-----------|-----------|-----------------|
+| Create a directory | `os.mkdir(path)` | `Path(path).mkdir()` |
+| Create nested directories | `os.makedirs(path)` | `Path(path).mkdir(parents=True)` |
+| Remove a file | `os.remove(path)` | `Path(path).unlink()` |
+| Remove an empty directory | `os.rmdir(path)` | `Path(path).rmdir()` |
+
+**Using `os`:**
+
+```python
+import os
+
+# Create a directory and nested directories
+os.mkdir("reports")
+os.makedirs("reports/2024/sales")
+
+# Remove a file and an empty directory
+os.remove("temp.txt")
+os.rmdir("reports/2024/sales")  # directory must be empty
+```
+
+**Using `pathlib`:**
+
+```python
+from pathlib import Path
+
+# Create a directory and nested directories
+Path("reports").mkdir()
+Path("reports/2024/sales").mkdir(parents=True)
+
+# Remove a file and an empty directory
+Path("temp.txt").unlink()
+Path("reports/2024/sales").rmdir()  # directory must be empty
+```
+
+**Note:** `os.makedirs()` and `Path.mkdir(parents=True)` create all missing parent directories. `os.remove()` / `Path.unlink()` delete files permanently, not move them to the trash.
+
+### 10.6.6 File Operations
 
 Read from and write to the records file.
 
@@ -987,7 +1028,7 @@ print(content)        # {"name": "Alice", "age": 25}
 records.write_text('{"name": "Bob", "age": 30}', encoding="utf-8")
 ```
 
-### 10.6.6 Directory Iteration
+### 10.6.7 Directory Iteration
 
 List all files in the `data` directory and match JSON files.
 
@@ -1038,7 +1079,7 @@ for json_file in data_dir.glob("*.json"):
 # records_backup.json
 ```
 
-### 10.6.7 `os.path` vs `pathlib`
+### 10.6.8 `os.path` vs `pathlib`
 
 All the operations above can be done with either module. `pathlib` is the modern, object-oriented approach.
 
