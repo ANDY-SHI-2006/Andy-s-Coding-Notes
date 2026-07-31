@@ -391,33 +391,9 @@ print(r.area)   # 20
 # r.area = 100  # AttributeError: can't set attribute
 ```
 
-**Important: `@<name>.setter` requires `@property` first.**
+**Important:** `@<name>.setter` requires a matching `@property` getter to be defined first. For the reason and a concrete error example, see [13.5.1.5 Why the Setter Needs the Getter First](13-closures-and-decorators.md#13515-why-the-setter-needs-the-getter-first).
 
-You cannot define a setter without first defining the corresponding getter with `@property`. Python needs to know the property exists before it can attach a setter to it.
-
-```python
-class BankAccount:
-    def __init__(self, balance):
-        self._balance = balance
-
-    @property
-    def balance(self):
-        return self._balance
-
-    # OK: balance.setter follows balance.property
-    @balance.setter
-    def balance(self, value):
-        if value < 0:
-            raise ValueError("Balance cannot be negative")
-        self._balance = value
-
-    # ERROR without @property first:
-    # @pin.setter      # AttributeError: 'function' object has no attribute 'setter'
-    # def pin(self, value):
-    #     self._pin = value
-```
-
-**Best practice:** Use the same method name for both `@property` getter and `@<name>.setter`. This ensures consistency and makes the property behave like a real attribute.
+**Best practice:** Use the same method name for the `@property` getter and `@<name>.setter` so the property behaves like a real attribute.
 
 ## 12.11 Duck Typing and Polymorphism
 
