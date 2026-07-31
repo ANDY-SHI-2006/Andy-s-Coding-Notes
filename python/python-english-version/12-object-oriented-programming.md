@@ -631,7 +631,7 @@ print(Bicycle().wheels)   # 2
 print(Car().wheels)       # 4
 ```
 
-**Order matters:** The decorator closest to the method runs first, so write `@property` above `@abstractmethod`.
+For why `@property` must be written above `@abstractmethod` and what happens if you reverse the order, see [13.4.1 Stacked Decorators](13-closures-and-decorators.md#1341-stacked-decorators).
 
 ## 12.14 `__slots__`
 
