@@ -1095,8 +1095,6 @@ All the operations above can be done with either module, but they represent two 
 
 Use the `tempfile` module for short-lived files.
 
-### 10.7.1 `tempfile` Functions
-
 | Function | Purpose |
 |----------|---------|
 | `NamedTemporaryFile(...)` | Create a temporary file |
