@@ -532,6 +532,34 @@ p = Person("Alice")
 del p.name          # Calls the deleter
 ```
 
+#### 13.5.1.5 Why the Setter Needs the Getter First
+
+You cannot define `@attr.setter` without first defining the corresponding getter with `@property`. Python needs to know the property exists before it can attach a setter or deleter to it.
+
+```python
+class BankAccount:
+    def __init__(self, balance):
+        self._balance = balance
+
+    @property
+    def balance(self):
+        return self._balance
+
+    # OK: balance.setter follows balance.property
+    @balance.setter
+    def balance(self, value):
+        if value < 0:
+            raise ValueError("Balance cannot be negative")
+        self._balance = value
+
+    # ERROR without @property first:
+    # @pin.setter      # AttributeError: 'function' object has no attribute 'setter'
+    # def pin(self, value):
+    #     self._pin = value
+```
+
+**Best practice:** Use the same method name for the `@property` getter, `@<name>.setter`, and `@<name>.deleter`. This makes the property behave like a real attribute.
+
 ### 13.5.2 `@classmethod`
 
 A `@classmethod` receives the class itself as the first argument (`cls`) instead of an instance. It is commonly used to create alternative constructors or factory methods.
