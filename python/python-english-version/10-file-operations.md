@@ -982,7 +982,7 @@ Path("reports/2024/sales").rmdir()  # directory must be empty
 
 Read from and write to the records file.
 
-| Operation | `os` style | `pathlib` style |
+| Operation | Using `open()` | `pathlib` style |
 |-----------|-----------|-----------------|
 | Read text | `open(p).read()` | `Path(p).read_text()` |
 | Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
