@@ -1183,4 +1183,38 @@ else:
 
 For the `try/except` statement itself, see [07.4 Exception Handling](07-control-flow.md#74-exception-handling).
 
+### 10.7.3 Copying and Moving Files with `shutil`
+
+The `shutil` module provides high-level operations for copying, moving, and removing entire file trees. These are more convenient than writing the loops yourself.
+
+| Function | Purpose |
+|----------|---------|
+| `shutil.copy(src, dst)` | Copy a file. Preserves basic permissions. |
+| `shutil.copy2(src, dst)` | Copy a file. Preserves metadata such as modification time. |
+| `shutil.copytree(src, dst)` | Copy an entire directory tree. |
+| `shutil.move(src, dst)` | Move a file or directory. |
+| `shutil.rmtree(path)` | Delete an entire directory tree. |
+
+```python
+import shutil
+from pathlib import Path
+
+# Copy a file
+shutil.copy("data/records.json", "data/records_copy.json")
+
+# Copy a file and preserve metadata
+shutil.copy2("data/records.json", "data/records_copy2.json")
+
+# Copy an entire directory tree
+shutil.copytree("data", "data_backup")
+
+# Move a file or directory
+shutil.move("data/records_copy.json", "archive/records_copy.json")
+
+# Delete a directory and everything inside it
+shutil.rmtree("data_backup")
+```
+
+**Note:** `shutil.rmtree()` permanently deletes directories and cannot be undone; use it with care. For safer deletion, move files to the trash using a third-party library such as `send2trash`.
+
 [← Previous: Functions](09-functions.md) | [Next: Advanced Functions →](11-advanced-functions.md)
