@@ -1117,8 +1117,6 @@ with tempfile.TemporaryDirectory() as tmpdir:
 
 File operations often fail for predictable reasons. Handle them explicitly instead of letting the program crash.
 
-### 10.8.1 Error Types and Handling
-
 | Error | Cause | Typical Fix |
 |-------|-------|-------------|
 | `FileNotFoundError` | Path does not exist | Check path or use `Path.exists()` first |
