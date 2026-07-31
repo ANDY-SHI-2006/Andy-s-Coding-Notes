@@ -354,4 +354,32 @@ def process(obj: "SomeClass") -> None:
     ...
 ```
 
+## 15.9 Reloading Modules with `importlib`
+
+Once a module is imported, Python caches it in `sys.modules`. Editing the source file and importing again does **not** reload the changed code. Use `importlib.reload()` to force a fresh load.
+
+```python
+import importlib
+import my_module
+
+# After editing my_module.py
+importlib.reload(my_module)
+```
+
+**Use cases:**
+- Long-running programs (e.g., web servers, game loops, data science notebooks).
+- Hot-swapping plugin modules.
+
+**Caveats:**
+- `reload()` only updates the module object; objects already created from the old code are not automatically updated.
+- References held elsewhere may still point to old functions or classes.
+
+```python
+import importlib
+import math
+
+# Force reload of a standard library module (rarely needed)
+importlib.reload(math)
+```
+
 [← Previous: Exception Handling](14-exception-handling.md) | [Next: functools →](16-functools.md)
