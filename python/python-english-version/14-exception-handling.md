@@ -137,6 +137,40 @@ finally:
 3. If no exception → `else` executes
 4. `finally` always executes last
 
+### 14.3.3 `finally` Use Cases
+
+Use `finally` for cleanup that must happen regardless of whether an error occurred.
+
+**Closing a resource manually:**
+
+```python
+f = open("data.txt", "r", encoding="utf-8")
+try:
+    content = f.read()
+    process(content)
+except FileNotFoundError:
+    print("File not found")
+finally:
+    f.close()           # Always runs
+```
+
+**Resetting state:**
+
+```python
+is_busy = False
+
+def perform_task():
+    global is_busy
+    is_busy = True
+    try:
+        # do work that might fail
+        risky_operation()
+    finally:
+        is_busy = False   # Always reset the flag
+```
+
+For most file and resource cleanup, `with` is preferred because it automatically generates the equivalent `try/finally` block.
+
 ## 14.4 Best Practices
 
 ### 14.4.1 Be Specific
