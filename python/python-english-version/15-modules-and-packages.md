@@ -316,4 +316,42 @@ printer.pprint(data)
 
 **When to use:** Any time you need to inspect nested data structures during debugging.
 
+## 15.8 Circular Imports
+
+A **circular import** happens when two modules import each other. Python partially loads the first module, then tries to load the second, which asks for the first again. The first module may not be fully initialized yet, so the second module may see incomplete or `None` names.
+
+### 15.8.1 Example of the Problem
+
+```python
+# a.py
+from b import func_b
+
+def func_a():
+    return "A"
+
+# b.py
+from a import func_a
+
+def func_b():
+    return func_a()
+```
+
+Running `a.py` can fail or behave unexpectedly because `a` is not finished loading when `b` imports from it.
+
+### 15.8.2 How to Avoid Circular Imports
+
+- **Restructure code:** Move shared code into a third module that both modules import.
+- **Delay imports:** Import inside a function instead of at the top level when the dependency is only needed at runtime.
+- **Use `if TYPE_CHECKING`:** For type hints only, import under a `typing.TYPE_CHECKING` guard so it does not run at import time.
+
+```python
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from other_module import SomeClass
+
+def process(obj: "SomeClass") -> None:
+    ...
+```
+
 [← Previous: Exception Handling](14-exception-handling.md) | [Next: functools →](16-functools.md)
