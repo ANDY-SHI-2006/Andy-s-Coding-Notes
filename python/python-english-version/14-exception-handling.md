@@ -291,19 +291,19 @@ with open("file.txt") as f:
     content = f.read()
 ```
 
-### Custom Context Manager
+### 14.7.1 Custom Context Manager
 
 Implement `__enter__` and `__exit__`.
 
 ```python
+import time
+
 class Timer:
     def __enter__(self):
-        import time
         self.start = time.time()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        import time
         elapsed = time.time() - self.start
         print(f"Elapsed: {elapsed:.2f}s")
 
@@ -312,7 +312,7 @@ with Timer():
     sum(range(1000000))
 ```
 
-### `contextlib.contextmanager`
+### 14.7.2 `contextlib.contextmanager`
 
 Simpler way to write context managers using generators.
 
