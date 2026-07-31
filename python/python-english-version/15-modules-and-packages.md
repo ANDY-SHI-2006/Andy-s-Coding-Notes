@@ -1,10 +1,12 @@
 [← Previous: Exception Handling](14-exception-handling.md) | [Next: functools →](16-functools.md)
 
-# 12 Modules and Packages
+# 15 Modules and Packages
 
-## 12.1 Importing Modules
+A **module** is a single `.py` file containing Python code (variables, functions, classes). A **package** is a directory that groups related modules together, usually with an `__init__.py` file. Modules and packages let you organize code into reusable, manageable pieces.
 
-### 12.1.1 Basic Import
+## 15.1 Importing Modules
+
+### 15.1.1 Basic Import
 
 Use `import` to load a module. Use `from ... import` to load specific names.
 
@@ -21,7 +23,7 @@ import numpy as np
 from datetime import datetime as dt
 ```
 
-### 12.1.2 Import Rules
+### 15.1.2 Import Rules
 
 | Syntax | Effect | Recommendation |
 |--------|--------|----------------|
@@ -42,7 +44,7 @@ from typing import Optional
 from math import *   # sqrt, pi, sin, cos... all dumped into global namespace
 ```
 
-## 12.2 Module Search Path
+## 15.3 Module Search Path
 
 Python searches for modules in this order:
 
@@ -56,7 +58,7 @@ import sys
 print(sys.path)   # List of search directories
 ```
 
-## 12.3 `__name__ == "__main__"`
+## 15.4 `__name__ == "__main__"`
 
 Code inside this guard only runs when the file is executed directly, not when imported as a module.
 
@@ -73,7 +75,7 @@ if __name__ == "__main__":
 
 **Best Practice:** Always wrap executable code in `if __name__ == "__main__":` to make modules reusable.
 
-## 12.4 pip and PyPI
+## 15.5 pip and PyPI
 
 `pip` is Python's package installer. PyPI (Python Package Index) is the public repository.
 
@@ -100,7 +102,7 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
-## 12.5 Virtual Environments
+## 15.6 Virtual Environments
 
 A virtual environment is an isolated Python environment for each project.
 
@@ -120,11 +122,11 @@ deactivate
 
 **Why use venv?** Different projects may need different versions of the same package. Venv prevents version conflicts.
 
-## 12.6 Standard Library Quick Reference
+## 15.7 Standard Library Quick Reference
 
 Python's standard library is extensive. Below are the most commonly used modules.
 
-### 12.6.1 `os` — Operating System Interface
+### 15.7.1 `os` — Operating System Interface
 
 ```python
 import os
@@ -142,7 +144,7 @@ os.remove("file.txt")    # Delete file
 os.system("python --version")   # Runs command in subshell
 ```
 
-### 12.6.2 `sys` — System-Specific Parameters
+### 15.7.2 `sys` — System-Specific Parameters
 
 ```python
 import sys
@@ -154,7 +156,7 @@ sys.platform      # Platform identifier ('win32', 'darwin', 'linux')
 sys.version       # Python version information string
 ```
 
-### 12.6.3 `datetime` — Date and Time
+### 15.7.3 `datetime` — Date and Time
 
 ```python
 from datetime import datetime, timedelta
@@ -170,7 +172,7 @@ future = now + timedelta(days=7)
 print(future)
 ```
 
-### 12.6.4 `random` — Random Numbers
+### 15.7.4 `random` — Random Numbers
 
 ```python
 import random
@@ -197,7 +199,7 @@ random.sample(elements, k=2)   # Example: ['C', 'A']
 | `choices()` | With | Allowed | Yes | Lottery, weighted selection |
 | `sample()` | Without | Not allowed | No | Draw without replacement |
 
-### 12.6.5 `re` — Regular Expressions
+### 15.7.5 `re` — Regular Expressions
 
 ```python
 import re
@@ -209,7 +211,7 @@ re.findall(r"\d+", "a1b2c3")   # Find all matches: ['1', '2', '3']
 re.sub(r"\d+", "X", "a1b2")    # Replace: 'aXbX'
 ```
 
-### 12.6.6 `pprint` — Pretty Printing
+### 15.7.6 `pprint` — Pretty Printing
 
 The `pprint` module formats complex data structures (especially nested dicts and lists) with automatic indentation and line wrapping, making them far more readable than standard `print()`.
 
