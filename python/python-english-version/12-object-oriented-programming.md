@@ -286,6 +286,29 @@ s.cook()
 
 **Rule of thumb:** Call `super().method()` when you want to *extend* parent behavior. Omit it when you want to *completely replace* it.
 
+**Complete replacement example:**
+
+```python
+class Chef:
+    def cook(self):
+        print("Heat pan")
+        print("Add ingredients")
+        print("Simmer")
+
+class MicrowaveChef(Chef):
+    def cook(self):
+        # Do not call super().cook() — replace the entire process
+        print("Pierce film lid")
+        print("Microwave on high for 3 minutes")
+        print("Let stand for 1 minute")
+
+m = MicrowaveChef()
+m.cook()
+# Pierce film lid
+# Microwave on high for 3 minutes
+# Let stand for 1 minute
+```
+
 ## 12.9 Encapsulation
 
 Python uses naming conventions to indicate intended visibility.
