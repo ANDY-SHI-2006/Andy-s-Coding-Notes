@@ -883,8 +883,8 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
 
-print(records)        # project\data\records.json (Windows)
-                      # project/data/records.json (Linux/macOS)
+print(records)        # C:\Users\Andy\project\data\records.json (Windows)
+                      # /home/andy/project/data/records.json (Linux/macOS)
 ```
 
 **Using `pathlib`:**
@@ -895,8 +895,8 @@ from pathlib import Path
 script_dir = Path(__file__).resolve().parent
 records = script_dir.parent / "data" / "records.json"
 
-print(records)        # project\data\records.json (Windows)
-                      # project/data/records.json (Linux/macOS)
+print(records)        # C:\Users\Andy\project\data\records.json (Windows)
+                      # /home/andy/project/data/records.json (Linux/macOS)
 ```
 
 Using `Path` with `/` is recommended for modern code because it works the same way on Windows, Linux, and macOS.
