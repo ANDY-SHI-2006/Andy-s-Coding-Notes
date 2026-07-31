@@ -822,43 +822,17 @@ python demo.py
 - `cwd` is `project/scripts/`.
 - The script looks for `project/scripts/data/records.json`, which does not exist. ❌
 
-This is why production code should not rely on the current working directory to locate resource files.
+This is why production code should locate resource files relative to the **script directory** instead of the current working directory.
 
-#### 10.6.1.4 Best Practice: Locate Files Relative to the Script
-
-Build the path to resource files relative to the script directory instead of the working directory. This makes the script work no matter where it is launched from.
-
-**Using `os`:**
-
-```python
-import os
-
-script_dir = os.path.dirname(os.path.abspath(__file__))
-records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
-
-with open(records, encoding="utf-8") as f:
-    content = f.read()
-```
-
-**Using `pathlib`:**
-
-```python
-from pathlib import Path
-
-script_dir = Path(__file__).resolve().parent
-records = script_dir.parent / "data" / "records.json"
-
-with open(records, encoding="utf-8") as f:
-    content = f.read()
-```
-
-#### 10.6.1.5 Note on `__file__`
+#### 10.6.1.4 Note on `__file__`
 
 `__file__` is only available when running a saved script. It does not work in interactive shells or REPL, because there is no script file in those environments.
 
 ### 10.6.2 Path Construction
 
-Build a path to `data/records.json` relative to the script directory. From `project/scripts/demo.py`, the `data` directory is one level up.
+Because relative paths are resolved from the current working directory, production code should locate resource files relative to the **script directory**. This makes the script work no matter where it is launched from.
+
+Build a path to `data/records.json` from `project/scripts/demo.py`. The `data` directory is one level up.
 
 | Operation | `os` style | `pathlib` style |
 |-----------|-----------|-----------------|
@@ -875,6 +849,9 @@ records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"
 
 print(records)        # C:\Users\Andy\project\data\records.json (Windows)
                       # /home/andy/project/data/records.json (Linux/macOS)
+
+with open(records, encoding="utf-8") as f:
+    content = f.read()
 ```
 
 **Using `pathlib`:**
@@ -887,6 +864,9 @@ records = script_dir.parent / "data" / "records.json"
 
 print(records)        # C:\Users\Andy\project\data\records.json (Windows)
                       # /home/andy/project/data/records.json (Linux/macOS)
+
+with open(records, encoding="utf-8") as f:
+    content = f.read()
 ```
 
 Using `Path` with `/` is recommended for modern code because it works the same way on Windows, Linux, and macOS.
