@@ -543,6 +543,32 @@ print(FlyingDog.__bases__)  # (<class '__main__.Dog'>, <class '__main__.CanFly'>
 
 **Note:** `__base__` only shows the *first* parent. For the complete hierarchy, use `__mro__` or `__bases__`.
 
+### 12.12.2 Mixins
+
+A **mixin** is a small class designed to add a specific behavior to other classes. It is not meant to be instantiated on its own, and it usually does not appear as the primary parent.
+
+```python
+class JSONSerializableMixin:
+    def to_json(self):
+        import json
+        return json.dumps(self.__dict__)
+
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+class Employee(Person, JSONSerializableMixin):
+    def __init__(self, name, age, role):
+        super().__init__(name, age)
+        self.role = role
+
+e = Employee("Alice", 30, "Engineer")
+print(e.to_json())   # {"name": "Alice", "age": 30, "role": "Engineer"}
+```
+
+**Mixin naming convention:** Many Python mixins use the suffix `Mixin` to signal that they provide a reusable behavior rather than representing a real-world concept.
+
 ## 12.13 Abstract Base Classes
 
 Abstract base classes (ABCs) let you define a common interface that subclasses must implement. A class inheriting from an ABC must override every abstract method; otherwise, it cannot be instantiated.
