@@ -1088,18 +1088,16 @@ Similarly, `glob.glob()` returns strings, while `Path.glob()` yields Path object
 
 ### 10.6.8 `os.path` vs `pathlib`
 
-All the operations above can be done with either module. `pathlib` is the modern, object-oriented approach.
+All the operations above can be done with either module, but they represent two different styles:
 
-| Operation | `os.path` | `pathlib` |
-|-----------|-----------|-----------|
-| Join paths | `os.path.join(a, b)` | `Path(a) / b` |
-| Check exists | `os.path.exists(p)` | `Path(p).exists()` |
-| Is file? | `os.path.isfile(p)` | `Path(p).is_file()` |
-| Get size | `os.path.getsize(p)` | `Path(p).stat().st_size` |
-| Read text | `open(p).read()` | `Path(p).read_text()` |
-| Write text | `open(p, 'w').write(s)` | `Path(p).write_text(s)` |
-| List directory | `os.listdir(dir)` | `Path(dir).iterdir()` |
-| Pattern match | `glob.glob("*.txt")` | `Path(dir).glob("*.txt")` |
+| Aspect | `os` / `os.path` | `pathlib` |
+|--------|------------------|-----------|
+| Style | String-based function calls | Object-oriented `Path` objects |
+| Path joining | `os.path.join(a, b)` | `Path(a) / b` |
+| Cross-platform | Correct, but manual | Built-in `/` operator handles separators |
+| Recommendation | Fine for simple scripts | Preferred for new code |
+
+`pathlib` is generally recommended for modern Python code because paths are objects with methods like `.exists()`, `.read_text()`, and `.glob()`, rather than strings passed through multiple function calls.
 
 ## 10.7 Temporary Files
 
