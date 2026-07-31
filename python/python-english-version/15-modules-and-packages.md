@@ -44,6 +44,74 @@ from typing import Optional
 from math import *   # sqrt, pi, sin, cos... all dumped into global namespace
 ```
 
+## 15.2 Packages
+
+A **package** is a directory that bundles related modules. It usually contains an `__init__.py` file (often empty) so Python recognizes it as a package rather than an ordinary directory.
+
+### 15.2.1 What Is a Package?
+
+Think of a package as a namespace: `graphics.shapes` groups shape-related code under the `graphics` package, keeping names organized and avoiding collisions.
+
+### 15.2.2 Package Structure
+
+```text
+my_project/
+    main.py
+    graphics/
+        __init__.py
+        shapes.py
+        colors.py
+```
+
+- `graphics/` is a package.
+- `__init__.py` tells Python it is a package.
+- `shapes.py` and `colors.py` are submodules.
+
+### 15.2.3 Importing from a Package
+
+Use dot notation to reach submodules.
+
+```python
+# Import a submodule
+import graphics.shapes
+graphics.shapes.draw_circle()
+
+# Import a specific name from a submodule
+from graphics.shapes import draw_circle
+draw_circle()
+
+# Import a submodule with an alias
+from graphics import shapes as gshapes
+gshapes.draw_circle()
+```
+
+### 15.2.4 Relative Imports
+
+Inside a package you can import sibling modules with relative dots. Use one dot for the current package, two dots for the parent package.
+
+```python
+# graphics/colors.py wants shapes.py from the same package
+from . import shapes
+
+# graphics/colors.py wants something from the parent package
+from .. import config
+```
+
+**Note:** Relative imports only work when the package is imported as a package, not when you run an individual module directly.
+
+### 15.2.5 Controlling `from package import *` with `__all__`
+
+Without `__all__`, `from package import *` imports every name that does not start with an underscore. Use `__all__` in `__init__.py` to define the public API.
+
+```python
+# graphics/__init__.py
+__all__ = ["shapes", "colors"]
+```
+
+```python
+from graphics import *   # Only brings in shapes and colors
+```
+
 ## 15.3 Module Search Path
 
 Python searches for modules in this order:
