@@ -956,12 +956,12 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 records = os.path.normpath(os.path.join(script_dir, "..", "data", "records.json"))
 
-print(os.path.getsize(records))      # e.g., 27
-print(os.path.getmtime(records))     # e.g., 1712345678.0
+print(os.path.getsize(records))      # 28
+print(os.path.getmtime(records))     # 1712345678.0
 
 stat = os.stat(records)
-print(stat.st_size)                  # e.g., 27 (size in bytes)
-print(stat.st_mtime)                 # e.g., 1712345678.0 (last modification)
+print(stat.st_size)                  # 28 (size in bytes)
+print(stat.st_mtime)                 # 1712345678.0 (last modification)
 ```
 
 **Using `pathlib`:**
@@ -971,8 +971,8 @@ from pathlib import Path
 
 records = Path(__file__).resolve().parent.parent / "data" / "records.json"
 
-print(records.stat().st_size)        # e.g., 27
-print(records.stat().st_mtime)       # e.g., 1712345678.0
+print(records.stat().st_size)        # 28
+print(records.stat().st_mtime)       # 1712345678.0
 ```
 
 ### 10.6.5 File Operations
