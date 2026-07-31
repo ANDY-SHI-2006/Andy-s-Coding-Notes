@@ -628,6 +628,35 @@ Use abstract base classes when:
 - You are designing a plugin system or framework where users must implement specific hooks.
 - You want to document the required methods of a class hierarchy explicitly.
 
+### 12.13.4 Abstract Properties
+
+You can also mark properties as abstract by stacking `@property` and `@abstractmethod`. Subclasses must then provide their own implementation of the property.
+
+```python
+from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
+    @property
+    @abstractmethod
+    def wheels(self):
+        pass
+
+class Bicycle(Vehicle):
+    @property
+    def wheels(self):
+        return 2
+
+class Car(Vehicle):
+    @property
+    def wheels(self):
+        return 4
+
+print(Bicycle().wheels)   # 2
+print(Car().wheels)       # 4
+```
+
+**Order matters:** The decorator closest to the method runs first, so write `@property` above `@abstractmethod`.
+
 ## 12.14 `__slots__`
 
 Restrict allowed attributes to save memory and prevent typos.
