@@ -797,17 +797,7 @@ print(script_dir)         # C:\Users\Andy\project\scripts
 
 If a script opens a file using a relative path, the path is resolved from the current working directory, not from the script's location. This can cause the same script to behave differently depending on where you run it.
 
-Consider this project layout:
-
-```text
-project/
-├── scripts/
-│   └── demo.py
-└── data/
-    └── records.json
-```
-
-`demo.py` contains:
+Using the project layout introduced above, `demo.py` contains:
 
 ```python
 with open("data/records.json", encoding="utf-8") as f:
