@@ -377,4 +377,55 @@ warnings.warn("This feature is deprecated", DeprecationWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 ```
 
+## 14.9 Logging Exceptions and Traceback
+
+When an exception occurs in a long-running program, printing a simple message is often not enough. The `logging` and `traceback` modules help record the full error information so you can diagnose problems later.
+
+### 14.9.1 Logging an Exception
+
+Use `logging.exception()` inside an `except` block to automatically include the traceback.
+
+```python
+import logging
+
+logging.basicConfig(level=logging.ERROR)
+
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    logging.exception("Division failed")
+```
+
+### 14.9.2 Capturing the Traceback as a String
+
+Use `traceback.format_exc()` to capture the full traceback for reporting, tests, or custom error messages.
+
+```python
+import traceback
+
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    tb = traceback.format_exc()
+    print("An error occurred. Details:")
+    print(tb)
+```
+
+**Best practice:** In production code, log exceptions with `logging.exception()` or `logging.error(..., exc_info=True)` rather than using bare `print()`. This preserves the full context needed for debugging.
+
+## 14.10 Suppressing Exception Context
+
+When you catch one exception and raise another, Python preserves the original exception as the **cause** or **context**. This is usually helpful, but sometimes you want to hide the original error to avoid confusing the user.
+
+Use `raise ... from None` to suppress the context.
+
+```python
+try:
+    int("not_a_number")
+except ValueError:
+    raise RuntimeError("Invalid configuration value") from None
+```
+
+Without `from None`, the traceback would show both the `ValueError` and the `RuntimeError`. With `from None`, only the `RuntimeError` is shown. Use this sparingly — hiding the original error makes debugging harder.
+
 [← Previous: Closures and Decorators](13-closures-and-decorators.md) | [Next: Modules and Packages →](15-modules-and-packages.md)
