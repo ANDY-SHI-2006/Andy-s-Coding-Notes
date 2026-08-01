@@ -12,7 +12,9 @@ The core ideas of OOP are:
 
 Classes in Python are defined with the `class` keyword. Methods are functions defined inside a class; the first parameter is usually `self`, which refers to the instance being operated on.
 
-## 12.1 Class Attributes
+## 12.1 Class Attributes, Instance Attributes, and Methods
+
+### 12.1.1 Class Attributes
 
 | Feature | Description |
 |---------|-------------|
@@ -29,7 +31,7 @@ s = Student()
 print(s.school)             # Access via instance
 ```
 
-## 12.2 Instance Attributes
+### 12.1.2 Instance Attributes
 
 | Feature | Description |
 |---------|-------------|
@@ -47,7 +49,7 @@ s1 = Student("Alice", 20)
 s2 = Student("Bob", 21)     # Each has independent name/age
 ```
 
-## 12.3 Instance Methods
+### 12.1.3 Instance Methods
 
 | Feature | Description |
 |---------|-------------|
