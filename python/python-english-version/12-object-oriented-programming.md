@@ -143,7 +143,7 @@ print(MathUtils.add(3, 5))      # 8 (no instance needed)
 | Can call class methods? | ✅ Yes | ✅ Yes | ❌ No |
 | Typical use | Object behavior | Factory / counters | Utility functions |
 
-## 12.6 Special Methods (Magic Methods)
+## 12.4 Special Methods (Magic Methods)
 
 | Method | Purpose | Triggered by |
 |--------|---------|--------------|
@@ -171,7 +171,7 @@ v = Vector(1, 2)
 print(v)                        # Vector(1, 2)
 ```
 
-### 12.6.1 `__repr__` vs `__str__`
+### 12.4.1 `__repr__` vs `__str__`
 
 | Method | Purpose | Called by | Fallback |
 |--------|---------|-----------|----------|
@@ -197,13 +197,13 @@ print(p)           # (1, 2)     — __str__
 print(repr(p))     # Point(1, 2) — __repr__
 ```
 
-### 12.6.2 Comparison Methods
+### 12.4.2 Comparison Methods
 
 Implement rich comparison operators (`__eq__`, `__lt__`, `__le__`, `__gt__`, `__ge__`). If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the rest automatically.
 
 For details and examples, see [16.6 `@functools.total_ordering`](16-functools.md#166-auto-generating-comparisons-with-functoolstotal_ordering).
 
-### 12.6.3 Callable Objects
+### 12.4.3 Callable Objects
 
 Make an instance callable like a function.
 
@@ -315,7 +315,7 @@ m.cook()
 # Let stand for 1 minute
 ```
 
-## 12.9 Encapsulation
+## 12.5 Encapsulation
 
 Python uses naming conventions to indicate intended visibility.
 
@@ -348,7 +348,7 @@ Unlike Java or C++, Python cannot truly hide attributes. Both `_name` and `__nam
 
 This is sometimes described as "keeping honest people honest." The goal is to communicate intent to other programmers, not to enforce security. If you need actual access control, use property getters/setters or design your API carefully.
 
-## 12.10 Property Decorator
+## 12.6 Property Decorator
 
 Expose a method as an attribute.
 
@@ -401,7 +401,7 @@ print(r.area)   # 20
 
 **Best practice:** Use the same method name for the `@property` getter and `@<name>.setter` so the property behaves like a real attribute.
 
-## 12.11 Duck Typing and Polymorphism
+## 12.7 Duck Typing and Polymorphism
 
 Python uses **duck typing**: an object's fitness for use is determined by the presence of required methods/attributes, not by its type.
 
@@ -422,7 +422,7 @@ animal_sound(Dog())   # Woof!
 animal_sound(Cat())   # Meow!
 ```
 
-### 12.11.1 Type Introspection
+### 12.7.1 Type Introspection
 
 | Function | Purpose |
 |----------|---------|
@@ -466,7 +466,7 @@ type(dog) is Mammal       # False  ← type() does NOT check inheritance
 - `isinstance(obj, Class)` → checks inheritance chain (usually preferred)
 - `type(obj) is Class` → checks exact type only (ignores inheritance)
 
-## 12.12 Multiple Inheritance and MRO
+## 12.8 Multiple Inheritance and MRO
 
 A class can inherit from multiple parents. Python uses **Method Resolution Order (C3 linearization)** to determine which method runs.
 
@@ -487,7 +487,7 @@ d.move()            # Flying — Flyer comes first in MRO
 print(Duck.__mro__) # (<class 'Duck'>, <class 'Flyer'>, <class 'Swimmer'>, <class 'object'>)
 ```
 
-### 12.12.1 Inspecting Inheritance with `__bases__` and `__base__`
+### 12.8.1 Inspecting Inheritance with `__bases__` and `__base__`
 
 Python provides special attributes on classes for introspecting their inheritance:
 
@@ -525,7 +525,7 @@ print(FlyingDog.__bases__)  # (<class '__main__.Dog'>, <class '__main__.CanFly'>
 
 **Note:** `__base__` only shows the *first* parent. For the complete hierarchy, use `__mro__` or `__bases__`.
 
-### 12.12.2 Mixins
+### 12.8.2 Mixins
 
 A **mixin** is a small class designed to add a specific behavior to other classes. It is not meant to be instantiated on its own, and it usually does not appear as the primary parent.
 
@@ -551,11 +551,11 @@ print(e.to_json())   # {"name": "Alice", "age": 30, "role": "Engineer"}
 
 **Mixin naming convention:** Many Python mixins use the suffix `Mixin` to signal that they provide a reusable behavior rather than representing a real-world concept.
 
-## 12.13 Abstract Base Classes
+## 12.9 Abstract Base Classes
 
 Abstract base classes (ABCs) let you define a common interface that subclasses must implement. A class inheriting from an ABC must override every abstract method; otherwise, it cannot be instantiated.
 
-### 12.13.1 Defining an Abstract Class
+### 12.9.1 Defining an Abstract Class
 
 Use `ABC` as the base class and mark methods with `@abstractmethod`.
 
@@ -572,7 +572,7 @@ class Shape(ABC):
         pass
 ```
 
-### 12.13.2 Concrete Subclasses
+### 12.9.2 Concrete Subclasses
 
 A concrete subclass must implement every abstract method inherited from the ABC.
 
@@ -602,7 +602,7 @@ class BadRectangle(Shape):
 # b = BadRectangle()   # TypeError: Can't instantiate abstract class
 ```
 
-### 12.13.3 When to Use ABCs
+### 12.9.3 When to Use ABCs
 
 Use abstract base classes when:
 
@@ -610,7 +610,7 @@ Use abstract base classes when:
 - You are designing a plugin system or framework where users must implement specific hooks.
 - You want to document the required methods of a class hierarchy explicitly.
 
-### 12.13.4 Abstract Properties
+### 12.9.4 Abstract Properties
 
 You can also mark properties as abstract by stacking `@property` and `@abstractmethod`. Subclasses must then provide their own implementation of the property.
 
@@ -639,7 +639,7 @@ print(Car().wheels)       # 4
 
 For why `@property` must be written above `@abstractmethod` and what happens if you reverse the order, see [13.4.1 Stacked Decorators](13-closures-and-decorators.md#1341-stacked-decorators).
 
-## 12.14 `__slots__`
+## 12.10 `__slots__`
 
 Restrict allowed attributes to save memory and prevent typos.
 
@@ -657,7 +657,7 @@ p = Point(1, 2)
 
 **Trade-off:** `__slots__` removes `__dict__`, saving memory but preventing dynamic attribute assignment.
 
-## 12.15 Composition vs Inheritance
+## 12.11 Composition vs Inheritance
 
 Inheritance is useful for "is-a" relationships: a `Dog` *is an* `Animal`. Composition is better for "has-a" relationships: a `Car` *has an* `Engine`.
 
