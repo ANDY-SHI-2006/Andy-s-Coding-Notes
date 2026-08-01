@@ -219,7 +219,9 @@ triple = Multiplier(3)
 print(triple(5))   # 15
 ```
 
-## 12.7 Inheritance
+## 12.3 Inheritance and `super()`
+
+### 12.3.1 Basic Inheritance
 
 Inheritance lets a class acquire attributes and methods from another class.
 
@@ -243,7 +245,7 @@ d = Dog("Buddy")
 print(d.speak())                # Buddy says woof!
 ```
 
-## 12.8 `super()`
+### 12.3.2 `super()`
 
 Call a method from the parent class.
 
@@ -262,7 +264,7 @@ s = Student("Alice", 20, "S001")
 print(s.name)                       # Alice (from Person)
 ```
 
-### 12.8.1 Method Override with `super()`
+### 12.3.3 Method Override with `super()`
 
 When a subclass redefines a parent method, `super()` lets you reuse the parent's implementation before adding custom behavior.
 
