@@ -323,9 +323,36 @@ print(repr(p))     # Point(1, 2) — __repr__
 
 ### 12.4.2 Comparison Methods
 
-Implement rich comparison operators (`__eq__`, `__lt__`, `__le__`, `__gt__`, `__ge__`). If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the rest automatically.
+Implement rich comparison operators (`__eq__`, `__lt__`, `__le__`, `__gt__`, `__ge__`).
 
-For details and examples, see [16.6 `@functools.total_ordering`](16-functools.md#166-auto-generating-comparisons-with-functoolstotal_ordering).
+```python
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        if not isinstance(other, Point):
+            return NotImplemented
+        return self.x == other.x and self.y == other.y
+
+    def __lt__(self, other):
+        if not isinstance(other, Point):
+            return NotImplemented
+        return (self.x, self.y) < (other.x, other.y)
+
+p1 = Point(1, 2)
+p2 = Point(1, 2)
+p3 = Point(3, 4)
+
+print(p1 == p2)   # True
+print(p1 < p3)    # True
+print(p1 >= p3)   # TypeError — __ge__ not defined
+```
+
+**Auto-generating the rest:** If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the remaining comparison methods automatically.
+
+For details, see [16.6 `@functools.total_ordering`](16-functools.md#166-auto-generating-comparisons-with-functoolstotal_ordering).
 
 ### 12.4.3 Callable Objects
 
