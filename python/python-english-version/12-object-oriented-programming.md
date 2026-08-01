@@ -72,6 +72,24 @@ s = Student("Alice", 95)
 print(s.get_grade())            # "A"
 ```
 
+### 12.1.4 `__slots__`
+
+Restrict allowed attributes to save memory and prevent typos.
+
+```python
+class Point:
+    __slots__ = ["x", "y"]
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+p = Point(1, 2)
+# p.z = 3             # AttributeError: 'Point' object has no attribute 'z'
+```
+
+**Trade-off:** `__slots__` removes `__dict__`, saving memory but preventing dynamic attribute assignment.
+
 ## 12.2 Class Methods and Static Methods
 
 ### 12.2.1 Class Methods
@@ -639,25 +657,7 @@ print(Car().wheels)       # 4
 
 For why `@property` must be written above `@abstractmethod` and what happens if you reverse the order, see [13.4.1 Stacked Decorators](13-closures-and-decorators.md#1341-stacked-decorators).
 
-## 12.10 `__slots__`
-
-Restrict allowed attributes to save memory and prevent typos.
-
-```python
-class Point:
-    __slots__ = ["x", "y"]
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-p = Point(1, 2)
-# p.z = 3             # AttributeError: 'Point' object has no attribute 'z'
-```
-
-**Trade-off:** `__slots__` removes `__dict__`, saving memory but preventing dynamic attribute assignment.
-
-## 12.11 Composition vs Inheritance
+## 12.10 Composition vs Inheritance
 
 Inheritance is useful for "is-a" relationships: a `Dog` *is an* `Animal`. Composition is better for "has-a" relationships: a `Car` *has an* `Engine`.
 
