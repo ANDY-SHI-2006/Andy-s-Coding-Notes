@@ -390,6 +390,87 @@ print(c())   # 2
 print(c())   # 3
 ```
 
+### 12.4.4 Arithmetic Operator Overloading
+
+You can make objects work with `+`, `-`, `*`, `/`, and other operators by implementing the corresponding special methods.
+
+| Operator | Special Method |
+|----------|----------------|
+| `+` | `__add__` |
+| `-` | `__sub__` |
+| `*` | `__mul__` |
+| `/` | `__truediv__` |
+| `//` | `__floordiv__` |
+| `%` | `__mod__` |
+| `**` | `__pow__` |
+| `==` | `__eq__` |
+| `<` | `__lt__` |
+
+```python
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        if not isinstance(other, Vector):
+            return NotImplemented
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        if not isinstance(other, Vector):
+            return NotImplemented
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def __repr__(self):
+        return f"Vector({self.x}, {self.y})"
+
+v1 = Vector(1, 2)
+v2 = Vector(3, 4)
+print(v1 + v2)   # Vector(4, 6)
+print(v1 - v2)   # Vector(-2, -2)
+```
+
+**Returning `NotImplemented`:** When the other operand is not supported, return `NotImplemented` so Python can try the reverse operation or raise the correct `TypeError`.
+
+### 12.4.5 Container Protocol
+
+Implement the container protocol to make your own objects behave like lists, dicts, or sets.
+
+| Special Method | Triggered By | Purpose |
+|----------------|--------------|---------|
+| `__len__` | `len(obj)` | Return the number of items |
+| `__getitem__` | `obj[key]` | Retrieve an item by index or key |
+| `__setitem__` | `obj[key] = value` | Set an item by index or key |
+| `__delitem__` | `del obj[key]` | Delete an item |
+| `__iter__` | `for x in obj` | Return an iterator |
+| `__contains__` | `item in obj` | Membership test |
+
+```python
+class Deck:
+    def __init__(self):
+        self._cards = ["A", "2", "3", "4", "5"]
+
+    def __len__(self):
+        return len(self._cards)
+
+    def __getitem__(self, index):
+        return self._cards[index]
+
+    def __iter__(self):
+        return iter(self._cards)
+
+deck = Deck()
+print(len(deck))       # 5
+print(deck[0])         # A
+print("3" in deck)     # True
+for card in deck:
+    print(card)
+# A 2 3 4 5
+```
+
+**Note:** If you define `__iter__`, Python can usually derive `__contains__` for you. Define `__contains__` explicitly only when you want a faster or custom membership test.
+
 ## 12.5 Encapsulation
 
 Python uses naming conventions to indicate intended visibility.
