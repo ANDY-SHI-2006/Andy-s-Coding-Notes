@@ -161,82 +161,6 @@ print(MathUtils.add(3, 5))      # 8 (no instance needed)
 | Can call class methods? | ✅ Yes | ✅ Yes | ❌ No |
 | Typical use | Object behavior | Factory / counters | Utility functions |
 
-## 12.4 Special Methods (Magic Methods)
-
-| Method | Purpose | Triggered by |
-|--------|---------|--------------|
-| `__init__` | Constructor | `Class()` |
-| `__str__` | String representation | `str()`, `print()` |
-| `__repr__` | Official representation | `repr()` |
-| `__eq__` | Equality comparison | `==` |
-| `__lt__` | Less than comparison | `<` |
-| `__len__` | Length | `len()` |
-| `__getitem__` | Index access | `obj[key]` |
-
-```python
-class Vector:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __str__(self):          # For user-friendly output
-        return f"Vector({self.x}, {self.y})"
-
-    def __eq__(self, other):    # For == comparison
-        return self.x == other.x and self.y == other.y
-
-v = Vector(1, 2)
-print(v)                        # Vector(1, 2)
-```
-
-### 12.4.1 `__repr__` vs `__str__`
-
-| Method | Purpose | Called by | Fallback |
-|--------|---------|-----------|----------|
-| `__str__` | User-friendly, informal | `str()`, `print()` | `__repr__` |
-| `__repr__` | Unambiguous, developer-focused | `repr()`, interactive shell | Default object address |
-
-**Best practice:** `__repr__` should ideally be valid Python code that could recreate the object.
-
-```python
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __repr__(self):
-        return f"Point({self.x}, {self.y})"
-
-    def __str__(self):
-        return f"({self.x}, {self.y})"
-
-p = Point(1, 2)
-print(p)           # (1, 2)     — __str__
-print(repr(p))     # Point(1, 2) — __repr__
-```
-
-### 12.4.2 Comparison Methods
-
-Implement rich comparison operators (`__eq__`, `__lt__`, `__le__`, `__gt__`, `__ge__`). If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the rest automatically.
-
-For details and examples, see [16.6 `@functools.total_ordering`](16-functools.md#166-auto-generating-comparisons-with-functoolstotal_ordering).
-
-### 12.4.3 Callable Objects
-
-Make an instance callable like a function.
-
-```python
-class Multiplier:
-    def __init__(self, factor):
-        self.factor = factor
-
-    def __call__(self, value):
-        return value * self.factor
-
-triple = Multiplier(3)
-print(triple(5))   # 15
-```
-
 ## 12.3 Inheritance and `super()`
 
 ### 12.3.1 Basic Inheritance
@@ -331,6 +255,82 @@ m.cook()
 # Pierce film lid
 # Microwave on high for 3 minutes
 # Let stand for 1 minute
+```
+
+## 12.4 Special Methods (Magic Methods)
+
+| Method | Purpose | Triggered by |
+|--------|---------|--------------|
+| `__init__` | Constructor | `Class()` |
+| `__str__` | String representation | `str()`, `print()` |
+| `__repr__` | Official representation | `repr()` |
+| `__eq__` | Equality comparison | `==` |
+| `__lt__` | Less than comparison | `<` |
+| `__len__` | Length | `len()` |
+| `__getitem__` | Index access | `obj[key]` |
+
+```python
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):          # For user-friendly output
+        return f"Vector({self.x}, {self.y})"
+
+    def __eq__(self, other):    # For == comparison
+        return self.x == other.x and self.y == other.y
+
+v = Vector(1, 2)
+print(v)                        # Vector(1, 2)
+```
+
+### 12.4.1 `__repr__` vs `__str__`
+
+| Method | Purpose | Called by | Fallback |
+|--------|---------|-----------|----------|
+| `__str__` | User-friendly, informal | `str()`, `print()` | `__repr__` |
+| `__repr__` | Unambiguous, developer-focused | `repr()`, interactive shell | Default object address |
+
+**Best practice:** `__repr__` should ideally be valid Python code that could recreate the object.
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return f"Point({self.x}, {self.y})"
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+
+p = Point(1, 2)
+print(p)           # (1, 2)     — __str__
+print(repr(p))     # Point(1, 2) — __repr__
+```
+
+### 12.4.2 Comparison Methods
+
+Implement rich comparison operators (`__eq__`, `__lt__`, `__le__`, `__gt__`, `__ge__`). If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the rest automatically.
+
+For details and examples, see [16.6 `@functools.total_ordering`](16-functools.md#166-auto-generating-comparisons-with-functoolstotal_ordering).
+
+### 12.4.3 Callable Objects
+
+Make an instance callable like a function.
+
+```python
+class Multiplier:
+    def __init__(self, factor):
+        self.factor = factor
+
+    def __call__(self, value):
+        return value * self.factor
+
+triple = Multiplier(3)
+print(triple(5))   # 15
 ```
 
 ## 12.5 Encapsulation
