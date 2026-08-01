@@ -72,7 +72,17 @@ s = Student("Alice", 95)
 print(s.get_grade())            # "A"
 ```
 
-### 12.1.4 `__slots__`
+### 12.1.4 Summary: Class vs Instance Members
+
+| Aspect | Class Attribute | Instance Attribute | Instance Method |
+|--------|-----------------|--------------------|-----------------|
+| Defined | Directly inside class body | Usually inside `__init__` via `self` | Inside class body with `self` as first parameter |
+| Shared? | ✅ Shared across all instances | ❌ Unique to each instance | ❌ Bound to each instance |
+| Access | `ClassName.attr` or `instance.attr` | `instance.attr` | `instance.method()` |
+| Typical use | Constants, counters, shared config | Object-specific data (name, age, score) | Object behavior using instance data |
+| Example | `school = "XYZ High"` | `self.name = name` | `def get_grade(self): ...` |
+
+### 12.1.5 `__slots__`
 
 Restrict allowed attributes to save memory and prevent typos.
 
