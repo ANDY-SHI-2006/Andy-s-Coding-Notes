@@ -746,7 +746,7 @@ dog = Dog()
 print(dog.speak())    # Woof
 ```
 
-For more details and the full ABC workflow, see [12.13 Abstract Base Classes](12-object-oriented-programming.md#1213-abstract-base-classes).
+For more details and the full ABC workflow, see [12.9 Abstract Base Classes](12-object-oriented-programming.md#129-abstract-base-classes).
 
 ## 13.6 Practical Examples
 
