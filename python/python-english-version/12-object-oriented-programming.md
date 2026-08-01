@@ -356,7 +356,7 @@ For details, see [16.6 `@functools.total_ordering`](16-functools.md#166-auto-gen
 
 ### 12.4.3 Callable Objects
 
-Make an instance callable like a function.
+Make an instance callable like a function by defining `__call__`.
 
 ```python
 class Multiplier:
@@ -368,6 +368,26 @@ class Multiplier:
 
 triple = Multiplier(3)
 print(triple(5))   # 15
+```
+
+**Common use cases:**
+- **Stateful functions:** A callable object can remember state between calls, unlike a plain `def` function without closures.
+- **Custom function objects:** Wrap behavior so the object itself can be passed where a function is expected (e.g., callbacks, event handlers).
+- **Counter / logger:** Track how many times something has been called.
+
+```python
+class Counter:
+    def __init__(self):
+        self.count = 0
+
+    def __call__(self):
+        self.count += 1
+        return self.count
+
+c = Counter()
+print(c())   # 1
+print(c())   # 2
+print(c())   # 3
 ```
 
 ## 12.5 Encapsulation
