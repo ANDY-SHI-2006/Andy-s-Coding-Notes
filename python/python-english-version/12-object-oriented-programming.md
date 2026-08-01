@@ -72,7 +72,9 @@ s = Student("Alice", 95)
 print(s.get_grade())            # "A"
 ```
 
-## 12.4 Class Methods
+## 12.2 Class Methods and Static Methods
+
+### 12.2.1 Class Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -110,7 +112,7 @@ class Demo:
         # print(self.instance_attr) # ❌ Error — no self in class method
 ```
 
-## 12.5 Static Methods
+### 12.2.2 Static Methods
 
 | Feature | Description |
 |---------|-------------|
@@ -129,7 +131,7 @@ print(MathUtils.add(3, 5))      # 8 (no instance needed)
 
 **Key insight:** A static method is essentially a plain function that happens to live inside a class namespace. It has no access to `self` (instance) or `cls` (class). Use it when the logic is related to the class conceptually but does not need any class or instance data.
 
-### 12.5.1 Instance vs Class vs Static Methods
+### 12.2.3 Instance vs Class vs Static Methods
 
 | Aspect | Instance Method | Class Method | Static Method |
 |--------|----------------|--------------|---------------|
