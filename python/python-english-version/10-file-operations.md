@@ -28,119 +28,7 @@ f.close()
 
 Forgetting to close files can leak system resources, especially in long-running programs.
 
-### 10.1.2 Path Types
-
-#### 10.1.2.1 Relative Paths
-
-Relative paths are resolved from the current working directory.
-
-```python
-"./file.txt"       # In the current directory
-"../data/file.txt" # One level up, then into data/
-```
-
-#### 10.1.2.2 Absolute Paths
-
-Absolute paths start from the root of the filesystem.
-
-```python
-"C:/Users/name/file.txt"   # Unix-style slash works on all platforms
-"/home/name/file.txt"      # Linux / macOS
-```
-
-Using `/` in paths is recommended for cross-platform compatibility.
-
-#### 10.1.2.3 Windows Backslash and Raw Strings
-
-Windows paths traditionally use `\`. In Python strings, `\` is an escape character, so Windows paths must either be escaped or written as raw strings.
-
-```python
-"C:\\Users\\name\\file.txt"  # Escaped backslashes
-r"C:\Users\name\file.txt"    # Raw string: backslash is literal
-```
-
-#### 10.1.2.4 Current Working Directory
-
-The starting point for all relative paths is the **current working directory**. If the program is run from a different directory, the same relative path may refer to a different file.
-
-For details on how to inspect or change the current working directory, see [10.6 Paths and File Metadata](10-file-operations.md#106-paths-and-file-metadata).
-
-### 10.1.3 File Modes
-
-#### 10.1.3.1 Read Mode
-
-| Mode | Description |
-|------|-------------|
-| `"r"` | Read (default). File must exist. |
-
-```python
-with open("data.txt", "r", encoding="utf-8") as f:
-    content = f.read()
-```
-
-#### 10.1.3.2 Write Modes
-
-| Mode | Description |
-|------|-------------|
-| `"w"` | Write (overwrite, create if not exists) |
-| `"a"` | Append (create if not exists) |
-| `"x"` | Create and write; fail if file already exists |
-
-```python
-with open("output.txt", "w", encoding="utf-8") as f:
-    f.write("Hello\n")
-
-with open("log.txt", "a", encoding="utf-8") as f:
-    f.write("New entry\n")
-```
-
-#### 10.1.3.3 Read-Write Modes
-
-| Mode | Description |
-|------|-------------|
-| `"r+"` | Read and write; **does not truncate**; file must exist |
-| `"w+"` | Read and write; **truncates first**; creates if not exists |
-
-**Key difference:** `"r+"` keeps existing content and requires the file to exist; `"w+"` clears the file first and creates it if missing.
-
-```python
-with open("data.txt", "r+", encoding="utf-8") as f:
-    f.seek(0)
-    f.write("NEW")     # Overwrites first 3 chars, keeps the rest
-
-with open("fresh.txt", "w+", encoding="utf-8") as f:
-    f.write("Hello")   # Creates or clears the file
-    f.seek(0)
-    print(f.read())    # "Hello"
-```
-
-#### 10.1.3.4 Binary Modes
-
-| Mode | Description |
-|------|-------------|
-| `"rb"` | Binary read. File must exist. |
-| `"wb"` | Binary write (overwrite or create). |
-| `"ab"` | Binary append. |
-
-```python
-with open("photo.jpg", "rb") as f:
-    data = f.read()
-```
-
-For more details on binary read/write methods and the difference between text and binary mode, see [10.3 Binary Files](10-file-operations.md#103-binary-files).
-
-### 10.1.4 Encoding
-
-Text files store bytes; `encoding` tells Python how to convert those bytes into characters. Always specify `encoding="utf-8"` when opening text files to avoid relying on the system default encoding.
-
-```python
-with open("data.txt", "r", encoding="utf-8") as f:
-    content = f.read()
-```
-
-For more details about encodings, bytes, and common pitfalls, see [10.5 Character Encoding](10-file-operations.md#105-character-encoding).
-
-### 10.1.5 The `with` Statement
+### 10.1.2 The `with` Statement
 
 The `with` statement creates a context in which the file object is automatically closed when the block ends, even if an error occurs.
 
@@ -157,7 +45,101 @@ with open(file, mode, encoding) as variable:
     # work with the file object
 ```
 
-Because `with` guarantees cleanup, it is the recommended pattern for opening files.
+Because `with` guarantees cleanup, it is the recommended pattern for opening files. All examples in this chapter use `with`.
+
+### 10.1.3 Path Types
+
+**Relative paths** are resolved from the current working directory.
+
+```python
+"./file.txt"       # In the current directory
+"../data/file.txt" # One level up, then into data/
+```
+
+**Absolute paths** start from the root of the filesystem.
+
+```python
+"C:/Users/name/file.txt"   # Forward slashes work on Windows too
+"/home/name/file.txt"      # Linux / macOS
+```
+
+Using `/` in paths is recommended for cross-platform compatibility.
+
+**Windows backslash and raw strings.** Windows paths traditionally use `\`. In Python strings, `\` is an escape character, so Windows paths must either be escaped or written as raw strings.
+
+```python
+"C:\\Users\\name\\file.txt"  # Escaped backslashes
+r"C:\Users\name\file.txt"    # Raw string: backslash is literal
+```
+
+**Current working directory.** The starting point for all relative paths is the **current working directory**. If the program is run from a different directory, the same relative path may refer to a different file.
+
+For details on how to inspect or change the current working directory, see [10.6 Paths and File Metadata](#106-paths-and-file-metadata).
+
+### 10.1.4 File Modes
+
+**Read mode**
+
+| Mode | Description |
+|------|-------------|
+| `"r"` | Read (default). File must exist. |
+
+```python
+with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+```
+
+**Write modes**
+
+| Mode | Description |
+|------|-------------|
+| `"w"` | Write (overwrite, create if not exists) |
+| `"a"` | Append (create if not exists) |
+| `"x"` | Create and write; fail if file already exists |
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("Hello\n")
+
+with open("log.txt", "a", encoding="utf-8") as f:
+    f.write("New entry\n")
+```
+
+**Read-write modes**
+
+| Mode | Description |
+|------|-------------|
+| `"r+"` | Read and write; **does not truncate**; file must exist |
+| `"w+"` | Read and write; **truncates first**; creates if not exists |
+| `"a+"` | Read and append; creates if not exists; writes always go to the end |
+
+**Key difference:** `"r+"` keeps existing content and requires the file to exist; `"w+"` clears the file first and creates it if missing. With `"a+"`, writes always land at the end of the file regardless of `seek()`, so it is mainly useful for log-style appending.
+
+```python
+with open("data.txt", "r+", encoding="utf-8") as f:
+    f.seek(0)
+    f.write("NEW")     # Overwrites first 3 chars, keeps the rest
+
+with open("fresh.txt", "w+", encoding="utf-8") as f:
+    f.write("Hello")   # Creates or clears the file
+    f.seek(0)
+    print(f.read())    # "Hello"
+```
+
+**Binary modes**
+
+Adding `b` to any mode opens the file in binary mode (`"rb"`, `"wb"`, `"ab"`, `"r+b"`, ...), where you work with raw `bytes` instead of `str`. For the full mode table, read/write methods, and the difference between text and binary mode, see [10.3 Binary Files](#103-binary-files).
+
+### 10.1.5 Encoding
+
+Text files store bytes; `encoding` tells Python how to convert those bytes into characters. Always specify `encoding="utf-8"` when opening text files to avoid relying on the system default encoding.
+
+```python
+with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+```
+
+For more details about encodings, bytes, and common pitfalls, see [10.5 Character Encoding](#105-character-encoding).
 
 ## 10.2 File Object Methods
 
@@ -173,7 +155,7 @@ Line 2
 Line 3
 ```
 
-#### 10.2.1.1 `read()`
+**`read()`**
 
 | Method | Returns | Parameters |
 |--------|---------|------------|
@@ -188,18 +170,9 @@ print(repr(content))
 # 'Line 1\nLine 2\nLine 3\n'
 ```
 
-**Character vs Byte:** `read(n)` reads **n characters**, not n bytes. With UTF-8, one Chinese character uses 3 bytes on disk, but `read(1)` still returns one character.
+**Character vs Byte:** `read(n)` reads **n characters**, not n bytes. With UTF-8, one Chinese character uses 3 bytes on disk, but `read(1)` still returns one character. For a worked example, see [10.5.5 Byte Positions and Multi-byte Characters](#1055-byte-positions-and-multi-byte-characters).
 
-```python
-with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")         # 2 characters, 6 bytes on disk
-
-with open("chinese.txt", "r", encoding="utf-8") as f:
-    print(repr(f.read(1)))  # '中' — 1 character
-    print(f.tell())         # 3 — cursor position in bytes
-```
-
-#### 10.2.1.2 `readline()`
+**`readline()`**
 
 | Method | Returns |
 |--------|---------|
@@ -214,7 +187,7 @@ print(repr(first))   # 'Line 1\n'
 print(repr(second))  # 'Line 2\n'
 ```
 
-#### 10.2.1.3 `readlines()`
+**`readlines()`**
 
 | Method | Returns |
 |--------|---------|
@@ -232,7 +205,7 @@ print(lines)
 
 These methods write data to a file. They require a file opened in write (`"w"`, `"x"`) or append (`"a"`) mode.
 
-#### 10.2.2.1 `write()`
+**`write()`**
 
 | Method | Returns | Parameters |
 |--------|---------|------------|
@@ -243,7 +216,7 @@ with open("output.txt", "w", encoding="utf-8") as f:
     f.write("Hello World\n")
 ```
 
-#### 10.2.2.2 `writelines()`
+**`writelines()`**
 
 | Method | Returns | Parameters |
 |--------|---------|------------|
@@ -254,7 +227,7 @@ with open("output.txt", "w", encoding="utf-8") as f:
     f.writelines(["Line 1\n", "Line 2\n"])
 ```
 
-#### 10.2.2.3 No Automatic Newline
+**No automatic newline**
 
 Neither `write()` nor `writelines()` adds a newline automatically. If you omit `\n`, consecutive writes are concatenated on the same line.
 
@@ -289,7 +262,7 @@ with open("output.txt", "w", encoding="utf-8") as f:
 
 These methods control the position of the file cursor.
 
-#### 10.2.3.1 `tell()`
+**`tell()`**
 
 | Method | Returns |
 |--------|---------|
@@ -301,18 +274,9 @@ with open("data.txt", encoding="utf-8") as f:
     print(f.tell())   # 5
 ```
 
-**Note:** The position is counted in **bytes**, not characters. With UTF-8, one Chinese character uses 3 bytes, so `tell()` returns `3` after reading one Chinese character.
+**Note:** The position is counted in **bytes**, not characters. With UTF-8, one Chinese character uses 3 bytes, so `tell()` returns `3` after reading one Chinese character — see [10.5.5 Byte Positions and Multi-byte Characters](#1055-byte-positions-and-multi-byte-characters) for a worked example.
 
-```python
-with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")
-
-with open("chinese.txt", "r", encoding="utf-8") as f:
-    f.read(1)            # 中
-    print(f.tell())      # 3
-```
-
-#### 10.2.3.2 `seek()`
+**`seek()`**
 
 | Method | Parameters |
 |--------|------------|
@@ -356,7 +320,7 @@ with open("data.txt", "rb") as f:
 
 In text mode, `seek()` moves by bytes but must land on character boundaries. `whence=1` and `whence=2` are usually only allowed with `offset=0` in text mode. For arbitrary byte offsets, open the file in binary mode (`"rb"`).
 
-For the special case of multi-byte characters (e.g., UTF-8 Chinese), see [10.5.5 Byte Positions and Multi-byte Characters](10-file-operations.md#1055-byte-positions-and-multi-byte-characters).
+For the special case of multi-byte characters (e.g., UTF-8 Chinese), see [10.5.5 Byte Positions and Multi-byte Characters](#1055-byte-positions-and-multi-byte-characters).
 
 ### 10.2.4 Line Iteration
 
@@ -445,9 +409,9 @@ with open("photo.jpg", "rb") as src:
 
 ## 10.4 Common File Formats
 
-### 10.4.1 JSON Functions
+### 10.4.1 JSON
 
-#### 10.4.1.1 `json.dumps()`
+**`json.dumps()`**
 
 | Function | Purpose |
 |----------|---------|
@@ -473,7 +437,7 @@ json.dumps(data)                      # '{"name": "\\u4e2d\\u6587"}'
 json.dumps(data, ensure_ascii=False)  # '{"name": "中文"}'
 ```
 
-#### 10.4.1.2 `json.loads()`
+**`json.loads()`**
 
 | Function | Purpose |
 |----------|---------|
@@ -486,7 +450,7 @@ json_str = '{"name": "Alice", "age": 25}'
 data = json.loads(json_str)
 ```
 
-#### 10.4.1.3 `json.dump()`
+**`json.dump()`**
 
 | Function | Purpose |
 |----------|---------|
@@ -501,7 +465,7 @@ with open("data.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False)
 ```
 
-#### 10.4.1.4 `json.load()`
+**`json.load()`**
 
 | Function | Purpose |
 |----------|---------|
@@ -514,9 +478,9 @@ with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
-### 10.4.2 CSV Functions
+### 10.4.2 CSV
 
-#### 10.4.2.1 Why Use `newline=""`?
+**Why use `newline=""`?**
 
 When opening CSV files, always pass `newline=""`. On Windows, the default text mode translates `\n` to `\r\n` when writing. The `csv` module already writes `\r\n` line endings, so the translation produces `\r\r\n`, resulting in a blank row between every data row.
 
@@ -536,6 +500,16 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
 
 Using `newline=""` disables this automatic translation and lets the `csv` module control line endings. This is safe on Linux and macOS as well, so use it for all CSV file operations.
 
+**Opening the CSV in Excel: use `utf-8-sig`.** Excel on Windows relies on a BOM (byte order mark) to recognize UTF-8. A plain UTF-8 CSV containing Chinese may appear garbled when opened in Excel. Write with `encoding="utf-8-sig"` to add the BOM:
+
+```python
+with open("output.csv", "w", encoding="utf-8-sig", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows([["name", "city"], ["Alice", "北京"]])
+```
+
+`utf-8-sig` also works for reading: it strips the BOM if present and otherwise behaves like plain UTF-8, so it is a safe default for CSV files shared with Excel users.
+
 The read and write examples below assume a CSV file with the following content:
 
 ```text
@@ -545,7 +519,7 @@ Bob,25
 Carol,30
 ```
 
-#### 10.4.2.2 Reading CSV as Lists: `csv.reader()`
+**Reading CSV as lists: `csv.reader()`**
 
 | Function | Purpose |
 |----------|---------|
@@ -565,7 +539,7 @@ with open("data.csv", encoding="utf-8", newline="") as f:
 # ['Carol', '30']
 ```
 
-#### 10.4.2.3 Writing CSV from Lists
+**Writing CSV from lists**
 
 `csv.writer(f)` returns a writer object. The actual writing is done by its `.writerow()` and `.writerows()` methods.
 
@@ -585,7 +559,7 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
     writer.writerows([["Bob", 25], ["Carol", 30]])
 ```
 
-#### 10.4.2.4 Reading CSV as Dicts: `csv.DictReader()`
+**Reading CSV as dicts: `csv.DictReader()`**
 
 | Function | Purpose |
 |----------|---------|
@@ -604,7 +578,7 @@ with open("data.csv", encoding="utf-8", newline="") as f:
 # {'name': 'Carol', 'age': '30'}
 ```
 
-#### 10.4.2.5 Writing CSV from Dicts
+**Writing CSV from dicts**
 
 `csv.DictWriter(f, fieldnames)` returns a DictWriter object. You must call `.writeheader()` first, then `.writerow()` or `.writerows()`.
 
@@ -688,13 +662,10 @@ UTF-8 is the modern standard. It is backward-compatible with ASCII and supports 
 Every Unicode character has a numeric code point. `ord()` returns the code point of a character; `chr()` converts a code point back to a character.
 
 ```python
-# ASCII code point
-print(ord('A'))   # 65
-print(chr(65))    # 'A'
-
-# UTF-8 Chinese uses 3 bytes per character
-with open("chinese.txt", "w", encoding="utf-8") as f:
-    f.write("中文")   # 6 bytes total (2 chars × 3 bytes)
+print(ord('A'))     # 65
+print(chr(65))      # 'A'
+print(ord('中'))    # 20013
+print(chr(20013))   # '中'
 ```
 
 ### 10.5.5 Byte Positions and Multi-byte Characters
@@ -702,8 +673,13 @@ with open("chinese.txt", "w", encoding="utf-8") as f:
 `seek()` moves the cursor by **bytes**, not characters. For any multi-byte encoding — not just UTF-8 Chinese — you must seek to byte positions that align with character boundaries.
 
 ```python
+with open("chinese.txt", "w", encoding="utf-8") as f:
+    f.write("中文")         # 2 characters, 6 bytes on disk
+
 with open("chinese.txt", "r", encoding="utf-8") as f:
-    f.read()                # "中文" — cursor at end
+    print(repr(f.read(1)))  # '中' — read() counts characters
+    print(f.tell())         # 3 — but the cursor position is in bytes
+
     f.seek(3)               # Move to byte 3 (start of second char)
     print(f.read(1))        # "文"
 
@@ -734,18 +710,14 @@ All examples assume the script is running from inside `project/` or `project/scr
 
 ### 10.6.1 Working Directory
 
-#### 10.6.1.1 Two Kinds of "Location"
-
-When working with files, you need to know two different directory concepts:
+**Two kinds of "location".** When working with files, you need to know two different directory concepts:
 
 - **Current working directory** (`cwd`): the directory from which the script was launched.
 - **Script directory**: the directory containing the script file (`demo.py`).
 
 These are often the same, but they can be different depending on where you run the script.
 
-#### 10.6.1.2 API Comparison
-
-The examples below assume the project layout introduced above and that the script is launched from the `project/` directory:
+**API comparison.** The examples below assume the project layout introduced above and that the script is launched from the `project/` directory:
 
 ```shell
 python scripts/demo.py
@@ -768,8 +740,8 @@ import os
 print(os.getcwd())        # C:\Users\Andy\project
 
 # Change the current working directory
-os.chdir("../data")
-print(os.getcwd())        # C:\Users\Andy\data
+os.chdir("data")
+print(os.getcwd())        # C:\Users\Andy\project\data
 ```
 
 **Using `pathlib`:**
@@ -785,9 +757,7 @@ script_dir = Path(__file__).resolve().parent
 print(script_dir)         # C:\Users\Andy\project\scripts
 ```
 
-#### 10.6.1.3 Why the Working Directory Matters
-
-If a script opens a file using a relative path, the path is resolved from the current working directory, not from the script's location. This can cause the same script to behave differently depending on where you run it.
+**Why the working directory matters.** If a script opens a file using a relative path, the path is resolved from the current working directory, not from the script's location. This can cause the same script to behave differently depending on where you run it.
 
 Using the project layout introduced above, `demo.py` contains:
 
@@ -816,13 +786,9 @@ python demo.py
 
 This is why production code should locate resource files relative to the **script directory** instead of the current working directory.
 
-#### 10.6.1.4 Note on `__file__`
-
-`__file__` is only available when running a saved script. It does not work in interactive shells or REPL, because there is no script file in those environments.
+**Note on `__file__`.** `__file__` is only available when running a saved script. It does not work in interactive shells or REPL, because there is no script file in those environments.
 
 ### 10.6.2 Path Construction
-
-Because relative paths are resolved from the current working directory, production code should locate resource files relative to the **script directory**. This makes the script work no matter where it is launched from.
 
 Build a path to `data/records.json` from `project/scripts/demo.py`. The `data` directory is one level up.
 
@@ -896,8 +862,8 @@ records = Path(__file__).resolve().parent.parent / "data" / "records.json"
 data_dir = records.parent
 
 print(records.exists())           # True
-print(records.is_file())            # True
-print(data_dir.is_dir())            # True
+print(records.is_file())          # True
+print(data_dir.is_dir())          # True
 ```
 
 ### 10.6.4 File Metadata
@@ -955,7 +921,7 @@ import os
 
 # Create a directory and nested directories
 os.mkdir("reports")
-os.makedirs("reports/2024/sales")
+os.makedirs("reports/2024/sales", exist_ok=True)
 
 # Remove a file and an empty directory
 os.remove("temp.txt")
@@ -969,16 +935,20 @@ from pathlib import Path
 
 # Create a directory and nested directories
 Path("reports").mkdir()
-Path("reports/2024/sales").mkdir(parents=True)
+Path("reports/2024/sales").mkdir(parents=True, exist_ok=True)
 
 # Remove a file and an empty directory
 Path("temp.txt").unlink()
 Path("reports/2024/sales").rmdir()  # directory must be empty
 ```
 
-**Note:** `os.makedirs()` and `Path.mkdir(parents=True)` create all missing parent directories. `os.remove()` / `Path.unlink()` delete files permanently, not move them to the trash.
+**Notes:**
 
-### 10.6.6 File Operations
+- `os.makedirs()` and `Path.mkdir(parents=True)` create all missing parent directories.
+- Pass `exist_ok=True` to skip the error when the directory already exists — essential for code that may run more than once.
+- `os.remove()` / `Path.unlink()` delete files permanently, not move them to the trash.
+
+### 10.6.6 Read/Write Shortcuts
 
 Read from and write to the records file.
 
@@ -1142,7 +1112,7 @@ File operations often fail for predictable reasons. Handle them explicitly inste
 |-------|-------|-------------|
 | `FileNotFoundError` | Path does not exist | Check path or use `Path.exists()` first |
 | `PermissionError` | Insufficient permissions | Run with proper privileges or change file permissions |
-| `UnicodeDecodeError` | Wrong encoding | Specify `encoding="utf-8"` or detect encoding |
+| `UnicodeDecodeError` | Wrong encoding | Specify `encoding="utf-8"`; for unknown encodings, detect with `charset-normalizer` |
 | `IsADirectoryError` | Tried to open a directory as a file | Use `os.listdir()` or `Path.iterdir()` instead |
 
 All of the above inherit from `OSError`, so you can catch them together when the specific type does not matter:
@@ -1216,5 +1186,59 @@ shutil.rmtree("data_backup")
 ```
 
 **Note:** `shutil.rmtree()` permanently deletes directories and cannot be undone; use it with care. For safer deletion, move files to the trash using a third-party library such as `send2trash`.
+
+## 10.8 Quick Reference
+
+**File modes**
+
+| Mode | Meaning |
+|------|---------|
+| `"r"` | Read; file must exist |
+| `"w"` | Write; truncates or creates |
+| `"a"` | Append; creates if missing |
+| `"x"` | Create; fails if file already exists |
+| `"+"` | Add to `r`/`w`/`a` for read+write (`"r+"`, `"w+"`, `"a+"`) |
+| `"b"` | Add to any mode for binary (`"rb"`, `"wb"`, ...) |
+
+**Reading and writing (text mode)**
+
+| Method | Purpose |
+|--------|---------|
+| `f.read()` / `f.read(n)` | Whole file / up to `n` characters |
+| `f.readline()` | One line (including `\n`) |
+| `f.readlines()` | All lines as a list |
+| `for line in f:` | Iterate line by line (memory-efficient) |
+| `f.write(s)` | Write a string |
+| `f.writelines(lines)` | Write an iterable of strings |
+| `f.tell()` / `f.seek(offset, whence)` | Cursor position / move cursor (in bytes) |
+
+**Paths: `os` vs `pathlib`**
+
+| Task | `os` style | `pathlib` style |
+|------|-----------|-----------------|
+| Join paths | `os.path.join(a, b)` | `Path(a) / b` |
+| Script directory | `os.path.dirname(os.path.abspath(__file__))` | `Path(__file__).resolve().parent` |
+| Exists / is file / is dir | `os.path.exists/isfile/isdir(p)` | `p.exists()` / `p.is_file()` / `p.is_dir()` |
+| Read / write text | `open(p).read()` / `open(p, "w").write(s)` | `p.read_text()` / `p.write_text(s)` |
+| List / match directory | `os.listdir(d)` / `glob.glob(pattern)` | `p.iterdir()` / `p.glob("*.json")` |
+| Size / mtime | `os.path.getsize(p)` / `os.path.getmtime(p)` | `p.stat().st_size` / `p.stat().st_mtime` |
+
+**JSON and CSV**
+
+| Task | Code |
+|------|------|
+| Object → JSON string | `json.dumps(obj, ensure_ascii=False)` |
+| JSON string → object | `json.loads(s)` |
+| Object → file | `json.dump(obj, f, ensure_ascii=False)` |
+| File → object | `json.load(f)` |
+| Read CSV rows | `csv.reader(f)` / `csv.DictReader(f)` |
+| Write CSV rows | `csv.writer(f).writerows(rows)` / `csv.DictWriter(f, fieldnames)` |
+
+**Golden rules**
+
+- Always use `with open(...)` and `encoding="utf-8"` for text files.
+- Always pass `newline=""` for CSV files; use `encoding="utf-8-sig"` if the CSV will be opened in Excel.
+- Locate resource files relative to the script directory, not the current working directory.
+- Catch specific exceptions (`FileNotFoundError`, `PermissionError`, ...) instead of a bare `except`.
 
 [← Previous: Functions](09-functions.md) | [Next: Advanced Functions →](11-advanced-functions.md)
