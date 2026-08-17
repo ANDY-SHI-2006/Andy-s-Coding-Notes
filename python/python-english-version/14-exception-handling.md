@@ -23,20 +23,20 @@ Good exception handling makes code more robust and easier to debug by separating
 | `AttributeError` | Attribute doesn't exist |
 
 ```python
-# Common exceptions
-def demo_exceptions():
-    # ValueError
-    int("abc")                  # Invalid literal
+# ValueError — invalid literal
+int("abc")
 
-    # IndexError
-    [1, 2, 3][10]               # Index out of range
+# IndexError — index out of range
+[1, 2, 3][10]
 
-    # KeyError
-    {"a": 1}["b"]               # Key not found
+# KeyError — key not found
+{"a": 1}["b"]
 
-    # TypeError
-    "1" + 2                     # Can't add str and int
+# TypeError — can't add str and int
+"1" + 2
 ```
+
+Each line above raises the named exception on its own — try them one at a time.
 
 ## 14.2 Exception Hierarchy
 
@@ -55,7 +55,8 @@ BaseException
       ├── TypeError
       ├── ValueError
       ├── AttributeError
-      └── FileNotFoundError
+      └── OSError
+           └── FileNotFoundError
 ```
 
 **Best Practice:** Catch the most specific exception possible.
@@ -171,6 +172,30 @@ def perform_task():
 
 For most file and resource cleanup, `with` is preferred because it automatically generates the equivalent `try/finally` block.
 
+### 14.3.4 Ordering of `except` Blocks
+
+Python checks `except` blocks **from top to bottom and runs only the first match**. Specific exceptions must come before broader ones, or the broad one shadows them and the specific block never runs:
+
+```python
+# ❌ Bad — Exception matches everything, ZeroDivisionError never reached
+try:
+    result = 10 / 0
+except Exception:
+    print("Caught something")
+except ZeroDivisionError:
+    print("Cannot divide by zero")   # Dead code — never runs
+
+# ✅ Good — specific first, general last
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+except Exception:
+    print("Caught something")
+```
+
+This follows directly from the hierarchy in 14.2: a parent class matches all of its subclasses.
+
 ## 14.4 Best Practices
 
 ### 14.4.1 Be Specific
@@ -201,12 +226,45 @@ except:
     pass                    # Bug goes unnoticed!
 
 # Good - log or handle meaningfully
+import logging
+
 try:
     process_data()
 except ValueError as e:
-    logger.error(f"Data error: {e}")
+    logging.error(f"Data error: {e}")
     raise                   # Re-raise if caller should know
 ```
+
+For configuring `logging` and capturing full tracebacks, see [14.9 Logging Exceptions and Traceback](#149-logging-exceptions-and-traceback).
+
+### 14.4.3 EAFP vs LBYL
+
+Two styles for dealing with operations that might fail:
+
+- **LBYL** (Look Before You Leap): check preconditions with `if` before acting.
+- **EAFP** (Easier to Ask Forgiveness than Permission): just try it, and handle the exception if it fails.
+
+```python
+# LBYL — check first
+from pathlib import Path
+
+p = Path("data.txt")
+if p.exists():
+    content = p.read_text(encoding="utf-8")
+
+# EAFP — try first, handle failure
+try:
+    content = Path("data.txt").read_text(encoding="utf-8")
+except FileNotFoundError:
+    content = ""
+```
+
+Python idioms generally prefer **EAFP**:
+
+- Between an `if` check and the action, the situation can change (another process deletes the file) — a **race condition**. EAFP has no such gap.
+- The happy path reads as a straight line instead of being buried inside `if` guards.
+
+LBYL is still fine when the check is cheap, failure is common, or no suitable exception exists.
 
 ## 14.5 `raise`
 
@@ -228,10 +286,10 @@ def withdraw(balance, amount):
 class ValidationError(Exception):
     pass
 
-def validate_age(age):
-    if age < 0:
-        raise ValidationError("Age cannot be negative")
+raise ValidationError("Age cannot be negative")
 ```
+
+A custom exception is just a class inheriting from `Exception`. For a complete example that carries extra context attributes, see 14.5.1 below.
 
 ### 14.5.1 Practical Example: Custom Exception with Context
 
@@ -278,6 +336,21 @@ try:
 except ValueError as e:
     raise RuntimeError("Conversion failed") from e
 ```
+
+### 14.5.3 Suppressing Exception Context
+
+When you catch one exception and raise another, Python preserves the original exception as the **cause** or **context**. This is usually helpful, but sometimes you want to hide the original error to avoid confusing the user.
+
+Use `raise ... from None` to suppress the context.
+
+```python
+try:
+    int("not_a_number")
+except ValueError:
+    raise RuntimeError("Invalid configuration value") from None
+```
+
+Without `from None`, the traceback would show both the `ValueError` and the `RuntimeError`. With `from None`, only the `RuntimeError` is shown. Use this sparingly — hiding the original error makes debugging harder.
 
 ## 14.6 `assert`
 
@@ -413,19 +486,35 @@ except ZeroDivisionError:
 
 **Best practice:** In production code, log exceptions with `logging.exception()` or `logging.error(..., exc_info=True)` rather than using bare `print()`. This preserves the full context needed for debugging.
 
-## 14.10 Suppressing Exception Context
+## 14.10 Quick Reference
 
-When you catch one exception and raise another, Python preserves the original exception as the **cause** or **context**. This is usually helpful, but sometimes you want to hide the original error to avoid confusing the user.
+**`try/except` syntax**
 
-Use `raise ... from None` to suppress the context.
+| Block | Runs when |
+|-------|-----------|
+| `try` | Always — the watched code |
+| `except X as e` | Exception `X` (or a subclass) was raised |
+| `else` | No exception was raised in `try` |
+| `finally` | Always, last — cleanup |
 
-```python
-try:
-    int("not_a_number")
-except ValueError:
-    raise RuntimeError("Invalid configuration value") from None
-```
+**Raising and checking**
 
-Without `from None`, the traceback would show both the `ValueError` and the `RuntimeError`. With `from None`, only the `RuntimeError` is shown. Use this sparingly — hiding the original error makes debugging harder.
+| Tool | Use for |
+|------|---------|
+| `raise X("msg")` | Signaling an expected error |
+| `raise` | Re-raising the current exception |
+| `raise X(...) from e` | Chaining: keep the original cause |
+| `raise X(...) from None` | Hiding the original cause (sparingly) |
+| `assert cond, "msg"` | Internal bug checks only — disabled by `python -O` |
+| `with` / context manager | Guaranteed cleanup (files, locks, timers) |
+
+**Golden rules**
+
+- Catch the most specific exception possible; never use a bare `except:`.
+- Order `except` blocks from specific to general — the first match wins.
+- Don't swallow exceptions silently; log (`logging.exception()`) or re-raise.
+- Use `raise` for expected errors, `assert` for "this should never happen".
+- Prefer EAFP (`try` first) over LBYL (`if` check first) in Python idioms.
+- For file errors specifically, see [10.7.2 Common File Errors](10-file-operations.md#1072-common-file-errors).
 
 [← Previous: Closures and Decorators](13-closures-and-decorators.md) | [Next: Modules and Packages →](15-modules-and-packages.md)
