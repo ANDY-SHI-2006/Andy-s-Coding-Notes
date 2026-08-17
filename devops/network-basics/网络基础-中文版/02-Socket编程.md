@@ -15,7 +15,7 @@
 | **encode（编码）** | 数据 → 二进制 | 将人类可读的数据转换为可传输的二进制格式 |
 | **decode（解码）** | 二进制 → 数据 | 将二进制数据还原为人类可读的格式 |
 
-#### 2.1.1.1 示例
+#### 示例
 
 ```python
 # String to binary (encode)
@@ -52,13 +52,13 @@ print(f"Decoded:  {decoded_cn}")
 
 容器不能直接编码。必须先将其转换为字符串（例如 JSON），然后再编码为二进制。
 
-#### 2.1.2.1 流程
+#### 流程
 
 ```
 Container → String (JSON) → Binary Data
 ```
 
-#### 2.1.2.2 示例
+#### 示例
 
 ```python
 import json
@@ -93,7 +93,7 @@ import socket
 socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-### address_family —— 地址类型
+### 2.3.1 address_family —— 地址类型
 
 | 取值 | 说明 |
 |-------|-------------|
@@ -102,7 +102,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.AF_UNIX` | Unix 域套接字 —— 同一台机器上的进程间通信（IPC）（仅限 Linux/macOS） |
 | `socket.AF_BLUETOOTH` | 蓝牙通信 |
 
-### socket_type —— 传输模式
+### 2.3.2 socket_type —— 传输模式
 
 | 取值 | 说明 |
 |-------|-------------|
@@ -111,7 +111,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.SOCK_RAW` | 原始套接字：直接访问网络层；需要管理员权限；用于自定义协议或抓包 |
 | `socket.SOCK_SEQPACKET` | 有序、可靠、面向连接的数据报（极少使用） |
 
-### proto —— 协议编号（可选）
+### 2.3.3 proto —— 协议编号（可选）
 
 默认值为 `0`，系统会根据前两个参数自动选择。只有在使用 `SOCK_RAW` 时才需要指定：
 
@@ -125,16 +125,14 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 
 ## 2.4 UDP Socket
 
-UDP socket 是无连接的，效率高，但不保证数据传输的安全性。
-
-### UDP 的特点
+### 2.4.1 UDP 的特点
 
 - **可能丢包**：不保证数据一定到达
 - **简单高效**：传输过程简单，易于实现
 - **数据报传输**：数据以报文（包）的形式传输
 - **无连接**：发送数据时必须携带客户端 IP、端口以及目标 IP/端口
 
-### UDP 服务器完整流程
+### 2.4.2 UDP 服务器完整流程
 
 ```python
 import socket
@@ -183,7 +181,7 @@ server.close()
 - **IPv6 回环地址**：`'::1'` 等价于 `'127.0.0.1'`
 - **IPv6 通配地址**：`'::'` 等价于 `'0.0.0.0'`
 
-### UDP 客户端完整流程
+### 2.4.3 UDP 客户端完整流程
 
 ```python
 import socket
@@ -208,7 +206,7 @@ while True:
 client.close()
 ```
 
-### UDP 适用场景
+### 2.4.4 UDP 适用场景
 
 | 场景 | 原因 |
 |----------|--------|
@@ -218,40 +216,20 @@ client.close()
 
 ## 2.5 TCP Socket
 
-TCP socket 是面向连接的，提供安全稳定的数据传输，但效率相对较低。
-
-### TCP 的特点
+### 2.5.1 TCP 的特点
 
 - **可靠传输**：不丢失、不乱序、不出错、不重复
 - **连接机制**：通信前先建立数据连接
 - **确认机制**：自动确认收到的数据
 - **正常断开**：通信结束后正常断开连接
 
-### TCP 连接的建立与终止
+### 2.5.2 TCP 连接的建立与终止
 
-#### 三次握手（Three-Way Handshake，建立连接）
+TCP 通过**三次握手（Three-Way Handshake）**建立连接，通过**四次挥手（Four-Way Handshake）**断开连接。`connect()` 会自动触发三次握手，`close()` 会自动触发四次挥手，应用程序无需手动处理。
 
-1. 客户端发送请求报文，请求建立连接
-2. 服务器收到请求并回复，表示可以建立连接
-3. 客户端收到回复后再次发送报文，正式建立连接
+> 详细过程与 SYN/ACK/FIN/seq 等术语解释见第 1 章 1.3.3 节。
 
-**术语：**
-- **SYN**：同步位。SYN = 1 表示请求建立连接
-- **ACK**：确认位。ACK = 1 表示确认有效，ACK = 0 表示确认无效
-- **ack**：确认号 = 发送方的序列号 + 1
-- **seq**：序列号。随机的、不确定的、非固定的值
-
-#### 四次挥手（断开连接）
-
-1. 主动方发送报文，请求断开连接
-2. 被动方收到请求后立即回复，表示正在准备断开
-3. 被动方准备就绪后再次发送报文，表示可以断开
-4. 主动方收到确认后发送最后一个报文，完成断开
-
-**术语：**
-- **FIN = 1**：表示请求断开连接
-
-### TCP 服务器完整流程
+### 2.5.3 TCP 服务器完整流程
 
 ```python
 import socket
@@ -292,7 +270,7 @@ conn.close()     # Close connection object
 server.close()   # Close server socket
 ```
 
-### TCP 客户端完整流程
+### 2.5.4 TCP 客户端完整流程
 
 ```python
 import socket
@@ -323,7 +301,7 @@ while True:
 client.close()
 ```
 
-### TCP 注意事项与适用场景
+### 2.5.5 TCP 注意事项与适用场景
 
 **重要细节：**
 
@@ -612,6 +590,7 @@ client.close()
 - 接收方不应使用 `recv(1024)` 来接收任意长度的消息。它应当精确读取头部声明的长度，如果数据较大，可能需要循环读取。
 - 对于生产系统，可以考虑使用成熟的协议或库（例如 HTTP、JSON-RPC、gRPC、`asyncio` 流、配合网络字节序 `!i` 使用的 `struct`）。
 - `struct.pack("i", ...)` 默认使用机器的本机字节序。对于跨平台通信，应使用 `!i`（网络字节序/大端序）。
+- 示例代码为简洁起见使用 `send()`；它返回实际发送的字节数，不保证一次调用发完所有数据。生产代码应使用 `sendall()`（或循环检查 `send()` 的返回值），确保数据完整发送。
 
 ---
 
@@ -858,3 +837,12 @@ client.close()
 - 在转向 `asyncio` 或 `selectors` 之前学习基础知识
 
 > **小结**：非阻塞 socket + `select` 是构建单线程并发网络服务器的经典方式。对于现代 Python 项目，`asyncio` 建立在相同的思想之上，但提供了更简洁、更高级的 API。
+
+
+## 2.10 本章小结
+
+- **数据编码**：所有数据在传输前都必须编码为字节——字符串用 `encode()`/`decode()`，容器（列表、字典）先经 JSON 转换为字符串。
+- **Socket 基础**：`AF_INET` + `SOCK_DGRAM` 创建 UDP socket；`AF_INET` + `SOCK_STREAM` 创建 TCP socket。
+- **UDP vs TCP**：UDP 无连接、高效但不保证送达；TCP 面向连接、可靠但开销更大。根据实时性与可靠性需求选择。
+- **粘包问题**：TCP 是字节流协议，消息边界会丢失；标准解决方案是固定长度的头部（如用 `struct` 打包的 4 字节长度前缀），接收方先读头部再精确读取正文。
+- **并发服务器**：非阻塞 socket 可单线程轮询多个连接，但 CPU 占用高；`select` 实现的 IO 多路复用只在 socket 就绪时通知，是经典的单线程并发方案；现代 Python 项目推荐使用 `asyncio`。

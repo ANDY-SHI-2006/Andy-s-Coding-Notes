@@ -15,7 +15,7 @@ All data (strings, numbers, containers) must be converted to byte sequences (bin
 | **encode** | Data → Binary | Converts human-readable data to transmittable binary format |
 | **decode** | Binary → Data | Converts binary data back to human-readable format |
 
-#### 2.1.1.1 Example
+#### Example
 
 ```python
 # String to binary (encode)
@@ -52,13 +52,13 @@ print(f"Decoded:  {decoded_cn}")
 
 Containers cannot be directly encoded. They must be converted to a string first (e.g., JSON), then encoded to binary.
 
-#### 2.1.2.1 Process
+#### Process
 
 ```
 Container → String (JSON) → Binary Data
 ```
 
-#### 2.1.2.2 Example
+#### Example
 
 ```python
 import json
@@ -93,7 +93,7 @@ Function signature for creating a Socket:
 socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-### address_family — Address Type
+### 2.3.1 address_family — Address Type
 
 | Value | Description |
 |-------|-------------|
@@ -102,7 +102,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.AF_UNIX` | Unix domain socket — IPC on the same machine (Linux/macOS only) |
 | `socket.AF_BLUETOOTH` | Bluetooth communication |
 
-### socket_type — Transmission Mode
+### 2.3.2 socket_type — Transmission Mode
 
 | Value | Description |
 |-------|-------------|
@@ -111,7 +111,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.SOCK_RAW` | Raw socket: direct network-layer access; requires admin privileges; used for custom protocols or packet capture |
 | `socket.SOCK_SEQPACKET` | Ordered, reliable, connection-oriented datagrams (rarely used) |
 
-### proto — Protocol Number (Optional)
+### 2.3.3 proto — Protocol Number (Optional)
 
 Default is `0`, the system automatically selects from the first two parameters. Only needed when using `SOCK_RAW`:
 
@@ -125,16 +125,14 @@ Default is `0`, the system automatically selects from the first two parameters. 
 
 ## 2.4 UDP Socket
 
-UDP socket is connectionless, with high efficiency but no guarantee of data transmission security.
-
-### UDP Characteristics
+### 2.4.1 UDP Characteristics
 
 - **Possible Packet Loss**: No guarantee of data arrival
 - **Simple and Efficient**: Simple transmission process, easy to implement
 - **Datagram Transmission**: Data is transmitted in packets
 - **Connectionless**: When sending data, client IP, port and target IP/port must be included
 
-### UDP Server Complete Process
+### 2.4.2 UDP Server Complete Process
 
 ```python
 import socket
@@ -183,7 +181,7 @@ server.close()
 - **IPv6 loopback**: `'::1'` is equivalent to `'127.0.0.1'`
 - **IPv6 wildcard**: `'::'` is equivalent to `'0.0.0.0'`
 
-### UDP Client Complete Process
+### 2.4.3 UDP Client Complete Process
 
 ```python
 import socket
@@ -208,7 +206,7 @@ while True:
 client.close()
 ```
 
-### UDP Applicable Scenarios
+### 2.4.4 UDP Applicable Scenarios
 
 | Scenario | Reason |
 |----------|--------|
@@ -218,40 +216,20 @@ client.close()
 
 ## 2.5 TCP Socket
 
-TCP socket is connection-oriented, providing secure and stable data transmission, but with relatively lower efficiency.
-
-### TCP Characteristics
+### 2.5.1 TCP Characteristics
 
 - **Reliable Transmission**: No loss, disorder, errors, or duplication
 - **Connection Mechanism**: Establish data connection before communication
 - **Acknowledgment**: Automatically confirm received data
 - **Normal Disconnection**: Properly disconnect after communication ends
 
-### TCP Connection Establishment and Termination
+### 2.5.2 TCP Connection Establishment and Termination
 
-#### Three-way Handshake (Establish Connection)
+TCP establishes a connection via the **three-way handshake** and terminates it via the **four-way handshake**. `connect()` automatically triggers the three-way handshake, and `close()` triggers the four-way termination — the application does not need to handle them manually.
 
-1. Client sends request packet, requesting connection
-2. Server receives request and replies, indicating connection is possible
-3. Client receives reply, sends packet again to establish connection
+> For the full procedure and the SYN/ACK/FIN/seq terminology, see section 1.3.3 in Chapter 1.
 
-**Terminology:**
-- **SYN**: Synchronize bit. SYN = 1 indicates connection request
-- **ACK**: Acknowledgment bit. ACK = 1 indicates acknowledgment is valid, ACK = 0 indicates invalid
-- **ack**: Acknowledgment number = sender's sequence number + 1
-- **seq**: Sequence number. Random, uncertain, non-fixed value
-
-#### Four-way Handshake (Disconnect)
-
-1. Active side sends packet requesting disconnection
-2. Passive side receives request and replies immediately, indicating preparation for disconnection
-3. Passive side sends packet again when ready, indicating disconnection is possible
-4. Active side receives acknowledgment and sends final packet to complete disconnection
-
-**Terminology:**
-- **FIN = 1**: Indicates disconnection request
-
-### TCP Server Complete Process
+### 2.5.3 TCP Server Complete Process
 
 ```python
 import socket
@@ -292,7 +270,7 @@ conn.close()     # Close connection object
 server.close()   # Close server socket
 ```
 
-### TCP Client Complete Process
+### 2.5.4 TCP Client Complete Process
 
 ```python
 import socket
@@ -323,7 +301,7 @@ while True:
 client.close()
 ```
 
-### TCP Notes and Applicable Scenarios
+### 2.5.5 TCP Notes and Applicable Scenarios
 
 **Important Details:**
 
@@ -612,6 +590,7 @@ client.close()
 - The receiver should not use `recv(1024)` for arbitrary messages. It should read exactly the announced length, possibly in a loop if the data is large.
 - For production systems, consider using established protocols or libraries (e.g., HTTP, JSON-RPC, gRPC, `asyncio` streams, `struct` with network byte order `!i`).
 - `struct.pack("i", ...)` uses the machine's native byte order by default. For cross-platform communication, use `!i` (network byte order / big-endian).
+- The examples use `send()` for brevity; it returns the number of bytes actually sent and does not guarantee that all data goes out in one call. Production code should use `sendall()` (or loop on the return value of `send()`) to ensure complete transmission.
 
 ---
 
@@ -858,3 +837,12 @@ client.close()
 - Learning the foundations before moving to `asyncio` or `selectors`
 
 > **Summary**: Non-blocking sockets + `select` is a classic way to build single-threaded concurrent network servers. For modern Python projects, `asyncio` builds on the same ideas but provides a cleaner, higher-level API.
+
+
+## 2.10 Chapter Summary
+
+- **Data encoding**: All data must be encoded into bytes before transmission — strings via `encode()`/`decode()`, containers (lists, dicts) first converted to strings via JSON.
+- **Socket basics**: `AF_INET` + `SOCK_DGRAM` creates a UDP socket; `AF_INET` + `SOCK_STREAM` creates a TCP socket.
+- **UDP vs TCP**: UDP is connectionless and efficient but does not guarantee delivery; TCP is connection-oriented and reliable but with more overhead. Choose based on real-time vs reliability needs.
+- **Sticky packets**: TCP is a byte-stream protocol and message boundaries are lost; the standard solution is a fixed-length header (e.g., a 4-byte length prefix packed with `struct`) — the receiver reads the header first, then exactly that many bytes.
+- **Concurrent servers**: Non-blocking sockets let one thread poll multiple connections but burn CPU; IO multiplexing with `select` notifies only when a socket is ready — the classic single-threaded concurrency approach. Modern Python projects should prefer `asyncio`.
