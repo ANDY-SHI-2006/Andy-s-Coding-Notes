@@ -415,7 +415,7 @@ user: dict[str, int] = {"age": 20}
 
 **Note:** Python remains dynamically typed. Type hints are checked by external tools (like `mypy`), not at runtime.
 
-**See also:** [16 Type Annotations](16-type-annotations.md) for a more detailed discussion.
+**See also:** [17 Type Annotations](17-type-annotations.md) for a more detailed discussion.
 
 Import from the `typing` module for complex type declarations.
 

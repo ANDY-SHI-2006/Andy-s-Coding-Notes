@@ -201,7 +201,7 @@ all(n >= 0 for n in nums)    # True
 
 ## 11.4 `functools` Functional Utilities
 
-Python's `functools` module provides several tools for functional programming, including `reduce()` and `partial()`. For details and examples, see [16 `functools`](16-functools.md).
+Python's `functools` module provides several tools for functional programming, including `reduce()` and `partial()`. For details and examples, see [14 `functools`](14-functools.md).
 
 ## 11.5 Iterators
 

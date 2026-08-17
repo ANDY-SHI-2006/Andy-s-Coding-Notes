@@ -1,4 +1,4 @@
-[← Previous: functools](16-functools.md)
+[← Previous: Modules and Packages](16-modules-and-packages.md)
 
 # 17 Type Annotations
 
@@ -157,4 +157,4 @@ print(typing.get_type_hints(add))
 - ❌ Don't over-annotate trivial cases like `i: int = 0` where the type is obvious
 
 
-[← Previous: functools](16-functools.md)
+[← Previous: Modules and Packages](16-modules-and-packages.md)

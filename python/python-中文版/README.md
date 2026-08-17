@@ -24,9 +24,9 @@
 
 ### 第四部分：闭包、装饰器与开发要点
 13. [闭包与装饰器](13-闭包与装饰器.md) — *嵌套函数、包装器、@ 语法*
-14. [异常处理](14-异常处理.md) — *try/except、raise、自定义异常、assert*
-15. [模块与包](15-模块与包.md) — *import、pip、venv、标准库*
-16. [functools](16-functools.md) — *wraps、partial、reduce、lru_cache、total_ordering*
+14. [functools](14-functools.md) — *wraps、partial、reduce、lru_cache、total_ordering*
+15. [异常处理](15-异常处理.md) — *try/except、raise、自定义异常、assert*
+16. [模块与包](16-模块与包.md) — *import、pip、venv、标准库*
 
 ### 附录
 17. [类型注解](17-类型注解.md) — *类型提示、Union、Optional、dataclass、mypy*

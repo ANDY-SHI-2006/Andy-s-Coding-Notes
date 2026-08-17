@@ -24,9 +24,9 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 
 ### Part 4: Closures, Decorators, and Development Essentials
 13. [Closures and Decorators](13-closures-and-decorators.md) — *Nested functions, wrappers, @syntax*
-14. [Exception Handling](14-exception-handling.md) — *try/except, raise, custom exceptions, assert*
-15. [Modules and Packages](15-modules-and-packages.md) — *import, pip, venv, standard library*
-16. [functools](16-functools.md) — *wraps, partial, reduce, lru_cache, total_ordering*
+14. [functools](14-functools.md) — *wraps, partial, reduce, lru_cache, total_ordering*
+15. [Exception Handling](15-exception-handling.md) — *try/except, raise, custom exceptions, assert*
+16. [Modules and Packages](16-modules-and-packages.md) — *import, pip, venv, standard library*
 
 ### Appendix
 17. [Type Annotations](17-type-annotations.md) — *Type hints, Union, Optional, dataclass, mypy*
