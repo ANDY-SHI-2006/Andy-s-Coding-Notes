@@ -486,6 +486,8 @@ except ZeroDivisionError:
 
 **Best practice:** In production code, log exceptions with `logging.exception()` or `logging.error(..., exc_info=True)` rather than using bare `print()`. This preserves the full context needed for debugging.
 
+For a deeper treatment, see [28 logging](28-logging.md).
+
 ## 14.10 Quick Reference
 
 **`try/except` syntax**

@@ -520,6 +520,8 @@ print(counts)  # Counter({'apple': 3, 'banana': 2, 'cherry': 1})
 print(counts.most_common(2))  # [('apple', 3), ('banana', 2)]
 ```
 
+For a deeper treatment, see [18 collections Module](18-collections-module.md).
+
 ## 4.3 Common Concepts for Sets and Dictionaries
 
 ### 4.3.1 Hashable Keys and Elements

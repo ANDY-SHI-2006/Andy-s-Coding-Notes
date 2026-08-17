@@ -32,7 +32,17 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 
 ### Part 5: Common Modules in Depth
 17. [functools](17-functools.md) — *wraps, partial, reduce, lru_cache, total_ordering*
+18. [collections Module](18-collections-module.md) — *Counter, defaultdict, deque, namedtuple, ChainMap*
+19. [itertools Module](19-itertools-module.md) — *Infinite iterators, combinatorics, groupby, lazy tools*
 20. [Regular Expressions (re)](20-regular-expressions.md) — *Metacharacters, groups, flags, re.compile, hands-on examples*
+21. [os Module](21-os-module.md) — *Paths, directory walking, environment variables, vs pathlib*
+22. [json Module](22-json-module.md) — *Serialization, file I/O, formatting, custom encoders*
+23. [csv Module](23-csv-module.md) — *reader/writer, DictReader/DictWriter, dialects, pitfalls*
+24. [Date and Time (datetime)](24-date-and-time-datetime.md) — *Formatting, timedelta, time zones, timestamps*
+25. [random Module](25-random-module.md) — *Sampling, shuffle, seeding, secrets for security*
+26. [sys Module](26-sys-module.md) — *argv, exit, sys.path, standard streams, interpreter info*
+27. [argparse Command-Line Arguments](27-argparse-command-line-args.md) — *Positional/optional args, subcommands, auto help*
+28. [logging](28-logging.md) — *Levels, handlers, formatters, exception logging*
 
 ---
 
@@ -48,4 +58,4 @@ Each chapter contains navigation links at the top and bottom for easy browsing b
 - **Chapters 11-12**: Advanced Functions and Object-Oriented Programming
 - **Chapters 13-15**: Closures, Decorators, Robustness, and Development Essentials
 - **Appendix**: Type Annotations
-- **Chapters 17+**: Common Modules in Depth
+- **Chapters 17-28**: Common Modules in Depth

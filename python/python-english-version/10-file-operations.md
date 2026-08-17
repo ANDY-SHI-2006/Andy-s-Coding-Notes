@@ -496,6 +496,8 @@ with open("data.json", encoding="utf-8") as f:
     loaded = json.load(f)
 ```
 
+For a deeper treatment, see [22 json Module](22-json-module.md).
+
 ### 10.4.2 CSV
 
 **Why use `newline=""`?**
@@ -619,6 +621,8 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
         {"name": "Carol", "age": 30},
     ])
 ```
+
+For a deeper treatment, see [23 csv Module](23-csv-module.md).
 
 ## 10.5 Character Encoding
 

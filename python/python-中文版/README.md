@@ -32,7 +32,17 @@
 
 ### 第五部分：常用模块专题
 17. [functools](17-functools.md) — *wraps、partial、reduce、lru_cache、total_ordering*
+18. [collections 模块](18-collections模块.md) — *Counter、defaultdict、deque、namedtuple、ChainMap*
+19. [itertools 模块](19-itertools模块.md) — *无限迭代器、组合排列、groupby、惰性工具*
 20. [正则表达式（re 模块）](20-正则表达式re.md) — *元字符、分组、标志位、re.compile、实战示例*
+21. [os 模块](21-os模块.md) — *路径、目录遍历、环境变量、与 pathlib 对比*
+22. [json 模块](22-json模块.md) — *序列化、文件读写、格式控制、自定义编码器*
+23. [csv 模块](23-csv模块.md) — *reader/writer、DictReader/DictWriter、方言、常见坑*
+24. [日期与时间（datetime）](24-日期与时间datetime.md) — *格式化、timedelta、时区、时间戳*
+25. [random 随机数](25-random随机数.md) — *采样、打乱、种子复现、secrets 安全随机*
+26. [sys 模块](26-sys模块.md) — *argv、exit、sys.path、标准流、解释器信息*
+27. [argparse 命令行参数](27-argparse命令行参数.md) — *位置/可选参数、子命令、自动帮助*
+28. [logging 日志](28-logging日志.md) — *级别、Handler、Formatter、异常日志*
 
 ---
 
@@ -48,4 +58,4 @@
 - **第 11–12 章**：高级函数与面向对象编程
 - **第 13–15 章**：闭包、装饰器、健壮性与开发要点
 - **附录**：类型注解
-- **第 17 章起**：常用模块专题
+- **第 17–28 章**：常用模块专题

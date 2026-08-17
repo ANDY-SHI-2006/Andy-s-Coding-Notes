@@ -291,6 +291,8 @@ for key, group in itertools.groupby(data, key=lambda x: x[0]):
     print(key, list(group))   # A [(A,1), (A,2)]  B [(B,3), (B,4)]
 ```
 
+For a deeper treatment, see [19 itertools Module](19-itertools-module.md).
+
 ## 11.6 Generators
 
 ### 11.6.1 Generator Functions and Expressions

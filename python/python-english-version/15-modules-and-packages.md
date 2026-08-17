@@ -217,6 +217,8 @@ os.remove("file.txt")    # Delete file
 os.system("python --version")   # Runs command in subshell
 ```
 
+For a deeper treatment, see [21 os Module](21-os-module.md).
+
 ### 15.7.2 `sys` — System-Specific Parameters
 
 ```python
@@ -228,6 +230,8 @@ sys.path          # Module search path
 sys.platform      # Platform identifier ('win32', 'darwin', 'linux')
 sys.version       # Python version information string
 ```
+
+For a deeper treatment, see [26 sys Module](26-sys-module.md).
 
 ### 15.7.3 `datetime` — Date and Time
 
@@ -244,6 +248,8 @@ print(birthday.year)          # 2000
 future = now + timedelta(days=7)
 print(future)
 ```
+
+For a deeper treatment, see [24 Date and Time (datetime)](24-date-and-time-datetime.md).
 
 ### 15.7.4 `random` — Random Numbers
 
@@ -271,6 +277,8 @@ random.sample(elements, k=2)   # Example: ['C', 'A']
 | `choice()` | — | — | No | Pick one random item |
 | `choices()` | With | Allowed | Yes | Lottery, weighted selection |
 | `sample()` | Without | Not allowed | No | Draw without replacement |
+
+For a deeper treatment, see [25 random Module](25-random-module.md).
 
 ### 15.7.5 `re` — Regular Expressions
 
