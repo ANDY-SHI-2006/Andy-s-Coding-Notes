@@ -13,18 +13,8 @@ Requires downloading a client application to use.
 | **Client** | Terminal program installed locally (WeChat, TikTok, Steam, LoL) |
 | **Server** | 24/7 standby, responds to requests (e.g., Tencent WeChat Server) |
 | **Use Cases** | Games, Banking Apps (high performance & security needs) |
-
-#### 1.1.1.1 Pros
-
-- Excellent UX: rich graphics/audio stored locally
-- Offline capability (single-player games, document editing)
-- Better security, data can be stored locally
-
-#### 1.1.1.2 Cons
-
-- Higher dev/maintenance cost (client + server)
-- Users must download updates
-- Cross-platform complexity (iOS, Android, Windows)
+| **Pros** | Excellent UX: rich graphics/audio stored locally<br>Offline capability (single-player games, document editing)<br>Better security, data can be stored locally |
+| **Cons** | Higher dev/maintenance cost (client + server)<br>Users must download updates<br>Cross-platform complexity (iOS, Android, Windows) |
 
 ### 1.1.2 B/S: Browser / Server
 
@@ -34,19 +24,8 @@ No installation needed; access via browser using URLs.
 |--------|-------------|
 | **Access** | Browser + URL (baidu.com, jd.com, bilibili.com) |
 | **Use Cases** | Entertainment, shopping, web games (convenience-focused) |
-
-#### 1.1.2.1 Pros
-
-- No client development needed (web page + server only)
-- Zero install for users; open browser and go
-- Easy updates: server-side only, users just refresh
-- Cross-platform: any device with a browser
-
-#### 1.1.2.2 Cons
-
-- Everything loaded from server → network dependent
-- Poor performance for large apps (low quality graphics/audio)
-- Limited interactivity compared to native apps
+| **Pros** | No client development needed (web page + server only)<br>Zero install for users; open browser and go<br>Easy updates: server-side only, users just refresh<br>Cross-platform: any device with a browser |
+| **Cons** | Everything loaded from server → network dependent<br>Poor performance for large apps (low quality graphics/audio)<br>Limited interactivity compared to native apps |
 
 ### 1.1.3 Comparison Summary
 
@@ -78,21 +57,21 @@ Every network communication involves three core elements: **IP addresses**, **po
 
 An IP address is a unique identifier assigned to a device on a network.
 
-#### 1.2.1.1 IP Address Classification
+#### IP Address Classification
 
 | Version | Description | Address Length | Format |
 |---------|-------------|----------------|--------|
 | **IPv4** | Internet Protocol version 4 | 32-bit binary | Dot-decimal notation (e.g., `192.168.1.34`) |
 | **IPv6** | Internet Protocol version 6 | 128-bit binary | 8 groups of hexadecimal numbers separated by colons |
 
-#### 1.2.1.2 IPv4 Address Structure
+#### IPv4 Address Structure
 
 - **Binary representation**: 32 bits divided into 4 octets (8 bits each)
 - **Display format**: Dot-decimal notation (e.g., `192.168.1.34`)
 - **Value range per octet**: 0 - 255
 - **Total address space**: Approximately 4.3 billion (2^32) unique addresses
 
-#### 1.2.1.3 IPv6 Address Structure
+#### IPv6 Address Structure
 
 - **Address format**: 8 groups of 4 hexadecimal digits separated by colons
 - **Example**: `2001:0db8:85a3:0000:0000:8a2e:0370:7334`
@@ -101,7 +80,7 @@ An IP address is a unique identifier assigned to a device on a network.
   - **Rule**: Can only be used once per address
   - **Reason**: Using `::` twice would make it impossible to determine how many zero groups each represents (8 total groups minus visible groups = groups represented by `::`)
 
-#### 1.2.1.4 IP Address Types
+#### IP Address Types
 
 | Type | Description | Address Range | Usage |
 |------|-------------|---------------|-------|
@@ -111,7 +90,7 @@ An IP address is a unique identifier assigned to a device on a network.
 
 > **Note on private IP ranges**: The `172.16.0.0/12` range spans from `172.16.0.0` to `172.31.255.255`.
 
-#### 1.2.1.5 IPv4 Address Exhaustion
+#### IPv4 Address Exhaustion
 
 IPv4 provides approximately 4.3 billion unique addresses (2^32). With the explosive growth of internet-connected devices, the global IPv4 address pool was exhausted in stages:
 
@@ -119,19 +98,19 @@ IPv4 provides approximately 4.3 billion unique addresses (2^32). With the explos
 - **Regional Internet Registries (RIRs)** ran out of free IPv4 addresses at different times (between 2011 and 2019).
 - This shortage makes IPv6 and address conservation techniques essential.
 
-##### 1.2.1.5.1 Solutions
+##### Solutions
 
 1. **IPv6 Deployment**
    - 128-bit address space provides 340 undecillion addresses (2^128)
    - Written as 8 groups of hexadecimal numbers separated by colons
    - Gradually replacing IPv4 as the standard protocol
 
-2. **Network Address Translation (NAT)**
+2. **Network Address Translation (NAT)** (see 1.4.4)
    - Allows multiple devices on a private network to share a single public IP
    - Router translates private IP to public IP for internet access
    - Temporarily extends IPv4 lifespan but creates network complexity
 
-3. **Classless Inter-Domain Routing (CIDR)**
+3. **Classless Inter-Domain Routing (CIDR)** (see 1.4.3)
    - More flexible allocation of IP addresses
    - Replaces old class-based system (A, B, C classes)
    - Reduces address waste through subnetting
@@ -141,7 +120,7 @@ IPv4 provides approximately 4.3 billion unique addresses (2^32). With the explos
    - Selling allocated but unused addresses on the market
    - Limited effectiveness as a long-term solution
 
-#### 1.2.1.6 Common IP-Related Commands
+#### Common IP-Related Commands
 
 | Operating System | Command | Purpose |
 | ---------------- | -------------------- | -------------------------- |
@@ -149,7 +128,7 @@ IPv4 provides approximately 4.3 billion unique addresses (2^32). With the explos
 | Linux (modern) | `ip addr` | Display private IP address |
 | Linux/macOS (legacy) | `ifconfig` | Display private IP address |
 | Universal | `curl ifconfig.me` | Display public IP address |
-| Universal | `ping [IP/hostname]` | Test network connectivity |
+| Universal | `ping [IP/hostname]` | Test network connectivity (see 1.6.1) |
 
 > **Note on hostname**: A hostname is a network identifier that can be:
 > - **Domain name**: `google.com`, `github.com`
@@ -169,9 +148,9 @@ A numerical identifier for specific applications or services on a device.
 | **Registered ports** | 1024 - 49151 |
 | **Dynamic/Private ports** | 49152 - 65535 |
 | **Purpose** | Identifies specific applications/services on a device |
-| **Uniqueness** | Each port number can only be used by one application at a time per device |
+| **Uniqueness** | Each port number can only be used by one application at a time per device, per protocol (TCP and UDP are independent — e.g., DNS uses port 53 on both TCP and UDP simultaneously) |
 
-#### 1.2.2.1 Common Port Numbers
+#### Common Port Numbers
 
 | Port | Service | Description |
 |------|---------|-------------|
@@ -199,7 +178,7 @@ A set of rules that define how data is transmitted over a network.
 | **Transmission rules** | Determines how messages are sent and received |
 | **Error handling** | Specifies how errors are detected and corrected |
 
-#### 1.2.3.1 Network Communication Protocol Models
+#### Network Communication Protocol Models
 
 | Model | Layers | Description |
 |-------|--------|-------------|
@@ -208,7 +187,7 @@ A set of rules that define how data is transmitted over a network.
 
 The TCP/IP model is the de facto standard for internet communication.
 
-#### 1.2.3.2 OSI Model (7 Layers)
+#### OSI Model (7 Layers)
 
 A theoretical model used in network education.
 
@@ -222,20 +201,16 @@ A theoretical model used in network education.
 | 2 | **Data Link** | Provides node-to-node reliable transmission |
 | 1 | **Physical** | Transmits raw bit streams over physical medium |
 
-##### 1.2.3.2.1 Data Flow
+##### Data Flow
 
 - **Sender**: Data starts at the Application layer, is processed downward through each layer, and is finally transmitted as binary signals at the Physical layer.
 - **Receiver**: Binary signals are processed at the Physical layer, move upward through each layer, and are finally reconstructed into usable data at the Application layer.
 
-##### 1.2.3.2.2 Pros
+**Pros**: Establishes unified communication standards and reduces development difficulty through clear layer separation.
 
-Establishes unified communication standards and reduces development difficulty through clear layer separation.
+**Cons**: Overly idealistic and structurally too complex for direct practical engineering implementation.
 
-##### 1.2.3.2.3 Cons
-
-Overly idealistic and structurally too complex for direct practical engineering implementation.
-
-#### 1.2.3.3 OSI vs TCP/IP Layer Mapping
+#### OSI vs TCP/IP Layer Mapping
 
 | OSI Layer | OSI Name | TCP/IP Layer | TCP/IP Name | Merged? |
 |-----------|----------|--------------|-------------|---------|
@@ -247,7 +222,7 @@ Overly idealistic and structurally too complex for direct practical engineering 
 | 2 | Data Link | 1 | Network Interface | ✅ Merged |
 | 1 | Physical | 1 | Network Interface | ✅ Merged |
 
-#### 1.2.3.4 TCP/IP Model (4 Layers)
+#### TCP/IP Model (4 Layers)
 
 Practical implementation standard used in actual networking.
 
@@ -258,7 +233,7 @@ Practical implementation standard used in actual networking.
 | 2 | **Internet** | IP, ICMP, ARP | End-to-end data routing |
 | 1 | **Network Interface** | Ethernet, Wi-Fi | Binary signal transmission over physical medium |
 
-##### 1.2.3.4.1 Key Protocols
+##### Key Protocols
 
 - **Application Layer**: HTTP (web browsing), FTP (file transfer), SMTP (email), DNS (domain name resolution)
 - **Transport Layer**: TCP (reliable, slower), UDP (unreliable, fast)
@@ -295,9 +270,9 @@ The Transport layer is responsible for process-to-process communication. Its two
 
 #### Three-Way Handshake (Establish Connection)
 
-1. Client sends a request packet, requesting connection.
-2. Server receives the request and replies, indicating that the connection is possible.
-3. Client receives the reply and sends a packet again to establish the connection.
+1. Client sends a SYN packet (seq = x), requesting a connection.
+2. Server replies with a SYN + ACK packet (seq = y, ack = x + 1), indicating the connection can be established.
+3. Client sends an ACK packet (ack = y + 1), and the connection is formally established.
 
 **Terminology:**
 - **SYN**: Synchronize bit. SYN = 1 indicates a connection request.
@@ -470,11 +445,11 @@ Components:
 
 #### TLS Handshake (Simplified)
 
-1. Client sends supported TLS versions and cipher suites.
-2. Server responds with its certificate and chosen cipher suite.
-3. Client validates the certificate and generates a session key.
-4. Client and server agree on the session key (often using asymmetric encryption).
-5. Subsequent communication is encrypted with the session key.
+1. Client sends supported TLS versions and a list of cipher suites (ClientHello).
+2. Server responds with the chosen cipher suite and its certificate (ServerHello + Certificate).
+3. Client validates the certificate, generates a pre-master secret, encrypts it with the server's public key, and sends it to the server.
+4. Both sides independently derive the same session key from the pre-master secret.
+5. Subsequent communication is encrypted symmetrically with the session key.
 
 > **Port 443** is the default port for HTTPS; port 80 is the default for HTTP.
 
