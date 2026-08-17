@@ -31,6 +31,9 @@ A comprehensive Python programming course covering fundamentals, advanced featur
 ### Appendix
 17. [Type Annotations](17-type-annotations.md) — *Type hints, Union, Optional, dataclass, mypy*
 
+### Part 5: Common Modules in Depth
+18. [Regular Expressions (re)](18-regular-expressions.md) — *Metacharacters, groups, flags, re.compile, hands-on examples*
+
 ---
 
 ## Navigation
@@ -45,3 +48,4 @@ Each chapter contains navigation links at the top and bottom for easy browsing b
 - **Chapters 11-12**: Advanced Functions and Object-Oriented Programming
 - **Chapters 13-16**: Closures, Decorators, Robustness, and Development Essentials
 - **Appendix**: Type Annotations
+- **Chapter 18**: Common Modules in Depth (Regular Expressions)

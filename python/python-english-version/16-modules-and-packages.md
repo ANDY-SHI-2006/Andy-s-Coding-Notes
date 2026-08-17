@@ -284,6 +284,8 @@ re.findall(r"\d+", "a1b2c3")   # Find all matches: ['1', '2', '3']
 re.sub(r"\d+", "X", "a1b2")    # Replace: 'aXbX'
 ```
 
+For a deeper treatment (metacharacters, groups, flags, hands-on examples), see [18 Regular Expressions (re)](18-regular-expressions.md).
+
 ### 16.7.6 `pprint` — Pretty Printing
 
 The `pprint` module formats complex data structures (especially nested dicts and lists) with automatic indentation and line wrapping, making them far more readable than standard `print()`.
