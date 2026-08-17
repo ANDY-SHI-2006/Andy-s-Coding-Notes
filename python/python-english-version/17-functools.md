@@ -1,10 +1,10 @@
-[← Previous: Closures and Decorators](13-closures-and-decorators.md) | [Next: Exception Handling →](15-exception-handling.md)
+[← Previous: Type Annotations](16-type-annotations.md) | [Next: collections Module →](18-collections-module.md)
 
-# 14 `functools`
+# 17 `functools`
 
 `functools` is a module in the Python standard library that provides tools for working with functions and callable objects. It is especially useful when combined with decorators, higher-order functions, and performance optimization.
 
-## 14.1 Overview
+## 17.1 Overview
 
 `functools` contains helpers that operate on functions themselves — preserving metadata, fixing arguments, combining values, caching results, and simplifying class comparisons.
 
@@ -18,7 +18,7 @@ The most commonly used members are:
 | `@functools.lru_cache` | Cache function results |
 | `@functools.total_ordering` | Auto-generate comparison methods for classes |
 
-## 14.2 Preserving Metadata with `@functools.wraps`
+## 17.2 Preserving Metadata with `@functools.wraps`
 
 When you write a decorator, the decorated function name becomes the wrapper's name. Use `@wraps` to copy the original `__name__`, `__doc__`, and other attributes.
 
@@ -42,7 +42,7 @@ print(greet.__doc__)    # Say hello.
 
 **When to use:** Always inside custom decorators. See also [13.3.5 Preserving Metadata with `functools.wraps`](13-closures-and-decorators.md#1335-preserving-metadata-with-functoolswraps).
 
-## 14.3 Fixing Arguments with `functools.partial`
+## 17.3 Fixing Arguments with `functools.partial`
 
 `partial(func, arg1, arg2, ...)` returns a new function with some arguments already filled in.
 
@@ -71,7 +71,7 @@ print(hex_to_int("FF"))   # 255
 print(hex_to_int("A"))    # 10
 ```
 
-## 14.4 Reducing Iterables with `functools.reduce`
+## 17.4 Reducing Iterables with `functools.reduce`
 
 `reduce(function, iterable)` applies a two-argument function cumulatively to the items of an iterable, from left to right, reducing it to a single value.
 
@@ -102,7 +102,7 @@ print(maximum)   # 9
 
 **Note:** In many cases, built-ins like `sum()`, `max()`, or list comprehensions are clearer than `reduce`. Use `reduce` only when it genuinely improves readability.
 
-## 14.5 Caching Results with `@functools.lru_cache`
+## 17.5 Caching Results with `@functools.lru_cache`
 
 `@lru_cache` stores recent function calls and returns the cached result for repeated inputs. This is called *memoization*.
 
@@ -136,7 +136,7 @@ def factorial(n):
 
 **Important:** Only cache functions whose arguments are hashable (e.g., numbers, strings, tuples). Lists and dictionaries cannot be cached directly.
 
-## 14.6 Auto-Generating Comparisons with `@functools.total_ordering`
+## 17.6 Auto-Generating Comparisons with `@functools.total_ordering`
 
 If you define `__eq__` and one other comparison method (`__lt__`, `__le__`, `__gt__`, or `__ge__`), `@total_ordering` generates the rest for you.
 
@@ -164,7 +164,7 @@ print(alice <= bob)  # False
 
 **When to use:** It reduces boilerplate in classes that need rich comparison operators.
 
-## 14.7 Summary
+## 17.7 Summary
 
 | Tool | Use it when... |
 |------|----------------|
@@ -176,4 +176,4 @@ print(alice <= bob)  # False
 
 `functools` is small but powerful. Mastering the first four tools (`wraps`, `partial`, `reduce`, `lru_cache`) covers most real-world use cases.
 
-[← Previous: Closures and Decorators](13-closures-and-decorators.md) | [Next: Exception Handling →](15-exception-handling.md)
+[← Previous: Type Annotations](16-type-annotations.md) | [Next: collections Module →](18-collections-module.md)

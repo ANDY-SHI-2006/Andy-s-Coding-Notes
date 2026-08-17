@@ -1,10 +1,10 @@
-[← 上一篇：闭包与装饰器](13-闭包与装饰器.md) | [下一篇：异常处理 →](15-异常处理.md)
+[← 上一篇：类型注解](16-类型注解.md) | [下一篇：collections 模块 →](18-collections模块.md)
 
-# 14 `functools`
+# 17 `functools`
 
 `functools` 是 Python 标准库中的一个模块，提供了用于处理函数和可调用对象的工具。它与装饰器、高阶函数和性能优化结合使用时尤其有用。
 
-## 14.1 概览
+## 17.1 概览
 
 `functools` 包含一系列直接作用于函数本身的辅助工具——保留元数据、固定参数、合并值、缓存结果，以及简化类的比较操作。
 
@@ -18,7 +18,7 @@
 | `@functools.lru_cache` | 缓存函数结果 |
 | `@functools.total_ordering` | 为类自动生成比较方法 |
 
-## 14.2 使用 `@functools.wraps` 保留元数据
+## 17.2 使用 `@functools.wraps` 保留元数据
 
 当你编写装饰器时，被装饰函数的名字会变成包装函数的名字。使用 `@wraps` 可以把原来的 `__name__`、`__doc__` 等属性复制过来。
 
@@ -42,7 +42,7 @@ print(greet.__doc__)    # Say hello.
 
 **何时使用：** 在自定义装饰器中始终使用。另见 [13.3.5 用 `functools.wraps` 保留元数据](13-闭包与装饰器.md#1335-用-functoolswraps-保留元数据)。
 
-## 14.3 使用 `functools.partial` 固定参数
+## 17.3 使用 `functools.partial` 固定参数
 
 `partial(func, arg1, arg2, ...)` 返回一个新函数，其中部分参数已经被预先填充。
 
@@ -71,7 +71,7 @@ print(hex_to_int("FF"))   # 255
 print(hex_to_int("A"))    # 10
 ```
 
-## 14.4 使用 `functools.reduce` 归约可迭代对象
+## 17.4 使用 `functools.reduce` 归约可迭代对象
 
 `reduce(function, iterable)` 将一个双参数函数从左到右累积地作用于可迭代对象的各个元素，最终归约为单个值。
 
@@ -102,7 +102,7 @@ print(maximum)   # 9
 
 **注意：** 在许多情况下，`sum()`、`max()` 等内置函数或列表推导式比 `reduce` 更清晰。只有当 `reduce` 确实能提升可读性时才使用它。
 
-## 14.5 使用 `@functools.lru_cache` 缓存结果
+## 17.5 使用 `@functools.lru_cache` 缓存结果
 
 `@lru_cache` 会存储最近的函数调用结果，对于重复的输入直接返回缓存的结果。这种技术称为*记忆化*（memoization）。
 
@@ -136,7 +136,7 @@ def factorial(n):
 
 **重要提示：** 只能缓存参数可哈希的函数（例如数字、字符串、元组）。列表和字典不能直接作为缓存键。
 
-## 14.6 使用 `@functools.total_ordering` 自动生成比较方法
+## 17.6 使用 `@functools.total_ordering` 自动生成比较方法
 
 如果你定义了 `__eq__` 和另一个比较方法（`__lt__`、`__le__`、`__gt__` 或 `__ge__`），`@total_ordering` 会为你自动生成其余的比较方法。
 
@@ -164,7 +164,7 @@ print(alice <= bob)  # False
 
 **何时使用：** 当类需要完整的比较运算符时，它可以减少样板代码。
 
-## 14.7 小结
+## 17.7 小结
 
 | 工具 | 何时使用…… |
 |------|------------|
@@ -176,4 +176,4 @@ print(alice <= bob)  # False
 
 `functools` 模块虽小，但功能强大。掌握前四个工具（`wraps`、`partial`、`reduce`、`lru_cache`）即可覆盖大多数实际应用场景。
 
-[← 上一篇：闭包与装饰器](13-闭包与装饰器.md) | [下一篇：异常处理 →](15-异常处理.md)
+[← 上一篇：类型注解](16-类型注解.md) | [下一篇：collections 模块 →](18-collections模块.md)

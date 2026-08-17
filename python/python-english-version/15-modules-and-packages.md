@@ -1,12 +1,12 @@
-[← Previous: Exception Handling](15-exception-handling.md) | [Next: Type Annotations →](17-type-annotations.md)
+[← Previous: Exception Handling](14-exception-handling.md) | [Next: Type Annotations →](16-type-annotations.md)
 
-# 16 Modules and Packages
+# 15 Modules and Packages
 
 A **module** is a single `.py` file containing Python code (variables, functions, classes). A **package** is a directory that groups related modules together, usually with an `__init__.py` file. Modules and packages let you organize code into reusable, manageable pieces.
 
-## 16.1 Importing Modules
+## 15.1 Importing Modules
 
-### 16.1.1 Basic Import
+### 15.1.1 Basic Import
 
 Use `import` to load a module. Use `from ... import` to load specific names.
 
@@ -23,7 +23,7 @@ import numpy as np
 from datetime import datetime as dt
 ```
 
-### 16.1.2 Import Rules
+### 15.1.2 Import Rules
 
 | Syntax | Effect | Recommendation |
 |--------|--------|----------------|
@@ -44,13 +44,13 @@ from typing import Optional
 from math import *   # sqrt, pi, sin, cos... all dumped into global namespace
 ```
 
-## 16.2 Packages
+## 15.2 Packages
 
-### 16.2.1 What Is a Package?
+### 15.2.1 What Is a Package?
 
 A **package** is a directory that bundles related modules. It usually contains an `__init__.py` file (often empty) so Python recognizes it as a package rather than an ordinary directory. Think of a package as a namespace: `graphics.shapes` groups shape-related code under the `graphics` package, keeping names organized and avoiding collisions.
 
-### 16.2.2 Package Structure
+### 15.2.2 Package Structure
 
 ```text
 my_project/
@@ -67,7 +67,7 @@ my_project/
 
 **Tip:** Since Python 3.3, `__init__.py` can be omitted (this is called a namespace package), but writing `__init__.py` explicitly is still the recommended practice.
 
-### 16.2.3 Importing from a Package
+### 15.2.3 Importing from a Package
 
 Use dot notation to reach submodules.
 
@@ -85,7 +85,7 @@ from graphics import shapes as gshapes
 gshapes.draw_circle()
 ```
 
-### 16.2.4 Relative Imports
+### 15.2.4 Relative Imports
 
 Inside a package you can import sibling modules with relative dots. Use one dot for the current package, two dots for the parent package.
 
@@ -99,7 +99,7 @@ from .. import config
 
 **Note:** Relative imports only work when the package is imported as a package, not when you run an individual module directly.
 
-### 16.2.5 Controlling `from package import *` with `__all__`
+### 15.2.5 Controlling `from package import *` with `__all__`
 
 For a module, without `__all__`, `from module import *` imports every name that does not start with an underscore. For a package, however, `from package import *` only imports the names already bound in `__init__.py` — it does not automatically import submodules. That is exactly why you define the public API explicitly with `__all__` in `__init__.py`.
 
@@ -112,7 +112,7 @@ __all__ = ["shapes", "colors"]
 from graphics import *   # Only brings in shapes and colors
 ```
 
-## 16.3 Module Search Path
+## 15.3 Module Search Path
 
 Python searches for modules in this order:
 
@@ -126,7 +126,7 @@ import sys
 print(sys.path)   # List of search directories
 ```
 
-## 16.4 `__name__ == "__main__"`
+## 15.4 `__name__ == "__main__"`
 
 Code inside this guard only runs when the file is executed directly, not when imported as a module.
 
@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
 **Best Practice:** Always wrap executable code in `if __name__ == "__main__":` to make modules reusable.
 
-## 16.5 pip and PyPI
+## 15.5 pip and PyPI
 
 `pip` is Python's package installer. PyPI (Python Package Index) is the public repository. The recommended way to invoke pip is `python -m pip`, which guarantees the package is installed for the exact Python interpreter you intend, avoiding mistakes when multiple Python versions are installed.
 
@@ -173,7 +173,7 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
-## 16.6 Virtual Environments
+## 15.6 Virtual Environments
 
 A virtual environment is an isolated Python environment for each project.
 
@@ -195,11 +195,11 @@ deactivate
 
 **Typical workflow:** Create and activate a venv for each project, then install dependencies with `pip install -r requirements.txt`. Do not commit the `.venv` directory to version control — exclude it in `.gitignore`.
 
-## 16.7 Standard Library Quick Reference
+## 15.7 Standard Library Quick Reference
 
 Python's standard library is extensive. Below are the most commonly used modules.
 
-### 16.7.1 `os` — Operating System Interface
+### 15.7.1 `os` — Operating System Interface
 
 ```python
 import os
@@ -217,7 +217,7 @@ os.remove("file.txt")    # Delete file
 os.system("python --version")   # Runs command in subshell
 ```
 
-### 16.7.2 `sys` — System-Specific Parameters
+### 15.7.2 `sys` — System-Specific Parameters
 
 ```python
 import sys
@@ -229,7 +229,7 @@ sys.platform      # Platform identifier ('win32', 'darwin', 'linux')
 sys.version       # Python version information string
 ```
 
-### 16.7.3 `datetime` — Date and Time
+### 15.7.3 `datetime` — Date and Time
 
 ```python
 from datetime import datetime, timedelta
@@ -245,7 +245,7 @@ future = now + timedelta(days=7)
 print(future)
 ```
 
-### 16.7.4 `random` — Random Numbers
+### 15.7.4 `random` — Random Numbers
 
 ```python
 import random
@@ -272,7 +272,7 @@ random.sample(elements, k=2)   # Example: ['C', 'A']
 | `choices()` | With | Allowed | Yes | Lottery, weighted selection |
 | `sample()` | Without | Not allowed | No | Draw without replacement |
 
-### 16.7.5 `re` — Regular Expressions
+### 15.7.5 `re` — Regular Expressions
 
 ```python
 import re
@@ -284,9 +284,9 @@ re.findall(r"\d+", "a1b2c3")   # Find all matches: ['1', '2', '3']
 re.sub(r"\d+", "X", "a1b2")    # Replace: 'aXbX'
 ```
 
-For a deeper treatment (metacharacters, groups, flags, hands-on examples), see [18 Regular Expressions (re)](18-regular-expressions.md).
+For a deeper treatment (metacharacters, groups, flags, hands-on examples), see [20 Regular Expressions (re)](20-regular-expressions.md).
 
-### 16.7.6 `pprint` — Pretty Printing
+### 15.7.6 `pprint` — Pretty Printing
 
 The `pprint` module formats complex data structures (especially nested dicts and lists) with automatic indentation and line wrapping, making them far more readable than standard `print()`.
 
@@ -323,11 +323,11 @@ printer.pprint(data)
 
 **When to use:** Any time you need to inspect nested data structures during debugging.
 
-## 16.8 Circular Imports
+## 15.8 Circular Imports
 
 A **circular import** happens when two modules import each other. Python partially loads the first module, then tries to load the second, which asks for the first again. The first module may not be fully initialized yet, so the second module may see incomplete or `None` names.
 
-### 16.8.1 Example of the Problem
+### 15.8.1 Example of the Problem
 
 ```python
 # a.py
@@ -345,7 +345,7 @@ def func_b():
 
 Running `a.py` can fail or behave unexpectedly because `a` is not finished loading when `b` imports from it.
 
-### 16.8.2 How to Avoid Circular Imports
+### 15.8.2 How to Avoid Circular Imports
 
 - **Restructure code:** Move shared code into a third module that both modules import.
 - **Delay imports:** Import inside a function instead of at the top level when the dependency is only needed at runtime.
@@ -361,7 +361,7 @@ def process(obj: "SomeClass") -> None:
     ...
 ```
 
-## 16.9 Reloading Modules with `importlib`
+## 15.9 Reloading Modules with `importlib`
 
 Once a module is imported, Python caches it in `sys.modules`. Editing the source file and importing again does **not** reload the changed code. Use `importlib.reload()` to force a fresh load.
 
@@ -389,4 +389,4 @@ import math
 importlib.reload(math)
 ```
 
-[← Previous: Exception Handling](15-exception-handling.md) | [Next: Type Annotations →](17-type-annotations.md)
+[← Previous: Exception Handling](14-exception-handling.md) | [Next: Type Annotations →](16-type-annotations.md)

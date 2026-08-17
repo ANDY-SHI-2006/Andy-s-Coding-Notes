@@ -1169,7 +1169,7 @@ else:
     print("File does not exist.")
 ```
 
-For the `try/except` statement itself, see [15.3 Exception Handling Syntax](15-exception-handling.md#153-exception-handling-syntax).
+For the `try/except` statement itself, see [14.3 Exception Handling Syntax](14-exception-handling.md#143-exception-handling-syntax).
 
 ### 10.7.3 Copying and Moving Files with `shutil`
 

@@ -1,6 +1,6 @@
-[← Previous: functools](14-functools.md) | [Next: Modules and Packages →](16-modules-and-packages.md)
+[← Previous: Closures and Decorators](13-closures-and-decorators.md) | [Next: Modules and Packages →](15-modules-and-packages.md)
 
-# 15 Exception Handling
+# 14 Exception Handling
 
 An **exception** is an event that disrupts the normal flow of a program. Examples include dividing by zero, opening a missing file, or passing an invalid value to a function. If an exception is not handled, the program prints an error message and stops.
 
@@ -8,7 +8,7 @@ An **exception** is an event that disrupts the normal flow of a program. Example
 
 Good exception handling makes code more robust and easier to debug by separating normal logic from error handling.
 
-## 15.1 Common Exceptions
+## 14.1 Common Exceptions
 
 | Exception | Cause |
 |-----------|-------|
@@ -38,7 +38,7 @@ int("abc")
 
 Each line above raises the named exception on its own — try them one at a time.
 
-## 15.2 Exception Hierarchy
+## 14.2 Exception Hierarchy
 
 Python exceptions form a class hierarchy. Catching a parent class catches all its subclasses.
 
@@ -61,7 +61,7 @@ BaseException
 
 **Best Practice:** Catch the most specific exception possible.
 
-## 15.3 Exception Handling Syntax
+## 14.3 Exception Handling Syntax
 
 | Syntax | Purpose |
 |--------|---------|
@@ -90,7 +90,7 @@ except (ValueError, TypeError):
     print("Invalid input")
 ```
 
-### 15.3.1 Nested `try/except`
+### 14.3.1 Nested `try/except`
 
 You can nest `try` blocks. The inner `except` handles errors from the inner block; if it doesn't catch the exception, it propagates to the outer `except`.
 
@@ -114,7 +114,7 @@ except Exception:
 
 **Use case:** Inner blocks handle expected, local errors; outer blocks handle unexpected, broader failures.
 
-### 15.3.2 Execution Flow
+### 14.3.2 Execution Flow
 
 ```
 try:
@@ -138,7 +138,7 @@ finally:
 3. If no exception → `else` executes
 4. `finally` always executes last
 
-### 15.3.3 `finally` Use Cases
+### 14.3.3 `finally` Use Cases
 
 Use `finally` for cleanup that must happen regardless of whether an error occurred.
 
@@ -172,7 +172,7 @@ def perform_task():
 
 For most file and resource cleanup, `with` is preferred because it automatically generates the equivalent `try/finally` block.
 
-### 15.3.4 Ordering of `except` Blocks
+### 14.3.4 Ordering of `except` Blocks
 
 Python checks `except` blocks **from top to bottom and runs only the first match**. Specific exceptions must come before broader ones, or the broad one shadows them and the specific block never runs:
 
@@ -194,11 +194,11 @@ except Exception:
     print("Caught something")
 ```
 
-This follows directly from the hierarchy in 15.2: a parent class matches all of its subclasses.
+This follows directly from the hierarchy in 14.2: a parent class matches all of its subclasses.
 
-## 15.4 Best Practices
+## 14.4 Best Practices
 
-### 15.4.1 Be Specific
+### 14.4.1 Be Specific
 
 ```python
 # Bad - catches everything including SystemExit and KeyboardInterrupt
@@ -216,7 +216,7 @@ except FileNotFoundError:
     print("File missing")
 ```
 
-### 15.4.2 Don't Silence Exceptions Blindly
+### 14.4.2 Don't Silence Exceptions Blindly
 
 ```python
 # Bad - hides bugs
@@ -235,9 +235,9 @@ except ValueError as e:
     raise                   # Re-raise if caller should know
 ```
 
-For configuring `logging` and capturing full tracebacks, see [15.9 Logging Exceptions and Traceback](#159-logging-exceptions-and-traceback).
+For configuring `logging` and capturing full tracebacks, see [14.9 Logging Exceptions and Traceback](#149-logging-exceptions-and-traceback).
 
-### 15.4.3 EAFP vs LBYL
+### 14.4.3 EAFP vs LBYL
 
 Two styles for dealing with operations that might fail:
 
@@ -266,7 +266,7 @@ Python idioms generally prefer **EAFP**:
 
 LBYL is still fine when the check is cheap, failure is common, or no suitable exception exists.
 
-## 15.5 `raise`
+## 14.5 `raise`
 
 | Feature | Description |
 |---------|-------------|
@@ -289,9 +289,9 @@ class ValidationError(Exception):
 raise ValidationError("Age cannot be negative")
 ```
 
-A custom exception is just a class inheriting from `Exception`. For a complete example that carries extra context attributes, see 15.5.1 below.
+A custom exception is just a class inheriting from `Exception`. For a complete example that carries extra context attributes, see 14.5.1 below.
 
-### 15.5.1 Practical Example: Custom Exception with Context
+### 14.5.1 Practical Example: Custom Exception with Context
 
 A custom exception with a descriptive message makes debugging much easier. Inherit from `Exception` (or a more specific built-in exception) and pass the error details to `super().__init__()`.
 
@@ -326,7 +326,7 @@ except FutureYearError as e:
 # Current year: 2025
 ```
 
-### 15.5.2 Exception Chaining
+### 14.5.2 Exception Chaining
 
 `raise ... from ...` attaches the original exception as the cause, preserving full traceback information.
 
@@ -337,7 +337,7 @@ except ValueError as e:
     raise RuntimeError("Conversion failed") from e
 ```
 
-### 15.5.3 Suppressing Exception Context
+### 14.5.3 Suppressing Exception Context
 
 When you catch one exception and raise another, Python preserves the original exception as the **cause** or **context**. This is usually helpful, but sometimes you want to hide the original error to avoid confusing the user.
 
@@ -352,7 +352,7 @@ except ValueError:
 
 Without `from None`, the traceback would show both the `ValueError` and the `RuntimeError`. With `from None`, only the `RuntimeError` is shown. Use this sparingly — hiding the original error makes debugging harder.
 
-## 15.6 `assert`
+## 14.6 `assert`
 
 | Feature | Description |
 |---------|-------------|
@@ -388,7 +388,7 @@ print(s.pop())   # 1
 - **Assertion**: Internal bug check, can be disabled
 - **Exception**: Expected error cases, always handled
 
-## 15.7 Context Managers
+## 14.7 Context Managers
 
 The `with` statement ensures cleanup code runs even if exceptions occur.
 
@@ -398,7 +398,7 @@ with open("file.txt") as f:
     content = f.read()
 ```
 
-### 15.7.1 Custom Context Manager
+### 14.7.1 Custom Context Manager
 
 Implement `__enter__` and `__exit__`.
 
@@ -419,7 +419,7 @@ with Timer():
     sum(range(1000000))
 ```
 
-### 15.7.2 `contextlib.contextmanager`
+### 14.7.2 `contextlib.contextmanager`
 
 Simpler way to write context managers using generators.
 
@@ -436,7 +436,7 @@ with managed_resource("db_connection") as res:
     print(f"Using {res}")
 ```
 
-## 15.8 `warnings` Module
+## 14.8 `warnings` Module
 
 Issue non-fatal warnings without stopping execution.
 
@@ -450,11 +450,11 @@ warnings.warn("This feature is deprecated", DeprecationWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 ```
 
-## 15.9 Logging Exceptions and Traceback
+## 14.9 Logging Exceptions and Traceback
 
 When an exception occurs in a long-running program, printing a simple message is often not enough. The `logging` and `traceback` modules help record the full error information so you can diagnose problems later.
 
-### 15.9.1 Logging an Exception
+### 14.9.1 Logging an Exception
 
 Use `logging.exception()` inside an `except` block to automatically include the traceback.
 
@@ -469,7 +469,7 @@ except ZeroDivisionError:
     logging.exception("Division failed")
 ```
 
-### 15.9.2 Capturing the Traceback as a String
+### 14.9.2 Capturing the Traceback as a String
 
 Use `traceback.format_exc()` to capture the full traceback for reporting, tests, or custom error messages.
 
@@ -486,7 +486,7 @@ except ZeroDivisionError:
 
 **Best practice:** In production code, log exceptions with `logging.exception()` or `logging.error(..., exc_info=True)` rather than using bare `print()`. This preserves the full context needed for debugging.
 
-## 15.10 Quick Reference
+## 14.10 Quick Reference
 
 **`try/except` syntax**
 
@@ -517,4 +517,4 @@ except ZeroDivisionError:
 - Prefer EAFP (`try` first) over LBYL (`if` check first) in Python idioms.
 - For file errors specifically, see [10.7.2 Common File Errors](10-file-operations.md#1072-common-file-errors).
 
-[← Previous: functools](14-functools.md) | [Next: Modules and Packages →](16-modules-and-packages.md)
+[← Previous: Closures and Decorators](13-closures-and-decorators.md) | [Next: Modules and Packages →](15-modules-and-packages.md)

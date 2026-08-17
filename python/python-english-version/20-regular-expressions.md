@@ -1,6 +1,6 @@
-[← Previous: Type Annotations](17-type-annotations.md)
+[← Previous: itertools Module](19-itertools-module.md) | [Next: os Module →](21-os-module.md)
 
-# 18 Regular Expressions (re Module)
+# 20 Regular Expressions (re Module)
 
 A regular expression (regex for short) is a small language for describing string patterns. With the `re` module in Python's standard library, you can use a single pattern to perform text-processing tasks such as searching, validating, extracting, replacing, and splitting, without writing tedious loops and conditionals by hand.
 
@@ -8,9 +8,9 @@ A regular expression (regex for short) is a small language for describing string
 import re
 ```
 
-## 18.1 Getting Started
+## 20.1 Getting Started
 
-### 18.1.1 A First Example
+### 20.1.1 A First Example
 
 Suppose you want to find all the numbers in a piece of text. Without regular expressions you would have to check characters one by one; with a regex, a single pattern `\d+` (one or more digits) is enough:
 
@@ -34,9 +34,9 @@ emails = re.findall(r"[\w.+-]+@[\w-]+\.[\w.]+", text)
 print(emails)   # ['alice@example.com', 'bob_2024@test.org']
 ```
 
-The meaning of this pattern will be broken down piece by piece in Section 18.2. For now, you just need to build an intuition: a regex is a compact set of symbols that describes the shape of a string.
+The meaning of this pattern will be broken down piece by piece in Section 20.2. For now, you just need to build an intuition: a regex is a compact set of symbols that describes the shape of a string.
 
-### 18.1.2 Why Patterns Should Use Raw Strings
+### 20.1.2 Why Patterns Should Use Raw Strings
 
 Regular expressions make heavy use of the backslash `\` (as in `\d`, `\b`, `\w`), and Python strings themselves also treat `\` as an escape character. The same backslash has two layers of meaning, which can easily interfere with each other.
 
@@ -62,11 +62,11 @@ print("\\d")   # \d (explicit escaping, correct but noisy)
 print(r"\d")   # \d (raw string, the recommended way)
 ```
 
-## 18.2 Metacharacters and Character Classes
+## 20.2 Metacharacters and Character Classes
 
 A regex pattern consists of ordinary characters and metacharacters. Ordinary characters match themselves, while metacharacters have special meanings.
 
-### 18.2.1 Metacharacter Cheat Sheet
+### 20.2.1 Metacharacter Cheat Sheet
 
 | Metacharacter | Meaning | Example Pattern | Matches |
 |--------|------|----------|------|
@@ -86,7 +86,7 @@ A regex pattern consists of ordinary characters and metacharacters. Ordinary cha
 
 Inside a character class, a hyphen denotes a range: `[0-9]`, `[a-z]`, `[A-Za-z]`.
 
-### 18.2.2 Escape Sequences
+### 20.2.2 Escape Sequences
 
 | Sequence | Meaning | Equivalent Character Class |
 |------|------|-----------|
@@ -122,9 +122,9 @@ re.findall(r"cat|dog", "cat bird dog") # ['cat', 'dog']
 
 Note that `^` means negation inside a character class (`[^0-9]`), but means "start" outside a character class; the two meanings are different.
 
-## 18.3 Core Functions
+## 20.3 Core Functions
 
-### 18.3.1 `re.match()` — Matches Only from the Start
+### 20.3.1 `re.match()` — Matches Only from the Start
 
 `re.match(pattern, string)` checks only whether the **beginning** of the string matches. It returns a Match object on success, otherwise `None`:
 
@@ -135,7 +135,7 @@ re.match(r"\d+", "123abc")   # <re.Match object; span=(0, 3), match='123'>
 re.match(r"\d+", "abc123")   # None — digits are not at the start
 ```
 
-### 18.3.2 `re.search()` — Finds the First Match Anywhere
+### 20.3.2 `re.search()` — Finds the First Match Anywhere
 
 `re.search(pattern, string)` scans the entire string and returns the **first** match:
 
@@ -145,7 +145,7 @@ import re
 re.search(r"\d+", "abc123def456")   # <re.Match object; span=(3, 6), match='123'>
 ```
 
-### 18.3.3 `re.fullmatch()` — Matches the Entire String
+### 20.3.3 `re.fullmatch()` — Matches the Entire String
 
 `re.fullmatch(pattern, string)` requires the **entire string** to conform to the pattern, and is often used for format validation:
 
@@ -158,7 +158,7 @@ re.fullmatch(r"\d{4}-\d{2}-\d{2}", "2024-05-01xyz")   # None
 
 It is equivalent to wrapping the pattern with `\A` and `\Z`, but clearer.
 
-### 18.3.4 `re.findall()` — All Matches
+### 20.3.4 `re.findall()` — All Matches
 
 `re.findall(pattern, string)` returns a list of all non-overlapping matches:
 
@@ -168,9 +168,9 @@ import re
 re.findall(r"\d+", "12 and 345 and 6789")   # ['12', '345', '6789']
 ```
 
-If the pattern contains groups, the contents of the groups are returned instead (see Section 18.5).
+If the pattern contains groups, the contents of the groups are returned instead (see Section 20.5).
 
-### 18.3.5 `re.finditer()` — Returns an Iterator
+### 20.3.5 `re.finditer()` — Returns an Iterator
 
 `re.finditer(pattern, string)` returns an iterator yielding Match objects, which is well suited for handling a large number of matches or when you need the match positions:
 
@@ -183,7 +183,7 @@ for m in re.finditer(r"\d+", "12 and 345"):
 # 345 (7, 10)
 ```
 
-### 18.3.6 `re.sub()` — Substitution
+### 20.3.6 `re.sub()` — Substitution
 
 `re.sub(pattern, repl, string)` replaces every match with `repl`:
 
@@ -213,7 +213,7 @@ re.sub(r"\d+", lambda m: str(int(m.group()) * 2), "a1b22")
 # 'a2b44'
 ```
 
-### 18.3.7 `re.split()` — Split by Pattern
+### 20.3.7 `re.split()` — Split by Pattern
 
 `re.split(pattern, string)` cuts the string at every match, and is more flexible than `str.split()`:
 
@@ -224,7 +224,7 @@ re.split(r"[,;]\s*", "a, b;c,  d;e")   # ['a', 'b', 'c', 'd', 'e']
 re.split(r"\d+", "a1b22c")             # ['a', 'b', 'c']
 ```
 
-### 18.3.8 Function Comparison Table
+### 20.3.8 Function Comparison Table
 
 | Function | Purpose | Return Value | Typical Use Case |
 |------|------|--------|----------|
@@ -236,11 +236,11 @@ re.split(r"\d+", "a1b22c")             # ['a', 'b', 'c']
 | `re.sub()` | Replace matches | New string | Cleaning, format conversion |
 | `re.split()` | Split by pattern | List of strings | Splitting on multiple delimiters |
 
-For a quick reference on the `re` module, see also Section 16.7.5.
+For a quick reference on the `re` module, see also Section 15.7.5.
 
-## 18.4 Match Objects
+## 20.4 Match Objects
 
-### 18.4.1 Failed Matches Return `None`
+### 20.4.1 Failed Matches Return `None`
 
 `match()`, `search()`, and `fullmatch()` return `None` when they fail. **You must check for `None` before using the result**, otherwise an `AttributeError` will be raised:
 
@@ -254,7 +254,7 @@ else:
     print("No match found")   # No match found
 ```
 
-### 18.4.2 Common Methods
+### 20.4.2 Common Methods
 
 ```python
 import re
@@ -271,12 +271,12 @@ m.span()         # (6, 23) — (start, end)
 ```
 
 - `group(0)` is the same as `group()`, both being the entire match; `group(1)`, `group(2)`, ... correspond to the individual capture groups.
-- `groupdict()` returns a dictionary of the named groups (see Section 18.5).
+- `groupdict()` returns a dictionary of the named groups (see Section 20.5).
 - `start()`, `end()`, and `span()` also accept a group number; for example, `m.span(1)` gets the position of the first group.
 
-## 18.5 Groups
+## 20.5 Groups
 
-### 18.5.1 Capture Groups and Their Numbers
+### 20.5.1 Capture Groups and Their Numbers
 
 Parentheses `(...)` create capture groups, which are numbered starting from 1 in the order their opening parentheses appear:
 
@@ -293,7 +293,7 @@ m.groups()   # ('2024', '05', '01')
 
 Groups can also be combined with quantifiers: `(ab)+` matches repeated units like `abab`.
 
-### 18.5.2 Non-Capturing Groups
+### 20.5.2 Non-Capturing Groups
 
 Sometimes a group exists only to limit the scope of a quantifier or `|`, and you do not need to capture its content. Use `(?:...)` to create a non-capturing group, which does not consume a group number:
 
@@ -305,7 +305,7 @@ m.group(1)      # 'Smith' — only one capture group
 m.groups()      # ('Smith',)
 ```
 
-### 18.5.3 Named Groups
+### 20.5.3 Named Groups
 
 Once you have many groups, numeric numbering becomes hard to read. Named groups are defined with `(?P<name>...)` and accessed by name:
 
@@ -327,7 +327,7 @@ re.findall(r"\b(?P<word>\w+) (?P=word)\b", "the the cat and and dog")
 # ['the', 'and']
 ```
 
-### 18.5.4 `\g<name>` in Substitutions
+### 20.5.4 `\g<name>` in Substitutions
 
 In the replacement string of `re.sub()`, named groups are referenced with `\g<name>` (the numbered form `\1`, `\2` still works as well):
 
@@ -338,11 +338,11 @@ re.sub(r"(?P<first>\w+) (?P<last>\w+)", r"\g<last> \g<first>", "John Smith")
 # 'Smith John'
 ```
 
-## 18.6 Flags
+## 20.6 Flags
 
 All `re` functions accept an optional `flags` argument that changes matching behavior. Multiple flags are combined with `|`.
 
-### 18.6.1 `re.IGNORECASE` — Case-Insensitive Matching
+### 20.6.1 `re.IGNORECASE` — Case-Insensitive Matching
 
 ```python
 import re
@@ -354,7 +354,7 @@ re.findall(r"python", "Python python PYTHON", re.IGNORECASE)       # 3 matches
 
 It can be abbreviated as `re.I`.
 
-### 18.6.2 `re.MULTILINE` — `^` and `$` Match Each Line
+### 20.6.2 `re.MULTILINE` — `^` and `$` Match Each Line
 
 By default, `^` and `$` match only the start and end of the entire string. With `re.MULTILINE` (abbreviated `re.M`), they match the start and end of each line:
 
@@ -367,7 +367,7 @@ re.findall(r"^\w+", text)                # ['first']
 re.findall(r"^\w+", text, re.MULTILINE)  # ['first', 'second', 'third']
 ```
 
-### 18.6.3 `re.DOTALL` — `.` Matches Newlines
+### 20.6.3 `re.DOTALL` — `.` Matches Newlines
 
 By default, `.` does not match the newline character `\n`. With `re.DOTALL` (abbreviated `re.S`), `.` matches any character including newlines:
 
@@ -380,7 +380,7 @@ re.search(r"start.*end", text)              # None — . stops at newlines
 re.search(r"start.*end", text, re.DOTALL)   # Match — spans all three lines
 ```
 
-### 18.6.4 `re.VERBOSE` — Multi-Line Patterns with Comments
+### 20.6.4 `re.VERBOSE` — Multi-Line Patterns with Comments
 
 Complex patterns written on a single line are hard to read. `re.VERBOSE` (abbreviated `re.X`) lets you split a pattern across multiple lines and add comments; whitespace in the pattern is ignored (write `\ ` or `[ ]` when you need to match whitespace):
 
@@ -399,7 +399,7 @@ m = pattern.search("Date: 2024-05-01")
 print(m.groupdict())   # {'year': '2024', 'month': '05', 'day': '01'}
 ```
 
-## 18.7 `re.compile()` and Pattern Reuse
+## 20.7 `re.compile()` and Pattern Reuse
 
 `re.compile(pattern, flags)` precompiles a pattern into a Pattern object. When the same pattern is used repeatedly, precompiling avoids parsing it again and again, and also makes the code clearer:
 
@@ -430,7 +430,7 @@ pattern.sub("#", "a1b22")         # 'a#b#'
 
 In fact, the module-level function `re.findall(pattern, text)` internally compiles the pattern first and then calls the method; `re` also caches recently used compiled patterns. So for simple, occasional use, calling module-level functions directly is fine, while for loops or high-frequency calls, an explicit `re.compile()` is recommended.
 
-## 18.8 Greedy vs. Non-Greedy
+## 20.8 Greedy vs. Non-Greedy
 
 The quantifiers `*`, `+`, `?`, `{m,n}` are greedy by default: they match as many characters as possible while still allowing an overall match. Adding `?` after a quantifier turns it into a non-greedy (also called lazy) match: it matches as few characters as possible.
 
@@ -461,9 +461,9 @@ re.findall(r"\d{2,4}?", "12345")   # ['12', '34'] — as few as allowed
 
 Note: non-greedy does not mean "shortest match wins". The regex engine still scans from left to right; it simply matches as little as possible at each starting position.
 
-## 18.9 Practical Examples
+## 20.9 Practical Examples
 
-### 18.9.1 Validating Email Format
+### 20.9.1 Validating Email Format
 
 ```python
 import re
@@ -482,7 +482,7 @@ is_valid_email("a@b")                  # False — no dot in domain
 
 How it works: `[\w.+-]+` matches the local part before `@`; `[\w-]+(\.[\w-]+)+` matches the domain and requires at least one `.label`, thereby guaranteeing a top-level domain. Note that this is a pragmatic simplification — the full email specification (RFC 5322) is far more complex.
 
-### 18.9.2 Validating Mainland China Mobile Numbers
+### 20.9.2 Validating Mainland China Mobile Numbers
 
 ```python
 import re
@@ -498,7 +498,7 @@ is_valid_phone("1381234567")    # False — only 10 digits
 
 How it works: `1` fixes the first digit; `[3-9]` constrains the second digit; `\d{9}` supplies the remaining 9 digits, totaling 11. Using `fullmatch()` ensures there are no extra characters.
 
-### 18.9.3 Extracting URLs from Text
+### 20.9.3 Extracting URLs from Text
 
 ```python
 import re
@@ -510,7 +510,7 @@ print(urls)   # ['https://example.com/a?x=1', 'http://test.org']
 
 How it works: `https?` matches `http` or `https` (`s?` means the `s` is optional); `://` is a literal; `[^\s,]+` matches everything except whitespace and commas, continuing until the URL ends.
 
-### 18.9.4 Parsing Log Lines
+### 20.9.4 Parsing Log Lines
 
 Use named groups to break a log line into structured fields:
 
@@ -533,13 +533,13 @@ print(m.groupdict())
 
 How it works: each field gets its own named group, and fields are separated by literal spaces and `[]`; `.*` catches the remaining message content. Adjacent raw strings are automatically concatenated into a single pattern at the syntax level.
 
-## 18.10 Common Pitfalls and Best Practices
+## 20.10 Common Pitfalls and Best Practices
 
-### 18.10.1 Forgetting Raw Strings
+### 20.10.1 Forgetting Raw Strings
 
-`"\b"` is the backspace character, not a word boundary; see Section 18.1.2. Always write patterns as `r"..."`.
+`"\b"` is the backspace character, not a word boundary; see Section 20.1.2. Always write patterns as `r"..."`.
 
-### 18.10.2 Confusing `match()` and `search()`
+### 20.10.2 Confusing `match()` and `search()`
 
 `re.match()` matches only from the start, and is the most common source of mistakes for beginners:
 
@@ -552,9 +552,9 @@ re.search(r"\d+", "abc123")   # Match — finds 123
 
 When you want to match the entire string, use `re.fullmatch()`, which is more explicit than manually adding `^...$` to the pattern.
 
-### 18.10.3 Overmatching Caused by Greediness
+### 20.10.3 Overmatching Caused by Greediness
 
-By default, quantifiers swallow more than you expect (see Section 18.8). When the result does not match your expectation, first check whether you should change `*`, `+` to `*?`, `+?`, or use a more precise character class (such as `[^>]*` instead of `.*?`) — the latter is often both clearer and more efficient:
+By default, quantifiers swallow more than you expect (see Section 20.8). When the result does not match your expectation, first check whether you should change `*`, `+` to `*?`, `+?`, or use a more precise character class (such as `[^>]*` instead of `.*?`) — the latter is often both clearer and more efficient:
 
 ```python
 import re
@@ -562,7 +562,7 @@ import re
 re.findall(r"<[^>]*>", "<b>bold</b>")   # ['<b>', '</b>'] — no backtracking
 ```
 
-### 18.10.4 Catastrophic Backtracking
+### 20.10.4 Catastrophic Backtracking
 
 Regex engines explore matching paths through backtracking by default. When nested quantifiers create ambiguity, the number of paths grows exponentially, causing catastrophic backtracking, and the program appears to "hang":
 
@@ -582,7 +582,7 @@ Ways to avoid it:
 - Since Python 3.11, possessive quantifiers `*+`, `++` and atomic groups `(?>...)` are supported; they forbid backtracking, e.g. `re.fullmatch(r"(?>a+)+$", s)` or the more direct `r"a++$"`.
 - For untrusted input, consider the third-party `regex` library, which supports setting a timeout on matching.
 
-### 18.10.5 When Not to Use Regular Expressions
+### 20.10.5 When Not to Use Regular Expressions
 
 Regular expressions excel at text with "simple shapes and stable rules", and are unsuitable for parsing formats with nested structure:
 
@@ -592,4 +592,4 @@ Regular expressions excel at text with "simple shapes and stable rules", and are
 
 The rule of thumb is simple: if a regex grows so long that you need `re.VERBOSE` plus a dozen lines of comments to understand it, you have probably chosen the wrong tool.
 
-[← Previous: Type Annotations](17-type-annotations.md)
+[← Previous: itertools Module](19-itertools-module.md) | [Next: os Module →](21-os-module.md)

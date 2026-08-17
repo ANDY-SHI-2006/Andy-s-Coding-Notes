@@ -1,6 +1,6 @@
-[← Previous: Modules and Packages](16-modules-and-packages.md) | [Next: Regular Expressions (re) →](18-regular-expressions.md)
+[← Previous: Modules and Packages](15-modules-and-packages.md) | [Next: functools →](17-functools.md)
 
-# 17 Type Annotations
+# 16 Type Annotations
 
 Python is **dynamically typed** — a variable's type is determined at runtime, and you can reassign it to a different type anytime. This is flexible but can make large codebases hard to understand.
 
@@ -12,7 +12,7 @@ Python is **dynamically typed** — a variable's type is determined at runtime, 
 
 Think of type annotations as **high-quality comments that machines can read**.
 
-## 17.1 Basic Syntax
+## 16.1 Basic Syntax
 
 Attach a type to a name with a colon `:`.
 
@@ -41,7 +41,7 @@ def log(message: str) -> None:
 | `-> str` | Function return | This function returns a `str` |
 | `-> None` | Function return | This function returns nothing |
 
-## 17.2 Common Types
+## 16.2 Common Types
 
 **Basic types:** `int`, `float`, `str`, `bool`, `None`
 
@@ -120,7 +120,7 @@ class Point:
 p = Point(3, 4)  # __init__ generated automatically from annotations
 ```
 
-## 17.3 Runtime Behavior
+## 16.3 Runtime Behavior
 
 Type hints are **not enforced** at runtime. The interpreter ignores them completely.
 
@@ -157,4 +157,4 @@ print(typing.get_type_hints(add))
 - ❌ Don't over-annotate trivial cases like `i: int = 0` where the type is obvious
 
 
-[← Previous: Modules and Packages](16-modules-and-packages.md) | [Next: Regular Expressions (re) →](18-regular-expressions.md)
+[← Previous: Modules and Packages](15-modules-and-packages.md) | [Next: functools →](17-functools.md)

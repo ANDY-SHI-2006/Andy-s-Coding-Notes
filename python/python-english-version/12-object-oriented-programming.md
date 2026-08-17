@@ -369,7 +369,7 @@ Two ways to fix it:
 
 **Auto-generating the rest:** If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the remaining comparison methods automatically.
 
-For details, see [14.6 `@functools.total_ordering`](14-functools.md#146-auto-generating-comparisons-with-functoolstotal_ordering).
+For details, see [17.6 `@functools.total_ordering`](17-functools.md#176-auto-generating-comparisons-with-functoolstotal_ordering).
 
 ### 12.4.3 Callable Objects
 

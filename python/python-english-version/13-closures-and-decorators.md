@@ -1,4 +1,4 @@
-[← Previous: Object-Oriented Programming](12-object-oriented-programming.md) | [Next: functools →](14-functools.md)
+[← Previous: Object-Oriented Programming](12-object-oriented-programming.md) | [Next: Exception Handling →](14-exception-handling.md)
 
 # 13 Closures and Decorators
 
@@ -287,7 +287,7 @@ def view_profile(user):
 
 When you write a decorator, the wrapper function replaces the original function's metadata such as `__name__` and `__doc__`. Use `@functools.wraps(func)` on the wrapper to copy those attributes back.
 
-For details and examples, see [14.2 Preserving Metadata with `@functools.wraps`](14-functools.md#142-preserving-metadata-with-functoolswraps).
+For details and examples, see [17.2 Preserving Metadata with `@functools.wraps`](17-functools.md#172-preserving-metadata-with-functoolswraps).
 
 ## 13.4 Advanced Decorator Patterns
 
@@ -816,4 +816,4 @@ greet("Alice", greeting="Hi")
 
 **Real-world tip:** In production, replace `print()` with a proper logging framework like Python's `logging` module.
 
-[← Previous: Object-Oriented Programming](12-object-oriented-programming.md) | [Next: functools →](14-functools.md)
+[← Previous: Object-Oriented Programming](12-object-oriented-programming.md) | [Next: Exception Handling →](14-exception-handling.md)

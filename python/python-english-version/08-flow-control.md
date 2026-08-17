@@ -347,7 +347,7 @@ match p:
         print(f"Point ({x}, {y})")
 ```
 
-> **Note:** The `x: int` syntax inside `@dataclass` is a **type annotation** (type hint). It tells `@dataclass` what fields to generate and helps IDEs provide autocompletion. See [17 Type Annotations](17-type-annotations.md#17-type-annotations).
+> **Note:** The `x: int` syntax inside `@dataclass` is a **type annotation** (type hint). It tells `@dataclass` what fields to generate and helps IDEs provide autocompletion. See [16 Type Annotations](16-type-annotations.md#16-type-annotations).
 
 #### 8.1.4.6 Wildcard `_`
 

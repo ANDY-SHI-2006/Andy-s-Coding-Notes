@@ -24,15 +24,15 @@
 
 ### 第四部分：闭包、装饰器与开发要点
 13. [闭包与装饰器](13-闭包与装饰器.md) — *嵌套函数、包装器、@ 语法*
-14. [functools](14-functools.md) — *wraps、partial、reduce、lru_cache、total_ordering*
-15. [异常处理](15-异常处理.md) — *try/except、raise、自定义异常、assert*
-16. [模块与包](16-模块与包.md) — *import、pip、venv、标准库*
+14. [异常处理](14-异常处理.md) — *try/except、raise、自定义异常、assert*
+15. [模块与包](15-模块与包.md) — *import、pip、venv、标准库*
 
 ### 附录
-17. [类型注解](17-类型注解.md) — *类型提示、Union、Optional、dataclass、mypy*
+16. [类型注解](16-类型注解.md) — *类型提示、Union、Optional、dataclass、mypy*
 
 ### 第五部分：常用模块专题
-18. [正则表达式（re 模块）](18-正则表达式re.md) — *元字符、分组、标志位、re.compile、实战示例*
+17. [functools](17-functools.md) — *wraps、partial、reduce、lru_cache、total_ordering*
+20. [正则表达式（re 模块）](20-正则表达式re.md) — *元字符、分组、标志位、re.compile、实战示例*
 
 ---
 
@@ -46,6 +46,6 @@
 - **第 6–9 章**：运算符、流程控制与函数
 - **第 10 章**：文件操作
 - **第 11–12 章**：高级函数与面向对象编程
-- **第 13–16 章**：闭包、装饰器、健壮性与开发要点
+- **第 13–15 章**：闭包、装饰器、健壮性与开发要点
 - **附录**：类型注解
-- **第 18 章**：常用模块专题（正则表达式）
+- **第 17 章起**：常用模块专题
