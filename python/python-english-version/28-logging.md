@@ -365,7 +365,7 @@ except OSError:
 
 ### 28.6.3 Logging and Then Re-raising
 
-A common pattern is: log the full traceback at a low level, then use `raise` to pass the exception unchanged up to the caller for handling (for `raise` usage, see Section 14.3). This way the log contains the complete scene, and the caller is still aware of the failure:
+A common pattern is: log the full traceback at a low level, then use `raise` to pass the exception unchanged up to the caller for handling (for `raise` usage, see Section 14.5). This way the log contains the complete scene, and the caller is still aware of the failure:
 
 ```python
 import logging

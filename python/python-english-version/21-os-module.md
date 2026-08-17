@@ -170,7 +170,7 @@ os.rmdir("demo")
 
 ## 21.3 Walking Directory Trees with os.walk
 
-listdir only looks at one level, while os.walk traverses the entire directory tree **recursively**. It is a generator (see Section 11.3 for the concept of generators) that lazily yields results with very little memory overhead.
+listdir only looks at one level, while os.walk traverses the entire directory tree **recursively**. It is a generator (see Section 11.6 for the concept of generators) that lazily yields results with very little memory overhead.
 
 ### 21.3.1 Basic Usage
 

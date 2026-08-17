@@ -353,7 +353,7 @@ echo -e "hello\nworld" | python upper.py
 # 2: WORLD
 ```
 
-Iterating over `sys.stdin` line by line reads lazily, so even hundreds of millions of lines of input will not exhaust memory (lazy evaluation of iterators is covered in Section 11.4).
+Iterating over `sys.stdin` line by line reads lazily, so even hundreds of millions of lines of input will not exhaust memory (lazy evaluation of iterators is covered in Section 11.5).
 
 ## 26.5 Interpreter Information
 
