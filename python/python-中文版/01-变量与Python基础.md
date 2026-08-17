@@ -1,0 +1,176 @@
+[下一篇：基本数据类型 →](02-基本数据类型.md)
+
+# 1 变量与 Python 基础
+
+## 1.1 Python 如何运行
+
+Python 代码主要有两种执行方式：通过交互式解释器（REPL）交互执行，或运行脚本文件。两者最终都依赖同一套编译与执行流水线。
+
+### 1.1.1 REPL（读取-求值-输出循环）
+
+在终端输入 `python` 即可进入交互式会话。每一行代码会立即执行并打印结果。
+
+```python
+>>> 2 + 3
+5
+>>> x = 10
+>>> x
+10
+```
+
+### 1.1.2 运行脚本
+
+将代码保存到 `.py` 文件中，然后用 `python script.py` 运行。
+
+```python
+# hello.py
+print("Hello, World!")
+```
+
+### 1.1.3 编译与执行
+
+Python 源代码首先被编译为字节码（`.pyc` 文件），然后由 Python 虚拟机执行。这个编译过程是自动完成的，通常不需要手动管理。
+
+```
+hello.py  --compile-->  __pycache__/hello.cpython-312.pyc  --run-->  Python VM
+```
+
+**注意：** Python 既是解释型语言也是编译型语言——编译这一步由解释器替你完成。
+
+## 1.2 变量与对象
+
+在 Python 中，变量只是一个**名字**（或引用），它指向内存中的一个对象。赋值永远不会复制数据，它只是把一个名字绑定到一个对象上。
+
+```python
+a = 10       # a points to the integer object 10
+b = a        # b points to the same object as a
+
+print(id(a)) # e.g., 140735... (same as b)
+print(id(b))
+```
+
+### 1.2.1 重新赋值
+
+```python
+a = 10
+print(id(a))
+a = 20          # a now points to a different integer object
+print(id(a))    # different address
+```
+
+### 1.2.2 同一性与相等性
+
+- `==` 比较的是值。
+- `is` 比较的是同一性（内存地址）。
+
+```python
+x = [1, 2, 3]
+y = [1, 2, 3]
+
+print(x == y)   # True  (same values)
+print(x is y)   # False (different objects)
+
+z = x
+print(x is z)   # True  (same object)
+```
+
+### 1.2.3 什么时候用 `is`
+- 与 `None` 比较时：`if x is None`
+- 检查两个引用是否指向完全相同的同一个对象时。
+
+## 1.3 变量与赋值
+
+### 1.3.1 动态类型
+
+Python 不要求声明类型。变量的类型根据赋给它的值推断而来。变量在任何时候都可以被重新赋值为不同类型的值，不会报错。
+
+使用 `type()` 可以查看变量当前的类型。
+
+```python
+x = 10          # int
+x = "hello"     # str (reassigned, no error)
+type(x)         # <class 'str'>
+```
+
+### 1.3.2 多重赋值
+
+Python 允许在一条语句中把多个值赋给多个变量。
+
+```python
+a, b = 1, 2   # a=1, b=2
+```
+
+这等价于先在右侧创建一个元组，再将其解包：
+
+```python
+a, b = (1, 2)  # comma creates a tuple
+```
+
+关于解包的详细规则——包括从列表和字符串解包、以及使用 `*` 的扩展解包——请参阅 [3.5.3 序列解包](03-序列类型.md#353-序列解包)。
+
+### 1.3.3 链式赋值
+
+将多个名字绑定到同一个对象。
+
+```python
+a = b = 0
+```
+
+**⚠️ 可变对象的陷阱：** 链式赋值创建的是指向同一个对象的多个引用，而不是相互独立的副本。
+
+```python
+a = b = []
+a.append(1)
+print(b)  # [1] — b refers to the same list as a
+```
+
+对于数字或字符串这类不可变对象，不存在这个陷阱，因为重新赋值会创建一个新对象。
+
+### 1.3.4 交换
+
+无需临时变量即可交换两个值。
+
+```python
+a, b = b, a
+```
+
+## 1.4 注释
+
+### 1.4.1 单行注释
+
+用 `#` 开始一个单行注释。同一行中 `#` 之后的所有内容都会被解释器忽略。
+
+```python
+# This is a single-line comment
+x = 10  # Inline comment
+```
+
+### 1.4.2 多行注释
+
+Python 没有正式的多行注释语法。三引号 `'''` 或 `"""` 创建的是字符串字面量；当它没有被赋值给变量时，解释器会将其丢弃。它的标准用途是**文档字符串（docstring）**。
+
+```python
+'''
+This is a multi-line string literal.
+It acts as a comment when not assigned.
+'''
+
+def greet():
+    """Return a greeting string."""
+    return "Hello"
+```
+
+## 1.5 变量命名
+
+变量名应当清晰地描述其用途。除了循环计数器外，应避免使用单字母命名。
+
+| 约定 | 格式 | 用于 | 示例 |
+|------------|--------|----------|---------|
+| **snake_case** | 全小写，用下划线分隔 | 变量和函数 | `student_age_info = 18` |
+| **PascalCase** | 每个单词首字母大写 | 类名 | `class StudentAgeInfo:` |
+| **camelCase** | 首单词小写，其余单词首字母大写 | 在 Python 中不常用 | `studentAgeInfo = 18` |
+| **UPPER_SNAKE_CASE** | 全大写，用下划线分隔 | 常量（按约定） | `MAX_RETRIES = 3` |
+
+> **注意：** Python 没有 `const` 关键字。`UPPER_SNAKE_CASE` 只是依靠程序员的自律来表示"不要修改"；该值在运行时仍然是可以改变的。
+
+[下一篇：基本数据类型 →](02-基本数据类型.md)
