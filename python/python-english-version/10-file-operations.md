@@ -49,14 +49,18 @@ Because `with` guarantees cleanup, it is the recommended pattern for opening fil
 
 ### 10.1.3 Path Types
 
-**Relative paths** are resolved from the current working directory.
+#### 10.1.3.1 Relative Paths
+
+Relative paths are resolved from the current working directory.
 
 ```python
 "./file.txt"       # In the current directory
 "../data/file.txt" # One level up, then into data/
 ```
 
-**Absolute paths** start from the root of the filesystem.
+#### 10.1.3.2 Absolute Paths
+
+Absolute paths start from the root of the filesystem.
 
 ```python
 "C:/Users/name/file.txt"   # Forward slashes work on Windows too
@@ -65,14 +69,18 @@ Because `with` guarantees cleanup, it is the recommended pattern for opening fil
 
 Using `/` in paths is recommended for cross-platform compatibility.
 
-**Windows backslash and raw strings.** Windows paths traditionally use `\`. In Python strings, `\` is an escape character, so Windows paths must either be escaped or written as raw strings.
+#### 10.1.3.3 Windows Backslashes and Raw Strings
+
+Windows paths traditionally use `\`. In Python strings, `\` is an escape character, so Windows paths must either be escaped or written as raw strings.
 
 ```python
 "C:\\Users\\name\\file.txt"  # Escaped backslashes
 r"C:\Users\name\file.txt"    # Raw string: backslash is literal
 ```
 
-**Current working directory.** The starting point for all relative paths is the **current working directory**. If the program is run from a different directory, the same relative path may refer to a different file.
+#### 10.1.3.4 Current Working Directory
+
+The starting point for all relative paths is the **current working directory**. If the program is run from a different directory, the same relative path may refer to a different file.
 
 For details on how to inspect or change the current working directory, see [10.6 Paths and File Metadata](#106-paths-and-file-metadata).
 
@@ -128,7 +136,17 @@ with open("fresh.txt", "w+", encoding="utf-8") as f:
 
 **Binary modes**
 
-Adding `b` to any mode opens the file in binary mode (`"rb"`, `"wb"`, `"ab"`, `"r+b"`, ...), where you work with raw `bytes` instead of `str`. For the full mode table, read/write methods, and the difference between text and binary mode, see [10.3 Binary Files](#103-binary-files).
+Adding `b` to any mode opens the file in binary mode, where you work with raw `bytes` instead of `str`.
+
+| Mode | Description |
+|------|-------------|
+| `"rb"` | Binary read; file must exist |
+| `"wb"` | Binary write; truncates first; creates if not exists |
+| `"ab"` | Binary append; creates if not exists |
+| `"r+b"` | Binary read and write; does not truncate; file must exist |
+| `"w+b"` | Binary read and write; truncates first; creates if not exists |
+
+For read/write methods and the difference between text and binary mode, see [10.3 Binary Files](#103-binary-files).
 
 ### 10.1.5 Encoding
 
@@ -1186,59 +1204,5 @@ shutil.rmtree("data_backup")
 ```
 
 **Note:** `shutil.rmtree()` permanently deletes directories and cannot be undone; use it with care. For safer deletion, move files to the trash using a third-party library such as `send2trash`.
-
-## 10.8 Quick Reference
-
-**File modes**
-
-| Mode | Meaning |
-|------|---------|
-| `"r"` | Read; file must exist |
-| `"w"` | Write; truncates or creates |
-| `"a"` | Append; creates if missing |
-| `"x"` | Create; fails if file already exists |
-| `"+"` | Add to `r`/`w`/`a` for read+write (`"r+"`, `"w+"`, `"a+"`) |
-| `"b"` | Add to any mode for binary (`"rb"`, `"wb"`, ...) |
-
-**Reading and writing (text mode)**
-
-| Method | Purpose |
-|--------|---------|
-| `f.read()` / `f.read(n)` | Whole file / up to `n` characters |
-| `f.readline()` | One line (including `\n`) |
-| `f.readlines()` | All lines as a list |
-| `for line in f:` | Iterate line by line (memory-efficient) |
-| `f.write(s)` | Write a string |
-| `f.writelines(lines)` | Write an iterable of strings |
-| `f.tell()` / `f.seek(offset, whence)` | Cursor position / move cursor (in bytes) |
-
-**Paths: `os` vs `pathlib`**
-
-| Task | `os` style | `pathlib` style |
-|------|-----------|-----------------|
-| Join paths | `os.path.join(a, b)` | `Path(a) / b` |
-| Script directory | `os.path.dirname(os.path.abspath(__file__))` | `Path(__file__).resolve().parent` |
-| Exists / is file / is dir | `os.path.exists/isfile/isdir(p)` | `p.exists()` / `p.is_file()` / `p.is_dir()` |
-| Read / write text | `open(p).read()` / `open(p, "w").write(s)` | `p.read_text()` / `p.write_text(s)` |
-| List / match directory | `os.listdir(d)` / `glob.glob(pattern)` | `p.iterdir()` / `p.glob("*.json")` |
-| Size / mtime | `os.path.getsize(p)` / `os.path.getmtime(p)` | `p.stat().st_size` / `p.stat().st_mtime` |
-
-**JSON and CSV**
-
-| Task | Code |
-|------|------|
-| Object → JSON string | `json.dumps(obj, ensure_ascii=False)` |
-| JSON string → object | `json.loads(s)` |
-| Object → file | `json.dump(obj, f, ensure_ascii=False)` |
-| File → object | `json.load(f)` |
-| Read CSV rows | `csv.reader(f)` / `csv.DictReader(f)` |
-| Write CSV rows | `csv.writer(f).writerows(rows)` / `csv.DictWriter(f, fieldnames)` |
-
-**Golden rules**
-
-- Always use `with open(...)` and `encoding="utf-8"` for text files.
-- Always pass `newline=""` for CSV files; use `encoding="utf-8-sig"` if the CSV will be opened in Excel.
-- Locate resource files relative to the script directory, not the current working directory.
-- Catch specific exceptions (`FileNotFoundError`, `PermissionError`, ...) instead of a bare `except`.
 
 [← Previous: Functions](09-functions.md) | [Next: Advanced Functions →](11-advanced-functions.md)

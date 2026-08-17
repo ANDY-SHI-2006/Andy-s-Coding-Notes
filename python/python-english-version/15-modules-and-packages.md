@@ -46,11 +46,9 @@ from math import *   # sqrt, pi, sin, cos... all dumped into global namespace
 
 ## 15.2 Packages
 
-A **package** is a directory that bundles related modules. It usually contains an `__init__.py` file (often empty) so Python recognizes it as a package rather than an ordinary directory.
-
 ### 15.2.1 What Is a Package?
 
-Think of a package as a namespace: `graphics.shapes` groups shape-related code under the `graphics` package, keeping names organized and avoiding collisions.
+A **package** is a directory that bundles related modules. It usually contains an `__init__.py` file (often empty) so Python recognizes it as a package rather than an ordinary directory. Think of a package as a namespace: `graphics.shapes` groups shape-related code under the `graphics` package, keeping names organized and avoiding collisions.
 
 ### 15.2.2 Package Structure
 
@@ -66,6 +64,8 @@ my_project/
 - `graphics/` is a package.
 - `__init__.py` tells Python it is a package.
 - `shapes.py` and `colors.py` are submodules.
+
+**Tip:** Since Python 3.3, `__init__.py` can be omitted (this is called a namespace package), but writing `__init__.py` explicitly is still the recommended practice.
 
 ### 15.2.3 Importing from a Package
 
@@ -101,7 +101,7 @@ from .. import config
 
 ### 15.2.5 Controlling `from package import *` with `__all__`
 
-Without `__all__`, `from package import *` imports every name that does not start with an underscore. Use `__all__` in `__init__.py` to define the public API.
+For a module, without `__all__`, `from module import *` imports every name that does not start with an underscore. For a package, however, `from package import *` only imports the names already bound in `__init__.py` — it does not automatically import submodules. That is exactly why you define the public API explicitly with `__all__` in `__init__.py`.
 
 ```python
 # graphics/__init__.py
@@ -145,10 +145,13 @@ if __name__ == "__main__":
 
 ## 15.5 pip and PyPI
 
-`pip` is Python's package installer. PyPI (Python Package Index) is the public repository.
+`pip` is Python's package installer. PyPI (Python Package Index) is the public repository. The recommended way to invoke pip is `python -m pip`, which guarantees the package is installed for the exact Python interpreter you intend, avoiding mistakes when multiple Python versions are installed.
 
 ```bash
-# Install a package
+# Install a package (recommended form)
+python -m pip install requests
+
+# Shorthand
 pip install requests
 
 # Install specific version
@@ -189,6 +192,8 @@ deactivate
 ```
 
 **Why use venv?** Different projects may need different versions of the same package. Venv prevents version conflicts.
+
+**Typical workflow:** Create and activate a venv for each project, then install dependencies with `pip install -r requirements.txt`. Do not commit the `.venv` directory to version control — exclude it in `.gitignore`.
 
 ## 15.7 Standard Library Quick Reference
 
@@ -263,7 +268,7 @@ random.sample(elements, k=2)   # Example: ['C', 'A']
 
 | Method | Replacement | Duplicates | Weights | Use case |
 |--------|-------------|------------|---------|----------|
-| `choice()` | Single pick | — | No | Pick one random item |
+| `choice()` | — | — | No | Pick one random item |
 | `choices()` | With | Allowed | Yes | Lottery, weighted selection |
 | `sample()` | Without | Not allowed | No | Draw without replacement |
 
