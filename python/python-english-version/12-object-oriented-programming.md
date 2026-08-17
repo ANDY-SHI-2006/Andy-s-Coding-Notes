@@ -123,6 +123,9 @@ class Student:
         return cls.count
 
 print(Student.get_count())      # 0
+s1 = Student("Alice")
+s2 = Student("Bob")
+print(Student.get_count())      # 2 — each __init__ incremented the counter
 ```
 
 **Limitation:** Class methods can only access **class attributes** and call other **class methods**. They **cannot** access instance attributes or call instance methods — there is no `self` available.
@@ -196,6 +199,8 @@ class Cat(Animal):
 d = Dog("Buddy")
 print(d.speak())                # Buddy says woof!
 ```
+
+Raising `NotImplementedError` only fails at **call time**. For a stricter, more formal way to enforce that subclasses implement a method — failing at **instantiation time** — see [12.9 Abstract Base Classes](#129-abstract-base-classes).
 
 ### 12.3.2 `super()`
 
@@ -347,8 +352,20 @@ p3 = Point(3, 4)
 
 print(p1 == p2)   # True
 print(p1 < p3)    # True
-print(p1 >= p3)   # TypeError — __ge__ not defined
+# print(p1 >= p3)   # ❌ TypeError — __ge__ not defined
 ```
+
+**Pitfall: `__eq__` disables `__hash__`.** Once you define `__eq__`, Python sets `__hash__` to `None`, making instances unhashable — they can no longer be placed in a `set` or used as `dict` keys:
+
+```python
+p = Point(1, 2)
+# {p}                 # ❌ TypeError: unhashable type: 'Point'
+```
+
+Two ways to fix it:
+
+- If instances are immutable and should be hashable, define `__hash__` explicitly, e.g. `return hash((self.x, self.y))`.
+- If instances are mutable, leaving them unhashable is usually the correct design — mutable objects as keys are a bug magnet.
 
 **Auto-generating the rest:** If you only define `__eq__` and one other operator, you can use `@functools.total_ordering` to generate the remaining comparison methods automatically.
 
@@ -403,8 +420,6 @@ You can make objects work with `+`, `-`, `*`, `/`, and other operators by implem
 | `//` | `__floordiv__` |
 | `%` | `__mod__` |
 | `**` | `__pow__` |
-| `==` | `__eq__` |
-| `<` | `__lt__` |
 
 ```python
 class Vector:
@@ -469,7 +484,9 @@ for card in deck:
 # A 2 3 4 5
 ```
 
-**Note:** If you define `__iter__`, Python can usually derive `__contains__` for you. Define `__contains__` explicitly only when you want a faster or custom membership test.
+**Note:** If a class does not define `__contains__`, the `in` operator falls back to iterating with `__iter__` and comparing each item. That is why `"3" in deck` works above even though `Deck` never defines `__contains__`. Define `__contains__` explicitly only when you want a faster or custom membership test.
+
+**Tired of writing special-method boilerplate?** For classes that mainly store data, `@dataclass` generates `__init__`, `__repr__`, `__eq__`, and more automatically — see [13.5.4 `@dataclass`](13-closures-and-decorators.md#1354-dataclass).
 
 ## 12.5 Encapsulation
 
@@ -642,6 +659,8 @@ d = Duck()
 d.move()            # Flying — Flyer comes first in MRO
 print(Duck.__mro__) # (<class 'Duck'>, <class 'Flyer'>, <class 'Swimmer'>, <class 'object'>)
 ```
+
+**`super()` follows the MRO, not "the parent class".** In single inheritance the two are the same, but with multiple inheritance `super()` delegates to the *next class in the MRO chain*. This is what allows mixins to cooperate: each class in the chain can call `super()` and pass the work along, so every class's method runs exactly once. The mixin example in 12.8.2 relies on this — `super().__init__(name, age)` in `Employee` reaches `Person.__init__` through the MRO.
 
 ### 12.8.1 Inspecting Inheritance with `__bases__` and `__base__`
 
@@ -843,5 +862,52 @@ c.move()   # Moving on electric power
 - The hierarchy is shallow and stable.
 
 A common guideline: **favor composition over inheritance** when you are unsure.
+
+## 12.11 Quick Reference
+
+**Class vs instance members**
+
+| Aspect | Class Attribute | Instance Attribute | Instance Method |
+|--------|-----------------|--------------------|-----------------|
+| Defined | In class body | In `__init__` via `self` | In class body, first param `self` |
+| Shared? | Across all instances | Unique per instance | Bound per instance |
+| Access | `Class.attr` or `obj.attr` | `obj.attr` | `obj.method()` |
+
+**Three kinds of methods**
+
+| Kind | Decorator | First param | Accesses |
+|------|-----------|-------------|----------|
+| Instance | — | `self` | Instance + class attrs |
+| Class | `@classmethod` | `cls` | Class attrs only |
+| Static | `@staticmethod` | — | Neither (utility) |
+
+**Common special methods**
+
+| Method | Triggered by | Method | Triggered by |
+|--------|--------------|--------|--------------|
+| `__init__` | `Class(...)` | `__len__` | `len(obj)` |
+| `__str__` | `print()`, `str()` | `__getitem__` | `obj[key]` |
+| `__repr__` | `repr()`, shell | `__iter__` | `for x in obj` |
+| `__eq__` | `==` | `__contains__` | `x in obj` |
+| `__lt__` | `<` (use `@total_ordering` for the rest) | `__call__` | `obj(...)` |
+| `__add__` etc. | `+`, `-`, `*`, `/`, ... | | |
+
+**Visibility conventions**
+
+| Name | Meaning |
+|------|---------|
+| `name` | Public |
+| `_name` | Internal use (convention only) |
+| `__name` | Name-mangled to `_ClassName__name` |
+| `@property` | Expose a method as an attribute; add `@x.setter` for writes |
+
+**Golden rules**
+
+- Call `super().method()` to *extend* parent behavior; omit it to *replace* it. In multiple inheritance, `super()` follows the MRO.
+- Defining `__eq__` disables `__hash__` — define `__hash__` too, or keep the class unhashable on purpose.
+- Return `NotImplemented` (not an exception) from unsupported comparisons and operators.
+- Use an ABC (`class Shape(ABC)` + `@abstractmethod`) to force subclasses to implement an interface.
+- Favor composition ("has-a") over inheritance ("is-a") when unsure.
+- Data-only classes: reach for `@dataclass` instead of handwriting special methods.
 
 [← Previous: Advanced Functions](11-advanced-functions.md) | [Next: Closures and Decorators →](13-closures-and-decorators.md)
