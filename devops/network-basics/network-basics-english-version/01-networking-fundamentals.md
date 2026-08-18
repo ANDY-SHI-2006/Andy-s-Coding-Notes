@@ -57,21 +57,21 @@ Every network communication involves three core elements: **IP addresses**, **po
 
 An IP address is a unique identifier assigned to a device on a network.
 
-#### IP Address Classification
+#### 1.2.1.1 IP Address Classification
 
 | Version | Description | Address Length | Format |
 |---------|-------------|----------------|--------|
 | **IPv4** | Internet Protocol version 4 | 32-bit binary | Dot-decimal notation (e.g., `192.168.1.34`) |
 | **IPv6** | Internet Protocol version 6 | 128-bit binary | 8 groups of hexadecimal numbers separated by colons |
 
-#### IPv4 Address Structure
+#### 1.2.1.2 IPv4 Address Structure
 
 - **Binary representation**: 32 bits divided into 4 octets (8 bits each)
 - **Display format**: Dot-decimal notation (e.g., `192.168.1.34`)
 - **Value range per octet**: 0 - 255
 - **Total address space**: Approximately 4.3 billion (2^32) unique addresses
 
-#### IPv6 Address Structure
+#### 1.2.1.3 IPv6 Address Structure
 
 - **Address format**: 8 groups of 4 hexadecimal digits separated by colons
 - **Example**: `2001:0db8:85a3:0000:0000:8a2e:0370:7334`
@@ -80,7 +80,7 @@ An IP address is a unique identifier assigned to a device on a network.
   - **Rule**: Can only be used once per address
   - **Reason**: Using `::` twice would make it impossible to determine how many zero groups each represents (8 total groups minus visible groups = groups represented by `::`)
 
-#### IP Address Types
+#### 1.2.1.4 IP Address Types
 
 | Type | Description | Address Range | Usage |
 |------|-------------|---------------|-------|
@@ -90,7 +90,7 @@ An IP address is a unique identifier assigned to a device on a network.
 
 > **Note on private IP ranges**: The `172.16.0.0/12` range spans from `172.16.0.0` to `172.31.255.255`.
 
-#### IPv4 Address Exhaustion
+#### 1.2.1.5 IPv4 Address Exhaustion
 
 IPv4 provides approximately 4.3 billion unique addresses (2^32). With the explosive growth of internet-connected devices, the global IPv4 address pool was exhausted in stages:
 
@@ -98,7 +98,7 @@ IPv4 provides approximately 4.3 billion unique addresses (2^32). With the explos
 - **Regional Internet Registries (RIRs)** ran out of free IPv4 addresses at different times (between 2011 and 2019).
 - This shortage makes IPv6 and address conservation techniques essential.
 
-##### Solutions
+##### 1.2.1.5.1 Solutions
 
 1. **IPv6 Deployment**
    - 128-bit address space provides 340 undecillion addresses (2^128)
@@ -120,7 +120,7 @@ IPv4 provides approximately 4.3 billion unique addresses (2^32). With the explos
    - Selling allocated but unused addresses on the market
    - Limited effectiveness as a long-term solution
 
-#### Common IP-Related Commands
+#### 1.2.1.6 Common IP-Related Commands
 
 | Operating System | Command | Purpose |
 | ---------------- | -------------------- | -------------------------- |
@@ -150,7 +150,7 @@ A numerical identifier for specific applications or services on a device.
 | **Purpose** | Identifies specific applications/services on a device |
 | **Uniqueness** | Each port number can only be used by one application at a time per device, per protocol (TCP and UDP are independent — e.g., DNS uses port 53 on both TCP and UDP simultaneously) |
 
-#### Common Port Numbers
+#### 1.2.2.1 Common Port Numbers
 
 | Port | Service | Description |
 |------|---------|-------------|
@@ -178,7 +178,7 @@ A set of rules that define how data is transmitted over a network.
 | **Transmission rules** | Determines how messages are sent and received |
 | **Error handling** | Specifies how errors are detected and corrected |
 
-#### Network Communication Protocol Models
+#### 1.2.3.1 Network Communication Protocol Models
 
 | Model | Layers | Description |
 |-------|--------|-------------|
@@ -187,7 +187,7 @@ A set of rules that define how data is transmitted over a network.
 
 The TCP/IP model is the de facto standard for internet communication.
 
-#### OSI Model (7 Layers)
+#### 1.2.3.2 OSI Model (7 Layers)
 
 A theoretical model used in network education.
 
@@ -201,7 +201,7 @@ A theoretical model used in network education.
 | 2 | **Data Link** | Provides node-to-node reliable transmission |
 | 1 | **Physical** | Transmits raw bit streams over physical medium |
 
-##### Data Flow
+##### 1.2.3.2.1 Data Flow
 
 - **Sender**: Data starts at the Application layer, is processed downward through each layer, and is finally transmitted as binary signals at the Physical layer.
 - **Receiver**: Binary signals are processed at the Physical layer, move upward through each layer, and are finally reconstructed into usable data at the Application layer.
@@ -210,7 +210,7 @@ A theoretical model used in network education.
 
 **Cons**: Overly idealistic and structurally too complex for direct practical engineering implementation.
 
-#### OSI vs TCP/IP Layer Mapping
+#### 1.2.3.3 OSI vs TCP/IP Layer Mapping
 
 | OSI Layer | OSI Name | TCP/IP Layer | TCP/IP Name | Merged? |
 |-----------|----------|--------------|-------------|---------|
@@ -222,7 +222,7 @@ A theoretical model used in network education.
 | 2 | Data Link | 1 | Network Interface | ✅ Merged |
 | 1 | Physical | 1 | Network Interface | ✅ Merged |
 
-#### TCP/IP Model (4 Layers)
+#### 1.2.3.4 TCP/IP Model (4 Layers)
 
 Practical implementation standard used in actual networking.
 
@@ -233,7 +233,7 @@ Practical implementation standard used in actual networking.
 | 2 | **Internet** | IP, ICMP, ARP | End-to-end data routing |
 | 1 | **Network Interface** | Ethernet, Wi-Fi | Binary signal transmission over physical medium |
 
-##### Key Protocols
+##### 1.2.3.4.1 Key Protocols
 
 - **Application Layer**: HTTP (web browsing), FTP (file transfer), SMTP (email), DNS (domain name resolution)
 - **Transport Layer**: TCP (reliable, slower), UDP (unreliable, fast)
@@ -268,7 +268,7 @@ The Transport layer is responsible for process-to-process communication. Its two
 
 ### 1.3.3 TCP Three-Way Handshake and Four-Way Termination
 
-#### Three-Way Handshake (Establish Connection)
+#### 1.3.3.1 Three-Way Handshake (Establish Connection)
 
 1. Client sends a SYN packet (seq = x), requesting a connection.
 2. Server replies with a SYN + ACK packet (seq = y, ack = x + 1), indicating the connection can be established.
@@ -280,7 +280,7 @@ The Transport layer is responsible for process-to-process communication. Its two
 - **ack**: Acknowledgment number = sender's sequence number + 1.
 - **seq**: Sequence number. Random, uncertain, non-fixed value.
 
-#### Four-Way Handshake (Disconnect)
+#### 1.3.3.2 Four-Way Handshake (Disconnect)
 
 1. Active side sends a packet requesting disconnection.
 2. Passive side receives the request and replies immediately, indicating preparation for disconnection.
@@ -300,11 +300,11 @@ Beyond IP addresses and port numbers, real-world networking relies on several ma
 
 DNS translates human-readable domain names (e.g., `google.com`) into machine-readable IP addresses (e.g., `142.250.80.46`).
 
-#### Why DNS Matters
+#### 1.4.1.1 Why DNS Matters
 
 Without DNS, users would have to remember IP addresses for every website or service. DNS is often called the **phonebook of the internet**.
 
-#### DNS Resolution Process
+#### 1.4.1.2 DNS Resolution Process
 
 1. User enters `www.example.com` in a browser.
 2. Browser checks local cache; if not found, queries the OS resolver.
@@ -313,7 +313,7 @@ Without DNS, users would have to remember IP addresses for every website or serv
 5. The authoritative server returns the IP address.
 6. The result is cached and returned to the browser, which then initiates an HTTP/TCP connection.
 
-#### Common DNS Records
+#### 1.4.1.3 Common DNS Records
 
 | Record Type | Purpose | Example |
 |-------------|---------|---------|
@@ -326,7 +326,7 @@ Without DNS, users would have to remember IP addresses for every website or serv
 
 ### 1.4.2 MAC Addresses and ARP
 
-#### MAC Address
+#### 1.4.2.1 MAC Address
 
 A **MAC (Media Access Control) address** is a hardware address assigned to a network interface card (NIC). It is 48 bits long (6 bytes) and usually written as 6 pairs of hexadecimal digits, e.g., `00:1B:44:11:3A:B7`.
 
@@ -334,7 +334,7 @@ A **MAC (Media Access Control) address** is a hardware address assigned to a net
 - **Scope**: MAC addresses are used only within the local network segment (LAN).
 - **Purpose**: Switches use MAC addresses to forward frames within a LAN.
 
-#### ARP (Address Resolution Protocol)
+#### 1.4.2.2 ARP (Address Resolution Protocol)
 
 ARP maps IP addresses to MAC addresses on a local network. When a device wants to communicate with another device on the same LAN, it uses ARP to find the corresponding MAC address.
 
@@ -348,14 +348,14 @@ ARP maps IP addresses to MAC addresses on a local network. When a device wants t
 
 ### 1.4.3 Subnet Masks, CIDR, and Gateways
 
-#### Subnet Mask
+#### 1.4.3.1 Subnet Mask
 
 A subnet mask divides an IP address into a **network portion** and a **host portion**. It determines which devices are on the same local network.
 
 - Example: `255.255.255.0` means the first 3 octets are the network part and the last octet is the host part.
 - CIDR notation: `/24` is equivalent to `255.255.255.0`.
 
-#### CIDR (Classless Inter-Domain Routing)
+#### 1.4.3.2 CIDR (Classless Inter-Domain Routing)
 
 CIDR replaces the old class-based IP allocation system (Class A, B, C) with a more flexible notation using a prefix length.
 
@@ -367,7 +367,7 @@ CIDR replaces the old class-based IP allocation system (Class A, B, C) with a mo
 
 > **Quick calculation**: Number of usable hosts = 2^(32 - prefix) - 2 (subtract 2 for network and broadcast addresses).
 
-#### Gateway
+#### 1.4.3.3 Gateway
 
 A **default gateway** is the device (usually a router) that forwards traffic from the local network to other networks, including the internet. If a destination IP is outside the local subnet, the device sends the packet to the gateway.
 
@@ -375,14 +375,14 @@ A **default gateway** is the device (usually a router) that forwards traffic fro
 
 NAT allows multiple devices on a private network to share one or more public IP addresses when accessing the internet. It is the primary mechanism that has extended the life of IPv4.
 
-#### How NAT Works
+#### 1.4.4.1 How NAT Works
 
 1. A device with a private IP (e.g., `192.168.1.10`) sends a request to an internet server.
 2. The router replaces the private source IP with the router's public IP.
 3. The router tracks the translation in a NAT table.
 4. When the response returns, the router translates the destination back to the private IP and forwards it.
 
-#### Types of NAT
+#### 1.4.4.2 Types of NAT
 
 | Type | Description |
 |------|-------------|
@@ -390,7 +390,7 @@ NAT allows multiple devices on a private network to share one or more public IP 
 | **DNAT (Destination NAT)** | Changes the destination IP address, typically used for port forwarding to internal servers. |
 | **PAT / NAT Overload** | Many private IPs share one public IP by using different source port numbers. This is the most common home-router NAT. |
 
-#### NAT and DevOps
+#### 1.4.4.3 NAT and DevOps
 
 - NAT is common in cloud environments (VPCs, private subnets).
 - Kubernetes services and cloud load balancers often use NAT or proxy mechanisms to expose internal pods.
@@ -404,7 +404,7 @@ HTTP and HTTPS are the most widely used application-layer protocols in modern ne
 
 **HTTP (Hypertext Transfer Protocol)** is a request-response protocol used to transfer web pages, APIs, and other resources between clients and servers.
 
-#### HTTP Request Structure
+#### 1.5.1.1 HTTP Request Structure
 
 ```http
 GET /index.html HTTP/1.1
@@ -420,7 +420,7 @@ Components:
 - **Headers**: Metadata about the request
 - **Body**: Optional data sent with the request (common in `POST`/`PUT`)
 
-#### HTTP Response Structure
+#### 1.5.1.2 HTTP Response Structure
 
 ```http
 HTTP/1.1 200 OK
@@ -443,7 +443,7 @@ Components:
 - **Authentication**: Verifies the server's identity via certificates.
 - **Integrity**: Ensures data is not tampered with during transit.
 
-#### TLS Handshake (Simplified)
+#### 1.5.2.1 TLS Handshake (Simplified)
 
 1. Client sends supported TLS versions and a list of cipher suites (ClientHello).
 2. Server responds with the chosen cipher suite and its certificate (ServerHello + Certificate).
@@ -485,7 +485,7 @@ A DevOps engineer spends significant time debugging network issues. The followin
 
 ### 1.6.1 Connectivity Testing
 
-#### `ping`
+#### 1.6.1.1 `ping`
 
 Tests reachability and measures round-trip time using ICMP echo requests.
 
@@ -500,7 +500,7 @@ Common outputs:
 - `Request timed out`: Packet did not return (could be firewall, routing issue, or target down).
 - `Destination unreachable`: Router cannot deliver the packet.
 
-#### `traceroute` / `tracert`
+#### 1.6.1.2 `traceroute` / `tracert`
 
 Shows the route/path taken through intermediate routers to reach a destination.
 
@@ -513,14 +513,14 @@ Useful for identifying where along the path a connection fails.
 
 ### 1.6.2 DNS Verification
 
-#### `nslookup`
+#### 1.6.2.1 `nslookup`
 
 ```bash
 nslookup google.com
 nslookup -type=mx example.com
 ```
 
-#### `dig` (Linux/macOS, more detailed)
+#### 1.6.2.2 `dig` (Linux/macOS, more detailed)
 
 ```bash
 dig google.com
@@ -529,7 +529,7 @@ dig @8.8.8.8 google.com  # Query specific DNS server
 
 ### 1.6.3 Port and Connection Inspection
 
-#### `netstat` / `ss`
+#### 1.6.3.1 `netstat` / `ss`
 
 Display active connections, listening ports, and routing tables.
 
@@ -545,7 +545,7 @@ netstat -an          # Show all connections and ports
 
 > These are critical for verifying whether a service is actually listening on the expected port.
 
-#### `lsof`
+#### 1.6.3.2 `lsof`
 
 ```bash
 lsof -i :80          # Show which process is using port 80
@@ -554,7 +554,7 @@ lsof -i tcp:8080     # Show process using TCP port 8080
 
 ### 1.6.4 Packet Capture
 
-#### Wireshark
+#### 1.6.4.1 Wireshark
 
 A graphical, cross-platform packet analyzer. Wireshark captures and inspects packets at the network interface level, allowing deep analysis of protocols like TCP, UDP, HTTP, DNS, and TLS.
 
@@ -566,7 +566,7 @@ A graphical, cross-platform packet analyzer. Wireshark captures and inspects pac
 
 > **Tip**: Capture filters reduce noise. Examples: `tcp port 80`, `host 192.168.1.1`, `icmp`.
 
-#### tcpdump
+#### 1.6.4.2 tcpdump
 
 A command-line packet analyzer available on most Unix-like systems.
 
@@ -588,7 +588,7 @@ sudo tcpdump -i eth0 port 53
 
 ### 1.6.5 HTTP Testing
 
-#### `curl`
+#### 1.6.5.1 `curl`
 
 A versatile command-line tool for testing HTTP/HTTPS requests.
 
@@ -611,7 +611,7 @@ curl -X POST https://api.example.com/users \
 curl -v https://example.com
 ```
 
-#### `wget`
+#### 1.6.5.2 `wget`
 
 ```bash
 wget https://example.com/file.zip

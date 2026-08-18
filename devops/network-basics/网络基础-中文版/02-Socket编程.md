@@ -15,7 +15,7 @@
 | **encode（编码）** | 数据 → 二进制 | 将人类可读的数据转换为可传输的二进制格式 |
 | **decode（解码）** | 二进制 → 数据 | 将二进制数据还原为人类可读的格式 |
 
-#### 示例
+#### 2.1.1.1 示例
 
 ```python
 # String to binary (encode)
@@ -52,13 +52,13 @@ print(f"Decoded:  {decoded_cn}")
 
 容器不能直接编码。必须先将其转换为字符串（例如 JSON），然后再编码为二进制。
 
-#### 流程
+#### 2.1.2.1 流程
 
 ```
 Container → String (JSON) → Binary Data
 ```
 
-#### 示例
+#### 2.1.2.2 示例
 
 ```python
 import json

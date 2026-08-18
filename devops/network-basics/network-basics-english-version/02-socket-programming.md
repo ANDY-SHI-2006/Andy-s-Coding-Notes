@@ -15,7 +15,7 @@ All data (strings, numbers, containers) must be converted to byte sequences (bin
 | **encode** | Data → Binary | Converts human-readable data to transmittable binary format |
 | **decode** | Binary → Data | Converts binary data back to human-readable format |
 
-#### Example
+#### 2.1.1.1 Example
 
 ```python
 # String to binary (encode)
@@ -52,13 +52,13 @@ print(f"Decoded:  {decoded_cn}")
 
 Containers cannot be directly encoded. They must be converted to a string first (e.g., JSON), then encoded to binary.
 
-#### Process
+#### 2.1.2.1 Process
 
 ```
 Container → String (JSON) → Binary Data
 ```
 
-#### Example
+#### 2.1.2.2 Example
 
 ```python
 import json
