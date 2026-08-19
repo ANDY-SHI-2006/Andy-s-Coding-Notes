@@ -140,32 +140,48 @@ Default is `0`, the system automatically selects from the first two parameters. 
 
 ### 2.4.2 UDP Server Complete Process
 
+Complete runnable example: [UDP server](../网络基础-中文版/examples/udp_server.py)
+
 ```python
 import socket
 
+HOST = "127.0.0.1"
+PORT = 8080
+BUFFER_SIZE = 1024
+
+
+def main():
 # 1. Create UDP socket
-server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # 2. Bind IP and port
-server.bind(('127.0.0.1', 8080))
+    server.bind((HOST, PORT))
+    print(f"UDP server listening on {HOST}:{PORT}")
 
 # 3. Receive and send data (loop mode)
-while True:
-    info, addr = server.recvfrom(1024)
+    try:
+        while True:
+            data, address = server.recvfrom(BUFFER_SIZE)
+            message = data.decode("utf-8")
+            print(f"Received from {address}: {message}")
 
-    if info.decode() == 'exit':
-        break
+            if message == "exit":
+                break
 
-    print(f"Message: {info.decode()}")
-    print(f"From: {addr}")
+            server.sendto("Reply from UDP server".encode("utf-8"), address)
+    finally:
+        server.close()
+        print("UDP server stopped")
 
-    server.sendto("Reply from server".encode(), addr)
 
-# 4. Close socket
-server.close()
+if __name__ == "__main__":
+    main()
 ```
 
-### 2.4.3 UDP Socket Address Binding
+`recvfrom()` returns both the message and the client address. The server uses that address with `sendto()` to send the reply back.
+
+**UDP Socket Address Binding**
 
 The first argument to `bind()` is a two-item tuple containing the address and port:
 
@@ -179,32 +195,60 @@ The first argument to `bind()` is a two-item tuple containing the address and po
 - **Automatic port assignment**: port `0` lets the system choose an available port; use `getsockname()` to retrieve it.
 - **Listening address**: `'0.0.0.0'` is for listening on all IPv4 interfaces and should not be used as a client connection target.
 
-### 2.4.4 UDP Client Complete Process
+### 2.4.3 UDP Client Complete Process
+
+Complete runnable example: [UDP client](../网络基础-中文版/examples/udp_client.py)
 
 ```python
 import socket
 
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 8080
+BUFFER_SIZE = 1024
+
+
+def main():
 # 1. Create UDP socket (client doesn't need to bind)
-client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client.settimeout(5.0)
 
 # 2. Send and receive data (loop mode)
-while True:
-    msg = input("Message: ")
+    try:
+        while True:
+            message = input("Message (exit to stop): ")
+            client.sendto(message.encode("utf-8"), (SERVER_HOST, SERVER_PORT))
 
-    # sendto: 1st parameter=data(bytes), 2nd parameter=target(ip, port) tuple
-    client.sendto(msg.encode(), ('127.0.0.1', 8080))
+            if message == "exit":
+                break
 
-    if msg == 'exit':
-        break
+            data, address = client.recvfrom(BUFFER_SIZE)
+            print(f"Reply from {address}: {data.decode('utf-8')}")
+    except socket.timeout:
+        print("No UDP reply received within 5 seconds")
+    finally:
+        client.close()
+        print("UDP client stopped")
 
-    info, addr = client.recvfrom(1024)
-    print(f"Server reply: {info.decode()}")
 
-# 3. Close socket
-client.close()
+if __name__ == "__main__":
+    main()
 ```
 
-### 2.4.5 UDP Applicable Scenarios
+The client sends a message with `sendto()` and receives the server reply with `recvfrom()`. UDP is bidirectional; this example uses a client-request/server-reply pattern.
+
+Run the example in two terminals:
+
+```powershell
+# Terminal 1: start the server
+python examples/udp_server.py
+
+# Terminal 2: start the client
+python examples/udp_client.py
+```
+
+Start the server first, then the client. Type a normal message to receive a reply, or type `exit` to stop. The example listens only on `127.0.0.1` for local learning; `0.0.0.0` is a server listening address, not a client connection target.
+
+### 2.4.4 UDP Applicable Scenarios
 
 | Scenario | Reason |
 |----------|--------|

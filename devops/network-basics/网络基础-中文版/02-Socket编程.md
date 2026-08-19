@@ -140,32 +140,48 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 
 ### 2.4.2 UDP 服务器完整流程
 
+完整可运行示例：[UDP 服务器](examples/udp_server.py)
+
 ```python
 import socket
 
+HOST = "127.0.0.1"
+PORT = 8080
+BUFFER_SIZE = 1024
+
+
+def main():
 # 1. 创建 UDP socket
-server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # 2. 绑定 IP 地址和端口
-server.bind(('127.0.0.1', 8080))
+    server.bind((HOST, PORT))
+    print(f"UDP server listening on {HOST}:{PORT}")
 
 # 3. 接收和发送数据（循环模式）
-while True:
-    info, addr = server.recvfrom(1024)
+    try:
+        while True:
+            data, address = server.recvfrom(BUFFER_SIZE)
+            message = data.decode("utf-8")
+            print(f"Received from {address}: {message}")
 
-    if info.decode() == 'exit':
-        break
+            if message == "exit":
+                break
 
-    print(f"Message: {info.decode()}")
-    print(f"From: {addr}")
+            server.sendto("Reply from UDP server".encode("utf-8"), address)
+    finally:
+        server.close()
+        print("UDP server stopped")
 
-    server.sendto("Reply from server".encode(), addr)
 
-# 4. 关闭 socket
-server.close()
+if __name__ == "__main__":
+    main()
 ```
 
-### 2.4.3 UDP Socket 地址绑定
+服务器通过 `recvfrom()` 同时获得消息和客户端地址，再使用 `sendto()` 将回复发送回该地址。
+
+**UDP Socket 地址绑定**
 
 `bind()` 的第一个参数是地址和端口组成的二元组：
 
@@ -179,32 +195,60 @@ server.close()
 - **自动分配端口**：使用端口 `0` 时，系统会自动选择可用端口，可通过 `getsockname()` 获取实际端口。
 - **监听地址**：`'0.0.0.0'` 只用于服务器监听所有 IPv4 接口，不应作为客户端连接的目标地址。
 
-### 2.4.4 UDP 客户端完整流程
+### 2.4.3 UDP 客户端完整流程
+
+完整可运行示例：[UDP 客户端](examples/udp_client.py)
 
 ```python
 import socket
 
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 8080
+BUFFER_SIZE = 1024
+
+
+def main():
 # 1. 创建 UDP socket（客户端不需要绑定）
-client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client.settimeout(5.0)
 
 # 2. 发送和接收数据（循环模式）
-while True:
-    msg = input("Message: ")
+    try:
+        while True:
+            message = input("Message (exit to stop): ")
+            client.sendto(message.encode("utf-8"), (SERVER_HOST, SERVER_PORT))
 
-    # sendto：第 1 个参数是数据（bytes），第 2 个参数是目标 (ip, port) 元组
-    client.sendto(msg.encode(), ('127.0.0.1', 8080))
+            if message == "exit":
+                break
 
-    if msg == 'exit':
-        break
+            data, address = client.recvfrom(BUFFER_SIZE)
+            print(f"Reply from {address}: {data.decode('utf-8')}")
+    except socket.timeout:
+        print("No UDP reply received within 5 seconds")
+    finally:
+        client.close()
+        print("UDP client stopped")
 
-    info, addr = client.recvfrom(1024)
-    print(f"Server reply: {info.decode()}")
 
-# 3. 关闭 socket
-client.close()
+if __name__ == "__main__":
+    main()
 ```
 
-### 2.4.5 UDP 适用场景
+客户端先使用 `sendto()` 发送消息，再使用 `recvfrom()` 接收服务器回复。UDP 本身是双向的，但当前示例采用“客户端请求、服务器回复”的模式。
+
+运行方式：
+
+```powershell
+# 终端 1：启动服务器
+python examples/udp_server.py
+
+# 终端 2：启动客户端
+python examples/udp_client.py
+```
+
+先启动服务器，再启动客户端。客户端输入普通消息可以看到服务器回复，输入 `exit` 可以退出。示例只监听 `127.0.0.1`，适合本机学习；`0.0.0.0` 是服务器监听地址，不是客户端连接目标地址。
+
+### 2.4.4 UDP 适用场景
 
 | 场景 | 原因 |
 |----------|--------|
