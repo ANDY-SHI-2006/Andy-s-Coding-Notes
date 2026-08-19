@@ -15,7 +15,7 @@ All data (strings, numbers, containers) must be converted to byte sequences (bin
 | **encode** | Data → Binary | Converts human-readable data to transmittable binary format |
 | **decode** | Binary → Data | Converts binary data back to human-readable format |
 
-#### 2.1.1.1 Example
+**Example:**
 
 ```python
 # String to binary (encode)
@@ -52,13 +52,13 @@ print(f"Decoded:  {decoded_cn}")
 
 Containers cannot be directly encoded. They must be converted to a string first (e.g., JSON), then encoded to binary.
 
-#### 2.1.2.1 Process
+**Process:**
 
 ```
 Container → String (JSON) → Binary Data
 ```
 
-#### 2.1.2.2 Example
+**Example:**
 
 ```python
 import json
@@ -236,6 +236,7 @@ import socket
 
 # 1. Create TCP socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # 2. Bind address
 server.bind(('127.0.0.1', 9090))
@@ -255,15 +256,16 @@ while True:
     info = conn.recv(1024)
 
     # When client disconnects unexpectedly, recv returns empty string
-    if info.decode() == '':
+    if not info:
         print("Client disconnected")
         break
 
-    if info.decode() == 'exit':  # Client sends exit signal
+    text = info.decode()
+    if text == 'exit':  # Client sends exit signal
         break
 
-    print(f"Received: {info.decode()}")
-    conn.send("Reply".encode())
+    print(f"Received: {text}")
+    conn.sendall("Reply".encode())
 
 # 6. Close connection (four-way handshake)
 conn.close()     # Close connection object
@@ -289,7 +291,7 @@ while True:
     if msg == '':
         continue
 
-    client.send(msg.encode())  # send() has only one parameter, data must be bytes
+    client.sendall(msg.encode())
 
     if msg == 'exit':
         break
@@ -364,6 +366,7 @@ This makes it impossible for the receiver to know where one message ends and the
 import socket
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind(('127.0.0.1', 9090))
 server.listen(5)
 conn, addr = server.accept()
@@ -422,17 +425,17 @@ In Python, use the `struct` module to convert integers to and from 4-byte binary
 ```python
 import struct
 
-# Pack an integer into 4 bytes (little-endian by default)
-length_bytes = struct.pack("i", 100)  # 4 bytes
+# Pack an integer into 4 bytes in network byte order
+length_bytes = struct.pack("!I", 100)  # 4 bytes
 print(len(length_bytes))  # 4
 
 # Unpack back to integer
-length_tuple = struct.unpack("i", length_bytes)
+length_tuple = struct.unpack("!I", length_bytes)
 print(length_tuple)      # (100,)
 print(length_tuple[0])   # 100
 ```
 
-> **Format `"i"`**: signed 4-byte integer. This gives a fixed header size of 4 bytes, supporting messages up to roughly 2 GB.
+> **Format `"!I"`**: unsigned 4-byte integer in network byte order. This keeps the header cross-platform; applications should still enforce a maximum message size.
 
 ### 2.6.5 Server and Client with Length-Prefix Protocol
 
@@ -440,6 +443,7 @@ print(length_tuple[0])   # 100
 # server.py
 import socket
 import struct
+from util import recv_exactly
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('127.0.0.1', 9090))
@@ -449,17 +453,17 @@ print(f"Connected by {addr}")
 
 while True:
     # Step 1: Read 4-byte header
-    header = conn.recv(4)
-    if not header:
+    header = recv_exactly(conn, 4)
+    if header is None:
         print("Client disconnected")
         break
 
     # Step 2: Unpack to get message length
-    msg_length = struct.unpack('i', header)[0]
+    msg_length = struct.unpack('!I', header)[0]
 
     # Step 3: Read exactly msg_length bytes
-    msg = conn.recv(msg_length)
-    if not msg:
+    msg = recv_exactly(conn, msg_length)
+    if msg is None:
         print("Client disconnected unexpectedly")
         break
 
@@ -491,8 +495,8 @@ while True:
     length = len(byte_info)
 
     # Send 4-byte length header, then the data
-    client.send(struct.pack('i', length))
-    client.send(byte_info)
+    client.sendall(struct.pack('!I', length))
+    client.sendall(byte_info)
 
     if info == 'exit':
         break
@@ -508,28 +512,47 @@ For real projects, it is cleaner to wrap the length-prefix logic in reusable fun
 # util.py
 import struct
 
+HEADER_FORMAT = '!I'
+HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
+MAX_MESSAGE_SIZE = 16 * 1024 * 1024
+
+
+def recv_exactly(sock, size):
+    """Read exactly size bytes, or return None if the peer disconnects."""
+    chunks = bytearray()
+    while len(chunks) < size:
+        chunk = sock.recv(size - len(chunks))
+        if not chunk:
+            return None
+        chunks.extend(chunk)
+    return bytes(chunks)
+
 
 def send_with_length(sock, message):
     """Send a string message with a 4-byte length header."""
     data = message.encode()
     length = len(data)
-    sock.send(struct.pack('i', length))
-    sock.send(data)
+    if length > MAX_MESSAGE_SIZE:
+        raise ValueError('message is too large')
+    sock.sendall(struct.pack(HEADER_FORMAT, length))
+    sock.sendall(data)
 
 
 def recv_with_length(sock):
     """Receive a string message using a 4-byte length header.
 
-    Returns the decoded message, or an empty string if the peer disconnected.
+    Returns the decoded message, or None if the peer disconnected.
     """
-    header = sock.recv(4)
-    if not header:
-        return ''
+    header = recv_exactly(sock, HEADER_SIZE)
+    if header is None:
+        return None
 
-    length = struct.unpack('i', header)[0]
-    data = sock.recv(length)
-    if not data:
-        return ''
+    length = struct.unpack(HEADER_FORMAT, header)[0]
+    if length > MAX_MESSAGE_SIZE:
+        raise ValueError('message is too large')
+    data = recv_exactly(sock, length)
+    if data is None:
+        return None
 
     return data.decode()
 ```
@@ -546,7 +569,7 @@ conn, addr = server.accept()
 
 while True:
     msg = recv_with_length(conn)
-    if msg == '':
+    if msg is None:
         print("Client disconnected unexpectedly")
         break
     if msg == 'exit':
@@ -589,8 +612,8 @@ client.close()
 
 - The receiver should not use `recv(1024)` for arbitrary messages. It should read exactly the announced length, possibly in a loop if the data is large.
 - For production systems, consider using established protocols or libraries (e.g., HTTP, JSON-RPC, gRPC, `asyncio` streams, `struct` with network byte order `!i`).
-- `struct.pack("i", ...)` uses the machine's native byte order by default. For cross-platform communication, use `!i` (network byte order / big-endian).
-- The examples use `send()` for brevity; it returns the number of bytes actually sent and does not guarantee that all data goes out in one call. Production code should use `sendall()` (or loop on the return value of `send()`) to ensure complete transmission.
+- The length prefix uses `!I`, an unsigned 4-byte integer in network byte order, for cross-platform communication.
+- TCP examples use `sendall()` to ensure complete transmission. If using `send()`, loop over its returned byte count.
 
 ---
 
@@ -602,13 +625,21 @@ client.close()
 | **Server bind** | `server.bind((ip, port))` | `server.bind((ip, port))` |
 | **Server listen** | ❌ Not needed | `server.listen(n)` |
 | **Server accept** | ❌ Not needed | `conn, addr = server.accept()` |
-| **Send** | `socket.sendto(data, (ip, port))` | `socket.send(data)` |
+| **Send** | `socket.sendto(data, (ip, port))` | `socket.sendall(data)` |
 | **Receive** | `data, addr = socket.recvfrom(n)` | `data = socket.recv(n)` |
 | **Close** | `socket.close()` | `conn.close()` then `server.close()` |
 
 > **Key difference**: UDP `sendto`/`recvfrom` always carry the address; TCP `send`/`recv` don't need it because the connection is already established.
 
 ## 2.8 Non-Blocking Sockets
+
+Network programs should also use reasonable timeouts so that connect, receive, or send operations do not block forever. For example:
+
+```python
+client.settimeout(5.0)  # Raise TimeoutError after 5 seconds
+```
+
+Production code should catch `socket.timeout` and decide whether to retry, close the connection, or return an error.
 
 By default, socket methods like `accept()` and `recv()` are **blocking**: the program pauses until a client connects or data arrives. This is fine for a single client, but it makes a single thread unable to handle many clients simultaneously.
 

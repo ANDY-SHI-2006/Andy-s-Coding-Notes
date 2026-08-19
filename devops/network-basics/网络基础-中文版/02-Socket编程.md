@@ -15,7 +15,7 @@
 | **encode（编码）** | 数据 → 二进制 | 将人类可读的数据转换为可传输的二进制格式 |
 | **decode（解码）** | 二进制 → 数据 | 将二进制数据还原为人类可读的格式 |
 
-#### 2.1.1.1 示例
+**示例：**
 
 ```python
 # String to binary (encode)
@@ -52,13 +52,13 @@ print(f"Decoded:  {decoded_cn}")
 
 容器不能直接编码。必须先将其转换为字符串（例如 JSON），然后再编码为二进制。
 
-#### 2.1.2.1 流程
+**流程：**
 
 ```
 Container → String (JSON) → Binary Data
 ```
 
-#### 2.1.2.2 示例
+**示例：**
 
 ```python
 import json
@@ -227,7 +227,7 @@ client.close()
 
 TCP 通过**三次握手（Three-Way Handshake）**建立连接，通过**四次挥手（Four-Way Handshake）**断开连接。`connect()` 会自动触发三次握手，`close()` 会自动触发四次挥手，应用程序无需手动处理。
 
-> 详细过程与 SYN/ACK/FIN/seq 等术语解释见第 1 章 1.3.3 节。
+> 详细过程与 SYN/ACK/FIN/seq 等术语解释见第 1 章 1.3.4 节。
 
 ### 2.5.3 TCP 服务器完整流程
 
@@ -236,6 +236,7 @@ import socket
 
 # 1. Create TCP socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # 2. Bind address
 server.bind(('127.0.0.1', 9090))
@@ -255,15 +256,16 @@ while True:
     info = conn.recv(1024)
 
     # When client disconnects unexpectedly, recv returns empty string
-    if info.decode() == '':
+    if not info:
         print("Client disconnected")
         break
 
-    if info.decode() == 'exit':  # Client sends exit signal
+    text = info.decode()
+    if text == 'exit':  # Client sends exit signal
         break
 
-    print(f"Received: {info.decode()}")
-    conn.send("Reply".encode())
+    print(f"Received: {text}")
+    conn.sendall("Reply".encode())
 
 # 6. Close connection (four-way handshake)
 conn.close()     # Close connection object
@@ -289,7 +291,7 @@ while True:
     if msg == '':
         continue
 
-    client.send(msg.encode())  # send() has only one parameter, data must be bytes
+    client.sendall(msg.encode())
 
     if msg == 'exit':
         break
@@ -364,6 +366,7 @@ b'abc123456'
 import socket
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind(('127.0.0.1', 9090))
 server.listen(5)
 conn, addr = server.accept()
@@ -422,17 +425,17 @@ client.send("456".encode())
 ```python
 import struct
 
-# Pack an integer into 4 bytes (little-endian by default)
-length_bytes = struct.pack("i", 100)  # 4 bytes
+# Pack an integer into 4 bytes in network byte order
+length_bytes = struct.pack("!I", 100)  # 4 bytes
 print(len(length_bytes))  # 4
 
 # Unpack back to integer
-length_tuple = struct.unpack("i", length_bytes)
+length_tuple = struct.unpack("!I", length_bytes)
 print(length_tuple)      # (100,)
 print(length_tuple[0])   # 100
 ```
 
-> **格式 `"i"`**：有符号 4 字节整数。这使得头部长度固定为 4 字节，可支持最大约 2 GB 的消息。
+> **格式 `"!I"`**：网络字节序的无符号 4 字节整数。它使头部长度固定且跨平台一致；实际应用仍应设置最大消息长度。
 
 ### 2.6.5 使用长度前缀协议的服务器与客户端
 
@@ -440,6 +443,7 @@ print(length_tuple[0])   # 100
 # server.py
 import socket
 import struct
+from util import recv_exactly
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('127.0.0.1', 9090))
@@ -449,17 +453,17 @@ print(f"Connected by {addr}")
 
 while True:
     # Step 1: Read 4-byte header
-    header = conn.recv(4)
-    if not header:
+    header = recv_exactly(conn, 4)
+    if header is None:
         print("Client disconnected")
         break
 
     # Step 2: Unpack to get message length
-    msg_length = struct.unpack('i', header)[0]
+    msg_length = struct.unpack('!I', header)[0]
 
     # Step 3: Read exactly msg_length bytes
-    msg = conn.recv(msg_length)
-    if not msg:
+    msg = recv_exactly(conn, msg_length)
+    if msg is None:
         print("Client disconnected unexpectedly")
         break
 
@@ -491,8 +495,8 @@ while True:
     length = len(byte_info)
 
     # Send 4-byte length header, then the data
-    client.send(struct.pack('i', length))
-    client.send(byte_info)
+    client.sendall(struct.pack('!I', length))
+    client.sendall(byte_info)
 
     if info == 'exit':
         break
@@ -508,28 +512,47 @@ client.close()
 # util.py
 import struct
 
+HEADER_FORMAT = '!I'
+HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
+MAX_MESSAGE_SIZE = 16 * 1024 * 1024
+
+
+def recv_exactly(sock, size):
+    """Read exactly size bytes, or return None if the peer disconnects."""
+    chunks = bytearray()
+    while len(chunks) < size:
+        chunk = sock.recv(size - len(chunks))
+        if not chunk:
+            return None
+        chunks.extend(chunk)
+    return bytes(chunks)
+
 
 def send_with_length(sock, message):
     """Send a string message with a 4-byte length header."""
     data = message.encode()
     length = len(data)
-    sock.send(struct.pack('i', length))
-    sock.send(data)
+    if len(data) > MAX_MESSAGE_SIZE:
+        raise ValueError('message is too large')
+    sock.sendall(struct.pack(HEADER_FORMAT, length))
+    sock.sendall(data)
 
 
 def recv_with_length(sock):
     """Receive a string message using a 4-byte length header.
 
-    Returns the decoded message, or an empty string if the peer disconnected.
+    Returns the decoded message, or None if the peer disconnected.
     """
-    header = sock.recv(4)
-    if not header:
-        return ''
+    header = recv_exactly(sock, HEADER_SIZE)
+    if header is None:
+        return None
 
-    length = struct.unpack('i', header)[0]
-    data = sock.recv(length)
-    if not data:
-        return ''
+    length = struct.unpack(HEADER_FORMAT, header)[0]
+    if length > MAX_MESSAGE_SIZE:
+        raise ValueError('message is too large')
+    data = recv_exactly(sock, length)
+    if data is None:
+        return None
 
     return data.decode()
 ```
@@ -546,7 +569,7 @@ conn, addr = server.accept()
 
 while True:
     msg = recv_with_length(conn)
-    if msg == '':
+    if msg is None:
         print("Client disconnected unexpectedly")
         break
     if msg == 'exit':
@@ -589,8 +612,8 @@ client.close()
 
 - 接收方不应使用 `recv(1024)` 来接收任意长度的消息。它应当精确读取头部声明的长度，如果数据较大，可能需要循环读取。
 - 对于生产系统，可以考虑使用成熟的协议或库（例如 HTTP、JSON-RPC、gRPC、`asyncio` 流、配合网络字节序 `!i` 使用的 `struct`）。
-- `struct.pack("i", ...)` 默认使用机器的本机字节序。对于跨平台通信，应使用 `!i`（网络字节序/大端序）。
-- 示例代码为简洁起见使用 `send()`；它返回实际发送的字节数，不保证一次调用发完所有数据。生产代码应使用 `sendall()`（或循环检查 `send()` 的返回值），确保数据完整发送。
+- 长度前缀使用 `!I`，表示网络字节序的无符号 4 字节整数，适合跨平台通信。
+- TCP 示例使用 `sendall()` 确保数据完整发送；如果使用 `send()`，必须循环检查返回的字节数。
 
 ---
 
@@ -602,13 +625,21 @@ client.close()
 | **服务器绑定** | `server.bind((ip, port))` | `server.bind((ip, port))` |
 | **服务器监听** | ❌ 不需要 | `server.listen(n)` |
 | **服务器接受连接** | ❌ 不需要 | `conn, addr = server.accept()` |
-| **发送** | `socket.sendto(data, (ip, port))` | `socket.send(data)` |
+| **发送** | `socket.sendto(data, (ip, port))` | `socket.sendall(data)` |
 | **接收** | `data, addr = socket.recvfrom(n)` | `data = socket.recv(n)` |
 | **关闭** | `socket.close()` | 先 `conn.close()`，再 `server.close()` |
 
 > **关键区别**：UDP 的 `sendto`/`recvfrom` 始终携带地址；TCP 的 `send`/`recv` 不需要地址，因为连接已经建立。
 
 ## 2.8 非阻塞 Socket
+
+网络程序也应设置合理的超时，避免连接、接收或发送永久阻塞。例如：
+
+```python
+client.settimeout(5.0)  # Raise TimeoutError after 5 seconds
+```
+
+生产代码应捕获 `socket.timeout`，并根据业务决定重试、关闭连接或返回错误。
 
 默认情况下，`accept()` 和 `recv()` 等 socket 方法是**阻塞（blocking）**的：程序会一直暂停，直到有客户端连接或有数据到达。对于单个客户端这没有问题，但它会使单个线程无法同时处理多个客户端。
 
