@@ -19,19 +19,30 @@ Basic command-line skills are enough. Command examples identify Windows, Linux, 
 
 ## 1.1 Network Architecture and Core Concepts
 
-### 1.1.1 C/S: Client / Server
+### 1.1.1 Components of the Internet
+
+The Internet is built from end systems, communication links, and packet switches:
+
+- **End systems (hosts)**: devices running applications, including computers, phones, servers, TVs, and IoT devices.
+- **Communication links**: wired or wireless links with different transmission rates.
+- **Packet switches**: devices that forward packets based on header information, mainly routers and link-layer switches.
+- **ISPs**: Internet Service Providers are networks of switches and links that provide access to end systems.
+
+The sender divides application data into smaller pieces and adds headers to form packets. Packets can be compared to trucks, links to roads, switches to intersections, and end systems to the buildings where the data is delivered.
+
+### 1.1.2 C/S: Client / Server
 
 C/S architecture combines a local client with server-side services. The client may handle the interface, part of the business logic, and local resources, while the server provides centralized data and services.
 
 Common examples include desktop software, games, and banking clients. It can provide a rich local experience, but client versions and operating-system compatibility must be maintained. Security does not automatically improve because data is local; it depends on authentication, authorization, encryption, and endpoint protection.
 
-### 1.1.2 B/S: Browser / Server
+### 1.1.3 B/S: Browser / Server
 
 B/S architecture exposes a Web application through a browser and usually requires no dedicated installation.
 
 It simplifies release and updates and reduces cross-platform cost, but depends on the network, browser capabilities, and server performance. Modern Web applications can improve offline behavior with caching, WebAssembly, and Service Workers.
 
-### 1.1.3 C/S vs B/S
+### 1.1.4 C/S vs B/S
 
 | Dimension | C/S | B/S |
 | --- | --- | --- |
@@ -41,13 +52,13 @@ It simplifies release and updates and reduces cross-platform cost, but depends o
 | Cross-platform | Multiple clients may be needed | Browser compatibility matters |
 | Typical use | Desktop software, games, specialist clients | Websites, admin panels, online services |
 
-### 1.1.4 DevOps implications
+### 1.1.5 DevOps implications
 
 - B/S systems emphasize HTTP latency, status codes, TLS, reverse proxies, and load balancing.
 - C/S systems also require attention to client versions, connection stability, latency, packet loss, and update mechanisms.
 - Both need authentication, access control, logs, metrics, and tracing.
 
-### 1.1.5 Three Core Elements
+### 1.1.6 Three Core Elements
 
 A useful starting point for network analysis is:
 
@@ -107,7 +118,17 @@ During troubleshooting, check whether a matching route exists, whether the next 
 
 ### 1.2.5 DNS
 
-DNS maps domain names to IP addresses and can provide other information such as mail servers.
+DNS is a distributed, hierarchical database and an application-layer protocol. It maps domain names to IP addresses and can provide other information such as mail servers.
+
+The DNS hierarchy commonly includes:
+
+- **Root DNS servers**: direct queries toward top-level domains.
+- **Top-level domain (TLD) DNS servers**: handle domains such as `.com`, `.org`, and `.cn`.
+- **Authoritative DNS servers**: store the official records for a domain.
+
+A recursive resolver queries these servers on behalf of a client and caches results for a period defined by the TTL. Caching uses locality of reference, so most queries do not need to reach the root. If root servers are temporarily unavailable, existing cached entries can still resolve some domains.
+
+DNS records commonly include:
 
 | Record | Purpose |
 | --- | --- |
@@ -145,6 +166,10 @@ OSI is mainly a teaching and analysis model with seven layers. TCP/IP is the mor
 
 Data is encapsulated from the upper layers downward when sent and decapsulated upward when received. ARP is often discussed near the network-access layer because it crosses the network/link-layer boundary.
 
+Each layer provides services to the layer above and uses services from the layer below. Layering reduces complexity through abstraction and separation of responsibilities: an upper layer can use lower-layer capabilities without knowing every implementation detail.
+
+The data units are commonly called **messages** at the application layer, **segments/datagrams** at the transport layer, **datagrams** at the network layer, **frames** at the link layer, and **bits** at the physical layer.
+
 | Layer | Common devices or components | Troubleshooting clues |
 | --- | --- | --- |
 | Application | Web server, reverse proxy | Status codes, request logs, application latency |
@@ -163,6 +188,13 @@ Data is encapsulated from the upper layers downward when sent and decapsulated u
 
 UDP does not require applications to use only small data; applications still need to consider MTU, fragmentation, and loss. TCP also does not preserve application message boundaries, so applications must define framing.
 
+Transport services are commonly evaluated by:
+
+- **Reliable data transfer**: whether data arrives, arrives in order, and is not duplicated.
+- **Throughput**: the number of bits transferred per unit of time.
+- **Timing/latency**: how long data takes to travel from sender to receiver.
+- **Security**: confidentiality, integrity, and endpoint authentication. TCP itself does not encrypt data; TLS or another protocol is needed.
+
 TCP also provides flow control and congestion control. The receive window prevents a sender from exceeding receiver capacity, while the congestion window adapts the sending rate to network conditions. These mechanisms affect throughput but do not remove the need for application timeouts and retry policies.
 
 ### 1.3.3 TCP Data and Exceptional States
@@ -178,6 +210,31 @@ TCP presents application data as a continuous byte stream and does not preserve 
 3. The client returns `ACK`, and the connection can carry data.
 
 TCP is full-duplex, so the two directions can close independently. A graceful close commonly exchanges `FIN` and `ACK`, hence the traditional term “four-way termination”. Delayed acknowledgment, simultaneous close, and reset can change the observed packets.
+
+### 1.3.5 Network Layer: Forwarding and Routing
+
+The network-layer data unit is commonly called a datagram. The network layer exists in end systems and routers and moves datagrams across networks:
+
+- **Forwarding** is a data-plane action. It sends the current datagram from an input interface to the correct output interface using the routing table.
+- **Routing** is a control-plane function. It computes and maintains paths to different destination networks.
+
+Therefore, “no matching route in the routing table” is primarily a routing problem, while “a matching route exists but the packet leaves through the wrong interface” points more toward forwarding or device state.
+
+### 1.3.6 Application Processes, Sockets, and Addressing
+
+Application-layer communication is performed by processes running on different end systems. A socket is the interface between an application process and the network; a process can be compared to a house and its socket to the door.
+
+Locating a receiving process normally requires two pieces of information: the destination host's IP address and the port number identifying the process on that host. HTTP services commonly use `80` or `443`, while SMTP commonly uses `25`; applications may use different configured ports.
+
+### 1.3.7 Link Layer, LANs, and Wireless Networks
+
+The link layer transfers data between neighboring network nodes. Its data unit is a frame, and MAC addresses provide local-link addressing. Link-layer functions are commonly implemented by NICs, switches, and wireless access points, with some work performed in hardware and some by the operating system.
+
+A LAN (Local-Area Network) connects devices within a home, institution, or other limited area. Common wireless network types include:
+
+- **Bluetooth**: short-range communication, often for personal devices.
+- **Wi-Fi**: short-range LAN access, usually through a wireless access point.
+- **Cellular networks**: wider-area access for mobile devices through an operator network.
 
 ## 1.4 HTTP and HTTPS
 
