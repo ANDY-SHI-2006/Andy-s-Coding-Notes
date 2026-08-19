@@ -4,7 +4,7 @@
 
 ## 目录
 
-1. [网络基础](01-网络基础/README.md) — *网络架构、寻址与名称解析、网络分层、TCP/UDP、HTTP/HTTPS、故障排查*
+1. [网络基础](01-网络基础.md) — *网络架构、寻址与名称解析、网络分层、TCP/UDP、HTTP/HTTPS、故障排查*
 2. [Socket 编程](02-Socket编程.md) — *数据编码、UDP socket、TCP socket、粘包问题、struct 打包、多客户端服务器*
 
 ---

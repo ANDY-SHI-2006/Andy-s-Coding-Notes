@@ -4,7 +4,7 @@ A practical introduction to computer networking fundamentals and socket programm
 
 ## Table of Contents
 
-1. [Networking Fundamentals](01-networking-fundamentals/README.md) — *network architecture, addressing and name resolution, network layers, TCP/UDP, HTTP/HTTPS, and troubleshooting*
+1. [Networking Fundamentals](01-networking-fundamentals.md) — *network architecture, addressing and name resolution, network layers, TCP/UDP, HTTP/HTTPS, and troubleshooting*
 2. [Socket Programming](02-socket-programming.md) — *Data encoding, UDP sockets, TCP sockets, sticky packet problem, struct packing, multi-client servers*
 
 ---
