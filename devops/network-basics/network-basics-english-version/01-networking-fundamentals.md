@@ -326,21 +326,4 @@ sudo tcpdump -i eth0 -w capture.pcap
 
 The interface may not be named `eth0`; use `ip link` or `tcpdump -D` to confirm it. Captures may contain passwords, tokens, and personal data. Capture only on authorized networks and use filters to limit the scope.
 
-## 1.6 Integrated Practice
-
-1. Inspect the local addresses and route table and identify the default route's next hop.
-2. Use `arp -a` or `ip neigh` to find the link-layer address of the default gateway.
-3. Use `curl -i` and `curl -v` to inspect an HTTPS response and TLS setup.
-4. Simulate “DNS works but the port is unreachable” and “the port is reachable but returns 502”, then write the investigation steps.
-5. Design a length-prefixed message format and explain how it handles TCP coalescing and fragmentation.
-
-## 1.7 Chapter Summary
-
-- Analyze network communication through addresses, ports, and protocols.
-- Use IP, MAC, ARP/NDP, subnets, routes, DNS, and NAT to understand addressing and name resolution.
-- Use OSI to understand responsibilities and TCP/IP to relate them to real Internet implementations.
-- TCP provides a reliable byte stream, while UDP provides low-overhead datagrams; applications still need framing and timeout policies.
-- HTTP handles application-layer request-response communication, while HTTPS adds TLS confidentiality, authentication, and integrity.
-- Narrow failures through configuration, routes, DNS, ports, application responses, and packet capture.
-
 [Back to networking basics](README.md) | [Next: Socket Programming](02-socket-programming.md)
