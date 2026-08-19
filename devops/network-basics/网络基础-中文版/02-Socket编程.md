@@ -23,23 +23,29 @@ original_string = "hello world"
 byte_data = original_string.encode()
 print(f"Original: {original_string}")
 print(f"Encoded:  {byte_data}")
-# Output: b'hello world'
+# Output:
+# Original: hello world
+# Encoded:  b'hello world'
 
 # Binary back to string (decode)
 decoded_string = byte_data.decode()
 print(f"Decoded:  {decoded_string}")
-# Output: hello world
+# Output:
+# Decoded:  hello world
 
 # Non-ASCII characters (e.g., Chinese)
 chinese_text = "你好世界"
 byte_data_cn = chinese_text.encode('utf-8')
 print(f"Original: {chinese_text}")
 print(f"Encoded:  {byte_data_cn}")
-# Output: b'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
+# Output:
+# Original: 你好世界
+# Encoded:  b'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
 
 decoded_cn = byte_data_cn.decode('utf-8')
 print(f"Decoded:  {decoded_cn}")
-# Output: 你好世界
+# Output:
+# Decoded:  你好世界
 ```
 
 **要点：**

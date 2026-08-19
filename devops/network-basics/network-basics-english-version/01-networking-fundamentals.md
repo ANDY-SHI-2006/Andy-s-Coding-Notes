@@ -4,19 +4,6 @@
 
 A practical networking fundamentals chapter for developers and DevOps engineers.
 
-## Learning Goals
-
-After completing this chapter, you should be able to:
-
-- Explain how IP addresses, ports, protocols, DNS, gateways, and NAT relate.
-- Use the TCP/IP layers to locate connection problems.
-- Distinguish the responsibilities of TCP, UDP, HTTP, and HTTPS.
-- Use common commands to inspect DNS, routes, ports, and HTTP responses.
-
-## Prerequisites
-
-Basic command-line skills are enough. Command examples identify Windows, Linux, or macOS differences.
-
 ## 1.1 Network Architecture and Core Concepts
 
 ### 1.1.1 Components of the Internet
@@ -30,19 +17,9 @@ The Internet is built from end systems, communication links, and packet switches
 
 The sender divides application data into smaller pieces and adds headers to form packets. Packets can be compared to trucks, links to roads, switches to intersections, and end systems to the buildings where the data is delivered.
 
-### 1.1.2 C/S: Client / Server
+### 1.1.2 C/S and B/S Architectures
 
-C/S architecture combines a local client with server-side services. The client may handle the interface, part of the business logic, and local resources, while the server provides centralized data and services.
-
-Common examples include desktop software, games, and banking clients. It can provide a rich local experience, but client versions and operating-system compatibility must be maintained. Security does not automatically improve because data is local; it depends on authentication, authorization, encryption, and endpoint protection.
-
-### 1.1.3 B/S: Browser / Server
-
-B/S architecture exposes a Web application through a browser and usually requires no dedicated installation.
-
-It simplifies release and updates and reduces cross-platform cost, but depends on the network, browser capabilities, and server performance. Modern Web applications can improve offline behavior with caching, WebAssembly, and Service Workers.
-
-### 1.1.4 C/S vs B/S
+C/S (Client / Server) combines a local client with server-side services and is common for desktop software, games, and specialist clients. B/S (Browser / Server) exposes a Web application through a browser and usually requires no dedicated installation. Modern applications may use both approaches.
 
 | Dimension | C/S | B/S |
 | --- | --- | --- |
@@ -52,23 +29,13 @@ It simplifies release and updates and reduces cross-platform cost, but depends o
 | Cross-platform | Multiple clients may be needed | Browser compatibility matters |
 | Typical use | Desktop software, games, specialist clients | Websites, admin panels, online services |
 
-### 1.1.5 DevOps implications
+Both architectures need authentication, authorization, encryption, logging, and monitoring. C/S also requires attention to client versions, connection stability, and updates; B/S usually emphasizes HTTP latency, status codes, TLS, reverse proxies, and load balancing.
+
+### 1.1.3 DevOps implications
 
 - B/S systems emphasize HTTP latency, status codes, TLS, reverse proxies, and load balancing.
 - C/S systems also require attention to client versions, connection stability, latency, packet loss, and update mechanisms.
 - Both need authentication, access control, logs, metrics, and tracing.
-
-### 1.1.6 Three Core Elements
-
-A useful starting point for network analysis is:
-
-1. **IP address**: which host or interface should receive the data?
-2. **Port**: which process or service on that host?
-3. **Protocol**: which format and rules govern the exchange?
-
-These are often combined as `IP:port` and a protocol, such as `192.168.1.10:443/TCP`.
-
-An IP address provides network-layer addressing, a port distinguishes services on the same host, and a protocol defines message format, exchange order, error handling, and state changes.
 
 ## 1.2 Network Addressing and Name Resolution
 
@@ -95,6 +62,10 @@ ARP maps an IPv4 address to a MAC address on a local network. A host broadcasts 
 IPv6 does not use ARP. It uses Neighbor Discovery Protocol (NDP), which is based on ICMPv6 and also supports neighbor reachability detection and router discovery.
 
 ### 1.2.4 Subnets, CIDR, and Gateways
+
+A useful starting point for network analysis is: the IP address identifies the destination host or interface, the port identifies the process or service on that host, and the protocol defines the exchange format and rules. These are often combined as `IP:port` and a protocol, such as `192.168.1.10:443/TCP`.
+
+An IP address provides network-layer addressing, and a port distinguishes services on the same host.
 
 A subnet mask divides an IPv4 address into network and host portions. `255.255.255.0` is equivalent to `/24`.
 
@@ -126,7 +97,7 @@ The DNS hierarchy commonly includes:
 - **Top-level domain (TLD) DNS servers**: handle domains such as `.com`, `.org`, and `.cn`.
 - **Authoritative DNS servers**: store the official records for a domain.
 
-A recursive resolver queries these servers on behalf of a client and caches results for a period defined by the TTL. Caching uses locality of reference, so most queries do not need to reach the root. If root servers are temporarily unavailable, existing cached entries can still resolve some domains.
+A recursive resolver queries these servers on behalf of a client and caches results for a period defined by the TTL. Caching uses locality of reference, so most queries do not need to reach the root. If root servers are temporarily unavailable, existing cached entries can still resolve some domains. A typical lookup path is local cache, recursive resolver, root server, TLD server, authoritative server, and then a cached response back to the client.
 
 DNS records commonly include:
 
@@ -139,7 +110,7 @@ DNS records commonly include:
 | `NS` | Authoritative name server |
 | `TXT` | Text and validation data |
 
-Resolution commonly involves browser or operating-system caches, a recursive resolver, and authoritative name servers. On a cache miss, the recursive resolver may query root, top-level-domain, and authoritative servers in sequence. Caching and DNS over HTTPS/TLS can change the visible sequence.
+The visible sequence can differ because of browser and operating-system caches, prefetching, split DNS, and DNS over HTTPS/TLS.
 
 ### 1.2.6 NAT
 
@@ -218,7 +189,7 @@ The network-layer data unit is commonly called a datagram. The network layer exi
 - **Forwarding** is a data-plane action. It sends the current datagram from an input interface to the correct output interface using the routing table.
 - **Routing** is a control-plane function. It computes and maintains paths to different destination networks.
 
-Therefore, “no matching route in the routing table” is primarily a routing problem, while “a matching route exists but the packet leaves through the wrong interface” points more toward forwarding or device state.
+Forwarding is the immediate decision made by one device for one packet; routing is the network-wide process of computing and maintaining paths. Therefore, “no matching route in the routing table” is primarily a routing problem, while “a matching route exists but the packet leaves through the wrong interface” points more toward forwarding or device state.
 
 ### 1.3.6 Application Processes, Sockets, and Addressing
 
@@ -235,6 +206,8 @@ A LAN (Local-Area Network) connects devices within a home, institution, or other
 - **Bluetooth**: short-range communication, often for personal devices.
 - **Wi-Fi**: short-range LAN access, usually through a wireless access point.
 - **Cellular networks**: wider-area access for mobile devices through an operator network.
+
+Wireless networks share a radio medium and are affected by distance, obstacles, interference, signal strength, and contention for the medium.
 
 ## 1.4 HTTP and HTTPS
 
