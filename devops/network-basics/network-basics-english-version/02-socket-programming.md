@@ -90,6 +90,7 @@ list2 = json.loads(strinfo2)   # Original list
 Python socket programming module import:
 ```python
 import socket
+import time
 ```
 
 ## 2.3 Socket API Core Parameters
@@ -148,12 +149,14 @@ import socket
 HOST = "127.0.0.1"
 PORT = 8080
 BUFFER_SIZE = 1024
+CLIENT_TIMEOUT = 300
 
 
 def main():
 # 1. Create UDP socket
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    clients = {}
 
 # 2. Bind IP and port
     server.bind((HOST, PORT))
@@ -164,12 +167,26 @@ def main():
         while True:
             data, address = server.recvfrom(BUFFER_SIZE)
             message = data.decode("utf-8")
+            clients[address] = time.time()
             print(f"Received from {address}: {message}")
 
             if message == "exit":
-                break
+                clients.pop(address, None)
+                server.sendto("UDP session closed".encode("utf-8"), address)
+                continue
 
             server.sendto("Reply from UDP server".encode("utf-8"), address)
+
+            now = time.time()
+            inactive_clients = [
+                client_address
+                for client_address, last_seen in clients.items()
+                if now - last_seen > CLIENT_TIMEOUT
+            ]
+            for client_address in inactive_clients:
+                clients.pop(client_address, None)
+    except KeyboardInterrupt:
+        print("Stopping UDP server...")
     finally:
         server.close()
         print("UDP server stopped")
@@ -179,7 +196,9 @@ if __name__ == "__main__":
     main()
 ```
 
-`recvfrom()` returns both the message and the client address. The server uses that address with `sendto()` to send the reply back.
+`recvfrom()` returns both the message and the client address. The server uses that address with `sendto()` to send the reply back. One UDP server socket can receive datagrams from multiple clients; this example processes them serially and quickly.
+
+When a client sends `exit`, only that client's application-level session is closed and the server continues serving other clients. Stop the server with `Ctrl+C`. The server records each client's last activity and removes clients that have been inactive for more than five minutes.
 
 **UDP Socket Address Binding**
 
@@ -255,6 +274,44 @@ Start the server first, then the client. Type a normal message to receive a repl
 | Video streaming, live broadcast, video chat | High real-time requirements, can tolerate some packet loss |
 | Network broadcast, mass sending | Need one-to-many transmission |
 | Gaming | Low latency requirement higher than reliability |
+
+### 2.4.5 UDP Expert System Example
+
+UDP can carry more than fixed replies. It can also provide the communication interface for a simple rule-based expert system: the client sends a question, the server matches keywords in a knowledge base, and returns an answer.
+
+Complete examples:
+
+- [UDP expert server](../网络基础-中文版/examples/udp_expert_server.py)
+- [UDP expert client](../网络基础-中文版/examples/udp_expert_client.py)
+
+The server knowledge base can be represented by a dictionary:
+
+```python
+KNOWLEDGE_BASE = {
+    "你好": "你好！我是一个基于规则的网络学习助手。",
+    "udp": "UDP 是无连接的数据报协议，速度快，但不保证送达。",
+    "tcp": "TCP 是面向连接的可靠字节流协议。",
+    "default": "I cannot answer this question yet.",
+}
+```
+
+The basic reasoning flow is:
+
+```text
+Receive question -> Match keyword -> Select answer -> Reply to client
+```
+
+Run it in two terminals:
+
+```powershell
+# Terminal 1
+python examples/udp_expert_server.py
+
+# Terminal 2
+python examples/udp_expert_client.py
+```
+
+This is a keyword- and rule-based expert system, not a natural-language understanding system. Extend it by adding keywords, answers, and more advanced rules.
 
 ## 2.5 TCP Socket
 

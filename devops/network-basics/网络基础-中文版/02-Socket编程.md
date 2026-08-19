@@ -90,6 +90,7 @@ list2 = json.loads(strinfo2)   # 原始列表
 Python socket 编程模块的导入：
 ```python
 import socket
+import time
 ```
 
 ## 2.3 Socket API 核心参数
@@ -148,12 +149,14 @@ import socket
 HOST = "127.0.0.1"
 PORT = 8080
 BUFFER_SIZE = 1024
+CLIENT_TIMEOUT = 300
 
 
 def main():
 # 1. 创建 UDP socket
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    clients = {}
 
 # 2. 绑定 IP 地址和端口
     server.bind((HOST, PORT))
@@ -164,12 +167,26 @@ def main():
         while True:
             data, address = server.recvfrom(BUFFER_SIZE)
             message = data.decode("utf-8")
+            clients[address] = time.time()
             print(f"Received from {address}: {message}")
 
             if message == "exit":
-                break
+                clients.pop(address, None)
+                server.sendto("UDP session closed".encode("utf-8"), address)
+                continue
 
             server.sendto("Reply from UDP server".encode("utf-8"), address)
+
+            now = time.time()
+            inactive_clients = [
+                client_address
+                for client_address, last_seen in clients.items()
+                if now - last_seen > CLIENT_TIMEOUT
+            ]
+            for client_address in inactive_clients:
+                clients.pop(client_address, None)
+    except KeyboardInterrupt:
+        print("Stopping UDP server...")
     finally:
         server.close()
         print("UDP server stopped")
@@ -179,7 +196,9 @@ if __name__ == "__main__":
     main()
 ```
 
-服务器通过 `recvfrom()` 同时获得消息和客户端地址，再使用 `sendto()` 将回复发送回该地址。
+服务器通过 `recvfrom()` 同时获得消息和客户端地址，再使用 `sendto()` 将回复发送回该地址。UDP 服务端可以使用一个 socket 接收多个客户端的数据；当前示例按数据报快速串行处理多个客户端。
+
+客户端发送 `exit` 时，只关闭该客户端的应用层会话，服务器会继续为其他客户端服务。服务器本身通过 `Ctrl+C` 停止，并记录客户端最后活动时间；超过 5 分钟没有活动的客户端会从状态表中清理。
 
 **UDP Socket 地址绑定**
 
@@ -255,6 +274,44 @@ python examples/udp_client.py
 | 视频流媒体、直播、视频聊天 | 实时性要求高，可以容忍少量丢包 |
 | 网络广播、群发 | 需要一对多传输 |
 | 游戏 | 对低延迟的要求高于对可靠性的要求 |
+
+### 2.4.5 UDP 专家系统示例
+
+UDP 不只可以传输固定回复，也可以作为一个简单专家系统的通信接口。客户端发送问题，服务器在知识库中匹配关键词，再返回对应答案。
+
+完整示例：
+
+- [UDP 专家系统服务器](examples/udp_expert_server.py)
+- [UDP 专家系统客户端](examples/udp_expert_client.py)
+
+服务器的核心知识库可以写成字典：
+
+```python
+KNOWLEDGE_BASE = {
+    "你好": "你好！我是一个基于规则的网络学习助手。",
+    "udp": "UDP 是无连接的数据报协议，速度快，但不保证送达。",
+    "tcp": "TCP 是面向连接的可靠字节流协议。",
+    "默认": "我暂时无法回答这个问题。",
+}
+```
+
+基本推理流程是：
+
+```text
+接收问题 → 匹配关键词 → 选择答案 → 返回客户端
+```
+
+运行方式：
+
+```powershell
+# 终端 1
+python examples/udp_expert_server.py
+
+# 终端 2
+python examples/udp_expert_client.py
+```
+
+这是一个基于关键词和固定规则的专家系统，不具备真正的自然语言理解能力。可以通过增加关键词、答案和更复杂的规则继续扩展。
 
 ## 2.5 TCP Socket
 
