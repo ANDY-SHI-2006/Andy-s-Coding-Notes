@@ -24,6 +24,8 @@ A MAC address is usually 48 bits and identifies a network interface on a local l
 
 ARP maps an IPv4 address to a MAC address on a local network. A host broadcasts a request, the target replies, and the result is cached. Use `arp -a` on Windows or `ip neigh` on Linux to inspect the cache.
 
+IPv6 does not use ARP. It uses Neighbor Discovery Protocol (NDP), which is based on ICMPv6 and also supports neighbor reachability detection and router discovery.
+
 ## 3. Subnets, CIDR, and Gateways
 
 A subnet mask divides an IPv4 address into network and host portions. `255.255.255.0` is equivalent to `/24`.
@@ -34,9 +36,19 @@ A subnet mask divides an IPv4 address into network and host portions. `255.255.2
 | `/16` | `255.255.0.0` | 65,534 |
 | `/24` | `255.255.255.0` | 254 |
 
-For a traditional IPv4 subnet, usable hosts are usually $2^{32-prefix}-2$, but point-to-point links, cloud networks, and IPv6 may use different rules.
+For a traditional IPv4 subnet, usable hosts are usually $2^{32-p}-2$, where $p$ is the CIDR prefix length; point-to-point links, cloud networks, and IPv6 may use different rules.
 
 A default gateway forwards traffic outside the local subnet. A host first determines whether the destination is local; otherwise it sends the packet to the gateway.
+
+Useful commands:
+
+```bash
+ip route                 # Linux
+route print              # Windows
+netstat -rn              # macOS
+```
+
+During troubleshooting, check whether a matching route exists, whether the next hop is correct, and whether the interface is enabled.
 
 ## 4. DNS
 
@@ -51,7 +63,7 @@ DNS maps domain names to IP addresses and can provide other information such as 
 | `NS` | Authoritative name server |
 | `TXT` | Text and validation data |
 
-Resolution commonly involves browser or operating-system caches, a recursive resolver, and authoritative name servers. Caching and DNS over HTTPS/TLS can change the visible sequence.
+Resolution commonly involves browser or operating-system caches, a recursive resolver, and authoritative name servers. On a cache miss, the recursive resolver may query root, top-level-domain, and authoritative servers in sequence. Caching and DNS over HTTPS/TLS can change the visible sequence.
 
 ## 5. NAT
 
@@ -62,5 +74,11 @@ NAT changes IP addresses or ports at an address boundary and commonly lets priva
 - **PAT/NAT overload** lets multiple private addresses share one public address through different ports.
 
 NAT is not a firewall replacement. Cloud VPCs, port forwarding, and some container networks use translation or proxy mechanisms, but the exact behavior depends on the platform.
+
+## 6. Practice
+
+1. Inspect the local addresses and route table and identify the default route's next hop.
+2. Use `arp -a` or `ip neigh` to find the link-layer address of the default gateway.
+3. Query `A`, `AAAA`, and `MX` records with `nslookup` or `dig`, and record their TTL values.
 
 [Previous: Network Architecture and Core Concepts](01-network-architecture-and-core-concepts.md) | [Back to chapter index](README.md) | [Next: Network Layers and Transport Protocols](03-network-layers-and-transport-protocols.md)
