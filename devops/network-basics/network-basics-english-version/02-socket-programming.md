@@ -87,10 +87,20 @@ list2 = json.loads(strinfo2)   # Original list
 - **UDP Socket**: Connectionless, data transmission is unreliable, but efficiency is higher
 - **TCP Socket**: Connection-oriented, data transmission is secure and stable, but efficiency is relatively lower
 
+A socket is the interface between an application process and the network. UDP uses datagrams, and one socket can receive data from multiple clients. TCP uses a reliable byte stream; the server socket accepts connections, while each connected socket communicates with one client.
+
+Common lifecycles:
+
+```text
+UDP server: create -> bind -> recvfrom/sendto -> close
+UDP client: create -> sendto/recvfrom -> close
+TCP server: create -> bind -> listen -> accept -> recv/sendall -> close
+TCP client: create -> connect -> recv/sendall -> close
+```
+
 Python socket programming module import:
 ```python
 import socket
-import time
 ```
 
 ## 2.3 Socket API Core Parameters
@@ -100,7 +110,62 @@ Function signature for creating a Socket:
 socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-### 2.3.1 address_family — Address Type
+Learn the Socket API in this order: create the object, configure the address, exchange data, and release resources. The following methods appear repeatedly in later examples.
+
+### 2.3.1 `bind()`: Bind a Local Address
+
+```python
+server.bind(("127.0.0.1", 8080))
+```
+
+The argument must be a `(host, port)` tuple. Servers normally bind a local address; clients usually receive a temporary port from the operating system.
+
+### 2.3.2 `sendto()` and `recvfrom()`: UDP I/O
+
+```python
+server.sendto(data, client_address)
+data, client_address = server.recvfrom(1024)
+```
+
+`recvfrom()` returns the data and sender address `(ip, port)`. A server can pass that address to `sendto()` to reply to the client.
+
+### 2.3.3 `listen()` and `accept()`: Wait for TCP Connections
+
+```python
+server.listen(5)
+connection, client_address = server.accept()
+```
+
+These methods are used by TCP servers. `accept()` returns a new connected socket while the server socket remains available for other clients.
+
+### 2.3.4 `connect()`: Connect a TCP Client
+
+```python
+client.connect(("127.0.0.1", 9090))
+```
+
+Calling `connect()` on a TCP client triggers the three-way handshake. UDP usually uses `sendto()` without a connection; UDP `connect()` only sets a default peer and is not a TCP-style connection.
+
+### 2.3.5 `sendall()` and `recv()`: TCP I/O
+
+```python
+client.sendall(data)
+data = client.recv(1024)
+```
+
+`sendall()` ensures complete transmission; `recv(n)` reads at most `n` bytes. TCP is a byte stream, so one `recv()` call does not necessarily return one complete application message. Applications must define message framing.
+
+### 2.3.6 `close()`, Timeouts, and Port Reuse
+
+```python
+client.settimeout(5.0)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+client.close()
+```
+
+`settimeout()` prevents network operations from blocking forever; `SO_REUSEADDR` makes development-time restarts easier; `close()` releases resources.
+
+### 2.3.7 address_family — Address Type
 
 | Value | Description |
 |-------|-------------|
@@ -109,7 +174,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.AF_UNIX` | Unix domain socket — IPC on the same machine (Linux/macOS only) |
 | `socket.AF_BLUETOOTH` | Bluetooth communication |
 
-### 2.3.2 socket_type — Transmission Mode
+### 2.3.8 socket_type — Transmission Mode
 
 | Value | Description |
 |-------|-------------|
@@ -118,7 +183,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.SOCK_RAW` | Raw socket: direct network-layer access; requires admin privileges; used for custom protocols or packet capture |
 | `socket.SOCK_SEQPACKET` | Ordered, reliable, connection-oriented datagrams (rarely used) |
 
-### 2.3.3 proto — Protocol Number (Optional)
+### 2.3.9 proto — Protocol Number (Optional)
 
 Default is `0`, the system automatically selects from the first two parameters. Only needed when using `SOCK_RAW`:
 
@@ -145,6 +210,7 @@ Complete runnable example: [UDP server](../网络基础-中文版/examples/udp_s
 
 ```python
 import socket
+import time
 
 HOST = "127.0.0.1"
 PORT = 8080

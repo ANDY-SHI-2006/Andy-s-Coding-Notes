@@ -87,10 +87,20 @@ list2 = json.loads(strinfo2)   # 原始列表
 - **UDP Socket**：无连接，数据传输不可靠，但效率更高
 - **TCP Socket**：面向连接，数据传输安全稳定，但效率相对较低
 
+Socket 是应用进程与网络之间的接口。UDP 使用数据报，一个 Socket 可以接收多个客户端的数据；TCP 使用可靠字节流，服务器 Socket 负责接受连接，连接 Socket 负责与具体客户端通信。
+
+常见生命周期如下：
+
+```text
+UDP 服务器：创建 → 绑定 → recvfrom/sendto → 关闭
+UDP 客户端：创建 → sendto/recvfrom → 关闭
+TCP 服务器：创建 → 绑定 → 监听 → 接受连接 → recv/sendall → 关闭
+TCP 客户端：创建 → 连接 → recv/sendall → 关闭
+```
+
 Python socket 编程模块的导入：
 ```python
 import socket
-import time
 ```
 
 ## 2.3 Socket API 核心参数
@@ -100,7 +110,62 @@ import time
 socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-### 2.3.1 address_family —— 地址类型
+Socket API 的学习顺序是“创建对象 → 配置地址 → 收发数据 → 关闭资源”。后续示例会反复使用以下方法：
+
+### 2.3.1 `bind()`：绑定本地地址
+
+```python
+server.bind(("127.0.0.1", 8080))
+```
+
+参数必须是 `(host, port)` 二元组。服务器通常需要绑定本地地址，客户端通常由操作系统自动分配临时端口。
+
+### 2.3.2 `sendto()` 与 `recvfrom()`：UDP 收发
+
+```python
+server.sendto(data, client_address)
+data, client_address = server.recvfrom(1024)
+```
+
+`recvfrom()` 返回数据和发送方地址 `(ip, port)`。服务器可以把这个地址传给 `sendto()`，向客户端回复。
+
+### 2.3.3 `listen()` 与 `accept()`：TCP 服务器等待连接
+
+```python
+server.listen(5)
+connection, client_address = server.accept()
+```
+
+这两个方法只用于 TCP 服务器。`accept()` 返回一个新的连接 Socket，服务器 Socket 继续接受其他客户端连接。
+
+### 2.3.4 `connect()`：TCP 客户端连接服务器
+
+```python
+client.connect(("127.0.0.1", 9090))
+```
+
+TCP 客户端调用 `connect()` 会触发三次握手。UDP 通常使用 `sendto()`，不需要建立连接；UDP 调用 `connect()` 只会固定默认目标地址，不等同于 TCP 连接。
+
+### 2.3.5 `sendall()` 与 `recv()`：TCP 收发
+
+```python
+client.sendall(data)
+data = client.recv(1024)
+```
+
+`sendall()` 用于确保数据完整发送；`recv(n)` 最多读取 `n` 个字节。TCP 是字节流协议，`recv()` 不保证一次读取一条完整业务消息，应用需要定义消息边界。
+
+### 2.3.6 `close()`、超时与端口复用
+
+```python
+client.settimeout(5.0)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+client.close()
+```
+
+`settimeout()` 防止网络操作永久阻塞；`SO_REUSEADDR` 方便开发阶段快速重启服务器；`close()` 用于释放资源。
+
+### 2.3.7 address_family —— 地址类型
 
 | 取值 | 说明 |
 |-------|-------------|
@@ -109,7 +174,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.AF_UNIX` | Unix 域套接字 —— 同一台机器上的进程间通信（IPC）（仅限 Linux/macOS） |
 | `socket.AF_BLUETOOTH` | 蓝牙通信 |
 
-### 2.3.2 socket_type —— 传输模式
+### 2.3.8 socket_type —— 传输模式
 
 | 取值 | 说明 |
 |-------|-------------|
@@ -118,7 +183,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 | `socket.SOCK_RAW` | 原始套接字：直接访问网络层；需要管理员权限；用于自定义协议或抓包 |
 | `socket.SOCK_SEQPACKET` | 有序、可靠、面向连接的数据报（极少使用） |
 
-### 2.3.3 proto —— 协议编号（可选）
+### 2.3.9 proto —— 协议编号（可选）
 
 默认值为 `0`，系统会根据前两个参数自动选择。只有在使用 `SOCK_RAW` 时才需要指定：
 
@@ -145,6 +210,7 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 
 ```python
 import socket
+import time
 
 HOST = "127.0.0.1"
 PORT = 8080
