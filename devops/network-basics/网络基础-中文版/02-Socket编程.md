@@ -18,7 +18,7 @@
 **示例：**
 
 ```python
-# String to binary (encode)
+# 字符串转换为字节（二进制编码）
 original_string = "hello world"
 byte_data = original_string.encode()
 print(f"Original: {original_string}")
@@ -27,13 +27,13 @@ print(f"Encoded:  {byte_data}")
 # Original: hello world
 # Encoded:  b'hello world'
 
-# Binary back to string (decode)
+# 字节转换回字符串（二进制解码）
 decoded_string = byte_data.decode()
 print(f"Decoded:  {decoded_string}")
 # Output:
 # Decoded:  hello world
 
-# Non-ASCII characters (e.g., Chinese)
+# 非 ASCII 字符（例如中文）
 chinese_text = "你好世界"
 byte_data_cn = chinese_text.encode('utf-8')
 print(f"Original: {chinese_text}")
@@ -70,14 +70,14 @@ Container → String (JSON) → Binary Data
 import json
 
 list1 = ['apple', 'banana', 'watermelon']
-# Step 1: Convert list to JSON string
+# 第 1 步：将列表转换为 JSON 字符串
 str_list = json.dumps(list1)  # '["apple", "banana", "watermelon"]'
-# Step 2: Encode string to binary
+# 第 2 步：将字符串编码为二进制
 bytelist = str_list.encode()   # b'[...]'
 
-# Reverse process:
-strinfo2 = bytelist.decode()   # JSON string
-list2 = json.loads(strinfo2)   # Original list
+# 逆向过程：
+strinfo2 = bytelist.decode()   # JSON 字符串
+list2 = json.loads(strinfo2)   # 原始列表
 ```
 
 ## 2.2 Socket 基础
@@ -143,26 +143,15 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```python
 import socket
 
-# 1. Create UDP socket
+# 1. 创建 UDP socket
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# 2. Bind IP and port
+# 2. 绑定 IP 地址和端口
 server.bind(('127.0.0.1', 8080))
-# Address options explanation:
-#   ('127.0.0.1', 8080)  - IPv4 loopback, local access only
-#   ('localhost', 8080)  - Hostname resolves to 127.0.0.1, for development only
-#   ('0.0.0.0', 8080)    - All network interfaces, allows external/LAN access
-#   ('', 8080)           - Empty string, equivalent to '0.0.0.0'
-#   ('192.168.1.10', 8080) - Bind to specific network interface
 
-# Special port value: port=0 lets system auto-assign available port
-# server.bind(('127.0.0.1', 0))
-# actual_port = server.getsockname()[1]
-
-# 3. Receive and send data (loop mode)
+# 3. 接收和发送数据（循环模式）
 while True:
-    # recvfrom() blocks until message arrives, returns (data_bytes, (client_ip, client_port))
-    info, addr = server.recvfrom(1024)  # 1024 = maximum bytes to receive per call
+    info, addr = server.recvfrom(1024)
 
     if info.decode() == 'exit':
         break
@@ -170,14 +159,15 @@ while True:
     print(f"Message: {info.decode()}")
     print(f"From: {addr}")
 
-    # sendto must pass addr back
     server.sendto("Reply from server".encode(), addr)
 
-# 4. Close socket
+# 4. 关闭 socket
 server.close()
 ```
 
-**绑定要点：**
+### 2.4.3 UDP Socket 地址绑定
+
+`bind()` 的第一个参数是地址和端口组成的二元组：
 
 | 写法 | 是否正确 | 说明 |
 |--------|----------|-------------|
@@ -186,20 +176,22 @@ server.close()
 
 - **IPv6 回环地址**：`'::1'` 等价于 `'127.0.0.1'`
 - **IPv6 通配地址**：`'::'` 等价于 `'0.0.0.0'`
+- **自动分配端口**：使用端口 `0` 时，系统会自动选择可用端口，可通过 `getsockname()` 获取实际端口。
+- **监听地址**：`'0.0.0.0'` 只用于服务器监听所有 IPv4 接口，不应作为客户端连接的目标地址。
 
-### 2.4.3 UDP 客户端完整流程
+### 2.4.4 UDP 客户端完整流程
 
 ```python
 import socket
 
-# 1. Create UDP socket (client doesn't need to bind)
+# 1. 创建 UDP socket（客户端不需要绑定）
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# 2. Send and receive data (loop mode)
+# 2. 发送和接收数据（循环模式）
 while True:
     msg = input("Message: ")
 
-    # sendto: 1st parameter=data(bytes), 2nd parameter=target(ip, port) tuple
+    # sendto：第 1 个参数是数据（bytes），第 2 个参数是目标 (ip, port) 元组
     client.sendto(msg.encode(), ('127.0.0.1', 8080))
 
     if msg == 'exit':
@@ -208,11 +200,11 @@ while True:
     info, addr = client.recvfrom(1024)
     print(f"Server reply: {info.decode()}")
 
-# 3. Close socket
+# 3. 关闭 socket
 client.close()
 ```
 
-### 2.4.4 UDP 适用场景
+### 2.4.5 UDP 适用场景
 
 | 场景 | 原因 |
 |----------|--------|
@@ -240,42 +232,42 @@ TCP 通过**三次握手（Three-Way Handshake）**建立连接，通过**四次
 ```python
 import socket
 
-# 1. Create TCP socket
+# 1. 创建 TCP socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-# 2. Bind address
+# 2. 绑定地址
 server.bind(('127.0.0.1', 9090))
 
-# 3. Set listening (maximum pending connections)
+# 3. 设置监听（最大待处理连接数）
 server.listen(5)
 
-# 4. Accept connection (blocks until client connects, three-way handshake occurs here)
-# accept() returns (conn_object, (client_ip, client_port))
-# conn = connection object — all subsequent send/recv use conn, not server
+# 4. 接受连接（阻塞直到客户端连接，三次握手在此处完成）
+# accept() 返回 (conn_object, (client_ip, client_port))
+# conn 是连接对象，后续 send/recv 都使用 conn，而不是 server
 conn, addr = server.accept()
 print(f"Connected by {addr}")
 
-# 5. Send and receive data (loop mode)
+# 5. 发送和接收数据（循环模式）
 while True:
-    # recv() doesn't need address (connection-oriented)
+    # recv() 不需要地址（因为 TCP 面向连接）
     info = conn.recv(1024)
 
-    # When client disconnects unexpectedly, recv returns empty string
+    # 客户端意外断开时，recv 返回空字节串
     if not info:
         print("Client disconnected")
         break
 
     text = info.decode()
-    if text == 'exit':  # Client sends exit signal
+    if text == 'exit':  # 客户端发送退出信号
         break
 
     print(f"Received: {text}")
     conn.sendall("Reply".encode())
 
-# 6. Close connection (four-way handshake)
-conn.close()     # Close connection object
-server.close()   # Close server socket
+# 6. 关闭连接（四次挥手）
+conn.close()     # 关闭连接对象
+server.close()   # 关闭服务器 socket
 ```
 
 ### 2.5.4 TCP 客户端完整流程
@@ -283,17 +275,17 @@ server.close()   # Close server socket
 ```python
 import socket
 
-# 1. Create TCP socket
+# 1. 创建 TCP socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# 2. Connect to server (automatically triggers three-way handshake)
+# 2. 连接服务器（三次握手会自动触发）
 client.connect(('127.0.0.1', 9090))
 
-# 3. Send and receive data (loop mode)
+# 3. 发送和接收数据（循环模式）
 while True:
     msg = input("Message: ")
 
-    # ⚠ Cannot send empty string, will cause issues
+    # ⚠ 不能发送空字符串，否则可能导致问题
     if msg == '':
         continue
 
@@ -305,7 +297,7 @@ while True:
     data = client.recv(1024)
     print(f"Server reply: {data.decode()}")
 
-# 4. Close socket (automatically triggers four-way handshake)
+# 4. 关闭 socket（四次挥手会自动触发）
 client.close()
 ```
 
@@ -347,7 +339,7 @@ TCP 是**面向字节流（stream-oriented）**的协议。与 UDP 中每次 `se
 **示例：**
 
 ```python
-# Client sends three separate messages
+# 客户端分别发送三条消息
 client.send("abc".encode())
 client.send("123".encode())
 client.send("456".encode())
@@ -377,7 +369,7 @@ server.bind(('127.0.0.1', 9090))
 server.listen(5)
 conn, addr = server.accept()
 
-info = conn.recv(10)  # Might receive b'abc123456' all at once
+info = conn.recv(10)  # 可能一次性接收到完整的 b'abc123456'
 print(f"Received: {info.decode()}")
 
 conn.send("Hello from server".encode())
@@ -431,11 +423,11 @@ client.send("456".encode())
 ```python
 import struct
 
-# Pack an integer into 4 bytes in network byte order
-length_bytes = struct.pack("!I", 100)  # 4 bytes
+# 按网络字节序将整数打包为 4 个字节
+length_bytes = struct.pack("!I", 100)  # 4 个字节
 print(len(length_bytes))  # 4
 
-# Unpack back to integer
+# 解包还原为整数
 length_tuple = struct.unpack("!I", length_bytes)
 print(length_tuple)      # (100,)
 print(length_tuple[0])   # 100
@@ -458,16 +450,16 @@ conn, addr = server.accept()
 print(f"Connected by {addr}")
 
 while True:
-    # Step 1: Read 4-byte header
+    # 第 1 步：读取 4 字节头部
     header = recv_exactly(conn, 4)
     if header is None:
         print("Client disconnected")
         break
 
-    # Step 2: Unpack to get message length
+    # 第 2 步：解包得到消息长度
     msg_length = struct.unpack('!I', header)[0]
 
-    # Step 3: Read exactly msg_length bytes
+    # 第 3 步：精确读取 msg_length 个字节
     msg = recv_exactly(conn, msg_length)
     if msg is None:
         print("Client disconnected unexpectedly")
@@ -500,7 +492,7 @@ while True:
     byte_info = info.encode()
     length = len(byte_info)
 
-    # Send 4-byte length header, then the data
+    # 先发送 4 字节长度头部，再发送数据
     client.sendall(struct.pack('!I', length))
     client.sendall(byte_info)
 
@@ -535,7 +527,7 @@ def recv_exactly(sock, size):
 
 
 def send_with_length(sock, message):
-    """Send a string message with a 4-byte length header."""
+    """使用 4 字节长度头部发送字符串消息。"""
     data = message.encode()
     length = len(data)
     if len(data) > MAX_MESSAGE_SIZE:
@@ -545,9 +537,9 @@ def send_with_length(sock, message):
 
 
 def recv_with_length(sock):
-    """Receive a string message using a 4-byte length header.
+    """使用 4 字节长度头部接收字符串消息。
 
-    Returns the decoded message, or None if the peer disconnected.
+    返回解码后的消息；如果对方断开连接，则返回 None。
     """
     header = recv_exactly(sock, HEADER_SIZE)
     if header is None:
@@ -677,7 +669,7 @@ server.setblocking(False)
 connections = []
 
 while True:
-    # Try to accept a new connection
+    # 尝试接受新连接
     try:
         conn, addr = server.accept()
         conn.setblocking(False)
@@ -686,13 +678,13 @@ while True:
     except BlockingIOError:
         pass
 
-    # Check each connection for incoming data
+    # 检查每个连接是否有传入数据
     disconnected = []
     for conn in connections:
         try:
             msg = conn.recv(1024)
             if not msg:
-                # Client closed the connection gracefully
+                # 客户端正常关闭连接
                 disconnected.append(conn)
                 continue
 
@@ -704,12 +696,12 @@ while True:
             print(f"Received: {text}")
             conn.send("Hello from server".encode())
         except BlockingIOError:
-            # No data available from this client right now
+            # 当前客户端暂时没有可用数据
             pass
         except ConnectionResetError:
             disconnected.append(conn)
 
-    # Remove disconnected clients
+    # 移除已断开的客户端
     for conn in disconnected:
         if conn in connections:
             connections.remove(conn)
@@ -788,7 +780,7 @@ server.bind(('127.0.0.1', 9090))
 server.listen(5)
 server.setblocking(False)
 
-# Start by monitoring the server socket for incoming connections
+# 首先监控服务器 socket 的新连接
 read_list = [server]
 
 while True:
@@ -796,17 +788,17 @@ while True:
 
     for sock in readable:
         if sock is server:
-            # New client connection
+            # 新的客户端连接
             conn, addr = server.accept()
             conn.setblocking(False)
             read_list.append(conn)
             print(f"New connection from {addr}")
         else:
-            # Existing client sent data
+            # 已连接的客户端发送了数据
             try:
                 msg = sock.recv(1024)
                 if not msg:
-                    # Client disconnected
+                    # 客户端断开连接
                     print("Client disconnected")
                     read_list.remove(sock)
                     sock.close()
@@ -827,7 +819,7 @@ while True:
 ```
 
 ```python
-# client.py (same as before)
+# client.py（与前面相同）
 import socket
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -148,21 +148,10 @@ server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # 2. Bind IP and port
 server.bind(('127.0.0.1', 8080))
-# Address options explanation:
-#   ('127.0.0.1', 8080)  - IPv4 loopback, local access only
-#   ('localhost', 8080)  - Hostname resolves to 127.0.0.1, for development only
-#   ('0.0.0.0', 8080)    - All network interfaces, allows external/LAN access
-#   ('', 8080)           - Empty string, equivalent to '0.0.0.0'
-#   ('192.168.1.10', 8080) - Bind to specific network interface
-
-# Special port value: port=0 lets system auto-assign available port
-# server.bind(('127.0.0.1', 0))
-# actual_port = server.getsockname()[1]
 
 # 3. Receive and send data (loop mode)
 while True:
-    # recvfrom() blocks until message arrives, returns (data_bytes, (client_ip, client_port))
-    info, addr = server.recvfrom(1024)  # 1024 = maximum bytes to receive per call
+    info, addr = server.recvfrom(1024)
 
     if info.decode() == 'exit':
         break
@@ -170,14 +159,15 @@ while True:
     print(f"Message: {info.decode()}")
     print(f"From: {addr}")
 
-    # sendto must pass addr back
     server.sendto("Reply from server".encode(), addr)
 
 # 4. Close socket
 server.close()
 ```
 
-**Key Binding Points:**
+### 2.4.3 UDP Socket Address Binding
+
+The first argument to `bind()` is a two-item tuple containing the address and port:
 
 | Syntax | Correct? | Explanation |
 |--------|----------|-------------|
@@ -186,8 +176,10 @@ server.close()
 
 - **IPv6 loopback**: `'::1'` is equivalent to `'127.0.0.1'`
 - **IPv6 wildcard**: `'::'` is equivalent to `'0.0.0.0'`
+- **Automatic port assignment**: port `0` lets the system choose an available port; use `getsockname()` to retrieve it.
+- **Listening address**: `'0.0.0.0'` is for listening on all IPv4 interfaces and should not be used as a client connection target.
 
-### 2.4.3 UDP Client Complete Process
+### 2.4.4 UDP Client Complete Process
 
 ```python
 import socket
@@ -212,7 +204,7 @@ while True:
 client.close()
 ```
 
-### 2.4.4 UDP Applicable Scenarios
+### 2.4.5 UDP Applicable Scenarios
 
 | Scenario | Reason |
 |----------|--------|
