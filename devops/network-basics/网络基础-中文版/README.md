@@ -4,7 +4,7 @@
 
 ## 目录
 
-1. [网络基础](01-网络基础.md) — *C/S 与 B/S 架构、IP 地址、端口、协议、OSI 与 TCP/IP 模型、TCP/UDP、DNS、ARP、子网掩码、CIDR、NAT、HTTP/HTTPS、故障排查工具*
+1. [网络基础](01-网络基础/README.md) — *网络架构、寻址与名称解析、网络分层、TCP/UDP、HTTP/HTTPS、故障排查*
 2. [Socket 编程](02-Socket编程.md) — *数据编码、UDP socket、TCP socket、粘包问题、struct 打包、多客户端服务器*
 
 ---

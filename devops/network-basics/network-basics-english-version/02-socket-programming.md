@@ -1,4 +1,4 @@
-[← Previous: Networking Fundamentals](01-networking-fundamentals.md)
+[← Previous: Networking Fundamentals](01-networking-fundamentals/README.md)
 
 # 2. Socket Programming
 
