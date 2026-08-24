@@ -33,6 +33,9 @@ def main():
                 break
 
             print(f"Reply: {data.decode('utf-8')}")
+    except ConnectionRefusedError:
+        # Server not started, or wrong address/port
+        print("Server is not running or the address is wrong")
     except socket.timeout:
         # No response within 5 seconds
         print("The TCP operation timed out")
