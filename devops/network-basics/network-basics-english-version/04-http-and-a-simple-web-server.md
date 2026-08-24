@@ -146,4 +146,4 @@ In real development, web frameworks solve these problems: Django/Flask in Python
 
 > **Summary**: HTTP is a text protocol built on top of TCP. A socket server can talk to any browser as long as it replies in the "status line + headers + empty line + body" format. Hand-rolling a web server is the best exercise for understanding what web frameworks do under the hood.
 
-[← Previous: Sticky Packets and Concurrency](03-sticky-packets-and-concurrency.md) | [Back to networking basics](README.md)
+[← Previous: Sticky Packets and Concurrency](03-sticky-packets-and-concurrency.md) | [Next: Project — A Simple Network Drive →](05-project-simple-network-drive.md)
