@@ -116,6 +116,23 @@ print(length_tuple[0])   # 100
 
 ### 3.1.5 Server and Client with Length-Prefix Protocol
 
+First, define a helper in `util.py` that reads an exact number of bytes (`recv(n)` may return fewer than `n` bytes at once, so a loop is required):
+
+```python
+# util.py
+def recv_exactly(sock, size):
+    """Loop until exactly size bytes are read; return None if the peer disconnects."""
+    chunks = bytearray()
+    while len(chunks) < size:
+        chunk = sock.recv(size - len(chunks))
+        if not chunk:
+            return None
+        chunks.extend(chunk)
+    return bytes(chunks)
+```
+
+Both the server and the client build the length-prefix protocol on top of it:
+
 ```python
 # server.py
 import socket
@@ -183,7 +200,7 @@ client.close()
 
 ### 3.1.6 Reusable Helper Functions
 
-For real projects, it is cleaner to wrap the length-prefix logic in reusable functions.
+For real projects, it is cleaner to build on `recv_exactly` from 3.1.5 and wrap sending and receiving into reusable functions as well, adding a maximum-message-size guard. This gives the complete `util.py`:
 
 ```python
 # util.py
@@ -288,7 +305,7 @@ client.close()
 ### 3.1.7 Important Notes
 
 - The receiver should not use `recv(1024)` for arbitrary messages. It should read exactly the announced length, possibly in a loop if the data is large.
-- For production systems, consider using established protocols or libraries (e.g., HTTP, JSON-RPC, gRPC, `asyncio` streams, `struct` with network byte order `!i`).
+- For production systems, consider using established protocols or libraries (e.g., HTTP, JSON-RPC, gRPC, `asyncio` streams, `struct` with network byte order `!I`).
 - The length prefix uses `!I`, an unsigned 4-byte integer in network byte order, for cross-platform communication.
 - TCP examples use `sendall()` to ensure complete transmission. If using `send()`, loop over its returned byte count.
 
@@ -533,3 +550,5 @@ client.close()
 - Learning the foundations before moving to `asyncio` or `selectors`
 
 > **Summary**: Non-blocking sockets + `select` is a classic way to build single-threaded concurrent network servers. For modern Python projects, `asyncio` builds on the same ideas but provides a cleaner, higher-level API.
+
+[← Previous: Socket Programming](02-socket-programming.md) | [Back to networking basics](README.md)
