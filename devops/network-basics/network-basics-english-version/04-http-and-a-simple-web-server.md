@@ -1,0 +1,149 @@
+[← Previous: Sticky Packets and Concurrency](03-sticky-packets-and-concurrency.md)
+
+# 4. HTTP and a Simple Web Server
+
+This chapter pushes the TCP socket knowledge from earlier chapters one level up: we hand-roll a web server that a browser can talk to. For HTTP protocol details (methods, status codes, caching, HTTPS), see [Section 1.4](01-networking-fundamentals.md); the focus here is turning the protocol format into a running server.
+
+## 4.1 From Socket to Web Server
+
+### 4.1.1 The Browser Is the Client
+
+In the B/S architecture (see 1.1.2), the browser acts as the client: typing `127.0.0.1:8000` into the address bar makes the browser open a TCP connection to port 8000 and send an HTTP request. So an ordinary TCP server only needs a small makeover to "become" a web server.
+
+### 4.1.2 Minimal Attempt: Reply with a Plain Sentence
+
+Start with the plain TCP server from Chapter 2, replying with an arbitrary sentence:
+
+```python
+import socket
+
+sock = socket.socket()
+sock.bind(('127.0.0.1', 8000))
+sock.listen(5)
+
+while True:
+    conn, addr = sock.accept()
+    headers = conn.recv(1024).decode()
+    print(headers)  # Print the raw request from the browser
+    conn.send(b'hello world')
+    conn.close()
+```
+
+Visit `http://127.0.0.1:8000` in a browser. The terminal prints the browser's raw request, but the browser usually shows an error or garbled output — because `hello world` does not follow the HTTP response format, and the browser does not know how to parse it.
+
+## 4.2 What the Browser's Request Looks Like
+
+The printed content looks roughly like this:
+
+```http
+GET / HTTP/1.1
+Host: 127.0.0.1:8000
+User-Agent: Mozilla/5.0 ...
+Accept: text/html,application/xhtml+xml,...
+Accept-Language: en-US,en;q=0.9
+Connection: keep-alive
+
+```
+
+An HTTP request has four parts (details in 1.4.1):
+
+1. **Request line**: method + path + protocol version, e.g. `GET /index HTTP/1.1`.
+2. **Headers**: several `Key: Value` lines, each ending with `\r\n`.
+3. **Empty line**: a lone `\r\n` marking the end of the headers.
+4. **Body** (optional): GET/HEAD usually have no body; POST/PUT carry submitted data.
+
+> Tip: browsers usually send an extra request for `/favicon.ico` (the site icon). Don't be surprised to see it in the logs.
+
+## 4.3 Returning a Valid HTTP Response
+
+An HTTP response also has four parts:
+
+1. **Status line**: protocol version + status code + reason phrase, e.g. `HTTP/1.1 200 OK`.
+2. **Headers**: `Key: Value` lines; at minimum, `Content-Type` tells the browser what the body is.
+3. **Empty line**: `\r\n`, marking the end of the headers.
+4. **Body**: the content the browser actually renders.
+
+As long as the reply follows this format, the browser renders it correctly:
+
+Complete runnable example: [minimal web server](../examples/en/http_server_minimal.py)
+
+```python
+# http_server_minimal.py
+import socket
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('127.0.0.1', 8000))
+sock.listen(5)
+
+while True:
+    conn, addr = sock.accept()
+    request = conn.recv(1024).decode()
+    print(request.split('\r\n')[0])  # Print only the request line, e.g. GET / HTTP/1.1
+
+    # Reply in HTTP response format: status line + headers + empty line + body
+    conn.sendall(b'HTTP/1.1 200 OK\r\n')
+    conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
+    conn.sendall(b'\r\n')
+    conn.sendall('<h1>Hello, world</h1>'.encode('utf-8'))
+    conn.close()
+```
+
+Run it and visit `http://127.0.0.1:8000` in a browser — the page shows a big "Hello, world".
+
+> Including `charset=utf-8` in `Content-Type` avoids mojibake for non-ASCII text.
+
+## 4.4 Parsing the Path and Simple Routing
+
+When the browser visits different addresses (e.g. `/index`, `/cart`), the only difference is the second field of the request line. Parse the path out, and you can return different content per path — the embryonic form of "routing" in web frameworks:
+
+Complete runnable example: [web server with routing](../examples/en/http_server_routing.py)
+
+```python
+# http_server_routing.py
+import socket
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('127.0.0.1', 8000))
+sock.listen(5)
+
+while True:
+    conn, addr = sock.accept()
+    request = conn.recv(1024).decode()
+
+    # The request line looks like "GET /cart HTTP/1.1"; split out the path
+    request_line = request.split('\r\n')[0]
+    path = request_line.split(' ')[1]
+    print(f"Request path: {path}")
+
+    # Choose the status code and body based on the path
+    if path == '/index':
+        status, body = '200 OK', '<h1>Home</h1>'
+    elif path == '/cart':
+        status, body = '200 OK', '<h1>Shopping cart</h1>'
+    else:
+        status, body = '404 Not Found', '<h1>404 Not Found</h1>'
+
+    conn.sendall(f'HTTP/1.1 {status}\r\n'.encode())
+    conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
+    conn.sendall(b'\r\n')
+    conn.sendall(body.encode('utf-8'))
+    conn.close()
+```
+
+Visiting `http://127.0.0.1:8000/index` and `http://127.0.0.1:8000/cart` shows different pages; any other path returns a 404 page.
+
+## 4.5 Limitations of a Hand-Rolled Web Server
+
+Working is not the same as production-ready. The server above has several obvious shortcomings:
+
+- **One `recv(1024)` may not read the entire request** — this is exactly the sticky-packet/fragmentation problem from Chapter 3; a real implementation must read the body precisely according to `Content-Length`.
+- **Only one connection at a time**: a slow client blocks every subsequent request (see 3.2 and 3.3 for concurrency options).
+- **Routing, static files, and body parsing are all hand-written**: the code spirals out of control as features grow.
+
+In real development, web frameworks solve these problems: Django/Flask in Python, Express in Node, and so on. They are essentially HTTP parsing and routing layers built on top of sockets. The [Django tutorial](../../../web-development/django/) in this repository picks up from here.
+
+> **Summary**: HTTP is a text protocol built on top of TCP. A socket server can talk to any browser as long as it replies in the "status line + headers + empty line + body" format. Hand-rolling a web server is the best exercise for understanding what web frameworks do under the hood.
+
+[← Previous: Sticky Packets and Concurrency](03-sticky-packets-and-concurrency.md) | [Back to networking basics](README.md)

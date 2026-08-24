@@ -551,4 +551,4 @@ client.close()
 
 > **Summary**: Non-blocking sockets + `select` is a classic way to build single-threaded concurrent network servers. For modern Python projects, `asyncio` builds on the same ideas but provides a cleaner, higher-level API.
 
-[← Previous: Socket Programming](02-socket-programming.md) | [Back to networking basics](README.md)
+[← Previous: Socket Programming](02-socket-programming.md) | [Next: HTTP and a Simple Web Server →](04-http-and-a-simple-web-server.md)
