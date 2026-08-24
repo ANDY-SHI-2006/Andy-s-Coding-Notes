@@ -103,69 +103,19 @@ Python socket 编程模块的导入：
 import socket
 ```
 
-## 2.3 Socket API 核心参数
+## 2.3 Socket API 核心方法与参数
 
-创建 Socket 的函数签名：
+Socket API 的学习顺序是“创建对象 → 配置地址 → 收发数据 → 关闭资源”。后续示例会反复使用以下方法：
+
+### 2.3.1 创建 Socket
+
+#### 2.3.1.1 `socket.socket()`：创建 Socket
+
 ```python
 socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-Socket API 的学习顺序是“创建对象 → 配置地址 → 收发数据 → 关闭资源”。后续示例会反复使用以下方法：
-
-### 2.3.1 `bind()`：绑定本地地址
-
-```python
-server.bind(("127.0.0.1", 8080))
-```
-
-参数必须是 `(host, port)` 二元组。服务器通常需要绑定本地地址，客户端通常由操作系统自动分配临时端口。
-
-### 2.3.2 `sendto()` 与 `recvfrom()`：UDP 收发
-
-```python
-server.sendto(data, client_address)
-data, client_address = server.recvfrom(1024)
-```
-
-`recvfrom()` 返回数据和发送方地址 `(ip, port)`。服务器可以把这个地址传给 `sendto()`，向客户端回复。
-
-### 2.3.3 `listen()` 与 `accept()`：TCP 服务器等待连接
-
-```python
-server.listen(5)
-connection, client_address = server.accept()
-```
-
-这两个方法只用于 TCP 服务器。`accept()` 返回一个新的连接 Socket，服务器 Socket 继续接受其他客户端连接。
-
-### 2.3.4 `connect()`：TCP 客户端连接服务器
-
-```python
-client.connect(("127.0.0.1", 9090))
-```
-
-TCP 客户端调用 `connect()` 会触发三次握手。UDP 通常使用 `sendto()`，不需要建立连接；UDP 调用 `connect()` 只会固定默认目标地址，不等同于 TCP 连接。
-
-### 2.3.5 `sendall()` 与 `recv()`：TCP 收发
-
-```python
-client.sendall(data)
-data = client.recv(1024)
-```
-
-`sendall()` 用于确保数据完整发送；`recv(n)` 最多读取 `n` 个字节。TCP 是字节流协议，`recv()` 不保证一次读取一条完整业务消息，应用需要定义消息边界。
-
-### 2.3.6 `close()`、超时与端口复用
-
-```python
-client.settimeout(5.0)
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-client.close()
-```
-
-`settimeout()` 防止网络操作永久阻塞；`SO_REUSEADDR` 方便开发阶段快速重启服务器；`close()` 用于释放资源。
-
-### 2.3.7 address_family —— 地址类型
+**address_family —— 地址类型**
 
 | 取值 | 说明 |
 |-------|-------------|
@@ -174,7 +124,7 @@ client.close()
 | `socket.AF_UNIX` | Unix 域套接字 —— 同一台机器上的进程间通信（IPC）（仅限 Linux/macOS） |
 | `socket.AF_BLUETOOTH` | 蓝牙通信 |
 
-### 2.3.8 socket_type —— 传输模式
+**socket_type —— 传输模式**
 
 | 取值 | 说明 |
 |-------|-------------|
@@ -183,7 +133,7 @@ client.close()
 | `socket.SOCK_RAW` | 原始套接字：直接访问网络层；需要管理员权限；用于自定义协议或抓包 |
 | `socket.SOCK_SEQPACKET` | 有序、可靠、面向连接的数据报（极少使用） |
 
-### 2.3.9 proto —— 协议编号（可选）
+**proto —— 协议编号（可选）**
 
 默认值为 `0`，系统会根据前两个参数自动选择。只有在使用 `SOCK_RAW` 时才需要指定：
 
@@ -193,7 +143,138 @@ client.close()
 | `socket.IPPROTO_UDP` (17) | UDP |
 | `socket.IPPROTO_ICMP` (1) | ICMP —— 用于 `ping` |
 
-**`fileno`**（可选）：将一个已有的操作系统文件描述符包装为 socket 对象。仅用于底层系统编程，日常开发可以忽略。
+**fileno**（可选）：将一个已有的操作系统文件描述符包装为 socket 对象。仅用于底层系统编程，日常开发可以忽略。
+
+### 2.3.2 地址与连接
+
+#### 2.3.2.1 `bind()`：绑定本地地址
+
+```python
+server.bind(("127.0.0.1", 8080))
+```
+
+参数必须是 `(host, port)` 二元组。服务器通常需要绑定本地地址；客户端通常不需要绑定，由操作系统自动分配临时端口。
+
+#### 2.3.2.2 `getsockname()`：查询实际绑定的地址和端口
+
+```python
+host, port = server.getsockname()
+```
+
+返回 Socket 实际绑定的 `(host, port)`。绑定端口 `0` 让操作系统自动分配空闲端口时，可以用它查询分配到的端口号。
+
+#### 2.3.2.3 `listen()`：开始监听（TCP 服务器）
+
+```python
+server.listen(5)
+```
+
+只用于 TCP 服务器。参数是等待连接队列的最大长度（backlog），队列满后新的连接请求会被拒绝。监听后调用 `accept()` 接受连接（见 2.3.2.4）。
+
+#### 2.3.2.4 `accept()`：接受连接（TCP 服务器）
+
+```python
+connection, client_address = server.accept()
+```
+
+只用于 TCP 服务器，阻塞等待客户端连接。返回一个新的连接 Socket 和客户端地址 `(ip, port)`；服务器 Socket 继续监听，连接 Socket 专门负责与该客户端通信。
+
+#### 2.3.2.5 `connect()`：发起连接（TCP 客户端）
+
+```python
+client.connect(("127.0.0.1", 9090))
+```
+
+TCP 客户端调用 `connect()` 会触发三次握手。UDP 通常使用 `sendto()`，不需要建立连接；UDP 调用 `connect()` 只会固定默认目标地址，不等同于 TCP 连接。
+
+### 2.3.3 数据收发
+
+#### 2.3.3.1 `sendto()`：UDP 发送
+
+```python
+server.sendto(data, client_address)
+```
+
+第一个参数必须是字节串（bytes），第二个参数是目标地址 `(ip, port)`。UDP 无连接，每次发送都必须携带目标地址。
+
+#### 2.3.3.2 `recvfrom()`：UDP 接收
+
+```python
+data, client_address = server.recvfrom(1024)
+```
+
+返回数据和发送方地址 `(ip, port)`；`1024` 是单次最多接收的字节数（缓冲区大小）。服务器可以把返回的地址传给 `sendto()` 向客户端回复（见 2.3.3.1）。
+
+#### 2.3.3.3 `send()`：TCP 发送
+
+```python
+n = client.send(data)
+```
+
+返回实际发送的字节数，不保证一次调用发完所有数据。需要确保完整发送时应使用 `sendall()`（见 2.3.3.4）。
+
+#### 2.3.3.4 `sendall()`：TCP 完整发送
+
+```python
+client.sendall(data)
+```
+
+持续发送直到所有数据发出，出错时抛出异常。与 `send()`（见 2.3.3.3）不同，它不返回发送字节数——要么全部发出，要么失败。
+
+#### 2.3.3.5 `recv()`：TCP 接收
+
+```python
+data = client.recv(1024)
+```
+
+`1024` 是单次最多读取的字节数（缓冲区大小）。TCP 是字节流协议，`recv()` 不保证一次读取一条完整业务消息，应用需要定义消息边界。
+
+### 2.3.4 关闭与选项
+
+#### 2.3.4.1 `settimeout()`：超时控制
+
+```python
+client.settimeout(5.0)
+```
+
+设置阻塞操作的超时时间（单位为秒），超时后抛出 `socket.timeout` 异常，防止永久阻塞。
+
+#### 2.3.4.2 `setsockopt()`：Socket 选项
+
+```python
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+```
+
+设置 Socket 选项，每个选项由三个参数定位：
+
+**level —— 选项层级**
+
+| 取值 | 说明 |
+|-------|-------------|
+| `socket.SOL_SOCKET` | Socket 层通用选项（最常用） |
+| `socket.IPPROTO_TCP` | TCP 层选项（如 `TCP_NODELAY`） |
+| `socket.IPPROTO_IP` | IP 层选项 |
+
+**optname —— 选项名称**
+
+| 取值 | 说明 |
+|-------|-------------|
+| `socket.SO_REUSEADDR` | 允许端口在服务器重启后立即复用，方便开发调试（最常用） |
+| `socket.SO_BROADCAST` | 允许发送广播数据报（UDP） |
+| `socket.SO_KEEPALIVE` | 启用 TCP 保活探测 |
+| `socket.TCP_NODELAY` | 禁用 Nagle 算法，降低小数据包延迟（level 需为 `socket.IPPROTO_TCP`） |
+
+**value —— 选项值**
+
+通常为整数：`1` 表示启用，`0` 表示禁用。
+
+#### 2.3.4.3 `close()`：释放资源
+
+```python
+client.close()
+```
+
+关闭 Socket 并释放资源。TCP 中 `close()` 会自动触发四次挥手（见 2.5.2）。生产代码推荐使用 `try/finally` 确保关闭。
 
 ## 2.4 UDP Socket
 
@@ -204,7 +285,74 @@ client.close()
 - **数据报传输**：数据以报文（包）的形式传输
 - **无连接**：发送数据时必须携带客户端 IP、端口以及目标 IP/端口
 
-### 2.4.2 UDP 服务器完整流程
+### 2.4.2 UDP 服务器最小示例
+
+最小可运行版本，只保留核心骨架：创建 → 绑定 → 循环收发。带超时处理和多客户端状态管理的完整版本见 2.4.4。
+
+完整可运行示例：[UDP 服务器（最小版）](examples/udp_server_minimal.py)
+
+```python
+import socket
+
+HOST = "127.0.0.1"
+PORT = 8080
+BUFFER_SIZE = 1024
+
+# 1. 创建 UDP socket
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# 2. 绑定 IP 地址和端口
+server.bind((HOST, PORT))
+print(f"UDP server listening on {HOST}:{PORT}")
+
+# 3. 接收并回复（循环模式）
+while True:
+    data, address = server.recvfrom(BUFFER_SIZE)
+    message = data.decode("utf-8")
+    print(f"Received from {address}: {message}")
+
+    if message == "exit":
+        server.sendto("UDP session closed".encode("utf-8"), address)
+        continue
+
+    server.sendto("Reply from UDP server".encode("utf-8"), address)
+
+# 4. 关闭 socket（实际运行中用 Ctrl+C 停止）
+server.close()
+```
+
+### 2.4.3 UDP 客户端最小示例
+
+最小可运行版本：创建 → 循环发送/接收 → 退出。带超时和异常处理的完整版本见 2.4.5。
+
+完整可运行示例：[UDP 客户端（最小版）](examples/udp_client_minimal.py)
+
+```python
+import socket
+
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 8080
+BUFFER_SIZE = 1024
+
+# 1. 创建 UDP socket（客户端不需要绑定）
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# 2. 发送和接收数据（循环模式）
+while True:
+    message = input("Message (exit to stop): ")
+    client.sendto(message.encode("utf-8"), (SERVER_HOST, SERVER_PORT))
+
+    if message == "exit":
+        break
+
+    data, address = client.recvfrom(BUFFER_SIZE)
+    print(f"Reply from {address}: {data.decode('utf-8')}")
+
+# 3. 关闭 socket
+client.close()
+```
+
+### 2.4.4 UDP 服务器完整流程
 
 完整可运行示例：[UDP 服务器](examples/udp_server.py)
 
@@ -215,34 +363,39 @@ import time
 HOST = "127.0.0.1"
 PORT = 8080
 BUFFER_SIZE = 1024
-CLIENT_TIMEOUT = 300
+CLIENT_TIMEOUT = 300  # 客户端超过 300 秒（5 分钟）无活动则视为离线
 
 
 def main():
-# 1. 创建 UDP socket
+    # 1. 创建 UDP socket
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # SO_REUSEADDR：服务器重启后允许立即复用端口（见 2.3.4.2）
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # 记录每个客户端的最后活动时间：{客户端地址: 时间戳}
     clients = {}
 
-# 2. 绑定 IP 地址和端口
+    # 2. 绑定 IP 地址和端口
     server.bind((HOST, PORT))
     print(f"UDP server listening on {HOST}:{PORT}")
 
-# 3. 接收和发送数据（循环模式）
+    # 3. 接收和发送数据（循环模式）
     try:
         while True:
+            # recvfrom 同时返回消息和发送方地址
             data, address = server.recvfrom(BUFFER_SIZE)
             message = data.decode("utf-8")
-            clients[address] = time.time()
+            clients[address] = time.time()  # 更新该客户端的活动时间
             print(f"Received from {address}: {message}")
 
             if message == "exit":
+                # 客户端主动退出：从状态表中移除，仅结束该客户端的会话
                 clients.pop(address, None)
                 server.sendto("UDP session closed".encode("utf-8"), address)
                 continue
 
             server.sendto("Reply from UDP server".encode("utf-8"), address)
 
+            # 清理超过 CLIENT_TIMEOUT 秒无活动的客户端
             now = time.time()
             inactive_clients = [
                 client_address
@@ -252,13 +405,16 @@ def main():
             for client_address in inactive_clients:
                 clients.pop(client_address, None)
     except KeyboardInterrupt:
+        # 按 Ctrl+C 停止服务器
         print("Stopping UDP server...")
     finally:
+        # 无论正常结束还是异常退出，都确保释放 socket
         server.close()
         print("UDP server stopped")
 
 
 if __name__ == "__main__":
+    # 只有直接运行本文件时才启动服务器（被 import 时不执行）
     main()
 ```
 
@@ -280,7 +436,7 @@ if __name__ == "__main__":
 - **自动分配端口**：使用端口 `0` 时，系统会自动选择可用端口，可通过 `getsockname()` 获取实际端口。
 - **监听地址**：`'0.0.0.0'` 只用于服务器监听所有 IPv4 接口，不应作为客户端连接的目标地址。
 
-### 2.4.3 UDP 客户端完整流程
+### 2.4.5 UDP 客户端完整流程
 
 完整可运行示例：[UDP 客户端](examples/udp_client.py)
 
@@ -293,14 +449,17 @@ BUFFER_SIZE = 1024
 
 
 def main():
-# 1. 创建 UDP socket（客户端不需要绑定）
+    # 1. 创建 UDP socket（客户端不需要绑定，系统自动分配临时端口）
     client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # 设置 5 秒超时：服务器无响应时 recvfrom 不会永久阻塞（见 2.3.4.1）
     client.settimeout(5.0)
+    print(f"UDP client sending to {SERVER_HOST}:{SERVER_PORT}")
 
-# 2. 发送和接收数据（循环模式）
+    # 2. 发送和接收数据（循环模式）
     try:
         while True:
             message = input("Message (exit to stop): ")
+            # UDP 无连接，每次发送都必须携带目标地址
             client.sendto(message.encode("utf-8"), (SERVER_HOST, SERVER_PORT))
 
             if message == "exit":
@@ -309,13 +468,16 @@ def main():
             data, address = client.recvfrom(BUFFER_SIZE)
             print(f"Reply from {address}: {data.decode('utf-8')}")
     except socket.timeout:
+        # 超过 5 秒未收到服务器回复
         print("No UDP reply received within 5 seconds")
     finally:
+        # 3. 关闭 socket，释放资源
         client.close()
         print("UDP client stopped")
 
 
 if __name__ == "__main__":
+    # 只有直接运行本文件时才启动客户端（被 import 时不执行）
     main()
 ```
 
@@ -333,7 +495,7 @@ python examples/udp_client.py
 
 先启动服务器，再启动客户端。客户端输入普通消息可以看到服务器回复，输入 `exit` 可以退出。示例只监听 `127.0.0.1`，适合本机学习；`0.0.0.0` 是服务器监听地址，不是客户端连接目标地址。
 
-### 2.4.4 UDP 适用场景
+### 2.4.6 UDP 适用场景
 
 | 场景 | 原因 |
 |----------|--------|
@@ -341,7 +503,7 @@ python examples/udp_client.py
 | 网络广播、群发 | 需要一对多传输 |
 | 游戏 | 对低延迟的要求高于对可靠性的要求 |
 
-### 2.4.5 UDP 专家系统示例
+### 2.4.7 UDP 专家系统示例
 
 UDP 不只可以传输固定回复，也可以作为一个简单专家系统的通信接口。客户端发送问题，服务器在知识库中匹配关键词，再返回对应答案。
 
@@ -390,7 +552,7 @@ python examples/udp_expert_client.py
 
 ### 2.5.2 TCP 连接的建立与终止
 
-TCP 通过**三次握手（Three-Way Handshake）**建立连接，通过**四次挥手（Four-Way Handshake）**断开连接。`connect()` 会自动触发三次握手，`close()` 会自动触发四次挥手，应用程序无需手动处理。
+TCP 通过**三次握手（Three-Way Handshake）** 建立连接，通过 **四次挥手（Four-Way Handshake）** 断开连接。`connect()` 会自动触发三次握手，`close()` 会自动触发四次挥手，应用程序无需手动处理。
 
 > 详细过程与 SYN/ACK/FIN/seq 等术语解释见第 1 章 1.3.4 节。
 

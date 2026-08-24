@@ -103,69 +103,19 @@ Python socket programming module import:
 import socket
 ```
 
-## 2.3 Socket API Core Parameters
+## 2.3 Socket API Core Methods and Parameters
 
-Function signature for creating a Socket:
+Learn the Socket API in this order: create the object, configure the address, exchange data, and release resources. The following methods appear repeatedly in later examples.
+
+### 2.3.1 Creating a Socket
+
+#### 2.3.1.1 `socket.socket()`: Create a Socket
+
 ```python
 socket.socket(address_family, socket_type, proto=0, fileno=None)
 ```
 
-Learn the Socket API in this order: create the object, configure the address, exchange data, and release resources. The following methods appear repeatedly in later examples.
-
-### 2.3.1 `bind()`: Bind a Local Address
-
-```python
-server.bind(("127.0.0.1", 8080))
-```
-
-The argument must be a `(host, port)` tuple. Servers normally bind a local address; clients usually receive a temporary port from the operating system.
-
-### 2.3.2 `sendto()` and `recvfrom()`: UDP I/O
-
-```python
-server.sendto(data, client_address)
-data, client_address = server.recvfrom(1024)
-```
-
-`recvfrom()` returns the data and sender address `(ip, port)`. A server can pass that address to `sendto()` to reply to the client.
-
-### 2.3.3 `listen()` and `accept()`: Wait for TCP Connections
-
-```python
-server.listen(5)
-connection, client_address = server.accept()
-```
-
-These methods are used by TCP servers. `accept()` returns a new connected socket while the server socket remains available for other clients.
-
-### 2.3.4 `connect()`: Connect a TCP Client
-
-```python
-client.connect(("127.0.0.1", 9090))
-```
-
-Calling `connect()` on a TCP client triggers the three-way handshake. UDP usually uses `sendto()` without a connection; UDP `connect()` only sets a default peer and is not a TCP-style connection.
-
-### 2.3.5 `sendall()` and `recv()`: TCP I/O
-
-```python
-client.sendall(data)
-data = client.recv(1024)
-```
-
-`sendall()` ensures complete transmission; `recv(n)` reads at most `n` bytes. TCP is a byte stream, so one `recv()` call does not necessarily return one complete application message. Applications must define message framing.
-
-### 2.3.6 `close()`, Timeouts, and Port Reuse
-
-```python
-client.settimeout(5.0)
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-client.close()
-```
-
-`settimeout()` prevents network operations from blocking forever; `SO_REUSEADDR` makes development-time restarts easier; `close()` releases resources.
-
-### 2.3.7 address_family — Address Type
+**address_family — Address Type**
 
 | Value | Description |
 |-------|-------------|
@@ -174,7 +124,7 @@ client.close()
 | `socket.AF_UNIX` | Unix domain socket — IPC on the same machine (Linux/macOS only) |
 | `socket.AF_BLUETOOTH` | Bluetooth communication |
 
-### 2.3.8 socket_type — Transmission Mode
+**socket_type — Transmission Mode**
 
 | Value | Description |
 |-------|-------------|
@@ -183,7 +133,7 @@ client.close()
 | `socket.SOCK_RAW` | Raw socket: direct network-layer access; requires admin privileges; used for custom protocols or packet capture |
 | `socket.SOCK_SEQPACKET` | Ordered, reliable, connection-oriented datagrams (rarely used) |
 
-### 2.3.9 proto — Protocol Number (Optional)
+**proto — Protocol Number (Optional)**
 
 Default is `0`, the system automatically selects from the first two parameters. Only needed when using `SOCK_RAW`:
 
@@ -193,7 +143,138 @@ Default is `0`, the system automatically selects from the first two parameters. 
 | `socket.IPPROTO_UDP` (17) | UDP |
 | `socket.IPPROTO_ICMP` (1) | ICMP — used for `ping` |
 
-**`fileno`** (Optional): Wraps an existing OS file descriptor as a socket object. Only used for low-level system programming, can be ignored for daily use.
+**fileno** (Optional): Wraps an existing OS file descriptor as a socket object. Only used for low-level system programming, can be ignored for daily use.
+
+### 2.3.2 Addressing and Connections
+
+#### 2.3.2.1 `bind()`: Bind a Local Address
+
+```python
+server.bind(("127.0.0.1", 8080))
+```
+
+The argument must be a `(host, port)` tuple. Servers normally bind a local address; clients usually skip binding and receive a temporary port from the operating system.
+
+#### 2.3.2.2 `getsockname()`: Query the Bound Address
+
+```python
+host, port = server.getsockname()
+```
+
+Returns the `(host, port)` the socket is actually bound to. Especially useful when binding to port `0`, where the OS auto-assigns a free port and you need to find out which one.
+
+#### 2.3.2.3 `listen()`: Start Listening (TCP Server)
+
+```python
+server.listen(5)
+```
+
+TCP servers only. The argument is the maximum backlog of pending connections; new connection requests are refused once the queue is full. After listening, call `accept()` to take connections (see 2.3.2.4).
+
+#### 2.3.2.4 `accept()`: Accept a Connection (TCP Server)
+
+```python
+connection, client_address = server.accept()
+```
+
+TCP servers only; blocks until a client connects. Returns a new connected socket plus the client address `(ip, port)`. The server socket keeps listening while the connection socket handles communication with that client.
+
+#### 2.3.2.5 `connect()`: Initiate a Connection (TCP Client)
+
+```python
+client.connect(("127.0.0.1", 9090))
+```
+
+Calling `connect()` on a TCP client triggers the three-way handshake. UDP usually uses `sendto()` without a connection; UDP `connect()` only sets a default peer and is not a TCP-style connection.
+
+### 2.3.3 Sending and Receiving
+
+#### 2.3.3.1 `sendto()`: UDP Send
+
+```python
+server.sendto(data, client_address)
+```
+
+The first argument must be bytes; the second is the destination address `(ip, port)`. UDP is connectionless, so every send must carry the destination address.
+
+#### 2.3.3.2 `recvfrom()`: UDP Receive
+
+```python
+data, client_address = server.recvfrom(1024)
+```
+
+Returns the data and the sender address `(ip, port)`; `1024` is the buffer size — the maximum number of bytes received per call. A server can pass the returned address to `sendto()` to reply (see 2.3.3.1).
+
+#### 2.3.3.3 `send()`: TCP Send
+
+```python
+n = client.send(data)
+```
+
+Returns the number of bytes actually sent and does not guarantee everything goes out in one call. Use `sendall()` when complete transmission matters (see 2.3.3.4).
+
+#### 2.3.3.4 `sendall()`: TCP Complete Send
+
+```python
+client.sendall(data)
+```
+
+Keeps sending until all data has been transmitted, raising an exception on error. Unlike `send()` (see 2.3.3.3), it returns nothing — either everything was sent or the call failed.
+
+#### 2.3.3.5 `recv()`: TCP Receive
+
+```python
+data = client.recv(1024)
+```
+
+`1024` is the buffer size — the maximum number of bytes read per call. TCP is a byte stream, so one `recv()` call does not necessarily return one complete application message. Applications must define message framing.
+
+### 2.3.4 Closing and Options
+
+#### 2.3.4.1 `settimeout()`: Timeout Control
+
+```python
+client.settimeout(5.0)
+```
+
+Sets a timeout (in seconds) for blocking operations, raising `socket.timeout` instead of blocking forever.
+
+#### 2.3.4.2 `setsockopt()`: Socket Options
+
+```python
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+```
+
+Sets a socket option; each option is located by three parameters:
+
+**level — Option Level**
+
+| Value | Description |
+|-------|-------------|
+| `socket.SOL_SOCKET` | Socket-level general options (most common) |
+| `socket.IPPROTO_TCP` | TCP-level options (e.g., `TCP_NODELAY`) |
+| `socket.IPPROTO_IP` | IP-level options |
+
+**optname — Option Name**
+
+| Value | Description |
+|-------|-------------|
+| `socket.SO_REUSEADDR` | Reuse the port immediately after a server restart, convenient during development (most common) |
+| `socket.SO_BROADCAST` | Allow sending broadcast datagrams (UDP) |
+| `socket.SO_KEEPALIVE` | Enable TCP keepalive probes |
+| `socket.TCP_NODELAY` | Disable Nagle's algorithm to reduce small-packet latency (level must be `socket.IPPROTO_TCP`) |
+
+**value — Option Value**
+
+Usually an integer: `1` to enable, `0` to disable.
+
+#### 2.3.4.3 `close()`: Release Resources
+
+```python
+client.close()
+```
+
+Closes the socket and releases its resources. For TCP, `close()` automatically triggers the four-way termination (see 2.5.2). Production code should use `try/finally` to guarantee closure.
 
 ## 2.4 UDP Socket
 
@@ -204,7 +285,74 @@ Default is `0`, the system automatically selects from the first two parameters. 
 - **Datagram Transmission**: Data is transmitted in packets
 - **Connectionless**: When sending data, client IP, port and target IP/port must be included
 
-### 2.4.2 UDP Server Complete Process
+### 2.4.2 UDP Server Minimal Example
+
+A minimal runnable version with only the core skeleton: create → bind → receive/reply loop. For the full version with timeout handling and multi-client state management, see 2.4.4.
+
+Complete runnable example: [UDP server (minimal)](../网络基础-中文版/examples/udp_server_minimal.py)
+
+```python
+import socket
+
+HOST = "127.0.0.1"
+PORT = 8080
+BUFFER_SIZE = 1024
+
+# 1. Create UDP socket
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# 2. Bind IP address and port
+server.bind((HOST, PORT))
+print(f"UDP server listening on {HOST}:{PORT}")
+
+# 3. Receive and reply (loop)
+while True:
+    data, address = server.recvfrom(BUFFER_SIZE)
+    message = data.decode("utf-8")
+    print(f"Received from {address}: {message}")
+
+    if message == "exit":
+        server.sendto("UDP session closed".encode("utf-8"), address)
+        continue
+
+    server.sendto("Reply from UDP server".encode("utf-8"), address)
+
+# 4. Close the socket (stop with Ctrl+C in practice)
+server.close()
+```
+
+### 2.4.3 UDP Client Minimal Example
+
+A minimal runnable version: create → send/receive loop → exit. For the full version with timeout and exception handling, see 2.4.5.
+
+Complete runnable example: [UDP client (minimal)](../网络基础-中文版/examples/udp_client_minimal.py)
+
+```python
+import socket
+
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 8080
+BUFFER_SIZE = 1024
+
+# 1. Create UDP socket (client doesn't need to bind)
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# 2. Send and receive data (loop mode)
+while True:
+    message = input("Message (exit to stop): ")
+    client.sendto(message.encode("utf-8"), (SERVER_HOST, SERVER_PORT))
+
+    if message == "exit":
+        break
+
+    data, address = client.recvfrom(BUFFER_SIZE)
+    print(f"Reply from {address}: {data.decode('utf-8')}")
+
+# 3. Close the socket
+client.close()
+```
+
+### 2.4.4 UDP Server Complete Process
 
 Complete runnable example: [UDP server](../网络基础-中文版/examples/udp_server.py)
 
@@ -215,34 +363,39 @@ import time
 HOST = "127.0.0.1"
 PORT = 8080
 BUFFER_SIZE = 1024
-CLIENT_TIMEOUT = 300
+CLIENT_TIMEOUT = 300  # A client is considered offline after 300s (5 min) of inactivity
 
 
 def main():
-# 1. Create UDP socket
+    # 1. Create UDP socket
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # SO_REUSEADDR: allows the port to be reused immediately after a restart (see 2.3.4.2)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # Track each client's last activity time: {client_address: timestamp}
     clients = {}
 
-# 2. Bind IP and port
+    # 2. Bind IP and port
     server.bind((HOST, PORT))
     print(f"UDP server listening on {HOST}:{PORT}")
 
-# 3. Receive and send data (loop mode)
+    # 3. Receive and send data (loop mode)
     try:
         while True:
+            # recvfrom returns both the message and the sender's address
             data, address = server.recvfrom(BUFFER_SIZE)
             message = data.decode("utf-8")
-            clients[address] = time.time()
+            clients[address] = time.time()  # Update this client's activity time
             print(f"Received from {address}: {message}")
 
             if message == "exit":
+                # Client left voluntarily: remove from state table, ending only this session
                 clients.pop(address, None)
                 server.sendto("UDP session closed".encode("utf-8"), address)
                 continue
 
             server.sendto("Reply from UDP server".encode("utf-8"), address)
 
+            # Remove clients inactive for more than CLIENT_TIMEOUT seconds
             now = time.time()
             inactive_clients = [
                 client_address
@@ -252,13 +405,16 @@ def main():
             for client_address in inactive_clients:
                 clients.pop(client_address, None)
     except KeyboardInterrupt:
+        # Stop the server with Ctrl+C
         print("Stopping UDP server...")
     finally:
+        # Always release the socket, whether exiting normally or on error
         server.close()
         print("UDP server stopped")
 
 
 if __name__ == "__main__":
+    # Only start the server when this file is run directly (not when imported)
     main()
 ```
 
@@ -280,7 +436,7 @@ The first argument to `bind()` is a two-item tuple containing the address and po
 - **Automatic port assignment**: port `0` lets the system choose an available port; use `getsockname()` to retrieve it.
 - **Listening address**: `'0.0.0.0'` is for listening on all IPv4 interfaces and should not be used as a client connection target.
 
-### 2.4.3 UDP Client Complete Process
+### 2.4.5 UDP Client Complete Process
 
 Complete runnable example: [UDP client](../网络基础-中文版/examples/udp_client.py)
 
@@ -293,14 +449,17 @@ BUFFER_SIZE = 1024
 
 
 def main():
-# 1. Create UDP socket (client doesn't need to bind)
+    # 1. Create UDP socket (client doesn't need to bind; OS assigns a temporary port)
     client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # Set a 5-second timeout so recvfrom won't block forever if the server is down (see 2.3.4.1)
     client.settimeout(5.0)
+    print(f"UDP client sending to {SERVER_HOST}:{SERVER_PORT}")
 
-# 2. Send and receive data (loop mode)
+    # 2. Send and receive data (loop mode)
     try:
         while True:
             message = input("Message (exit to stop): ")
+            # UDP is connectionless; every send must carry the destination address
             client.sendto(message.encode("utf-8"), (SERVER_HOST, SERVER_PORT))
 
             if message == "exit":
@@ -309,13 +468,16 @@ def main():
             data, address = client.recvfrom(BUFFER_SIZE)
             print(f"Reply from {address}: {data.decode('utf-8')}")
     except socket.timeout:
+        # No reply from the server within 5 seconds
         print("No UDP reply received within 5 seconds")
     finally:
+        # 3. Close the socket and release resources
         client.close()
         print("UDP client stopped")
 
 
 if __name__ == "__main__":
+    # Only start the client when this file is run directly (not when imported)
     main()
 ```
 
@@ -333,7 +495,7 @@ python examples/udp_client.py
 
 Start the server first, then the client. Type a normal message to receive a reply, or type `exit` to stop. The example listens only on `127.0.0.1` for local learning; `0.0.0.0` is a server listening address, not a client connection target.
 
-### 2.4.4 UDP Applicable Scenarios
+### 2.4.6 UDP Applicable Scenarios
 
 | Scenario | Reason |
 |----------|--------|
@@ -341,7 +503,7 @@ Start the server first, then the client. Type a normal message to receive a repl
 | Network broadcast, mass sending | Need one-to-many transmission |
 | Gaming | Low latency requirement higher than reliability |
 
-### 2.4.5 UDP Expert System Example
+### 2.4.7 UDP Expert System Example
 
 UDP can carry more than fixed replies. It can also provide the communication interface for a simple rule-based expert system: the client sends a question, the server matches keywords in a knowledge base, and returns an answer.
 
