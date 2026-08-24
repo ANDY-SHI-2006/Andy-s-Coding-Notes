@@ -153,7 +153,19 @@ socket.socket(address_family, socket_type, proto=0, fileno=None)
 server.bind(("127.0.0.1", 8080))
 ```
 
-参数必须是 `(host, port)` 二元组。服务器通常需要绑定本地地址；客户端通常不需要绑定，由操作系统自动分配临时端口。
+参数必须是 `(host, port)` 二元组：
+
+| 写法 | 是否正确 | 说明 |
+|--------|----------|-------------|
+| `bind(('127.0.0.1', 8080))` | ✓ | 必须使用元组 |
+| `bind('127.0.0.1', 8080)` | ✗ | 缺少括号 |
+
+服务器通常需要绑定本地地址；客户端通常不需要绑定，由操作系统自动分配临时端口。
+
+- **IPv6 回环地址**：`'::1'` 等价于 `'127.0.0.1'`
+- **IPv6 通配地址**：`'::'` 等价于 `'0.0.0.0'`
+- **自动分配端口**：使用端口 `0` 时，系统会自动选择可用端口，可通过 `getsockname()` 获取实际端口（见 2.3.2.2）。
+- **监听地址**：`'0.0.0.0'` 只用于服务器监听所有 IPv4 接口，不应作为客户端连接的目标地址。
 
 #### 2.3.2.2 `getsockname()`：查询实际绑定的地址和端口
 
@@ -259,10 +271,10 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 | 取值 | 说明 |
 |-------|-------------|
-| `socket.SO_REUSEADDR` | 允许端口在服务器重启后立即复用，方便开发调试（最常用） |
-| `socket.SO_BROADCAST` | 允许发送广播数据报（UDP） |
-| `socket.SO_KEEPALIVE` | 启用 TCP 保活探测 |
-| `socket.TCP_NODELAY` | 禁用 Nagle 算法，降低小数据包延迟（level 需为 `socket.IPPROTO_TCP`） |
+| `socket.SO_REUSEADDR` | 允许端口在服务器重启后立即复用，方便开发调试（最常用；默认关闭） |
+| `socket.SO_BROADCAST` | 允许发送广播数据报（UDP；默认关闭） |
+| `socket.SO_KEEPALIVE` | 启用 TCP 保活探测（默认关闭） |
+| `socket.TCP_NODELAY` | 禁用 Nagle 算法，降低小数据包延迟（level 需为 `socket.IPPROTO_TCP`；默认关闭，即 Nagle 算法默认开启） |
 
 **value —— 选项值**
 
@@ -289,7 +301,7 @@ client.close()
 
 最小可运行版本，只保留核心骨架：创建 → 绑定 → 循环收发。带超时处理和多客户端状态管理的完整版本见 2.4.4。
 
-完整可运行示例：[UDP 服务器（最小版）](examples/udp_server_minimal.py)
+完整可运行示例：[UDP 服务器（最小版）](../examples/zh/udp_server_minimal.py)
 
 ```python
 import socket
@@ -325,7 +337,7 @@ server.close()
 
 最小可运行版本：创建 → 循环发送/接收 → 退出。带超时和异常处理的完整版本见 2.4.5。
 
-完整可运行示例：[UDP 客户端（最小版）](examples/udp_client_minimal.py)
+完整可运行示例：[UDP 客户端（最小版）](../examples/zh/udp_client_minimal.py)
 
 ```python
 import socket
@@ -354,7 +366,7 @@ client.close()
 
 ### 2.4.4 UDP 服务器完整流程
 
-完整可运行示例：[UDP 服务器](examples/udp_server.py)
+完整可运行示例：[UDP 服务器](../examples/zh/udp_server.py)
 
 ```python
 import socket
@@ -422,23 +434,9 @@ if __name__ == "__main__":
 
 客户端发送 `exit` 时，只关闭该客户端的应用层会话，服务器会继续为其他客户端服务。服务器本身通过 `Ctrl+C` 停止，并记录客户端最后活动时间；超过 5 分钟没有活动的客户端会从状态表中清理。
 
-**UDP Socket 地址绑定**
-
-`bind()` 的第一个参数是地址和端口组成的二元组：
-
-| 写法 | 是否正确 | 说明 |
-|--------|----------|-------------|
-| `bind(('127.0.0.1', 8080))` | ✓ | 必须使用元组 |
-| `bind('127.0.0.1', 8080)` | ✗ | 缺少括号 |
-
-- **IPv6 回环地址**：`'::1'` 等价于 `'127.0.0.1'`
-- **IPv6 通配地址**：`'::'` 等价于 `'0.0.0.0'`
-- **自动分配端口**：使用端口 `0` 时，系统会自动选择可用端口，可通过 `getsockname()` 获取实际端口。
-- **监听地址**：`'0.0.0.0'` 只用于服务器监听所有 IPv4 接口，不应作为客户端连接的目标地址。
-
 ### 2.4.5 UDP 客户端完整流程
 
-完整可运行示例：[UDP 客户端](examples/udp_client.py)
+完整可运行示例：[UDP 客户端](../examples/zh/udp_client.py)
 
 ```python
 import socket
@@ -487,10 +485,10 @@ if __name__ == "__main__":
 
 ```powershell
 # 终端 1：启动服务器
-python examples/udp_server.py
+python ../examples/zh/udp_server.py
 
 # 终端 2：启动客户端
-python examples/udp_client.py
+python ../examples/zh/udp_client.py
 ```
 
 先启动服务器，再启动客户端。客户端输入普通消息可以看到服务器回复，输入 `exit` 可以退出。示例只监听 `127.0.0.1`，适合本机学习；`0.0.0.0` 是服务器监听地址，不是客户端连接目标地址。
@@ -509,8 +507,8 @@ UDP 不只可以传输固定回复，也可以作为一个简单专家系统的�
 
 完整示例：
 
-- [UDP 专家系统服务器](examples/udp_expert_server.py)
-- [UDP 专家系统客户端](examples/udp_expert_client.py)
+- [UDP 专家系统服务器](../examples/zh/udp_expert_server.py)
+- [UDP 专家系统客户端](../examples/zh/udp_expert_client.py)
 
 服务器的核心知识库可以写成字典：
 
@@ -533,10 +531,10 @@ KNOWLEDGE_BASE = {
 
 ```powershell
 # 终端 1
-python examples/udp_expert_server.py
+python ../examples/zh/udp_expert_server.py
 
 # 终端 2
-python examples/udp_expert_client.py
+python ../examples/zh/udp_expert_client.py
 ```
 
 这是一个基于关键词和固定规则的专家系统，不具备真正的自然语言理解能力。可以通过增加关键词、答案和更复杂的规则继续扩展。
@@ -556,81 +554,210 @@ TCP 通过**三次握手（Three-Way Handshake）** 建立连接，通过 **四�
 
 > 详细过程与 SYN/ACK/FIN/seq 等术语解释见第 1 章 1.3.4 节。
 
-### 2.5.3 TCP 服务器完整流程
+### 2.5.3 TCP 服务器最小示例
+
+最小可运行版本，只保留核心骨架：创建 → 绑定 → 监听 → 接受连接 → 循环收发 → 关闭。带超时处理和资源保护的完整版本见 2.5.5。
+
+完整可运行示例：[TCP 服务器（最小版）](../examples/zh/tcp_server_minimal.py)
 
 ```python
 import socket
+
+HOST = "127.0.0.1"
+PORT = 9090
+BUFFER_SIZE = 1024
 
 # 1. 创建 TCP socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # 2. 绑定地址
-server.bind(('127.0.0.1', 9090))
+server.bind((HOST, PORT))
 
-# 3. 设置监听（最大待处理连接数）
+# 3. 开始监听
 server.listen(5)
+print(f"TCP server listening on {HOST}:{PORT}")
 
-# 4. 接受连接（阻塞直到客户端连接，三次握手在此处完成）
-# accept() 返回 (conn_object, (client_ip, client_port))
-# conn 是连接对象，后续 send/recv 都使用 conn，而不是 server
+# 4. 接受连接（阻塞，三次握手在此处完成）
 conn, addr = server.accept()
 print(f"Connected by {addr}")
 
-# 5. 发送和接收数据（循环模式）
+# 5. 接收并回复（循环模式）
 while True:
-    # recv() 不需要地址（因为 TCP 面向连接）
-    info = conn.recv(1024)
-
-    # 客户端意外断开时，recv 返回空字节串
-    if not info:
-        print("Client disconnected")
+    data = conn.recv(BUFFER_SIZE)
+    if not data:  # 客户端断开连接
         break
 
-    text = info.decode()
-    if text == 'exit':  # 客户端发送退出信号
+    message = data.decode("utf-8")
+    print(f"Received: {message}")
+
+    if message == "exit":
         break
 
-    print(f"Received: {text}")
-    conn.sendall("Reply".encode())
+    conn.sendall("Reply from TCP server".encode("utf-8"))
 
-# 6. 关闭连接（四次挥手）
-conn.close()     # 关闭连接对象
-server.close()   # 关闭服务器 socket
+# 6. 关闭连接和服务器 socket
+conn.close()
+server.close()
 ```
 
-### 2.5.4 TCP 客户端完整流程
+### 2.5.4 TCP 客户端最小示例
+
+最小可运行版本：创建 → 连接 → 循环收发 → 退出。带超时和异常处理的完整版本见 2.5.6。
+
+完整可运行示例：[TCP 客户端（最小版）](../examples/zh/tcp_client_minimal.py)
 
 ```python
 import socket
+
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 9090
+BUFFER_SIZE = 1024
 
 # 1. 创建 TCP socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# 2. 连接服务器（三次握手会自动触发）
-client.connect(('127.0.0.1', 9090))
+# 2. 连接服务器（自动触发三次握手）
+client.connect((SERVER_HOST, SERVER_PORT))
 
 # 3. 发送和接收数据（循环模式）
 while True:
-    msg = input("Message: ")
+    message = input("Message (exit to stop): ")
 
-    # ⚠ 不能发送空字符串，否则可能导致问题
-    if msg == '':
+    if message == "":  # 不能发送空消息
         continue
 
-    client.sendall(msg.encode())
+    client.sendall(message.encode("utf-8"))
 
-    if msg == 'exit':
+    if message == "exit":
         break
 
-    data = client.recv(1024)
-    print(f"Server reply: {data.decode()}")
+    data = client.recv(BUFFER_SIZE)
+    print(f"Server reply: {data.decode('utf-8')}")
 
-# 4. 关闭 socket（四次挥手会自动触发）
+# 4. 关闭 socket（自动触发四次挥手）
 client.close()
 ```
 
-### 2.5.5 TCP 注意事项与适用场景
+### 2.5.5 TCP 服务器完整流程
+
+完整可运行示例：[TCP 服务器](../examples/zh/tcp_server.py)
+
+```python
+import socket
+
+HOST = "127.0.0.1"
+PORT = 9090
+BUFFER_SIZE = 1024
+
+
+def main():
+    # 1. 创建 TCP socket
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # SO_REUSEADDR：服务器重启后允许立即复用端口（见 2.3.4.2）
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    # 2. 绑定地址并开始监听
+    server.bind((HOST, PORT))
+    server.listen(1)  # backlog：等待连接队列的最大长度（见 2.3.2.3）
+    print(f"TCP server listening on {HOST}:{PORT}")
+
+    try:
+        # 3. 接受连接（阻塞，三次握手在此处完成）
+        connection, address = server.accept()
+        # with 语句：离开代码块时自动关闭连接 socket
+        with connection:
+            print(f"Connected by {address}")
+            # 4. 接收和发送数据（循环模式）
+            while True:
+                data = connection.recv(BUFFER_SIZE)
+                if not data:  # 客户端断开连接
+                    break
+
+                message = data.decode("utf-8")
+                print(f"Received: {message}")
+
+                if message == "exit":
+                    break
+
+                connection.sendall("Reply from TCP server".encode("utf-8"))
+    finally:
+        # 5. 无论正常结束还是异常退出，都确保关闭服务器 socket
+        server.close()
+        print("TCP server stopped")
+
+
+if __name__ == "__main__":
+    # 只有直接运行本文件时才启动服务器（被 import 时不执行）
+    main()
+```
+
+### 2.5.6 TCP 客户端完整流程
+
+完整可运行示例：[TCP 客户端](../examples/zh/tcp_client.py)
+
+```python
+import socket
+
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 9090
+BUFFER_SIZE = 1024
+
+
+def main():
+    # 1. 创建 TCP socket
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # 设置 5 秒超时：网络异常时不会永久阻塞（见 2.3.4.1）
+    client.settimeout(5.0)
+
+    try:
+        # 2. 连接服务器（自动触发三次握手）
+        client.connect((SERVER_HOST, SERVER_PORT))
+        print(f"Connected to TCP server at {SERVER_HOST}:{SERVER_PORT}")
+
+        # 3. 发送和接收数据（循环模式）
+        while True:
+            message = input("Message (exit to stop): ")
+            if not message:  # 不能发送空消息
+                print("Message cannot be empty")
+                continue
+
+            client.sendall(message.encode("utf-8"))
+            if message == "exit":
+                break
+
+            data = client.recv(BUFFER_SIZE)
+            if not data:  # 服务器关闭了连接
+                print("Server closed the connection")
+                break
+
+            print(f"Reply: {data.decode('utf-8')}")
+    except socket.timeout:
+        # 操作超过 5 秒未响应
+        print("The TCP operation timed out")
+    finally:
+        # 4. 关闭 socket，释放资源
+        client.close()
+        print("TCP client stopped")
+
+
+if __name__ == "__main__":
+    # 只有直接运行本文件时才启动客户端（被 import 时不执行）
+    main()
+```
+
+运行方式：
+
+```powershell
+# 终端 1：启动服务器
+python ../examples/zh/tcp_server.py
+
+# 终端 2：启动客户端
+python ../examples/zh/tcp_client.py
+```
+
+先启动服务器，再启动客户端。客户端输入普通消息可以看到服务器回复，输入 `exit` 可以退出。
+
+### 2.5.7 TCP 注意事项与适用场景
 
 **重要细节：**
 
@@ -659,7 +786,7 @@ client.close()
 
 ## 2.6 TCP 粘包问题及解决方案
 
-TCP 是**面向字节流（stream-oriented）**的协议。与 UDP 中每次 `send` 对应一个数据报不同，TCP 将数据视为连续的字节流。操作系统使用**发送缓冲区和接收缓冲区**来管理这个字节流，这可能导致**粘包（sticky packet）**问题。
+TCP 是**面向字节流（stream-oriented）** 的协议。与 UDP 中每次 `send` 对应一个数据报不同，TCP 将数据视为连续的字节流。操作系统使用**发送缓冲区和接收缓冲区**来管理这个字节流，这可能导致**粘包（sticky packet）** 问题。
 
 ### 2.6.1 粘包是如何产生的
 

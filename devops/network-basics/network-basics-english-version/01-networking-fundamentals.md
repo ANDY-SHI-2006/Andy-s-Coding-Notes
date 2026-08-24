@@ -180,7 +180,15 @@ TCP presents application data as a continuous byte stream and does not preserve 
 2. The server returns `SYN + ACK`, confirming the client and declaring its own sequence number.
 3. The client returns `ACK`, and the connection can carry data.
 
+![[tcp-three-way-handshake.png]]
+
+> The diagram above is a humorous analogy of the three-way handshake: the client sends SYN=1, seq=x; the server replies SYN=1, ACK=1, ack=x+1, seq=y; the client returns ACK=1, ack=y+1.
+
 TCP is full-duplex, so the two directions can close independently. A graceful close commonly exchanges `FIN` and `ACK`, hence the traditional term “four-way termination”. Delayed acknowledgment, simultaneous close, and reset can change the observed packets.
+
+![[tcp-four-way-termination.png]]
+
+> The diagram above is a humorous analogy of the four-way termination: each direction exchanges its own FIN/ACK pair and closes independently.
 
 ### 1.3.5 Network Layer: Forwarding and Routing
 

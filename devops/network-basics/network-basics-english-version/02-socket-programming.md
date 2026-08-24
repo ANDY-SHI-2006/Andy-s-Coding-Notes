@@ -153,7 +153,19 @@ Default is `0`, the system automatically selects from the first two parameters. 
 server.bind(("127.0.0.1", 8080))
 ```
 
-The argument must be a `(host, port)` tuple. Servers normally bind a local address; clients usually skip binding and receive a temporary port from the operating system.
+The argument must be a `(host, port)` tuple:
+
+| Syntax | Correct? | Explanation |
+|--------|----------|-------------|
+| `bind(('127.0.0.1', 8080))` | ✓ | Must use tuple |
+| `bind('127.0.0.1', 8080)` | ✗ | Missing parentheses |
+
+Servers normally bind a local address; clients usually skip binding and receive a temporary port from the operating system.
+
+- **IPv6 loopback**: `'::1'` is equivalent to `'127.0.0.1'`
+- **IPv6 wildcard**: `'::'` is equivalent to `'0.0.0.0'`
+- **Automatic port assignment**: port `0` lets the system choose an available port; use `getsockname()` to retrieve it (see 2.3.2.2).
+- **Listening address**: `'0.0.0.0'` is for listening on all IPv4 interfaces and should not be used as a client connection target.
 
 #### 2.3.2.2 `getsockname()`: Query the Bound Address
 
@@ -259,10 +271,10 @@ Sets a socket option; each option is located by three parameters:
 
 | Value | Description |
 |-------|-------------|
-| `socket.SO_REUSEADDR` | Reuse the port immediately after a server restart, convenient during development (most common) |
-| `socket.SO_BROADCAST` | Allow sending broadcast datagrams (UDP) |
-| `socket.SO_KEEPALIVE` | Enable TCP keepalive probes |
-| `socket.TCP_NODELAY` | Disable Nagle's algorithm to reduce small-packet latency (level must be `socket.IPPROTO_TCP`) |
+| `socket.SO_REUSEADDR` | Reuse the port immediately after a server restart, convenient during development (most common; off by default) |
+| `socket.SO_BROADCAST` | Allow sending broadcast datagrams (UDP; off by default) |
+| `socket.SO_KEEPALIVE` | Enable TCP keepalive probes (off by default) |
+| `socket.TCP_NODELAY` | Disable Nagle's algorithm to reduce small-packet latency (level must be `socket.IPPROTO_TCP`; off by default, i.e., Nagle's algorithm is on by default) |
 
 **value — Option Value**
 
@@ -289,7 +301,7 @@ Closes the socket and releases its resources. For TCP, `close()` automatically t
 
 A minimal runnable version with only the core skeleton: create → bind → receive/reply loop. For the full version with timeout handling and multi-client state management, see 2.4.4.
 
-Complete runnable example: [UDP server (minimal)](../网络基础-中文版/examples/udp_server_minimal.py)
+Complete runnable example: [UDP server (minimal)](../examples/en/udp_server_minimal.py)
 
 ```python
 import socket
@@ -325,7 +337,7 @@ server.close()
 
 A minimal runnable version: create → send/receive loop → exit. For the full version with timeout and exception handling, see 2.4.5.
 
-Complete runnable example: [UDP client (minimal)](../网络基础-中文版/examples/udp_client_minimal.py)
+Complete runnable example: [UDP client (minimal)](../examples/en/udp_client_minimal.py)
 
 ```python
 import socket
@@ -354,7 +366,7 @@ client.close()
 
 ### 2.4.4 UDP Server Complete Process
 
-Complete runnable example: [UDP server](../网络基础-中文版/examples/udp_server.py)
+Complete runnable example: [UDP server](../examples/en/udp_server.py)
 
 ```python
 import socket
@@ -422,23 +434,9 @@ if __name__ == "__main__":
 
 When a client sends `exit`, only that client's application-level session is closed and the server continues serving other clients. Stop the server with `Ctrl+C`. The server records each client's last activity and removes clients that have been inactive for more than five minutes.
 
-**UDP Socket Address Binding**
-
-The first argument to `bind()` is a two-item tuple containing the address and port:
-
-| Syntax | Correct? | Explanation |
-|--------|----------|-------------|
-| `bind(('127.0.0.1', 8080))` | ✓ | Must use tuple |
-| `bind('127.0.0.1', 8080)` | ✗ | Missing parentheses |
-
-- **IPv6 loopback**: `'::1'` is equivalent to `'127.0.0.1'`
-- **IPv6 wildcard**: `'::'` is equivalent to `'0.0.0.0'`
-- **Automatic port assignment**: port `0` lets the system choose an available port; use `getsockname()` to retrieve it.
-- **Listening address**: `'0.0.0.0'` is for listening on all IPv4 interfaces and should not be used as a client connection target.
-
 ### 2.4.5 UDP Client Complete Process
 
-Complete runnable example: [UDP client](../网络基础-中文版/examples/udp_client.py)
+Complete runnable example: [UDP client](../examples/en/udp_client.py)
 
 ```python
 import socket
@@ -487,10 +485,10 @@ Run the example in two terminals:
 
 ```powershell
 # Terminal 1: start the server
-python examples/udp_server.py
+python ../examples/en/udp_server.py
 
 # Terminal 2: start the client
-python examples/udp_client.py
+python ../examples/en/udp_client.py
 ```
 
 Start the server first, then the client. Type a normal message to receive a reply, or type `exit` to stop. The example listens only on `127.0.0.1` for local learning; `0.0.0.0` is a server listening address, not a client connection target.
@@ -509,8 +507,8 @@ UDP can carry more than fixed replies. It can also provide the communication int
 
 Complete examples:
 
-- [UDP expert server](../网络基础-中文版/examples/udp_expert_server.py)
-- [UDP expert client](../网络基础-中文版/examples/udp_expert_client.py)
+- [UDP expert server](../examples/en/udp_expert_server.py)
+- [UDP expert client](../examples/en/udp_expert_client.py)
 
 The server knowledge base can be represented by a dictionary:
 
@@ -533,10 +531,10 @@ Run it in two terminals:
 
 ```powershell
 # Terminal 1
-python examples/udp_expert_server.py
+python ../examples/en/udp_expert_server.py
 
 # Terminal 2
-python examples/udp_expert_client.py
+python ../examples/en/udp_expert_client.py
 ```
 
 This is a keyword- and rule-based expert system, not a natural-language understanding system. Extend it by adding keywords, answers, and more advanced rules.
@@ -556,81 +554,210 @@ TCP establishes a connection via the **three-way handshake** and terminates it v
 
 > For the full procedure and the SYN/ACK/FIN/seq terminology, see section 1.3.3 in Chapter 1.
 
-### 2.5.3 TCP Server Complete Process
+### 2.5.3 TCP Server Minimal Example
+
+A minimal runnable version with only the core skeleton: create → bind → listen → accept → receive/reply loop → close. For the full version with timeout handling and resource protection, see 2.5.5.
+
+Complete runnable example: [TCP server (minimal)](../examples/en/tcp_server_minimal.py)
 
 ```python
 import socket
+
+HOST = "127.0.0.1"
+PORT = 9090
+BUFFER_SIZE = 1024
 
 # 1. Create TCP socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # 2. Bind address
-server.bind(('127.0.0.1', 9090))
+server.bind((HOST, PORT))
 
-# 3. Set listening (maximum pending connections)
+# 3. Start listening
 server.listen(5)
+print(f"TCP server listening on {HOST}:{PORT}")
 
-# 4. Accept connection (blocks until client connects, three-way handshake occurs here)
-# accept() returns (conn_object, (client_ip, client_port))
-# conn = connection object — all subsequent send/recv use conn, not server
+# 4. Accept connection (blocks; three-way handshake happens here)
 conn, addr = server.accept()
 print(f"Connected by {addr}")
 
-# 5. Send and receive data (loop mode)
+# 5. Receive and reply (loop)
 while True:
-    # recv() doesn't need address (connection-oriented)
-    info = conn.recv(1024)
-
-    # When client disconnects unexpectedly, recv returns empty string
-    if not info:
-        print("Client disconnected")
+    data = conn.recv(BUFFER_SIZE)
+    if not data:  # Client disconnected
         break
 
-    text = info.decode()
-    if text == 'exit':  # Client sends exit signal
+    message = data.decode("utf-8")
+    print(f"Received: {message}")
+
+    if message == "exit":
         break
 
-    print(f"Received: {text}")
-    conn.sendall("Reply".encode())
+    conn.sendall("Reply from TCP server".encode("utf-8"))
 
-# 6. Close connection (four-way handshake)
-conn.close()     # Close connection object
-server.close()   # Close server socket
+# 6. Close the connection and the server socket
+conn.close()
+server.close()
 ```
 
-### 2.5.4 TCP Client Complete Process
+### 2.5.4 TCP Client Minimal Example
+
+A minimal runnable version: create → connect → send/receive loop → exit. For the full version with timeout and exception handling, see 2.5.6.
+
+Complete runnable example: [TCP client (minimal)](../examples/en/tcp_client_minimal.py)
 
 ```python
 import socket
+
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 9090
+BUFFER_SIZE = 1024
 
 # 1. Create TCP socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# 2. Connect to server (automatically triggers three-way handshake)
-client.connect(('127.0.0.1', 9090))
+# 2. Connect to server (automatically triggers the three-way handshake)
+client.connect((SERVER_HOST, SERVER_PORT))
 
 # 3. Send and receive data (loop mode)
 while True:
-    msg = input("Message: ")
+    message = input("Message (exit to stop): ")
 
-    # ⚠ Cannot send empty string, will cause issues
-    if msg == '':
+    if message == "":  # Cannot send an empty message
         continue
 
-    client.sendall(msg.encode())
+    client.sendall(message.encode("utf-8"))
 
-    if msg == 'exit':
+    if message == "exit":
         break
 
-    data = client.recv(1024)
-    print(f"Server reply: {data.decode()}")
+    data = client.recv(BUFFER_SIZE)
+    print(f"Server reply: {data.decode('utf-8')}")
 
-# 4. Close socket (automatically triggers four-way handshake)
+# 4. Close the socket (automatically triggers the four-way termination)
 client.close()
 ```
 
-### 2.5.5 TCP Notes and Applicable Scenarios
+### 2.5.5 TCP Server Complete Process
+
+Complete runnable example: [TCP server](../examples/en/tcp_server.py)
+
+```python
+import socket
+
+HOST = "127.0.0.1"
+PORT = 9090
+BUFFER_SIZE = 1024
+
+
+def main():
+    # 1. Create TCP socket
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # SO_REUSEADDR: allows the port to be reused immediately after a restart (see 2.3.4.2)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    # 2. Bind address and start listening
+    server.bind((HOST, PORT))
+    server.listen(1)  # backlog: maximum length of the pending-connection queue (see 2.3.2.3)
+    print(f"TCP server listening on {HOST}:{PORT}")
+
+    try:
+        # 3. Accept connection (blocks; three-way handshake happens here)
+        connection, address = server.accept()
+        # The with statement closes the connection socket automatically when the block exits
+        with connection:
+            print(f"Connected by {address}")
+            # 4. Receive and send data (loop mode)
+            while True:
+                data = connection.recv(BUFFER_SIZE)
+                if not data:  # Client disconnected
+                    break
+
+                message = data.decode("utf-8")
+                print(f"Received: {message}")
+
+                if message == "exit":
+                    break
+
+                connection.sendall("Reply from TCP server".encode("utf-8"))
+    finally:
+        # 5. Always close the server socket, whether exiting normally or on error
+        server.close()
+        print("TCP server stopped")
+
+
+if __name__ == "__main__":
+    # Only start the server when this file is run directly (not when imported)
+    main()
+```
+
+### 2.5.6 TCP Client Complete Process
+
+Complete runnable example: [TCP client](../examples/en/tcp_client.py)
+
+```python
+import socket
+
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = 9090
+BUFFER_SIZE = 1024
+
+
+def main():
+    # 1. Create TCP socket
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Set a 5-second timeout so network issues won't block forever (see 2.3.4.1)
+    client.settimeout(5.0)
+
+    try:
+        # 2. Connect to server (automatically triggers the three-way handshake)
+        client.connect((SERVER_HOST, SERVER_PORT))
+        print(f"Connected to TCP server at {SERVER_HOST}:{SERVER_PORT}")
+
+        # 3. Send and receive data (loop mode)
+        while True:
+            message = input("Message (exit to stop): ")
+            if not message:  # Cannot send an empty message
+                print("Message cannot be empty")
+                continue
+
+            client.sendall(message.encode("utf-8"))
+            if message == "exit":
+                break
+
+            data = client.recv(BUFFER_SIZE)
+            if not data:  # Server closed the connection
+                print("Server closed the connection")
+                break
+
+            print(f"Reply: {data.decode('utf-8')}")
+    except socket.timeout:
+        # No response within 5 seconds
+        print("The TCP operation timed out")
+    finally:
+        # 4. Close the socket and release resources
+        client.close()
+        print("TCP client stopped")
+
+
+if __name__ == "__main__":
+    # Only start the client when this file is run directly (not when imported)
+    main()
+```
+
+Run the example in two terminals:
+
+```powershell
+# Terminal 1: start the server
+python ../examples/en/tcp_server.py
+
+# Terminal 2: start the client
+python ../examples/en/tcp_client.py
+```
+
+Start the server first, then the client. Type a normal message to receive a reply, or type `exit` to stop.
+
+### 2.5.7 TCP Notes and Applicable Scenarios
 
 **Important Details:**
 
