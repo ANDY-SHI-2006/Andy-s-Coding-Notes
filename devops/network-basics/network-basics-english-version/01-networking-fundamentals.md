@@ -17,6 +17,16 @@ The Internet is built from end systems, communication links, and packet switches
 
 The sender divides application data into smaller pieces and adds headers to form packets. Packets can be compared to trucks, links to roads, switches to intersections, and end systems to the buildings where the data is delivered.
 
+Common network devices and the layers they work at:
+
+| Device | Main layer | Role |
+| --- | --- | --- |
+| Switch | Link layer | Forwards frames within a LAN by MAC address |
+| Router | Network layer | Forwards datagrams between networks by IP address |
+| Wireless access point (AP) | Link layer | Connects wireless devices to a wired LAN |
+| Firewall | Network/transport | Filters traffic by address, port, and protocol rules |
+| Load balancer | Transport/application | Distributes requests across multiple backend servers |
+
 ### 1.1.2 C/S and B/S Architectures
 
 C/S (Client / Server) combines a local client with server-side services and is common for desktop software, games, and specialist clients. B/S (Browser / Server) exposes a Web application through a browser and usually requires no dedicated installation. Modern applications may use both approaches.
@@ -53,6 +63,15 @@ IPv4 uses 32-bit addresses in dotted-decimal notation, such as `192.168.1.34`; e
 
 IPv6, CIDR, NAT, and address reclamation all help address IPv4 scarcity.
 
+Useful commands for viewing local addresses:
+
+| Purpose | Command |
+| --- | --- |
+| Local private IP (Windows) | `ipconfig` |
+| Local private IP (Linux) | `ip addr` |
+| Local private IP (legacy Linux/macOS) | `ifconfig` |
+| Public IP | `curl ifconfig.me` |
+
 ### 1.2.3 MAC, ARP, and NDP
 
 A MAC address is usually 48 bits and identifies a network interface on a local link. Switches forward frames using MAC addresses.
@@ -87,7 +106,29 @@ netstat -rn              # macOS
 
 During troubleshooting, check whether a matching route exists, whether the next hop is correct, and whether the interface is enabled.
 
-### 1.2.5 DNS
+### 1.2.5 Port Numbers
+
+A port number is a 16-bit integer (0–65535) that distinguishes network services on the same host. Ports are divided into three ranges:
+
+| Range | Name | Notes |
+| --- | --- | --- |
+| 0–1023 | Well-known ports | Reserved for system services; listening usually requires admin privileges |
+| 1024–49151 | Registered ports | Assigned to common applications (databases, caches, etc.) |
+| 49152–65535 | Dynamic/private ports | Temporarily assigned by the OS when a client initiates a connection |
+
+Common well-known and registered ports:
+
+| Port | Service | Port | Service |
+| --- | --- | --- | --- |
+| 20/21 | FTP | 443 | HTTPS |
+| 22 | SSH | 3306 | MySQL |
+| 25 | SMTP | 5432 | PostgreSQL |
+| 53 | DNS | 6379 | Redis |
+| 80 | HTTP | 8080 | Common dev/proxy port |
+
+`IP:port` plus a protocol uniquely identifies a communication endpoint, e.g. `192.168.1.10:443/TCP`. On one host, a port number can be listened on by only one process at a time per protocol; TCP and UDP ports are independent — DNS, for example, uses port 53 on both TCP and UDP.
+
+### 1.2.6 DNS
 
 DNS is a distributed, hierarchical database and an application-layer protocol. It maps domain names to IP addresses and can provide other information such as mail servers.
 
@@ -112,7 +153,7 @@ DNS records commonly include:
 
 The visible sequence can differ because of browser and operating-system caches, prefetching, split DNS, and DNS over HTTPS/TLS.
 
-### 1.2.6 NAT
+### 1.2.7 NAT
 
 NAT changes IP addresses or ports at an address boundary and commonly lets private networks access the Internet.
 
@@ -141,6 +182,15 @@ Each layer provides services to the layer above and uses services from the layer
 
 The data units are commonly called **messages** at the application layer, **segments/datagrams** at the transport layer, **datagrams** at the network layer, **frames** at the link layer, and **bits** at the physical layer.
 
+A web page request illustrates the encapsulation process:
+
+1. The application layer produces an HTTP request **message**.
+2. The transport layer adds a TCP header (source/destination ports, sequence numbers), forming a **segment**.
+3. The network layer adds an IP header (source/destination IP addresses), forming a **datagram**.
+4. The link layer adds an Ethernet header and trailer (source/destination MAC addresses, checksum), forming a **frame**, which the physical layer finally sends as a bit stream.
+
+The receiver unwraps the layers in reverse, and each layer reads only its own header: a switch cares only about the frame header (MAC), a router about the IP header, and the web server on the destination host finally reads the HTTP message.
+
 | Layer | Common devices or components | Troubleshooting clues |
 | --- | --- | --- |
 | Application | Web server, reverse proxy | Status codes, request logs, application latency |
@@ -168,13 +218,24 @@ Transport services are commonly evaluated by:
 
 TCP also provides flow control and congestion control. The receive window prevents a sender from exceeding receiver capacity, while the congestion window adapts the sending rate to network conditions. These mechanisms affect throughput but do not remove the need for application timeouts and retry policies.
 
-### 1.3.3 TCP Data and Exceptional States
+### 1.3.3 TCP Reliability Mechanisms
+
+TCP's reliability comes from a set of cooperating mechanisms:
+
+- **Sequence and acknowledgment numbers**: every byte sent carries a sequence number, and the receiver acknowledges with the next byte it expects. Missing sequence numbers are retransmitted and out-of-order data is reordered — this is what `seq`/`ack` do in the 1.3.5 handshake.
+- **Timeout retransmission**: the sender starts a timer after sending; if no acknowledgment arrives in time, the data is retransmitted. The timeout adapts dynamically to network conditions.
+- **Flow control (sliding window)**: the receiver advertises a receive window indicating how many bytes it can still accept, preventing a fast sender from overwhelming a slow receiver.
+- **Congestion control**: the sender actively adjusts its rate based on signals such as loss and latency (slow start, congestion avoidance), preventing the whole network from being overwhelmed.
+
+These mechanisms are transparent to applications, but understanding them explains why TCP costs more than UDP and is the basis for diagnosing transfer performance problems.
+
+### 1.3.4 TCP Data and Exceptional States
 
 TCP presents application data as a continuous byte stream and does not preserve `send()` or `write()` boundaries. Applications commonly use length prefixes, delimiters, or fixed-size messages to define framing.
 
 `RST` immediately resets a connection. Common causes include an unlistened port, an actively rejected connection, or a stateful middlebox losing connection state. After a graceful close, the active closer may enter `TIME_WAIT` so delayed old segments cannot affect a later connection.
 
-### 1.3.4 TCP Connection Setup and Close
+### 1.3.5 TCP Connection Setup and Close
 
 1. The client sends `SYN` with an initial sequence number.
 2. The server returns `SYN + ACK`, confirming the client and declaring its own sequence number.
@@ -190,7 +251,7 @@ TCP is full-duplex, so the two directions can close independently. A graceful cl
 
 > The diagram above is a humorous analogy of the four-way termination: each direction exchanges its own FIN/ACK pair and closes independently.
 
-### 1.3.5 Network Layer: Forwarding and Routing
+### 1.3.6 Network Layer: Forwarding and Routing
 
 The network-layer data unit is commonly called a datagram. The network layer exists in end systems and routers and moves datagrams across networks:
 
@@ -199,13 +260,15 @@ The network-layer data unit is commonly called a datagram. The network layer exi
 
 Forwarding is the immediate decision made by one device for one packet; routing is the network-wide process of computing and maintaining paths. Therefore, “no matching route in the routing table” is primarily a routing problem, while “a matching route exists but the packet leaves through the wrong interface” points more toward forwarding or device state.
 
-### 1.3.6 Application Processes, Sockets, and Addressing
+The network layer also includes the auxiliary protocol **ICMP** (Internet Control Message Protocol), which carries error reports and diagnostic information between devices. Two of the most common troubleshooting tools are built on it: `ping` tests reachability with ICMP Echo Request/Reply messages, and `traceroute` deliberately sends packets with decreasing TTL values, mapping the path hop by hop from the ICMP “Time Exceeded” messages returned by intermediate routers.
+
+### 1.3.7 Application Processes, Sockets, and Addressing
 
 Application-layer communication is performed by processes running on different end systems. A socket is the interface between an application process and the network; a process can be compared to a house and its socket to the door.
 
 Locating a receiving process normally requires two pieces of information: the destination host's IP address and the port number identifying the process on that host. HTTP services commonly use `80` or `443`, while SMTP commonly uses `25`; applications may use different configured ports.
 
-### 1.3.7 Link Layer, LANs, and Wireless Networks
+### 1.3.8 Link Layer, LANs, and Wireless Networks
 
 The link layer transfers data between neighboring network nodes. Its data unit is a frame, and MAC addresses provide local-link addressing. Link-layer functions are commonly implemented by NICs, switches, and wireless access points, with some work performed in hardware and some by the operating system.
 

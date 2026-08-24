@@ -556,7 +556,7 @@ python ../examples/zh/udp_expert_client.py
 
 TCP 通过**三次握手（Three-Way Handshake）** 建立连接，通过 **四次挥手（Four-Way Handshake）** 断开连接。`connect()` 会自动触发三次握手，`close()` 会自动触发四次挥手，应用程序无需手动处理。
 
-> 详细过程与 SYN/ACK/FIN/seq 等术语解释见第 1 章 1.3.4 节。
+> 详细过程与 SYN/ACK/FIN/seq 等术语解释见第 1 章 1.3.5 节。
 
 ### 2.5.3 TCP 服务器最小示例
 

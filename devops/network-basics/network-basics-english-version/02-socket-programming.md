@@ -556,7 +556,7 @@ This is a keyword- and rule-based expert system, not a natural-language understa
 
 TCP establishes a connection via the **three-way handshake** and terminates it via the **four-way handshake**. `connect()` automatically triggers the three-way handshake, and `close()` triggers the four-way termination — the application does not need to handle them manually.
 
-> For the full procedure and the SYN/ACK/FIN/seq terminology, see section 1.3.3 in Chapter 1.
+> For the full procedure and the SYN/ACK/FIN/seq terminology, see section 1.3.5 in Chapter 1.
 
 ### 2.5.3 TCP Server Minimal Example
 

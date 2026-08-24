@@ -35,6 +35,11 @@ This makes it impossible for the receiver to know where one message ends and the
 
 ### 3.1.2 Demonstrating the Problem
 
+Complete runnable example: [TCP sticky packet demo — server](../examples/en/tcp_server_sticky_demo.py) · [client](../examples/en/tcp_client_sticky_demo.py)
+
+```python
+# server.py
+
 ```python
 # server.py
 import socket
