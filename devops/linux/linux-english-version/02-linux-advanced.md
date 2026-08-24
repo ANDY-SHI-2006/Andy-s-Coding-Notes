@@ -1,4 +1,4 @@
-﻿[<- Previous: linux basics](01-linux-basics.md) | [Next: deployment ->](03-deployment.md)
+[<- Previous: linux basics](01-linux-basics.md) | [Next: deployment ->](03-deployment.md)
 
 # 2 LINUX ADVANCED
 

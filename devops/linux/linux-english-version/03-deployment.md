@@ -1,4 +1,4 @@
-﻿[<- Previous: linux advanced](02-linux-advanced.md)
+[<- Previous: linux advanced](02-linux-advanced.md)
 
 # 3 DEPLOYMENT
 
