@@ -490,9 +490,65 @@ import calendar
 print(calendar.isleap(2026))                # False
 ```
 
-## 24.7 Summary
+## 24.7 The `time` Module: Sleeping and Timing
+
+The `time` module and the `datetime` module have similar names but different jobs:
+
+| Need | Use |
+|------|-----|
+| Current timestamp | `time.time()` |
+| Pause the program | `time.sleep()` |
+| Measure code duration | `time.perf_counter()` |
+| Dates, formatting, time zones | `datetime` (covered earlier in this chapter) |
+
+### 24.7.1 `time.sleep()`: Pausing the Program
+
+```python
+import time
+
+print("Start")
+time.sleep(2)    # Sleep for 2 seconds
+print("End")
+```
+
+**Note:** The argument to `sleep()` is in **seconds** (floats allowed, e.g. `0.5` for 500 ms). The actual sleep may be slightly longer than requested — the operating system makes no exact guarantee.
+
+### 24.7.2 Measuring Durations: `perf_counter()` vs `time()` vs `monotonic()`
+
+| Function | Characteristics | Best for |
+|----------|----------------|----------|
+| `time.time()` | System clock; can jump if the clock is adjusted manually or by NTP | Getting the current timestamp |
+| `time.monotonic()` | Monotonic — never affected by system clock changes | Measuring intervals |
+| `time.perf_counter()` | Monotonic + highest available precision | Benchmarking (first choice) |
+
+```python
+import time
+
+start = time.perf_counter()
+sum(range(1000000))
+elapsed = time.perf_counter() - start
+print(f"Elapsed: {elapsed:.4f}s")   # e.g. Elapsed: 0.0123s
+```
+
+**Rule of thumb:** for "what time is it now" use `datetime.now()`; for an exact timestamp use `time.time()`; for measuring how long something takes use `time.perf_counter()`.
+
+### 24.7.3 `struct_time`: The Legacy Interface
+
+Functions like `time.localtime()` and `time.gmtime()` return a `struct_time` object (a named tuple) — an interface that predates `datetime`:
+
+```python
+import time
+
+t = time.localtime()
+print(t.tm_year, t.tm_mon, t.tm_mday)   # e.g. 2026 8 25
+```
+
+Prefer `datetime` in everyday code; you will mainly encounter `struct_time` when interacting with old code or C libraries.
+
+## 24.8 Summary
 
 - Three core objects: `date` (date), `time` (time), and `datetime` (date-time) — all immutable.
+- The `time` module handles timing and sleeping: `time.sleep()` to pause, `time.perf_counter()` to measure durations, `time.time()` for timestamps.
 - `strftime()` formats and `strptime()` parses; among the format codes, `%m` (month) and `%M` (minute) are the easiest to confuse.
 - Use `timedelta` for time arithmetic; subtracting two dates yields a `timedelta`, with `.days` giving the whole days and `.total_seconds()` the exact seconds.
 - A timestamp is the number of seconds since the Unix epoch; `timestamp()` and `fromtimestamp()` handle the conversion in both directions.

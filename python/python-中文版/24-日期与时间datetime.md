@@ -490,9 +490,65 @@ import calendar
 print(calendar.isleap(2026))                # False
 ```
 
-## 24.7 小结
+## 24.7 `time` 模块：计时与休眠
+
+`time` 模块和 `datetime` 模块名字相似，但分工不同：
+
+| 需求 | 用哪个 |
+|------|--------|
+| 当前时间戳 | `time.time()` |
+| 程序休眠 | `time.sleep()` |
+| 测量代码耗时 | `time.perf_counter()` |
+| 日期、格式化、时区 | `datetime`（本章前面内容） |
+
+### 24.7.1 `time.sleep()`：让程序暂停
+
+```python
+import time
+
+print("Start")
+time.sleep(2)    # Sleep for 2 seconds
+print("End")
+```
+
+**注意：** `sleep()` 的参数是**秒**（可用浮点数，如 `0.5` 表示 500 毫秒）；实际休眠时间可能略长于指定值，操作系统不做精确保证。
+
+### 24.7.2 测量代码耗时：`perf_counter()` vs `time()` vs `monotonic()`
+
+| 函数 | 特点 | 适用场景 |
+|------|------|----------|
+| `time.time()` | 系统时钟，可能被手动调整或 NTP 校准影响 | 获取当前时间戳 |
+| `time.monotonic()` | 单调递增，不受系统时钟调整影响 | 测量时间间隔 |
+| `time.perf_counter()` | 单调 + 最高精度 | 性能测量（首选） |
+
+```python
+import time
+
+start = time.perf_counter()
+sum(range(1000000))
+elapsed = time.perf_counter() - start
+print(f"Elapsed: {elapsed:.4f}s")   # e.g. Elapsed: 0.0123s
+```
+
+**经验法则：** 要「现在是几点」用 `datetime.now()`，要「精确时间戳」用 `time.time()`，要「测耗时」用 `time.perf_counter()`。
+
+### 24.7.3 `struct_time`：老接口，了解即可
+
+`time.localtime()`、`time.gmtime()` 等函数返回 `struct_time` 对象（一个命名元组），这是比 `datetime` 更早的接口：
+
+```python
+import time
+
+t = time.localtime()
+print(t.tm_year, t.tm_mon, t.tm_mday)   # e.g. 2026 8 25
+```
+
+日常开发中优先使用 `datetime`，只有在与旧代码或 C 库交互时才会碰到 `struct_time`。
+
+## 24.8 小结
 
 - 三个核心对象：`date`（日期）、`time`（时间）、`datetime`（日期时间），均为不可变对象。
+- `time` 模块负责计时与休眠：暂停用 `time.sleep()`，测耗时用 `time.perf_counter()`，取时间戳用 `time.time()`。
 - `strftime()` 格式化、`strptime()` 解析，格式码中 `%m`（月）与 `%M`（分）最易混淆。
 - 用 `timedelta` 做时间加减；两个日期相减得到 `timedelta`，`.days` 取整天数，`.total_seconds()` 取精确秒数。
 - 时间戳是距 Unix 纪元的秒数，`timestamp()` 与 `fromtimestamp()` 负责互转。
