@@ -39,9 +39,6 @@ Complete runnable example: [TCP sticky packet demo — server](../examples/en/tc
 
 ```python
 # server.py
-
-```python
-# server.py
 import socket
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -50,10 +47,13 @@ server.bind(('127.0.0.1', 9090))
 server.listen(5)
 conn, addr = server.accept()
 
-info = conn.recv(10)  # Might receive b'abc123456' all at once
-print(f"Received: {info.decode()}")
+# Read in a loop until the client disconnects
+while True:
+    info = conn.recv(10)
+    if not info:
+        break
+    print(f"Received ({len(info)} bytes): {info.decode()}")
 
-conn.send("Hello from server".encode())
 conn.close()
 server.close()
 ```
@@ -65,12 +65,10 @@ import socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 9090))
 
-client.send("abc".encode())
-client.send("123".encode())
-client.send("456".encode())
+# Send multiple small messages rapidly to increase sticky packet probability
+for i in range(10):
+    client.send(f"msg-{i}".encode())
 
-msg = client.recv(1024)
-print(f"Server reply: {msg.decode()}")
 client.close()
 ```
 

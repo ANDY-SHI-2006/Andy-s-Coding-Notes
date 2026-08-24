@@ -3,10 +3,8 @@ import socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 9090))
 
-client.send("abc".encode())
-client.send("123".encode())
-client.send("456".encode())
+# 快速连续发送多条小消息，增加粘包概率
+for i in range(10):
+    client.send(f"msg-{i}".encode())
 
-msg = client.recv(1024)
-print(f"Server reply: {msg.decode()}")
 client.close()

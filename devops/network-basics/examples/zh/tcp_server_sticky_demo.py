@@ -6,10 +6,12 @@ server.bind(('127.0.0.1', 9090))
 server.listen(5)
 conn, addr = server.accept()
 
-# 可能一次性接收到完整的 b'abc123456'
-info = conn.recv(10)
-print(f"Received: {info.decode()}")
+# 循环读取，观察粘包现象
+while True:
+    info = conn.recv(10)
+    if not info:
+        break
+    print(f"Received ({len(info)} bytes): {info.decode()}")
 
-conn.send("Hello from server".encode())
 conn.close()
 server.close()
