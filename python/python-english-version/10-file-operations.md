@@ -47,6 +47,8 @@ with open(file, mode, encoding) as variable:
 
 Because `with` guarantees cleanup, it is the recommended pattern for opening files. All examples in this chapter use `with`.
 
+For a deeper treatment (custom context managers, `contextlib` utilities, and more), see [14.7 Context Managers](14-exception-handling.md#147-context-managers).
+
 ### 10.1.3 Path Types
 
 #### 10.1.3.1 Relative Paths

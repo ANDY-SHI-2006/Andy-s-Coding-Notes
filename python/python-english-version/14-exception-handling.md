@@ -390,7 +390,7 @@ print(s.pop())   # 1
 
 ## 14.7 Context Managers
 
-The `with` statement ensures cleanup code runs even if exceptions occur.
+A **context manager** is an object that defines what to do when entering and leaving a block of code. The `with` statement uses it to guarantee that cleanup happens whether the code finishes normally or raises an exception.
 
 ```python
 # File context manager (auto-closes)
@@ -398,7 +398,53 @@ with open("file.txt") as f:
     content = f.read()
 ```
 
-### 14.7.1 Custom Context Manager
+### 14.7.1 Why Use `with`
+
+Compare writing `try/finally` manually versus using `with`:
+
+```python
+# Manual try/finally — verbose and easy to forget
+f = open("data.txt", "r")
+try:
+    content = f.read()
+finally:
+    f.close()
+
+# with — concise, and cleanup is guaranteed
+with open("data.txt", "r") as f:
+    content = f.read()
+```
+
+`with` is not just for files. It works for locks, database connections, network sessions — any resource that comes in pairs (acquire/release, lock/unlock). It turns cleanup from "remember to do it" into "guaranteed by the syntax."
+
+### 14.7.2 The `with` Statement in Detail
+
+**Basic syntax:**
+
+```python
+with EXPRESSION as variable:
+    # use variable
+    ...
+```
+
+- `EXPRESSION` evaluates to a context manager object.
+- Python calls its `__enter__()` and binds the return value to the variable after `as`.
+- When the block ends (normally or with an exception), `__exit__()` is called for cleanup.
+
+**Managing multiple resources at once:**
+
+```python
+# Use parentheses to span multiple lines, open several files
+with (
+    open("input.txt") as fin,
+    open("output.txt", "w") as fout,
+):
+    fout.write(fin.read())
+```
+
+Multiple context managers are entered **in order** and exited **in reverse order** (like nested `with` statements).
+
+### 14.7.3 Custom Context Manager: Class-Based
 
 Implement `__enter__` and `__exit__`.
 
@@ -408,20 +454,45 @@ import time
 class Timer:
     def __enter__(self):
         self.start = time.time()
-        return self
+        return self  # return value binds to the as variable
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         elapsed = time.time() - self.start
         print(f"Elapsed: {elapsed:.2f}s")
 
-with Timer():
-    # Code to time
+with Timer() as t:
     sum(range(1000000))
 ```
 
-### 14.7.2 `contextlib.contextmanager`
+**The three parameters and return value of `__exit__`:**
 
-Simpler way to write context managers using generators.
+| Parameter | Meaning |
+|-----------|---------|
+| `exc_type` | Exception type (`None` if no exception) |
+| `exc_val` | Exception instance (`None` if no exception) |
+| `exc_tb` | Traceback object (`None` if no exception) |
+
+If `__exit__` **returns `True`**, the exception is **suppressed** (it does not propagate further). Returning `False` or `None` lets the exception propagate normally.
+
+```python
+class SuppressErrors:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is ValueError:
+            print(f"Caught: {exc_val}")
+            return True  # Suppress the exception
+        return False     # Let other exceptions propagate
+
+with SuppressErrors():
+    raise ValueError("something went wrong")
+print("Continues here")  # Execution reaches this line
+```
+
+### 14.7.4 Custom Context Manager: `@contextmanager`
+
+A generator-based context manager is simpler. Code before `yield` acts as `__enter__`; code after acts as `__exit__`.
 
 ```python
 from contextlib import contextmanager
@@ -429,12 +500,79 @@ from contextlib import contextmanager
 @contextmanager
 def managed_resource(name):
     print(f"Acquiring {name}")
-    yield name
+    yield name          # the yielded value binds to the as variable
     print(f"Releasing {name}")
 
 with managed_resource("db_connection") as res:
     print(f"Using {res}")
 ```
+
+**Exception handling in generators:** If the `with` block raises an exception, it is re-raised at the `yield` point. Catch it with `try/except`:
+
+```python
+@contextmanager
+def managed_resource(name):
+    print(f"Acquiring {name}")
+    try:
+        yield name
+    except Exception as e:
+        print(f"Exception occurred: {e}")
+        raise           # propagate
+    finally:
+        print(f"Releasing {name}")  # always runs
+```
+
+### 14.7.5 `contextlib` Utilities
+
+The `contextlib` module provides ready-made utilities — no need to write your own class.
+
+```python
+from contextlib import suppress
+
+# suppress — silently ignore specified exceptions
+with suppress(FileNotFoundError):
+    os.remove("temp.txt")  # no error if file doesn't exist
+```
+
+```python
+from contextlib import closing
+import urllib.request
+
+# closing — ensures .close() is called (for objects without __exit__)
+with closing(urllib.request.urlopen("https://example.com")) as response:
+    html = response.read()
+```
+
+```python
+from contextlib import redirect_stdout
+import io
+
+# redirect_stdout — temporarily redirect output to a variable
+f = io.StringIO()
+with redirect_stdout(f):
+    print("hello")
+output = f.getvalue()  # "hello\n"
+```
+
+```python
+from contextlib import ExitStack
+
+# ExitStack — dynamically manage any number of contexts
+with ExitStack() as stack:
+    files = [stack.enter_context(open(f)) for f in ["a.txt", "b.txt"]]
+    # all files closed automatically on exit
+```
+
+### 14.7.6 Common Standard Library Context Managers
+
+| Context Manager | Purpose |
+|-----------------|---------|
+| `open()` | Auto-close files after reading/writing |
+| `threading.Lock()` | Acquire/release locks |
+| `tempfile.TemporaryDirectory()` | Temp directory, auto-deleted on exit |
+| `contextlib.suppress()` | Silently ignore specified exceptions |
+| `contextlib.redirect_stdout()` | Temporarily redirect stdout |
+| `contextlib.closing()` | Ensure `close()` is called |
 
 ## 14.8 `warnings` Module
 
