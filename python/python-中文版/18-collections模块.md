@@ -9,7 +9,7 @@
 ```python
 import collections
 
-# Or import specific classes
+# 或者导入具体的类
 from collections import Counter, defaultdict, deque, namedtuple, ChainMap, OrderedDict
 ```
 
@@ -24,16 +24,16 @@ from collections import Counter, defaultdict, deque, namedtuple, ChainMap, Order
 `Counter` 可以从任何可迭代对象或映射创建。
 
 ```python
-# From an iterable
+# 从可迭代对象
 words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
 c = Counter(words)
 print(c)                    # Counter({'apple': 3, 'banana': 2, 'cherry': 1})
 
-# From a string (counts characters)
+# 从字符串（统计字符）
 letters = Counter("abracadabra")
 print(letters["a"])         # 5
 
-# From keyword arguments
+# 从关键字参数
 inventory = Counter(apple=3, banana=2)
 print(inventory["banana"])  # 2
 ```
@@ -43,7 +43,7 @@ print(inventory["banana"])  # 2
 ```python
 c = Counter("hello")
 print(c["l"])   # 2
-print(c["z"])   # 0 (no KeyError)
+print(c["z"])   # 0 (不会报 KeyError)
 ```
 
 **注意：** 返回 `0` 并不意味着键真的存在。`"z" in c` 仍然是 `False`。不过一旦对不存在的键执行赋值（如 `c["z"] += 1` 前先做读取不会写入），显式的 `c["z"] = 0` 会把键写进去，可用 `del c["z"]` 删除。
@@ -57,7 +57,7 @@ c = Counter("abracadabra")
 print(c.most_common(3))
 # [('a', 5), ('b', 2), ('r', 2)]
 
-# Counter.total() (Python 3.10+) sums all counts
+# Counter.total()（Python 3.10+）对所有计数求和
 print(c.total())            # 11
 ```
 
@@ -75,7 +75,7 @@ print(freq.most_common(2))  # [('the', 3), ('fox', 2)]
 
 ```python
 c = Counter("aab")
-c.update("abc")             # Add counts from another iterable
+c.update("abc")             # 加上另一个可迭代对象的计数
 print(c)                    # Counter({'a': 3, 'b': 2, 'c': 1})
 
 c.subtract("ab")
@@ -94,8 +94,8 @@ b = Counter("bbd")
 
 print(a + b)                # Counter({'b': 4, 'a': 2, 'c': 1, 'd': 1})
 print(a - b)                # Counter({'a': 2, 'c': 1})
-print(a & b)                # Counter({'b': 2})  (intersection: min counts)
-print(a | b)                # Counter({'a': 2, 'b': 2, 'c': 1, 'd': 1})  (union: max counts)
+print(a & b)                # Counter({'b': 2})  (交集：取最小计数)
+print(a | b)                # Counter({'a': 2, 'b': 2, 'c': 1, 'd': 1})  (并集：取最大计数)
 ```
 
 **注意：** 算术运算 `+`、`-`、`&`、`|` 的结果会**丢弃零和负计数**；而 `subtract()` 方法会保留零和负计数。
@@ -103,10 +103,10 @@ print(a | b)                # Counter({'a': 2, 'b': 2, 'c': 1, 'd': 1})  (union:
 ```python
 c = Counter(a=1)
 c.subtract(Counter(a=2))
-print(c)                    # Counter({'a': -1})  (kept)
+print(c)                    # Counter({'a': -1})  (被保留)
 
 d = Counter(a=1) - Counter(a=2)
-print(d)                    # Counter()  (dropped)
+print(d)                    # Counter()  (被丢弃)
 ```
 
 ## 18.2 defaultdict
@@ -118,12 +118,12 @@ print(d)                    # Counter()  (dropped)
 用普通 `dict` 给键追加值时，必须先处理键不存在的情况。两种常见写法：
 
 ```python
-# Approach 1: setdefault
+# 方法 1：setdefault
 groups = {}
 for name, dept in [("Alice", "Eng"), ("Bob", "Sales"), ("Carol", "Eng")]:
     groups.setdefault(dept, []).append(name)
 
-# Approach 2: defaultdict (cleaner)
+# 方法 2：defaultdict（更简洁）
 groups = defaultdict(list)
 for name, dept in [("Alice", "Eng"), ("Bob", "Sales"), ("Carol", "Eng")]:
     groups[dept].append(name)
@@ -143,19 +143,19 @@ print(dict(groups))         # {'Eng': ['Alice', 'Carol'], 'Sales': ['Bob']}
 工厂可以是任何无参可调用对象（见第 11 章高级函数）。
 
 ```python
-# list factory: grouping
+# list 工厂：分组
 by_first_letter = defaultdict(list)
 for word in ["apple", "avocado", "banana"]:
     by_first_letter[word[0]].append(word)
 print(dict(by_first_letter))  # {'a': ['apple', 'avocado'], 'b': ['banana']}
 
-# int factory: counting (an alternative to Counter)
+# int 工厂：计数（Counter 的替代方案）
 counts = defaultdict(int)
 for ch in "mississippi":
     counts[ch] += 1
 print(counts["s"])            # 4
 
-# dict factory: nested structures
+# dict 工厂：嵌套结构
 nested = defaultdict(dict)
 nested["user1"]["age"] = 30
 print(nested)                 # defaultdict(<class 'dict'>, {'user1': {'age': 30}})
@@ -164,7 +164,7 @@ print(nested)                 # defaultdict(<class 'dict'>, {'user1': {'age': 30
 也可以用 `lambda` 提供自定义默认值：
 
 ```python
-scores = defaultdict(lambda: 100)   # Default score is 100
+scores = defaultdict(lambda: 100)   # 默认分数为 100
 print(scores["new_player"])         # 100
 ```
 
@@ -196,8 +196,8 @@ print(dict(totals))           # {'a': 4, 'b': 2}
 
 ```python
 d = defaultdict(int)
-print(d["missing"])           # 0 -- and the key is now INSERTED
-print("missing" in d)         # True (side effect of the read above)
+print(d["missing"])           # 0 -- 而且这个键现在被插入了
+print("missing" in d)         # True (上面那次读取的副作用)
 
 plain = {}
 # plain["missing"]            # KeyError, nothing inserted
@@ -213,16 +213,16 @@ plain = {}
 
 ```python
 d = deque([1, 2, 3])
-d.append(4)                 # Add to the right
-d.appendleft(0)             # Add to the left
+d.append(4)                 # 右端添加
+d.appendleft(0)             # 左端添加
 print(d)                    # deque([0, 1, 2, 3, 4])
 
-d.pop()                     # Remove from the right -> 4
-d.popleft()                 # Remove from the left -> 0
+d.pop()                     # 从右端移除 -> 4
+d.popleft()                 # 从左端移除 -> 0
 print(d)                    # deque([1, 2, 3])
 
-d.extend([4, 5])            # Extend the right
-d.extendleft([-1, -2])      # Extend the left (note: reversed order!)
+d.extend([4, 5])            # 右端扩展
+d.extendleft([-1, -2])      # 左端扩展（注意：顺序相反！）
 print(d)                    # deque([-2, -1, 1, 2, 3, 4, 5])
 ```
 
@@ -237,7 +237,7 @@ d = deque([1, 2, 3, 4, 5])
 d.rotate(2)
 print(d)                    # deque([4, 5, 1, 2, 3])
 
-d.rotate(-2)                # Rotate back
+d.rotate(-2)                # 转回去
 print(d)                    # deque([1, 2, 3, 4, 5])
 ```
 
@@ -253,8 +253,8 @@ for i in range(5):
 # [0]
 # [0, 1]
 # [0, 1, 2]
-# [1, 2, 3]  (0 was evicted)
-# [2, 3, 4]  (1 was evicted)
+# [1, 2, 3]  (0 被挤出)
+# [2, 3, 4]  (1 被挤出)
 ```
 
 实际应用：保留最近的日志行。
@@ -300,7 +300,7 @@ for _ in range(1000):
 deque_time = perf_counter() - start
 
 print(f"list: {list_time:.4f}s, deque: {deque_time:.4f}s")
-# deque is typically tens of times faster for head operations
+# 头部操作上 deque 通常快几十倍
 ```
 
 **取舍建议：** 只在一端操作时用 `list` 即可；需要频繁的头部增删或实现队列（FIFO）时用 `deque`；需要频繁按索引随机访问中间元素时，`deque` 反而慢，应选 `list`。
@@ -314,14 +314,14 @@ print(f"list: {list_time:.4f}s, deque: {deque_time:.4f}s")
 ```python
 Point = namedtuple("Point", ["x", "y"])
 
-p = Point(10, 20)             # Positional, like a plain tuple
-q = Point(x=1, y=2)           # Keyword arguments also work
+p = Point(10, 20)             # 像普通元组一样按位置传参
+q = Point(x=1, y=2)           # 也可以用关键字参数
 
-print(p.x, p.y)               # 10 20  (access by name)
-print(p[0], p[1])             # 10 20  (access by index)
+print(p.x, p.y)               # 10 20  (按名字访问)
+print(p[0], p[1])             # 10 20  (按索引访问)
 print(p)                      # Point(x=10, y=20)
 
-x, y = p                      # Unpacking still works
+x, y = p                      # 解包依然可用
 print(x + y)                  # 30
 ```
 
@@ -343,16 +343,16 @@ print(origin)                 # Point(x=0, y=0)
 Point = namedtuple("Point", ["x", "y"])
 p = Point(10, 20)
 
-p2 = p._replace(y=99)         # Returns a NEW instance
+p2 = p._replace(y=99)         # 返回一个新实例
 print(p2)                     # Point(x=10, y=99)
-print(p)                      # Point(x=10, y=20)  (original unchanged)
+print(p)                      # Point(x=10, y=20)  (原对象不变)
 ```
 
 `_asdict()` 把命名元组转换成字典，常用于序列化（如写入 JSON，见第 10 章文件操作）。
 
 ```python
 print(p._asdict())            # {'x': 10, 'y': 20}
-print(p._fields)              # ('x', 'y')  (field names)
+print(p._fields)              # ('x', 'y')  (字段名)
 ```
 
 **注意：** `_replace`、`_asdict`、`_fields` 等方法名以下划线开头，是为了避免与用户自定义的字段名冲突，它们并不是私有方法，可以放心使用。
@@ -394,8 +394,8 @@ defaults = {"color": "blue", "size": "M"}
 user_config = {"color": "red"}
 
 config = ChainMap(user_config, defaults)
-print(config["color"])        # red   (found in user_config first)
-print(config["size"])         # M     (falls through to defaults)
+print(config["color"])        # red   (先在 user_config 中找到)
+print(config["size"])         # M     (回落到 defaults)
 ```
 
 这正是处理「命令行参数 > 环境变量 > 默认配置」这类分层配置的经典模式。
@@ -403,16 +403,16 @@ print(config["size"])         # M     (falls through to defaults)
 **注意：** 写入和删除只作用于 ChainMap 的**第一个映射**，即使键来自后面的映射：
 
 ```python
-config["size"] = "L"          # Writes into user_config, NOT defaults
+config["size"] = "L"          # 写入 user_config，而不是 defaults
 print(user_config)            # {'color': 'red', 'size': 'L'}
-print(defaults)               # {'color': 'blue', 'size': 'M'}  (unchanged)
+print(defaults)               # {'color': 'blue', 'size': 'M'}  (未改变)
 ```
 
 常用方法与属性：
 
 ```python
-config.new_child({"debug": True})   # New ChainMap with a new front map
-print(config.maps)                  # List of the underlying mappings
+config.new_child({"debug": True})   # 在前面加一个新映射的新 ChainMap
+print(config.maps)                  # 底层映射的列表
 ```
 
 | 对比项 | `ChainMap(a, b)` | `{**a, **b}`（或 `a | b`） |
@@ -437,17 +437,17 @@ print(d1 == d2)                           # True
 
 o1 = OrderedDict(a=1, b=2)
 o2 = OrderedDict(b=2, a=1)
-print(o1 == o2)                           # False (order matters)
-print(o1 == d1)                           # True  (compared with a plain dict, order ignored)
+print(o1 == o2)                           # False (顺序有影响)
+print(o1 == d1)                           # True  (与普通字典比较时忽略顺序)
 ```
 
 2. **重排方法**：`move_to_end()` 是普通 `dict` 没有的。
 
 ```python
 od = OrderedDict(a=1, b=2, c=3)
-od.move_to_end("a")               # Move 'a' to the right end
+od.move_to_end("a")               # 把 'a' 移到右端
 print(list(od))                   # ['b', 'c', 'a']
-od.move_to_end("c", last=False)   # Move 'c' to the front
+od.move_to_end("c", last=False)   # 把 'c' 移到最前
 print(list(od))                   # ['c', 'b', 'a']
 ```
 
@@ -462,20 +462,20 @@ class LRUCache:
     def get(self, key):
         if key not in self.cache:
             return None
-        self.cache.move_to_end(key)     # Mark as recently used
+        self.cache.move_to_end(key)     # 标记为最近使用
         return self.cache[key]
 
     def put(self, key, value):
         self.cache[key] = value
         self.cache.move_to_end(key)
         if len(self.cache) > self.capacity:
-            self.cache.popitem(last=False)  # Evict the oldest
+            self.cache.popitem(last=False)  # 淘汰最旧的
 
 lru = LRUCache(2)
 lru.put("a", 1)
 lru.put("b", 2)
-lru.get("a")                    # 'a' becomes most recently used
-lru.put("c", 3)                 # Evicts 'b'
+lru.get("a")                    # 'a' 变成最近使用
+lru.put("c", 3)                 # 淘汰 'b'
 print(lru.get("b"))             # None
 print(lru.get("a"))             # 1
 ```
