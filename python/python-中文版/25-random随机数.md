@@ -19,7 +19,7 @@ import random
 ```python
 import random
 
-random.seed(42)                 # Fix the seed for reproducible output
+random.seed(42)                 # 固定种子以获得可复现的输出
 print(random.random())          # 0.6394267984578837
 print(random.random())          # 0.025010755222666936
 ```
@@ -34,7 +34,7 @@ print(random.random())          # 0.025010755222666936
 import random
 
 random.seed(42)
-print(random.randint(1, 10))    # 2 (both 1 and 10 are possible)
+print(random.randint(1, 10))    # 2 (1 和 10 都有可能出现)
 ```
 
 模拟掷骰子：
@@ -55,7 +55,7 @@ print(dice)                     # [4, 1, 1, 1, 5, 1, 6, 6, 1, 1]
 import random
 
 random.seed(42)
-print(random.randrange(0, 100, 5))   # 15 (a multiple of 5 in [0, 100))
+print(random.randrange(0, 100, 5))   # 15 ([0, 100) 中 5 的倍数)
 ```
 
 **注意：** `randint(0, 10)` 有 11 种可能结果，而 `randrange(0, 10)` 只有 10 种（不含 10）。混用两者是常见的差一错误（off-by-one error）来源。
@@ -79,7 +79,7 @@ print(random.uniform(1.5, 3.5))      # 2.7788535969157673
 import random
 
 random.seed(42)
-print(random.getrandbits(8))         # 163 (fits in 8 bits: 0~255)
+print(random.getrandbits(8))         # 163 (8 位以内：0~255)
 print(hex(random.getrandbits(32)))   # 0x1c80317f
 ```
 
@@ -195,7 +195,7 @@ print(nums)                     # [4, 2, 3, 5, 1]
 import random
 
 random.seed(42)
-# Simulate IQ-like scores: mean 100, std 15
+# 模拟类似智商的分数：均值 100，标准差 15
 scores = [round(random.gauss(100, 15), 2) for _ in range(3)]
 print(scores)   # [97.84, 97.41, 98.33]
 ```
@@ -222,7 +222,7 @@ print(round(statistics.stdev(data), 1))  # 15.0
 import random
 
 random.seed(42)
-# Average interval is 5 seconds (lambd = 1/5)
+# 平均间隔 5 秒（lambd = 1/5）
 intervals = [round(random.expovariate(1 / 5), 2) for _ in range(5)]
 print(intervals)   # [5.1, 0.13, 1.61, 1.26, 6.67]
 ```
@@ -235,7 +235,7 @@ print(intervals)   # [5.1, 0.13, 1.61, 1.26, 6.67]
 import random
 
 random.seed(42)
-# Estimate task durations: min 0, max 10, most likely 2
+# 估计任务耗时：最小 0，最大 10，最可能 2
 durations = [round(random.triangular(0, 10, 2), 2) for _ in range(3)]
 print(durations)   # [4.63, 0.71, 2.38]
 ```
@@ -291,8 +291,8 @@ def simulate(seed):
     rolls = [rng.randint(1, 6) for _ in range(10)]
     return sum(rolls)
 
-# Found a bug with some seed? Re-run with the same seed to reproduce.
-print(simulate(1234))   # 27 (always the same)
+# 某个种子下发现了 bug？用同一个种子重跑即可复现。
+print(simulate(1234))   # 27 (永远相同)
 print(simulate(1234))   # 27
 ```
 
@@ -302,7 +302,7 @@ print(simulate(1234))   # 27
 import random
 
 def test_shuffle_preserves_elements():
-    rng = random.Random(42)     # Deterministic test
+    rng = random.Random(42)     # 确定性测试
     data = [1, 2, 3, 4, 5]
     rng.shuffle(data)
     assert sorted(data) == [1, 2, 3, 4, 5]
@@ -318,11 +318,11 @@ test_shuffle_preserves_elements()
 import random
 
 random.seed(42)
-random.random()                     # Advance the generator
-state = random.getstate()           # Save current state
+random.random()                     # 推进生成器
+state = random.getstate()           # 保存当前状态
 
 x = random.random()
-random.setstate(state)              # Restore the saved state
+random.setstate(state)              # 恢复保存的状态
 y = random.random()
 
 print(x == y)                       # True
@@ -337,9 +337,9 @@ print(x == y)                       # True
 ```python
 import random
 
-random.seed(0)      # An attacker who guesses the seed gets everything
+random.seed(0)      # 攻击者猜到种子就能得到一切
 password = "".join(random.choice("abcxyz123") for _ in range(8))
-print(password)     # 11ay321y (fully reproducible!)
+print(password)     # 11ay321y (完全可复现！)
 ```
 
 因此，凡是涉及**安全**的场景——密码、重置令牌（token）、会话 ID、API 密钥、验证码——都不能用 `random`。Python 3.6 起标准库提供了 `secrets` 模块，它基于操作系统提供的密码学安全随机源（cryptographically secure random source），输出不可预测。
@@ -355,11 +355,11 @@ print(password)     # 11ay321y (fully reproducible!)
 ```python
 import secrets
 
-print(len(secrets.token_bytes(16)))    # 16 (bytes)
-print(len(secrets.token_hex(16)))      # 32 (hex chars)
-print(len(secrets.token_urlsafe(16)))  # 22 (approx; URL-safe text)
+print(len(secrets.token_bytes(16)))    # 16 (字节)
+print(len(secrets.token_hex(16)))      # 32 (十六进制字符)
+print(len(secrets.token_urlsafe(16)))  # 22 (大约；URL 安全文本)
 
-# Typical use: a password-reset token
+# 典型用途：密码重置令牌
 reset_token = secrets.token_urlsafe(32)
 ```
 
@@ -380,7 +380,7 @@ import string
 
 alphabet = string.ascii_letters + string.digits + "!@#$%"
 password = "".join(secrets.choice(alphabet) for _ in range(16))
-print(len(password))    # 16 (content differs every run)
+print(len(password))    # 16 (每次运行内容都不同)
 ```
 
 验证码场景：
@@ -389,7 +389,7 @@ print(len(password))    # 16 (content differs every run)
 import secrets
 
 code = "".join(str(secrets.randbelow(10)) for _ in range(6))
-print(len(code))        # 6 (a 6-digit verification code)
+print(len(code))        # 6 (6 位验证码)
 ```
 
 ### 25.5.4 random 与 secrets 对比
