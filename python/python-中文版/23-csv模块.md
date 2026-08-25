@@ -55,12 +55,12 @@ import csv
 
 with open("people.csv", newline="", encoding="utf-8") as f:
     reader = csv.reader(f)
-    header = next(reader)           # Take off the header row
+    header = next(reader)           # 取出表头行
     print("Header:", header)
-    for row in reader:              # Remaining rows are data
+    for row in reader:              # 剩余的行是数据
         print(row)
 
-# Header: ['name', 'age', 'city']
+# 表头：['name', 'age', 'city']
 # ['Alice', '30', 'Beijing']
 # ['Bob', '25', 'Shanghai']
 # ['Carol', '28', 'Guangzhou']
@@ -78,7 +78,7 @@ Python 官方文档明确要求：用 `csv` 模块读写文件时，`open()` 必
 2. 在 Windows 上，如果不加 `newline=""`，写入时文本模式会把 `\n` 转成 `\r\n`，而 `csv` 模块本身又会输出 `\r\n` 作为行结束符，两者叠加会在 Excel 中表现为**每隔一行出现一行空行**。
 
 ```python
-# Correct: always pass newline=""
+# 正确：始终传 newline=""
 with open("out.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
 ```
@@ -102,8 +102,8 @@ rows = [
 
 with open("out.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
-    writer.writerow(rows[0])        # Write a single row
-    writer.writerows(rows[1:])      # Write multiple rows at once
+    writer.writerow(rows[0])        # 写入单行
+    writer.writerows(rows[1:])      # 一次写入多行
 ```
 
 写入后 `out.csv` 的内容：
@@ -170,7 +170,7 @@ import csv
 with open("out_dict.csv", "w", newline="", encoding="utf-8") as f:
     fieldnames = ["name", "age", "city"]
     writer = csv.DictWriter(f, fieldnames=fieldnames)
-    writer.writeheader()                                # Write the header row
+    writer.writeheader()                                # 写入表头行
     writer.writerow({"name": "Alice", "age": 30, "city": "Beijing"})
     writer.writerows([
         {"name": "Bob", "age": 25, "city": "Shanghai"},
@@ -215,12 +215,12 @@ with open("out_extra.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(
         f,
         fieldnames=["name", "age"],
-        extrasaction="ignore",      # Silently drop unknown keys
-        restval="N/A",              # Fill value for missing keys
+        extrasaction="ignore",      # 静默丢弃未知的键
+        restval="N/A",              # 缺失键的填充值
     )
     writer.writeheader()
     writer.writerow({"name": "Alice", "age": 30, "hobby": "chess"})
-    writer.writerow({"name": "Bob"})        # Missing "age" -> "N/A"
+    writer.writerow({"name": "Bob"})        # 缺少 "age" -> "N/A"
 ```
 
 写入结果：
@@ -244,7 +244,7 @@ Bob,N/A
 ```python
 import csv
 
-# tsv content: name<TAB>age
+# tsv 内容：name<TAB>age
 with open("people.tsv", newline="", encoding="utf-8") as f:
     reader = csv.reader(f, delimiter="\t")
     for row in reader:
@@ -263,7 +263,7 @@ import csv
 with open("semi.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f, delimiter=";", quotechar="'")
     writer.writerow(["name", "city"])
-    writer.writerow(["Alice", "New;York"])      # Field contains ";"
+    writer.writerow(["Alice", "New;York"])      # 字段中包含 ";"
 
 with open("semi.csv", encoding="utf-8") as f:
     print(f.read())
@@ -288,15 +288,15 @@ Bob;25;Shanghai
 import csv
 
 with open("unknown.csv", newline="", encoding="utf-8") as f:
-    sample = f.read(1024)               # Read a sample chunk
-    f.seek(0)                           # Rewind to the beginning
+    sample = f.read(1024)               # 读取一段样本
+    f.seek(0)                           # 倒回开头
     dialect = csv.Sniffer().sniff(sample)
     print("Detected delimiter:", repr(dialect.delimiter))
     reader = csv.reader(f, dialect)
     for row in reader:
         print(row)
 
-# Detected delimiter: ';'
+# 检测到的分隔符：';'
 # ['name', 'age', 'city']
 # ['Alice', '30', 'Beijing']
 # ['Bob', '25', 'Shanghai']
@@ -338,7 +338,7 @@ import csv
 
 rows = [["姓名", "城市"], ["小明", "北京"], ["小红", "上海"]]
 
-# Write with a BOM so Excel detects UTF-8
+# 带 BOM 写入，让 Excel 识别 UTF-8
 with open("中文.csv", "w", newline="", encoding="utf-8-sig") as f:
     csv.writer(f).writerows(rows)
 ```
@@ -366,10 +366,10 @@ with open("people.csv", newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     total = 0
     for row in reader:
-        total += int(row["age"])    # Convert before arithmetic
+        total += int(row["age"])    # 运算前先转换
     print("Total age:", total)
 
-# Total age: 83
+# 年龄总和：83
 ```
 
 **注意：** 直接对字符串做加法得到的是拼接（`"30" + "25"` 是 `"3025"`），不会报错，结果却是错的。这类 bug 很隐蔽，读到数字字段后应立即用 `int()` / `float()` 转换，并视情况用 `try/except` 处理脏数据（见第 14 章异常处理）。
@@ -381,7 +381,7 @@ with open("people.csv", newline="", encoding="utf-8") as f:
 ```python
 import csv
 
-# Memory-friendly: process one row at a time
+# 节省内存：一次处理一行
 def iter_adults(path):
     with open(path, newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
