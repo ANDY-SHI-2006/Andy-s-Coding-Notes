@@ -42,10 +42,10 @@ hello.py  --compile-->  __pycache__/hello.cpython-312.pyc  --run-->  Python VM
 在 Python 中，变量只是一个**名字**（或引用），它指向内存中的一个对象。赋值永远不会复制数据，它只是把一个名字绑定到一个对象上。
 
 ```python
-a = 10       # a points to the integer object 10
-b = a        # b points to the same object as a
+a = 10       # a 指向整数对象 10
+b = a        # b 指向与 a 相同的对象
 
-print(id(a)) # e.g., 140735... (same as b)
+print(id(a)) # 例如 140735...（与 b 相同）
 print(id(b))
 ```
 
@@ -54,8 +54,8 @@ print(id(b))
 ```python
 a = 10
 print(id(a))
-a = 20          # a now points to a different integer object
-print(id(a))    # different address
+a = 20          # a 现在指向另一个整数对象
+print(id(a))    # 地址不同
 ```
 
 ### 1.2.2 同一性与相等性
@@ -67,11 +67,11 @@ print(id(a))    # different address
 x = [1, 2, 3]
 y = [1, 2, 3]
 
-print(x == y)   # True  (same values)
-print(x is y)   # False (different objects)
+print(x == y)   # True  (值相同)
+print(x is y)   # False (对象不同)
 
 z = x
-print(x is z)   # True  (same object)
+print(x is z)   # True  (同一对象)
 ```
 
 ### 1.2.3 什么时候用 `is`
@@ -88,7 +88,7 @@ Python 不要求声明类型。变量的类型根据赋给它的值推断而来�
 
 ```python
 x = 10          # int
-x = "hello"     # str (reassigned, no error)
+x = "hello"     # str (重新赋值，不报错)
 type(x)         # <class 'str'>
 ```
 
@@ -103,7 +103,7 @@ a, b = 1, 2   # a=1, b=2
 这等价于先在右侧创建一个元组，再将其解包：
 
 ```python
-a, b = (1, 2)  # comma creates a tuple
+a, b = (1, 2)  # 逗号会创建元组
 ```
 
 关于解包的详细规则——包括从列表和字符串解包、以及使用 `*` 的扩展解包——请参阅 [3.5.3 序列解包](03-序列类型.md#353-序列解包)。
@@ -121,7 +121,7 @@ a = b = 0
 ```python
 a = b = []
 a.append(1)
-print(b)  # [1] — b refers to the same list as a
+print(b)  # [1] — b 与 a 引用同一个列表
 ```
 
 对于数字或字符串这类不可变对象，不存在这个陷阱，因为重新赋值会创建一个新对象。
@@ -141,8 +141,8 @@ a, b = b, a
 用 `#` 开始一个单行注释。同一行中 `#` 之后的所有内容都会被解释器忽略。
 
 ```python
-# This is a single-line comment
-x = 10  # Inline comment
+# 这是单行注释
+x = 10  # 行内注释
 ```
 
 ### 1.4.2 多行注释
