@@ -359,6 +359,16 @@ readable, writable, exceptional = select.select(rlist, wlist, xlist)
 | `wlist` | Sockets to monitor for ability to send (write-ready) |
 | `xlist` | Sockets to monitor for exceptional conditions (usually empty) |
 
+**When does a socket count as "readable"?** A socket is marked read-ready when any of the following is true:
+
+| Condition | Which socket it happens on | The operation to perform |
+|------|---------------------|-----------|
+| A new connection request has arrived (SYN received) | The listening server socket | Call `accept()` to take the new connection — it will not block |
+| Data is waiting in the receive buffer | An established client socket | Call `recv()` to read the data |
+| The peer closed the connection (FIN received) | An established client socket | `recv()` returns an empty byte string (EOF) immediately |
+
+Mind the perspective in the last two rows: "connecting" and "sending a message" are both initiated by the client, but the ready objects the server program perceives are **two different sockets** — the former is the listening socket (`server`), the latter is the connection socket (`conn`) returned by `accept()` that represents that specific client. The `if sock is server` branch in 3.3.2's code distinguishes exactly these two cases.
+
 The function **blocks** until at least one socket is ready, then returns three lists of ready sockets.
 
 ### 3.3.1 Basic Workflow
