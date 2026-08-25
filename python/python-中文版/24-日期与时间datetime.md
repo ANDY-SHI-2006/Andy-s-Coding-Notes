@@ -7,7 +7,7 @@
 使用前先导入：
 
 ```python
-import datetime                     # Import the whole module
+import datetime                     # 导入整个模块
 from datetime import date, time, datetime, timedelta, timezone
 ```
 
@@ -34,7 +34,7 @@ print(d.year)           # 2026
 print(d.month)          # 8
 print(d.day)            # 17
 
-today = date.today()    # Current local date
+today = date.today()    # 当前本地日期
 print(today)
 ```
 
@@ -44,8 +44,8 @@ print(today)
 from datetime import date
 
 d = date(2026, 8, 17)
-print(d.weekday())          # 0 (Monday = 0, Sunday = 6)
-print(d.isoweekday())       # 1 (Monday = 1, Sunday = 7)
+print(d.weekday())          # 0 (周一 = 0，周日 = 6)
+print(d.isoweekday())       # 1 (周一 = 1，周日 = 7)
 print(d.isoformat())        # '2026-08-17'
 print(d.ctime())            # 'Mon Aug 17 00:00:00 2026'
 ```
@@ -79,7 +79,7 @@ print(dt)               # 2026-08-17 14:30:45
 print(dt.year, dt.month, dt.day)     # 2026 8 17
 print(dt.hour, dt.minute, dt.second) # 14 30 45
 
-now = datetime.now()    # Current local date and time
+now = datetime.now()    # 当前本地日期和时间
 print(now)
 ```
 
@@ -88,9 +88,9 @@ print(now)
 ```python
 from datetime import datetime, timezone
 
-datetime.now()                  # Local time (naive)
-datetime.today()                # Same as now() without arguments
-datetime.now(timezone.utc)      # Current UTC time (aware)
+datetime.now()                  # 本地时间（naive）
+datetime.today()                # 与不带参数的 now() 相同
+datetime.now(timezone.utc)      # 当前 UTC 时间（aware）
 ```
 
 `date` 和 `time` 可以与 `datetime` 相互转换：
@@ -105,7 +105,7 @@ print(dt.time())                        # 14:30:45
 combined = datetime.combine(date(2026, 8, 17), time(14, 30))
 print(combined)                         # 2026-08-17 14:30:00
 
-new_dt = dt.replace(year=2027, hour=9)  # Replace some fields
+new_dt = dt.replace(year=2027, hour=9)  # 替换部分字段
 print(new_dt)                           # 2027-08-17 09:30:45
 ```
 
@@ -177,7 +177,7 @@ print(d)                        # 2026-08-17
 from datetime import datetime
 
 try:
-    datetime.strptime("2026-08-17", "%Y/%m/%d")   # Wrong separator
+    datetime.strptime("2026-08-17", "%Y/%m/%d")   # 错误的分隔符
 except ValueError as e:
     print("Parse failed:", e)
 ```
@@ -272,10 +272,10 @@ print(max(d1, d2))          # 2026-12-25
 from datetime import datetime, timezone
 
 dt = datetime(2026, 8, 17, 14, 30, 45, tzinfo=timezone.utc)
-ts = dt.timestamp()                 # datetime -> timestamp
+ts = dt.timestamp()                 # datetime -> 时间戳
 print(ts)                           # 1786977045.0
 
-restored = datetime.fromtimestamp(ts, tz=timezone.utc)  # timestamp -> datetime
+restored = datetime.fromtimestamp(ts, tz=timezone.utc)  # 时间戳 -> datetime
 print(restored)                     # 2026-08-17 14:30:45+00:00
 ```
 
@@ -287,10 +287,10 @@ print(restored)                     # 2026-08-17 14:30:45+00:00
 import time
 from datetime import datetime
 
-ts = time.time()                    # Current timestamp (float)
+ts = time.time()                    # 当前时间戳（浮点数）
 print(ts)
 
-now = datetime.fromtimestamp(ts)    # Convert to local datetime
+now = datetime.fromtimestamp(ts)    # 转换为本地 datetime
 print(now)
 ```
 
@@ -437,7 +437,7 @@ def calc_age(birth, today=None):
     """Calculate exact age in years."""
     today = today or date.today()
     age = today.year - birth.year
-    # Not yet had birthday this year
+    # 今年还没过生日
     if (today.month, today.day) < (birth.month, birth.day):
         age -= 1
     return age
@@ -476,16 +476,16 @@ for d in date_range(date(2026, 8, 15), date(2026, 8, 17)):
 ```python
 from datetime import datetime, date
 
-# Number of days until a target date
+# 距离目标日期的天数
 target = date(2027, 1, 1)
 days_left = (target - date(2026, 8, 17)).days
 print(days_left)                            # 137
 
-# Timestamped filename for logs
+# 带时间戳的日志文件名
 filename = datetime.now().strftime("log_%Y%m%d_%H%M%S.txt")
 print(filename)                             # e.g. log_20260817_143045.txt
 
-# Check whether a year is a leap year
+# 检查某年是否为闰年
 import calendar
 print(calendar.isleap(2026))                # False
 ```
@@ -507,7 +507,7 @@ print(calendar.isleap(2026))                # False
 import time
 
 print("Start")
-time.sleep(2)    # Sleep for 2 seconds
+time.sleep(2)    # 休眠 2 秒
 print("End")
 ```
 
