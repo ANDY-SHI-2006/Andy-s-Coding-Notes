@@ -118,93 +118,9 @@ print(length_tuple[0])   # 100
 
 > **Format `"!I"`**: unsigned 4-byte integer in network byte order. This keeps the header cross-platform; applications should still enforce a maximum message size.
 
-### 3.1.5 Server and Client with Length-Prefix Protocol
+### 3.1.5 Complete Length-Prefix Protocol Implementation
 
-First, define a helper in `util.py` that reads an exact number of bytes (`recv(n)` may return fewer than `n` bytes at once, so a loop is required):
-
-```python
-# util.py
-def recv_exactly(sock, size):
-    """Loop until exactly size bytes are read; return None if the peer disconnects."""
-    chunks = bytearray()
-    while len(chunks) < size:
-        chunk = sock.recv(size - len(chunks))
-        if not chunk:
-            return None
-        chunks.extend(chunk)
-    return bytes(chunks)
-```
-
-Both the server and the client build the length-prefix protocol on top of it:
-
-```python
-# server.py
-import socket
-import struct
-from util import recv_exactly
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(('127.0.0.1', 9090))
-server.listen(5)
-conn, addr = server.accept()
-print(f"Connected by {addr}")
-
-while True:
-    # Step 1: Read 4-byte header
-    header = recv_exactly(conn, 4)
-    if header is None:
-        print("Client disconnected")
-        break
-
-    # Step 2: Unpack to get message length
-    msg_length = struct.unpack('!I', header)[0]
-
-    # Step 3: Read exactly msg_length bytes
-    msg = recv_exactly(conn, msg_length)
-    if msg is None:
-        print("Client disconnected unexpectedly")
-        break
-
-    text = msg.decode()
-    print(f"From client: {text}")
-
-    if text == 'exit':
-        break
-
-conn.close()
-server.close()
-```
-
-```python
-# client.py
-import socket
-import struct
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('127.0.0.1', 9090))
-
-while True:
-    info = input("Message: ")
-    if info == '':
-        print("Cannot send empty message")
-        continue
-
-    byte_info = info.encode()
-    length = len(byte_info)
-
-    # Send 4-byte length header, then the data
-    client.sendall(struct.pack('!I', length))
-    client.sendall(byte_info)
-
-    if info == 'exit':
-        break
-
-client.close()
-```
-
-### 3.1.6 Reusable Helper Functions
-
-For real projects, it is cleaner to build on `recv_exactly` from 3.1.5 and wrap sending and receiving into reusable functions as well, adding a maximum-message-size guard. This gives the complete `util.py`:
+The length-prefix protocol is wrapped directly into three reusable helpers in `util.py`. The key piece is `recv_exactly`: `recv(n)` may return fewer than `n` bytes at once, so it loops until the buffer is full (returning `None` if the peer disconnects). `recv_with_length` packages the three-step flow from earlier — read the 4-byte header, unpack the length, read exactly that many bytes — and adds a maximum-message-size guard.
 
 ```python
 # util.py
@@ -254,6 +170,8 @@ def recv_with_length(sock):
 
     return data.decode()
 ```
+
+Both server and client use these two helpers directly:
 
 ```python
 # server.py
@@ -306,7 +224,7 @@ while True:
 client.close()
 ```
 
-### 3.1.7 Important Notes
+### 3.1.6 Important Notes
 
 - The receiver should not use `recv(1024)` for arbitrary messages. It should read exactly the announced length, possibly in a loop if the data is large.
 - For production systems, consider using established protocols or libraries (e.g., HTTP, JSON-RPC, gRPC, `asyncio` streams, `struct` with network byte order `!I`).
