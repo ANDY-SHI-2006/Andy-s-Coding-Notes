@@ -16,11 +16,11 @@
 | 难以关闭 | 上线前要逐行删除或注释 `print`，费时且容易遗漏 |
 
 ```python
-# Debugging with print: these lines must be removed before release
+# 用 print 调试：这些行在发布前必须删掉
 def process(items):
-    print(f"[DEBUG] received {len(items)} items")   # Has to be deleted later
+    print(f"[DEBUG] received {len(items)} items")   # 之后还得手动删除
     for item in items:
-        print(f"[DEBUG] handling {item}")           # Clutters real output
+        print(f"[DEBUG] handling {item}")           # 污染真实输出
         ...
 ```
 
@@ -48,9 +48,9 @@ logging.warning("Disk space is running low")
 import logging
 
 def process(items):
-    logging.debug("Received %d items", len(items))   # Silenced by raising the level
+    logging.debug("Received %d items", len(items))   # 提高级别后被静默
     for item in items:
-        logging.debug("Handling %s", item)           # No need to delete these lines
+        logging.debug("Handling %s", item)           # 这些行无需删除
         ...
 ```
 
@@ -75,8 +75,8 @@ def process(items):
 ```python
 import logging
 
-logging.debug("Variable x has value 42")           # Not shown
-logging.info("Server started on port 8000")        # Not shown
+logging.debug("Variable x has value 42")           # 不会显示
+logging.info("Server started on port 8000")        # 不会显示
 logging.warning("Disk space is running low")       # WARNING:root:Disk space is running low
 logging.error("Failed to open config.ini")         # ERROR:root:Failed to open config.ini
 logging.critical("Out of memory, shutting down")   # CRITICAL:root:Out of memory, shutting down
@@ -87,7 +87,7 @@ logging.critical("Out of memory, shutting down")   # CRITICAL:root:Out of memory
 ```python
 import logging
 
-logging.basicConfig(level="INFO")   # Same as level=logging.INFO
+logging.basicConfig(level="INFO")   # 与 level=logging.INFO 相同
 ```
 
 ### 28.2.3 如何选择级别
@@ -168,9 +168,9 @@ logging.warning("Low memory")
 ```python
 import logging
 
-logging.warning("First call outputs a message")   # Creates a default handler
-logging.basicConfig(level=logging.DEBUG)          # No effect now
-logging.debug("Still not shown")                  # Not shown
+logging.warning("First call outputs a message")   # 创建一个默认 handler
+logging.basicConfig(level=logging.DEBUG)          # 现在没有效果
+logging.debug("Still not shown")                  # 不会显示
 ```
 
 ## 28.4 Handler 与 Formatter
@@ -199,19 +199,19 @@ logging.debug("Still not shown")                  # Not shown
 ```python
 import logging
 
-# Create a logger and set its overall threshold
+# 创建 logger 并设置它的总阈值
 logger = logging.getLogger("myapp")
 logger.setLevel(logging.DEBUG)
 
-# Console handler: only show WARNING and above
+# 控制台 handler：只显示 WARNING 及以上
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.WARNING)
 
-# File handler: record everything from DEBUG up
+# 文件 handler：从 DEBUG 起全部记录
 file_handler = logging.FileHandler("app.log", encoding="utf-8")
 file_handler.setLevel(logging.DEBUG)
 
-# Both handlers share one format
+# 两个 handler 共用一种格式
 formatter = logging.Formatter("%(asctime)s | %(levelname)-8s | %(message)s")
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
@@ -219,10 +219,10 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-logger.debug("Loading configuration file")      # File only
-logger.info("Server started on port 8000")      # File only
-logger.warning("Memory usage exceeds 80%")      # Console and file
-logger.error("Database connection failed")      # Console and file
+logger.debug("Loading configuration file")      # 只进文件
+logger.info("Server started on port 8000")      # 只进文件
+logger.warning("Memory usage exceeds 80%")      # 控制台和文件都有
+logger.error("Database connection failed")      # 控制台和文件都有
 ```
 
 控制台输出（时间戳以实际运行为准）：
@@ -235,8 +235,8 @@ logger.error("Database connection failed")      # Console and file
 而 `app.log` 中会包含全部四条消息。注意 logger 的级别是总闸门：即使 handler 设为 DEBUG，若 logger 本身的级别是 INFO，DEBUG 消息在进入 handler 之前就被丢弃了。
 
 ```python
-logger.setLevel(logging.INFO)   # The logger is the overall gate
-logger.debug("Dropped before reaching any handler")   # Never output anywhere
+logger.setLevel(logging.INFO)   # logger 是总闸门
+logger.debug("Dropped before reaching any handler")   # 任何地方都不会输出
 ```
 
 **注意：** 每个 logger 自身没有配置 handler 时，消息会传播给 root logger（见 28.5 节）。上面的例子中如果同时又调用了 `basicConfig()`，消息会在自己的 handler 和 root 的 handler 中各输出一次，出现重复行。要么只用 `basicConfig()`，要么自己组装 handler，两者选其一。
@@ -267,7 +267,7 @@ api_logger.warning("Request timed out")       # shop.api | WARNING | Request tim
 `%(name)s` 字段显示了消息来自哪个 logger——这正是分层命名的价值：一眼定位日志来源，还可以单独调整某个子树的级别。
 
 ```python
-logging.getLogger("shop.db").setLevel(logging.WARNING)   # Silence noisy db logs
+logging.getLogger("shop.db").setLevel(logging.WARNING)   # 静默吵闹的 db 日志
 ```
 
 ### 28.5.2 库代码为什么用 getLogger(__name__)
@@ -275,10 +275,10 @@ logging.getLogger("shop.db").setLevel(logging.WARNING)   # Silence noisy db logs
 `__name__` 是当前模块的导入名（见第 15 章模块与包）。用它作为 logger 名字，logger 层级就自动与包结构对齐：
 
 ```python
-# mylib/database.py — a module inside a library
+# mylib/database.py — 库内部的一个模块
 import logging
 
-logger = logging.getLogger(__name__)   # Name becomes "mylib.database"
+logger = logging.getLogger(__name__)   # 名称变成 "mylib.database"
 
 def connect(url):
     logger.info("Connecting to %s", url)
@@ -298,7 +298,7 @@ myproject/
 在应用入口（`main.py`）配置好 root logger 后，`mylib.database` 等子 logger 的消息都会传播上来，按统一格式输出：
 
 ```python
-# main.py — the application entry point
+# main.py — 应用入口
 import logging
 
 logging.basicConfig(level=logging.INFO,
@@ -332,7 +332,7 @@ def divide(a, b):
     try:
         return a / b
     except ZeroDivisionError:
-        logger.exception("Division failed")   # Appends the traceback automatically
+        logger.exception("Division failed")   # 自动附加 traceback
         return None
 
 divide(10, 0)
@@ -358,7 +358,7 @@ try:
     with open("missing.txt", encoding="utf-8") as f:
         data = f.read()
 except OSError:
-    logger.error("Failed to read the file", exc_info=True)   # Also appends traceback
+    logger.error("Failed to read the file", exc_info=True)   # 也会附加 traceback
 ```
 
 **注意：** `logger.exception()` 只能在 `except` 块（或处理异常的过程中）使用。在没有异常被处理的地方调用它，附加的堆栈会是 `NoneType: None`，没有实际意义。
@@ -379,7 +379,7 @@ def save_report(data, path):
             f.write(data)
     except OSError:
         logger.exception("Failed to save the report to %s", path)
-        raise   # Log the traceback, then let the caller handle it
+        raise   # 记录 traceback，然后交给调用方处理
 ```
 
 要避免在同一异常向上传播的每一层都记录一遍——同一事件在日志里重复出现多次，反而干扰排查。约定俗成的做法是「记录一次，要么就地处理，要么抛出」。
@@ -410,8 +410,8 @@ logger = logging.getLogger(__name__)
 推荐把变量作为参数传给日志方法，而不是用 f-string 预先拼好：
 
 ```python
-logger.debug("User %s has %d points", name, points)   # Good: formatted only if emitted
-logger.debug(f"User {name} has {points} points")      # f-string is always evaluated
+logger.debug("User %s has %d points", name, points)   # 正确：只有真正输出时才格式化
+logger.debug(f"User {name} has {points} points")      # f-string 总是会被求值
 ```
 
 前一种写法在消息被级别过滤掉时不做字符串拼接，开销更小；当日志位于循环等热路径上时差别明显。
@@ -426,8 +426,8 @@ from logging.handlers import RotatingFileHandler
 
 handler = RotatingFileHandler(
     "app.log",
-    maxBytes=1_000_000,   # Rotate when the file reaches about 1 MB
-    backupCount=3,        # Keep at most 3 old files
+    maxBytes=1_000_000,   # 文件达到约 1 MB 时轮转
+    backupCount=3,        # 最多保留 3 个旧文件
     encoding="utf-8",
 )
 
