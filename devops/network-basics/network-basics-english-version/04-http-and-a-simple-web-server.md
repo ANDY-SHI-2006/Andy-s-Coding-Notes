@@ -14,7 +14,10 @@ In the B/S architecture (see 1.1.2), the browser acts as the client: typing `127
 
 Start with the plain TCP server from Chapter 2, replying with an arbitrary sentence:
 
+Complete runnable example: [the invalid-response control experiment](../examples/en/http_server_naive.py)
+
 ```python
+# http_server_naive.py
 import socket
 
 sock = socket.socket()
@@ -29,7 +32,7 @@ while True:
     conn.close()
 ```
 
-Visit `http://127.0.0.1:8000` in a browser. The terminal prints the browser's raw request, but the browser usually shows an error or garbled output — because `hello world` does not follow the HTTP response format, and the browser does not know how to parse it.
+Visit `http://127.0.0.1:8000` in a browser. The terminal prints the browser's raw request, but the browser usually shows an error or garbled output — because `hello world` does not follow the HTTP response format, and the browser does not know how to parse it. This server is a deliberately "invalid" control experiment for observing how browsers behave when faced with a malformed response.
 
 ## 4.2 What the Browser's Request Looks Like
 
@@ -91,6 +94,23 @@ while True:
 
 Run it and visit `http://127.0.0.1:8000` in a browser — the page shows a big "Hello, world".
 
+**What you'll see**: the terminal prints the request line of each request (browsers usually also fire a `/favicon.ico` request):
+
+```
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+```
+
+If you don't want to open a browser, curl shows the raw response including the status line and headers (more HTTP testing tools in 1.5.5):
+
+```bash
+curl -i http://127.0.0.1:8000/
+# HTTP/1.1 200 OK
+# Content-Type: text/html; charset=utf-8
+#
+# <h1>Hello, world</h1>
+```
+
 > Including `charset=utf-8` in `Content-Type` avoids mojibake for non-ASCII text.
 
 ## 4.4 Parsing the Path and Simple Routing
@@ -134,6 +154,14 @@ while True:
 
 Visiting `http://127.0.0.1:8000/index` and `http://127.0.0.1:8000/cart` shows different pages; any other path returns a 404 page.
 
+**What you'll see**: the terminal prints the path parsed from each request (note that `/favicon.ico` falls into the 404 branch too):
+
+```
+Request path: /index
+Request path: /favicon.ico
+Request path: /cart
+```
+
 ## 4.5 Limitations of a Hand-Rolled Web Server
 
 Working is not the same as production-ready. The server above has several obvious shortcomings:
@@ -141,6 +169,8 @@ Working is not the same as production-ready. The server above has several obviou
 - **One `recv(1024)` may not read the entire request** — this is exactly the sticky-packet/fragmentation problem from Chapter 3; a real implementation must read the body precisely according to `Content-Length`.
 - **Only one connection at a time**: a slow client blocks every subsequent request (see 3.2 and 3.3 for concurrency options).
 - **Routing, static files, and body parsing are all hand-written**: the code spirals out of control as features grow.
+- **Each connection is closed after one request**: HTTP/1.0 style; HTTP/1.1 defaults to keep-alive, and a real implementation must declare the `Connection` behavior in its response headers.
+- **Only GET is handled**: POST requests carry a body, which requires parsing `Content-Length` from the headers and then reading exactly that many bytes — another application of Chapter 3's "read the header, then read exactly that much" pattern.
 
 In real development, web frameworks solve these problems: Django/Flask in Python, Express in Node, and so on. They are essentially HTTP parsing and routing layers built on top of sockets. The [Django tutorial](../../../web-development/django/) in this repository picks up from here.
 
