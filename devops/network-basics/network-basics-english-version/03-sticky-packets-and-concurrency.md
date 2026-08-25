@@ -253,51 +253,55 @@ The server maintains a list of connected client sockets. In each loop iteration:
 2. Loop through all existing connections and try to `recv()` from each.
 3. Remove disconnected clients from the list.
 
+Complete runnable example: [non-blocking server](../examples/en/nonblocking_server.py) · [client](../examples/en/echo_client.py)
+
 ```python
-# server.py
+# nonblocking_server.py
 import socket
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow immediate rebind on restart (see 3.4.3)
 server.bind(('127.0.0.1', 9090))
 server.listen(5)
-server.setblocking(False)
+server.setblocking(False)  # Non-blocking: fail fast instead of waiting when nothing is ready
 
-connections = []
+connections = []  # All established client connections
 
 while True:
-    # Try to accept a new connection
+    # 1. Try to accept a new connection; accept raises BlockingIOError when there is none
     try:
         conn, addr = server.accept()
-        conn.setblocking(False)
+        conn.setblocking(False)  # New connections must also be non-blocking, or recv stalls the whole loop
         connections.append(conn)
         print(f"New connection from {addr}")
     except BlockingIOError:
-        pass
+        pass  # No new connection right now; keep polling
 
-    # Check each connection for incoming data
+    # 2. Check each existing connection for incoming data
     disconnected = []
     for conn in connections:
         try:
             msg = conn.recv(1024)
             if not msg:
-                # Client closed the connection gracefully
+                # recv returning empty bytes = the client closed the connection gracefully
                 disconnected.append(conn)
                 continue
 
             text = msg.decode()
-            if text == 'exit':
+            if text == 'exit':  # Client asked to quit
                 disconnected.append(conn)
                 continue
 
             print(f"Received: {text}")
             conn.send("Hello from server".encode())
         except BlockingIOError:
-            # No data available from this client right now
+            # This client has no data right now; skip it
             pass
         except ConnectionResetError:
+            # The client died abruptly (e.g. killed); recv raises instead of returning empty bytes
             disconnected.append(conn)
 
-    # Remove disconnected clients
+    # 3. Clean up disconnected clients after the loop (never remove while iterating — it breaks indexes)
     for conn in disconnected:
         if conn in connections:
             connections.remove(conn)
@@ -305,7 +309,7 @@ while True:
 ```
 
 ```python
-# client.py
+# echo_client.py
 import socket
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -367,41 +371,46 @@ The function **blocks** until at least one socket is ready, then returns three l
 
 ### 3.3.2 Server with `select`
 
+Complete runnable example: [select server](../examples/en/select_server.py) · [client](../examples/en/echo_client.py)
+
 ```python
+# select_server.py
 import socket
 import select
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow immediate rebind on restart (see 3.4.3)
 server.bind(('127.0.0.1', 9090))
 server.listen(5)
-server.setblocking(False)
+server.setblocking(False)  # Non-blocking: select notifies us instead of blind waiting
 
-# Start by monitoring the server socket for incoming connections
+# Watch list: the server socket is included — "new connection arrived" is a readable event for it
 read_list = [server]
 
 while True:
+    # Block until at least one socket in the list is readable; writable/exceptional lists stay empty
     readable, _, _ = select.select(read_list, [], [])
 
-    for sock in readable:
+    for sock in readable:  # Handle each socket that became ready this round
         if sock is server:
-            # New client connection
+            # Server socket ready = a new client connected
             conn, addr = server.accept()
-            conn.setblocking(False)
-            read_list.append(conn)
+            conn.setblocking(False)  # New connections must also be non-blocking, or recv stalls the whole loop
+            read_list.append(conn)   # Add to the watch list so future select calls monitor it
             print(f"New connection from {addr}")
         else:
-            # Existing client sent data
+            # Client socket ready = data arrived, or the peer disconnected
             try:
                 msg = sock.recv(1024)
                 if not msg:
-                    # Client disconnected
+                    # recv returning empty bytes = the peer closed the connection normally
                     print("Client disconnected")
-                    read_list.remove(sock)
+                    read_list.remove(sock)  # Remove from the watch list first, then close
                     sock.close()
-                    continue
+                    continue  # Move on to the next ready socket
 
                 text = msg.decode()
-                if text == 'exit':
+                if text == 'exit':  # Client asked to quit
                     print("Client exited")
                     read_list.remove(sock)
                     sock.close()
@@ -410,12 +419,13 @@ while True:
                 print(f"From client: {text}")
                 sock.send("Hello from server".encode())
             except ConnectionResetError:
+                # The peer died abruptly (e.g. killed); recv raises instead of returning empty bytes
                 read_list.remove(sock)
                 sock.close()
 ```
 
 ```python
-# client.py (same as before)
+# echo_client.py (same as 3.2.2)
 import socket
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
