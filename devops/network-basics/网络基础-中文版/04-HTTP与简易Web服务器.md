@@ -34,6 +34,8 @@ while True:
 
 用浏览器访问 `http://127.0.0.1:8000`，终端会打印出浏览器发来的原始请求，但浏览器通常会报错或显示异常——因为 `hello world` 不符合 HTTP 响应格式，浏览器不知道如何解析它。这个服务器是故意"不合法"的对照实验，用来观察浏览器面对非法响应时的行为。
 
+![[Pasted image 20260825164218.png|700]]
+
 ## 4.2 浏览器发来的请求长什么样
 
 上面打印出的内容大致如下：
@@ -161,6 +163,23 @@ while True:
 请求路径: /favicon.ico
 请求路径: /cart
 ```
+
+### 4.4.1 进阶：返回 HTML 文件
+
+真实网站的页面存放在磁盘文件里，而不是写在代码中。把 4.4 的路由分支换成"按路径读文件"，就是静态文件服务的雏形：
+
+```python
+# 路由分支内：按路径打开对应的 HTML 文件并返回内容
+if path == '/index':
+    with open('html/index.html', encoding='utf-8') as f:
+        body = f.read()
+    status = '200 OK'
+```
+
+两个注意点：
+
+- **文件不存在要返回 404**，而不是让服务器崩溃：读文件前用 `os.path.exists` 判断，或捕获 `FileNotFoundError`。
+- **`Content-Type` 要随文件类型变化**：`.html` 是 `text/html`，`.css` 是 `text/css`，`.png` 是 `image/png` ——浏览器靠它决定如何渲染。Web 框架的静态文件目录（如 Django 的 `static/`）本质上就是这套逻辑的完善版。
 
 ## 4.5 手写 Web 服务器的局限
 

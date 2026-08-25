@@ -162,6 +162,23 @@ Request path: /favicon.ico
 Request path: /cart
 ```
 
+### 4.4.1 Going Further: Serving HTML Files
+
+Real websites keep pages in files on disk, not inside code. Swap 4.4's routing branches from inline strings to "read a file by path", and you get the embryonic form of static file serving:
+
+```python
+# Inside a routing branch: open the HTML file matching the path and return it
+if path == '/index':
+    with open('html/index.html', encoding='utf-8') as f:
+        body = f.read()
+    status = '200 OK'
+```
+
+Two caveats:
+
+- **Return 404 when the file is missing** instead of crashing the server: check with `os.path.exists` before reading, or catch `FileNotFoundError`.
+- **`Content-Type` must follow the file type**: `.html` is `text/html`, `.css` is `text/css`, `.png` is `image/png` — the browser relies on it to decide how to render. A web framework's static directory (like Django's `static/`) is essentially a polished version of this exact logic.
+
 ## 4.5 Limitations of a Hand-Rolled Web Server
 
 Working is not the same as production-ready. The server above has several obvious shortcomings:
