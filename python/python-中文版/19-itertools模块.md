@@ -21,7 +21,7 @@ import itertools
 ```python
 from itertools import count, islice
 
-# Take the first 5 numbers starting from 10
+# 从 10 开始取前 5 个数
 for n in islice(count(10, 2), 5):
     print(n, end=" ")
 # 10 12 14 16 18
@@ -47,7 +47,7 @@ for idx, name in zip(count(1), names):
 ```python
 from itertools import cycle, islice
 
-# Repeat the status labels in rotation
+# 循环轮换状态标签
 colors = cycle(["红", "绿", "蓝"])
 print([next(colors) for _ in range(7)])
 # ['红', '绿', '蓝', '红', '绿', '蓝', '红']
@@ -81,7 +81,7 @@ from itertools import repeat
 print(list(repeat("默认值", 3)))
 # ['默认值', '默认值', '默认值']
 
-# Provide default values for zip
+# 为 zip 提供默认值
 fields = ["name", "age", "city"]
 print(list(zip(fields, repeat("未填写"))))
 # [('name', '未填写'), ('age', '未填写'), ('city', '未填写')]
@@ -92,7 +92,7 @@ print(list(zip(fields, repeat("未填写"))))
 ```python
 from itertools import count, islice
 
-# Slice an infinite iterator down to a finite part
+# 把无限迭代器切出有限的一段
 print(list(islice(count(1), 5)))
 # [1, 2, 3, 4, 5]
 ```
@@ -137,11 +137,11 @@ from itertools import islice
 
 data = range(100)
 
-print(list(islice(data, 5)))           # First 5 items
+print(list(islice(data, 5)))           # 前 5 项
 # [0, 1, 2, 3, 4]
-print(list(islice(data, 10, 15)))      # Items 10..14
+print(list(islice(data, 10, 15)))      # 第 10..14 项
 # [10, 11, 12, 13, 14]
-print(list(islice(data, 0, 20, 5)))    # Every 5th item
+print(list(islice(data, 0, 20, 5)))    # 每隔 5 项取一个
 # [0, 5, 10, 15]
 ```
 
@@ -151,9 +151,9 @@ print(list(islice(data, 0, 20, 5)))    # Every 5th item
 from itertools import islice
 
 it = iter(range(10))
-print(list(islice(it, 3)))   # Consumes 0, 1, 2
+print(list(islice(it, 3)))   # 消费掉 0, 1, 2
 # [0, 1, 2]
-print(list(islice(it, 3)))   # Continues from 3, not from 0
+print(list(islice(it, 3)))   # 从 3 继续，而不是从 0
 # [3, 4, 5]
 ```
 
@@ -240,11 +240,11 @@ print(list(compress(names, passed)))
 ```python
 from itertools import product
 
-# Nested loops as a flat iterator
+# 把嵌套循环变成扁平迭代器
 print(list(product("AB", [1, 2])))
 # [('A', 1), ('A', 2), ('B', 1), ('B', 2)]
 
-# Equivalent to: for x in "AB": for y in [1, 2]
+# 等价于：for x in "AB": for y in [1, 2]
 ```
 
 `repeat` 参数用于对同一序列做自身乘积，比如生成所有可能的密码位组合：
@@ -343,7 +343,7 @@ from itertools import groupby
 
 words = ["apple", "avocado", "banana", "blueberry", "cherry"]
 
-# Wrong: grouping unsorted data scatters same-key groups
+# 错误：对未排序的数据分组会把同键的组打散
 for key, group in groupby(words, key=len):
     print(key, list(group))
 # 5 ['apple']
@@ -360,7 +360,7 @@ from itertools import groupby
 
 words = ["apple", "avocado", "banana", "blueberry", "cherry"]
 
-# Right: sort by the same key used for grouping
+# 正确：按分组所用的同一个键排序
 words.sort(key=len)
 for key, group in groupby(words, key=len):
     print(key, list(group))
@@ -379,13 +379,13 @@ from itertools import groupby
 
 data = [1, 1, 2, 2]
 
-# Wrong: storing raw group iterators
+# 错误：直接保存原始的组迭代器
 groups = groupby(data)
 saved = [(k, g) for k, g in groups]
 print([list(g) for _, g in saved])
 # [[], []]
 
-# Right: materialize each group immediately
+# 正确：立即把每个组实体化
 groups = groupby(data)
 saved = [(k, list(g)) for k, g in groups]
 print(saved)
@@ -399,7 +399,7 @@ from itertools import groupby
 
 scores = [92, 85, 71, 64, 58, 41, 99]
 
-# Group scores into pass / fail buckets
+# 把分数分成及格 / 不及格两桶
 scores.sort()
 for passed, group in groupby(scores, key=lambda s: s >= 60):
     label = "及格" if passed else "不及格"
@@ -436,7 +436,7 @@ from itertools import pairwise
 print(list(pairwise("ABCD")))
 # [('A', 'B'), ('B', 'C'), ('C', 'D')]
 
-# Compute the day-over-day differences
+# 计算逐日差值
 temps = [20, 23, 19, 25]
 print([b - a for a, b in pairwise(temps)])
 # [3, -4, 6]
