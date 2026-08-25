@@ -38,19 +38,23 @@ This makes it impossible for the receiver to know where one message ends and the
 Complete runnable example: [TCP sticky packet demo — server](../examples/en/tcp_server_sticky_demo.py) · [client](../examples/en/tcp_client_sticky_demo.py)
 
 ```python
-# server.py
+# tcp_server_sticky_demo.py
 import socket
 
+# 1. Create a TCP socket, bind the address, and start listening
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Reuse the port immediately after a restart
 server.bind(('127.0.0.1', 9090))
 server.listen(5)
+
+# 2. Accept one client connection (three-way handshake happens here)
 conn, addr = server.accept()
 
-# Read in a loop until the client disconnects
+# 3. Read in a loop and observe sticky packets
 while True:
+    # recv(10) means "at most 10 bytes": one call may return several messages glued together
     info = conn.recv(10)
-    if not info:
+    if not info:  # recv returns empty bytes when the client closes the connection
         break
     print(f"Received ({len(info)} bytes): {info.decode()}")
 
@@ -59,13 +63,15 @@ server.close()
 ```
 
 ```python
-# client.py
+# tcp_client_sticky_demo.py
 import socket
 
+# 1. Create a TCP socket and connect to the server (three-way handshake happens automatically)
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 9090))
 
-# Send multiple small messages rapidly to increase sticky packet probability
+# 2. Send multiple small messages rapidly to increase sticky packet probability
+#    The sender calls send 10 times, but the receiver may collect them in far fewer recv calls
 for i in range(10):
     client.send(f"msg-{i}".encode())
 
@@ -128,17 +134,18 @@ Complete runnable examples: [util.py](../examples/en/util.py) · [server](../exa
 # util.py
 import struct
 
-HEADER_FORMAT = '!I'
-HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
-MAX_MESSAGE_SIZE = 16 * 1024 * 1024
+HEADER_FORMAT = '!I'                            # Unsigned 4-byte integer in network byte order (cross-platform)
+HEADER_SIZE = struct.calcsize(HEADER_FORMAT)    # Number of header bytes: 4
+MAX_MESSAGE_SIZE = 16 * 1024 * 1024             # Maximum message size guard: 16 MB
 
 
 def recv_exactly(sock, size):
     """Read exactly size bytes, or return None if the peer disconnects."""
     chunks = bytearray()
     while len(chunks) < size:
+        # recv may return fewer bytes than requested; size - len(chunks) is what's still missing
         chunk = sock.recv(size - len(chunks))
-        if not chunk:
+        if not chunk:  # recv returns empty bytes when the peer disconnects
             return None
         chunks.extend(chunk)
     return bytes(chunks)
@@ -150,6 +157,7 @@ def send_with_length(sock, message):
     length = len(data)
     if length > MAX_MESSAGE_SIZE:
         raise ValueError('message is too large')
+    # Send the 4-byte length header first, then the body; sendall guarantees full delivery
     sock.sendall(struct.pack(HEADER_FORMAT, length))
     sock.sendall(data)
 
@@ -159,13 +167,17 @@ def recv_with_length(sock):
 
     Returns the decoded message, or None if the peer disconnected.
     """
+    # Step 1: read the 4-byte header
     header = recv_exactly(sock, HEADER_SIZE)
     if header is None:
         return None
 
+    # Step 2: unpack the body length
     length = struct.unpack(HEADER_FORMAT, header)[0]
     if length > MAX_MESSAGE_SIZE:
         raise ValueError('message is too large')
+
+    # Step 3: read exactly that many bytes and decode
     data = recv_exactly(sock, length)
     if data is None:
         return None
@@ -180,17 +192,21 @@ Both server and client use these two helpers directly:
 import socket
 from util import send_with_length, recv_with_length
 
+# 1. Create a TCP socket, bind the address, and start listening
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('127.0.0.1', 9090))
 server.listen(5)
+
+# 2. Accept one client connection
 conn, addr = server.accept()
 
+# 3. Receive and reply in a loop (the length prefix guarantees one recv_with_length = one complete message)
 while True:
     msg = recv_with_length(conn)
-    if msg is None:
+    if msg is None:  # Client disconnected
         print("Client disconnected unexpectedly")
         break
-    if msg == 'exit':
+    if msg == 'exit':  # Client quit voluntarily
         print("Client exited")
         break
 
@@ -206,12 +222,14 @@ server.close()
 import socket
 from util import send_with_length, recv_with_length
 
+# 1. Create a TCP socket and connect to the server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 9090))
 
+# 2. Loop: read a message -> send -> wait for the reply
 while True:
     info = input("Message: ")
-    if info == '':
+    if info == '':  # Empty messages are not allowed
         print("Cannot send empty message")
         continue
 
@@ -312,12 +330,14 @@ while True:
 # echo_client.py
 import socket
 
+# 1. Create a TCP socket and connect to the server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 9090))
 
+# 2. Loop: read a message -> send -> wait for the reply
 while True:
     info = input("Message: ")
-    if info == '':
+    if info == '':  # Empty messages are not allowed
         print("Cannot send empty message")
         continue
 
@@ -325,6 +345,7 @@ while True:
     if info == 'exit':
         break
 
+    # recv blocks waiting for the server's reply (connection-oriented, no address needed)
     msg = client.recv(1024)
     print(f"Server reply: {msg.decode()}")
 
@@ -437,15 +458,17 @@ while True:
 ```
 
 ```python
-# echo_client.py (same as 3.2.2)
+# echo_client.py
 import socket
 
+# 1. Create a TCP socket and connect to the server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 9090))
 
+# 2. Loop: read a message -> send -> wait for the reply
 while True:
     info = input("Message: ")
-    if info == '':
+    if info == '':  # Empty messages are not allowed
         print("Cannot send empty message")
         continue
 
@@ -453,6 +476,7 @@ while True:
     if info == 'exit':
         break
 
+    # recv blocks waiting for the server's reply (connection-oriented, no address needed)
     msg = client.recv(1024)
     print(f"Server reply: {msg.decode()}")
 

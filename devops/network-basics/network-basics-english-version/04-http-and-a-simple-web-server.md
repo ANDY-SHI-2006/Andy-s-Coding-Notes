@@ -20,14 +20,17 @@ Complete runnable example: [the invalid-response control experiment](../examples
 # http_server_naive.py
 import socket
 
+# Create the most basic TCP server (socket() with no arguments defaults to IPv4 + TCP)
 sock = socket.socket()
 sock.bind(('127.0.0.1', 8000))
 sock.listen(5)
 
 while True:
     conn, addr = sock.accept()
+    # Read and print the browser's raw HTTP request
     headers = conn.recv(1024).decode()
-    print(headers)  # Print the raw request from the browser
+    print(headers)
+    # Deliberately reply with content that is NOT a valid HTTP response, to observe the browser's reaction
     conn.send(b'hello world')
     conn.close()
 ```
@@ -78,20 +81,22 @@ Complete runnable example: [minimal web server](../examples/en/http_server_minim
 # http_server_minimal.py
 import socket
 
+# 1. Create a TCP socket, bind the address, and start listening (SO_REUSEADDR allows port reuse after restarts)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(('127.0.0.1', 8000))
 sock.listen(5)
 
 while True:
+    # 2. Accept a browser connection and read the request
     conn, addr = sock.accept()
     request = conn.recv(1024).decode()
     print(request.split('\r\n')[0])  # Print only the request line, e.g. GET / HTTP/1.1
 
-    # Reply in HTTP response format: status line + headers + empty line + body
+    # 3. Reply in HTTP response format: status line + headers + empty line + body
     conn.sendall(b'HTTP/1.1 200 OK\r\n')
     conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
-    conn.sendall(b'\r\n')
+    conn.sendall(b'\r\n')  # The empty line marks the end of the response headers
     conn.sendall('<h1>Hello, world</h1>'.encode('utf-8'))
     conn.close()
 ```
@@ -135,6 +140,7 @@ Complete runnable example: [web server with routing](../examples/en/http_server_
 # http_server_routing.py
 import socket
 
+# 1. Create a TCP socket, bind the address, and start listening
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(('127.0.0.1', 8000))
@@ -144,12 +150,12 @@ while True:
     conn, addr = sock.accept()
     request = conn.recv(1024).decode()
 
-    # The request line looks like "GET /cart HTTP/1.1"; split out the path
+    # 2. Parse the path: the request line looks like "GET /cart HTTP/1.1"; split out the second field
     request_line = request.split('\r\n')[0]
     path = request_line.split(' ')[1]
     print(f"Request path: {path}")
 
-    # Choose the status code and body based on the path
+    # 3. Choose the status code and body based on the path (the embryonic form of routing)
     if path == '/index':
         status, body = '200 OK', '<h1>Home</h1>'
     elif path == '/cart':
@@ -157,6 +163,7 @@ while True:
     else:
         status, body = '404 Not Found', '<h1>404 Not Found</h1>'
 
+    # 4. Reply in HTTP response format: status line + headers + empty line + body
     conn.sendall(f'HTTP/1.1 {status}\r\n'.encode())
     conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
     conn.sendall(b'\r\n')
@@ -197,9 +204,11 @@ Complete runnable example: [static file server](../examples/en/http_server_stati
 import os
 import socket
 
+# Absolute path of the html directory (based on this file's location, independent of the launch directory)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, 'html')
 
+# 1. Create a TCP socket, bind the address, and start listening
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(('127.0.0.1', 8000))
@@ -212,12 +221,13 @@ while True:
     path = request.split('\r\n')[0].split(' ')[1]
     print(f"Request path: {path}")
 
-    # Map the path to a file under html/; / defaults to index.html
+    # 2. Map the path to a file under html/; / defaults to index.html
     if path == '/':
         path = '/index.html'
+    # lstrip('/') removes the leading slash so it is not treated as an absolute path
     file_path = os.path.join(HTML_DIR, path.lstrip('/'))
 
-    # Serve the file if it exists, otherwise the 404 page
+    # 3. Serve the file if it exists, otherwise the 404 page
     if os.path.isfile(file_path):
         with open(file_path, encoding='utf-8') as f:
             body = f.read()
@@ -227,11 +237,44 @@ while True:
             body = f.read()
         status = '404 Not Found'
 
+    # 4. Reply in HTTP response format
     conn.sendall(f'HTTP/1.1 {status}\r\n'.encode())
     conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
     conn.sendall(b'\r\n')
     conn.sendall(body.encode('utf-8'))
     conn.close()
+```
+
+The two companion page files:
+
+```html
+<!-- html/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Home</h1>
+    <p>This page is served from the html/index.html file on disk.</p>
+</body>
+</html>
+```
+
+```html
+<!-- html/404.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>404</title>
+</head>
+<body>
+    <h1>404 Not Found</h1>
+    <p>This page is served from the html/404.html file on disk.</p>
+</body>
+</html>
 ```
 
 Run it and visit `http://127.0.0.1:8000/` to see the contents of `index.html`; any unknown path returns the `404.html` page with a 404 status code.

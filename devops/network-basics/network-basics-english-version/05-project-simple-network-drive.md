@@ -45,6 +45,8 @@ netdisk/
 
 `db/` and `files/` are created automatically when the server starts; no manual setup is needed.
 
+Complete runnable project: [server](../examples/en/netdisk/server/main.py) · [client](../examples/en/netdisk/client/main.py) (run `python main.py` in the `server/` and `client/` directories respectively)
+
 ### 5.1.3 Protocol Design
 
 The protocol reuses the **length-prefix scheme** from Chapter 3 (4-byte header in `struct`'s `!I` network byte order, plus an exact-read loop), with two conventions:
@@ -54,12 +56,10 @@ The protocol reuses the **length-prefix scheme** from Chapter 3 (4-byte header i
 
 ## 5.2 The Shared Protocol Module
 
-`utils/protocol.py` is identical on the client and the server — it is the foundation of the whole project:
-
-Complete runnable examples: [server](../examples/en/netdisk/server/main.py) · [client](../examples/en/netdisk/client/main.py) (run `python main.py` in each directory)
+`utils/protocol.py` is identical on the client and the server — it is the foundation of the whole project (full code: [utils/protocol.py](../examples/en/netdisk/server/utils/protocol.py); the client's file with the same name is identical):
 
 ```python
-# utils/protocol.py (excerpt)
+# utils/protocol.py
 import os
 import struct
 
@@ -96,9 +96,38 @@ def recv_msg(sock):
     if data is None:
         return None
     return data.decode('utf-8')
+
+
+def send_file(sock, file_path):
+    """Send the 4-byte file size first, then the file content in chunks."""
+    size = os.path.getsize(file_path)
+    sock.sendall(struct.pack(HEADER_FORMAT, size))
+    with open(file_path, 'rb') as f:
+        while True:
+            chunk = f.read(CHUNK_SIZE)
+            if not chunk:
+                break
+            sock.sendall(chunk)
+
+
+def recv_file(sock, file_path):
+    """Receive the 4-byte file size, then read chunks into file_path. Returns True on success."""
+    header = _recv_exactly(sock, HEADER_SIZE)
+    if header is None:
+        return False
+    size = struct.unpack(HEADER_FORMAT, header)[0]
+    received = 0
+    with open(file_path, 'wb') as f:
+        while received < size:
+            chunk = sock.recv(min(CHUNK_SIZE, size - received))
+            if not chunk:
+                return False
+            f.write(chunk)
+            received += len(chunk)
+    return True
 ```
 
-File transfer (`send_file` / `recv_file`) follows the same idea: send the 4-byte file size first, then move data in `CHUNK_SIZE` blocks while the receiver loops until it has every byte — exactly the "read the header, then read precisely that many bytes" pattern from Section 3.1.
+Like message transfer, `send_file` / `recv_file` send the 4-byte file size first and then move data in `CHUNK_SIZE` blocks — exactly the "read the header, then read precisely that many bytes" pattern from Section 3.1.
 
 ## 5.3 Server Implementation
 
@@ -135,6 +164,8 @@ class Server:
             handler = ClientHandler(conn, addr)
             threading.Thread(target=handler.run, daemon=True).start()
 ```
+
+Full code: [core/server.py](../examples/en/netdisk/server/core/server.py)
 
 > File transfer is a stateful, multi-step process ("command + several receives"). In the single-threaded `select` model from 3.3, one client transferring a large file would stall everyone else. One thread per connection is the simplest workable concurrency scheme here; larger production systems would use a thread pool or `asyncio`.
 
@@ -187,7 +218,11 @@ class ClientHandler:
         self._reply(True, f'{username} registered')
 ```
 
+Full code: [core/handler.py](../examples/en/netdisk/server/core/handler.py)
+
 Dispatching through a dictionary (`{'reg': self.reg, ...}`) beats a long `if/elif` chain: adding a command only takes one new method and one dictionary entry.
+
+`exit` is not in the dispatch table: the client handles it locally by closing the connection and quitting; the server notices through `recv_msg` returning `None`.
 
 ### 5.3.3 Upload and Download
 
@@ -208,6 +243,8 @@ Upload and download are both two-phase flows: confirm first, then transfer. Uplo
         ok = protocol.recv_file(self.conn, os.path.join(target_dir, filename))
         print(f"Upload {'succeeded' if ok else 'failed'}: {self.username}/{filename}")
 ```
+
+Full code: [core/handler.py](../examples/en/netdisk/server/core/handler.py) (same file as 5.3.2)
 
 `download` mirrors it: the server confirms the file exists, replies `READY`, then calls `send_file`. Note that `os.path.basename` strips any directory components from the client-supplied name, keeping only the final segment.
 
@@ -241,9 +278,11 @@ The client prints the menu, parses input, and sends commands. Every command meth
         return json.loads(protocol.recv_msg(self.sock))
 ```
 
+Full code: [core/handler.py](../examples/en/netdisk/client/core/handler.py)
+
 ## 5.5 Running the Demo
 
-Start the server first, then the client (each in its own directory):
+Start the server first, then the client (each in its own directory). The demo's `upload` needs a local file: create `notes.txt` with a few lines of content in the `client/` directory first:
 
 ```bash
 cd examples/en/netdisk/server && python main.py
@@ -273,7 +312,7 @@ Download finished: .../client/downloads/notes.txt
 >>> exit
 ```
 
-## 5.6 Limitations and Exercises
+## 5.6 Limitations
 
 This implementation optimizes for teaching clarity; a real network drive would go much further:
 
@@ -281,14 +320,6 @@ This implementation optimizes for teaching clarity; a real network drive would g
 - **No transfer integrity check**: add an MD5/SHA checksum to confirm the file arrived intact.
 - **Large files and resume**: the 4-byte size field caps files at ~4 GB, and an interrupted transfer must restart from scratch.
 - **Path safety**: the `ls` subdirectory argument does not defend against `..`; strict deployments should verify paths stay inside the user's directory.
-
-**Exercises:**
-
-1. Implement a `passwd` command: let a logged-in user change their password.
-2. Implement an `info` command: show the account's registration time and total drive usage.
-3. Add subdirectory support to `download` (mirror `upload`'s `subdir` parameter).
-4. Switch password storage to hashing (only `reg` and `login` need to change).
-
 > **Summary**: This project introduces no new knowledge — its value is in combination. Socket connections, the length-prefix protocol, JSON messages, file IO, and object-oriented dispatch each come from earlier chapters. If you can read and reproduce this project on your own, the course has done its job.
 
 [← Previous: HTTP and a Simple Web Server](04-http-and-a-simple-web-server.md) | [Back to networking basics](README.md)

@@ -20,14 +20,17 @@
 # http_server_naive.py
 import socket
 
+# 创建一个最普通的 TCP 服务器（socket() 不带参数时默认就是 IPv4 + TCP）
 sock = socket.socket()
 sock.bind(('127.0.0.1', 8000))
 sock.listen(5)
 
 while True:
     conn, addr = sock.accept()
+    # 读取并打印浏览器发来的原始 HTTP 请求
     headers = conn.recv(1024).decode()
-    print(headers)  # 打印浏览器发来的原始请求
+    print(headers)
+    # 故意回复一段不符合 HTTP 响应格式的内容，观察浏览器面对非法响应的反应
     conn.send(b'hello world')
     conn.close()
 ```
@@ -78,20 +81,22 @@ HTTP 响应同样由四部分组成：
 # http_server_minimal.py
 import socket
 
+# 1. 创建 TCP socket 并绑定地址，开始监听（SO_REUSEADDR 允许重启后立即复用端口）
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(('127.0.0.1', 8000))
 sock.listen(5)
 
 while True:
+    # 2. 接受一个浏览器连接，读取请求
     conn, addr = sock.accept()
     request = conn.recv(1024).decode()
     print(request.split('\r\n')[0])  # 只打印请求行，如 GET / HTTP/1.1
 
-    # 按 HTTP 响应格式回包：状态行 + 响应头 + 空行 + 响应体
+    # 3. 按 HTTP 响应格式回包：状态行 + 响应头 + 空行 + 响应体
     conn.sendall(b'HTTP/1.1 200 OK\r\n')
-    conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
-    conn.sendall(b'\r\n')
+    conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')  # charset=utf-8 防止中文乱码
+    conn.sendall(b'\r\n')  # 空行标志响应头结束
     conn.sendall('<h1>你好，世界</h1>'.encode('utf-8'))
     conn.close()
 ```
@@ -135,6 +140,7 @@ curl -i http://127.0.0.1:8000/
 # http_server_routing.py
 import socket
 
+# 1. 创建 TCP socket 并绑定地址，开始监听
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(('127.0.0.1', 8000))
@@ -144,12 +150,12 @@ while True:
     conn, addr = sock.accept()
     request = conn.recv(1024).decode()
 
-    # 请求行形如 "GET /cart HTTP/1.1"，按空格拆出路径
+    # 2. 解析路径：请求行形如 "GET /cart HTTP/1.1"，按空格拆出第 2 个字段
     request_line = request.split('\r\n')[0]
     path = request_line.split(' ')[1]
     print(f"请求路径: {path}")
 
-    # 根据路径选择状态码和响应体
+    # 3. 根据路径选择状态码和响应体（路由的雏形）
     if path == '/index':
         status, body = '200 OK', '<h1>首页</h1>'
     elif path == '/cart':
@@ -157,6 +163,7 @@ while True:
     else:
         status, body = '404 Not Found', '<h1>404 页面不存在</h1>'
 
+    # 4. 按 HTTP 响应格式回包：状态行 + 响应头 + 空行 + 响应体
     conn.sendall(f'HTTP/1.1 {status}\r\n'.encode())
     conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
     conn.sendall(b'\r\n')
@@ -197,9 +204,11 @@ while True:
 import os
 import socket
 
+# html 目录的绝对路径（基于本文件所在位置，与从哪个目录启动无关）
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, 'html')
 
+# 1. 创建 TCP socket 并绑定地址，开始监听
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(('127.0.0.1', 8000))
@@ -212,12 +221,13 @@ while True:
     path = request.split('\r\n')[0].split(' ')[1]
     print(f"请求路径: {path}")
 
-    # 按路径映射到 html 目录下的文件，/ 默认指向 index.html
+    # 2. 按路径映射到 html 目录下的文件，/ 默认指向 index.html
     if path == '/':
         path = '/index.html'
+    # lstrip('/') 去掉开头的斜杠，避免被当成绝对路径
     file_path = os.path.join(HTML_DIR, path.lstrip('/'))
 
-    # 文件存在则返回内容，否则返回 404 页面
+    # 3. 文件存在则返回内容，否则返回 404 页面
     if os.path.isfile(file_path):
         with open(file_path, encoding='utf-8') as f:
             body = f.read()
@@ -227,11 +237,44 @@ while True:
             body = f.read()
         status = '404 Not Found'
 
+    # 4. 按 HTTP 响应格式回包
     conn.sendall(f'HTTP/1.1 {status}\r\n'.encode())
     conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
     conn.sendall(b'\r\n')
     conn.sendall(body.encode('utf-8'))
     conn.close()
+```
+
+配套的两个页面文件：
+
+```html
+<!-- html/index.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>首页</title>
+</head>
+<body>
+    <h1>首页</h1>
+    <p>这个页面来自磁盘上的 html/index.html 文件。</p>
+</body>
+</html>
+```
+
+```html
+<!-- html/404.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>404</title>
+</head>
+<body>
+    <h1>404 页面不存在</h1>
+    <p>这个页面来自磁盘上的 html/404.html 文件。</p>
+</body>
+</html>
 ```
 
 运行后访问 `http://127.0.0.1:8000/` 会看到 `index.html` 的内容；访问不存在的路径会看到 `404.html` 的内容，且状态码为 404。
