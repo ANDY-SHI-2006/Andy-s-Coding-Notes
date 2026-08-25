@@ -17,9 +17,9 @@
 ```python
 import argparse
 
-parser = argparse.ArgumentParser()          # Step 1: create parser
-parser.add_argument("name")                 # Step 2: declare argument
-args = parser.parse_args()                  # Step 3: parse sys.argv
+parser = argparse.ArgumentParser()          # 第 1 步：创建解析器
+parser.add_argument("name")                 # 第 2 步：声明参数
+args = parser.parse_args()                  # 第 3 步：解析 sys.argv
 
 print(f"Hello, {args.name}!")
 ```
@@ -40,7 +40,7 @@ Hello, Alice!
 ```python
 import sys
 
-# Manual parsing with sys.argv
+# 用 sys.argv 手动解析
 if len(sys.argv) < 2:
     print("Usage: python hello.py <name>")
     sys.exit(1)
@@ -69,8 +69,8 @@ print(f"Hello, {name}!")
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("src")              # First positional argument
-parser.add_argument("dst")              # Second positional argument
+parser.add_argument("src")              # 第一个位置参数
+parser.add_argument("dst")              # 第二个位置参数
 args = parser.parse_args(["a.txt", "b.txt"])
 
 print(args.src)     # a.txt
@@ -87,11 +87,11 @@ print(args.dst)     # b.txt
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("count", type=int)          # Convert to int
-parser.add_argument("ratio", type=float)        # Convert to float
+parser.add_argument("count", type=int)          # 转换为 int
+parser.add_argument("ratio", type=float)        # 转换为 float
 args = parser.parse_args(["3", "0.5"])
 
-print(args.count + 1)       # 4 (already an int)
+print(args.count + 1)       # 4 (已经是 int)
 print(args.ratio * 2)       # 1.0
 ```
 
@@ -119,7 +119,7 @@ error: argument count: invalid int value: 'abc'
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("files", nargs="+")         # One or more files
+parser.add_argument("files", nargs="+")         # 一个或多个文件
 args = parser.parse_args(["a.txt", "b.txt", "c.txt"])
 
 print(args.files)           # ['a.txt', 'b.txt', 'c.txt']
@@ -133,7 +133,7 @@ print(args.files)           # ['a.txt', 'b.txt', 'c.txt']
 
 ```python
 parser.add_argument("src", metavar="SOURCE")
-# Usage line shows:  prog SOURCE
+# 用法行会显示： prog SOURCE
 ```
 
 ## 27.3 可选参数
@@ -216,7 +216,7 @@ parser.add_argument("--force", action="store_true")
 parser.add_argument("--tag", action="append", default=[])
 args = parser.parse_args(["-vv", "--force", "--tag", "a", "--tag", "b"])
 
-print(args.verbose)     # 2 (-v appeared twice)
+print(args.verbose)     # 2 (-v 出现了两次)
 print(args.force)       # True
 print(args.tag)         # ['a', 'b']
 ```
@@ -264,7 +264,7 @@ options:
 import argparse
 
 parser = argparse.ArgumentParser(
-    prog="wordcount",                               # Custom program name
+    prog="wordcount",                               # 自定义程序名
     description="Count lines and words in text files.",
 )
 parser.add_argument("files", nargs="+", metavar="FILE",
@@ -307,11 +307,11 @@ import argparse
 parser = argparse.ArgumentParser(prog="task")
 subparsers = parser.add_subparsers(dest="command", required=True)
 
-# Subcommand: add
+# 子命令：add
 add_parser = subparsers.add_parser("add", help="add a task")
 add_parser.add_argument("title", help="task title")
 
-# Subcommand: done
+# 子命令：done
 done_parser = subparsers.add_parser("done", help="mark a task as done")
 done_parser.add_argument("id", type=int, help="task id")
 
@@ -353,14 +353,14 @@ def main():
 
     add_parser = subparsers.add_parser("add", help="add a task")
     add_parser.add_argument("title", help="task title")
-    add_parser.set_defaults(func=cmd_add)       # Bind handler
+    add_parser.set_defaults(func=cmd_add)       # 绑定处理函数
 
     done_parser = subparsers.add_parser("done", help="mark a task as done")
     done_parser.add_argument("id", type=int, help="task id")
     done_parser.set_defaults(func=cmd_done)
 
     args = parser.parse_args()
-    args.func(args)                             # Dispatch to handler
+    args.func(args)                             # 分发到处理函数
 
 
 if __name__ == "__main__":
