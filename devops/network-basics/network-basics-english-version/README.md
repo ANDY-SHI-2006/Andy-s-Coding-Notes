@@ -10,8 +10,6 @@ A practical introduction to computer networking fundamentals and socket programm
 4. [HTTP and a Simple Web Server](04-http-and-a-simple-web-server.md) — *HTTP request/response format, hand-rolled socket web server, path parsing and simple routing*
 5. [Project: A Simple Network Drive](05-project-simple-network-drive.md) — *project design, JSON + length-prefix protocol, threaded server, register/login/upload/download*
 
----
-
 ## Navigation
 
 Each chapter contains navigation links at the top and bottom for easy browsing between sections.

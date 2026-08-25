@@ -122,6 +122,8 @@ print(length_tuple[0])   # 100
 
 The length-prefix protocol is wrapped directly into three reusable helpers in `util.py`. The key piece is `recv_exactly`: `recv(n)` may return fewer than `n` bytes at once, so it loops until the buffer is full (returning `None` if the peer disconnects). `recv_with_length` packages the three-step flow from earlier — read the 4-byte header, unpack the length, read exactly that many bytes — and adds a maximum-message-size guard.
 
+Complete runnable examples: [util.py](../examples/en/util.py) · [server](../examples/en/length_prefix_server.py) · [client](../examples/en/length_prefix_client.py)
+
 ```python
 # util.py
 import struct
@@ -174,7 +176,7 @@ def recv_with_length(sock):
 Both server and client use these two helpers directly:
 
 ```python
-# server.py
+# length_prefix_server.py
 import socket
 from util import send_with_length, recv_with_length
 
@@ -200,7 +202,7 @@ server.close()
 ```
 
 ```python
-# client.py
+# length_prefix_client.py
 import socket
 from util import send_with_length, recv_with_length
 
@@ -230,8 +232,6 @@ client.close()
 - For production systems, consider using established protocols or libraries (e.g., HTTP, JSON-RPC, gRPC, `asyncio` streams, `struct` with network byte order `!I`).
 - The length prefix uses `!I`, an unsigned 4-byte integer in network byte order, for cross-platform communication.
 - TCP examples use `sendall()` to ensure complete transmission. If using `send()`, loop over its returned byte count.
-
----
 
 ## 3.2 Non-Blocking Sockets
 
@@ -346,8 +346,6 @@ client.close()
 | No need for threading or multiprocessing | Inefficient when most connections are idle |
 
 For serious servers, section 3.3 (IO multiplexing) is usually preferred over pure non-blocking polling.
-
----
 
 ## 3.3 IO Multiplexing with `select`
 
