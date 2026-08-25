@@ -463,4 +463,52 @@ client.close()
 
 > **Summary**: Non-blocking sockets + `select` is a classic way to build single-threaded concurrent network servers. For modern Python projects, `asyncio` builds on the same ideas but provides a cleaner, higher-level API.
 
+## 3.4 Advanced TCP Topics
+
+Chapter 1 covered TCP's reliability mechanisms (1.3.3) and connection management (1.3.5). This section adds a few TCP topics you will actually run into in practice.
+
+### 3.4.1 Flow Control vs Congestion Control
+
+TCP has two independent "speed limit" mechanisms that are easy to confuse:
+
+| Mechanism | Problem it solves | How it works |
+|------|--------------|----------|
+| **Flow control** | The receiver can't keep up | The receiver advertises a **sliding window** saying how many bytes it can still accept; the sender must not exceed it |
+| **Congestion control** | The network can't keep up | The sender maintains a **congestion window**, probing from a slow start and backing off on packet loss (e.g. Reno, CUBIC) |
+
+In short: 1.3.3 explains how TCP "delivers correctly"; this is about how TCP "avoids overwhelming the receiver and the network". The actual send rate is limited by the smaller of the two windows.
+
+### 3.4.2 The Nagle Algorithm and `TCP_NODELAY`
+
+3.1.1 mentioned the **Nagle algorithm** as one cause of sticky packets: it buffers small segments and sends them together to reduce the number of tiny packets on the wire. That is throughput-friendly but latency-unfriendly.
+
+Latency-sensitive applications (games, remote terminals, instant messaging) usually turn it off:
+
+```python
+conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+```
+
+The trade-off: without Nagle's coalescing, sticky packets become *more* likely — all the more reason to use a length-prefix protocol (3.1) when disabling it.
+
+### 3.4.3 `TIME_WAIT` and `SO_REUSEADDR`
+
+The side that actively closes a connection enters the **TIME_WAIT** state, holding the port for roughly 1–4 minutes (waiting for a possibly retransmitted final ACK). That is why restarting a server sometimes fails with `Address already in use` — the old connection has not finished TIME_WAIT yet.
+
+Every server example in this course since Chapter 2 sets `SO_REUSEADDR`, precisely to let the server rebind a port that is sitting in TIME_WAIT:
+
+```python
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+```
+
+### 3.4.4 Keepalive and Half-Open Connections
+
+If the peer loses power or network without sending a FIN, the local connection becomes **half-open** — `recv` blocks forever, waiting for a notification that will never come.
+
+Two countermeasures:
+
+- **TCP-level keepalive**: the `SO_KEEPALIVE` option makes the OS send periodic probes, but the default idle time is two hours — usually too slow to be useful.
+- **Application-level heartbeats**: send a small "still alive" message in your own protocol (e.g. every 30 seconds) and declare the peer dead after several misses — the more common and controllable approach. If the Chapter 5 netdisk project ever needs "client went offline" detection, this is where to start.
+
+> **Summary**: What these four topics have in common: none of them shows up in a demo that "just works", but all of them show up in production incidents. Knowing they exist gives you a direction when troubleshooting.
+
 [← Previous: Socket Programming](02-socket-programming.md) | [Next: HTTP and a Simple Web Server →](04-http-and-a-simple-web-server.md)

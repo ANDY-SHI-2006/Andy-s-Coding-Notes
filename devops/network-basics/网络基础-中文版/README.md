@@ -6,7 +6,7 @@
 
 1. [网络基础](01-网络基础.md) — *网络架构、寻址与名称解析、网络分层、TCP/UDP、HTTP/HTTPS、故障排查*
 2. [Socket 编程](02-Socket编程.md) — *数据编码、Socket 生命周期与核心 API、UDP socket、TCP socket、UDP/TCP API 对比、UDP 进阶话题*
-3. [粘包与并发处理](03-粘包与并发处理.md) — *粘包问题、struct 长度前缀、非阻塞 socket、select IO 多路复用*
+3. [粘包与并发处理](03-粘包与并发处理.md) — *粘包问题、struct 长度前缀、非阻塞 socket、select IO 多路复用、TCP 进阶话题*
 4. [HTTP 与简易 Web 服务器](04-HTTP与简易Web服务器.md) — *HTTP 请求/响应格式、手写 socket Web 服务器、路径解析与简单路由*
 5. [实战项目：简易网盘系统](05-实战项目-简易网盘系统.md) — *项目设计、JSON + 长度前缀协议、多线程服务端、注册/登录/上传/下载*
 
