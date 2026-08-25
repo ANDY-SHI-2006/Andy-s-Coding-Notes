@@ -359,7 +359,11 @@ readable, writable, exceptional = select.select(rlist, wlist, xlist)
 | `wlist` | Sockets to monitor for ability to send (write-ready) |
 | `xlist` | Sockets to monitor for exceptional conditions (usually empty) |
 
-**When does a socket count as "readable"?** A socket is marked read-ready when any of the following is true:
+The function **blocks** until at least one socket is ready, then returns three lists of ready sockets.
+
+### 3.3.1 When Is a Socket "Readable"?
+
+A socket is marked read-ready when any of the following is true:
 
 | Condition | Which socket it happens on | The operation to perform |
 |------|---------------------|-----------|
@@ -367,11 +371,9 @@ readable, writable, exceptional = select.select(rlist, wlist, xlist)
 | Data is waiting in the receive buffer | An established client socket | Call `recv()` to read the data |
 | The peer closed the connection (FIN received) | An established client socket | `recv()` returns an empty byte string (EOF) immediately |
 
-Mind the perspective in the last two rows: "connecting" and "sending a message" are both initiated by the client, but the ready objects the server program perceives are **two different sockets** — the former is the listening socket (`server`), the latter is the connection socket (`conn`) returned by `accept()` that represents that specific client. The `if sock is server` branch in 3.3.2's code distinguishes exactly these two cases.
+Mind the perspective in the last two rows: "connecting" and "sending a message" are both initiated by the client, but the ready objects the server program perceives are **two different sockets** — the former is the listening socket (`server`), the latter is the connection socket (`conn`) returned by `accept()` that represents that specific client. The `if sock is server` branch in 3.3.3's code distinguishes exactly these two cases.
 
-The function **blocks** until at least one socket is ready, then returns three lists of ready sockets.
-
-### 3.3.1 Basic Workflow
+### 3.3.2 Basic Workflow
 
 1. Put the server socket into the `rlist`.
 2. When `select` returns, check each ready socket:
@@ -379,7 +381,7 @@ The function **blocks** until at least one socket is ready, then returns three l
    - If the ready socket is a **client connection**, call `recv()` to read data.
 3. Remove closed connections from the `rlist`.
 
-### 3.3.2 Server with `select`
+### 3.3.3 Server with `select`
 
 Complete runnable example: [select server](../examples/en/select_server.py) · [client](../examples/en/echo_client.py)
 
@@ -457,7 +459,7 @@ while True:
 client.close()
 ```
 
-### 3.3.3 Advantages of `select`
+### 3.3.4 Advantages of `select`
 
 | Feature | Benefit |
 |---------|---------|
@@ -466,7 +468,7 @@ client.close()
 | Lower CPU usage | No busy polling; blocked until something happens |
 | Portable | `select` is available on Unix, Linux, macOS, and Windows |
 
-### 3.3.4 Limitations and Alternatives
+### 3.3.5 Limitations and Alternatives
 
 | Limitation | Explanation |
 |------------|-------------|
@@ -474,7 +476,7 @@ client.close()
 | Performance | For thousands of connections, `poll` or `epoll` (Linux) / `kqueue` (BSD/macOS) perform better |
 | Modern Python | For high-level concurrency, `asyncio` with `async`/`await` is recommended |
 
-### 3.3.5 Common Use Cases
+### 3.3.6 Common Use Cases
 
 - Chat servers where one thread handles many connections
 - Simple TCP proxy or relay services
