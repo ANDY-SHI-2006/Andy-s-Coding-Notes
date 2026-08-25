@@ -558,15 +558,21 @@ for key, value in data.items():
 Do not add or remove items from a sequence while iterating over it. The iterator skips elements because indices shift.
 
 ```python
+items = [1, -1, -2, 3]
+
 # WRONG: skips elements
 for item in items:
     if item < 0:
         items.remove(item)
+print(items)   # [1, -2, 3] — WRONG: -2 was skipped!
+
+items = [1, -1, -2, 3]
 
 # CORRECT: iterate over a copy
 for item in items[:]:
     if item < 0:
         items.remove(item)
+print(items)   # [1, 3] — CORRECT
 ```
 
 #### 8.2.1.7 Loop Variable Scope
