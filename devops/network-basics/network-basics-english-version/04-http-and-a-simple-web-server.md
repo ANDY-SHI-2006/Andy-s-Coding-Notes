@@ -98,12 +98,20 @@ while True:
 
 Run it and visit `http://127.0.0.1:8000` in a browser — the page shows a big "Hello, world".
 
+Screenshot of an actual run:
+
+![[http-server-browser-hello.png]]
+
 **What you'll see**: the terminal prints the request line of each request (browsers usually also fire a `/favicon.ico` request):
 
 ```
 GET / HTTP/1.1
 GET /favicon.ico HTTP/1.1
 ```
+
+Screenshot of an actual run (after visiting `/`, the browser automatically requests `/favicon.ico`):
+
+![[http-server-terminal-requests.png]]
 
 If you don't want to open a browser, curl shows the raw response including the status line and headers (more HTTP testing tools in 1.5.5):
 
@@ -158,6 +166,12 @@ while True:
 
 Visiting `http://127.0.0.1:8000/index` and `http://127.0.0.1:8000/cart` shows different pages; any other path returns a 404 page.
 
+Screenshots of an actual run — `/index` and `/cart` each return a different page:
+
+![[http-routing-browser-index.png]]
+
+![[http-routing-browser-cart.png]]
+
 **What you'll see**: the terminal prints the path parsed from each request (note that `/favicon.ico` falls into the 404 branch too):
 
 ```
@@ -166,24 +180,68 @@ Request path: /favicon.ico
 Request path: /cart
 ```
 
-### 4.4.1 Going Further: Serving HTML Files
+Screenshot of an actual run (visiting `/index` and `/cart` in turn; the `/favicon.ico` in between is the browser's automatic request, which falls into the 404 branch):
+
+![[http-routing-terminal-paths.png]]
+
+> The examples so far only handle GET requests — browsers send GET when visiting pages; POST is for submitting data to the server (e.g. forms). See 1.4.2 for the full list of methods and status codes.
+
+## 4.5 Serving HTML Files from Disk
 
 Real websites keep pages in files on disk, not inside code. Swap 4.4's routing branches from inline strings to "read a file by path", and you get the embryonic form of static file serving:
 
+Complete runnable example: [static file server](../examples/en/http_server_static.py) (page files live in the [html/](../examples/en/html/) directory)
+
 ```python
-# Inside a routing branch: open the HTML file matching the path and return it
-if path == '/index':
-    with open('html/index.html', encoding='utf-8') as f:
-        body = f.read()
-    status = '200 OK'
+# http_server_static.py
+import os
+import socket
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+HTML_DIR = os.path.join(BASE_DIR, 'html')
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('127.0.0.1', 8000))
+sock.listen(5)
+print("Serving on http://127.0.0.1:8000")
+
+while True:
+    conn, addr = sock.accept()
+    request = conn.recv(1024).decode()
+    path = request.split('\r\n')[0].split(' ')[1]
+    print(f"Request path: {path}")
+
+    # Map the path to a file under html/; / defaults to index.html
+    if path == '/':
+        path = '/index.html'
+    file_path = os.path.join(HTML_DIR, path.lstrip('/'))
+
+    # Serve the file if it exists, otherwise the 404 page
+    if os.path.isfile(file_path):
+        with open(file_path, encoding='utf-8') as f:
+            body = f.read()
+        status = '200 OK'
+    else:
+        with open(os.path.join(HTML_DIR, '404.html'), encoding='utf-8') as f:
+            body = f.read()
+        status = '404 Not Found'
+
+    conn.sendall(f'HTTP/1.1 {status}\r\n'.encode())
+    conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
+    conn.sendall(b'\r\n')
+    conn.sendall(body.encode('utf-8'))
+    conn.close()
 ```
 
-Two caveats:
+Run it and visit `http://127.0.0.1:8000/` to see the contents of `index.html`; any unknown path returns the `404.html` page with a 404 status code.
 
-- **Return 404 when the file is missing** instead of crashing the server: check with `os.path.exists` before reading, or catch `FileNotFoundError`.
+Two directions for going further:
+
 - **`Content-Type` must follow the file type**: `.html` is `text/html`, `.css` is `text/css`, `.png` is `image/png` — the browser relies on it to decide how to render. A web framework's static directory (like Django's `static/`) is essentially a polished version of this exact logic.
+- **Path safety**: a real server must guard against path traversal (e.g. `GET /../../etc/passwd`); this example skips it for teaching purposes.
 
-## 4.5 Limitations of a Hand-Rolled Web Server
+## 4.6 Limitations of a Hand-Rolled Web Server
 
 Working is not the same as production-ready. The server above has several obvious shortcomings:
 

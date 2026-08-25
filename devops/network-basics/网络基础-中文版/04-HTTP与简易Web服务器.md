@@ -98,12 +98,20 @@ while True:
 
 运行后用浏览器访问 `http://127.0.0.1:8000`，页面会显示一行大字"你好，世界"。
 
+实跑截图：
+
+![[http-server-browser-hello.png]]
+
 **运行效果**：终端会打印出每个请求的请求行（浏览器通常还会顺带请求一次 `/favicon.ico`）：
 
 ```
 GET / HTTP/1.1
 GET /favicon.ico HTTP/1.1
 ```
+
+实跑截图（先访问 `/`，浏览器随即自动请求 `/favicon.ico`）：
+
+![[http-server-terminal-requests.png|700]]
 
 不想开浏览器时，也可以用 curl 直接观察原始响应，包括状态行和响应头（更多 HTTP 测试工具见 1.5.5）：
 
@@ -158,6 +166,12 @@ while True:
 
 浏览器访问 `http://127.0.0.1:8000/index` 与 `http://127.0.0.1:8000/cart` 会看到不同页面；访问其他路径会得到 404 页面。
 
+实跑截图——`/index` 与 `/cart` 分别返回不同页面：
+
+![[http-routing-browser-index.png]]
+
+![[http-routing-browser-cart.png]]
+
 **运行效果**：终端会打印每个请求解析出的路径（注意 `/favicon.ico` 也会走进 404 分支）：
 
 ```
@@ -166,24 +180,68 @@ while True:
 请求路径: /cart
 ```
 
-### 4.4.1 进阶：返回 HTML 文件
+实跑截图（依次访问 `/index`、`/cart`；中间的 `/favicon.ico` 是浏览器自动请求，落入 404 分支）：
+
+![[http-routing-terminal-paths.png]]
+
+> 目前的示例只处理 GET 请求——浏览器访问页面发出的都是 GET；POST 用于向服务器提交数据（如表单）。方法与状态码的完整说明见 1.4.2。
+
+## 4.5 从磁盘提供 HTML 文件
 
 真实网站的页面存放在磁盘文件里，而不是写在代码中。把 4.4 的路由分支换成"按路径读文件"，就是静态文件服务的雏形：
 
+完整可运行示例：[静态文件服务器](../examples/zh/http_server_static.py)（页面文件在 [html/](../examples/zh/html/) 目录下）
+
 ```python
-# 路由分支内：按路径打开对应的 HTML 文件并返回内容
-if path == '/index':
-    with open('html/index.html', encoding='utf-8') as f:
-        body = f.read()
-    status = '200 OK'
+# http_server_static.py
+import os
+import socket
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+HTML_DIR = os.path.join(BASE_DIR, 'html')
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('127.0.0.1', 8000))
+sock.listen(5)
+print("Serving on http://127.0.0.1:8000")
+
+while True:
+    conn, addr = sock.accept()
+    request = conn.recv(1024).decode()
+    path = request.split('\r\n')[0].split(' ')[1]
+    print(f"请求路径: {path}")
+
+    # 按路径映射到 html 目录下的文件，/ 默认指向 index.html
+    if path == '/':
+        path = '/index.html'
+    file_path = os.path.join(HTML_DIR, path.lstrip('/'))
+
+    # 文件存在则返回内容，否则返回 404 页面
+    if os.path.isfile(file_path):
+        with open(file_path, encoding='utf-8') as f:
+            body = f.read()
+        status = '200 OK'
+    else:
+        with open(os.path.join(HTML_DIR, '404.html'), encoding='utf-8') as f:
+            body = f.read()
+        status = '404 Not Found'
+
+    conn.sendall(f'HTTP/1.1 {status}\r\n'.encode())
+    conn.sendall(b'Content-Type: text/html; charset=utf-8\r\n')
+    conn.sendall(b'\r\n')
+    conn.sendall(body.encode('utf-8'))
+    conn.close()
 ```
 
-两个注意点：
+运行后访问 `http://127.0.0.1:8000/` 会看到 `index.html` 的内容；访问不存在的路径会看到 `404.html` 的内容，且状态码为 404。
 
-- **文件不存在要返回 404**，而不是让服务器崩溃：读文件前用 `os.path.exists` 判断，或捕获 `FileNotFoundError`。
-- **`Content-Type` 要随文件类型变化**：`.html` 是 `text/html`，`.css` 是 `text/css`，`.png` 是 `image/png` ——浏览器靠它决定如何渲染。Web 框架的静态文件目录（如 Django 的 `static/`）本质上就是这套逻辑的完善版。
+两个进阶方向：
 
-## 4.5 手写 Web 服务器的局限
+- **`Content-Type` 要随文件类型变化**：`.html` 是 `text/html`，`.css` 是 `text/css`，`.png` 是 `image/png`——浏览器靠它决定如何渲染。Web 框架的静态文件目录（如 Django 的 `static/`）本质上就是这套逻辑的完善版。
+- **路径安全**：真实服务器必须防范路径穿越（如 `GET /../../etc/passwd`），本示例为教学从略。
+
+## 4.6 手写 Web 服务器的局限
 
 能跑通不代表能用在生产环境。上面的服务器有几个明显短板：
 
