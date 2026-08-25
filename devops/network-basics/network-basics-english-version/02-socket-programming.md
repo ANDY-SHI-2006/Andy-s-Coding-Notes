@@ -816,4 +816,47 @@ Start the server first, then the client. Type a normal message to receive a repl
 
 > **Key difference**: UDP `sendto`/`recvfrom` always carry the address; TCP `send`/`recv` don't need it because the connection is already established.
 
+## 2.7 Advanced UDP Topics
+
+UDP is often called an "unreliable" protocol, but unreliable does not mean unusable. This section briefly covers a few advanced UDP topics to help you understand when and how to use it.
+
+### 2.7.1 What "Unreliable" Actually Means
+
+UDP makes three no-guarantees:
+
+| Phenomenon | Meaning | Example of a tolerance design |
+|------|------|----------------|
+| **Loss** | A datagram may be lost in transit, and the sender is never notified | Live video simply skips a lost frame instead of retransmitting |
+| **Reordering** | A datagram sent later may arrive first | The receiver numbers packets and reassembles by sequence |
+| **Duplication** | The same datagram may arrive more than once | The receiver deduplicates by sequence number |
+
+So why do DNS, real-time audio/video, and online games still choose UDP? Because **low latency** matters more than "losing a little now and then": TCP retransmits to guarantee reliability, and the waiting caused by retransmission is worse than the loss itself in real-time scenarios. UDP is also leaner — an 8-byte header versus at least 20 bytes for TCP.
+
+### 2.7.2 MTU and Fragmentation
+
+The **MTU (Maximum Transmission Unit)** of an Ethernet link is usually 1500 bytes. Once a UDP datagram exceeds this limit, the IP layer **fragments** it into smaller packets; the receiver must collect every fragment to reassemble it, and **losing any single fragment dooms the entire datagram**.
+
+So in practice, keep UDP datagrams at or below **1472 bytes**:
+
+```
+1500 (MTU) - 20 (IP header) - 8 (UDP header) = 1472 bytes
+```
+
+To send larger payloads, split them at the application layer instead of relying on IP fragmentation.
+
+### 2.7.3 Broadcast and Multicast
+
+UDP supports **one-to-many** communication, which TCP cannot do:
+
+- **Broadcast**: send to every host on the LAN (e.g. `255.255.255.255`); the socket must enable the `SO_BROADCAST` option first. Typical use: automatic service discovery on a LAN.
+- **Multicast**: send to hosts that have joined a specific multicast group (`224.0.0.0` – `239.255.255.255`); only interested receivers get the packets. Typical uses: IPTV, market-data feeds.
+
+Both build on UDP's connectionless nature; TCP is point-to-point and cannot broadcast.
+
+### 2.7.4 Rebuilding Reliability on Top of UDP: QUIC
+
+UDP's "unreliability" is not incurable — the application layer can implement acknowledgments, retransmission, and ordering itself, adding exactly as much reliability as it needs. This is precisely the idea behind **QUIC** (the foundation of HTTP/3, see 1.4.3): it runs on top of UDP and handles reliable delivery, encryption, and connection management itself, keeping UDP's flexibility and low latency while avoiding TCP's head-of-line blocking, where one lost packet stalls the whole stream.
+
+> **Summary**: UDP trades guarantees for low latency, low overhead, and one-to-many capability. Understanding its limits (fragmentation, loss, reordering) is what lets you use it in the right scenarios.
+
 [Next: Sticky Packets and Concurrency →](03-sticky-packets-and-concurrency.md)

@@ -5,7 +5,7 @@ A practical introduction to computer networking fundamentals and socket programm
 ## Table of Contents
 
 1. [Networking Fundamentals](01-networking-fundamentals.md) — *network architecture, addressing and name resolution, network layers, TCP/UDP, HTTP/HTTPS, and troubleshooting*
-2. [Socket Programming](02-socket-programming.md) — *data encoding, socket lifecycle and core APIs, UDP sockets, TCP sockets, UDP/TCP API comparison*
+2. [Socket Programming](02-socket-programming.md) — *data encoding, socket lifecycle and core APIs, UDP sockets, TCP sockets, UDP/TCP API comparison, advanced UDP topics*
 3. [Sticky Packets and Concurrency](03-sticky-packets-and-concurrency.md) — *sticky packet problem, struct length prefixing, non-blocking sockets, IO multiplexing with select*
 4. [HTTP and a Simple Web Server](04-http-and-a-simple-web-server.md) — *HTTP request/response format, hand-rolled socket web server, path parsing and simple routing*
 5. [Project: A Simple Network Drive](05-project-simple-network-drive.md) — *project design, JSON + length-prefix protocol, threaded server, register/login/upload/download*
