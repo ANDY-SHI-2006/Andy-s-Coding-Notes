@@ -4,14 +4,35 @@
 
 ---
 
-## 🌐 Documentation Versions | 文档版本
+## 📝 About | 关于
 
-This repository provides documentation in both English and Chinese. Click the links below to view the user guide in your preferred language:
-本仓库提供中英文双版本文档，点击下方链接查看对应语言的使用说明：
+This repository serves two purposes: recording my own learning journey (notes beat memory), and sharing beginner-friendly notes to help others avoid common pitfalls.
+本仓库有两个目的：记录自己的学习轨迹（好记性不如烂笔头）；分享避坑经验，帮助初学者少走弯路。
 
-| 🇺🇸 English Version | 🇨🇳 中文版 |
-|:------------------:|:---------:|
-| **[English Documentation →](README-English%20version.md)** | **[中文使用文档 →](README-中文版.md)** |
+Notes are pure Markdown, focused on concept explanations, and updated as I learn. While carefully maintained, mistakes may exist — feel free to point them out.
+笔记为纯 Markdown 文档，专注知识点讲解，随学习进度持续补充。虽经整理，仍可能存在疏漏，欢迎指正。
+
+---
+
+## 🛠️ How to Solve Programming Problems | 编程问题解决方法论
+
+### ❌ The Wrong Way | 错误的方式
+
+1. Stare at the problem / 坐在电脑前读题目
+2. Confusion / 一脸懵逼
+3. Recall a vaguely similar problem / 回想之前做过的类似题目
+4. Write code that looks like it might work / 快速敲一段看起来可能能解决问题的代码
+5. Compile → 10,000 syntax errors / 编译，出现 10,000 个语法错误
+6. Break down and submit a broken program / 心态崩了，提交一个跑不通的程序
+7. Fail the exam, switch to gardening 🌱 / 考试挂科，转去学园艺 🌱
+
+### ✅ The Engineering Way | 正确的工程化方法
+
+1. **Understand the problem** — be precise about what to solve / **明确问题** —— 准确理解需要解决什么问题
+2. **Describe input and output** / **描述输入输出**
+3. **Work through an example by hand** / **手动演算示例**
+4. **Design the algorithm** — write down the steps / **设计算法** —— 写下分步骤的解决流程
+5. **Write code** — only after fully understanding the problem / **编写代码** —— 只有完全理解问题后再动手
 
 ---
 
@@ -69,10 +90,15 @@ This repository provides documentation in both English and Chinese. Click the li
 
 ---
 
-## 📝 About | 关于
+## 🎯 Who Is This For | 适合人群
 
-This repository contains my personal programming study notes, documenting my learning journey in coding.
-本仓库包含我的个人编程学习笔记，记录我的编程学习历程。
+- 🌱 **Beginners** starting with code / **编程新手** —— 刚开始接触代码，需要基础入门资料
+- 📝 **Self-learners** looking for concise, systematic notes / **自学者** —— 寻找简洁、系统的参考笔记
+- 🎯 **Students** who want to understand concepts, not memorize / **学生** —— 希望理解编程核心概念，而非死记硬背
 
 Most topics exist in paired Chinese and English versions; a few are currently available in one language only (marked with —).
 大部分主题提供中英文双版本；少数主题目前只有单一语言版本（以 — 标注）。
+
+---
+
+**Happy coding! | 祝你 coding 愉快！** 🚀

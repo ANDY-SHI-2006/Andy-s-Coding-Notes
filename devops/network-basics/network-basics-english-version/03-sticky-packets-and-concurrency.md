@@ -72,6 +72,10 @@ for i in range(10):
 client.close()
 ```
 
+![[tcp-sticky-packet-demo.png]]
+
+> Actual run: the client sends 10 messages (`msg-0` … `msg-9`, 5 bytes each) back to back, but the server's `recv(10)` repeatedly merges two messages into one read (e.g. `msg-1msg-2`) — message boundaries are completely lost. This is the sticky packet problem.
+
 ### 3.1.3 Naive Workaround: Delay Between Sends
 
 Adding `time.sleep(1)` between sends can reduce the problem because the OS may send the first packet before the next message is written. However, this is **not reliable** and severely hurts performance.
