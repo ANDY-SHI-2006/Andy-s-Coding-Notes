@@ -52,11 +52,11 @@ Count:       2
 import sys
 
 def main():
-    args = sys.argv[1:]            # Skip the script name
+    args = sys.argv[1:]            # 跳过脚本名
 
     if len(args) != 2:
         print(f"Usage: python {sys.argv[0]} <num1> <num2>", file=sys.stderr)
-        sys.exit(1)                # Non-zero exit code means failure
+        sys.exit(1)                # 非零退出码表示失败
 
     try:
         a = float(args[0])
@@ -145,12 +145,12 @@ import sys
 def check_age(age):
     if age < 0:
         print("Error: age cannot be negative", file=sys.stderr)
-        sys.exit(1)              # Exit immediately with code 1
+        sys.exit(1)              # 立即以退出码 1 退出
     print(f"Age {age} is valid")
 
 check_age(25)                    # Age 25 is valid
 check_age(-3)                    # Error: age cannot be negative
-print("This line never runs")    # Never reached
+print("This line never runs")    # 永远不会执行到这里
 ```
 
 ### 26.2.2 退出码约定
@@ -165,9 +165,9 @@ print("This line never runs")    # Never reached
 ```python
 import sys
 
-sys.exit(0)      # Success
-sys.exit(1)      # General error
-sys.exit(2)      # Misuse of command-line arguments (convention)
+sys.exit(0)      # 成功
+sys.exit(1)      # 一般错误
+sys.exit(2)      # 命令行参数误用（惯例）
 ```
 
 **注意：** 如果给 `sys.exit()` 传入一个字符串，Python 会把这个字符串打印到 `stderr` 并以退出码 `1` 结束程序：
@@ -176,7 +176,7 @@ sys.exit(2)      # Misuse of command-line arguments (convention)
 import sys
 
 sys.exit("Fatal error: config file not found")
-# Prints the message to stderr, exits with code 1
+# 把消息打印到 stderr，并以退出码 1 退出
 ```
 
 在命令行中可以检查上一条命令的退出码：
@@ -234,11 +234,11 @@ C:\Python314\Lib\site-packages
 import sys
 from pathlib import Path
 
-# Add a sibling directory to the search path
+# 把同级目录加入搜索路径
 extra_dir = Path(__file__).resolve().parent.parent / "common"
 sys.path.insert(0, str(extra_dir))
 
-import my_utils          # Now importable from the added directory
+import my_utils          # 现在可以从添加的目录导入了
 ```
 
 - `sys.path.append(p)` 把路径加到**末尾**，优先级最低。
@@ -276,10 +276,10 @@ import my_utils          # Now importable from the added directory
 ```python
 import sys
 
-sys.stdout.write("Normal output\n")      # Same as print()
-sys.stderr.write("Error message\n")      # Goes to the error stream
+sys.stdout.write("Normal output\n")      # 与 print() 相同
+sys.stderr.write("Error message\n")      # 进入错误流
 
-line = sys.stdin.readline()              # Reads one line from stdin
+line = sys.stdin.readline()              # 从 stdin 读一行
 ```
 
 `print()` 本质上就是向 `sys.stdout` 写入；`print(..., file=sys.stderr)` 则把内容送往标准错误流。
@@ -303,7 +303,7 @@ python add.py a b 2> errors.log       # Only stderr goes into the file
 import sys
 from io import StringIO
 
-# Capture everything printed inside the block
+# 捕获块内打印的所有内容
 buffer = StringIO()
 original = sys.stdout
 sys.stdout = buffer
@@ -311,7 +311,7 @@ try:
     print("This is captured")
     print("Not shown on the terminal")
 finally:
-    sys.stdout = original               # Always restore stdout
+    sys.stdout = original               # 总是恢复 stdout
 
 captured = buffer.getvalue()
 print(f"Captured: {captured!r}")
@@ -340,7 +340,7 @@ import sys
 
 def main():
     for lineno, line in enumerate(sys.stdin, start=1):
-        # Strip newline and convert to upper case
+        # 去掉换行并转为大写
         sys.stdout.write(f"{lineno}: {line.rstrip().upper()}\n")
 
 if __name__ == "__main__":
@@ -362,8 +362,8 @@ echo -e "hello\nworld" | python upper.py
 ```python
 import sys
 
-print(sys.version)         # Full version string
-print(sys.version_info)    # Structured tuple-like object
+print(sys.version)         # 完整版本字符串
+print(sys.version_info)    # 结构化的类元组对象
 ```
 
 输出示例（Python 3.14）：
@@ -420,10 +420,10 @@ print(f"Platform: {sys.platform}, config dir: {config_dir}")
 ```python
 import sys
 
-print(sys.maxsize)                     # 9223372036854775807 on 64-bit
+print(sys.maxsize)                     # 64 位上为 9223372036854775807
 
 bits = 64 if sys.maxsize > 2**32 else 32
-print(f"{bits}-bit Python")            # 64-bit Python
+print(f"{bits}-bit Python")            # 64 位 Python
 ```
 
 ### 26.5.4 递归深度限制
@@ -443,15 +443,15 @@ import sys
 
 def countdown(n):
     print(n)
-    countdown(n - 1)                   # Missing base case!
+    countdown(n - 1)                   # 缺少基准情形！
 
 try:
-    sys.setrecursionlimit(50)          # Lower the limit for the demo
+    sys.setrecursionlimit(50)          # 为演示调低限制
     countdown(10)
 except RecursionError:
     print("RecursionError: maximum depth exceeded")
 finally:
-    sys.setrecursionlimit(1000)        # Restore the default
+    sys.setrecursionlimit(1000)        # 恢复默认值
 ```
 
 输出（深度计数因调用栈开销略有出入，思路不变）：
