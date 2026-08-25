@@ -64,7 +64,7 @@ print(cube(2))     # 8
 ```python
 from functools import partial
 
-# Convert strings to integers with a fixed base
+# 用固定进制把字符串转换为整数
 hex_to_int = partial(int, base=16)
 
 print(hex_to_int("FF"))   # 255
@@ -78,7 +78,7 @@ print(hex_to_int("A"))    # 10
 ```python
 from functools import reduce
 
-# Product of all elements
+# 所有元素的乘积
 numbers = [1, 2, 3, 4]
 product = reduce(lambda x, y: x * y, numbers)
 print(product)   # 24
@@ -89,12 +89,12 @@ print(product)   # 24
 ```python
 from functools import reduce
 
-# Join strings without repeated concatenation
+# 拼接字符串而不反复做连接运算
 words = ["Hello", " ", "World", "!"]
 sentence = reduce(lambda a, b: a + b, words)
 print(sentence)   # Hello World!
 
-# Find maximum
+# 求最大值
 values = [3, 7, 2, 9, 4]
 maximum = reduce(lambda a, b: a if a > b else b, values)
 print(maximum)   # 9
@@ -115,7 +115,7 @@ def fibonacci(n):
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)
 
-print(fibonacci(100))   # Fast, because intermediate results are cached
+print(fibonacci(100))   # 很快，因为中间结果已被缓存
 ```
 
 - `maxsize=None` 表示不限制缓存大小。
