@@ -32,10 +32,10 @@ import json
 
 data = {
     "name": "Andy",
-    "scores": [90, 85],        # list becomes array
-    "point": (1, 2),           # tuple also becomes array
-    "active": True,            # True becomes true
-    "address": None,           # None becomes null
+    "scores": [90, 85],        # list 变成数组
+    "point": (1, 2),           # tuple 也变成数组
+    "active": True,            # True 变成 true
+    "address": None,           # None 变成 null
 }
 
 print(json.dumps(data))
@@ -141,7 +141,7 @@ data = {"city": "北京", "greeting": "你好"}
 text = json.dumps(data, ensure_ascii=False)
 print(text)    # {"city": "北京", "greeting": "你好"}
 
-# Round trip still works
+# 往返转换依然正常
 back = json.loads(text)
 print(back["city"])    # 北京
 ```
@@ -195,7 +195,7 @@ import os
 
 FILENAME = "students.json"
 
-# Save data
+# 保存数据
 students = [
     {"name": "小明", "score": 92},
     {"name": "小红", "score": 88},
@@ -203,7 +203,7 @@ students = [
 with open(FILENAME, "w", encoding="utf-8") as f:
     json.dump(students, f, ensure_ascii=False, indent=2)
 
-# Load data back
+# 读回数据
 with open(FILENAME, "r", encoding="utf-8") as f:
     loaded = json.load(f)
 
@@ -212,7 +212,7 @@ for s in loaded:
 # 小明 92
 # 小红 88
 
-os.remove(FILENAME)    # Clean up
+os.remove(FILENAME)    # 清理
 ```
 
 这种模式是「程序退出前保存状态、启动时恢复状态」的常见做法。
@@ -229,7 +229,7 @@ if os.path.exists(FILENAME):
     with open(FILENAME, "r", encoding="utf-8") as f:
         settings = json.load(f)
 else:
-    settings = {}    # Use defaults when the file does not exist
+    settings = {}    # 文件不存在时使用默认值
 
 print(settings)    # {}
 ```
@@ -322,7 +322,7 @@ from datetime import datetime
 
 def my_default(obj):
     if isinstance(obj, datetime):
-        return obj.strftime("%Y-%m-%d %H:%M:%S")    # Convert to string
+        return obj.strftime("%Y-%m-%d %H:%M:%S")    # 转换为字符串
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 event = {"title": "会议", "time": datetime(2026, 8, 17, 10, 0)}
@@ -365,7 +365,7 @@ class MyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.strftime("%Y-%m-%d %H:%M:%S")
-        return super().default(obj)    # Let the base class raise TypeError
+        return super().default(obj)    # 让基类抛出 TypeError
 
 event = {"title": "会议", "time": datetime(2026, 8, 17, 10, 0)}
 
@@ -410,10 +410,10 @@ JSON 规定 object 的键必须是字符串。即使 Python 字典用的是 `int
 ```python
 import json
 
-scores = {1001: "小明", 1002: "小红"}    # int keys
+scores = {1001: "小明", 1002: "小红"}    # int 键
 
 text = json.dumps(scores, ensure_ascii=False)
-print(text)    # {"1001": "小明", "1002": "小红"} -- keys became strings
+print(text)    # {"1001": "小明", "1002": "小红"} -- 键变成了字符串
 
 restored = json.loads(text)
 try:
@@ -492,9 +492,9 @@ JSON 对格式的要求比 Python 字面量严格得多：字符串必须用双�
 import json
 
 bad_texts = [
-    "{'name': 'Andy'}",        # Single quotes are not allowed
-    '{"a": 1,}',               # Trailing comma
-    '{"a": True}',             # Must be lowercase true
+    "{'name': 'Andy'}",        # 不允许单引号
+    '{"a": 1,}',               # 尾随逗号
+    '{"a": True}',             # 必须是小写的 true
 ]
 
 for text in bad_texts:
