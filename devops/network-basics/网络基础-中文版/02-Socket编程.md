@@ -249,7 +249,7 @@ data = client.recv(1024)
 client.settimeout(5.0)
 ```
 
-设置阻塞操作的超时时间（单位为秒），超时后抛出 `socket.timeout` 异常，防止永久阻塞。
+设置阻塞操作的超时时间（单位为秒），超时后抛出 `socket.timeout` 异常，防止永久阻塞。生产代码应捕获 `socket.timeout`，并根据业务决定重试、关闭连接或返回错误。
 
 #### 2.3.4.2 `setsockopt()`：Socket 选项
 

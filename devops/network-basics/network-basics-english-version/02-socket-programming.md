@@ -249,7 +249,7 @@ data = client.recv(1024)
 client.settimeout(5.0)
 ```
 
-Sets a timeout (in seconds) for blocking operations, raising `socket.timeout` instead of blocking forever.
+Sets a timeout (in seconds) for blocking operations, raising `socket.timeout` instead of blocking forever. Production code should catch `socket.timeout` and decide whether to retry, close the connection, or return an error.
 
 #### 2.3.4.2 `setsockopt()`: Socket Options
 

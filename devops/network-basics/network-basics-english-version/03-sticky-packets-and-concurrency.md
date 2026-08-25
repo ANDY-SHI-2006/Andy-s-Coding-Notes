@@ -235,14 +235,6 @@ client.close()
 
 ## 3.2 Non-Blocking Sockets
 
-Network programs should also use reasonable timeouts so that connect, receive, or send operations do not block forever. For example:
-
-```python
-client.settimeout(5.0)  # Raise TimeoutError after 5 seconds
-```
-
-Production code should catch `socket.timeout` and decide whether to retry, close the connection, or return an error.
-
 By default, socket methods like `accept()` and `recv()` are **blocking**: the program pauses until a client connects or data arrives. This is fine for a single client, but it makes a single thread unable to handle many clients simultaneously.
 
 ### 3.2.1 What Is Non-Blocking?
