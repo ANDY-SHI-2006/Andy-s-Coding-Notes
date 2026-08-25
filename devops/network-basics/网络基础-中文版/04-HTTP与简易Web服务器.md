@@ -34,7 +34,9 @@ while True:
 
 用浏览器访问 `http://127.0.0.1:8000`，终端会打印出浏览器发来的原始请求，但浏览器通常会报错或显示异常——因为 `hello world` 不符合 HTTP 响应格式，浏览器不知道如何解析它。这个服务器是故意"不合法"的对照实验，用来观察浏览器面对非法响应时的行为。
 
-![[Pasted image 20260825164218.png|700]]
+实跑效果：Chrome 直接报错 `ERR_INVALID_HTTP_RESPONSE`（"发送了无效的响应"）：
+
+![[browser-invalid-http-response.png|700]]
 
 ## 4.2 浏览器发来的请求长什么样
 

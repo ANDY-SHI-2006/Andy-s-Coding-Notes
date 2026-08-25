@@ -34,6 +34,10 @@ while True:
 
 Visit `http://127.0.0.1:8000` in a browser. The terminal prints the browser's raw request, but the browser usually shows an error or garbled output — because `hello world` does not follow the HTTP response format, and the browser does not know how to parse it. This server is a deliberately "invalid" control experiment for observing how browsers behave when faced with a malformed response.
 
+In practice, Chrome flat-out reports `ERR_INVALID_HTTP_RESPONSE` ("sent an invalid response"):
+
+![[browser-invalid-http-response.png|700]]
+
 ## 4.2 What the Browser's Request Looks Like
 
 The printed content looks roughly like this:
