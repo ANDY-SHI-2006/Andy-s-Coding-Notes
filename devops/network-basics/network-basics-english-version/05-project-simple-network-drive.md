@@ -40,10 +40,11 @@ netdisk/
     ├── config/setting.py    # Server address, download directory
     ├── core/client.py       # Connection setup
     ├── core/handler.py      # Interactive menu and command parsing
-    └── utils/protocol.py    # Same protocol implementation as the server
+    ├── utils/protocol.py    # Same protocol implementation as the server
+    └── downloads/           # Created at runtime: downloaded files
 ```
 
-`db/` and `files/` are created automatically when the server starts; no manual setup is needed.
+`db/` and `files/` are created automatically when the server starts; `downloads/` is created by the client on the first download. No manual setup is needed.
 
 Complete runnable project: [server](../examples/en/netdisk/server/main.py) · [client](../examples/en/netdisk/client/main.py) (run `python main.py` in the `server/` and `client/` directories respectively)
 

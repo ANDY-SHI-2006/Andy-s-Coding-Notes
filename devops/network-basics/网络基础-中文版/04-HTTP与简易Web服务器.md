@@ -279,6 +279,14 @@ while True:
 
 运行后访问 `http://127.0.0.1:8000/` 会看到 `index.html` 的内容；访问不存在的路径会看到 `404.html` 的内容，且状态码为 404。
 
+实跑截图——访问 `/` 返回 `index.html`，访问 `/hello`（不存在）返回 404 页面；终端打印解析出的路径：
+
+![[http-static-browser-index.png]]
+
+![[http-static-browser-404.png]]
+
+![[http-static-terminal.png]]
+
 两个进阶方向：
 
 - **`Content-Type` 要随文件类型变化**：`.html` 是 `text/html`，`.css` 是 `text/css`，`.png` 是 `image/png`——浏览器靠它决定如何渲染。Web 框架的静态文件目录（如 Django 的 `static/`）本质上就是这套逻辑的完善版。

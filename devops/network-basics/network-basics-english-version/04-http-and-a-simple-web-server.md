@@ -279,6 +279,14 @@ The two companion page files:
 
 Run it and visit `http://127.0.0.1:8000/` to see the contents of `index.html`; any unknown path returns the `404.html` page with a 404 status code.
 
+Screenshots of an actual run — visiting `/` returns `index.html`, visiting `/hello` (which does not exist) returns the 404 page; the terminal prints the parsed paths:
+
+![[http-static-browser-index.png]]
+
+![[http-static-browser-404.png]]
+
+![[http-static-terminal.png]]
+
 Two directions for going further:
 
 - **`Content-Type` must follow the file type**: `.html` is `text/html`, `.css` is `text/css`, `.png` is `image/png` — the browser relies on it to decide how to render. A web framework's static directory (like Django's `static/`) is essentially a polished version of this exact logic.
