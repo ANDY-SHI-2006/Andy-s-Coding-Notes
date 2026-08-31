@@ -46,6 +46,33 @@ netdisk/
 
 `db/` and `files/` are created automatically when the server starts; `downloads/` is created by the client on the first download. No manual setup is needed.
 
+The fully expanded hierarchy looks like this:
+
+```text
+netdisk/
+├── server/
+│   ├── main.py              # Entry point
+│   ├── config/
+│   │   └── setting.py       # IP, port, data directories
+│   ├── core/
+│   │   ├── server.py        # Socket listening and connection management
+│   │   └── handler.py       # Business logic: reg, login, ls, upload, download
+│   ├── utils/
+│   │   └── protocol.py      # Wire protocol: message and file transfer
+│   ├── db/                  # Created at runtime: user account data
+│   └── files/               # Created at runtime: user drive files
+└── client/
+    ├── main.py              # Entry point
+    ├── config/
+    │   └── setting.py       # Server address, download directory
+    ├── core/
+    │   ├── client.py        # Connection setup
+    │   └── handler.py       # Interactive menu and command parsing
+    ├── utils/
+    │   └── protocol.py      # Same protocol implementation as the server
+    └── downloads/           # Created at runtime: downloaded files
+```
+
 Complete runnable project: [server](../examples/en/netdisk/server/main.py) · [client](../examples/en/netdisk/client/main.py) (run `python main.py` in the `server/` and `client/` directories respectively)
 
 ### 5.1.3 Protocol Design
