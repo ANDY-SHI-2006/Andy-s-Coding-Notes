@@ -57,6 +57,7 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 |--------------|---------|------|
 | **Django** | [Django Notes](web-development/django/django-english-version/README.md) | — |
 | **Django REST Framework** | [DRF Notes](web-development/drf/drf-english-version/README.md) | — |
+| **Flask** | [Flask Notes](web-development/flask/flask-english-version/README.md) | [Flask 笔记](web-development/flask/flask-中文版/README.md) |
 | **HTML & CSS** | [HTML-CSS Notes](web-development/html-css/html-css-english-version/README.md) | — |
 | **JavaScript** | [JavaScript Notes](web-development/javascript/javascript-english-version/README.md) | — |
 | **Node.js** | [Node Notes](web-development/node/node-english-version/README.md) | — |
