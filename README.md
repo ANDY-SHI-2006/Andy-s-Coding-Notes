@@ -61,7 +61,7 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 | **JavaScript** | [JavaScript Notes](web-development/javascript/javascript-english-version/README.md) | — |
 | **Node.js** | [Node Notes](web-development/node/node-english-version/README.md) | — |
 | **Python Crawler** | [Python Crawler Notes](web-development/python-crawler/python-crawler-english-version/README.md) | — |
-| **WeChat Mini Program** | [WeChat Mini Program Notes](web-development/wechat-miniprogram/wechat-miniprogram-english-version/README.md) | — |
+| **WeChat Mini Program** | [WeChat Mini Program Notes](web-development/wechat-miniprogram/wechat-miniprogram-english-version/README.md) | [微信小程序笔记](web-development/wechat-miniprogram/wechat-miniprogram-中文版/README.md) |
 
 ### 🔧 DevOps
 
