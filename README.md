@@ -45,6 +45,12 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 | **C++** | [C++ Notes](C++/c++-english-version/README.md) | [C++ 笔记](C++/C++-中文版/README.md) |
 | **Python** | [Python Notes](python/python-english-version/README.md) | [Python 笔记](python/python-中文版/README.md) |
 
+### 🖥️ CS Fundamentals | 计算机基础
+
+| Topic / 主题 | English | 中文 |
+|--------------|---------|------|
+| **Computer Architecture & Parallel Computing** | [Computer Architecture Notes](computer-architecture/computer-architecture-english-version/README.md) | [计算机架构与并行计算笔记](computer-architecture/计算机架构与并行计算-中文版/README.md) |
+
 ### 🌐 Web Development | Web 开发
 
 | Topic / 主题 | English | 中文 |
