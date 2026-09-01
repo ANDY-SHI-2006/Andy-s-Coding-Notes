@@ -567,6 +567,20 @@ Download finished: .../client/downloads/notes.txt
 >>> exit
 ```
 
+Screenshots of an actual run (corresponding to the session above; the last one is the server log):
+
+![[netdisk-client-reg.png]]
+
+![[netdisk-client-login.png]]
+
+![[netdisk-client-upload.png]]
+
+![[netdisk-client-ls.png]]
+
+![[netdisk-client-download.png]]
+
+![[netdisk-server-log.png]]
+
 ## 5.6 Limitations
 
 This implementation optimizes for teaching clarity; a real network drive would go much further:
