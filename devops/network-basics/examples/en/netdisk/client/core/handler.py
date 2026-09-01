@@ -11,6 +11,9 @@ MENU = '''
   ls [subdir]                        List drive files
   upload <local-path> [drive-subdir] Upload a file
   download <filename>                Download a file
+  passwd <new-password>              Change password
+  info                               Show account info
+  logout                             Log out
   exit                               Quit
 ================================='''
 
@@ -38,6 +41,9 @@ class PanClient:
                 'ls': self.ls,
                 'upload': self.upload,
                 'download': self.download,
+                'passwd': self.passwd,
+                'info': self.info,
+                'logout': self.logout,
             }.get(cmd)
             if action is None:
                 print('Unknown command')
@@ -104,6 +110,34 @@ class PanClient:
         save_path = os.path.join(DOWNLOAD_DIR, os.path.basename(args[0]))
         protocol.recv_file(self.sock, save_path)
         print(f'Download finished: {save_path}')
+
+    def passwd(self, *args):
+        if len(args) != 1:
+            print('Usage: passwd <new-password>')
+            return
+        resp = self._request({'cmd': 'passwd', 'password': args[0]})
+        print(resp['msg'])
+
+    def info(self, *args):
+        if args:
+            print('Usage: info')
+            return
+        resp = self._request({'cmd': 'info'})
+        if not resp['ok']:
+            print(resp['msg'])
+            return
+        print(f"Registered at: {resp['create_time']}")
+        print(f"Files: {resp['file_count']}")
+        print(f"Storage used: {resp['total_size'] / 1024:.1f} KB")
+
+    def logout(self, *args):
+        if args:
+            print('Usage: logout')
+            return
+        resp = self._request({'cmd': 'logout'})
+        print(resp['msg'])
+        if resp['ok']:
+            self.username = None
 
     # ---- Helpers ----
 

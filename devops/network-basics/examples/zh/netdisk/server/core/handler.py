@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 from config.setting import DB_DIR, FILES_DIR
 from utils import protocol
@@ -26,6 +27,9 @@ class ClientHandler:
                     'ls': self.ls,
                     'upload': self.upload,
                     'download': self.download,
+                    'passwd': self.passwd,
+                    'info': self.info,
+                    'logout': self.logout,
                 }.get(request.get('cmd'))
                 if handler is None:
                     self._reply(False, f"未知命令: {request.get('cmd')}")
@@ -44,7 +48,8 @@ class ClientHandler:
             self._reply(False, f'用户 {username} 已存在')
             return
         with open(db_path, 'w', encoding='utf-8') as f:
-            json.dump({'username': username, 'password': request['password']},
+            json.dump({'username': username, 'password': request['password'],
+                       'create_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
                       f, ensure_ascii=False)
         # 注册成功后在 files 下为该用户初始化网盘目录
         os.makedirs(os.path.join(FILES_DIR, username), exist_ok=True)
@@ -63,6 +68,40 @@ class ClientHandler:
             return
         self.username = username
         self._reply(True, '登录成功')
+
+    def passwd(self, request):
+        """修改当前登录用户的密码。"""
+        if not self._check_login():
+            return
+        db_path = self._user_db_path(self.username)
+        with open(db_path, encoding='utf-8') as f:
+            record = json.load(f)
+        record['password'] = request['password']
+        with open(db_path, 'w', encoding='utf-8') as f:
+            json.dump(record, f, ensure_ascii=False)
+        self._reply(True, '密码修改成功')
+
+    def info(self, request):
+        """返回注册时间、文件数量与网盘占用空间。"""
+        if not self._check_login():
+            return
+        with open(self._user_db_path(self.username), encoding='utf-8') as f:
+            record = json.load(f)
+        total_size = 0
+        file_count = 0
+        for dirpath, _, files in os.walk(self._user_files_dir()):
+            for name in files:
+                total_size += os.path.getsize(os.path.join(dirpath, name))
+                file_count += 1
+        self._reply(True, 'OK',
+                    create_time=record.get('create_time', '未知'),
+                    file_count=file_count,
+                    total_size=total_size)
+
+    def logout(self, request):
+        """退出登录：清空当前用户，连接保持，可重新登录。"""
+        self.username = None
+        self._reply(True, '已退出登录')
 
     # ---- 网盘操作 ----
 

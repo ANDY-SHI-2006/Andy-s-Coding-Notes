@@ -15,12 +15,16 @@ This chapter combines everything from the previous four chapters into one comple
 - `ls`: list files in the drive directory (optionally a first-level subdirectory)
 - `upload`: upload a local file to the drive (overwrites if it already exists)
 - `download`: download a file from the drive to the local machine
+- `passwd`: change password (requires login)
+- `info`: show registration time and storage usage (requires login)
+- `logout`: log out (connection stays open for a new login)
 - `exit`: quit
 
 **Server:**
 
 - Registration and login; account data stored in `db/` (one JSON file per user)
 - List, upload, and download; files stored under `files/<username>/`
+- Support password change, account info, and logout
 - Multiple clients at the same time
 
 ### 5.1.2 Directory Layout
@@ -250,6 +254,7 @@ if __name__ == '__main__':
 # core/handler.py
 import json
 import os
+from datetime import datetime
 
 from config.setting import DB_DIR, FILES_DIR
 from utils import protocol
@@ -276,6 +281,9 @@ class ClientHandler:
                     'ls': self.ls,
                     'upload': self.upload,
                     'download': self.download,
+                    'passwd': self.passwd,
+                    'info': self.info,
+                    'logout': self.logout,
                 }.get(request.get('cmd'))
                 if handler is None:
                     self._reply(False, f"Unknown command: {request.get('cmd')}")
@@ -294,7 +302,8 @@ class ClientHandler:
             self._reply(False, f'User {username} already exists')
             return
         with open(db_path, 'w', encoding='utf-8') as f:
-            json.dump({'username': username, 'password': request['password']},
+            json.dump({'username': username, 'password': request['password'],
+                       'create_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
                       f, ensure_ascii=False)
         # Initialize the user's drive directory under files/
         os.makedirs(os.path.join(FILES_DIR, username), exist_ok=True)
@@ -313,6 +322,40 @@ class ClientHandler:
             return
         self.username = username
         self._reply(True, 'Login successful')
+
+    def passwd(self, request):
+        """Change the password of the logged-in user."""
+        if not self._check_login():
+            return
+        db_path = self._user_db_path(self.username)
+        with open(db_path, encoding='utf-8') as f:
+            record = json.load(f)
+        record['password'] = request['password']
+        with open(db_path, 'w', encoding='utf-8') as f:
+            json.dump(record, f, ensure_ascii=False)
+        self._reply(True, 'Password changed')
+
+    def info(self, request):
+        """Return registration time, file count, and storage used."""
+        if not self._check_login():
+            return
+        with open(self._user_db_path(self.username), encoding='utf-8') as f:
+            record = json.load(f)
+        total_size = 0
+        file_count = 0
+        for dirpath, _, files in os.walk(self._user_files_dir()):
+            for name in files:
+                total_size += os.path.getsize(os.path.join(dirpath, name))
+                file_count += 1
+        self._reply(True, 'OK',
+                    create_time=record.get('create_time', 'unknown'),
+                    file_count=file_count,
+                    total_size=total_size)
+
+    def logout(self, request):
+        """Log out: clear the current user; the connection stays open for a new login."""
+        self.username = None
+        self._reply(True, 'Logged out')
 
     # ---- Drive operations ----
 
@@ -431,6 +474,9 @@ MENU = '''
   ls [subdir]                        List drive files
   upload <local-path> [drive-subdir] Upload a file
   download <filename>                Download a file
+  passwd <new-password>              Change password
+  info                               Show account info
+  logout                             Log out
   exit                               Quit
 ================================='''
 
@@ -458,6 +504,9 @@ class PanClient:
                 'ls': self.ls,
                 'upload': self.upload,
                 'download': self.download,
+                'passwd': self.passwd,
+                'info': self.info,
+                'logout': self.logout,
             }.get(cmd)
             if action is None:
                 print('Unknown command')
@@ -525,6 +574,34 @@ class PanClient:
         protocol.recv_file(self.sock, save_path)
         print(f'Download finished: {save_path}')
 
+    def passwd(self, *args):
+        if len(args) != 1:
+            print('Usage: passwd <new-password>')
+            return
+        resp = self._request({'cmd': 'passwd', 'password': args[0]})
+        print(resp['msg'])
+
+    def info(self, *args):
+        if args:
+            print('Usage: info')
+            return
+        resp = self._request({'cmd': 'info'})
+        if not resp['ok']:
+            print(resp['msg'])
+            return
+        print(f"Registered at: {resp['create_time']}")
+        print(f"Files: {resp['file_count']}")
+        print(f"Storage used: {resp['total_size'] / 1024:.1f} KB")
+
+    def logout(self, *args):
+        if args:
+            print('Usage: logout')
+            return
+        resp = self._request({'cmd': 'logout'})
+        print(resp['msg'])
+        if resp['ok']:
+            self.username = None
+
     # ---- Helpers ----
 
     def _request(self, payload):
@@ -564,6 +641,12 @@ Upload finished
   notes.txt
 >>> download notes.txt
 Download finished: .../client/downloads/notes.txt
+>>> info
+Registered at: 2026-09-01 21:50:12
+Files: 1
+Storage used: 0.1 KB
+>>> logout
+Logged out
 >>> exit
 ```
 
@@ -590,6 +673,7 @@ This implementation optimizes for teaching clarity; a real network drive would g
 - **Large files and resume**: the 4-byte size field caps files at ~4 GB, and an interrupted transfer must restart from scratch.
 - **Path safety**: the `ls` subdirectory argument does not defend against `..`; strict deployments should verify paths stay inside the user's directory.
 - **Threading races**: the "check existence, then write" flow in registration is not atomic — two clients registering the same username concurrently can overwrite each other; production systems need a lock (`threading.Lock`).
+
 > **Summary**: This project introduces no new knowledge — its value is in combination. Socket connections, the length-prefix protocol, JSON messages, file IO, and object-oriented dispatch each come from earlier chapters. If you can read and reproduce this project on your own, the course has done its job.
 
 [← Previous: HTTP and a Simple Web Server](04-http-and-a-simple-web-server.md) | [Back to networking basics](README.md)

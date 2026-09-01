@@ -11,6 +11,9 @@ MENU = '''
   ls [子目录]                     查看网盘文件
   upload <本地路径> [网盘子目录]  上传文件
   download <文件名>               下载文件
+  passwd <新密码>                 修改密码
+  info                            查看账号信息
+  logout                          退出登录
   exit                            退出
 ========================='''
 
@@ -38,6 +41,9 @@ class PanClient:
                 'ls': self.ls,
                 'upload': self.upload,
                 'download': self.download,
+                'passwd': self.passwd,
+                'info': self.info,
+                'logout': self.logout,
             }.get(cmd)
             if action is None:
                 print('未知命令')
@@ -104,6 +110,34 @@ class PanClient:
         save_path = os.path.join(DOWNLOAD_DIR, os.path.basename(args[0]))
         protocol.recv_file(self.sock, save_path)
         print(f'下载完成: {save_path}')
+
+    def passwd(self, *args):
+        if len(args) != 1:
+            print('格式: passwd <新密码>')
+            return
+        resp = self._request({'cmd': 'passwd', 'password': args[0]})
+        print(resp['msg'])
+
+    def info(self, *args):
+        if args:
+            print('格式: info')
+            return
+        resp = self._request({'cmd': 'info'})
+        if not resp['ok']:
+            print(resp['msg'])
+            return
+        print(f"注册时间: {resp['create_time']}")
+        print(f"文件数量: {resp['file_count']}")
+        print(f"占用空间: {resp['total_size'] / 1024:.1f} KB")
+
+    def logout(self, *args):
+        if args:
+            print('格式: logout')
+            return
+        resp = self._request({'cmd': 'logout'})
+        print(resp['msg'])
+        if resp['ok']:
+            self.username = None
 
     # ---- 辅助方法 ----
 

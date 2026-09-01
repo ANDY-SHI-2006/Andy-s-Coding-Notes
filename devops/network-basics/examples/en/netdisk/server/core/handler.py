@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 from config.setting import DB_DIR, FILES_DIR
 from utils import protocol
@@ -26,6 +27,9 @@ class ClientHandler:
                     'ls': self.ls,
                     'upload': self.upload,
                     'download': self.download,
+                    'passwd': self.passwd,
+                    'info': self.info,
+                    'logout': self.logout,
                 }.get(request.get('cmd'))
                 if handler is None:
                     self._reply(False, f"Unknown command: {request.get('cmd')}")
@@ -44,7 +48,8 @@ class ClientHandler:
             self._reply(False, f'User {username} already exists')
             return
         with open(db_path, 'w', encoding='utf-8') as f:
-            json.dump({'username': username, 'password': request['password']},
+            json.dump({'username': username, 'password': request['password'],
+                       'create_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
                       f, ensure_ascii=False)
         # Initialize the user's drive directory under files/
         os.makedirs(os.path.join(FILES_DIR, username), exist_ok=True)
@@ -63,6 +68,40 @@ class ClientHandler:
             return
         self.username = username
         self._reply(True, 'Login successful')
+
+    def passwd(self, request):
+        """Change the password of the logged-in user."""
+        if not self._check_login():
+            return
+        db_path = self._user_db_path(self.username)
+        with open(db_path, encoding='utf-8') as f:
+            record = json.load(f)
+        record['password'] = request['password']
+        with open(db_path, 'w', encoding='utf-8') as f:
+            json.dump(record, f, ensure_ascii=False)
+        self._reply(True, 'Password changed')
+
+    def info(self, request):
+        """Return registration time, file count, and storage used."""
+        if not self._check_login():
+            return
+        with open(self._user_db_path(self.username), encoding='utf-8') as f:
+            record = json.load(f)
+        total_size = 0
+        file_count = 0
+        for dirpath, _, files in os.walk(self._user_files_dir()):
+            for name in files:
+                total_size += os.path.getsize(os.path.join(dirpath, name))
+                file_count += 1
+        self._reply(True, 'OK',
+                    create_time=record.get('create_time', 'unknown'),
+                    file_count=file_count,
+                    total_size=total_size)
+
+    def logout(self, request):
+        """Log out: clear the current user; the connection stays open for a new login."""
+        self.username = None
+        self._reply(True, 'Logged out')
 
     # ---- Drive operations ----
 
