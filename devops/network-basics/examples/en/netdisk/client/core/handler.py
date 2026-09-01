@@ -100,7 +100,8 @@ class PanClient:
             print(resp['msg'])
             return
         os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-        save_path = os.path.join(DOWNLOAD_DIR, args[0])
+        # Keep only the file name so the input cannot escape the downloads directory
+        save_path = os.path.join(DOWNLOAD_DIR, os.path.basename(args[0]))
         protocol.recv_file(self.sock, save_path)
         print(f'Download finished: {save_path}')
 

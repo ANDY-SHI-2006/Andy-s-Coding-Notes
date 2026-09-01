@@ -105,7 +105,8 @@ class ClientHandler:
 
     # ---- Helpers ----
 
-    def _user_db_path(self, username):
+    @staticmethod  # Does not depend on instance state, so it is a static method
+    def _user_db_path(username):
         return os.path.join(DB_DIR, f'{username}.json')
 
     def _user_files_dir(self):

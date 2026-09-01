@@ -75,12 +75,47 @@ netdisk/
 
 Complete runnable project: [server](../examples/en/netdisk/server/main.py) · [client](../examples/en/netdisk/client/main.py) (run `python main.py` in the `server/` and `client/` directories respectively)
 
+Server and client each keep a settings file for addresses and directories:
+
+```python
+# server/config/setting.py
+import os
+
+IP = '127.0.0.1'
+PORT = 9090
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_DIR = os.path.join(BASE_DIR, 'db')        # User account data (one json file per user)
+FILES_DIR = os.path.join(BASE_DIR, 'files')  # User drive files (one directory per user)
+```
+
+```python
+# client/config/setting.py
+import os
+
+IP = '127.0.0.1'
+PORT = 9090
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DOWNLOAD_DIR = os.path.join(BASE_DIR, 'downloads')  # Where downloaded files are saved
+```
+
 ### 5.1.3 Protocol Design
 
 The protocol reuses the **length-prefix scheme** from Chapter 3 (4-byte header in `struct`'s `!I` network byte order, plus an exact-read loop), with two conventions:
 
 1. **Control messages are JSON**: the client sends `{"cmd": "login", "username": "...", "password": "..."}` and the server replies `{"ok": true, "msg": "..."}`. Compared with space-separated strings, JSON is immune to filenames containing spaces, and the field meanings are self-evident.
 2. **File transfer is two-phase**: for `upload`, the client first sends the `upload` command (JSON); the server confirms the directory is ready and replies `READY`; only then does the client send the file content (4-byte file size + chunked data).
+
+The full message flow of `upload`:
+
+```text
+Client                                        Server
+  │ ── JSON {"cmd": "upload", ...} ──►   │ Parse command, prepare directory
+  │ ◄── JSON {"ok": true, "msg": "READY"} │
+  │ ── 4-byte file size + chunked data ──► │ recv_file writes to disk
+  │                                        │ Print the upload result
+```
 
 ## 5.2 The Shared Protocol Module
 
@@ -195,14 +230,31 @@ class Server:
 
 Full code: [core/server.py](../examples/en/netdisk/server/core/server.py)
 
+The `main.py` entry point is only two lines: create a `Server` and enter the accept loop:
+
+```python
+# main.py
+from core.server import Server
+
+if __name__ == '__main__':
+    Server().run()
+```
+
 > File transfer is a stateful, multi-step process ("command + several receives"). In the single-threaded `select` model from 3.3, one client transferring a large file would stall everyone else. One thread per connection is the simplest workable concurrency scheme here; larger production systems would use a thread pool or `asyncio`.
 
 ### 5.3.2 Command Dispatch and Account Management
 
-`ClientHandler.run` loops over JSON commands and dispatches them to methods. Registration writes the account to `db/<username>.json` and initializes the drive directory; login verifies the password and records the current user:
+`ClientHandler.run` loops over JSON commands and dispatches them to methods. Registration writes the account to `db/<username>.json` and initializes the drive directory; login verifies the password and records the current user. The full implementation:
 
 ```python
-# core/handler.py (excerpt)
+# core/handler.py
+import json
+import os
+
+from config.setting import DB_DIR, FILES_DIR
+from utils import protocol
+
+
 class ClientHandler:
     """Handle a single client connection: register, login, ls, upload, download."""
 
@@ -231,6 +283,9 @@ class ClientHandler:
                 handler(request)
         finally:
             self.conn.close()
+            print(f'Connection closed: {self.addr}')
+
+    # ---- Register & login ----
 
     def reg(self, request):
         username = request['username']
@@ -244,20 +299,35 @@ class ClientHandler:
         # Initialize the user's drive directory under files/
         os.makedirs(os.path.join(FILES_DIR, username), exist_ok=True)
         self._reply(True, f'{username} registered')
-```
 
-Full code: [core/handler.py](../examples/en/netdisk/server/core/handler.py)
+    def login(self, request):
+        username = request['username']
+        db_path = self._user_db_path(username)
+        if not os.path.exists(db_path):
+            self._reply(False, f'User {username} does not exist')
+            return
+        with open(db_path, encoding='utf-8') as f:
+            record = json.load(f)
+        if record['password'] != request['password']:
+            self._reply(False, 'Wrong password')
+            return
+        self.username = username
+        self._reply(True, 'Login successful')
 
-Dispatching through a dictionary (`{'reg': self.reg, ...}`) beats a long `if/elif` chain: adding a command only takes one new method and one dictionary entry.
+    # ---- Drive operations ----
 
-`exit` is not in the dispatch table: the client handles it locally by closing the connection and quitting; the server notices through `recv_msg` returning `None`.
+    def ls(self, request):
+        if not self._check_login():
+            return
+        target = self._user_files_dir()
+        subdir = request.get('subdir')
+        if subdir:
+            target = os.path.join(target, subdir)
+        if not os.path.isdir(target):
+            self._reply(False, 'Directory does not exist')
+            return
+        self._reply(True, 'OK', items=sorted(os.listdir(target)))
 
-### 5.3.3 Upload and Download
-
-Upload and download are both two-phase flows: confirm first, then transfer. Upload, for example:
-
-```python
-# core/handler.py (excerpt)
     def upload(self, request):
         if not self._check_login():
             return
@@ -270,18 +340,159 @@ Upload and download are both two-phase flows: confirm first, then transfer. Uplo
         self._reply(True, 'READY')  # Directory ready; tell the client to start sending
         ok = protocol.recv_file(self.conn, os.path.join(target_dir, filename))
         print(f"Upload {'succeeded' if ok else 'failed'}: {self.username}/{filename}")
+
+    def download(self, request):
+        if not self._check_login():
+            return
+        filename = os.path.basename(request['filename'])
+        file_path = os.path.join(self._user_files_dir(), filename)
+        if not os.path.isfile(file_path):
+            self._reply(False, 'File does not exist')
+            return
+        self._reply(True, 'READY')  # File exists; content follows
+        protocol.send_file(self.conn, file_path)
+        print(f'Download finished: {self.username}/{filename}')
+
+    # ---- Helpers ----
+
+    @staticmethod  # Does not depend on instance state, so it is a static method
+    def _user_db_path(username):
+        return os.path.join(DB_DIR, f'{username}.json')
+
+    def _user_files_dir(self):
+        return os.path.join(FILES_DIR, self.username)
+
+    def _reply(self, ok, msg, **extra):
+        payload = {'ok': ok, 'msg': msg}
+        payload.update(extra)
+        protocol.send_msg(self.conn, json.dumps(payload, ensure_ascii=False))
+
+    def _check_login(self):
+        if self.username is None:
+            self._reply(False, 'Please log in first')
+            return False
+        return True
 ```
 
-Full code: [core/handler.py](../examples/en/netdisk/server/core/handler.py) (same file as 5.3.2)
+Full code: [core/handler.py](../examples/en/netdisk/server/core/handler.py)
 
-`download` mirrors it: the server confirms the file exists, replies `READY`, then calls `send_file`. Note that `os.path.basename` strips any directory components from the client-supplied name, keeping only the final segment.
+Dispatching through a dictionary (`{'reg': self.reg, ...}`) beats a long `if/elif` chain: adding a command only takes one new method and one dictionary entry.
+
+`exit` is not in the dispatch table: the client handles it locally by closing the connection and quitting; the server notices through `recv_msg` returning `None`.
+
+### 5.3.3 Upload and Download
+
+Upload and download are both two-phase flows: confirm first, then transfer. They correspond to the `upload` / `download` methods in the full listing of 5.3.2.
+
+After `_check_login()`, `os.path.basename` strips any directory components from the client-supplied name (keeping only the final segment); an optional `subdir` is created if needed; the server replies `READY` before the transfer — `upload` calls `recv_file` to write to disk, while `download` mirrors it by confirming the file exists, replying `READY`, and calling `send_file`.
 
 ## 5.4 Client Implementation
 
-The client prints the menu, parses input, and sends commands. Every command method follows the same pattern: validate arguments → `_request` sends JSON and returns the response → act on the `ok` field:
+The client prints the menu, parses input, and sends commands. The entry chain:
 
 ```python
-# core/handler.py (excerpt)
+# main.py
+from core.client import Client
+
+if __name__ == '__main__':
+    Client().run()
+```
+
+```python
+# core/client.py
+import socket
+
+from config.setting import IP, PORT
+from core.handler import PanClient
+
+
+class Client:
+    def run(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((IP, PORT))
+        PanClient(sock).run()
+        sock.close()
+```
+
+All business logic lives in `core/handler.py`. Every command method follows the same pattern: validate arguments → `_request` sends JSON and returns the response → act on the `ok` field. The full implementation:
+
+```python
+# core/handler.py
+import json
+import os
+
+from config.setting import DOWNLOAD_DIR
+from utils import protocol
+
+MENU = '''
+======== Simple Netdisk ========
+  reg <username> <password>          Register
+  login <username> <password>        Log in
+  ls [subdir]                        List drive files
+  upload <local-path> [drive-subdir] Upload a file
+  download <filename>                Download a file
+  exit                               Quit
+================================='''
+
+
+class PanClient:
+    """Client interaction: parse user input, send commands, handle responses."""
+
+    def __init__(self, sock):
+        self.sock = sock
+        self.username = None
+
+    def run(self):
+        while True:
+            print(MENU)
+            print('Current user:', self.username or 'not logged in')
+            parts = input('>>> ').split()
+            if not parts:
+                continue
+            cmd, args = parts[0], parts[1:]
+            if cmd == 'exit':
+                break
+            action = {
+                'reg': self.reg,
+                'login': self.login,
+                'ls': self.ls,
+                'upload': self.upload,
+                'download': self.download,
+            }.get(cmd)
+            if action is None:
+                print('Unknown command')
+                continue
+            action(*args)
+
+    # ---- Commands ----
+
+    def reg(self, *args):
+        if len(args) != 2:
+            print('Usage: reg <username> <password>')
+            return
+        resp = self._request({'cmd': 'reg', 'username': args[0], 'password': args[1]})
+        print(resp['msg'])
+
+    def login(self, *args):
+        if len(args) != 2:
+            print('Usage: login <username> <password>')
+            return
+        resp = self._request({'cmd': 'login', 'username': args[0], 'password': args[1]})
+        print(resp['msg'])
+        if resp['ok']:
+            self.username = args[0]
+
+    def ls(self, *args):
+        request = {'cmd': 'ls'}
+        if len(args) == 1:
+            request['subdir'] = args[0]
+        resp = self._request(request)
+        if resp['ok']:
+            for item in resp['items']:
+                print(' ', item)
+        else:
+            print(resp['msg'])
+
     def upload(self, *args):
         if len(args) not in (1, 2):
             print('Usage: upload <local-path> [drive-subdir]')
@@ -299,6 +510,22 @@ The client prints the menu, parses input, and sends commands. Every command meth
             return
         protocol.send_file(self.sock, local_path)  # Server is ready; send the content
         print('Upload finished')
+
+    def download(self, *args):
+        if len(args) != 1:
+            print('Usage: download <filename>')
+            return
+        resp = self._request({'cmd': 'download', 'filename': args[0]})
+        if not resp['ok']:
+            print(resp['msg'])
+            return
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+        # Keep only the file name so the input cannot escape the downloads directory
+        save_path = os.path.join(DOWNLOAD_DIR, os.path.basename(args[0]))
+        protocol.recv_file(self.sock, save_path)
+        print(f'Download finished: {save_path}')
+
+    # ---- Helpers ----
 
     def _request(self, payload):
         """Send a JSON command and return the parsed JSON response."""
@@ -348,6 +575,7 @@ This implementation optimizes for teaching clarity; a real network drive would g
 - **No transfer integrity check**: add an MD5/SHA checksum to confirm the file arrived intact.
 - **Large files and resume**: the 4-byte size field caps files at ~4 GB, and an interrupted transfer must restart from scratch.
 - **Path safety**: the `ls` subdirectory argument does not defend against `..`; strict deployments should verify paths stay inside the user's directory.
+- **Threading races**: the "check existence, then write" flow in registration is not atomic — two clients registering the same username concurrently can overwrite each other; production systems need a lock (`threading.Lock`).
 > **Summary**: This project introduces no new knowledge — its value is in combination. Socket connections, the length-prefix protocol, JSON messages, file IO, and object-oriented dispatch each come from earlier chapters. If you can read and reproduce this project on your own, the course has done its job.
 
 [← Previous: HTTP and a Simple Web Server](04-http-and-a-simple-web-server.md) | [Back to networking basics](README.md)

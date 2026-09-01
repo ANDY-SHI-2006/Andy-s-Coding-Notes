@@ -105,7 +105,8 @@ class ClientHandler:
 
     # ---- 辅助方法 ----
 
-    def _user_db_path(self, username):
+    @staticmethod  # 不依赖实例状态，写成静态方法
+    def _user_db_path(username):
         return os.path.join(DB_DIR, f'{username}.json')
 
     def _user_files_dir(self):
