@@ -1,3 +1,3 @@
-﻿# 1 CRAWLER BASICS
+# 1 CRAWLER BASICS
 
 Content to be added.
