@@ -145,25 +145,7 @@ Further readings:
 - *Dark Silicon and the End of Multicore Scaling* (ISCA 2011)
 - *A New Golden Age for Computer Architecture* (CACM 2019)
 
-## 1.7 Course Logistics at a Glance
-
-**Grading**: attendance 10% (one absence allowed); assignments & labs 50% (10 assignments, 5% each — open questions, any AI allowed, no fixed deadlines tied to the schedule); group project 40% (mid-term presentation 10% + final 30%; if your final ranks top 3, the project score is decided by the final alone).
-
-**Bonus**: ops adopted by real-world projects (CANN / MNN / llama.cpp / SGLang / vLLM); a submitted paper on class topics; blogs/tutorials explaining key terms.
-
-**Labs & projects**: 12 labs in total (4 for the intro part, 7 for the core part, 1 guest-lecture lab); the last 4 lectures have no labs, reserved for final projects. Project topics (LLM-related, groups of at most 3): attention optimization, KV cache optimization, MoE optimization — the goal is to beat standard industry-level code; AI is allowed, but you must explain the details in the final presentation.
-
-**The 16-lecture syllabus** (numbering: lecture within the unit / cumulative):
-
-![[syllabus-schedule.png]]
-
-- Foundations (4 lectures): L1 Intro; L2–4 Computer Organization & Compiler Basics
-- Core (9 lectures): Memory Hierarchy & Cache (the performance bottleneck; hands-on analysis of miss rate, multi-level, bandwidth; virtual memory excluded); CPU Instruction-Level Parallelism (ILP — static + dynamic; Tomasulo, ROB, branch prediction); CPU & GPU Data-Level Parallelism (DLP); CPU Multicore & Thread-Level Parallelism (TLP)
-- Extensions (3 lectures): Cloud Servers — Internet (distributed) & other devices (FPGA & EDA, DSP, MCU & embedded); Rising topics in the AI/LLM era: Domain-Specific Architectures (Google TPU, Huawei NPU, CAS DianNao series) and AI compilers (TVM, etc.)
-
-**How to succeed (the instructor's view)**: being present is part of learning (learning materials ≠ learning); ask as many questions as possible in class; after class, use the slides as a starting point and dig deeper (ask AI); use AI properly — be the master of AI, not its slave; when told to get your hands dirty without AI, do it — first-person experience matters.
-
-## 1.8 After-Class Tasks & Open Questions
+## 1.7 After-Class Tasks & Open Questions
 
 - Self-study: the history of programming languages and operating systems (1.3.4 / 1.3.5)
 - Complete the timeline in 1.3.6
