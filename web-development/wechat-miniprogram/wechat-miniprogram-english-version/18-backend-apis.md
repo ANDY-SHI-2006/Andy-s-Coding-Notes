@@ -71,7 +71,7 @@ API_IGNORE_URLS = [
     "^/api"
 ]
 
-# The mini program's appid and appkey (credentials from the WeChat MP platform)
+# The mini program's appid and appkey (credentials from the WeChat MP platform — replace with your own)
 MINA_APP = {
     "appid": "your-appid",
     "appkey": "your-appsecret",
