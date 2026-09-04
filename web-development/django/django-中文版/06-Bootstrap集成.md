@@ -1,14 +1,14 @@
-[<- Prev: ORM models](04-orm-models.md) | [Next: library system project ->](06-library-system.md)
+[← 上一篇：ORM 与模型](05-ORM与模型.md) | [下一篇：图书管理系统 →](07-图书管理系统.md)
 
-# 5 Bootstrap Integration
+# 6 Bootstrap 集成
 
-Bootstrap is the most popular CSS framework for building responsive, mobile-first web interfaces. Integrating Bootstrap with Django accelerates frontend development without writing custom CSS from scratch.
+Bootstrap 是最流行的 CSS 框架，用于构建响应式、移动优先的 Web 界面。将 Bootstrap 与 Django 集成，无需从零编写自定义 CSS 即可加速前端开发。
 
 ---
 
-## 5.1 Including Bootstrap in Django
+## 6.1 在 Django 中引入 Bootstrap
 
-### 5.1.1 CDN Method (Simplest)
+### 6.1.1 CDN 方式（最简单）
 
 ```django
 <!-- templates/base.html -->
@@ -25,16 +25,16 @@ Bootstrap is the most popular CSS framework for building responsive, mobile-firs
 <body>
     {% block content %}{% endblock %}
 
-    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <!-- Bootstrap JS Bundle（包含 Popper）-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
 ```
 
-### 5.1.2 Local Static Files (Recommended for Production)
+### 6.1.2 本地静态文件（生产环境推荐）
 
-Download Bootstrap and place in your static directory:
+下载 Bootstrap 并放入静态目录：
 
 ```
 static/
@@ -52,9 +52,9 @@ static/
 
 ---
 
-## 5.2 Grid System
+## 6.2 栅格系统
 
-Bootstrap's grid system divides the viewport into **12 columns**. It enables responsive layouts that adapt to screen size.
+Bootstrap 的栅格系统将视口划分为 **12 列**。它支持随屏幕尺寸自适应的响应式布局。
 
 ```html
 <div class="container">
@@ -65,18 +65,18 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 </div>
 ```
 
-### Breakpoints
+### 断点
 
-| Breakpoint | Width | Class Prefix | Usage |
+| 断点 | 宽度 | 类前缀 | 用途 |
 |------------|-------|--------------|-------|
-| Extra Small | < 576px | `xs` | Portrait phones |
-| Small | >= 576px | `sm` | Landscape phones |
-| Medium | >= 768px | `md` | Tablets |
-| Large | >= 992px | `lg` | Desktops |
-| Extra Large | >= 1200px | `xl` | Large desktops |
-| Extra Extra Large | >= 1400px | `xxl` | Extra large screens |
+| 超小 | < 576px | `xs` | 竖屏手机 |
+| 小 | >= 576px | `sm` | 横屏手机 |
+| 中 | >= 768px | `md` | 平板 |
+| 大 | >= 992px | `lg` | 台式机 |
+| 超大 | >= 1200px | `xl` | 大屏台式机 |
+| 特大 | >= 1400px | `xxl` | 超大屏幕 |
 
-### Responsive Column Examples
+### 响应式列示例
 
 ```html
 <!-- Equal columns on all screens -->
@@ -95,9 +95,9 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 
 ---
 
-## 5.3 Common Components
+## 6.3 常用组件
 
-### 5.3.1 Navbar
+### 6.3.1 导航栏
 
 ```html
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -116,7 +116,7 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 </nav>
 ```
 
-### 5.3.2 Cards
+### 6.3.2 卡片
 
 ```html
 <div class="card" style="width: 18rem;">
@@ -128,7 +128,7 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 </div>
 ```
 
-### 5.3.3 Tables
+### 6.3.3 表格
 
 ```html
 <table class="table table-striped table-hover">
@@ -151,7 +151,7 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 </table>
 ```
 
-### 5.3.4 Forms
+### 6.3.4 表单
 
 ```html
 <form method="post">
@@ -168,7 +168,7 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 </form>
 ```
 
-### 5.3.5 Alerts
+### 6.3.5 提示框
 
 ```html
 <div class="alert alert-success" role="alert">Operation completed successfully!</div>
@@ -181,11 +181,11 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 
 ---
 
-## 5.4 Utility Classes
+## 6.4 工具类
 
-### 5.4.1 Spacing
+### 6.4.1 间距
 
-Bootstrap uses `m-*` (margin) and `p-*` (padding) with sizes 0-5:
+Bootstrap 使用 `m-*`（margin）和 `p-*`（padding），尺寸为 0-5：
 
 ```html
 <div class="m-3 p-2">Margin 3, Padding 2</div>
@@ -194,7 +194,7 @@ Bootstrap uses `m-*` (margin) and `p-*` (padding) with sizes 0-5:
 <div class="ms-auto">Margin left auto (push right)</div>
 ```
 
-| Size | Value |
+| 尺寸 | 值 |
 |------|-------|
 | `0` | 0 |
 | `1` | 0.25rem (4px) |
@@ -204,7 +204,7 @@ Bootstrap uses `m-*` (margin) and `p-*` (padding) with sizes 0-5:
 | `5` | 3rem (48px) |
 | `auto` | auto |
 
-### 5.4.2 Colors
+### 6.4.2 颜色
 
 ```html
 <p class="text-primary">Primary blue</p>
@@ -213,7 +213,7 @@ Bootstrap uses `m-*` (margin) and `p-*` (padding) with sizes 0-5:
 <p class="bg-dark text-white">White text on dark background</p>
 ```
 
-### 5.4.3 Display and Flexbox
+### 6.4.3 显示与 Flexbox
 
 ```html
 <!-- Hide on mobile, show on desktop -->
@@ -227,11 +227,11 @@ Bootstrap uses `m-*` (margin) and `p-*` (padding) with sizes 0-5:
 
 ---
 
-## 5.5 Integrating with Django Forms
+## 6.5 与 Django 表单集成
 
-Render Django forms with Bootstrap styling using custom template tags or `django-crispy-forms`:
+使用自定义模板标签或 `django-crispy-forms` 将 Django 表单渲染为 Bootstrap 样式：
 
-### Manual Styling
+### 手动样式化
 
 ```django
 <form method="post" class="needs-validation" novalidate>
@@ -249,22 +249,22 @@ Render Django forms with Bootstrap styling using custom template tags or `django
 </form>
 ```
 
-> **Tip:** Define a custom `add_class` filter (see Templates chapter) to inject Bootstrap classes into form widgets.
+> **提示：** 定义一个自定义 `add_class` 过滤器（见"模板"章节），将 Bootstrap 类注入表单控件。
 
 ---
 
-## 5.6 Best Practices
+## 6.6 最佳实践
 
-| Do | Don't |
+| 建议 | 避免 |
 |----|-------|
-| Use the grid system for layout | Use inline styles for layout |
-| Leverage responsive breakpoints | Design for desktop only |
-| Use utility classes for quick styling | Write custom CSS for every element |
-| Combine Bootstrap with custom CSS sparingly | Override Bootstrap classes extensively |
-| Use `container` or `container-fluid` for wrapping | Leave content without container |
-| Load Bootstrap JS at the end of `<body>` | Load it in `<head>` (blocks rendering) |
+| 使用栅格系统进行布局 | 使用内联样式进行布局 |
+| 利用响应式断点 | 只为桌面端设计 |
+| 使用工具类进行快速样式化 | 为每个元素编写自定义 CSS |
+| 少量地将 Bootstrap 与自定义 CSS 结合 | 大量覆盖 Bootstrap 类 |
+| 使用 `container` 或 `container-fluid` 包裹内容 | 让内容没有 container |
+| 在 `<body>` 末尾加载 Bootstrap JS | 在 `<head>` 中加载（阻塞渲染） |
 
-**Summary Mnemonic**
-- **Bootstrap** = "12-column grid + pre-built components + utility classes = fast responsive UI"
+**记忆口诀**
+- **Bootstrap** = "12 列栅格 + 现成组件 + 工具类 = 快速响应式 UI"
 
-[<- Prev: ORM models](04-orm-models.md) | [Next: library system project ->](06-library-system.md)
+[← 上一篇：ORM 与模型](05-ORM与模型.md) | [下一篇：图书管理系统 →](07-图书管理系统.md)

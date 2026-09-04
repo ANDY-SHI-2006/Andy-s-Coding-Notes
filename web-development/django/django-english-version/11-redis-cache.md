@@ -1,12 +1,12 @@
-[<- Prev: forms](08-forms.md) | [Next: cookie and session ->](10-cookie-session.md)
+[<- Prev: forms](10-forms.md) | [Next: cookie and session ->](12-cookie-session.md)
 
-# 9 Redis and Caching
+# 11 Redis and Caching
 
 Caching reduces database load and improves response times by storing expensive computation results. Django's cache framework supports multiple backends, with **Redis** being the most popular choice for production.
 
 ---
 
-## 9.1 Django Cache Framework
+## 11.1 Django Cache Framework
 
 Django provides a unified API for caching regardless of the backend.
 
@@ -21,7 +21,7 @@ Django provides a unified API for caching regardless of the backend.
 
 ---
 
-## 9.2 Redis Setup
+## 11.2 Redis Setup
 
 ### Installation
 
@@ -54,7 +54,7 @@ SESSION_CACHE_ALIAS = 'default'
 
 ---
 
-## 9.3 Low-Level Cache API
+## 11.3 Low-Level Cache API
 
 ### Basic Operations
 
@@ -107,9 +107,9 @@ values = cache.get_many(['a', 'b', 'c'])
 
 ---
 
-## 9.4 Caching Patterns
+## 11.4 Caching Patterns
 
-### 9.4.1 Cache Expensive Queries
+### 11.4.1 Cache Expensive Queries
 
 ```python
 from django.core.cache import cache
@@ -129,7 +129,7 @@ def get_popular_posts():
     return posts
 ```
 
-### 9.4.2 Cache-Aside Pattern (Check-Update)
+### 11.4.2 Cache-Aside Pattern (Check-Update)
 
 ```python
 def get_user_profile(user_id):
@@ -150,9 +150,9 @@ def update_user_profile(user_id, data):
 
 ---
 
-## 9.5 View-Level Caching
+## 11.5 View-Level Caching
 
-### 9.5.1 Per-View Caching
+### 11.5.1 Per-View Caching
 
 ```python
 from django.views.decorators.cache import cache_page
@@ -163,7 +163,7 @@ def article_list(request):
     return render(request, 'article_list.html', {'articles': articles})
 ```
 
-### 9.5.2 Cache-Control Headers
+### 11.5.2 Cache-Control Headers
 
 ```python
 from django.views.decorators.cache import cache_control
@@ -174,7 +174,7 @@ def static_api(request):
     return JsonResponse(data)
 ```
 
-### 9.5.3 Conditional View Processing
+### 11.5.3 Conditional View Processing
 
 ```python
 from django.views.decorators.http import condition
@@ -191,7 +191,7 @@ def entry_list(request):
 
 ---
 
-## 9.6 Template Fragment Caching
+## 11.6 Template Fragment Caching
 
 Cache specific parts of a template:
 
@@ -217,7 +217,7 @@ Cache specific parts of a template:
 
 ---
 
-## 9.7 Cache in Class-Based Views
+## 11.7 Cache in Class-Based Views
 
 ```python
 from django.views.generic import ListView
@@ -232,7 +232,7 @@ class ArticleListView(ListView):
 
 ---
 
-## 9.8 Best Practices
+## 11.8 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -260,4 +260,4 @@ cache.set('posts', posts)
 **Summary Mnemonic**
 - **Caching** = "Check cache first → Compute if missing → Store result → Invalidate on change"
 
-[<- Prev: forms](08-forms.md) | [Next: cookie and session ->](10-cookie-session.md)
+[<- Prev: forms](10-forms.md) | [Next: cookie and session ->](12-cookie-session.md)

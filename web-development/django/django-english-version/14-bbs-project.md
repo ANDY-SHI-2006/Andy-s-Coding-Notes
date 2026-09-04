@@ -1,12 +1,12 @@
-[<- Prev: auth and admin](11-auth-admin.md)
+[<- Prev: auth and admin](13-auth-admin.md)
 
-# 12 BBS Forum Project
+# 14 BBS Forum Project
 
 The BBS (Bulletin Board System) Forum is a capstone project that integrates all Django concepts covered in this series: authentication, models, views, templates, forms, AJAX, caching, and admin customization.
 
 ---
 
-## 12.1 Project Overview
+## 14.1 Project Overview
 
 | Module | Features |
 |--------|----------|
@@ -20,7 +20,7 @@ The BBS (Bulletin Board System) Forum is a capstone project that integrates all 
 
 ---
 
-## 12.2 Database Design
+## 14.2 Database Design
 
 ```python
 # boards/models.py
@@ -97,7 +97,7 @@ class User(AbstractUser):
 
 ---
 
-## 12.3 Views Architecture
+## 14.3 Views Architecture
 
 ### Board List and Topic Views
 
@@ -217,7 +217,7 @@ class ReplyTopicView(LoginRequiredMixin, CreateView):
 
 ---
 
-## 12.4 URL Routing
+## 14.4 URL Routing
 
 ```python
 # boards/urls.py
@@ -237,7 +237,7 @@ urlpatterns = [
 
 ---
 
-## 12.5 Forms
+## 14.5 Forms
 
 ```python
 # boards/forms.py
@@ -268,7 +268,7 @@ class PostForm(forms.ModelForm):
 
 ---
 
-## 12.6 Templates
+## 14.6 Templates
 
 ### Board Home
 
@@ -320,7 +320,7 @@ class PostForm(forms.ModelForm):
 
 ---
 
-## 12.7 AJAX Enhancements
+## 14.7 AJAX Enhancements
 
 ### Real-time Reply Preview
 
@@ -366,7 +366,7 @@ document.querySelectorAll('.upvote-btn').forEach(btn => {
 
 ---
 
-## 12.8 Caching Strategy
+## 14.8 Caching Strategy
 
 ```python
 # Cache expensive aggregations
@@ -386,7 +386,7 @@ def get_board_stats(board_id):
 
 ---
 
-## 12.9 Admin Customization
+## 14.9 Admin Customization
 
 ```python
 # boards/admin.py
@@ -417,7 +417,7 @@ class TopicAdmin(admin.ModelAdmin):
 
 ---
 
-## 12.10 Key Architecture Decisions
+## 14.10 Key Architecture Decisions
 
 | Decision | Implementation | Rationale |
 |----------|---------------|-----------|
@@ -431,7 +431,7 @@ class TopicAdmin(admin.ModelAdmin):
 
 ---
 
-## 12.11 Best Practices
+## 14.11 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -446,4 +446,4 @@ class TopicAdmin(admin.ModelAdmin):
 **Summary Mnemonic**
 - **BBS Project** = "Boards organize Topics → Topics contain Posts → Users interact via Auth + AJAX → Cache scales performance"
 
-[<- Prev: auth and admin](11-auth-admin.md)
+[<- Prev: auth and admin](13-auth-admin.md)

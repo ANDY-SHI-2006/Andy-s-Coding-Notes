@@ -1,12 +1,12 @@
-[<- Prev: templates](03-templates.md) | [Next: bootstrap ->](05-bootstrap.md)
+[<- Prev: templates](04-templates.md) | [Next: bootstrap ->](06-bootstrap.md)
 
-# 4 ORM and Models
+# 5 ORM and Models
 
 Django's **Object-Relational Mapping (ORM)** allows you to interact with databases using Python code instead of SQL. Models define your data structure, and the ORM handles all database operations.
 
 ---
 
-## 4.1 Defining Models
+## 5.1 Defining Models
 
 A Django model is a Python class that subclasses `django.db.models.Model`.
 
@@ -29,7 +29,7 @@ class Author(models.Model):
         return self.name
 ```
 
-### 4.1.1 Common Field Types
+### 5.1.1 Common Field Types
 
 | Field | Description | Example |
 |-------|-------------|---------|
@@ -45,7 +45,7 @@ class Author(models.Model):
 | `FileField` / `ImageField` | File uploads | `avatar = ImageField(upload_to='avatars/')` |
 | `JSONField` | JSON data | `metadata = JSONField(default=dict)` |
 
-### 4.1.2 Field Options
+### 5.1.2 Field Options
 
 | Option | Description |
 |--------|-------------|
@@ -75,9 +75,9 @@ class Article(models.Model):
 
 ---
 
-## 4.2 Model Relationships
+## 5.2 Model Relationships
 
-### 4.2.1 One-to-Many (ForeignKey)
+### 5.2.1 One-to-Many (ForeignKey)
 
 ```python
 class Article(models.Model):
@@ -98,7 +98,7 @@ class Article(models.Model):
 | `SET_DEFAULT` | Set to default value |
 | `DO_NOTHING` | No action (may cause integrity errors) |
 
-### 4.2.2 One-to-One (OneToOneField)
+### 5.2.2 One-to-One (OneToOneField)
 
 ```python
 class Profile(models.Model):
@@ -107,7 +107,7 @@ class Profile(models.Model):
     avatar = models.ImageField(upload_to='avatars/')
 ```
 
-### 4.2.3 Many-to-Many (ManyToManyField)
+### 5.2.3 Many-to-Many (ManyToManyField)
 
 ```python
 class Article(models.Model):
@@ -121,7 +121,7 @@ article.tags.all()
 
 > **Note:** `ManyToManyField` creates an intermediate join table automatically.
 
-### 4.2.4 Related Name
+### 5.2.4 Related Name
 
 Use `related_name` to define the reverse accessor:
 
@@ -132,7 +132,7 @@ Use `related_name` to define the reverse accessor:
 
 ---
 
-## 4.3 Migrations
+## 5.3 Migrations
 
 Migrations are Django's way of propagating model changes to the database schema.
 
@@ -154,11 +154,11 @@ python manage.py sqlmigrate app_name 0001
 
 ---
 
-## 4.4 QuerySet API
+## 5.4 QuerySet API
 
 The `objects` manager is the default interface for database queries.
 
-### 4.4.1 Basic Queries
+### 5.4.1 Basic Queries
 
 ```python
 # Retrieve all records
@@ -182,7 +182,7 @@ Article.objects.exclude(status='draft')
 Article.objects.filter(status='published').filter(views__gte=100)
 ```
 
-### 4.4.2 Field Lookups
+### 5.4.2 Field Lookups
 
 | Lookup | Description | Example |
 |--------|-------------|---------|
@@ -195,7 +195,7 @@ Article.objects.filter(status='published').filter(views__gte=100)
 | `isnull` | NULL check | `deleted_at__isnull=True` |
 | `year` / `month` / `day` | Date components | `created__year=2024` |
 
-### 4.4.3 QuerySet Methods
+### 5.4.3 QuerySet Methods
 
 ```python
 # Ordering
@@ -220,7 +220,7 @@ Article.objects.first()
 Article.objects.last()
 ```
 
-### 4.4.4 Aggregation and Annotation
+### 5.4.4 Aggregation and Annotation
 
 ```python
 from django.db.models import Count, Avg, Sum, Max, Min
@@ -234,7 +234,7 @@ Author.objects.annotate(article_count=Count('articles'))
 # Each author gets an `article_count` attribute
 ```
 
-### 4.4.5 Select Related and Prefetch Related
+### 5.4.5 Select Related and Prefetch Related
 
 Optimize queries for related objects:
 
@@ -252,7 +252,7 @@ articles = Article.objects.prefetch_related('tags').all()
 
 ---
 
-## 4.5 CRUD Operations
+## 5.5 CRUD Operations
 
 ### Create
 
@@ -311,7 +311,7 @@ Article.objects.filter(created__year__lt=2020).delete()
 
 ---
 
-## 4.6 Custom Managers
+## 5.6 Custom Managers
 
 ```python
 class PublishedManager(models.Manager):
@@ -330,7 +330,7 @@ Article.published.all()    # Only published articles
 
 ---
 
-## 4.7 Best Practices
+## 5.7 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -345,4 +345,4 @@ Article.published.all()    # Only published articles
 **Summary Mnemonic**
 - **ORM** = "Model defines structure → Migration creates table → QuerySet manipulates data"
 
-[<- Prev: templates](03-templates.md) | [Next: bootstrap ->](05-bootstrap.md)
+[<- Prev: templates](04-templates.md) | [Next: bootstrap ->](06-bootstrap.md)

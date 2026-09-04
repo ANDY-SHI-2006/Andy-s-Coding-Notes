@@ -1,16 +1,16 @@
-[<- Prev: AJAX](07-ajax.md) | [Next: Redis cache ->](09-redis-cache.md)
+[<- Prev: middleware](09-middleware.md) | [Next: Redis cache ->](11-redis-cache.md)
 
-# 8 Forms
+# 10 Forms
 
 Django's form system handles HTML form generation, data validation, and error presentation. It eliminates manual validation code and ensures consistent, secure user input processing.
 
 ---
 
-## 8.1 Form Basics
+## 10.1 Form Basics
 
 A Django form is a Python class that subclasses `django.forms.Form` or `django.forms.ModelForm`.
 
-### 8.1.1 Simple Form
+### 10.1.1 Simple Form
 
 ```python
 from django import forms
@@ -23,7 +23,7 @@ class ContactForm(forms.Form):
     subscribe = forms.BooleanField(required=False, initial=True)
 ```
 
-### 8.1.2 Form in a View
+### 10.1.2 Form in a View
 
 ```python
 from django.shortcuts import render, redirect
@@ -50,7 +50,7 @@ def contact(request):
 
 ---
 
-## 8.2 ModelForm
+## 10.2 ModelForm
 
 `ModelForm` automatically generates fields from a model, simplifying CRUD operations.
 
@@ -106,9 +106,9 @@ def article_update(request, pk):
 
 ---
 
-## 8.3 Form Validation
+## 10.3 Form Validation
 
-### 8.3.1 Field-Level Validation
+### 10.3.1 Field-Level Validation
 
 Define `clean_<fieldname>()` methods for individual field validation:
 
@@ -132,7 +132,7 @@ class RegistrationForm(forms.Form):
         return age
 ```
 
-### 8.3.2 Form-Level Validation
+### 10.3.2 Form-Level Validation
 
 Define `clean()` for cross-field validation:
 
@@ -148,7 +148,7 @@ Define `clean()` for cross-field validation:
         return cleaned_data
 ```
 
-### 8.3.3 Validation Order
+### 10.3.3 Validation Order
 
 1. Field `to_python()` conversion
 2. Field `validate()` method
@@ -157,7 +157,7 @@ Define `clean()` for cross-field validation:
 
 ---
 
-## 8.4 Common Form Fields
+## 10.4 Common Form Fields
 
 | Field | HTML Widget | Usage |
 |-------|-------------|-------|
@@ -179,9 +179,9 @@ Define `clean()` for cross-field validation:
 
 ---
 
-## 8.5 File Uploads
+## 10.5 File Uploads
 
-### 8.5.1 Model and Form
+### 10.5.1 Model and Form
 
 ```python
 # models.py
@@ -197,7 +197,7 @@ class DocumentForm(forms.ModelForm):
         fields = ['title', 'file']
 ```
 
-### 8.5.2 View Handling
+### 10.5.2 View Handling
 
 ```python
 def upload_document(request):
@@ -211,7 +211,7 @@ def upload_document(request):
     return render(request, 'upload.html', {'form': form})
 ```
 
-### 8.5.3 Template
+### 10.5.3 Template
 
 ```html
 <!-- Must include enctype! -->
@@ -230,7 +230,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 ---
 
-## 8.6 Formsets
+## 10.6 Formsets
 
 Formsets manage multiple instances of the same form on one page.
 
@@ -263,7 +263,7 @@ ArticleModelFormSet = modelformset_factory(Article, fields=['title', 'status'], 
 
 ---
 
-## 8.7 Rendering Forms in Templates
+## 10.7 Rendering Forms in Templates
 
 | Method | Output | Usage |
 |--------|--------|-------|
@@ -295,7 +295,7 @@ ArticleModelFormSet = modelformset_factory(Article, fields=['title', 'status'], 
 
 ---
 
-## 8.8 Best Practices
+## 10.8 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -310,4 +310,4 @@ ArticleModelFormSet = modelformset_factory(Article, fields=['title', 'status'], 
 **Summary Mnemonic**
 - **Django Forms** = "Define fields → Validate data → Render HTML → Process cleaned_data → Save"
 
-[<- Prev: AJAX](07-ajax.md) | [Next: Redis cache ->](09-redis-cache.md)
+[<- Prev: middleware](09-middleware.md) | [Next: Redis cache ->](11-redis-cache.md)

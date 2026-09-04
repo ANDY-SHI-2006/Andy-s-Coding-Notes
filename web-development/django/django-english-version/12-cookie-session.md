@@ -1,12 +1,12 @@
-[<- Prev: Redis cache](09-redis-cache.md) | [Next: auth and admin ->](11-auth-admin.md)
+[<- Prev: Redis cache](11-redis-cache.md) | [Next: auth and admin ->](13-auth-admin.md)
 
-# 10 Cookie and Session
+# 12 Cookie and Session
 
 HTTP is stateless — each request is independent. **Cookies** and **Sessions** are mechanisms to persist data across requests, enabling features like user authentication, shopping carts, and personalized content.
 
 ---
 
-## 10.1 Cookies
+## 12.1 Cookies
 
 Cookies are small text files stored in the client's browser. They are sent with every request to the same domain.
 
@@ -65,7 +65,7 @@ response.set_cookie(
 
 ---
 
-## 10.2 Sessions
+## 12.2 Sessions
 
 Sessions store data on the server. The client only holds a **session ID** (usually in a cookie), which maps to server-side data.
 
@@ -105,7 +105,7 @@ def clear_cart(request):
 
 ---
 
-## 10.3 Session Engines
+## 12.3 Session Engines
 
 Django supports multiple session backends:
 
@@ -138,7 +138,7 @@ SESSION_SAVE_EVERY_REQUEST = False    # Only save when modified
 
 ---
 
-## 10.4 Session Security
+## 12.4 Session Security
 
 | Threat | Mitigation |
 |--------|------------|
@@ -165,7 +165,7 @@ def user_login(request):
 
 ---
 
-## 10.5 Cookie vs Session Comparison
+## 12.5 Cookie vs Session Comparison
 
 | Aspect | Cookie | Session |
 |--------|--------|---------|
@@ -178,7 +178,7 @@ def user_login(request):
 
 ---
 
-## 10.6 Best Practices
+## 12.6 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -193,4 +193,4 @@ def user_login(request):
 **Summary Mnemonic**
 - **Cookie/Session** = "Cookie = client keyring, Session = server vault. Keep vault secure, keyring minimal."
 
-[<- Prev: Redis cache](09-redis-cache.md) | [Next: auth and admin ->](11-auth-admin.md)
+[<- Prev: Redis cache](11-redis-cache.md) | [Next: auth and admin ->](13-auth-admin.md)

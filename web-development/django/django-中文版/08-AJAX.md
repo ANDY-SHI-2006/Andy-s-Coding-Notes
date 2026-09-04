@@ -1,46 +1,46 @@
-[<- Prev: library system project](06-library-system.md) | [Next: forms ->](08-forms.md)
+[← 上一篇：图书管理系统](07-图书管理系统.md) | [下一篇：中间件 →](09-中间件.md)
 
-# 7 AJAX
+# 8 AJAX
 
-**AJAX (Asynchronous JavaScript and XML)** enables web pages to update asynchronously by exchanging data with the server behind the scenes. Django handles AJAX requests using standard views that return JSON instead of HTML.
+**AJAX（Asynchronous JavaScript and XML，异步 JavaScript 与 XML）** 通过在后台与服务器交换数据，使网页能够异步更新。Django 使用标准视图处理 AJAX 请求，返回 JSON 而不是 HTML。
 
 ---
 
-## 7.1 How AJAX Works with Django
+## 8.1 AJAX 与 Django 的协作方式
 
 ```
-Browser                    Server
+浏览器                      服务器
    |                          |
-   |  1. JavaScript event     |
-   |  (click, input, etc.)    |
+   |  1. JavaScript 事件      |
+   |  （点击、输入等）        |
    |        ↓                 |
    |  2. Fetch/$.ajax()      |
    |------------------------->|
-   |  3. HTTP Request         |
-   |  (GET/POST/PUT/DELETE)   |
+   |  3. HTTP 请求            |
+   |  （GET/POST/PUT/DELETE） |
    |                          |
-   |  4. Django View          |
-   |  processes request       |
+   |  4. Django 视图          |
+   |  处理请求                |
    |        ↓                 |
-   |  5. JsonResponse         |
+   |  5. JsonResponse        |
    |<-------------------------|
-   |  6. JavaScript updates   |
-   |  DOM without reload      |
+   |  6. JavaScript 更新      |
+   |  DOM（无需刷新）         |
 ```
 
 ---
 
-## 7.2 Fetch API (Modern Approach)
+## 8.2 Fetch API（现代方式）
 
-### Basic GET Request
+### 基础 GET 请求
 
 ```javascript
-// Client-side JavaScript
+// 客户端 JavaScript
 fetch('/api/books/')
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        // Update DOM
+        // 更新 DOM
         document.getElementById('book-list').innerHTML = data.map(
             book => `<li>${book.title}</li>`
         ).join('');
@@ -48,10 +48,10 @@ fetch('/api/books/')
     .catch(error => console.error('Error:', error));
 ```
 
-### POST Request with CSRF Token
+### 带 CSRF Token 的 POST 请求
 
 ```javascript
-// Get CSRF token from cookie
+// 从 cookie 中获取 CSRF token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -69,12 +69,12 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
-// Send POST request
+// 发送 POST 请求
 fetch('/api/books/create/', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': csrftoken,   // Required for POST/PUT/DELETE
+        'X-CSRFToken': csrftoken,   // POST/PUT/DELETE 请求必须携带
     },
     body: JSON.stringify({
         title: 'New Book',
@@ -93,9 +93,9 @@ fetch('/api/books/create/', {
 
 ---
 
-## 7.3 Django Handling AJAX Requests
+## 8.3 Django 处理 AJAX 请求
 
-### JsonResponse View
+### JsonResponse 视图
 
 ```python
 from django.http import JsonResponse
@@ -131,25 +131,25 @@ def book_create_api(request):
         }, status=400)
 ```
 
-### Checking for AJAX Requests
+### 检测 AJAX 请求
 
 ```python
 def my_view(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        # AJAX request
+        # AJAX 请求
         return JsonResponse({'data': ...})
-    # Regular request
+    # 普通请求
     return render(request, 'template.html')
 ```
 
 ---
 
-## 7.4 Common AJAX Patterns
+## 8.4 常见的 AJAX 模式
 
-### 7.4.1 Live Search Suggestions
+### 8.4.1 实时搜索建议
 
 ```javascript
-// Client
+// 客户端
 const searchInput = document.getElementById('search');
 searchInput.addEventListener('input', debounce(function(e) {
     const query = e.target.value;
@@ -165,7 +165,7 @@ searchInput.addEventListener('input', debounce(function(e) {
         });
 }, 300));
 
-// Debounce utility
+// 防抖工具函数
 function debounce(func, wait) {
     let timeout;
     return function(...args) {
@@ -176,7 +176,7 @@ function debounce(func, wait) {
 ```
 
 ```python
-# Server
+# 服务器端
 def search_api(request):
     q = request.GET.get('q', '')
     results = Book.objects.filter(title__icontains=q)[:10]
@@ -185,10 +185,10 @@ def search_api(request):
     })
 ```
 
-### 7.4.2 Like/Unlike Button
+### 8.4.2 点赞/取消点赞按钮
 
 ```javascript
-// Client
+// 客户端
 document.querySelectorAll('.like-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const bookId = this.dataset.bookId;
@@ -206,7 +206,7 @@ document.querySelectorAll('.like-btn').forEach(btn => {
 ```
 
 ```python
-# Server
+# 服务器端
 @require_http_methods(["POST"])
 def book_like(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
@@ -224,7 +224,7 @@ def book_like(request, book_id):
     })
 ```
 
-### 7.4.3 Infinite Scroll / Load More
+### 8.4.3 无限滚动 / 加载更多
 
 ```javascript
 let page = 1;
@@ -249,12 +249,12 @@ function loadMore() {
         });
 }
 
-// Load on button click or scroll
+// 点击按钮或滚动时加载
 ```
 
 ---
 
-## 7.5 AJAX with Class-Based Views
+## 8.5 类视图中的 AJAX
 
 ```python
 from django.views import View
@@ -273,18 +273,18 @@ class BookAPIView(View):
 
 ---
 
-## 7.6 Best Practices
+## 8.6 最佳实践
 
-| Do | Don't |
+| 建议 | 避免 |
 |----|-------|
-| Always include CSRF token for state-changing requests | Send POST/PUT/DELETE without CSRF protection |
-| Return consistent JSON structure (`success`, `data`, `errors`) | Mix response formats |
-| Use `@require_http_methods` to restrict verbs | Allow all HTTP methods on every endpoint |
-| Validate data server-side even for AJAX | Trust client-side validation only |
-| Use `JsonResponse` (not `HttpResponse` with JSON) | Manually serialize JSON and set headers |
-| Handle errors gracefully on both sides | Leave `.catch()` empty |
+| 始终为改变状态（写操作）的请求携带 CSRF token | 在没有 CSRF 保护的情况下发送 POST/PUT/DELETE |
+| 返回一致的 JSON 结构（`success`、`data`、`errors`） | 混合不同的响应格式 |
+| 使用 `@require_http_methods` 限制请求方法 | 让每个接口都允许所有 HTTP 方法 |
+| 即使是 AJAX 请求，也要在服务器端校验数据 | 只信任客户端校验 |
+| 使用 `JsonResponse`（而不是带 JSON 的 `HttpResponse`） | 手动序列化 JSON 并设置响应头 |
+| 在两端都优雅地处理错误 | 让 `.catch()` 保持空 |
 
-### Recommended JSON Response Format
+### 推荐的 JSON 响应格式
 
 ```json
 {
@@ -304,7 +304,7 @@ class BookAPIView(View):
 }
 ```
 
-**Summary Mnemonic**
-- **AJAX** = "JavaScript fetches → Django returns JSON → DOM updates without reload"
+**记忆口诀**
+- **AJAX** = "JavaScript 发起请求 → Django 返回 JSON → 无需刷新即可更新 DOM"
 
-[<- Prev: library system project](06-library-system.md) | [Next: forms ->](08-forms.md)
+[← 上一篇：图书管理系统](07-图书管理系统.md) | [下一篇：中间件 →](09-中间件.md)

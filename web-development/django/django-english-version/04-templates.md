@@ -1,16 +1,16 @@
-[<- Prev: urls and routing](02-urls-and-routing.md) | [Next: ORM models ->](04-orm-models.md)
+[<- Prev: views and requests](03-views-and-requests.md) | [Next: ORM models ->](05-orm-models.md)
 
-# 3 Templates
+# 4 Templates
 
 Django's template engine separates presentation from business logic. Templates are text files that define the structure of rendered output, with special syntax for dynamic content.
 
 ---
 
-## 3.1 Template Syntax
+## 4.1 Template Syntax
 
 Django templates use three core constructs: **variables**, **tags**, and **filters**.
 
-### 3.1.1 Variables
+### 4.1.1 Variables
 
 Output values from the context dictionary using double braces:
 
@@ -27,7 +27,7 @@ Variable resolution follows dot notation (`.`):
 
 > **Note:** Methods called in templates cannot take arguments (except built-in tags).
 
-### 3.1.2 Tags
+### 4.1.2 Tags
 
 Tags perform logic and control flow using `{% %}`:
 
@@ -45,7 +45,7 @@ Tags perform logic and control flow using `{% %}`:
 {% endfor %}
 ```
 
-### 3.1.3 Filters
+### 4.1.3 Filters
 
 Filters transform variable values using `|`:
 
@@ -56,7 +56,7 @@ Filters transform variable values using `|`:
 {{ post.views|default:"N/A" }}
 ```
 
-### 3.1.4 Comments
+### 4.1.4 Comments
 
 ```django
 {# Single-line comment #}
@@ -69,7 +69,7 @@ Filters transform variable values using `|`:
 
 ---
 
-## 3.2 Built-in Tags Reference
+## 4.2 Built-in Tags Reference
 
 | Tag | Purpose | Example |
 |-----|---------|---------|
@@ -86,7 +86,7 @@ Filters transform variable values using `|`:
 
 ---
 
-## 3.3 Built-in Filters Reference
+## 4.3 Built-in Filters Reference
 
 | Filter | Purpose | Example |
 |--------|---------|---------|
@@ -105,7 +105,7 @@ Filters transform variable values using `|`:
 
 ---
 
-## 3.4 Template Inheritance
+## 4.4 Template Inheritance
 
 Template inheritance is Django's most powerful feature for maintaining consistent layouts.
 
@@ -170,9 +170,9 @@ Template inheritance is Django's most powerful feature for maintaining consisten
 
 ---
 
-## 3.5 Template Loading and Context
+## 4.5 Template Loading and Context
 
-### 3.5.1 Template Search Path
+### 4.5.1 Template Search Path
 
 Django searches templates in this order:
 1. App directories (if `APP_DIRS = True`)
@@ -191,7 +191,7 @@ TEMPLATES = [
 
 > **Naming:** Use `app_name/template_name.html` to avoid conflicts between apps.
 
-### 3.5.2 Passing Context from Views
+### 4.5.2 Passing Context from Views
 
 ```python
 from django.shortcuts import render
@@ -204,7 +204,7 @@ def post_list(request):
     })
 ```
 
-### 3.5.3 Context Processors
+### 4.5.3 Context Processors
 
 Context processors automatically add variables to every template context:
 
@@ -226,9 +226,9 @@ Built-in context processors provide `request`, `user`, `messages`, `perms`, and 
 
 ---
 
-## 3.6 Custom Filters
+## 4.6 Custom Filters
 
-### 3.6.1 Creating a Custom Filter
+### 4.6.1 Creating a Custom Filter
 
 ```python
 # blog/templatetags/blog_extras.py
@@ -262,7 +262,7 @@ def add_class(field, css_class):
 
 ---
 
-## 3.7 Static Files
+## 4.7 Static Files
 
 Reference CSS, JavaScript, and images in templates:
 
@@ -282,7 +282,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 ---
 
-## 3.8 Best Practices
+## 4.8 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -296,4 +296,4 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 **Summary Mnemonic**
 - **Templates** = "Variables `{{ }}`, Tags `{% %}`, Filters `|`, Inheritance `{% extends %}`"
 
-[<- Prev: urls and routing](02-urls-and-routing.md) | [Next: ORM models ->](04-orm-models.md)
+[<- Prev: views and requests](03-views-and-requests.md) | [Next: ORM models ->](05-orm-models.md)

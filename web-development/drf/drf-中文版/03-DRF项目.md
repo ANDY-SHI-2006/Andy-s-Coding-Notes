@@ -1,20 +1,20 @@
-﻿[<- Prev: DRF advanced](02-drf-advanced.md)
+[← 上一篇：DRF 进阶](02-DRF进阶.md)
 
-# 3 DRF Project
+# 3 DRF 项目
 
-This chapter walks through a complete DRF project: table design, register, login, topics, news, home page, favorites, and comments. It ties together everything from chapters 1 and 2.
+本章讲解一个完整的 DRF 项目：表设计、注册、登录、话题、资讯、首页、收藏、评论，把前两章的知识串起来。
 
-## 3.1 Project Overview
+## 3.1 项目功能总览
 
-- **Register:** phone, username, password, confirm password.
-- **Login:** username or phone + password; returns a token (temporary) for later requests.
-- **Topics:** list, add, update, delete.
-- **Home:** all news — time-sorted, paginated, only approved.
-- **Recommend:** recommend / unrecommend, my recommend list.
-- **Favorites:** favorite / unfavorite, my favorite list.
-- **Comments:** create (root comment vs reply), list comments.
+- **注册：**手机号、用户名、密码、确认密码。
+- **登录：**用户名或手机号 + 密码；成功后返回 token（临时），后续携带 token 访问。
+- **话题：**话题列表、添加、修改、删除。
+- **首页：**所有资讯（按时间排序、分页、只读已审核的）。
+- **推荐：**推荐 / 取消推荐，我的推荐列表。
+- **收藏：**收藏 / 取消收藏，我的收藏列表。
+- **评论：**创建评论（判断是根评论还是回复）、展示评论列表。
 
-## 3.2 Project Setup
+## 3.2 项目搭建
 
 ```cmd
 pip install django==4.2.10
@@ -29,7 +29,7 @@ python manage.py startapp api
 ```
 
 ```python
-# settings.py (key parts)
+# settings.py（关键部分）
 INSTALLED_APPS = [..., 'rest_framework', 'api']
 
 DATABASES = {
@@ -56,13 +56,13 @@ TIME_ZONE = 'Asia/Shanghai'
 USE_TZ = False
 ```
 
-## 3.3 Table Design
+## 3.3 表结构设计
 
 ```python
 from django.db import models
 
 class BaseModel(models.Model):
-    """Abstract base: only for inheritance, creates no table."""
+    """抽象类：只用于继承，不会创建表。"""
     create_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     update_time = models.DateTimeField(auto_now=True, null=True, blank=True)
     is_delete = models.BooleanField(default=False)
@@ -76,7 +76,7 @@ class UserInfo(BaseModel):
     phone = models.CharField(max_length=11)
     token = models.CharField(max_length=256, null=True, blank=True)
     token_expire_date = models.DateTimeField(null=True, blank=True)
-    status = models.SmallIntegerField(choices=[(0, 'disabled'), (1, 'active')], default=1)
+    status = models.SmallIntegerField(choices=[(0, '禁用'), (1, '激活')], default=1)
 
 class Topic(BaseModel):
     title = models.CharField(max_length=16)
@@ -87,7 +87,7 @@ class News(BaseModel):
     title = models.CharField(max_length=128)
     image = models.TextField(null=True, blank=True)     # "x.jpg,y.jpg"
     url = models.CharField(max_length=256, null=True, blank=True)
-    status = models.IntegerField(choices=[(0, 'pending'), (1, 'approved'), (2, 'rejected')], default=0)
+    status = models.IntegerField(choices=[(0, '待审核'), (1, '审核通过'), (2, '审核拒绝')], default=0)
     topic = models.ForeignKey(to=Topic, on_delete=models.CASCADE)
     user = models.ForeignKey(to=UserInfo, on_delete=models.CASCADE)
     collect_count = models.IntegerField(default=0)
@@ -115,27 +115,27 @@ class Comment(models.Model):
     update_time = models.DateTimeField(auto_now=True, null=True, blank=True)
 ```
 
-Two kinds of comment:
+评论分两种：
 
-- **Root comment:** `root` and `parent` are both `NULL`, `depth=0`.
-- **Child comment:** has `root` and `parent`.
-  - level-1 reply: `root == parent`.
-  - deeper reply: `root != parent` (root is the original root comment).
+- **根评论：**`root` 和 `parent` 都为 `NULL`，`depth=0`。
+- **子评论：**有 `root` 和 `parent`。
+  - 一级子评论：`root == parent`。
+  - 更深层子评论：`root != parent`（root 是最初的根评论）。
 
 | id | content | parent_id | root_id | depth |
 |----|---------|-----------|---------|-------|
-| 1 | Comment A | NULL | NULL | 0 |
-| 2 | Comment B | 1 | 1 | 1 |
-| 3 | Comment C | 2 | 1 | 2 |
-| 4 | Comment D | 2 | 1 | 2 |
-| 5 | Comment E | 1 | 1 | 1 |
+| 1 | 评论 A | NULL | NULL | 0 |
+| 2 | 评论 B | 1 | 1 | 1 |
+| 3 | 评论 C | 2 | 1 | 2 |
+| 4 | 评论 D | 2 | 1 | 2 |
+| 5 | 评论 E | 1 | 1 | 1 |
 
-## 3.4 Registration
+## 3.4 注册
 
-Routing:
+路由：
 
 ```python
-# project urls.py
+# 项目 urls.py
 from django.urls import path, include
 
 urlpatterns = [
@@ -153,7 +153,7 @@ urlpatterns = [
 ]
 ```
 
-Serializer:
+序列化器：
 
 ```python
 from rest_framework import serializers
@@ -174,19 +174,19 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate_username(self, username):
         if UserInfo.objects.filter(username=username).first():
-            raise exceptions.ValidationError({'username': 'username already exists'})
+            raise exceptions.ValidationError({'username': '用户名已存在'})
         return username
 
     def validate_phone(self, phone):
         if UserInfo.objects.filter(phone=phone).first():
-            raise exceptions.ValidationError({'phone': 'phone already exists'})
+            raise exceptions.ValidationError({'phone': '手机号已存在'})
         if not re.match(r'^1[3-9]\d{9}$', phone):
-            raise exceptions.ValidationError({'phone': 'invalid phone format'})
+            raise exceptions.ValidationError({'phone': '手机号格式错误'})
         return phone
 
     def validate(self, validated_data):
         if validated_data.get('password') != validated_data.get('re_password'):
-            raise exceptions.ValidationError({'re_password': 'passwords do not match'})
+            raise exceptions.ValidationError({'re_password': '两次密码不一致'})
         return validated_data
 
     def create(self, validated_data):
@@ -195,18 +195,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         return UserInfo.objects.create(**validated_data)
 ```
 
-Password encryption helper:
+密码加密工具：
 
 ```python
 # api/utils/tools.py
 import hashlib
 
 def encrypt_func(password):
-    salt = 'a fixed salt'
+    salt = '固定盐值'
     return hashlib.md5((salt + password).encode('utf-8')).hexdigest()
 ```
 
-View:
+视图：
 
 ```python
 from rest_framework.viewsets import GenericViewSet
@@ -217,16 +217,16 @@ class RegisterView(GenericViewSet, CreateModelMixin):
     serializer_class = RegisterSerializer
 ```
 
-> `CreateModelMixin.create` internally calls `serializer.save()`, which calls the serializer's `create()` — so the encryption logic lives in the serializer.
+> `CreateModelMixin.create` 内部会调用 `serializer.save()`，而 `save()` 会调用序列化器的 `create()` —— 因此加密逻辑放在序列化器里。
 
-## 3.5 Login
+## 3.5 登录
 
 ```python
 # api/urls.py
 path('login/', user_views.LoginView.as_view()),
 ```
 
-Serializer:
+序列化器：
 
 ```python
 class LoginSerializer(serializers.Serializer):
@@ -238,13 +238,13 @@ class LoginSerializer(serializers.Serializer):
         username = validated_data.get('username')
         phone = validated_data.get('phone')
         if not (username or phone):
-            raise exceptions.ValidationError({'username': 'enter username or phone'})
+            raise exceptions.ValidationError({'username': '用户名和手机号必须输入一个'})
         if username and phone:
-            raise exceptions.ValidationError({'username': 'enter only one of username/phone'})
+            raise exceptions.ValidationError({'username': '用户名和手机号不能同时输入'})
         return validated_data
 ```
 
-View:
+视图：
 
 ```python
 import uuid
@@ -257,7 +257,7 @@ class LoginView(APIView):
     def post(self, request):
         ser = LoginSerializer(data=request.data)
         if not ser.is_valid():
-            return Response({'code': 400, 'msg': 'login failed', 'errors': ser.errors})
+            return Response({'code': 400, 'msg': '登录失败', 'errors': ser.errors})
 
         username = ser.validated_data.get('username')
         phone = ser.validated_data.get('phone')
@@ -265,22 +265,22 @@ class LoginView(APIView):
 
         user_obj = UserInfo.objects.filter(Q(username=username) | Q(phone=phone)).first()
         if not user_obj:
-            return Response({'code': 400, 'msg': 'login failed', 'errors': {'username': 'user not found'}})
+            return Response({'code': 400, 'msg': '登录失败', 'errors': {'username': '用户名或手机号不存在'}})
 
         if user_obj.password != encrypt_func(password):
-            return Response({'code': 400, 'msg': 'login failed', 'errors': {'password': 'wrong password'}})
+            return Response({'code': 400, 'msg': '登录失败', 'errors': {'password': '密码错误'}})
 
         token = str(uuid.uuid4())
         expire_date = datetime.now() + timedelta(days=1)
         user_obj.token = token
         user_obj.token_expire_date = expire_date
         user_obj.save()
-        return Response({'code': 200, 'msg': 'login success', 'data': {'token': token}})
+        return Response({'code': 200, 'msg': '登录成功', 'data': {'token': token}})
 ```
 
-## 3.6 Topics
+## 3.6 话题
 
-First, a shared authentication class (checks token in body or header, plus expiry):
+首先，编写一个通用的认证类（在请求体或请求头中校验 token，并判断过期）：
 
 ```python
 # api/extension/auth.py
@@ -292,32 +292,32 @@ class TokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
         token = request.data.get('token') or request.headers.get('Token')
         if not token:
-            raise exceptions.AuthenticationFailed({'code': 403, 'msg': 'token is required'})
+            raise exceptions.AuthenticationFailed({'code': 403, 'msg': 'token不能为空'})
 
         user_obj = UserInfo.objects.filter(token=token).first()
         if not user_obj:
-            raise exceptions.AuthenticationFailed({'code': 403, 'msg': 'invalid token'})
+            raise exceptions.AuthenticationFailed({'code': 403, 'msg': 'token错误'})
 
         if datetime.now() > user_obj.token_expire_date:
-            raise exceptions.AuthenticationFailed({'code': 403, 'msg': 'token expired'})
+            raise exceptions.AuthenticationFailed({'code': 403, 'msg': 'token过期'})
 
         return (user_obj, token)
 ```
 
-Routing (with a router):
+路由（使用路由器）：
 
 ```python
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
 router.register('topic', topic_views.TopicViewSet)
-# ... other registers
+# ... 其他注册
 
 urlpatterns = [ ... ]
 urlpatterns += router.urls
 ```
 
-Serializer and view:
+序列化器和视图：
 
 ```python
 class TopicSerializer(serializers.ModelSerializer):
@@ -336,16 +336,16 @@ class TopicViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
 
     def perform_create(self, serializer):
-        # the model needs a `user`; supply it from the logged-in user
+        # 模型需要 user 字段；从当前登录用户获取并补充
         serializer.save(user=self.request.user)
 
     def perform_destroy(self, instance):
-        # logical delete instead of physical delete
+        # 逻辑删除，而非物理删除
         instance.is_delete = True
         instance.save()
 ```
 
-Pagination (global config):
+分页（全局配置）：
 
 ```python
 # api/extension/page.py
@@ -364,9 +364,9 @@ REST_FRAMEWORK = {
 }
 ```
 
-## 3.7 News
+## 3.7 资讯（News）
 
-Serializer (write-only input fields vs read-only display fields):
+序列化器（只写输入字段 vs 只读展示字段）：
 
 ```python
 class NewsSerializer(serializers.ModelSerializer):
@@ -394,14 +394,14 @@ class NewsSerializer(serializers.ModelSerializer):
     def validate_topic(self, topic):
         request = self.context['request']
         user = request.user
-        # the topic must belong to the current user
+        # 话题必须属于当前用户
         topic_obj = Topic.objects.filter(id=topic.id, user=user, is_delete=False).first()
         if not topic_obj:
-            raise serializers.ValidationError('topic does not belong to the current user')
+            raise serializers.ValidationError('话题不属于当前用户')
         return topic
 ```
 
-View with create-only throttling:
+只对 create 做限流的视图：
 
 ```python
 from rest_framework.viewsets import ModelViewSet
@@ -413,7 +413,7 @@ class NewsView(ModelViewSet):
     throttle_classes = [MyThrottle]
 
     def get_throttles(self):
-        # throttle only the create action
+        # 只对 create 动作做限流
         if self.action == 'create':
             return [MyThrottle()]
         return []
@@ -422,7 +422,7 @@ class NewsView(ModelViewSet):
         serializer.save(user=self.request.user)
 ```
 
-Throttle class:
+限流类：
 
 ```python
 from django.core.cache import cache as redis_cache
@@ -439,19 +439,19 @@ class MyThrottle(SimpleRateThrottle):
         return self.cache_format % (self.scope, request.user.id)
 
     def throttle_failure(self):
-        raise Throttled({'code': 429, 'msg': f'too frequent, retry in {int(self.wait())}s'})
+        raise Throttled({'code': 429, 'msg': f'请求过于频繁，请{int(self.wait())}秒后重试'})
 ```
 
-## 3.8 Home Page
+## 3.8 首页
 
-Home lists all approved news (time-sorted, paginated) and marks whether the current user has favorited each item.
+首页展示所有已审核资讯（按时间排序、分页），并标记当前用户是否已收藏每条资讯。
 
 ```python
 # urls.py
 path('index/', news_views.IndexView.as_view({'get': 'list'})),
 ```
 
-An authentication class that allows anonymous users (returns `None` instead of raising):
+允许匿名访问的认证类（不抛异常，而是返回 `None`）：
 
 ```python
 class NoTokenAuthentication(BaseAuthentication):
@@ -477,7 +477,7 @@ class IndexView(ListModelMixin, GenericViewSet):
     authentication_classes = [NoTokenAuthentication]
 ```
 
-Serializer with an `is_collect` computed field:
+带 `is_collect` 计算字段的序列化器：
 
 ```python
 class IndexNewsSerializer(serializers.ModelSerializer):
@@ -499,11 +499,11 @@ class IndexNewsSerializer(serializers.ModelSerializer):
         request = self.context['request']
         user = request.user
         if not isinstance(user, UserInfo):
-            return False   # anonymous user
+            return False   # 未登录用户
         return Collect.objects.filter(user=user, news=obj).exists()
 ```
 
-## 3.9 Favorites
+## 3.9 收藏
 
 ```python
 router.register('collect', collect_views.CollectView)
@@ -531,7 +531,7 @@ class CollectSerializer(serializers.ModelSerializer):
         }
 ```
 
-Toggle favorite / unfavorite (favoriting twice = unfavorite):
+收藏 / 取消收藏的切换（再次收藏 = 取消收藏）：
 
 ```python
 from rest_framework.response import Response
@@ -549,31 +549,31 @@ class CollectView(ModelViewSet):
             serializer.save(user=user)
             news.collect_count += 1
             news.save()
-            return Response({'code': 200, 'msg': 'favorited', 'active': True})
+            return Response({'code': 200, 'msg': '收藏成功', 'active': True})
         else:
             collect_obj.delete()
             news.collect_count -= 1
             news.save()
-            return Response({'code': 200, 'msg': 'unfavorited', 'active': False})
+            return Response({'code': 200, 'msg': '取消收藏成功', 'active': False})
 ```
 
-## 3.10 Recommend (Exercise)
+## 3.10 推荐（练习）
 
-The recommend feature is exactly the same as favorites — copy the pattern, swap `Collect` for `Recommend`, and update `recommend_count`. (Left as an exercise.)
+推荐功能与收藏完全一致 —— 复制同样的模式，把 `Collect` 换成 `Recommend`，更新 `recommend_count` 即可。（留作练习。）
 
-## 3.11 Comments
+## 3.11 评论
 
-A comment is either a **root comment** (`root=parent=NULL, depth=0`) or a **child comment** (has `root` and `parent`).
+评论要么是**根评论**（`root=parent=NULL, depth=0`），要么是**子评论**（有 `root` 和 `parent`）。
 
-- Root comment: only `news`, `user`, `content` are passed; `root`/`depth` are derived automatically.
-- Level-1 reply: pass `parent=root_id`; then `root=parent`, `depth=parent.depth+1`.
-- Deeper reply: pass `parent=reply_id`; then `root=parent.root`, `depth=parent.depth+1`.
+- 根评论：只需传 `news`、`user`、`content`；`root`/`depth` 自动推演。
+- 一级子评论：传 `parent=根评论id`；则 `root=parent`、`depth=parent.depth+1`。
+- 更深层子评论：传 `parent=回复的评论id`；则 `root=parent.root`、`depth=parent.depth+1`。
 
 ```python
 router.register('comment', comment_views.CommentView, basename='comment')
 ```
 
-Serializer:
+序列化器：
 
 ```python
 class CommentSerializer(serializers.ModelSerializer):
@@ -590,13 +590,13 @@ class CommentSerializer(serializers.ModelSerializer):
         parent_obj = attrs.get('parent')
         news_obj = attrs.get('news')
         if not parent_obj:
-            return attrs   # root comment: any news is fine
+            return attrs   # 根评论：任意资讯都可以
         if parent_obj.news != news_obj:
-            raise serializers.ValidationError('reply must belong to the same news')
+            raise serializers.ValidationError('回复的评论必须属于该资讯')
         return attrs
 ```
 
-View — auto-compute `root` and `depth`:
+视图 —— 自动计算 `root` 和 `depth`：
 
 ```python
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModelMixin
@@ -610,10 +610,10 @@ class CommentView(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericVi
         user = self.request.user
         parent_obj = serializer.validated_data.get('parent')
         if not parent_obj:
-            # root comment
+            # 根评论
             comment_obj = serializer.save(user=user)
         else:
-            # child comment: derive root and depth
+            # 子评论：推演 root 和 depth
             root = parent_obj if not parent_obj.root else parent_obj.root
             depth = parent_obj.depth + 1
             comment_obj = serializer.save(user=user, root=root, depth=depth)
@@ -622,7 +622,7 @@ class CommentView(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericVi
         comment_obj.news.save()
 ```
 
-Displaying the comment tree:
+展示评论树：
 
 ```python
 class ListCommentSerializer(serializers.ModelSerializer):
@@ -650,7 +650,7 @@ class ListCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'content', 'create_time', 'parent', 'child_list']
 ```
 
-The view switches serializer for the `list` action:
+视图在 `list` 动作时切换序列化器：
 
 ```python
 def get_serializer_class(self):
@@ -659,18 +659,18 @@ def get_serializer_class(self):
     return CommentSerializer
 ```
 
-## 3.12 Best Practices
+## 3.12 最佳实践
 
-| Do | Don't |
-|----|-------|
-| Encrypt passwords (hash + salt) | Store plaintext passwords |
-| Use an abstract base model for shared fields | Repeat timestamp/delete fields in every model |
-| Do logical deletes with `perform_destroy` | Physically `delete()` shared data |
-| Derive `root`/`depth` in `perform_create` | Ask the client to send them |
-| Keep separate serializers for input vs output | Force one serializer to do everything |
+| 推荐 Do | 不推荐 Don't |
+|---------|--------------|
+| 密码加密（哈希 + 盐值） | 明文存储密码 |
+| 用抽象基类承载公共字段 | 每个模型重复写时间/删除字段 |
+| 用 `perform_destroy` 做逻辑删除 | 对共享数据直接 `delete()` |
+| 在 `perform_create` 里推演 `root`/`depth` | 让客户端传这些字段 |
+| 输入与输出用不同序列化器 | 强迫一个序列化器做完所有事 |
 
-**Summary Mnemonic**
-- **Project flow** = "register → login (token) → auth (token) → topic/news → home → favorite/recommend → comment".
-- **Comment tree** = "root (depth 0) → level-1 (root=parent) → deeper (root=parent.root), depth = parent.depth + 1".
+**记忆口诀**
+- **项目流程** = "注册 → 登录（拿 token）→ 认证（带 token）→ 话题/资讯 → 首页 → 收藏/推荐 → 评论"。
+- **评论树** = "根评论（depth 0）→ 一级（root=parent）→ 更深（root=parent.root），depth = parent.depth + 1"。
 
-[<- Prev: DRF advanced](02-drf-advanced.md)
+[← 上一篇：DRF 进阶](02-DRF进阶.md)

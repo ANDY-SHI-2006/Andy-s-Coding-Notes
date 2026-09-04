@@ -55,8 +55,8 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 
 | Topic / 主题 | English | 中文 |
 |--------------|---------|------|
-| **Django** | [Django Notes](web-development/django/django-english-version/README.md) | — |
-| **Django REST Framework** | [DRF Notes](web-development/drf/drf-english-version/README.md) | — |
+| **Django** | [Django Notes](web-development/django/django-english-version/README.md) | [Django 笔记](web-development/django/django-中文版/README.md) |
+| **Django REST Framework** | [DRF Notes](web-development/drf/drf-english-version/README.md) | [DRF 笔记](web-development/drf/drf-中文版/README.md) |
 | **Flask** | [Flask Notes](web-development/flask/flask-english-version/README.md) | [Flask 笔记](web-development/flask/flask-中文版/README.md) |
 | **HTML & CSS** | [HTML-CSS Notes](web-development/html-css/html-css-english-version/README.md) | [HTML-CSS 笔记](web-development/html-css/html-css-中文版/README.md) |
 | **JavaScript** | [JavaScript Notes](web-development/javascript/javascript-english-version/README.md) | [JavaScript 笔记](web-development/javascript/javascript-中文版/README.md) |
@@ -69,7 +69,7 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 | Topic / 主题 | English | 中文 |
 |--------------|---------|------|
 | **Network Basics** | [Network Basics Notes](devops/network-basics/network-basics-english-version/README.md) | [网络基础笔记](devops/network-basics/网络基础-中文版/README.md) |
-| **Linux** | [Linux Notes](devops/linux/linux-english-version/README.md) | — |
+| **Linux** | [Linux Notes](devops/linux/linux-english-version/README.md) | [Linux 笔记](devops/linux/linux-中文版/README.md) |
 | **Command Line** | [Command Line Notes](devops/command-line/Command%20Line-English%20version.md) | [命令行笔记](devops/command-line/命令行-中文版.md) |
 
 ### 🛠️ Tools & Skills | 工具与技能

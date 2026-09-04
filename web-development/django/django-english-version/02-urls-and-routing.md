@@ -1,4 +1,4 @@
-[<- Prev: intro and setup](01-intro-and-setup.md) | [Next: templates ->](03-templates.md)
+[<- Prev: intro and setup](01-intro-and-setup.md) | [Next: views and requests ->](03-views-and-requests.md)
 
 # 2 URLs and Routing
 
@@ -263,4 +263,4 @@ reverse('blog:detail', kwargs={'id': 1})
 **Summary Mnemonic**
 - **URL routing** = "`path('route/', view, name='name')` → `reverse('name')` → URL"
 
-[<- Prev: intro and setup](01-intro-and-setup.md) | [Next: templates ->](03-templates.md)
+[<- Prev: intro and setup](01-intro-and-setup.md) | [Next: views and requests ->](03-views-and-requests.md)

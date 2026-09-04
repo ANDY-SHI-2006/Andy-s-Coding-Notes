@@ -1,12 +1,12 @@
-[<- Prev: cookie and session](10-cookie-session.md) | [Next: BBS project ->](12-bbs-project.md)
+[<- Prev: cookie and session](12-cookie-session.md) | [Next: BBS project ->](14-bbs-project.md)
 
-# 11 Authentication and Admin
+# 13 Authentication and Admin
 
 Django includes a complete, production-ready authentication system and a powerful admin interface. These built-in features eliminate the need to build user management and admin panels from scratch.
 
 ---
 
-## 11.1 Built-in Authentication
+## 13.1 Built-in Authentication
 
 Django's `django.contrib.auth` provides:
 
@@ -20,7 +20,7 @@ Django's `django.contrib.auth` provides:
 
 ---
 
-## 11.2 User Authentication Views
+## 13.2 User Authentication Views
 
 Django provides ready-to-use auth views. Include them in your URLconf:
 
@@ -77,7 +77,7 @@ urlpatterns = [
 
 ---
 
-## 11.3 Login and Logout in Views
+## 13.3 Login and Logout in Views
 
 ### Programmatic Authentication
 
@@ -110,7 +110,7 @@ def custom_logout(request):
 
 ---
 
-## 11.4 Registration
+## 13.4 Registration
 
 ```python
 from django.contrib.auth.forms import UserCreationForm
@@ -158,7 +158,7 @@ class CustomUserCreationForm(forms.ModelForm):
 
 ---
 
-## 11.5 Access Control
+## 13.5 Access Control
 
 ### Decorators
 
@@ -208,7 +208,7 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
 ---
 
-## 11.6 Custom User Model
+## 13.6 Custom User Model
 
 **Always define a custom user model at the start of a project.** Changing later requires migration gymnastics.
 
@@ -243,7 +243,7 @@ admin.site.register(User, UserAdmin)
 
 ---
 
-## 11.7 Django Admin
+## 13.7 Django Admin
 
 The admin interface auto-generates CRUD panels for your models.
 
@@ -312,7 +312,7 @@ class BookAdmin(admin.ModelAdmin):
 
 ---
 
-## 11.8 Password Management
+## 13.8 Password Management
 
 ```python
 # settings.py - Password validators
@@ -326,7 +326,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ---
 
-## 11.9 Best Practices
+## 13.9 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -341,4 +341,4 @@ AUTH_PASSWORD_VALIDATORS = [
 **Summary Mnemonic**
 - **Auth/Admin** = "Authenticate with built-ins → Authorize with decorators → Administer with auto-CRUD"
 
-[<- Prev: cookie and session](10-cookie-session.md) | [Next: BBS project ->](12-bbs-project.md)
+[<- Prev: cookie and session](12-cookie-session.md) | [Next: BBS project ->](14-bbs-project.md)
