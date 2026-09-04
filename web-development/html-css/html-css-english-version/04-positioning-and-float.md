@@ -19,6 +19,8 @@ Controlling where elements appear on the page is one of CSS's most important job
 }
 ```
 
+> **Note:** Quotes in `url()` are optional. Use them when the URL contains spaces or special characters: `url("path with space/image.png")`.
+
 **Background-repeat values:**
 
 | Value | Behavior |
@@ -85,6 +87,53 @@ Controls the transparency of an entire element (including its content).
     background-color: rgba(255, 0, 0, 0.5);  /* Red with 50% opacity */
 }
 ```
+
+### 4.1.5 CSS Sprites
+
+CSS sprites combine multiple small icons into one image file. Use `background-position` with negative offsets to display only the needed region, reducing HTTP requests.
+
+```css
+.icon {
+    width: 24px;
+    height: 24px;
+    background-image: url("icons-sprite.png");
+    background-repeat: no-repeat;
+    background-position: -10px -10px; /* Show the icon at this region */
+}
+
+.icon:hover {
+    background-position: -10px -40px; /* Switch coordinate on hover */
+}
+```
+
+Key points:
+- Negative `background-position` moves the image up/left to reveal the target area.
+- The element's `width` and `height` act as a viewport over the sprite sheet.
+- Use sprites for groups of small icons that are loaded together.
+
+### 4.1.6 Background-Only Transparency
+
+Do not set `opacity` on a parent when you only want the background to be transparent, because it also fades all child content. Instead, use a `::before` pseudo-element as an overlay layer.
+
+```css
+.card {
+    position: relative;
+    color: white;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); /* Or use opacity on a solid color */
+    z-index: -1;
+}
+```
+
+Key points:
+- `::before` creates a layer behind the content.
+- Apply `opacity` or `rgba()` to the overlay only.
+- The text and children stay fully opaque.
 
 ---
 
@@ -163,6 +212,51 @@ When a parent contains only floated children, its height collapses to zero. Thre
 ```
 
 > **Modern alternative:** Use `display: flex` or `display: grid` instead of floats for layout.
+
+### 4.2.4 Float vs Inline-Block
+
+For horizontal layouts, `float` was the traditional choice. `inline-block` is simpler but has baseline-alignment and whitespace-gap issues.
+
+| Approach | Pros | Cons |
+|---|---|---|
+| `float` | No inline whitespace gaps | Needs clearfix, can collapse parent height |
+| `inline-block` | Easy to use, stays in flow | Whitespace gaps, baseline alignment quirks |
+
+Use `inline-block` for small inline-like layouts; prefer `float` (or modern Flexbox/Grid) for multi-column rows.
+
+### 4.2.5 Mini Case: Xiaomi Top Navigation Bar
+
+A classic top navigation uses a fixed-width container centered with `margin: 0 auto`, with `float: left` for the logo/menu and `float: right` for user actions.
+
+```html
+<nav class="top-bar">
+  <div class="container">
+    <div class="logo">Logo</div>
+    <ul class="nav-left">...</ul>
+    <div class="nav-right">...</div>
+  </div>
+</nav>
+```
+
+```css
+.container {
+    width: 1226px;
+    margin: 0 auto;
+}
+
+.nav-left { float: left; }
+.nav-right { float: right; }
+.container::after { /* Clearfix */
+    content: "";
+    display: block;
+    clear: both;
+}
+```
+
+Key points:
+- `float` cleanly separates left and right columns.
+- Clear the container to avoid height collapse.
+- `line-height` equal to the nav height vertically centers single-line links.
 
 ---
 
@@ -279,6 +373,47 @@ When elements overlap, `z-index` controls which one appears on top.
 - `z-index` only works on **positioned** elements (not `static`)
 - A new stacking context is created by: `position` + `z-index`, `opacity` < 1, `transform`, `filter`, `flex` children with `z-index`
 - Elements inside a stacking context cannot escape above elements outside it
+- Positioned elements always stack above normal-flow elements
+- When `z-index` is equal or absent, the later element in source order appears on top
+- A negative `z-index` can place a positioned element behind its normal-flow siblings
+
+### 4.3.7 Mini Case: Taobao Search Bar
+
+The dropdown list under a search input is typically placed with `position: absolute` inside a `position: relative` wrapper, and shown or hidden with `:hover` or JavaScript.
+
+```html
+<div class="search-box">
+  <input type="text" placeholder="Search...">
+  <button>Search</button>
+  <ul class="suggest-list">
+    <li>Item 1</li>
+    <li>Item 2</li>
+  </ul>
+</div>
+```
+
+```css
+.search-box {
+    position: relative;
+}
+
+.suggest-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    display: none;
+}
+
+.search-box:hover .suggest-list {
+    display: block;
+}
+```
+
+Key points:
+- The parent gets `position: relative` to anchor the dropdown.
+- `top: 100%` places the list directly below the input.
+- Remove the default `border` and `outline` on the input for custom styling.
 
 ---
 
@@ -295,12 +430,43 @@ When elements overlap, `z-index` controls which one appears on top.
 
 ### 4.4.2 Center with Absolute Positioning
 
+Three common ways to center an absolutely positioned element both horizontally and vertically.
+
+**Method 1: Stretch all edges + auto margins**
+
+```css
+.center-absolute {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;   /* Requires explicit width and height */
+}
+```
+
+**Method 2: 50% + transform**
+
 ```css
 .center-absolute {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);   /* Offset by half its own size */
+}
+```
+
+**Method 3: 50% + negative margin**
+
+```css
+.center-absolute {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 100px;
+    margin-top: -50px;   /* Negative half of height */
+    margin-left: -100px; /* Negative half of width */
 }
 ```
 
@@ -314,6 +480,24 @@ When elements overlap, `z-index` controls which one appears on top.
     height: 100vh;
 }
 ```
+
+### 4.4.4 Fixed Sidebar Vertical Centering
+
+A fixed element can be vertically centered in the viewport using `top: 50%` plus `transform: translateY(-50%)`.
+
+```css
+.side-tool {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+```
+
+Key points:
+- `top: 50%` aligns the element's top edge with the viewport center.
+- `translateY(-50%)` shifts it up by half its own height.
+- The same idea works for horizontal centering with `left: 50%` and `translateX(-50%)`.
 
 ---
 

@@ -31,11 +31,25 @@ button.addEventListener("click", handleClick);
 button.removeEventListener("click", handleClick);
 ```
 
-| Parameter | Description |
-|-----------|-------------|
+| Parameter / Option | Description |
+|--------------------|-------------|
 | `type` | Event name: `"click"`, `"mouseover"`, `"keydown"`, etc. |
 | `listener` | Function to execute when the event fires |
 | `useCapture` | `true` = capture phase, `false` = bubble phase (default) |
+| `options` | Object such as `{ once: true }` or `{ passive: true }` |
+
+```javascript
+// Run once and auto-remove
+button.addEventListener("click", () => {
+    console.log("Only once");
+}, { once: true });
+
+// Tell the browser the listener will not call preventDefault()
+// For wheel/touch events, modern browsers usually default to passive anyway
+window.addEventListener("wheel", handleWheel, { passive: true });
+```
+
+> **Removing listeners:** `removeEventListener(type, listener)` needs the **same function reference** used with `addEventListener`. Anonymous inline functions cannot be removed.
 
 ### 3.1.2 Inline Event Handlers (Avoid)
 
@@ -45,6 +59,51 @@ button.removeEventListener("click", handleClick);
 ```
 
 > **Why avoid:** Mixes HTML and JavaScript, hard to maintain, only one handler per event.
+
+### 3.1.3 Three Ways to Bind Events
+
+| Way | Syntax | Can stack? | Removal |
+|-----|--------|-----------|---------|
+| Inline HTML | `<button onclick="fn()">` | No (one attribute) | Remove attribute |
+| DOM0 | `element.onclick = fn` | No (later assignment overwrites earlier) | `element.onclick = null` |
+| DOM2 | `element.addEventListener("click", fn)` | Yes (multiple listeners per event) | `removeEventListener` with same reference |
+
+```javascript
+let btn = document.getElementById("btn");
+
+// DOM0: simple, but only one handler at a time
+btn.onclick = function () {
+    console.log("DOM0 first");
+};
+
+btn.onclick = function () {
+    console.log("DOM0 second — overwrites the first");
+};
+
+// DOM2: both handlers run
+btn.addEventListener("click", () => console.log("DOM2 first"));
+btn.addEventListener("click", () => console.log("DOM2 second"));
+```
+
+> Prefer DOM2 (`addEventListener`) for production code; keep DOM0 only as a compatibility shortcut.
+
+### 3.1.4 Removing Event Handlers
+
+```javascript
+let btn = document.getElementById("btn");
+
+// DOM0 unbind
+btn.onclick = null;
+
+// DOM2 unbind — same reference, same capture option
+function handler() {
+    console.log("hi");
+}
+btn.addEventListener("click", handler);
+btn.removeEventListener("click", handler);
+```
+
+> If you add a listener with `{ capture: true }`, remove it with the same option. Anonymous arrow functions cannot be removed.
 
 ---
 
@@ -75,6 +134,8 @@ element.addEventListener("mouseleave", () => {
 });
 ```
 
+> **Tip:** Prefer `mouseenter` / `mouseleave` when you only need to react to the element itself. `mouseover` / `mouseout` bubble, so they fire again when the pointer moves between the element and its child elements.
+
 ### 3.2.2 Keyboard Events
 
 | Event | Fires When |
@@ -97,8 +158,10 @@ document.addEventListener("keydown", (event) => {
 | Event | Fires When |
 |-------|------------|
 | `submit` | Form is submitted |
+| `reset` | Form is reset (attach to `<form>`) |
 | `change` | Value changes and element loses focus |
 | `input` | Value changes immediately |
+| `select` | Text inside an input/textarea is selected |
 | `focus` | Element receives focus |
 | `blur` | Element loses focus |
 
@@ -164,27 +227,107 @@ link.addEventListener("click", (event) => {
 });
 ```
 
+### 3.3.2 Mouse Position Properties
+
+For mouse events, the event object carries four coordinate pairs:
+
+| Property | Measured From |
+|----------|---------------|
+| `clientX` / `clientY` | Top-left of the visible viewport |
+| `pageX` / `pageY` | Top-left of the full document, including scrolled area |
+| `offsetX` / `offsetY` | Top-left of the target element's padding edge |
+| `screenX` / `screenY` | Top-left of the physical screen |
+
+```javascript
+box.addEventListener("mousemove", (e) => {
+    console.log("Viewport:", e.clientX, e.clientY);
+    console.log("Document:", e.pageX, e.pageY);
+    console.log("Inside element:", e.offsetX, e.offsetY);
+});
+```
+
+### 3.3.3 `currentTarget` vs `this`
+
+Inside a normal (non-arrow) event handler, `this` is the element the listener is attached to — the same as `event.currentTarget`.
+
+```javascript
+button.addEventListener("click", function (e) {
+    console.log(this === e.currentTarget); // true
+    console.log(this === e.target);        // false if a child was clicked
+});
+```
+
+Arrow functions do **not** get their own `this`; they inherit it from the surrounding scope, so use `e.currentTarget` instead:
+
+```javascript
+button.addEventListener("click", (e) => {
+    console.log(e.currentTarget); // the element with the listener
+    console.log(this);            // likely window, not the button
+});
+```
+
+> Do not rely on the global `event` variable used in older code. Always accept the event object as the handler's first parameter.
+
+### 3.3.4 Explicit `this` Binding: `call`, `apply`, `bind`
+
+These methods let you control what `this` points to when a function runs. They are useful when passing an object method as a callback (for example, to a timer or event listener).
+
+```javascript
+let user = {
+    name: "Andy",
+    greet() {
+        console.log("Hello, " + this.name);
+    }
+};
+
+// call: invoke immediately with individual arguments
+user.greet.call({ name: "Bob" }); // Hello, Bob
+
+// apply: invoke immediately with an array of arguments
+user.greet.apply({ name: "Bob" });
+
+// bind: returns a new function with permanent this
+let bound = user.greet.bind({ name: "Bob" });
+setInterval(bound, 1000);
+```
+
+> `bind` is especially handy when a method must keep its `this` inside a delayed callback such as `setInterval` or `addEventListener`.
+
 ---
 
 ## 3.4 Event Propagation
 
-Events in the DOM travel through three phases:
+When an event fires, it travels through the DOM in three phases:
 
-1. **Capture phase:** Event travels from `document` down to the target element.
-2. **Target phase:** Event reaches the target element.
-3. **Bubble phase:** Event travels back up from the target to `document`.
+1. **Capture phase:** The event moves from `window` down through ancestors to the target's parent.
+2. **Target phase:** The event reaches the target element itself.
+3. **Bubble phase:** The event travels back up from the target to `window`.
 
 ```
-Capture:  document → html → body → div → button
+Capture:  window → document → html → body → div → button
 Target:   button
-Bubble:   button → div → body → html → document
+Bubble:   button → div → body → html → document → window
 ```
 
-By default, event listeners trigger during the **bubble** phase.
+By default, event listeners trigger during the **bubble** phase. Use `true` (or `{ capture: true }`) to listen during the capture phase instead.
 
 ```javascript
-// Trigger during capture phase (rarely needed)
+// Trigger during capture phase
 element.addEventListener("click", handler, true);
+
+// Or with the options object
+element.addEventListener("click", handler, { capture: true });
+```
+
+Listeners on the target itself fire in registration order. Ancestor capture listeners run before the target, and ancestor bubble listeners run after.
+
+```javascript
+outer.addEventListener("click", () => console.log("outer capture"), true);
+outer.addEventListener("click", () => console.log("outer bubble"), false);
+inner.addEventListener("click", () => console.log("inner"));
+
+// Clicking inner logs:
+// outer capture → inner → outer bubble
 ```
 
 ### 3.4.1 Stopping Propagation
@@ -245,7 +388,58 @@ document.getElementById("list").addEventListener("click", (event) => {
 | Call `preventDefault()` when you need to stop browser behavior | Call `preventDefault()` unnecessarily |
 | Remove listeners when components are destroyed | Leave orphaned listeners that cause memory leaks |
 
+---
+
+## 3.7 Mini Case Snippets
+
+### 3.7.1 Tab Switching (Exclusive Pattern)
+
+Clear all active states, then activate only the clicked tab and its matching panel.
+
+```javascript
+const tabs = document.querySelectorAll(".tab");
+const panes = document.querySelectorAll(".pane");
+
+tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        panes.forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        panes[index].classList.add("active");
+    });
+});
+```
+
+- The "exclusive" idea: reset everything, then mark the current item.
+- Use the tab's index to pick the matching content pane.
+
+### 3.7.2 Countdown "Send Code" Button
+
+Disable the button during the countdown and re-enable it when done.
+
+```javascript
+const btn = document.getElementById("sendCode");
+let seconds = 60;
+btn.disabled = true;
+btn.textContent = `${seconds}s`;
+
+const timer = setInterval(() => {
+    seconds--;
+    btn.textContent = `${seconds}s`;
+    if (seconds <= 0) {
+        clearInterval(timer);
+        btn.disabled = false;
+        btn.textContent = "Send Code";
+    }
+}, 1000);
+```
+
+- Always store the timer ID so you can `clearInterval` when finished.
+- Set `disabled` to prevent repeated clicks and provide visual feedback.
+
 **Summary Mnemonic**
 - **Events** = "Listen on parent, check target, delegate for scale"
+- **Binding** = "DOM2 stacks, DOM0 overwrites, same reference to remove"
+- **Flow** = "Capture down, bubble up, currentTarget shows the owner"
 
 [<- Previous: functions and dom](02-functions-and-dom.md) | [Next: dom manipulation ->](04-dom-manipulation.md)

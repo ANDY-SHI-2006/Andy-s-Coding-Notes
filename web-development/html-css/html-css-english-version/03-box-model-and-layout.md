@@ -37,6 +37,15 @@ Every element consists of four layers, from inside to outside:
 }
 ```
 
+Use `min-width` and `max-width` to keep a box within a range without hard-coding a single size:
+
+```css
+.responsive {
+    min-width: 600px;
+    max-width: 800px;
+}
+```
+
 ### 3.1.2 Padding
 
 Padding creates space inside the box, between the content and the border.
@@ -91,6 +100,19 @@ Padding creates space inside the box, between the content and the border.
 | `none` | No border |
 | `hidden` | No border (hides table borders) |
 
+**Drawing triangles with borders:** set `width` and `height` to `0`, then color one border side:
+
+```css
+.triangle-down {
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-top-color: red;   /* colored side points down */
+}
+```
+
+The four borders meet at the center; making three transparent leaves a single triangle.
+
 ### 3.1.4 Margin
 
 Margin creates space outside the box, separating it from other elements.
@@ -115,6 +137,24 @@ Margin creates space outside the box, separating it from other elements.
 ```
 
 > **Centering a block element:** `margin: 0 auto;` centers a block-level element horizontally within its parent.
+
+### 3.1.5 Overflow Control
+
+The `overflow` property decides what happens when content is larger than its container.
+
+| Value | Behavior |
+|-------|----------|
+| `visible` | Default: content spills outside the box |
+| `hidden` | Overflow is clipped, no scrollbars |
+| `scroll` | Scrollbars are always shown |
+| `auto` | Scrollbars appear only when content overflows |
+
+```css
+.scroll-box {
+    height: 100px;
+    overflow: auto;   /* scrollbar appears when needed */
+}
+```
 
 ---
 
@@ -200,6 +240,34 @@ div {
 }
 ```
 
+### 3.4.1 Inline and Inline-Block Limitations
+
+| Feature | `inline` | `inline-block` |
+|---------|----------|----------------|
+| Set `width` / `height` | No | Yes |
+| `margin` / `padding` | Horizontal only | All four sides |
+| `margin: auto` | No | No |
+
+> **Note:** `inline` and `inline-block` elements cannot be centered with `margin: auto`. Use `text-align: center` on the parent or switch to `display: block`.
+
+### 3.4.2 Removing Inline-Block Gaps
+
+Whitespace between `inline-block` elements in the source HTML is rendered as a small gap. Common fixes:
+
+1. Remove the whitespace in HTML (write tags on one line).
+2. Set `font-size: 0` on the parent and restore it on the children.
+3. Use `display: flex` on the parent (recommended).
+
+```css
+.parent {
+    font-size: 0;   /* remove gaps */
+}
+.child {
+    display: inline-block;
+    font-size: 16px;   /* restore text size */
+}
+```
+
 ---
 
 ## 3.5 Border Radius and Box Shadow
@@ -244,6 +312,26 @@ Rounds the corners of an element.
 | `spread-radius` | How much the shadow expands/contracts |
 | `color` | Shadow color (often semi-transparent) |
 
+### 3.5.3 Elliptical Corners and Percentage Values
+
+A slash (`/`) separates the horizontal and vertical radii of each corner, creating elliptical corners:
+
+```css
+.ellipse {
+    border-radius: 10px / 20px;   /* horizontal 10px, vertical 20px */
+}
+```
+
+When you use `50%`, the browser calculates each corner radius as half of that side. On a square it produces a perfect circle; on a rectangle it produces an ellipse.
+
+```css
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;   /* perfect circle */
+}
+```
+
 ---
 
 ## 3.6 Text and Font Styling
@@ -251,10 +339,20 @@ Rounds the corners of an element.
 ### 3.6.1 Text Decoration
 
 ```css
-a { text-decoration: none; }           /* Remove underline */
+a { text-decoration: none; }                     /* Remove underline */
 .underline { text-decoration: underline; }
+.overline { text-decoration: overline; }
 .line-through { text-decoration: line-through; }
+
+/* Split into individual properties */
+.wavy {
+    text-decoration-line: underline;
+    text-decoration-color: red;
+    text-decoration-style: wavy;   /* solid | double | dotted | dashed | wavy */
+}
 ```
+
+Common values for `text-decoration`: `none`, `underline`, `overline`, `line-through`. Use `text-decoration-color` and `text-decoration-style` to customize the appearance independently.
 
 ### 3.6.2 Text Alignment
 
@@ -292,6 +390,27 @@ a { text-decoration: none; }           /* Remove underline */
 
 > **Font stack best practice:** Always provide fallback fonts ending with a generic family (`serif`, `sans-serif`, `monospace`).
 
+**Relative font-size units:**
+
+| Unit | Relative to |
+|------|-------------|
+| `em` | Parent element's font size |
+| `rem` | Root element (`<html>`) font size |
+| `%` | Parent element's font size |
+
+```css
+html { font-size: 16px; }
+.parent { font-size: 20px; }
+.child {
+    font-size: 1.5rem;   /* 24px, relative to html */
+    padding: 1em;        /* 24px, relative to this element's font-size */
+}
+```
+
+**`font-weight` numeric values:** `100`–`900`, increasing in steps of `100`. `400` is normal, `700` is bold. Not every font provides every weight, so the browser may pick the nearest available one.
+
+**`font-style` values:** `normal`, `italic` (uses a designed italic glyph set), `oblique` (slants the normal glyphs).
+
 ### 3.6.5 Text Ellipsis (Truncation)
 
 When text overflows its container, show `...`:
@@ -303,6 +422,101 @@ When text overflows its container, show `...`:
     text-overflow: ellipsis;  /* Show ... */
 }
 ```
+
+### 3.6.6 Text Color Representations
+
+CSS offers several ways to specify color:
+
+```css
+.keyword { color: red; }
+.hex { color: #ff0000; }
+.hex-alpha { color: #ff000080; }   /* #RRGGBBAA, 50% transparent red */
+.rgb { color: rgb(255, 0, 0); }
+.rgba { color: rgba(255, 0, 0, 0.5); }
+```
+
+| Notation | Example | Notes |
+|----------|---------|-------|
+| Keyword | `red`, `blue` | Limited preset names |
+| HEX | `#ff0000` | Six-digit shorthand (`#f00`) |
+| HEX + alpha | `#ff000080` | Two extra digits for opacity |
+| RGB | `rgb(255, 0, 0)` | Values 0–255 |
+| RGBA | `rgba(255, 0, 0, 0.5)` | Alpha 0–1 |
+
+### 3.6.7 Text Indent and Word Spacing
+
+```css
+.paragraph {
+    text-indent: 2em;   /* indent only the first line */
+}
+
+.spacious-words {
+    word-spacing: 5px;   /* space between words; no effect on CJK text */
+}
+```
+
+> **Note:** `word-spacing` only affects spaces between words. For Chinese characters, use `letter-spacing` instead.
+
+### 3.6.8 Vertical Align
+
+`vertical-align` controls how an inline or inline-block element aligns with the text baseline of its parent.
+
+| Value | Effect |
+|-------|--------|
+| `baseline` | Default: aligns the baseline with the parent's baseline |
+| `top` | Aligns with the top of the line box |
+| `middle` | Aligns the middle of the element with the baseline plus half the x-height |
+| `bottom` | Aligns with the bottom of the line box |
+| `text-top` | Aligns with the top of the parent's text |
+| `text-bottom` | Aligns with the bottom of the parent's text |
+
+```css
+.icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+```
+
+> **Baseline tip:** The baseline is the imaginary line on which most letters sit (the bottom of a lowercase `x`).
+
+### 3.6.9 Custom Fonts with @font-face
+
+```css
+@font-face {
+    font-family: 'MyFont';
+    src: url('fonts/myfont.woff2') format('woff2'),
+         url('fonts/myfont.woff') format('woff'),
+         url('fonts/myfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.title {
+    font-family: 'MyFont', sans-serif;
+}
+```
+
+> **Font formats:** prefer `woff2` (smallest), then `woff`, then `ttf` for maximum browser support.
+
+### 3.6.10 Cursor Styles
+
+```css
+.button { cursor: pointer; }
+.disabled { cursor: not-allowed; }
+.draggable { cursor: move; }
+```
+
+Common values: `auto`, `default`, `pointer`, `crosshair`, `move`, `text`, `not-allowed`, `zoom-in`, `help`.
+
+### 3.6.11 Preventing Text Selection
+
+```css
+.no-select {
+    user-select: none;   /* text cannot be highlighted */
+}
+```
+
+Useful for buttons, icons, and UI labels where selection would feel awkward.
 
 ---
 
@@ -354,6 +568,17 @@ a {
 }
 ```
 
+### 3.8.1 Common Reset Approaches
+
+| Approach | Code | Note |
+|----------|------|------|
+| Universal reset | `* { margin: 0; padding: 0; }` | Quick but removes focus outlines and form defaults you may want to restore |
+| Targeted reset | `body, h1, h2, h3, p, ul, ol, dl, dd { margin: 0; padding: 0; }` | More predictable; keeps useful defaults for other elements |
+| External reset | `@import url('reset.css');` or `<link rel="stylesheet" href="reset.css">` | Share the same reset across projects |
+| Normalize | `normalize.css` | Preserves useful defaults instead of wiping everything |
+
+> **Recommendation:** prefer a targeted reset or `normalize.css` over `* { margin: 0; padding: 0; }` in production.
+
 ---
 
 ## 3.9 Best Practices
@@ -365,6 +590,54 @@ a {
 | Use `border-radius: 50%` for circles | Use fixed pixel values for responsive circles |
 | Reset default browser styles at the start | Fight against browser defaults in every rule |
 | Use `inline-block` for button-like elements | Use `float` for simple horizontal alignment |
+
+## 3.10 Mini Case Studies
+
+### 3.10.1 Xiaomi Product Card and Nine-Grid
+
+A compact product card relies on `inline-block` sizing and a hover shadow.
+
+```css
+.card {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 234px;
+    padding: 20px;
+    text-align: center;
+    transition: box-shadow 0.3s;
+}
+.card img { width: 100%; }
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+```
+
+**Key points:**
+- `width: 234px` plus `inline-block` lets cards wrap automatically like a grid.
+- `box-sizing: border-box` keeps the width predictable after padding.
+- For a nine-grid, use three cards per row (or `width: 33.33%`) and rely on whitespace handling or flex.
+
+### 3.10.2 Xiaomi Hover Shadow
+
+A common hover lift effect uses a soft shadow and a pointer cursor.
+
+```css
+.shadow-box {
+    width: 200px;
+    height: 200px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+.shadow-box:hover {
+    box-shadow: 5px 5px 13px 7px rgba(0, 0, 0, 0.2);
+}
+```
+
+**Key points:**
+- `cursor: pointer` tells users the element is interactive.
+- `transition` makes the shadow change feel smooth instead of abrupt.
+- The shadow order is `offset-x offset-y blur spread color`.
 
 **Summary Mnemonic**
 - **Box Model** = "Content → Padding → Border → Margin (CPBM)"

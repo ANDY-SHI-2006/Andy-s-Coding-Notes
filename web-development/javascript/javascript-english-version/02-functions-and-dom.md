@@ -59,6 +59,19 @@ function displayUser({ name, age }) {
 }
 
 displayUser({ name: "Alice", age: 25 });
+
+// The `arguments` object (array-like, not a real array)
+function sumAll() {
+    let total = 0;
+    for (let i = 0; i < arguments.length; i++) {
+        total += arguments[i];
+    }
+    return total;
+}
+sumAll(1, 2, 3, 4);  // 10
+
+// Arrow functions do NOT have their own `arguments`
+const sumAllArrow = (...numbers) => numbers.reduce((t, n) => t + n, 0);
 ```
 
 ### 2.1.4 Scope
@@ -83,6 +96,71 @@ function test() {
 
 // console.log(localVar);        // Error: not accessible
 ```
+
+**Scope chain:** When an inner function references a variable, JavaScript first searches the function's own scope, then the enclosing scope, and continues outward to the global scope. If the variable is not found anywhere, a `ReferenceError` is thrown.
+
+```javascript
+let globalVar = "global";
+
+function outer() {
+    let outerVar = "outer";
+
+    function inner() {
+        let innerVar = "inner";
+        console.log(innerVar);   // inner
+        console.log(outerVar);   // found via scope chain
+        console.log(globalVar);  // found via scope chain
+    }
+    inner();
+}
+outer();
+```
+
+### 2.1.5 Return Statement
+
+```javascript
+// Without return, a function returns undefined
+function greet(name) {
+    console.log("Hello, " + name);
+}
+let result = greet("Alice");  // undefined
+
+// return stops execution immediately
+function check(age) {
+    if (age < 18) return "minor";
+    return "adult";
+}
+
+// The comma operator: only the last value is returned
+function demo() {
+    return 1, 2, 3;  // returns 3
+}
+```
+
+> **Caution:** `return a, b` uses the comma operator and returns the last operand. To return multiple values, use an array or object: `return [a, b]` or `return { a, b }`.
+
+### 2.1.6 IIFE (Immediately Invoked Function Expression)
+
+```javascript
+// Classic IIFE
+(function () {
+    let privateVar = "I am private";
+    console.log(privateVar);
+})();
+
+// With parameters
+(function (name) {
+    console.log("Hello, " + name);
+})("World");
+
+// Unary-operator prefixes (also valid, but less common)
++function () { console.log("+ prefix"); }();
+-function () { console.log("- prefix"); }();
+~function () { console.log("~ prefix"); }();
+!function () { console.log("! prefix"); }();
+```
+
+> **Important:** Always place a semicolon after an IIFE, especially when multiple IIFEs appear in sequence. Without it, JavaScript may treat them as one continuous expression and throw an error.
 
 ---
 
@@ -119,6 +197,21 @@ let allButtons = document.querySelectorAll(".btn");
 
 > **Important:** `getElementsBy*` returns a **live** collection that updates automatically when the DOM changes. `querySelectorAll` returns a **static** snapshot.
 
+The `document` object also exposes quick references to the main page elements:
+
+| Property | Returns |
+|----------|---------|
+| `document.documentElement` | The `<html>` element |
+| `document.head` | The `<head>` element |
+| `document.body` | The `<body>` element |
+| `document.title` | The page title string (read/write) |
+
+```javascript
+// Read or update the page title
+console.log(document.title);
+document.title = "New Page Title";
+```
+
 ### 2.2.2 Reading Element Properties
 
 ```javascript
@@ -150,9 +243,16 @@ element.innerHTML = "<span>New</span> Title";  // Parses HTML
 
 // Change attributes
 element.id = "new-title";
-element.className = "heading highlighted";
+element.className = "heading highlighted";  // class is a reserved keyword
 element.setAttribute("data-id", "123");
 element.removeAttribute("data-id");
+
+// Common native properties
+let logo = document.getElementById("logo");
+logo.src = "logo-dark.png";
+
+let homeLink = document.getElementById("home");
+homeLink.href = "https://example.com";
 
 // Change inline styles
 element.style.color = "blue";
@@ -173,6 +273,10 @@ element.classList.contains("active"); // Check if class exists
 let newDiv = document.createElement("div");
 newDiv.textContent = "I am new!";
 newDiv.className = "box";
+
+// Create text and comment nodes
+let textNode = document.createTextNode("Plain text");
+let commentNode = document.createComment("This is a comment");
 
 // Insert into the DOM
 let parent = document.getElementById("container");
@@ -196,7 +300,16 @@ element.remove();                     // Modern method
 
 // Alternative (older browsers)
 element.parentNode.removeChild(element);
+
+// Replace a child with another node (older API)
+let parent = document.getElementById("container");
+let oldNode = document.getElementById("old");
+let newNode = document.createElement("div");
+newNode.textContent = "Replacement";
+parent.replaceChild(newNode, oldNode);
 ```
+
+> **Modern alternative:** `oldNode.replaceWith(newNode)` is preferred when browser support allows.
 
 ### 2.2.6 Traversing the DOM
 
@@ -205,6 +318,7 @@ let element = document.getElementById("item");
 
 element.parentElement;         // Parent element
 element.parentNode;            // Parent node (could be non-element)
+element.offsetParent;          // Nearest positioned ancestor (or null)
 
 element.children;              // Child elements only (HTMLCollection)
 element.childNodes;            // All child nodes (includes text nodes)
@@ -215,6 +329,74 @@ element.firstChild;            // First child node (could be text)
 
 element.nextElementSibling;    // Next sibling element
 element.previousElementSibling;// Previous sibling element
+```
+
+> **Note:** `offsetParent` is the closest ancestor with a CSS `position` value other than `static` (or `null` for fixed or hidden elements). It is useful when calculating element position with `offsetLeft` / `offsetTop`.
+
+### 2.2.7 Form Element Properties
+
+Form controls expose their state through properties rather than attributes.
+
+| Property | Applies to | Description |
+|----------|-----------|-------------|
+| `input.value` | Text inputs, textareas, selects | Current text or selected value |
+| `input.checked` | Radio buttons, checkboxes | Whether the control is checked |
+| `option.selected` | `<option>` elements | Whether the option is selected |
+| `input.disabled` | Most form controls | Whether the control is disabled |
+
+```javascript
+let input = document.getElementById("username");
+console.log(input.value);       // current user input
+input.value = "guest";          // programmatically set value
+
+let agree = document.getElementById("agree");
+agree.checked = true;           // check the box
+
+let submitBtn = document.getElementById("submit");
+submitBtn.disabled = true;      // disable the button
+```
+
+#### Mini Case: Toggle Password Visibility / Disable Input
+
+```javascript
+let pwd = document.getElementById("password");
+let toggle = document.getElementById("toggle");
+let lock = document.getElementById("lock");
+
+toggle.addEventListener("click", () => {
+    pwd.type = pwd.type === "password" ? "text" : "password";
+});
+
+lock.addEventListener("click", () => {
+    pwd.disabled = !pwd.disabled;
+});
+```
+
+**Key points:**
+- `input.type` switches between `"password"` and `"text"` to show or hide the value.
+- `input.disabled` is a boolean property; toggling it grays out the field and prevents interaction.
+
+### 2.2.8 Node Types
+
+Every node has a numeric `nodeType` property.
+
+| `nodeType` | Node Kind |
+|------------|-----------|
+| `1` | Element node |
+| `2` | Attribute node (rarely used directly) |
+| `3` | Text node |
+| `8` | Comment node |
+| `9` | Document node |
+
+```javascript
+let element = document.getElementById("title");
+console.log(element.nodeType);  // 1
+
+let text = document.createTextNode("hello");
+console.log(text.nodeType);     // 3
+
+let comment = document.createComment("note");
+console.log(comment.nodeType);  // 8
 ```
 
 ---
@@ -229,8 +411,16 @@ element.previousElementSibling;// Previous sibling element
 | Use `textContent` for plain text to avoid XSS | Use `innerHTML` with untrusted user input |
 | Use `classList` for class manipulation | Concatenate strings to modify `className` |
 | Prefer `append` over `appendChild` | Use `appendChild` when inserting strings |
+| Use `input.value` / `checked` / `disabled` for live form state | Read form state from HTML attributes |
+| Wrap standalone logic in an IIFE or block scope | Leave temporary variables in global scope |
 
 **Summary Mnemonic**
-- **DOM Selection** = "ID for one, querySelector for all, cache for speed"
+- **Functions** = "`arguments` is array-like; arrow functions do not have it"
+- **Return** = "No explicit return yields `undefined`; `return a, b` keeps only the last value"
+- **IIFE** = "Wrap and invoke once; end with a semicolon to avoid syntax surprises"
+- **Scope** = "Inner scopes climb the scope chain until the variable is found"
+- **DOM Selection** = "ID for one, querySelector for all, cache for speed; `document.body/head/title` for quick access"
+- **Node Types** = "1 element, 3 text, 8 comment, 9 document"
+- **Form State** = "Use `value`, `checked`, `selected`, `disabled` as properties, not attributes"
 
 [<- Previous: js fundamentals](01-js-fundamentals.md) | [Next: events ->](03-events.md)

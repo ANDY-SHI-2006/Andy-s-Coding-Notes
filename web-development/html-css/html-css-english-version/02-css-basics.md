@@ -83,6 +83,45 @@ p {
 
 > **Best Practice:** Use external stylesheets for all production websites.
 
+### 2.1.4 CSS Units and Values
+
+CSS declarations need a unit or value type. The most common ones are length units and color values.
+
+#### Length Units
+
+| Unit | Relative to | Typical Use |
+|------|-------------|-------------|
+| `px` | Screen pixels | Fixed sizes, borders |
+| `%` | Parent element | Fluid widths and heights |
+| `em` | Font size of the parent element | Scalable typography and spacing |
+| `rem` | Font size of the root element (`<html>`) | Consistent scaling across the page |
+
+```css
+html { font-size: 16px; }
+
+.parent { font-size: 20px; }
+.child  { font-size: 1.5em; }   /* 30px, relative to parent */
+.root-scaled { font-size: 1.5rem; } /* 24px, relative to html */
+```
+
+> **Tip:** Use `rem` for font sizes and `px` for borders to keep layouts predictable.
+
+#### Color Values
+
+| Notation | Example | Description |
+|----------|---------|-------------|
+| Keyword | `red`, `black`, `transparent` | Predefined named colors |
+| `rgb()` | `rgb(255, 0, 0)` | Red, green, blue channels (0–255) |
+| `rgba()` | `rgba(255, 0, 0, 0.5)` | RGB plus an alpha channel (0–1) |
+| Hex | `#ff0000` or `#f00` | Hexadecimal shorthand or full form |
+
+```css
+.keyword { color: red; }
+.rgb     { color: rgb(255, 0, 0); }
+.rgba    { color: rgba(255, 0, 0, 0.5); }
+.hex     { color: #ff0000; }
+```
+
 ---
 
 ## 2.2 CSS Selectors
@@ -110,6 +149,55 @@ p { color: blue; }
 
 /* Universal selector */
 * { margin: 0; padding: 0; }
+```
+
+#### Class and ID Naming Rules
+
+- Use only letters, digits, hyphens (`-`), and underscores (`_`).
+- The name **must not start with a digit**.
+- Names are case-sensitive (`.Box` and `.box` are different).
+- Choose names that describe the element's purpose, not its appearance.
+
+```html
+<!-- Good -->
+<div class="main-nav"></div>
+<div id="search-form"></div>
+
+<!-- Bad -->
+<div class=".1box"></div>      <!-- starts with a digit -->
+<div class="red-text"></div>  <!-- describes appearance, not purpose -->
+```
+
+#### Multiple Classes on One Element
+
+Separate class names with spaces to reuse common styles.
+
+```html
+<p class="text-box text-red">A paragraph with two classes.</p>
+```
+
+```css
+.text-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.text-red {
+    color: red;
+}
+```
+
+#### Universal Selector Use Case
+
+Use `*` mainly to reset default browser margins and paddings. Avoid styling all elements directly (e.g. setting colors or borders) because it is hard to override and can slow down rendering.
+
+```css
+/* Recommended reset only */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 ```
 
 > **Note:** An ID should be unique within a page. A class can be reused on multiple elements.
@@ -161,6 +249,45 @@ div.active {
 /* Only <p> elements inside <section> that have class="intro" */
 section p.intro {
     font-size: 18px;
+}
+```
+
+### 2.2.5 Attribute Selectors
+
+Attribute selectors target elements based on the presence or value of an HTML attribute.
+
+| Selector | Example | Targets |
+|----------|---------|---------|
+| `[attr]` | `[target]` | Elements that have the attribute |
+| `[attr=val]` | `[type="text"]` | Elements whose attribute exactly matches the value |
+| `[attr^=val]` | `[href^="https"]` | Elements whose attribute value starts with the string |
+| `[attr$=val]` | `[src$=".png"]` | Elements whose attribute value ends with the string |
+| `[attr*=val]` | `[title*="note"]` | Elements whose attribute value contains the string |
+
+```css
+/* Has a target attribute */
+a[target] {
+    color: purple;
+}
+
+/* Exact value match */
+input[type="text"] {
+    border: 1px solid gray;
+}
+
+/* Starts with */
+a[href^="https"] {
+    color: green;
+}
+
+/* Ends with */
+img[src$=".svg"] {
+    width: 24px;
+}
+
+/* Contains */
+[title*="tips"] {
+    cursor: help;
 }
 ```
 
@@ -263,6 +390,44 @@ p { color: green; }          /* Specificity: 0,0,1 */
 | Keep selectors as simple as possible | Create deeply nested selectors (`div > ul > li > a`) |
 | Use meaningful class names (`.nav`, `.btn`) | Use meaningless names (`.a`, `.b`, `.c`) |
 | Understand specificity before using `!important` | Use `!important` to fix specificity mistakes |
+
+#### Property Writing Order
+
+Writing properties in a consistent order makes stylesheets easier to read and maintain. A common order is:
+
+| Order | Category | Typical Properties |
+|-------|----------|--------------------|
+| 1 | Layout | `display`, `position`, `float`, `clear`, `z-index` |
+| 2 | Box model | `width`, `height`, `margin`, `padding`, `border`, `box-sizing` |
+| 3 | Background & color | `background`, `color`, `opacity` |
+| 4 | Typography | `font`, `line-height`, `text-align`, `letter-spacing` |
+| 5 | Visual effects | `box-shadow`, `transform`, `transition`, `animation` |
+
+```css
+.card {
+    /* Layout */
+    display: flex;
+    position: relative;
+
+    /* Box model */
+    width: 300px;
+    height: 200px;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #ccc;
+
+    /* Background & color */
+    background-color: #fff;
+    color: #333;
+
+    /* Typography */
+    font-size: 16px;
+    line-height: 1.5;
+
+    /* Visual effects */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+```
 
 **Summary Mnemonic**
 - **CSS** = "Cascading Style Sheets — the clothes of the web"

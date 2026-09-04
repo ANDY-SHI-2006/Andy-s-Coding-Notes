@@ -11,16 +11,20 @@ Core built-in objects and methods for manipulating text, collections, time, and 
 ```javascript
 let text = "Hello, World!";
 
-text.length;              // 13
-text[0];                  // "H"
-text.charAt(0);           // "H"
-text.charCodeAt(0);       // 72 (Unicode code point)
+text.length;                       // 13
+text[0];                           // "H"
+text.charAt(0);                    // "H"
+text.charCodeAt(0);                // 72 (Unicode code point)
+String.fromCharCode(72, 105);      // "Hi"
 
-text.indexOf("World");    // 7  (first occurrence)
-text.lastIndexOf("l");    // 10 (last occurrence)
-text.includes("World");   // true
-text.startsWith("Hello"); // true
-text.endsWith("!");       // true
+text.indexOf("World");             // 7  (first occurrence)
+text.indexOf("o", 8);              // 10 (start searching from index 8)
+text.lastIndexOf("l");             // 10 (last occurrence)
+text.includes("World");            // true
+text.startsWith("Hello");          // true
+text.endsWith("!");                // true
+
+text.concat(" ", "Again");         // "Hello, World! Again" (returns new string)
 ```
 
 ### 7.1.2 Extracting Substrings
@@ -32,9 +36,12 @@ text.slice(0, 5);         // "Hello" (start, end)
 text.slice(7);            // "World!" (start to end)
 text.slice(-6);           // "World!" (negative = from end)
 
-text.substring(0, 5);     // "Hello" (same as slice, no negatives)
+text.substring(0, 5);     // "Hello" (start, end)
+text.substring(5, 0);     // "Hello" (auto-swaps when start > end)
 text.substr(7, 5);        // "World" (start, length) — deprecated
 ```
+
+> **Note:** `substring` treats negative values as `0` and swaps the arguments if `start > end`. `substr(start, length)` is deprecated; prefer `slice` in new code.
 
 ### 7.1.3 Modifying Strings
 
@@ -56,7 +63,8 @@ text.replaceAll("l", "L");             // "  HeLLo, WorLd!  "
 
 ```javascript
 let csv = "Alice,25,Engineer";
-let parts = csv.split(",");     // ["Alice", "25", "Engineer"]
+let parts = csv.split(",");            // ["Alice", "25", "Engineer"]
+let limited = csv.split(",", 2);       // ["Alice", "25"] (limit fragments)
 
 let words = "Hello World".split(" ");  // ["Hello", "World"]
 let chars = "ABC".split("");           // ["A", "B", "C"]
@@ -82,6 +90,20 @@ let html = `
 `;
 ```
 
+### 7.1.6 Formatting Numbers
+
+`Number.prototype.toFixed` returns a string with a fixed number of decimal places.
+
+```javascript
+let pi = 3.14159;
+
+pi.toFixed(2);        // "3.14"
+pi.toFixed(0);        // "3"
+(2.5).toFixed(1);     // "2.5"
+```
+
+> **Caution:** `toFixed` rounds and always returns a **string**. Convert back with `Number()` or `parseFloat()` if you need to calculate further.
+
 ---
 
 ## 7.2 Array Methods
@@ -104,10 +126,10 @@ arr.findIndex(item => item === "Bob");      // 1
 ```javascript
 let arr = [1, 2, 3];
 
-arr.push(4);            // [1, 2, 3, 4] — add to end
-arr.pop();              // [1, 2, 3] — remove from end
-arr.unshift(0);         // [0, 1, 2, 3] — add to start
-arr.shift();            // [1, 2, 3] — remove from start
+let len1 = arr.push(4);     // 4 — new length; arr is now [1, 2, 3, 4]
+let last = arr.pop();       // 4 — removed element; arr is now [1, 2, 3]
+let len2 = arr.unshift(0);  // 4 — new length; arr is now [0, 1, 2, 3]
+let first = arr.shift();    // 0 — removed element; arr is now [1, 2, 3]
 
 arr.splice(1, 1);       // [1, 3] — remove 1 item at index 1
 arr.splice(1, 0, "a");  // [1, "a", 3] — insert at index 1
@@ -119,35 +141,43 @@ arr.splice(1, 1, "b");  // [1, "b", 3] — replace at index 1
 ```javascript
 let numbers = [1, 2, 3, 4, 5];
 
-// forEach — execute for each element
-numbers.forEach(num => console.log(num));
+// Higher-order callbacks receive (currentValue, index, array)
+numbers.forEach((num, i, arr) => console.log(num, i));
 
 // map — transform each element, return new array
-let doubled = numbers.map(num => num * 2);    // [2, 4, 6, 8, 10]
+let doubled = numbers.map((num, i, arr) => num * 2);    // [2, 4, 6, 8, 10]
 
 // filter — keep elements that pass the test
-let evens = numbers.filter(num => num % 2 === 0);  // [2, 4]
+let evens = numbers.filter((num, i, arr) => num % 2 === 0);  // [2, 4]
 
 // reduce — reduce to a single value
-let sum = numbers.reduce((total, num) => total + num, 0);  // 15
+// Callback signature: (accumulator, currentValue, index, array)
+let sum = numbers.reduce((acc, cur, idx, arr) => acc + cur, 0);  // 15
 
 // some — does ANY element pass?
-let hasEven = numbers.some(num => num % 2 === 0);   // true
+let hasEven = numbers.some((num, i, arr) => num % 2 === 0);   // true
 
 // every — do ALL elements pass?
-let allPositive = numbers.every(num => num > 0);    // true
+let allPositive = numbers.every((num, i, arr) => num > 0);    // true
 ```
+
+> **Note:** `forEach` cannot be interrupted with `break` or `continue`. Use a regular `for` loop or `some`/`find` when you need early exit.
 
 ### 7.2.4 Other Useful Methods
 
 ```javascript
 let arr = [3, 1, 4, 1, 5];
 
+// Sort comparison: < 0 → a first; > 0 → b first; 0 → keep order
 arr.sort((a, b) => a - b);     // [1, 1, 3, 4, 5] — numeric sort
 arr.reverse();                  // [5, 4, 3, 1, 1]
 arr.concat([9, 2]);             // [5, 4, 3, 1, 1, 9, 2]
 arr.slice(1, 3);                // [4, 3] — extract portion
 arr.join("-");                  // "5-4-3-1-1"
+
+Array.isArray(arr);             // true
+Array.from("ABC");              // ["A", "B", "C"] (array-like/iterable → array)
+Array.from({length: 3}, (_, i) => i); // [0, 1, 2]
 ```
 
 > **Important:** `sort()` and `reverse()` modify the original array. Use `slice()` first if you need to preserve the original.
@@ -191,11 +221,16 @@ date.getTime();           // Timestamp in milliseconds since 1970-01-01
 ```javascript
 let date = new Date();
 
+// Human-readable formats
+date.toDateString();                // "Wed Dec 25 2024"
+date.toTimeString();                // "10:30:00 GMT+0800 (...)"
+date.toUTCString();                 // "Wed, 25 Dec 2024 02:30:00 GMT"
+
 // Locale-specific formatting
 date.toLocaleDateString("en-US");   // "12/25/2024"
 date.toLocaleDateString("zh-CN");   // "2024/12/25"
-
 date.toLocaleTimeString("en-US");   // "10:30:00 AM"
+date.toLocaleString("zh-CN");       // "2024/12/25 10:30:00"
 
 // ISO format
 date.toISOString();                 // "2024-12-25T10:30:00.000Z"
@@ -217,6 +252,38 @@ let d2 = new Date("2024-12-31");
 let diff = d2 - d1;                   // Milliseconds
 let days = diff / (1000 * 60 * 60 * 24);  // Convert to days
 ```
+
+### 7.3.5 Timestamps
+
+Three common ways to get the current timestamp in milliseconds:
+
+```javascript
+Date.now();                 // Static method (preferred)
+new Date().getTime();       // From a Date instance
++new Date();                // Unary plus coerces Date to number
+```
+
+### 7.3.6 Case Snippet: Countdown
+
+Convert a second difference into days, hours, minutes, and seconds with zero-padding.
+
+```javascript
+function countdown(targetDate) {
+  let diff = Math.max(0, Math.floor((targetDate - Date.now()) / 1000));
+  let d = Math.floor(diff / 86400);
+  let h = Math.floor((diff / 3600) % 24);
+  let m = Math.floor((diff / 60) % 60);
+  let s = diff % 60;
+  let pad = n => (n < 10 ? "0" + n : n);
+  return `${pad(d)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+}
+
+setInterval(() => console.log(countdown(new Date("2025-01-01"))), 1000);
+```
+
+- Use `Date.now()` to get the current timestamp.
+- Divide by `1000` first, then use `/ 86400`, `/ 3600 % 24`, `/ 60 % 60`, `% 60`.
+- Pad single digits with `"0" + n` or `String(n).padStart(2, "0")`.
 
 ---
 
@@ -250,6 +317,9 @@ let pattern2 = new RegExp("abc"); // Constructor syntax
 | `a{3}` | Exactly 3 a's |
 | `a{2,4}` | 2 to 4 a's |
 | `a{2,}` | 2 or more a's |
+| `[\u4e00-\u9fa5]` | Any common Chinese character |
+
+> **Escaping:** In regex literals, these characters must be escaped with `\` when you mean the literal character: `(`, `)`, `[`, `]`, `{`, `}`, `^`, `$`, `*`, `?`, `\`, `|`, `+`, `.`. Inside a character class `[...]`, only `\`, `]`, `^` (if first), and `-` (between two chars) usually need escaping.
 
 ### 7.4.3 Regex Methods
 
@@ -267,6 +337,17 @@ let match = text.match(emailPattern);   // ["alice@example.com"]
 let text2 = "Prices: $10, $20, $30";
 let matches = [...text2.matchAll(/\$(\d+)/g)];
 // [["$10", "10"], ["$20", "20"], ["$30", "30"]]
+
+// exec — returns a result array with captured groups, updates lastIndex when global
+let numberPattern = /(\d{3})-(\d{4})/g;
+let result = numberPattern.exec("Tel: 123-4567, 999-8888");
+// result[0] = "123-4567", result[1] = "123", result[2] = "4567"
+
+// RegExp.$1 ~ $9 store the last match's capture groups (legacy but still supported)
+/^(\d{4})-(\d{2})-(\d{2})$/.test("2024-12-25");
+RegExp.$1;   // "2024"
+RegExp.$2;   // "12"
+RegExp.$3;   // "25"
 
 // replace — replace matches
 text.replace(emailPattern, "[hidden]");
@@ -306,9 +387,175 @@ text.search(emailPattern);      // 12
 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
 ```
 
+### 7.4.6 Lookahead and Lookbehind
+
+Assertions match a position, not a character.
+
+| Pattern | Name | Meaning |
+|---------|------|---------|
+| `(?=...)` | Positive lookahead | followed by `...` |
+| `(?!...)` | Negative lookahead | NOT followed by `...` |
+| `(?<=...)` | Positive lookbehind | preceded by `...` |
+| `(?<!...)` | Negative lookbehind | NOT preceded by `...` |
+
+```javascript
+let price = "$100";
+/\d+(?=\s*USD)/.test(price);      // false (no "USD" after)
+/(?<=\$)\d+/.exec(price);          // ["100"] (preceded by $)
+```
+
+### 7.4.7 Greedy vs Lazy Quantifiers
+
+By default, quantifiers are **greedy** (match as much as possible). Add `?` to make them **lazy** (match as little as possible).
+
+```javascript
+let html = "<div>one</div><div>two</div>";
+
+html.match(/<div>.*<\/div>/);      // greedy — "<div>one</div><div>two</div>"
+html.match(/<div>.*?<\/div>/);     // lazy — "<div>one</div>"
+```
+
+| Greedy | Lazy |
+|--------|------|
+| `+` | `+?` |
+| `*` | `*?` |
+| `?` | `??` |
+| `{n,m}` | `{n,m}?` |
+
+### 7.4.8 Case Snippets
+
+**Text find and highlight**
+
+Wrap every occurrence of a keyword in a `<span>`.
+
+```javascript
+const input = document.querySelector("#search");
+const box = document.querySelector("#text");
+
+input.addEventListener("input", () => {
+  let keyword = input.value.trim();
+  if (!keyword) return;
+  let pattern = new RegExp(`(${keyword})`, "gi");
+  box.innerHTML = box.textContent.replace(pattern, '<span class="highlight">$1</span>');
+});
+```
+
+- Build the pattern with `RegExp` when the keyword is dynamic.
+- Use `$1` in `replace` to insert the captured keyword.
+- Remember to sanitize user input if the keyword may contain regex metacharacters.
+
+**Registration form validation**
+
+Validate username, phone, and password on `blur`.
+
+```javascript
+const rules = {
+  username: /^[a-zA-Z0-9_]{4,16}$/,
+  phone: /^1[3-9]\d{9}$/,
+  password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+};
+
+function validate(field) {
+  let ok = rules[field.name].test(field.value);
+  field.nextElementSibling.style.display = ok ? "none" : "block";
+}
+
+document.querySelectorAll("input[data-rule]").forEach(input => {
+  input.addEventListener("blur", () => validate(input));
+});
+```
+
+- One regex per field keeps the logic readable.
+- Show/hide an error tip next to the input.
+
 ---
 
-## 7.5 Best Practices
+## 7.5 Math
+
+`Math` is a built-in object that holds numeric constants and utility functions. It is not a constructor.
+
+```javascript
+Math.PI;            // 3.141592653589793
+Math.E;             // 2.718281828459045
+
+Math.abs(-5);       // 5
+Math.ceil(2.1);     // 3
+Math.floor(2.9);    // 2
+Math.round(2.5);    // 3
+Math.trunc(2.9);    // 2 (integer part; prefer over `~~`, which is limited to 32-bit)
+
+Math.max(1, 5, 3);          // 5
+Math.max(...[1, 5, 3]);     // 5 (spread an array)
+Math.min(1, 5, 3);          // 1
+
+Math.pow(2, 3);     // 8
+Math.sqrt(16);      // 4
+Math.cbrt(27);      // 3
+
+Math.random();      // 0 <= x < 1
+```
+
+Random integer in the inclusive range `[min, max]`:
+
+```javascript
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+```
+
+### 7.5.1 Case Snippet: Random Background Color
+
+```javascript
+function randomColor() {
+  let r = Math.floor(Math.random() * 256);
+  let g = Math.floor(Math.random() * 256);
+  let b = Math.floor(Math.random() * 256);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+document.body.style.backgroundColor = randomColor();
+```
+
+- `Math.random() * 256` produces a value in `[0, 256)`.
+- `Math.floor` turns it into an integer `0-255`.
+
+---
+
+## 7.6 Destructuring Assignment
+
+Destructuring unpacks values from arrays or properties from objects into distinct variables.
+
+```javascript
+// Array destructuring
+let [a, b] = [1, 2];
+let [first, , third] = [1, 2, 3];     // skip the second item
+let [head, ...tail] = [1, 2, 3, 4];   // rest collects remaining items
+
+// Default values
+let [x = 0, y = 0] = [10];            // x = 10, y = 0
+
+// Object destructuring
+let { name, age } = { name: "Alice", age: 25 };
+let { name: userName } = { name: "Alice" }; // rename variable
+
+// Nested destructuring
+let user = { profile: { score: 90 } };
+let { profile: { score } } = user;    // score = 90
+
+// Function parameter destructuring with defaults
+function greet({ name = "Guest", age = 0 } = {}) {
+  return `Hello, ${name}, age ${age}`;
+}
+greet({ name: "Bob" });               // "Hello, Bob, age 0"
+```
+
+- Array destructuring is positional; object destructuring matches property names.
+- Use defaults to avoid `undefined` when a value is missing.
+- Rest patterns (`...rest`) collect remaining items into a real array.
+
+---
+
+## 7.7 Best Practices
 
 | Do | Don't |
 |----|-------|
@@ -318,8 +565,12 @@ text.search(emailPattern);      // 12
 | Use `toLocaleDateString` for user-facing dates | Use `toString()` for user-facing dates (format varies) |
 | Test regex patterns with tools like regex101.com | Write complex regex without testing |
 | Use `map`/`filter`/`reduce` for data transformation | Use `for` loops when array methods are cleaner |
+| Use `Math.trunc` for removing the decimal part | Use `~~` for large numbers (it truncates to 32-bit) |
+| Provide destructuring defaults for optional values | Assume all destructured properties exist |
 
 **Summary Mnemonic**
 - **Array methods** = "Map transforms, Filter selects, Reduce combines"
+- **Sort compare** = "Negative → a first, positive → b first"
+- **Random integer** = `floor(random() * (max - min + 1) + min)`
 
 [<- Previous: classes and storage](06-classes-and-storage.md) | [Next: data fetching ->](08-data-fetching.md)

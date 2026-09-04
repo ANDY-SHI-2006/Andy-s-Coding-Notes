@@ -28,6 +28,13 @@ let shallow = original.cloneNode(false);
 let deep = original.cloneNode(true);
 ```
 
+The boolean argument controls how much is copied:
+
+| Argument | Meaning |
+|----------|---------|
+| `false` | Shallow clone: copies the element itself (including attributes and `data-*` values) but **not** its children. |
+| `true` | Deep clone: copies the element and **all** descendants; event listeners added with `addEventListener` are **not** copied. |
+
 > **Use case:** Clone a hidden template element to create new list items, table rows, or cards without rebuilding HTML from strings.
 
 ---
@@ -48,6 +55,17 @@ parent.after(item);                  // Insert after parent itself
 parent.insertBefore(item, reference); // Insert before a specific child
 ```
 
+> **Legacy API comparison:** The older `Node` methods `appendChild` and `insertBefore` are still widely supported, but they only accept real DOM nodes — never HTML strings.
+>
+> ```javascript
+> parent.appendChild(item);                  // add item to the end
+> parent.insertBefore(item, referenceNode);  // insert item before a reference child
+> ```
+>
+> Key differences:
+> - `appendChild` / `insertBefore` require a **node** argument; passing an HTML string throws an error.
+> - `append` / `before` / `after` accept either a node or plain text.
+
 ### 4.2.2 Replacing and Removing
 
 ```javascript
@@ -62,6 +80,7 @@ oldNode.remove();
 
 // Older method (for compatibility)
 oldNode.parentNode.removeChild(oldNode);
+parentElement.removeChild(oldNode);   // equivalent when you already have the parent
 ```
 
 ### 4.2.3 Moving Existing Nodes
@@ -74,6 +93,33 @@ let newList = document.getElementById("list2");
 
 newList.append(item);   // item1 moves from its old parent to list2
 ```
+
+### 4.2.4 Mini Case: Adding and Deleting Table Rows
+
+Build table rows with `createElement` and remove them with event delegation.
+
+```javascript
+const tbody = document.querySelector("tbody");
+
+function addRow(name, score) {
+  const tr = document.createElement("tr");
+  [name, score].forEach(text => {
+    const td = document.createElement("td");
+    td.textContent = text;
+    tr.append(td);       // or tr.appendChild(td)
+  });
+  tbody.append(tr);
+}
+
+tbody.addEventListener("click", (e) => {
+  if (e.target.tagName !== "BUTTON") return;
+  e.target.closest("tr").remove();   // old style: e.target.parentElement.parentElement.remove()
+});
+```
+
+- Build the whole row in memory first, then append it once to avoid repeated reflows.
+- Use `textContent` for cell text so user data is not parsed as HTML.
+- Prefer `closest("tr")` over chained `parentElement` lookups; it survives layout changes.
 
 ---
 
@@ -95,6 +141,8 @@ container.innerHTML += "<p>Another paragraph</p>";
 ```
 
 > **Security Warning:** Never use `innerHTML` with untrusted user input. It can execute malicious scripts. Use `textContent` for user-generated content.
+
+> **Performance Warning:** `container.innerHTML += "..."` reads the entire existing HTML, concatenates the new string, and re-parses the whole element. For frequent or large updates this is slow and discards any state inside the container. Prefer `insertAdjacentHTML` or node-building with `createElement`.
 
 ### 4.3.2 insertAdjacentHTML
 

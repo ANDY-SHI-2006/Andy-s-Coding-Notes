@@ -46,6 +46,29 @@ console.log("Hello from external file!");
 <script src="analytics.js" async></script>
 ```
 
+### 1.1.3 Browser Input and Output
+
+JavaScript can interact with users through built-in dialogs and direct document writes. These are useful for quick demos, but avoid them in production user interfaces.
+
+| Method | Purpose | Return Value | Notes |
+|--------|---------|--------------|-------|
+| `alert(message)` | Show a modal message | `undefined` | Blocks the page until dismissed |
+| `confirm(question)` | Ask a yes/no question | `true` or `false` | Blocks the page until dismissed |
+| `prompt(label, default?)` | Ask for text input | A **string**, or `null` if cancelled | The result is always a string; convert with `Number()` if needed |
+| `document.write(html)` | Write raw HTML into the document while parsing | The written string | Calling after the document has finished parsing clears the page; prefer DOM methods |
+
+```javascript
+let name = prompt("Enter your name:", "Guest");
+if (name !== null) {
+    alert("Hello, " + name + "!");
+}
+
+let ok = confirm("Continue?");
+console.log(ok ? "User agreed" : "User cancelled");
+```
+
+> **Caution:** `document.write` is almost never used in modern code because it behaves differently depending on when it runs and can wipe out existing content.
+
 ---
 
 ## 1.2 Variables and Data Types
@@ -67,6 +90,19 @@ const PI = 3.14159;        // Block-scoped, cannot be reassigned
 | `const` | Block | No | No | Value is constant |
 
 > **Best Practice:** Use `const` by default. Switch to `let` only when you need to reassign.
+
+**Why `var` leaks out of blocks:**
+
+Because `var` is function-scoped, a variable declared inside an `if` or `for` block is still visible outside that block. `let` and `const` do not leak.
+
+```javascript
+if (true) {
+    var leaked = "I escape the block";
+    let trapped = "I stay inside";
+}
+console.log(leaked);   // "I escape the block"
+console.log(trapped);  // ReferenceError: trapped is not defined
+```
 
 ### 1.2.2 Data Types
 
@@ -103,6 +139,121 @@ typeof [];          // "object" (arrays are objects)
 typeof function(){} // "function"
 ```
 
+### 1.2.3 Variable Naming Rules and Reserved Words
+
+Identifiers (variable, function, and property names) must follow these rules:
+
+- Allowed characters: letters, digits, `_`, and `$`
+- Cannot start with a digit
+- Case-sensitive (`Name` and `name` are different)
+- Cannot use reserved words
+
+Common reserved words to avoid: `break`, `case`, `catch`, `class`, `const`, `continue`, `debugger`, `default`, `delete`, `do`, `else`, `export`, `extends`, `finally`, `for`, `function`, `if`, `import`, `in`, `instanceof`, `let`, `new`, `return`, `super`, `switch`, `this`, `throw`, `try`, `typeof`, `var`, `void`, `while`, `with`, `yield`.
+
+```javascript
+let $price = 9.99;      // valid
+let _count = 0;         // valid
+let userName = "Alice"; // valid (camelCase)
+// let 1stPlace = 1;    // SyntaxError
+// let class = "Math";  // SyntaxError
+```
+
+### 1.2.4 Strict Mode
+
+Adding `"use strict";` at the top of a script or function enables stricter parsing and error handling. It catches silent mistakes and disables some unsafe features.
+
+```javascript
+"use strict";
+
+x = 10; // ReferenceError: x is not declared
+```
+
+Without strict mode, the assignment above would create a global variable. Modern modules are already in strict mode, but regular scripts may still opt in.
+
+### 1.2.5 Number Precision and BigInt
+
+JavaScript numbers are IEEE-754 double-precision floats. They can safely represent integers only in the range:
+
+```javascript
+Number.MAX_SAFE_INTEGER; // 9007199254740991  (2^53 - 1)
+Number.MIN_SAFE_INTEGER; // -9007199254740991 (-(2^53 - 1))
+```
+
+Beyond this range, integer math may produce unexpected results:
+
+```javascript
+9007199254740991 + 2 === 9007199254740992; // true (precision lost)
+```
+
+Floating-point arithmetic is also approximate:
+
+```javascript
+0.1 + 0.2;        // 0.30000000000000004
+0.1 + 0.2 === 0.3 // false
+```
+
+A common workaround is to scale the numbers first:
+
+```javascript
+(0.1 * 10 + 0.2 * 10) / 10; // 0.3
+```
+
+For arbitrarily large integers, use `BigInt`:
+
+```javascript
+let big = 9007199254740992n;
+big + 2n; // 9007199254740994n
+```
+
+> **Note:** You cannot mix `BigInt` and regular `Number` in arithmetic. Convert explicitly when needed.
+
+### 1.2.6 null, undefined, and typeof Details
+
+`null` and `undefined` both mean "no value", but they behave differently in arithmetic:
+
+```javascript
+null + 1;      // 1  (null converts to 0)
+null / 1;      // 0
+undefined + 1; // NaN
+undefined / 1; // NaN
+```
+
+`typeof` can be written with or without parentheses:
+
+```javascript
+typeof "hello";    // "string"
+typeof("hello");   // "string" — parentheses are optional
+```
+
+`typeof` returns `"function"` for callable values, but `"object"` for arrays. To reliably test for arrays, use `Array.isArray`:
+
+```javascript
+typeof [];                // "object"
+Array.isArray([]);        // true
+Array.isArray({});        // false
+```
+
+### 1.2.7 Object Property Name Rules
+
+Object keys are strings or symbols. When defining a key:
+
+- Valid identifiers can use dot notation: `obj.name`
+- Keys that contain spaces, start with a digit, or use reserved words must be quoted and accessed with bracket notation
+
+```javascript
+let item = {
+    name: "Laptop",
+    "in stock": true,
+    "123": "numeric string key",
+    42: "also valid, converted to string"
+};
+
+console.log(item.name);        // "Laptop"
+console.log(item["in stock"]); // true
+console.log(item[42]);         // "also valid, converted to string"
+console.log(item["123"]);      // "numeric string key"
+```
+
 ---
 
 ## 1.3 Operators
@@ -129,6 +280,17 @@ count *= 2;     // Multiply and assign
 count /= 4;     // Divide and assign
 ```
 
+**Prefix vs. postfix `++` / `--`:**
+
+When used alone, prefix and postfix behave the same. In an expression, prefix changes the value before it is used; postfix changes it after.
+
+```javascript
+let a = 1;
+let b = ++a; // a becomes 2, then b = 2
+let c = a++; // c = 2, then a becomes 3
+console.log(a, b, c); // 3, 2, 2
+```
+
 ### 1.3.2 Comparison Operators
 
 | Operator | Meaning | Example |
@@ -143,6 +305,38 @@ count /= 4;     // Divide and assign
 | `<=` | Less than or equal | `5 <= 3` → `false` |
 
 > **Best Practice:** Always use `===` and `!==` to avoid unexpected type coercion.
+
+**String comparisons use Unicode code points:**
+
+```javascript
+"a" < "b";  // true  (97 < 98)
+"Z" < "a";  // true  (uppercase comes before lowercase)
+"10" < "2"; // true  (strings compare character by character)
+```
+
+**`NaN` is never equal to anything, including itself:**
+
+```javascript
+NaN > 5;   // false
+NaN < 5;   // false
+NaN === NaN; // false
+Number.isNaN(NaN); // true
+```
+
+**Do not chain range comparisons:**
+
+Mathematical notation like `5 < num < 10` does not work. It evaluates as `(5 < num) < 10`, where the boolean `true`/`false` becomes `1`/`0`.
+
+```javascript
+let num = 20;
+5 < num < 10; // (5 < 20) < 10 → true < 10 → 1 < 10 → true (wrong!)
+```
+
+Use `&&` instead:
+
+```javascript
+5 < num && num < 10; // false
+```
 
 ### 1.3.3 Logical Operators
 
@@ -162,6 +356,30 @@ let result2 = "hi" && "hello";  // "hello" (last truthy)
 // || returns the first truthy value, or the last value
 let fallback = "" || "default"; // "default"
 let value = "yes" || "no";      // "yes"
+```
+
+### 1.3.4 Operator Precedence
+
+Operators with higher precedence are evaluated first. Use parentheses to make intent explicit.
+
+| Precedence (high → low) | Operators |
+|-------------------------|-----------|
+| Grouping | `(...)` |
+| Postfix increment/decrement | `++`, `--` |
+| Prefix increment/decrement, logical NOT | `++`, `--`, `!` |
+| Exponentiation | `**` |
+| Multiplication/division/remainder | `*`, `/`, `%` |
+| Addition/subtraction | `+`, `-` |
+| Relational/comparison | `<`, `<=`, `>`, `>=` |
+| Equality | `==`, `!=`, `===`, `!==` |
+| Logical AND | `&&` |
+| Logical OR | `\|\|` |
+| Assignment | `=`, `+=`, `-=`, etc. |
+
+```javascript
+let x = 2 + 3 * 4;      // 14, not 20
+let y = (2 + 3) * 4;    // 20
+let z = !true || false;  // false
 ```
 
 ---
@@ -198,6 +416,47 @@ Boolean(0);         // false
 Boolean("");        // false
 Boolean("hello");   // true
 ```
+
+**`Number` conversion rules:**
+
+| Input | `Number(input)` |
+|-------|-----------------|
+| `undefined` | `NaN` |
+| `null` | `0` |
+| `true` | `1` |
+| `false` | `0` |
+| `""` (empty string) | `0` |
+| `"42"` | `42` |
+| `"42px"` | `NaN` |
+| whitespace string | `0` |
+
+**`parseInt` and `parseFloat` are more forgiving:**
+
+They read from left to right and stop at the first non-numeric character. If the string does not start with a valid number, they return `NaN`.
+
+```javascript
+parseInt("42abc");    // 42
+parseFloat("3.14px"); // 3.14
+parseInt("  56  ");   // 56
+parseInt("abc42");    // NaN
+parseInt("FF", 16);   // 255 (explicit radix)
+```
+
+> **Best Practice:** Always pass the radix to `parseInt` (usually `10`) to avoid octal parsing surprises.
+
+**`String` and `Boolean` conversion rules:**
+
+| Input | `String(input)` | `Boolean(input)` |
+|-------|-----------------|------------------|
+| `undefined` | `"undefined"` | `false` |
+| `null` | `"null"` | `false` |
+| `0` | `"0"` | `false` |
+| `NaN` | `"NaN"` | `false` |
+| `""` | `""` | `false` |
+| `" "` | `" "` | `true` |
+| `"0"` | `"0"` | `true` |
+| `[]` | `""` | `true` |
+| `{}` | `"[object Object]"` | `true` |
 
 **Falsy values in JavaScript:**
 - `false`
@@ -311,6 +570,22 @@ for (let i = 0; i < 10; i++) {
 | `break` | Exit the loop immediately |
 | `continue` | Skip to the next iteration |
 
+**`for...in` iterates over object keys:**
+
+Use `for...in` to loop over enumerable property names of an object. Do not use it for arrays (use `for...of` or `forEach` instead).
+
+```javascript
+let person = { name: "Alice", age: 25 };
+
+for (let key in person) {
+    console.log(key, person[key]);
+    // name Alice
+    // age 25
+}
+```
+
+> **Tip:** Use `Object.hasOwn(person, key)` or a direct `if (person.hasOwnProperty(key))` check when iterating objects that may have inherited properties.
+
 ---
 
 ## 1.6 Objects (Basics)
@@ -340,6 +615,11 @@ person.email = "alice@example.com";
 
 // Delete properties
 delete person.isStudent;
+
+// Inspect keys and values
+console.log(Object.keys(person));   // ["name", "age", "email"]
+console.log(Object.values(person)); // ["Alice", 26, "alice@example.com"]
+console.log(Object.entries(person)); // [["name","Alice"], ["age",26], ...]
 ```
 
 ---
@@ -354,8 +634,37 @@ delete person.isStudent;
 | Use `camelCase` for variable names | Use snake_case or PascalCase for regular variables |
 | Use meaningful names (`userCount`, not `uc`) | Use single-letter names except in loops |
 
+## 1.8 The `debugger` Statement
+
+The `debugger` statement creates a breakpoint. When the developer tools are open, execution pauses at that line so you can inspect variables and step through code.
+
+```javascript
+function sum(a, b) {
+    let result = a + b;
+    debugger; // Pauses here if dev tools are open
+    return result;
+}
+
+sum(2, 3);
+```
+
+Common debugging controls:
+
+| Control | Shortcut (most browsers) | Effect |
+|---------|--------------------------|--------|
+| Resume / Play | F8 | Continue until the next breakpoint |
+| Step Over | F10 | Run the current line, then pause |
+| Step Into | F11 | Enter a function call on the current line |
+| Step Out | Shift + F11 | Finish the current function and pause |
+
+> **Tip:** Remove `debugger` statements before committing code. Lint tools or pre-commit hooks can flag them automatically.
+
 **Summary Mnemonic**
 - **Variables** = "const first, let if mutable, never var"
+- **Scope** = "let/const stay in their block; var leaks out"
 - **Comparison** = "Triple equals for truth, double equals for bugs"
+- **Ranges** = "Use `&&`, never chain `<`"
+- **Conversion** = "parseInt reads left to right; Number needs a clean string"
+- **Objects** = "dot for clean keys, brackets for everything else"
 
 [Next: functions and dom ->](02-functions-and-dom.md)

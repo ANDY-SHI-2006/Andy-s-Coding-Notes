@@ -63,6 +63,7 @@ The `<input>` element is the most versatile form control. Its behavior changes b
 | `disabled` | Cannot be edited (not sent) |
 | `maxlength` | Maximum character count |
 | `min` / `max` | Range limit (for number, date, etc.) |
+| `autofocus` | Focuses the control automatically when the page loads |
 
 ### 5.2.2 Choice Inputs
 
@@ -127,6 +128,62 @@ The `<input>` element is the most versatile form control. Its behavior changes b
 | `url` | URL validation | `<input type="url">` |
 | `hidden` | Invisible field (sends data) | `<input type="hidden" name="token" value="abc">` |
 
+### 5.2.6 Removing Default Form Styling
+
+Browsers apply their own borders and focus rings to form controls. Reset them with CSS when you need a custom design, but always add a visible `:focus` state for accessibility.
+
+```css
+input, textarea, select, button {
+    border: none;      /* remove default border */
+    outline: none;     /* remove default focus outline */
+}
+
+/* Provide a custom focus indicator */
+input:focus, textarea:focus, select:focus, button:focus {
+    box-shadow: 0 0 0 2px #4a90e2;
+}
+```
+
+> **Accessibility note:** Removing `outline` without a replacement hurts keyboard navigation. Pair `outline: none` with a custom `:focus` style.
+
+### 5.2.7 Mini Case: Login/Registration Form
+
+A compact login form demonstrates labels, required fields, `autofocus`, and custom styling.
+
+```html
+<form action="/login" method="POST">
+    <label for="user">Username</label>
+    <input id="user" type="text" name="username" required autofocus>
+
+    <label for="pwd">Password</label>
+    <input id="pwd" type="password" name="password" required>
+
+    <button type="submit">Login</button>
+</form>
+```
+
+```css
+input, button {
+    border: none;
+    outline: none;
+    border-radius: 4px;
+}
+input:focus {
+    box-shadow: 0 0 0 2px #4a90e2;
+}
+button {
+    background: #4a90e2;
+    color: #fff;
+    cursor: pointer;
+}
+```
+
+**Key points:**
+- Pair each `<input>` with a `<label>` using `for` + `id`.
+- Use `autofocus` to place the cursor in the username field on page load.
+- Remove default borders/outlines and add a custom `:focus` ring.
+- Add `required` for basic client-side validation.
+
 ---
 
 ## 5.3 Labels
@@ -180,6 +237,17 @@ textarea {
 }
 ```
 
+**`resize` values:**
+
+| Value | Meaning |
+|-------|---------|
+| `none` | Disable resizing |
+| `vertical` | Resize up/down only |
+| `horizontal` | Resize left/right only |
+| `both` | Resize in both directions (browser default) |
+
+> **Tag rule:** Keep the opening and closing tags on the same line: `<textarea>...</textarea>`. Putting content on a new line adds leading whitespace inside the field.
+
 ### 5.4.2 Select Dropdown
 
 ```html
@@ -211,10 +279,13 @@ textarea {
 ```html
 <select name="skills" multiple size="4">
     <option value="html">HTML</option>
-    <option value="css">CSS</option>
+    <option value="css" selected>CSS</option>
     <option value="js">JavaScript</option>
 </select>
 ```
+
+- Use `selected` on an `<option>` to make it the default choice when the page loads.
+- Use `<select multiple>` to let users choose several options. Hold **Ctrl** (Windows/Linux) or **Cmd** (macOS) while clicking to select or deselect items.
 
 ---
 
@@ -263,6 +334,35 @@ Modern browsers support built-in form validation using HTML attributes.
 | Validate on both client and server | Rely only on client-side validation |
 | Use `button type="submit"` | Use `<input type="submit">` for new projects |
 | Group related fields with `<fieldset>` | Leave forms as one long list |
+
+---
+
+## 5.7 Table Styling
+
+HTML tables can be styled with a few CSS properties that control borders and empty cells.
+
+```css
+table {
+    border-collapse: collapse;  /* merge adjacent cell borders */
+    border-spacing: 0;          /* spacing when borders are separate */
+}
+
+td, th {
+    border: 1px solid #ccc;
+}
+
+table {
+    empty-cells: hide;          /* hide borders/background of empty cells */
+}
+```
+
+| Property | Values | Description |
+|----------|--------|-------------|
+| `border-collapse` | `collapse` / `separate` | Merge adjacent cell borders or keep them separate |
+| `border-spacing` | length (e.g. `5px`) | Gap between cells when `border-collapse: separate` |
+| `empty-cells` | `show` / `hide` | Whether to show borders/background of cells with no content |
+
+> **Note:** `border-spacing` only applies when `border-collapse` is set to `separate` (the default value).
 
 **Summary Mnemonic**
 - **Forms** = "Inputs collect, labels describe, buttons submit"

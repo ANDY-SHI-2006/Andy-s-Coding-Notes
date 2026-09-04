@@ -1,4 +1,4 @@
-[<- Previous: tables and forms](05-tables-and-forms.md) | [Next: dom events ->](07-dom-events.md)
+[<- Previous: tables and forms](05-tables-and-forms.md) | [Next: pseudo-classes ->](07-pseudo-classes.md)
 
 # 6 Transitions, Animations, and Flexbox
 
@@ -49,6 +49,70 @@ Transitions smoothly change a CSS property from one value to another over a spec
 
 > **Note:** Only properties with intermediate values can be transitioned. `display`, `visibility`, and `position` cannot be transitioned directly.
 
+### 6.1.3 Case: Shuyi Side Toolbar
+
+A fixed side toolbar expands each icon's width and fades in a label on hover.
+
+```css
+.toolbar {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.tool {
+    width: 40px;
+    overflow: hidden;
+    transition: width 0.3s, opacity 0.3s;
+}
+
+.tool:hover { width: 120px; }
+
+.label {
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: left center;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.tool:hover .label { opacity: 1; transform: scale(1); }
+```
+
+- `transition` animates both `width` and `opacity`.
+- `transform-origin` makes the label scale from the left edge instead of the center.
+
+### 6.1.4 Case: Xiaomi App QR Hover Expand
+
+Hovering a download link reveals a QR-code panel below it. A CSS triangle is drawn with `::before`, and the panel expands with `height` and `opacity` transitions.
+
+```css
+.download { position: relative; }
+
+.qr {
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    height: 0; opacity: 0;
+    overflow: hidden;
+    transition: height 0.3s, opacity 0.3s;
+}
+
+.download:hover .qr { height: 150px; opacity: 1; }
+
+.qr::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: 50%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    border-bottom-color: #fff;
+}
+```
+
+- Use `height` plus `opacity` for a smooth expand effect; `display: none` cannot be transitioned.
+- The triangle points from the panel back to the trigger.
+
 ---
 
 ## 6.2 CSS Transforms
@@ -94,6 +158,28 @@ Controls the pivot point for transforms.
     transform-origin: top left;
     transform-origin: 50% 50%;
     transform-origin: 20px 40px;
+}
+```
+
+### 6.2.3 Transform Details
+
+| Detail | Behavior |
+|--------|----------|
+| `scale(-n)` | Negative scale flips the element along that axis and scales it |
+| `skewX()` / `skewY()` | Tilts the element and its content together |
+| `rotate()` | Positive angle rotates clockwise; negative rotates counter-clockwise |
+
+```css
+.flip {
+    transform: scaleX(-1);        /* Horizontal mirror */
+}
+
+.tilt {
+    transform: skewX(10deg);      /* Content tilts with the box */
+}
+
+.spin {
+    transform: rotate(45deg);     /* Clockwise */
 }
 ```
 
@@ -152,6 +238,47 @@ For complex animations with multiple keyframes, use `@keyframes`.
 | `backwards` | Applies the first keyframe style during delay |
 | `both` | Applies both forwards and backwards |
 
+### 6.3.4 Alternate & Infinite Animations
+
+Combine `infinite` with `alternate` to make an animation run back and forth forever. Use `animation-play-state` to pause or resume it.
+
+```css
+@keyframes move {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100px); }
+}
+
+.mover {
+    animation: move 1s linear infinite alternate;
+}
+
+.mover:hover {
+    animation-play-state: paused;
+}
+```
+
+### 6.3.5 Case: Loading Spinner
+
+A rotating ring is created with a circular element and one colored border side.
+
+```css
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ddd;
+    border-top-color: #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+```
+
+- `border-radius: 50%` makes the element a circle.
+- Only one border side is colored, producing the rotating "gap" effect.
+
 ---
 
 ## 6.4 Flexbox Layout
@@ -163,8 +290,11 @@ Flexbox (Flexible Box Layout) is a one-dimensional layout system designed for di
 ```css
 .container {
     display: flex;           /* Enable flexbox */
+    display: inline-flex;    /* Inline-level flex container */
 }
 ```
+
+Use `display: inline-flex` when the container should sit inline with surrounding content while its children still form a flex layout.
 
 ### 6.4.2 Main Axis Direction
 
@@ -293,4 +423,4 @@ When items wrap onto multiple lines, `align-content` controls the spacing betwee
 **Summary Mnemonic**
 - **Flexbox** = "Justify on main, align on cross"
 
-[<- Previous: tables and forms](05-tables-and-forms.md) | [Next: dom events ->](07-dom-events.md)
+[<- Previous: tables and forms](05-tables-and-forms.md) | [Next: pseudo-classes ->](07-pseudo-classes.md)

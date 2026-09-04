@@ -1,4 +1,4 @@
-[<- Previous: transitions and animations](06-transitions-animations.md)
+[<- Previous: transitions and animations](06-transitions-animations.md) | [Next: icon fonts ->](08-icon-fonts.md)
 
 # 7 CSS Pseudo-Classes and Interactive States
 
@@ -24,6 +24,21 @@ input:focus { border-color: blue; outline: none; }
 ```
 
 > **Order matters:** Follow the **LVHA** order: `:link` → `:visited` → `:hover` → `:active`.
+
+### 7.1.1 :hover with `cursor: pointer`
+
+For clickable elements like links, buttons, and list items, pair `:hover` with `cursor: pointer` to give users clear visual feedback.
+
+```css
+.nav-item:hover,
+.button:hover {
+    cursor: pointer;
+    color: #e74c3c;
+}
+```
+
+- `cursor: pointer` shows the hand icon, signaling the element is interactive.
+- Use it on any element that responds to a click, not just `<a>` tags.
 
 ## 7.2 Form State Pseudo-Classes
 
@@ -98,6 +113,24 @@ li:not(.active) { opacity: 0.5; }
 | `nth-child(n+4)` | All children from the 4th onward |
 | `nth-child(-n+3)` | Only the first 3 children |
 
+### 7.3.2 Zebra Striping with `nth-of-type(even)`
+
+Use `:nth-of-type(even)` to alternate background colors for rows of the same element type, such as paragraphs or table rows.
+
+```css
+.article p:nth-of-type(even) {
+    background-color: #f5f5f5;
+}
+
+table tr:nth-of-type(even) {
+    background-color: #eef;
+}
+```
+
+- `nth-of-type(even)` counts only elements of the same tag type among siblings.
+- Unlike `nth-child(even)`, it ignores other element types (e.g., headings or images) between rows.
+- Add a little padding so the striping has enough breathing room.
+
 ## 7.4 CSS Custom Properties (Variables)
 
 CSS variables allow you to define reusable values. They are especially useful for colors, spacing, and theming.
@@ -153,4 +186,4 @@ CSS variables allow you to define reusable values. They are especially useful fo
 **Summary Mnemonic**
 - **Pseudo-classes** = "Style by state, not by class"
 
-[<- Previous: transitions and animations](06-transitions-animations.md)
+[<- Previous: transitions and animations](06-transitions-animations.md) | [Next: icon fonts ->](08-icon-fonts.md)

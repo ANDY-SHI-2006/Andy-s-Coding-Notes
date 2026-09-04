@@ -19,7 +19,28 @@ window.scrollX;          // Horizontal scroll position
 window.scrollY;          // Vertical scroll position
 window.scrollTo(0, 500); // Scroll to position (x, y)
 window.scrollBy(0, 100); // Scroll relative to current position
+
+// Modern options syntax for smooth scrolling
+window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+window.scrollBy({ top: 100, behavior: "smooth" });
+
+// Viewport resize and scroll events
+window.addEventListener("resize", () => {
+    console.log(window.innerWidth, window.innerHeight);
+});
+
+window.addEventListener("scroll", () => {
+    console.log(window.scrollX, window.scrollY);
+});
 ```
+
+> **Legacy note:** DOM0 properties such as `window.onresize` and `window.onscroll` still work, but `addEventListener` allows multiple handlers and is preferred.
+
+| Property | Measures | Includes Scrollbar? | Includes Toolbars? |
+|----------|----------|:-------------------:|:------------------:|
+| `window.outerWidth/Height` | Entire browser window | — | Yes |
+| `window.innerWidth/Height` | Viewport in CSS pixels | Yes | No |
+| `document.documentElement.clientWidth/Height` | Available content area | No | No |
 
 ### 5.1.1 Timers
 
@@ -46,6 +67,22 @@ clearInterval(intervalId);  // Stop the interval
 | `clearTimeout(id)` | Cancel a timeout |
 | `clearInterval(id)` | Cancel an interval |
 
+> **Animation Tip:** For visual animations, prefer `requestAnimationFrame` over `setInterval`. It synchronizes with the display refresh rate and pauses automatically when the tab is hidden.
+
+```javascript
+let animationId;
+let current = 0;
+
+function step() {
+    current += 1;
+    element.style.transform = `translateX(${current}px)`;
+    animationId = requestAnimationFrame(step);
+}
+
+animationId = requestAnimationFrame(step);
+cancelAnimationFrame(animationId);  // Stop when needed
+```
+
 ### 5.1.2 Dialogs
 
 ```javascript
@@ -66,12 +103,32 @@ let name = prompt("Enter your name:", "Guest");
 ### 5.1.3 Opening and Closing Windows
 
 ```javascript
-// Open a new window/tab
-let newWindow = window.open("https://example.com", "_blank", "width=600,height=400");
+// Open a new tab (default target is "_blank")
+let newWindow = window.open("https://example.com");
 
-// Close the window
-newWindow.close();
+// Common targets: "_blank", "_self", "_parent", "_top", or a custom window name
+let namedWindow = window.open("https://example.com", "myWindow");
+
+// Open a sized popup with features
+let popup = window.open(
+    "https://example.com",
+    "_blank",
+    "width=600,height=400,left=100,top=100,scrollbars=yes"
+);
+
+// Close a window that was opened by script
+popup.close();
 ```
+
+| Target | Behavior |
+|--------|----------|
+| `_blank` | New window/tab |
+| `_self` | Current window |
+| `_parent` | Parent frame |
+| `_top` | Full body of the window |
+| custom name | Reuses window with that name, or creates it |
+
+> **Note:** Modern browsers block `window.close()` unless the window was opened by JavaScript. Popups are often blocked unless triggered by a user gesture.
 
 ---
 
@@ -82,6 +139,7 @@ Contains information about the current URL and provides methods to navigate.
 ```javascript
 // Reading the URL
 location.href;        // Full URL: "https://example.com/page?id=1"
+location.origin;      // "https://example.com:8080" (read-only)
 location.protocol;    // "https:"
 location.host;        // "example.com"
 location.hostname;    // "example.com"
@@ -189,7 +247,7 @@ screen.orientation;   // Screen orientation object
 ```javascript
 let element = document.getElementById("box");
 
-// Dimensions (including padding and border)
+// Viewport-relative position and total size
 let rect = element.getBoundingClientRect();
 console.log(rect.top);       // Distance from viewport top
 console.log(rect.left);      // Distance from viewport left
@@ -202,10 +260,106 @@ console.log(element.offsetLeft);
 console.log(element.offsetWidth);
 console.log(element.offsetHeight);
 
-// Client dimensions (including padding, excluding border)
+// Client dimensions (content + padding, excluding border)
 console.log(element.clientWidth);
 console.log(element.clientHeight);
+
+// Scrollable dimensions (actual content + padding)
+console.log(element.scrollWidth);
+console.log(element.scrollHeight);
 ```
+
+### 5.6.1 Element Size Models
+
+| Property | Includes | Excludes |
+|----------|----------|----------|
+| `clientWidth/Height` | Content + padding | Border, margin, scrollbar |
+| `offsetWidth/Height` | Content + padding + border + scrollbar | Margin |
+| `scrollWidth/Height` | Actual content + padding (including overflow) | Border, margin |
+
+> **Mnemonic:** `client` = content + padding; `offset` = out to border; `scroll` = total scrollable area.
+
+### 5.6.2 Position and Scroll Offset
+
+`offsetLeft` and `offsetTop` measure the distance from the element's outer top-left corner to the top-left corner of its nearest positioned ancestor (`offsetParent`).
+
+```javascript
+let box = document.getElementById("box");
+
+console.log(box.offsetLeft, box.offsetTop);   // Relative to offsetParent
+console.log(box.offsetParent);                // Nearest positioned ancestor
+```
+
+`scrollTop` is readable and writable. For the page, read from `document.documentElement`.
+
+```javascript
+// Read current vertical scroll
+let scrollY = document.documentElement.scrollTop;
+
+// Smooth scroll back to top
+window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
+// Scroll a specific element
+let container = document.querySelector(".scrollable");
+container.scrollTop = 0;
+container.scrollTo({ top: 0, behavior: "smooth" });
+```
+
+> **Compatibility note:** Older browsers may report page scroll on `document.body`; use `document.documentElement.scrollTop || document.body.scrollTop` when you need broad support.
+
+### 5.6.3 Scroll-Driven UI Patterns
+
+**Sticky Navigation**
+
+```javascript
+const nav = document.querySelector(".navbar");
+const header = document.querySelector(".header");
+
+window.addEventListener("scroll", () => {
+    nav.classList.toggle(
+        "sticky",
+        document.documentElement.scrollTop >= header.offsetHeight
+    );
+});
+```
+
+- Toggle a CSS class at the reference element's `offsetHeight`.
+- Avoid setting inline styles; let CSS handle `position: fixed`.
+
+**Back-to-Top Button**
+
+```javascript
+const btn = document.querySelector(".back-to-top");
+
+window.addEventListener("scroll", () => {
+    btn.classList.toggle("visible", document.documentElement.scrollTop > 300);
+});
+
+btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+```
+
+- Show the button after a scroll threshold.
+- Use `behavior: "smooth"` for smooth scrolling.
+
+**Load More on Scroll to Bottom**
+
+```javascript
+let isLoading = false;
+
+window.addEventListener("scroll", () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (isLoading) return;
+    if (scrollTop + clientHeight >= scrollHeight - 50) {
+        isLoading = true;
+        loadMoreData().then(() => isLoading = false);
+    }
+});
+```
+
+- Detect near-bottom with `scrollTop + clientHeight ≈ scrollHeight`.
+- Use a flag to throttle requests and prevent duplicate fetches.
 
 ---
 
@@ -214,12 +368,18 @@ console.log(element.clientHeight);
 | Do | Don't |
 |----|-------|
 | Use `setTimeout`/`setInterval` for simple delays and polling | Use them for animations (use `requestAnimationFrame` instead) |
+| Use `requestAnimationFrame` for frame-synchronized animations | Forget to `cancelAnimationFrame` to avoid memory leaks |
 | Use `location.replace` when you don't want back-button access | Use `location.href =` for every navigation |
+| Use `location.origin` for origin comparisons | Compare origins manually by concatenating protocol/host/port |
 | Use `history.pushState` for SPA routing | Reload the entire page for every view change |
 | Check `navigator.onLine` before network requests | Assume the user always has internet |
 | Use `getBoundingClientRect` for precise element positioning | Use `offsetTop` when you need viewport-relative position |
+| Use `document.documentElement.clientWidth` for exact available space | Assume `innerWidth` excludes the scrollbar |
+| Use a loading flag to throttle scroll-based fetch requests | Fire a request on every scroll event |
 
 **Summary Mnemonic**
 - **BOM** = "Window wraps all, Location navigates, History remembers"
+- **Sizing** = "Outer window, Inner viewport, Client minus scrollbar; Client content+padding, Offset adds border, Scroll is total"
+- **Scroll** = "offsetTop to parent, scrollTop to top, rAF keeps frames smooth"
 
 [<- Previous: dom manipulation](04-dom-manipulation.md) | [Next: classes and storage ->](06-classes-and-storage.md)

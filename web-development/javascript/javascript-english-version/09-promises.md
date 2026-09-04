@@ -1,4 +1,4 @@
-[<- Previous: data fetching](08-data-fetching.md)
+[<- Previous: data fetching](08-data-fetching.md) | [Next: event loop ->](10-event-loop.md)
 
 # 9 Promises and Asynchronous JavaScript
 
@@ -29,6 +29,16 @@ A Promise can be in one of three states:
 | **Pending** | Initial state, neither fulfilled nor rejected |
 | **Fulfilled** | Operation completed successfully |
 | **Rejected** | Operation failed |
+
+### 9.1.1 Promise Characteristics
+
+| Characteristic | Description |
+|----------------|-------------|
+| **Executes immediately** | The executor function passed to `new Promise(...)` runs synchronously when the Promise is created. |
+| **Non-cancellable** | Once created, a Promise cannot be cancelled from the outside; the only way to "abort" is to build your own cancellation signal around it. |
+| **Silent rejection** | If a Promise rejects and has no `.catch()` or `try/catch`, the rejection does not throw in the surrounding synchronous code (modern environments still report it as an unhandled rejection). |
+| **Opaque progress** | While the Promise is `pending`, there is no built-in way to query its progress. |
+| **Immutable state** | Once a Promise settles (fulfilled or rejected), its state and value/reason never change. |
 
 ---
 
@@ -185,11 +195,27 @@ async function loadData() {
         let data = await response.json();
         return data;
     } catch (error) {
-        console.error("Failed to load:", error);
+        console.error("Failed to load:", error.name, error.message);
         throw error;   // Re-throw if caller needs to handle it
     }
 }
 ```
+
+Every caught error exposes at least `name` and `message`:
+
+| Property | Meaning |
+|----------|---------|
+| `err.name` | The error type, e.g. `"Error"`, `"TypeError"`, `"ReferenceError"`. |
+| `err.message` | A human-readable description of what went wrong. |
+
+Common built-in error types:
+
+| Type | Typical cause |
+|------|---------------|
+| `ReferenceError` | Accessing a variable that has not been declared. |
+| `TypeError` | Performing an invalid operation on a value (e.g. calling a non-function). |
+| `SyntaxError` | Invalid JavaScript syntax, usually thrown during parsing. |
+| `RangeError` | A numeric value is outside the allowed range. |
 
 ### 9.4.4 Awaiting in Loops
 
@@ -207,6 +233,44 @@ async function processItemsParallel(items) {
     await Promise.all(promises);   // Waits for all to complete
 }
 ```
+
+### 9.4.5 async/await with axios
+
+axios is a Promise-based HTTP client. When combined with `async/await`, the response body is available through `response.data`:
+
+```javascript
+async function getUser() {
+    try {
+        let { data } = await axios.get("https://api.example.com/user");
+        console.log(data);
+    } catch (err) {
+        console.error("Request failed:", err.name, err.message);
+    }
+}
+```
+
+> **Tip:** Destructuring `let { data } = await axios.get(url)` is the idiomatic way to extract the payload.
+
+### 9.4.6 Sequential Dependent Requests
+
+When each request needs the previous result, chain them with `await` and wrap the whole chain in `try/catch`:
+
+```javascript
+async function loadUserOrderGood() {
+    try {
+        let user = await getUserInfo();
+        let order = await getUserOrder(user);
+        let good = await getGood(order);
+        return good;
+    } catch (err) {
+        console.error("Chain failed:", err.name, err.message);
+    }
+}
+```
+
+- Each `await` pauses until the previous step returns a value.
+- Any rejection skips directly to `catch`.
+- Do **not** use `Promise.all` here because the steps depend on each other.
 
 ---
 
@@ -257,5 +321,8 @@ async function run() {
 
 **Summary Mnemonic**
 - **Promises** = "Pending → Fulfilled or Rejected, then catch it"
+- **async/await** = "Write async code like sync code; wrap it in try/catch"
+- **axios + await** = "Destructuring `{ data }` gets you the payload"
+- **Dependent requests** = "Chain awaits, not Promise.all"
 
-[<- Previous: data fetching](08-data-fetching.md)
+[<- Previous: data fetching](08-data-fetching.md) | [Next: event loop ->](10-event-loop.md)
