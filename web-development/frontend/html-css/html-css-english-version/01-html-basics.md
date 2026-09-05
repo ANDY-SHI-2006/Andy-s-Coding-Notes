@@ -29,10 +29,10 @@ Every HTML document follows a basic skeleton structure. In VS Code, you can gene
 
 | Element | Purpose |
 |---------|---------|
-| `<!DOCTYPE html>` | Declares the document type and HTML version (HTML5) |
+| `<!DOCTYPE html>` | Document declaration (not a tag), tells the browser to parse using HTML5 |
 | `<html>` | The root element of the page |
 | `<html lang="en">` | Sets the document language for SEO and accessibility |
-| `<head>` | Contains metadata (not displayed on the page) |
+| `<head>` | Contains metadata (not displayed on the page); manages the icon and title, and imports external resources |
 | `<meta charset="UTF-8">` | Sets the character encoding to UTF-8 |
 | `<meta name="viewport">` | Ensures responsive design on mobile devices |
 | `<meta name="description">` | Provides a page summary shown in search results |
@@ -40,6 +40,8 @@ Every HTML document follows a basic skeleton structure. In VS Code, you can gene
 | `<link rel="icon">` | Browser tab icon (favicon) |
 | `<title>` | Sets the browser tab title |
 | `<body>` | Contains all visible content |
+
+> **Root tag:** `<html>` is the root element of the entire page; all tags should be nested inside it. However, browsers are very lenient with HTML — even if content is accidentally written outside `<html>`, the browser usually corrects it and renders it normally. Still, for valid, clear markup, keep all tags inside `<html>`.
 
 ### 1.1.2 Tag Categories
 
@@ -61,6 +63,27 @@ HTML tags are classified in multiple ways:
 | **Inline-block** | Inline flow but can have width/height set | `<img>`, `<input>` |
 
 > **Note:** The actual display behavior is controlled by the CSS `display` property. The table above describes the **default** behavior of each tag.
+
+**Detailed characteristics of each type:**
+
+**Block-level (`<div>`, `<p>`, `<h1>`–`<h6>`, `<ul>`):**
+- Occupies its own line — even if there is spare room, other tags cannot use it.
+- Width and height can be set freely.
+- Width inherits from the parent when not set; height is determined by content when not set.
+- Can nest other tags; however, `<p>` cannot nest block-level tags (the browser will split them).
+- Margins and padding take effect in all directions (see the CSS chapter).
+
+**Inline (`<span>`, `<a>`, `<strong>`, `<em>`):**
+- Does not occupy its own line; shares a line with other inline elements.
+- Width and height cannot be set freely — they are determined by content.
+- Can only nest text or inline elements.
+- Margins and padding only take effect horizontally, not vertically (see the CSS chapter).
+
+**Inline-block (`<img>`, `<input>`, `<textarea>`):**
+- Does not occupy its own line; shares a line with other inline/inline-block tags.
+- Width and height can be set.
+- When not set, dimensions are determined by content.
+- Margins and padding take effect in all directions, like block-level (see the CSS chapter).
 
 **By relationship:**
 
