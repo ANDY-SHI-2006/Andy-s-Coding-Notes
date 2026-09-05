@@ -56,9 +56,14 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 | Topic / 主题 | English | 中文 |
 |--------------|---------|------|
 | **Network Basics** | [Network Basics Notes](web-development/network-basics/network-basics-english-version/README.md) | [网络基础笔记](web-development/network-basics/网络基础-中文版/README.md) |
-| **Django** | [Django Notes](web-development/django/django-english-version/README.md) | [Django 笔记](web-development/django/django-中文版/README.md) |
-| **Django REST Framework** | [DRF Notes](web-development/drf/drf-english-version/README.md) | [DRF 笔记](web-development/drf/drf-中文版/README.md) |
 | **Python Crawler** | [Python Crawler Notes](web-development/python-crawler/python-crawler-english-version/README.md) | [Python 爬虫笔记](web-development/python-crawler/python-crawler-中文版/README.md) |
+
+#### 🐍 Django | Django
+
+| Topic / 主题 | English | 中文 |
+|--------------|---------|------|
+| **Django** | [Django Notes](web-development/django/django-english-version/README.md) | [Django 笔记](web-development/django/django-中文版/README.md) |
+| **Django REST Framework** | [DRF Notes](web-development/django/drf-english-version/README.md) | [DRF 笔记](web-development/django/drf-中文版/README.md) |
 
 #### 📱 Flask + Mini Program | Flask 与小程序
 
