@@ -57,9 +57,14 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 |--------------|---------|------|
 | **Django** | [Django Notes](web-development/django/django-english-version/README.md) | [Django 笔记](web-development/django/django-中文版/README.md) |
 | **Django REST Framework** | [DRF Notes](web-development/drf/drf-english-version/README.md) | [DRF 笔记](web-development/drf/drf-中文版/README.md) |
-| **Flask** | [Flask Notes](web-development/flask/flask-english-version/README.md) | [Flask 笔记](web-development/flask/flask-中文版/README.md) |
 | **Python Crawler** | [Python Crawler Notes](web-development/python-crawler/python-crawler-english-version/README.md) | [Python 爬虫笔记](web-development/python-crawler/python-crawler-中文版/README.md) |
-| **WeChat Mini Program** | [WeChat Mini Program Notes](web-development/wechat-miniprogram/wechat-miniprogram-english-version/README.md) | [微信小程序笔记](web-development/wechat-miniprogram/wechat-miniprogram-中文版/README.md) |
+
+#### 📱 Flask + Mini Program | Flask 与小程序
+
+| Topic / 主题 | English | 中文 |
+|--------------|---------|------|
+| **Flask** | [Flask Notes](web-development/flask-miniprogram/flask/flask-english-version/README.md) | [Flask 笔记](web-development/flask-miniprogram/flask/flask-中文版/README.md) |
+| **WeChat Mini Program** | [WeChat Mini Program Notes](web-development/flask-miniprogram/wechat-miniprogram/wechat-miniprogram-english-version/README.md) | [微信小程序笔记](web-development/flask-miniprogram/wechat-miniprogram/wechat-miniprogram-中文版/README.md) |
 
 #### 🎨 Frontend | 前端开发
 
