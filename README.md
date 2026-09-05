@@ -55,6 +55,7 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 
 | Topic / 主题 | English | 中文 |
 |--------------|---------|------|
+| **Network Basics** | [Network Basics Notes](web-development/network-basics/network-basics-english-version/README.md) | [网络基础笔记](web-development/network-basics/网络基础-中文版/README.md) |
 | **Django** | [Django Notes](web-development/django/django-english-version/README.md) | [Django 笔记](web-development/django/django-中文版/README.md) |
 | **Django REST Framework** | [DRF Notes](web-development/drf/drf-english-version/README.md) | [DRF 笔记](web-development/drf/drf-中文版/README.md) |
 | **Python Crawler** | [Python Crawler Notes](web-development/python-crawler/python-crawler-english-version/README.md) | [Python 爬虫笔记](web-development/python-crawler/python-crawler-中文版/README.md) |
@@ -78,7 +79,6 @@ Notes are pure Markdown, focused on concept explanations, and updated as I learn
 
 | Topic / 主题 | English | 中文 |
 |--------------|---------|------|
-| **Network Basics** | [Network Basics Notes](devops/network-basics/network-basics-english-version/README.md) | [网络基础笔记](devops/network-basics/网络基础-中文版/README.md) |
 | **Linux** | [Linux Notes](devops/linux/linux-english-version/README.md) | [Linux 笔记](devops/linux/linux-中文版/README.md) |
 | **Command Line** | [Command Line Notes](devops/command-line/Command%20Line-English%20version.md) | [命令行笔记](devops/command-line/命令行-中文版.md) |
 
