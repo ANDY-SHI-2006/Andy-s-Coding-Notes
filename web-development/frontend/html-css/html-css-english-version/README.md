@@ -12,3 +12,9 @@ HTML and CSS fundamentals study notes, kept in bilingual sync with `html-css-中
 6. [Transitions and Animations](06-transitions-animations.md)
 7. [Pseudo-Classes and Interactive States](07-pseudo-classes.md)
 8. [Icon Fonts](08-icon-fonts.md)
+
+## Learning Resources
+
+- [MDN Web Docs (HTML)](https://developer.mozilla.org/en-US/docs/Web/HTML) — Mozilla's authoritative, comprehensive HTML reference
+- [W3Schools (HTML)](https://www.w3schools.com/html/default.asp) — beginner-friendly tutorial and quick reference
+- [TutorialsPoint (HTML)](https://www.tutorialspoint.com/html/index.htm) — concise HTML tutorial
