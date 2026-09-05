@@ -12,13 +12,13 @@ HTML（HyperText Markup Language）是创建网页的标准标记语言。它使
 
 ```html
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="面向搜索引擎的页面简介。">
-    <meta name="keywords" content="HTML, CSS, 教程">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="description" content="A concise description of the page for search engines.">
+    <meta name="keywords" content="HTML, CSS, tutorial">
+    <link rel="icon" href="favicon.ico">
     <title>Document</title>
 </head>
 <body>
@@ -31,7 +31,7 @@ HTML（HyperText Markup Language）是创建网页的标准标记语言。它使
 |---------|---------|
 | `<!DOCTYPE html>` | 声明文档类型和 HTML 版本（HTML5） |
 | `<html>` | 页面的根元素 |
-| `<html lang="zh-CN">` | 设置文档语言，利于 SEO 与无障碍访问 |
+| `<html lang="en">` | 设置文档语言，利于 SEO 与无障碍访问 |
 | `<head>` | 包含元数据（不在页面上显示） |
 | `<meta charset="UTF-8">` | 将字符编码设置为 UTF-8 |
 | `<meta name="viewport">` | 确保移动设备上的响应式设计 |
@@ -74,7 +74,7 @@ HTML 标签有多种分类方式：
 属性写在开始标签内，多个属性以空格分隔，顺序不限。
 
 ```html
-<img src="photo.jpg" alt="美丽的风景" width="300">
+<img src="photo.jpg" alt="A beautiful landscape" width="300">
 ```
 
 常见规则：
@@ -178,8 +178,8 @@ HTML 标签有多种分类方式：
 ```html
 <p>This is <strong>important</strong> and this is <em>emphasized</em>.</p>
 <p>This is <del>deleted</del> and this is <ins>inserted</ins> text.</p>
-<p>水的化学式是 H<sub>2</sub>O。</p>
-<p>面积是 x<sup>2</sup>。</p>
+<p>H<sub>2</sub>O is water.</p>
+<p>The area is x<sup>2</sup>.</p>
 ```
 
 **空白折叠（white-space collapsing）**
@@ -187,7 +187,7 @@ HTML 标签有多种分类方式：
 浏览器会把连续的空格、制表符和换行合并为一个空格。如需在段落内强制换行，使用 `<br>`；如需控制更大间距，使用 CSS。
 
 ```html
-<p>这    段    文    字    的    空    格    会    被    折    叠。</p>
+<p>This    text    has    collapsed    spaces.</p>
 ```
 
 **换行与水平线：**
@@ -230,7 +230,7 @@ HTML 标签有多种分类方式：
 **`<img>` — Image（图像）**
 
 ```html
-<img src="photo.jpg" alt="美丽的风景" width="300" title="风景">
+<img src="photo.jpg" alt="A beautiful landscape" width="300" title="Landscape">
 ```
 
 | 属性 | 说明 |
@@ -254,23 +254,6 @@ HTML 标签有多种分类方式：
 </ul>
 ```
 
-**无序列表 `list-style` 取值**
-
-使用 CSS `list-style` 属性改变项目符号样式：
-
-| 取值 | 符号样式 |
-|-------|--------------|
-| `disc` | 实心圆点（默认） |
-| `circle` | 空心圆点 |
-| `square` | 实心方块 |
-| `none` | 无符号 |
-
-```css
-ul {
-    list-style: square;
-}
-```
-
 **有序列表：**
 
 ```html
@@ -281,25 +264,14 @@ ul {
 </ol>
 ```
 
-**有序列表 `list-style` 取值**
-
-| 取值 | 编号样式 |
-|-------|-----------------|
-| `decimal` | 1, 2, 3（默认） |
-| `decimal-leading-zero` | 01, 02, 03 |
-| `lower-alpha` | a, b, c |
-| `upper-alpha` | A, B, C |
-| `lower-roman` | i, ii, iii |
-| `upper-roman` | I, II, III |
-
 **起始编号**
 
 使用 `start` 属性从指定数字开始计数：
 
 ```html
 <ol start="4">
-    <li>第四项</li>
-    <li>第五项</li>
+    <li>Fourth item</li>
+    <li>Fifth item</li>
 </ol>
 ```
 
@@ -309,13 +281,13 @@ ul {
 
 ```html
 <ul>
-    <li>水果
+    <li>Fruits
         <ul>
-            <li>苹果</li>
-            <li>香蕉</li>
+            <li>Apple</li>
+            <li>Banana</li>
         </ul>
     </li>
-    <li>蔬菜</li>
+    <li>Vegetables</li>
 </ul>
 ```
 
@@ -365,7 +337,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 
 ```html
 <video src="movie.mp4" controls width="640" height="360" poster="cover.jpg" muted>
-    您的浏览器不支持 video 标签。
+    Your browser does not support the video element.
 </video>
 ```
 
@@ -383,7 +355,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 
 ```html
 <audio src="music.mp3" controls loop>
-    您的浏览器不支持 audio 标签。
+    Your browser does not support the audio element.
 </audio>
 ```
 
@@ -394,7 +366,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 `<iframe>` 标签可在当前页面中嵌入另一个 HTML 页面。
 
 ```html
-<iframe src="https://example.com" width="600" height="400" title="嵌入页面"></iframe>
+<iframe src="https://example.com" width="600" height="400" title="Embedded page"></iframe>
 ```
 
 | 属性 | 说明 |
@@ -509,17 +481,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 
 ---
 
-## 1.4 最佳实践
-
-| 应该 | 不应该 |
-|----|-------|
-| 适时使用语义化标签（`<header>`、`<nav>`、`<main>`、`<footer>`） | 使用表格进行页面布局 |
-| 始终为图片提供 `alt` 文本 | 跳级标题（例如从 `h1` 直接到 `h3`） |
-| 标签名使用小写 | 使用表现型标签如 `<font>`、`<center>`（已废弃） |
-| 正确闭合所有成对标签 | 将块级标签嵌套在行内标签内 |
-| 展示代码时使用 `&lt;` 和 `&gt;` | 忘记 `<!DOCTYPE html>` 声明 |
-
-### 1.4.1 HTML5 语义化元素
+## 1.4 HTML5 语义化元素
 
 HTML5 引入了语义化元素，比通用 `<div>` 更清晰地描述页面结构。
 
@@ -535,17 +497,29 @@ HTML5 引入了语义化元素，比通用 `<div>` 更清晰地描述页面结�
 
 ```html
 <body>
-    <header>站点头部</header>
-    <nav>主导航</nav>
+    <header>Site header</header>
+    <nav>Main navigation</nav>
     <main>
-        <article>文章内容</article>
-        <aside>相关链接</aside>
+        <article>Article content</article>
+        <aside>Related links</aside>
     </main>
-    <footer>版权信息</footer>
+    <footer>Copyright info</footer>
 </body>
 ```
 
 > **注意：** 每个文档只能有一个 `<main>`，且 `<main>` 不能嵌套在 `<article>`、`<aside>`、`<footer>`、`<header>` 或 `<nav>` 内部。
+
+---
+
+## 1.5 最佳实践
+
+| 应该 | 不应该 |
+|----|-------|
+| 适时使用语义化标签（`<header>`、`<nav>`、`<main>`、`<footer>`） | 使用表格进行页面布局 |
+| 始终为图片提供 `alt` 文本 | 跳级标题（例如从 `h1` 直接到 `h3`） |
+| 标签名使用小写 | 使用表现型标签如 `<font>`、`<center>`（已废弃） |
+| 正确闭合所有成对标签 | 将块级标签嵌套在行内标签内 |
+| 展示代码时使用 `&lt;` 和 `&gt;` | 忘记 `<!DOCTYPE html>` 声明 |
 
 **记忆口诀**
 - **HTML** = "HyperText Markup Language — 网页的骨架"

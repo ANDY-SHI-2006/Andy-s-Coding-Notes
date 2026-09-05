@@ -18,7 +18,7 @@ Every HTML document follows a basic skeleton structure. In VS Code, you can gene
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A concise description of the page for search engines.">
     <meta name="keywords" content="HTML, CSS, tutorial">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" href="favicon.ico">
     <title>Document</title>
 </head>
 <body>
@@ -254,23 +254,6 @@ Browsers collapse consecutive spaces, tabs, and line breaks into a single space.
 </ul>
 ```
 
-**Unordered list styles**
-
-Use the `list-style` CSS property to change the bullet:
-
-| Value | Bullet style |
-|-------|--------------|
-| `disc` | Filled circle (default) |
-| `circle` | Hollow circle |
-| `square` | Filled square |
-| `none` | No bullet |
-
-```css
-ul {
-    list-style: square;
-}
-```
-
 **Ordered list:**
 
 ```html
@@ -280,17 +263,6 @@ ul {
     <li>Third step</li>
 </ol>
 ```
-
-**Ordered list styles**
-
-| Value | Numbering style |
-|-------|-----------------|
-| `decimal` | 1, 2, 3 (default) |
-| `decimal-leading-zero` | 01, 02, 03 |
-| `lower-alpha` | a, b, c |
-| `upper-alpha` | A, B, C |
-| `lower-roman` | i, ii, iii |
-| `upper-roman` | I, II, III |
 
 **Starting number**
 
@@ -509,17 +481,7 @@ For better structure and styling, tables can be divided into sections:
 
 ---
 
-## 1.4 Best Practices
-
-| Do | Don't |
-|----|-------|
-| Use semantic tags (`<header>`, `<nav>`, `<main>`, `<footer>`) when appropriate | Use tables for page layout |
-| Always include `alt` text for images | Skip heading levels (e.g., `h1` directly to `h3`) |
-| Write lowercase tag names | Use presentational tags like `<font>` or `<center>` (deprecated) |
-| Close all paired tags properly | Nest block tags inside inline tags |
-| Use `&lt;` and `&gt;` when displaying code | Forget the `<!DOCTYPE html>` declaration |
-
-### 1.4.1 Semantic HTML5 Elements
+## 1.4 Semantic HTML5 Elements
 
 HTML5 introduces semantic elements that describe page structure more clearly than generic `<div>` tags.
 
@@ -546,6 +508,18 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
 ```
 
 > **Note:** `<main>` must be unique per document and should not be nested inside `<article>`, `<aside>`, `<footer>`, `<header>`, or `<nav>`.
+
+---
+
+## 1.5 Best Practices
+
+| Do | Don't |
+|----|-------|
+| Use semantic tags (`<header>`, `<nav>`, `<main>`, `<footer>`) when appropriate | Use tables for page layout |
+| Always include `alt` text for images | Skip heading levels (e.g., `h1` directly to `h3`) |
+| Write lowercase tag names | Use presentational tags like `<font>` or `<center>` (deprecated) |
+| Close all paired tags properly | Nest block tags inside inline tags |
+| Use `&lt;` and `&gt;` when displaying code | Forget the `<!DOCTYPE html>` declaration |
 
 **Summary Mnemonic**
 - **HTML** = "HyperText Markup Language — the skeleton of the web"
