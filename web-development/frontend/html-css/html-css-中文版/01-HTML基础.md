@@ -8,7 +8,7 @@ HTML（HyperText Markup Language）是创建网页的标准标记语言。它使
 
 ### 1.1.1 HTML 骨架
 
-每个 HTML 文档都遵循基本的骨架结构。在 VS Code 中，输入 `!` 并按 `Tab`（Emmet 缩写）即可立即生成该骨架。
+每个 HTML 文档都遵循基本的骨架结构。在 VS Code 中，输入 `!` 并按 `Tab`（Emmet 缩写）即可立即生成下面的骨架，生成结果与这段代码完全一致：
 
 ```html
 <!DOCTYPE html>
@@ -16,9 +16,6 @@ HTML（HyperText Markup Language）是创建网页的标准标记语言。它使
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A concise description of the page for search engines.">
-    <meta name="keywords" content="HTML, CSS, tutorial">
-    <link rel="icon" href="favicon.ico">
     <title>Document</title>
 </head>
 <body>
@@ -30,16 +27,26 @@ HTML（HyperText Markup Language）是创建网页的标准标记语言。它使
 | 元素 | 说明 |
 |---------|---------|
 | `<!DOCTYPE html>` | 文档声明（不是标签），告诉浏览器用 HTML5 解析 |
-| `<html>` | 页面的根元素 |
-| `<html lang="en">` | 设置文档语言，利于 SEO 与无障碍访问 |
+| `<html lang="en">` | 页面的根元素；`lang` 属性设置文档语言，利于 SEO 与无障碍访问 |
 | `<head>` | 包含元数据（不在页面上显示），管理图标、标题，引入外部资源 |
 | `<meta charset="UTF-8">` | 将字符编码设置为 UTF-8 |
 | `<meta name="viewport">` | 确保移动设备上的响应式设计 |
+| `<title>` | 设置浏览器标签页标题 |
+| `<body>` | 包含所有可见内容 |
+
+骨架之外还有几个常用的可选补充，需要手动添加（`!`+Tab 不会自动生成）：
+
+```html
+<meta name="description" content="A concise description of the page for search engines.">
+<meta name="keywords" content="HTML, CSS, tutorial">
+<link rel="icon" href="favicon.ico">
+```
+
+| 元素 | 说明 |
+|---------|---------|
 | `<meta name="description">` | 提供页面摘要，显示在搜索结果中 |
 | `<meta name="keywords">` | 列出与页面相关的关键词 |
 | `<link rel="icon">` | 浏览器标签页图标（favicon） |
-| `<title>` | 设置浏览器标签页标题 |
-| `<body>` | 包含所有可见内容 |
 
 > **根标签：** `<html>` 是整个页面的根标签，理论上所有标签都应嵌套在它内部。不过浏览器对 HTML 非常宽容——即使有内容不小心写在 `<html>` 外面，浏览器通常也会自动纠错、正常渲染。但为了标记规范、结构清晰，仍应把全部标签都放在 `<html>` 内部。
 

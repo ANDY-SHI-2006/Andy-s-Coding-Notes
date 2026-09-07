@@ -8,7 +8,7 @@ HTML (HyperText Markup Language) is the standard markup language for creating we
 
 ### 1.1.1 The HTML Skeleton
 
-Every HTML document follows a basic skeleton structure. In VS Code, you can generate this skeleton instantly by typing `!` and pressing `Tab` (Emmet abbreviation).
+Every HTML document follows a basic skeleton structure. In VS Code, you can generate this skeleton instantly by typing `!` and pressing `Tab` (Emmet abbreviation). The generated output matches this code exactly:
 
 ```html
 <!DOCTYPE html>
@@ -16,9 +16,6 @@ Every HTML document follows a basic skeleton structure. In VS Code, you can gene
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A concise description of the page for search engines.">
-    <meta name="keywords" content="HTML, CSS, tutorial">
-    <link rel="icon" href="favicon.ico">
     <title>Document</title>
 </head>
 <body>
@@ -30,16 +27,26 @@ Every HTML document follows a basic skeleton structure. In VS Code, you can gene
 | Element | Purpose |
 |---------|---------|
 | `<!DOCTYPE html>` | Document declaration (not a tag), tells the browser to parse using HTML5 |
-| `<html>` | The root element of the page |
-| `<html lang="en">` | Sets the document language for SEO and accessibility |
+| `<html lang="en">` | The root element of the page; the `lang` attribute sets the document language for SEO and accessibility |
 | `<head>` | Contains metadata (not displayed on the page); manages the icon and title, and imports external resources |
 | `<meta charset="UTF-8">` | Sets the character encoding to UTF-8 |
 | `<meta name="viewport">` | Ensures responsive design on mobile devices |
+| `<title>` | Sets the browser tab title |
+| `<body>` | Contains all visible content |
+
+Beyond the skeleton, a few common optional additions must be written manually (`!`+Tab does not generate them):
+
+```html
+<meta name="description" content="A concise description of the page for search engines.">
+<meta name="keywords" content="HTML, CSS, tutorial">
+<link rel="icon" href="favicon.ico">
+```
+
+| Element | Purpose |
+|---------|---------|
 | `<meta name="description">` | Provides a page summary shown in search results |
 | `<meta name="keywords">` | Lists keywords relevant to the page |
 | `<link rel="icon">` | Browser tab icon (favicon) |
-| `<title>` | Sets the browser tab title |
-| `<body>` | Contains all visible content |
 
 > **Root tag:** `<html>` is the root element of the entire page; all tags should be nested inside it. However, browsers are very lenient with HTML — even if content is accidentally written outside `<html>`, the browser usually corrects it and renders it normally. Still, for valid, clear markup, keep all tags inside `<html>`.
 
