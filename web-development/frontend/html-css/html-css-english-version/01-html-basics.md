@@ -43,18 +43,18 @@ Every HTML document follows a basic skeleton structure. In VS Code, you can gene
 
 > **Root tag:** `<html>` is the root element of the entire page; all tags should be nested inside it. However, browsers are very lenient with HTML — even if content is accidentally written outside `<html>`, the browser usually corrects it and renders it normally. Still, for valid, clear markup, keep all tags inside `<html>`.
 
-### 1.1.2 Tag Categories
+### 1.1.2 Tag Categories and Attributes
 
 HTML tags are classified in multiple ways:
 
-**By structure:**
+### 1.1.2.1 By Structure
 
 | Type | Description | Examples |
 |------|-------------|----------|
 | **Paired (double) tags** | Have an opening and closing tag; wrap around content | `<div>...</div>`, `<p>...</p>` |
 | **Self-closing (single) tags** | Stand alone; often used to embed resources | `<img>`, `<br>`, `<hr>` |
 
-**By display behavior:**
+### 1.1.2.2 By Display Behavior
 
 | Type | Behavior | Examples |
 |------|----------|----------|
@@ -64,35 +64,35 @@ HTML tags are classified in multiple ways:
 
 > **Note:** The actual display behavior is controlled by the CSS `display` property. The table above describes the **default** behavior of each tag.
 
-**Detailed characteristics of each type:**
+### 1.1.2.3 Detailed Characteristics of Each Type
 
-**Block-level (`<div>`, `<p>`, `<h1>`–`<h6>`, `<ul>`):**
+#### 1.1.2.3.1 Block-level (`<div>`, `<p>`, `<h1>`–`<h6>`, `<ul>`)
 - Occupies its own line — even if there is spare room, other tags cannot use it.
 - Width and height can be set freely.
 - Width inherits from the parent when not set; height is determined by content when not set.
 - Can nest other tags; however, `<p>` cannot nest block-level tags (the browser will split them).
 - Margins and padding take effect in all directions (see the CSS chapter).
 
-**Inline (`<span>`, `<a>`, `<strong>`, `<em>`):**
+#### 1.1.2.3.2 Inline (`<span>`, `<a>`, `<strong>`, `<em>`)
 - Does not occupy its own line; shares a line with other inline elements.
 - Width and height cannot be set freely — they are determined by content.
 - Can only nest text or inline elements.
 - Margins and padding only take effect horizontally, not vertically (see the CSS chapter).
 
-**Inline-block (`<img>`, `<input>`, `<textarea>`):**
+#### 1.1.2.3.3 Inline-block (`<img>`, `<input>`, `<textarea>`)
 - Does not occupy its own line; shares a line with other inline/inline-block tags.
 - Width and height can be set.
 - When not set, dimensions are determined by content.
 - Margins and padding take effect in all directions, like block-level (see the CSS chapter).
 
-**By relationship:**
+### 1.1.2.4 By Relationship
 
 | Relationship | Description | Example |
 |-------------|-------------|---------|
 | **Parent-Child** | One tag is nested inside another | `<ul>` is parent of `<li>` |
 | **Sibling** | Tags at the same nesting level | Two `<li>` inside the same `<ul>` |
 
-**Attribute syntax**
+### 1.1.2.5 Attribute Syntax
 
 Attributes are written inside the opening tag, separated by spaces. Their order does not matter.
 
