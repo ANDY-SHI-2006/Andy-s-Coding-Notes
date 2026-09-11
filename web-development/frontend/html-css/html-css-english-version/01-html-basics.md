@@ -54,14 +54,14 @@ Beyond the skeleton, a few common optional additions must be written manually (`
 
 HTML tags are classified in multiple ways:
 
-### 1.1.2.1 By Structure
+#### 1.1.2.1 By Structure
 
 | Type | Description | Examples |
 |------|-------------|----------|
 | **Paired (double) tags** | Have an opening and closing tag; wrap around content | `<div>...</div>`, `<p>...</p>` |
 | **Self-closing (single) tags** | Stand alone; often used to embed resources | `<img>`, `<br>`, `<hr>` |
 
-### 1.1.2.2 By Display Behavior
+#### 1.1.2.2 By Display Behavior
 
 | Type | Behavior | Examples |
 |------|----------|----------|
@@ -102,7 +102,7 @@ The example below adds borders and background colors to the three tag types so y
 
 (A little CSS is added to make the effect easier to see; the style details are covered in Chapter 2 — just copy it for now.)
 
-### 1.1.2.3 By Relationship
+#### 1.1.2.3 By Relationship
 
 | Relationship | Description | Example |
 |-------------|-------------|---------|
@@ -116,7 +116,7 @@ The example below adds borders and background colors to the three tag types so y
 </ul>
 ```
 
-### 1.1.2.4 Attribute Syntax
+#### 1.1.2.4 Attribute Syntax
 
 Attributes are written inside the opening tag, separated by spaces. Their order does not matter.
 
@@ -169,7 +169,7 @@ Common settings (File → Preferences → Settings):
 
 ### 1.2.1 Container Tags
 
-### 1.2.1.1 `<div>` — Division
+#### 1.2.1.1 `<div>` — Division
 
 A generic block-level container used to group elements for styling or layout. **`<div>` carries no semantic meaning** — it can nest any tags and is commonly used to build page layouts:
 
@@ -182,7 +182,7 @@ A generic block-level container used to group elements for styling or layout. **
 
 ![[ch1-div-layout.png]]
 
-### 1.2.1.2 `<span>` — Span
+#### 1.2.1.2 `<span>` — Span
 
 A generic inline container used to style a portion of text within a larger block.
 
@@ -190,9 +190,26 @@ A generic inline container used to style a portion of text within a larger block
 <p>Hello, <span style="color: red;">world</span>!</p>
 ```
 
+**Nesting rules:**
+
+- **The spec**: `<span>` may only contain text and inline/inline-block elements.
+- **The experiment**: nesting a block-level element inside it is not corrected by the browser — it still renders (see the note in 1.2.2.2).
+- **The consequence**: when rendering, the browser splits the `<span>` into two pieces around the block-level child (called anonymous block boxes in CSS — see Chapter 3). Backgrounds/borders break apart and the block child takes its own line — **"it renders" does not mean "you should write it"**:
+
+```html
+<!-- Wrong example: a block-level div inside span splits the yellow background into two pieces -->
+<span style="background-color: yellow;">
+  Text before
+  <div style="background-color: #e74c3c; color: white;">Block inside span</div>
+  Text after
+</span>
+```
+
+![[ch1-span-nesting-block.png]]
+
 ### 1.2.2 Text Tags
 
-### 1.2.2.1 Heading Tags
+#### 1.2.2.1 Heading Tags
 
 ```html
 <h1>Heading Level 1</h1>
@@ -206,17 +223,24 @@ A generic inline container used to style a portion of text within a larger block
 ```
 ![[ch1-text-tags.png]]
 
-> **Best Practice:** Use only one `<h1>` per page. Headings should follow a logical hierarchy (`h1` → `h2` → `h3`) without skipping levels.
+> **Best Practice:** Use only one `<h1>` per page. Headings should follow a logical hierarchy (`h1` → `h2` → `h3`) without skipping levels. Multiple `<h1>` elements are technically allowed and browsers render them normally — but they confuse screen-reader navigation and dilute the page's topic for search engines, so the convention is one `<h1>` per page.
 
-### 1.2.2.2 Paragraph Tag
+#### 1.2.2.2 Paragraph Tag
+
+`<p>` is the paragraph tag, used to wrap a block of text.
 
 ```html
 <p>This is a paragraph of text.</p>
 ```
 
-> **Note:** Do not nest block-level elements (such as `<div>`, `<h1>`–`<h6>`, or another `<p>`) inside a `<p>`. Browsers will auto-close the paragraph, causing unexpected rendering. Use `<div>` or `<span>` for nested text containers instead.
+Two default behaviors to know:
 
-### 1.2.2.3 Text Formatting Tags
+- **Automatic wrapping**: text wraps automatically to fit the browser window width — no manual line breaks needed.
+- **Spacing between paragraphs**: adjacent paragraphs have default top/bottom margins, leaving a visible gap (from the browser's default stylesheet; see the CSS chapter).
+
+> **Note:** Do not nest block-level elements (such as `<div>`, `<h1>`–`<h6>`, or another `<p>`) inside a `<p>`. Browsers will auto-close the paragraph, causing unexpected rendering. Use `<div>` or `<span>` for nested text containers instead. This auto-correction applies only to a few specific tags like `<p>`; other invalid nesting (such as a `<p>` inside a `<span>`) is not corrected and renders as written — but it is still invalid HTML and should be avoided.
+
+#### 1.2.2.3 Text Formatting Tags
 
 | Tag | Visual Effect | Semantic Meaning |
 |-----|---------------|------------------|
@@ -238,7 +262,7 @@ A generic inline container used to style a portion of text within a larger block
 <p>The area is x<sup>2</sup>.</p>
 ```
 
-### 1.2.2.4 Whitespace Collapsing
+#### 1.2.2.4 Whitespace Collapsing
 
 Browsers collapse consecutive spaces, tabs, and line breaks into a single space. Use `<br>` for a forced line break inside a paragraph, or use CSS to control larger gaps.
 
@@ -253,7 +277,7 @@ are ignored too.</p>
 
 ![[ch1-whitespace-collapse.png]]
 
-### 1.2.2.5 Line Break and Horizontal Rule
+#### 1.2.2.5 Line Break and Horizontal Rule
 
 ```html
 <p>Line one<br>Line two</p>
@@ -263,7 +287,7 @@ are ignored too.</p>
 
 ### 1.2.3 Link and Media Tags
 
-### 1.2.3.1 `<a>` — Anchor (Hyperlink)
+#### 1.2.3.1 `<a>` — Anchor (Hyperlink)
 
 ```html
 <!-- Link to an external website -->
@@ -281,7 +305,7 @@ are ignored too.</p>
 | `href` | Destination URL or anchor |
 | `target` | Where to open the link; `_self` (default, same tab) or `_blank` (new tab) |
 
-### 1.2.3.2 Anchor Navigation (Within the Same Page)
+#### 1.2.3.2 Anchor Navigation (Within the Same Page)
 
 ```html
 <a href="#section1">Jump to Section 1</a>
@@ -290,7 +314,7 @@ are ignored too.</p>
 <h2 id="section1">Section 1</h2>
 ```
 
-### 1.2.3.3 `<img>` — Image
+#### 1.2.3.3 `<img>` — Image
 
 Here is how links and an image render on the page (`photo.svg` is a local placeholder — swap in your own image file):
 
