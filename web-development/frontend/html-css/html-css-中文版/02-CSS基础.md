@@ -10,11 +10,7 @@ CSS（Cascading Style Sheets，层叠样式表）用于为 HTML 元素设置样�
 
 ### 2.1.1 内联样式
 
-样式直接写在 HTML 标签的 `style` 属性中。
-
-```html
-<p style="color: red; font-size: 24px;">This text is red and large.</p>
-```
+样式直接写在 HTML 标签的 `style` 属性中。示例见 2.1.2 的综合演示（红色段落由内联样式设置）。
 
 | 优点 | 缺点 |
 |------|------|
@@ -26,24 +22,21 @@ CSS（Cascading Style Sheets，层叠样式表）用于为 HTML 元素设置样�
 
 ### 2.1.2 内部（嵌入式）样式
 
-样式放在 HTML `<head>` 内的 `<style>` 标签中。
+样式放在 HTML `<head>` 内的 `<style>` 标签中。下面用一个综合示例同时对比内联样式与内部样式：
 
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        p {
-            color: red;
-            font-size: 24px;
-        }
-    </style>
-</head>
-<body>
-    <p>This paragraph is styled by internal CSS.</p>
-</body>
-</html>
+<style>
+    /* 内部样式：写在 <style> 标签中，作用于所有 <p> */
+    p {
+        color: #2563eb;
+        font-size: 20px;
+    }
+</style>
+<!-- 内联样式：直接写在标签的 style 属性中，优先级更高 -->
+<p style="color: #dc2626;">Inline style — red, written on the tag itself.</p>
+<p>Internal style — blue, written in the &lt;style&gt; tag.</p>
 ```
+![[ch2-css-methods.png]]
 
 | 优点 | 缺点 |
 |------|------|
@@ -135,19 +128,22 @@ html { font-size: 16px; }
 | **ID 选择器** | `#header` | `id="header"` 的元素 |
 | **通配选择器** | `*` | 所有元素 |
 
-```css
-/* 元素选择器 */
-p { color: blue; }
+下面的示例让每种选择器命中不同的元素，效果一目了然：
 
-/* 类选择器 */
-.highlight { background-color: yellow; }
-
-/* ID 选择器 */
-#header { font-size: 32px; }
-
-/* 通配选择器 */
-* { margin: 0; padding: 0; }
+```html
+<style>
+    /* 元素选择器：所有 <p> 变蓝 */
+    p { color: #2563eb; }
+    /* 类选择器：黄色背景 */
+    .highlight { background-color: #fef08a; }
+    /* ID 选择器：放大字号 */
+    #header { font-size: 24px; }
+</style>
+<h2 id="header">ID selector: larger heading.</h2>
+<p>Element selector: blue text.</p>
+<p class="highlight">Class selector: yellow background.</p>
 ```
+![[ch2-selectors.png]]
 
 #### class / id 命名规范
 
@@ -209,30 +205,32 @@ p { color: blue; }
 | **相邻兄弟选择器** | `h1 + p` | 紧跟在 `<h1>` 后面的第一个 `<p>` |
 | **通用兄弟选择器** | `h1 ~ p` | 与 `<h1>` 同父元素且在其后的所有 `<p>` |
 
-```css
-/* 后代选择器：div 内的所有段落 */
-div p { color: red; }
-
-/* 子元素选择器：仅直接子元素 */
-div > p { color: blue; }
-
-/* 相邻兄弟选择器 */
-h1 + p { font-weight: bold; }
-
-/* 通用兄弟选择器 */
-h1 ~ p { font-style: italic; }
+```html
+<style>
+    /* 后代选择器：div 内所有层级的 <p> 变红 */
+    div p { color: #dc2626; }
+    /* 子元素选择器：仅 div 的直接子元素 <p> 变蓝加粗（与上条优先级相同，写得更晚所以胜出） */
+    div > p { color: #2563eb; font-weight: bold; }
+    /* 相邻兄弟选择器：紧跟 <h2> 后的第一个 <p> 有黄色背景 */
+    h2 + p { background-color: #fef08a; }
+    /* 分组选择器：h2 与 h3 共用同一字体 */
+    h2, h3 { font-family: Arial, sans-serif; }
+</style>
+<div>
+    <p>Direct child — blue &amp; bold (div &gt; p).</p>
+    <section>
+        <p>Nested grandchild — red only (div p).</p>
+    </section>
+</div>
+<h2>Section Title</h2>
+<p>Adjacent sibling — yellow background (h2 + p).</p>
+<p>Second paragraph — no highlight.</p>
 ```
+![[ch2-combinators.png]]
 
 ### 2.2.3 分组选择器
 
-同时为多个选择器应用相同的样式。
-
-```css
-h1, h2, h3 {
-    color: navy;
-    font-family: Arial, sans-serif;
-}
-```
+把多个选择器用逗号分隔，就能为它们应用同一组样式。见 2.2.2 示例中的 `h2, h3 { ... }`：一条规则同时给两级标题设置了相同字体。
 
 ### 2.2.4 交集选择器
 
@@ -307,16 +305,30 @@ img[src$=".svg"] {
 - `padding`
 - `width` / `height`
 
-```css
-body {
-    color: darkblue;      /* 会被所有子元素继承 */
-    font-family: Arial;   /* 会被所有子元素继承 */
-}
+下面的示例中，文字颜色和字体被 `<p>` 继承，边框则不会：
 
-div {
-    border: 1px solid black;  /* 不会被子元素继承 */
-}
+```html
+<style>
+    body {
+        color: #1e3a8a;              /* 可继承：所有子元素的文字颜色 */
+        font-family: Georgia, serif; /* 可继承：字体 */
+    }
+    .card {
+        border: 2px solid #60a5fa;   /* 不可继承：子元素不会有边框 */
+        padding: 10px;
+        margin: 8px 0;
+    }
+    .override {
+        color: #dc2626;             /* 子元素可以覆盖继承值 */
+        font-family: Arial, sans-serif;
+    }
+</style>
+<div class="card">
+    <p>Inherited: dark blue Georgia text comes from body.</p>
+    <p class="override">Overridden: red Arial set on this paragraph.</p>
+</div>
 ```
+![[ch2-inheritance.png]]
 
 > **提示：** 可以使用 `inherit` 关键字强制继承：`border: inherit;`
 
@@ -351,15 +363,19 @@ p { color: blue; }   /* 这条获胜——优先级相同，但声明更晚 */
 2. 如果相同，比较第二位数字（类数量）—— 数值大的获胜。
 3. 如果还相同，比较第三位数字（元素数量）—— 数值大的获胜。
 
-```html
-<p id="intro" class="highlight">Hello</p>
-```
+同一个元素被多条规则命中时，优先级最高的一条生效：
 
-```css
-#intro { color: red; }        /* 优先级：1,0,0 —— 获胜 */
-.highlight { color: blue; }   /* 优先级：0,1,0 */
-p { color: green; }          /* 优先级：0,0,1 */
+```html
+<style>
+    p { color: #16a34a; }          /* 0,0,1 —— 元素选择器 */
+    .highlight { color: #2563eb; } /* 0,1,0 —— 类选择器高于元素 */
+    #intro { color: #dc2626; }     /* 1,0,0 —— ID 最高，最终生效 */
+</style>
+<p id="intro" class="highlight">Red — the ID selector wins (1,0,0).</p>
+<p class="highlight">Blue — a class (0,1,0) beats an element (0,0,1).</p>
+<p>Green — only the element selector matches here.</p>
 ```
+![[ch2-specificity.png]]
 
 > **重要：** 内联样式（`style="..."`）的优先级高于任何选择器。仅在万不得已时使用 `!important`。
 

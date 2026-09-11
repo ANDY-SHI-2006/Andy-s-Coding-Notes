@@ -10,11 +10,7 @@ There are three ways to apply CSS to an HTML document:
 
 ### 2.1.1 Inline Styles
 
-Styles are written directly inside the HTML tag using the `style` attribute.
-
-```html
-<p style="color: red; font-size: 24px;">This text is red and large.</p>
-```
+Styles are written directly inside the HTML tag using the `style` attribute. See the combined demo in 2.1.2 (the red paragraph is set inline).
 
 | Pros | Cons |
 |------|------|
@@ -26,24 +22,21 @@ Styles are written directly inside the HTML tag using the `style` attribute.
 
 ### 2.1.2 Internal (Embedded) Styles
 
-Styles are placed inside a `<style>` tag in the HTML `<head>`.
+Styles are placed inside a `<style>` tag in the HTML `<head>`. The combined demo below compares inline and internal styles side by side:
 
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        p {
-            color: red;
-            font-size: 24px;
-        }
-    </style>
-</head>
-<body>
-    <p>This paragraph is styled by internal CSS.</p>
-</body>
-</html>
+<style>
+    /* Internal styles: inside the <style> tag, apply to every <p> */
+    p {
+        color: #2563eb;
+        font-size: 20px;
+    }
+</style>
+<!-- Inline style: written in the tag's style attribute, higher priority -->
+<p style="color: #dc2626;">Inline style — red, written on the tag itself.</p>
+<p>Internal style — blue, written in the &lt;style&gt; tag.</p>
 ```
+![[ch2-css-methods.png]]
 
 | Pros | Cons |
 |------|------|
@@ -135,19 +128,22 @@ Selectors determine which HTML elements a CSS rule applies to.
 | **ID** | `#header` | The element with `id="header"` |
 | **Universal** | `*` | All elements |
 
-```css
-/* Element selector */
-p { color: blue; }
+The demo below lets each selector hit a different element so the effects are visible at a glance:
 
-/* Class selector */
-.highlight { background-color: yellow; }
-
-/* ID selector */
-#header { font-size: 32px; }
-
-/* Universal selector */
-* { margin: 0; padding: 0; }
+```html
+<style>
+    /* Element selector: every <p> turns blue */
+    p { color: #2563eb; }
+    /* Class selector: yellow background */
+    .highlight { background-color: #fef08a; }
+    /* ID selector: larger font size */
+    #header { font-size: 24px; }
+</style>
+<h2 id="header">ID selector: larger heading.</h2>
+<p>Element selector: blue text.</p>
+<p class="highlight">Class selector: yellow background.</p>
 ```
+![[ch2-selectors.png]]
 
 #### Class and ID Naming Rules
 
@@ -209,30 +205,32 @@ Use `*` mainly to reset default browser margins and paddings. Avoid styling all 
 | **Adjacent Sibling** | `h1 + p` | The first `<p>` immediately following an `<h1>` |
 | **General Sibling** | `h1 ~ p` | All `<p>` that follow an `<h1>` (same parent) |
 
-```css
-/* Descendant: all paragraphs inside div */
-div p { color: red; }
-
-/* Child: only direct children */
-div > p { color: blue; }
-
-/* Adjacent sibling */
-h1 + p { font-weight: bold; }
-
-/* General sibling */
-h1 ~ p { font-style: italic; }
+```html
+<style>
+    /* Descendant: every <p> at any depth inside div turns red */
+    div p { color: #dc2626; }
+    /* Child: only <p> that are direct children of div turn blue and bold (same specificity, declared later so it wins) */
+    div > p { color: #2563eb; font-weight: bold; }
+    /* Adjacent sibling: the first <p> right after <h2> gets a yellow background */
+    h2 + p { background-color: #fef08a; }
+    /* Grouping: h2 and h3 share the same font */
+    h2, h3 { font-family: Arial, sans-serif; }
+</style>
+<div>
+    <p>Direct child — blue &amp; bold (div &gt; p).</p>
+    <section>
+        <p>Nested grandchild — red only (div p).</p>
+    </section>
+</div>
+<h2>Section Title</h2>
+<p>Adjacent sibling — yellow background (h2 + p).</p>
+<p>Second paragraph — no highlight.</p>
 ```
+![[ch2-combinators.png]]
 
 ### 2.2.3 Grouping Selector
 
-Apply the same styles to multiple selectors at once.
-
-```css
-h1, h2, h3 {
-    color: navy;
-    font-family: Arial, sans-serif;
-}
-```
+Separate multiple selectors with commas to apply the same declarations to all of them. See the `h2, h3 { ... }` rule in the 2.2.2 demo: one rule gives both heading levels the same font.
 
 ### 2.2.4 Intersection Selector
 
@@ -307,16 +305,30 @@ Some CSS properties are automatically inherited by child elements from their par
 - `padding`
 - `width` / `height`
 
-```css
-body {
-    color: darkblue;      /* Inherited by all children */
-    font-family: Arial;   /* Inherited by all children */
-}
+In the demo below, text color and font are inherited by the `<p>` elements, while the border is not:
 
-div {
-    border: 1px solid black;  /* NOT inherited by children */
-}
+```html
+<style>
+    body {
+        color: #1e3a8a;              /* Inherited: text color of all children */
+        font-family: Georgia, serif; /* Inherited: font */
+    }
+    .card {
+        border: 2px solid #60a5fa;   /* Not inherited: children get no border */
+        padding: 10px;
+        margin: 8px 0;
+    }
+    .override {
+        color: #dc2626;             /* Children can override inherited values */
+        font-family: Arial, sans-serif;
+    }
+</style>
+<div class="card">
+    <p>Inherited: dark blue Georgia text comes from body.</p>
+    <p class="override">Overridden: red Arial set on this paragraph.</p>
+</div>
 ```
+![[ch2-inheritance.png]]
 
 > **Tip:** You can force inheritance using the `inherit` keyword: `border: inherit;`
 
@@ -351,15 +363,19 @@ Specificity is calculated as a three-digit score: `(ID count, Class count, Eleme
 2. If tied, compare the second number (class count) — higher wins.
 3. If tied, compare the third number (element count) — higher wins.
 
-```html
-<p id="intro" class="highlight">Hello</p>
-```
+When several rules hit the same element, the one with the highest specificity wins:
 
-```css
-#intro { color: red; }        /* Specificity: 1,0,0 — WINS */
-.highlight { color: blue; }   /* Specificity: 0,1,0 */
-p { color: green; }          /* Specificity: 0,0,1 */
+```html
+<style>
+    p { color: #16a34a; }          /* 0,0,1 — element selector */
+    .highlight { color: #2563eb; } /* 0,1,0 — a class beats an element */
+    #intro { color: #dc2626; }     /* 1,0,0 — the ID is highest and wins */
+</style>
+<p id="intro" class="highlight">Red — the ID selector wins (1,0,0).</p>
+<p class="highlight">Blue — a class (0,1,0) beats an element (0,0,1).</p>
+<p>Green — only the element selector matches here.</p>
 ```
+![[ch2-specificity.png]]
 
 > **Important:** Inline styles (`style="..."`) have higher specificity than any selector. Use `!important` only as a last resort.
 

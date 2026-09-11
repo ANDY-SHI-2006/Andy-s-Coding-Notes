@@ -30,24 +30,49 @@ A form is a section of a document that contains interactive controls for submitt
 
 The `<input>` element is the most versatile form control. Its behavior changes based on the `type` attribute.
 
-### 5.2.1 Text Inputs
+### 5.2.1 Common Input Types (Combined Example)
+
+A compact form covering text inputs, radio buttons, checkboxes, file upload, and buttons:
 
 ```html
-<!-- Single-line text -->
-<input type="text" name="username" placeholder="Enter username">
+<style>
+    .demo label { display: block; margin: 10px 0 4px; font-weight: bold; }
+    .demo input { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; }
+    .demo .row label { display: inline; font-weight: normal; margin-right: 12px; }
+    .demo button { margin: 12px 6px 0 0; padding: 6px 20px; border: none; border-radius: 4px;
+                   background: #4a90e2; color: #fff; cursor: pointer; }
+</style>
+<form class="demo">
+    <!-- Text / password / number -->
+    <label for="user">Username</label>
+    <input type="text" id="user" name="username" placeholder="Enter username">
+    <label for="pwd">Password</label>
+    <input type="password" id="pwd" name="password" placeholder="Enter password">
+    <label for="age">Age</label>
+    <input type="number" id="age" name="age" min="1" max="120" value="18">
 
-<!-- Password (characters hidden) -->
-<input type="password" name="password" placeholder="Enter password">
+    <!-- Radio buttons: same name = one group, only one can be selected -->
+    <label>Gender</label>
+    <div class="row">
+        <input type="radio" name="gender" value="male" id="male"> <label for="male">Male</label>
+        <input type="radio" name="gender" value="female" id="female" checked> <label for="female">Female</label>
+    </div>
 
-<!-- Email (validates format) -->
-<input type="email" name="email" placeholder="you@example.com">
+    <!-- Checkboxes: same group allows multiple selections -->
+    <label>Hobbies</label>
+    <div class="row">
+        <input type="checkbox" name="hobbies" value="reading" id="read" checked> <label for="read">Reading</label>
+        <input type="checkbox" name="hobbies" value="sports" id="sport"> <label for="sport">Sports</label>
+    </div>
 
-<!-- Number (restricts to numeric input) -->
-<input type="number" name="age" min="1" max="120" value="18">
+    <!-- File upload (the form needs enctype="multipart/form-data") -->
+    <label for="avatar">Avatar</label>
+    <input type="file" id="avatar" name="avatar" accept="image/*">
 
-<!-- Telephone -->
-<input type="tel" name="phone" placeholder="123-456-7890">
+    <button type="submit">Submit</button>
+</form>
 ```
+![[ch5-input-types.png]]
 
 **Common input attributes:**
 
@@ -63,31 +88,9 @@ The `<input>` element is the most versatile form control. Its behavior changes b
 | `min` / `max` | Range limit (for number, date, etc.) |
 | `autofocus` | Focuses the control automatically when the page loads |
 
-### 5.2.2 Choice Inputs
-
-```html
-<!-- Radio buttons: only one can be selected per group -->
-<input type="radio" name="gender" value="male" id="male">
-<label for="male">Male</label>
-
-<input type="radio" name="gender" value="female" id="female">
-<label for="female">Female</label>
-
-<!-- Checkboxes: multiple can be selected -->
-<input type="checkbox" name="hobbies" value="reading" id="read">
-<label for="read">Reading</label>
-
-<input type="checkbox" name="hobbies" value="sports" id="sport">
-<label for="sport">Sports</label>
-```
-
 > **Rule:** Radio buttons in the same group share the same `name`. Checkboxes in the same group also share the same `name`.
 
-### 5.2.3 File Upload
-
-```html
-<input type="file" name="avatar" accept="image/*">
-```
+**File upload attributes:**
 
 | Attribute | Description |
 |-----------|-------------|
@@ -96,24 +99,9 @@ The `<input>` element is the most versatile form control. Its behavior changes b
 
 > **Requirement:** The form must use `enctype="multipart/form-data"` for file uploads.
 
-### 5.2.4 Buttons
-
-```html
-<!-- Submit button: sends the form -->
-<input type="submit" value="Submit">
-<button type="submit">Submit</button>
-
-<!-- Reset button: clears all inputs -->
-<input type="reset" value="Clear">
-<button type="reset">Clear</button>
-
-<!-- Regular button: does nothing by default (used with JavaScript) -->
-<button type="button" onclick="doSomething()">Click Me</button>
-```
-
 > **Best Practice:** Use `<button>` instead of `<input type="submit">`. Buttons are more flexible (can contain HTML like icons) and easier to style.
 
-### 5.2.5 Other Input Types
+### 5.2.2 Other Input Types
 
 | Type | Description | Example |
 |------|-------------|---------|
@@ -126,7 +114,7 @@ The `<input>` element is the most versatile form control. Its behavior changes b
 | `url` | URL validation | `<input type="url">` |
 | `hidden` | Invisible field (sends data) | `<input type="hidden" name="token" value="abc">` |
 
-### 5.2.6 Removing Default Form Styling
+### 5.2.3 Removing Default Form Styling
 
 Browsers apply their own borders and focus rings to form controls. Reset them with CSS when you need a custom design, but always add a visible `:focus` state for accessibility.
 
@@ -144,7 +132,7 @@ input:focus, textarea:focus, select:focus, button:focus {
 
 > **Accessibility note:** Removing `outline` without a replacement hurts keyboard navigation. Pair `outline: none` with a custom `:focus` style.
 
-### 5.2.7 Mini Case: Login/Registration Form
+### 5.2.4 Mini Case: Login/Registration Form
 
 A compact login form demonstrates labels, required fields, `autofocus`, and custom styling.
 
@@ -206,13 +194,47 @@ A `<label>` associates descriptive text with a form control. Clicking the label 
 
 ## 5.4 Multi-line Text and Selection
 
-### 5.4.1 Textarea
+### 5.4.1 Textarea and Select (Combined Example)
 
-For multi-line text input.
+`<textarea>` is for multi-line text input; `<select>` lets the user pick from a list of options (multiple selections allowed too):
 
 ```html
-<textarea name="message" rows="5" cols="30" placeholder="Enter your message..."></textarea>
+<style>
+    .demo label { display: block; margin: 10px 0 4px; font-weight: bold; }
+    .demo textarea, .demo select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; }
+    .demo textarea { width: 260px; height: 80px; resize: vertical; }  /* vertical resizing only */
+</style>
+<form class="demo">
+    <!-- Multi-line text -->
+    <label for="msg">Message</label>
+    <textarea id="msg" name="message" placeholder="Enter your message..."></textarea>
+
+    <!-- Dropdown: optgroup for grouping, selected marks the default -->
+    <label for="city">City</label>
+    <select id="city" name="city">
+        <optgroup label="Asia">
+            <option value="beijing">Beijing</option>
+            <option value="tokyo" selected>Tokyo</option>
+        </optgroup>
+        <optgroup label="Europe">
+            <option value="london">London</option>
+            <option value="paris">Paris</option>
+        </optgroup>
+    </select>
+
+    <!-- multiple allows multi-select, size sets visible rows -->
+    <label for="skills">Skills</label>
+    <select id="skills" name="skills" multiple size="4">
+        <option value="html">HTML</option>
+        <option value="css" selected>CSS</option>
+        <option value="js">JavaScript</option>
+        <option value="py">Python</option>
+    </select>
+</form>
 ```
+![[ch5-textarea-select.png]]
+
+**Common textarea attributes:**
 
 | Attribute | Description |
 |-----------|-------------|
@@ -221,15 +243,7 @@ For multi-line text input.
 | `maxlength` | Maximum character count |
 | `placeholder` | Hint text |
 
-> **CSS alternative:** Use CSS to control `textarea` dimensions instead of `rows`/`cols`.
-
-```css
-textarea {
-    width: 100%;
-    height: 150px;
-    resize: vertical;   /* Allow only vertical resizing */
-}
-```
+> **CSS alternative:** Control the `textarea` size with CSS (like the `width` / `height` / `resize` above) instead of `rows` / `cols`.
 
 **`resize` values:**
 
@@ -242,42 +256,6 @@ textarea {
 
 > **Tag rule:** Keep the opening and closing tags on the same line: `<textarea>...</textarea>`. Putting content on a new line adds leading whitespace inside the field.
 
-### 5.4.2 Select Dropdown
-
-```html
-<select name="country">
-    <option value="">-- Select a country --</option>
-    <option value="cn">China</option>
-    <option value="us" selected>United States</option>
-    <option value="uk">United Kingdom</option>
-</select>
-```
-
-**Grouping options:**
-
-```html
-<select name="city">
-    <optgroup label="Asia">
-        <option value="beijing">Beijing</option>
-        <option value="tokyo">Tokyo</option>
-    </optgroup>
-    <optgroup label="Europe">
-        <option value="london">London</option>
-        <option value="paris">Paris</option>
-    </optgroup>
-</select>
-```
-
-**Multiple selection:**
-
-```html
-<select name="skills" multiple size="4">
-    <option value="html">HTML</option>
-    <option value="css" selected>CSS</option>
-    <option value="js">JavaScript</option>
-</select>
-```
-
 - Use `selected` on an `<option>` to make it the default choice when the page loads.
 - Use `<select multiple>` to let users choose several options. Hold **Ctrl** (Windows/Linux) or **Cmd** (macOS) while clicking to select or deselect items.
 
@@ -286,22 +264,38 @@ textarea {
 Modern browsers support built-in form validation using HTML attributes.
 
 ```html
-<form>
-    <!-- Required field -->
-    <input type="text" name="username" required minlength="3" maxlength="20">
+<style>
+    /* The browser switches :valid / :invalid automatically based on the current value */
+    .demo label { display: block; margin: 10px 0 4px; font-weight: bold; }
+    .demo input { padding: 6px 8px; border: 2px solid #ccc; border-radius: 4px; }
+    .demo input:valid { border-color: #2ecc71; }    /* passed validation: green */
+    .demo input:invalid { border-color: #e74c3c; }  /* failed validation: red */
+    .demo button { margin-top: 12px; padding: 6px 20px; border: none; border-radius: 4px;
+                   background: #4a90e2; color: #fff; cursor: pointer; }
+</style>
+<form class="demo">
+    <!-- Required with minlength 3: filled in -> green -->
+    <label for="user">Username (required, 3+ chars)</label>
+    <input type="text" id="user" name="username" required minlength="3" maxlength="20" value="Andy">
 
-    <!-- Pattern matching (regex) -->
-    <input type="text" name="zipcode" pattern="[0-9]{5}" title="Five digit zip code">
+    <!-- Email format: current value is valid -> green -->
+    <label for="mail">Email</label>
+    <input type="email" id="mail" name="email" value="andy@example.com">
 
-    <!-- Email with required -->
-    <input type="email" name="email" required>
+    <!-- Pattern requires 5 digits: "123" does not match -> red -->
+    <label for="zip">Zip code (5 digits)</label>
+    <input type="text" id="zip" name="zipcode" pattern="[0-9]{5}" value="123" title="Five digit zip code">
 
-    <!-- Number with range -->
-    <input type="number" name="quantity" min="1" max="10" required>
+    <!-- Required but left empty -> red -->
+    <label for="qty">Quantity (1-10)</label>
+    <input type="number" id="qty" name="quantity" min="1" max="10" required>
 
     <button type="submit">Submit</button>
 </form>
 ```
+![[ch5-validation.png]]
+
+In the screenshot above, green borders mean the current value passes validation and red borders mean it fails — all done with the `:valid` / `:invalid` states in CSS, no JavaScript needed.
 
 | Attribute | Validation |
 |-----------|------------|
@@ -327,22 +321,28 @@ Modern browsers support built-in form validation using HTML attributes.
 
 ## 5.7 Table Styling
 
-HTML tables can be styled with a few CSS properties that control borders and empty cells.
+Here is a styled table combining collapsed borders, a colored header, and zebra striping:
 
-```css
-table {
-    border-collapse: collapse;  /* merge adjacent cell borders */
-    border-spacing: 0;          /* spacing when borders are separate */
-}
-
-td, th {
-    border: 1px solid #ccc;
-}
-
-table {
-    empty-cells: hide;          /* hide borders/background of empty cells */
-}
+```html
+<style>
+    table { border-collapse: collapse; width: 420px; }  /* merge adjacent cell borders */
+    th, td { border: 1px solid #d1d5db; padding: 8px 12px; text-align: left; }
+    th { background: #4a90e2; color: #fff; }            /* header colors */
+    tbody tr:nth-child(even) { background: #f3f6fb; }   /* zebra: shade even rows */
+</style>
+<table>
+    <thead>
+        <tr><th>Name</th><th>Language</th><th>Score</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Alice</td><td>HTML</td><td>92</td></tr>
+        <tr><td>Bob</td><td>CSS</td><td>88</td></tr>
+        <tr><td>Carol</td><td>JavaScript</td><td>95</td></tr>
+        <tr><td>David</td><td>Python</td><td>90</td></tr>
+    </tbody>
+</table>
 ```
+![[ch5-table-styles.png]]
 
 | Property | Values | Description |
 |----------|--------|-------------|

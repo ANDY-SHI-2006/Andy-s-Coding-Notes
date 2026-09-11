@@ -27,6 +27,41 @@ Every element consists of four layers, from inside to outside:
 | **Border** | `border` | The edge surrounding padding |
 | **Margin** | `margin` | Space outside the border (separates elements) |
 
+The demo below shows all four layers in one box (yellow = margin, orange = border, white = padding, blue = content):
+
+```html
+<style>
+    /* Four layers: margin → border → padding → content, each in its own color */
+    .demo { position: relative; display: inline-block; background: #fde68a; }   /* Yellow = margin */
+    .box {
+        margin: 40px;                      /* Margin: space outside the box */
+        border: 6px solid #f97316;         /* Border: orange frame */
+        padding: 40px;                     /* Padding: space between content and border */
+        background: #ffffff;               /* White = padding area */
+    }
+    .content {
+        width: 220px;
+        height: 110px;
+        background: #93c5fd;               /* Blue = content area */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    .lbl { position: absolute; font-size: 13px; font-weight: bold; }
+    .lbl-margin  { top: 10px; left: 10px; color: #92400e; }
+    .lbl-padding { top: 206px; left: 175px; color: #64748b; }
+</style>
+<div class="demo">
+    <span class="lbl lbl-margin">margin</span>
+    <div class="box">
+        <div class="content">content</div>
+    </div>
+    <span class="lbl lbl-padding">padding</span>
+</div>
+```
+![[ch3-box-model.png]]
+
 ### 3.1.1 Content
 
 ```css
@@ -158,29 +193,45 @@ The `overflow` property decides what happens when content is larger than its con
 
 ## 3.2 Box Sizing
 
-By default, `width` and `height` apply only to the **content** area. Adding padding and border increases the total size.
+By default, `width` and `height` apply only to the **content** area, so adding padding and border increases the total size; `box-sizing: border-box` makes `width` include padding and border. The two boxes below have identical `width`, `padding`, and `border`, yet end up with different rendered widths:
 
-```css
-/* Default behavior (content-box) */
-.box {
-    width: 200px;
-    padding: 20px;
-    border: 2px solid black;
-    /* Actual rendered width: 200 + 20*2 + 2*2 = 244px */
-}
+```html
+<style>
+    /* Both boxes share the same width, padding, and border */
+    .wrapper { display: flex; gap: 60px; align-items: flex-start; }
+    .panel h3 { margin: 0 0 10px; font-size: 16px; }
+    .box {
+        width: 200px;
+        padding: 20px;
+        border: 2px solid #334155;
+        background: #dbeafe;
+    }
+    .content-box { box-sizing: content-box; }   /* Default: total width 244px */
+    .border-box  { box-sizing: border-box; }    /* Total width stays 200px */
+    /* Red dashed reference bar: exactly 200px wide */
+    .ruler {
+        width: 200px;
+        margin-top: 16px;
+        padding-top: 4px;
+        border-top: 2px dashed #dc2626;
+        font-size: 13px;
+        color: #dc2626;
+    }
+</style>
+<div class="wrapper">
+    <div class="panel">
+        <h3>box-sizing: content-box (default)</h3>
+        <div class="box content-box">width: 200px</div>
+        <div class="ruler">actual width: 244px</div>
+    </div>
+    <div class="panel">
+        <h3>box-sizing: border-box</h3>
+        <div class="box border-box">width: 200px</div>
+        <div class="ruler">actual width: 200px</div>
+    </div>
+</div>
 ```
-
-To make `width` include padding and border, use `box-sizing`:
-
-```css
-.box {
-    box-sizing: border-box;   /* width = content + padding + border */
-    width: 200px;
-    padding: 20px;
-    border: 2px solid black;
-    /* Actual rendered width: 200px */
-}
-```
+![[ch3-box-sizing.png]]
 
 > **Best Practice:** Set `box-sizing: border-box;` globally to simplify layout calculations.
 
@@ -194,11 +245,31 @@ To make `width` include padding and border, use `box-sizing`:
 
 When two vertical margins meet, they collapse into a single margin equal to the **larger** of the two.
 
-```css
-.box1 { margin-bottom: 30px; }
-.box2 { margin-top: 20px; }
-/* Gap between them: 30px (not 50px) */
+In the demo below, Box 1's `margin-bottom: 30px` and Box 2's `margin-top: 20px` collapse into 30px (the yellow area is the margin):
+
+```html
+<style>
+    /* Yellow background makes the margin visible; with no padding/border between them, margins collapse */
+    .stage { position: relative; display: inline-block; background: #fef9c3; padding: 0 30px; }
+    .box1 { width: 280px; height: 60px; background: #93c5fd; margin-bottom: 30px; }
+    .box2 { width: 280px; height: 60px; background: #fca5a5; margin-top: 20px; }
+    /* Red dashed lines mark the real collapsed gap */
+    .gap {
+        position: absolute; left: 0; top: 60px; width: 100%; height: 30px;
+        border-left: 2px dashed #dc2626; border-right: 2px dashed #dc2626;
+    }
+    .gap span {
+        position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+        background: #ffffff; padding: 1px 6px; font-size: 13px; color: #dc2626;
+    }
+</style>
+<div class="stage">
+    <div class="box1">Box 1 — margin-bottom: 30px</div>
+    <div class="gap"><span>collapsed gap: 30px (not 50px)</span></div>
+    <div class="box2">Box 2 — margin-top: 20px</div>
+</div>
 ```
+![[ch3-margin-collapse.png]]
 
 **Rules of margin collapse:**
 - Only happens with **vertical** margins (top/bottom), not horizontal
@@ -264,6 +335,40 @@ Whitespace between `inline-block` elements in the source HTML is rendered as a s
 
 ## 3.5 Border Radius and Box Shadow
 
+The demo below shows common radius values and three shadow effects:
+
+```html
+<style>
+    .row { display: flex; gap: 28px; align-items: center; margin-bottom: 22px; }
+    .item { display: flex; flex-direction: column; align-items: center; }
+    .cap { font-size: 12px; color: #475569; margin-top: 6px; white-space: nowrap; }
+    .shape { width: 88px; height: 88px; background: #dbeafe; border: 2px solid #60a5fa; }
+    .rounded    { border-radius: 12px; }
+    .per-corner { border-radius: 8px 32px 8px 32px; }
+    .ellipse    { border-radius: 50% / 25%; }
+    .circle     { border-radius: 50%; }
+    .card {
+        width: 130px; height: 80px; background: #ffffff; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+    .shadow-soft  { box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); }
+    .shadow-multi { box-shadow: 2px 2px 6px red, -2px -2px 6px blue; }
+    .shadow-inset { box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.4); }
+</style>
+<div class="row">
+    <div class="item"><div class="shape rounded"></div><div class="cap">12px</div></div>
+    <div class="item"><div class="shape per-corner"></div><div class="cap">8px 32px 8px 32px</div></div>
+    <div class="item"><div class="shape ellipse"></div><div class="cap">50% / 25%</div></div>
+    <div class="item"><div class="shape circle"></div><div class="cap">50% → circle</div></div>
+</div>
+<div class="row">
+    <div class="item"><div class="card shadow-soft">soft shadow</div></div>
+    <div class="item"><div class="card shadow-multi">multi-color</div></div>
+    <div class="item"><div class="card shadow-inset">inset</div></div>
+</div>
+```
+![[ch3-radius-shadow.png]]
+
 ### 3.5.1 Border Radius
 
 Rounds the corners of an element.
@@ -325,6 +430,41 @@ When you use `50%`, the browser calculates each corner radius as half of that si
 ```
 
 ## 3.6 Text and Font Styling
+
+The demo below compares common font and text styles in one place:
+
+```html
+<style>
+    .demo { width: 480px; }
+    .row { margin: 10px 0; }
+    /* font-weight: higher numbers are bolder */
+    .w300 { font-weight: 300; }
+    .w700 { font-weight: 700; }
+    .w900 { font-weight: 900; }
+    .gap { margin-right: 16px; }
+    .italic { font-style: italic; }
+    .center { text-align: center; }
+    .right  { text-align: right; }
+    .strike { text-decoration: line-through; }
+    .wavy   { text-decoration: underline wavy red; }
+    .tight  { line-height: 1.2; }
+    .loose  { line-height: 2.2; }
+</style>
+<div class="demo">
+    <p class="row">
+        <span class="w300 gap">Weight 300</span>
+        <span class="gap">Weight 400</span>
+        <span class="w700 gap">Weight 700</span>
+        <span class="w900">Weight 900</span>
+    </p>
+    <p class="row"><span class="italic gap">Italic style</span><span class="strike gap">Line-through</span><span class="wavy">Wavy red underline</span></p>
+    <p class="row center">Centered text</p>
+    <p class="row right">Right-aligned text</p>
+    <p class="row tight">Line-height 1.2 — lines stay close.<br>Second line is near.</p>
+    <p class="row loose">Line-height 2.2 — lines are far apart.<br>Second line is distant.</p>
+</div>
+```
+![[ch3-text-font.png]]
 
 ### 3.6.1 Text Decoration
 
@@ -510,23 +650,35 @@ Useful for buttons, icons, and UI labels where selection would feel awkward.
 
 ## 3.7 Pseudo-elements
 
-Pseudo-elements create virtual elements that don't exist in the HTML.
+Pseudo-elements create virtual elements that don't exist in the HTML. The demo below shows a drop cap, decorative quotes, and a badge:
 
-```css
-/* Insert content before the element */
-.quote::before {
-    content: '"';
-    font-size: 24px;
-    color: gray;
-}
-
-/* Insert content after the element */
-.quote::after {
-    content: '"';
-    font-size: 24px;
-    color: gray;
-}
+```html
+<style>
+    /* ::first-letter: enlarge the first letter of a paragraph */
+    .lead::first-letter {
+        font-size: 40px;
+        font-weight: bold;
+        color: #dc2626;
+        float: left;
+        line-height: 1;
+        margin-right: 4px;
+    }
+    /* ::before / ::after: insert decorative content around an element */
+    .quote { background: #f1f5f9; padding: 10px 14px; border-radius: 6px; }
+    .quote::before { content: '"'; color: #60a5fa; font-size: 24px; }
+    .quote::after  { content: '"'; color: #60a5fa; font-size: 24px; }
+    /* Simulate a badge with ::after */
+    .tag::after {
+        content: "NEW"; background: #dc2626; color: #ffffff;
+        font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 6px;
+        vertical-align: middle;
+    }
+</style>
+<p class="lead">Once upon a time, the first letter of a paragraph grew larger all by itself.</p>
+<p class="quote">Before and after insert decoration around me</p>
+<p><span class="tag">Product Name</span></p>
 ```
+![[ch3-pseudo-elements.png]]
 
 > **Note:** `content: ''` is required for `::before` and `::after` to appear, even if empty.
 

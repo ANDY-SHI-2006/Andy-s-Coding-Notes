@@ -6,18 +6,27 @@ This chapter covers CSS transitions, transforms, keyframe animations, and Flexbo
 
 ## 6.1 CSS Transitions
 
-Transitions smoothly change a CSS property from one value to another over a specified duration.
+Transitions smoothly change a CSS property from one value to another over a specified duration. The example below places a button's normal state and its `:hover` end state side by side (the right button hard-codes the hovered styles) so you can compare them:
 
-```css
-.button {
-    background-color: blue;
-    transition: background-color 0.3s ease;
-}
-
-.button:hover {
-    background-color: red;
-}
+```html
+<style>
+    .row { display: flex; gap: 50px; align-items: center; padding: 20px; font-family: sans-serif; }
+    .btn {
+        width: 120px; padding: 10px 0; border-radius: 6px;
+        text-align: center; color: #fff; background-color: #3b82f6;
+        transition: background-color 0.3s ease, width 0.3s ease;
+    }
+    .btn:hover { background-color: #ef4444; width: 160px; }
+    /* Right button hard-codes the hover end state for a two-state screenshot */
+    .btn-end { background-color: #ef4444; width: 160px; }
+    .cap { margin: 0 0 6px; font-size: 13px; color: #6b7280; text-align: center; }
+</style>
+<div class="row">
+    <div><p class="cap">normal</p><div class="btn">Button</div></div>
+    <div><p class="cap">:hover end state</p><div class="btn btn-end">Button</div></div>
+</div>
 ```
+![[ch6-transition.png]]
 
 ### 6.1.1 Transition Properties
 
@@ -119,30 +128,30 @@ The `transform` property applies 2D or 3D transformations to an element.
 
 ### 6.2.1 2D Transforms
 
-```css
-.box {
-    /* Move (translate) */
-    transform: translate(50px, 100px);   /* X, Y */
-    transform: translateX(50px);
-    transform: translateY(100px);
+The example below shows the four common 2D transforms side by side — the normal state on the left and the transformed result hard-coded on the right:
 
-    /* Scale */
-    transform: scale(1.5);               /* Both axes */
-    transform: scaleX(1.5);
-    transform: scaleY(0.8);
-
-    /* Rotate */
-    transform: rotate(45deg);            /* Clockwise */
-    transform: rotate(-90deg);           /* Counter-clockwise */
-
-    /* Skew (distort) */
-    transform: skewX(20deg);
-    transform: skewY(10deg);
-
-    /* Combine transforms */
-    transform: translate(50px, 50px) rotate(45deg) scale(1.2);
-}
+```html
+<style>
+    .stage { display: flex; gap: 44px; padding: 30px 24px 10px; font-family: sans-serif; font-size: 13px; text-align: center; }
+    .box {
+        width: 70px; height: 70px; margin: 0 auto 8px;
+        background: #93c5fd; border: 2px solid #3b82f6; border-radius: 4px;
+    }
+    /* Right box hard-codes the transform; translateX()/translateY() move one axis only */
+    .t-translate { transform: translate(20px, -14px); }
+    /* scaleX()/scaleY() scale one axis only; negative rotate() is counter-clockwise */
+    .t-rotate { transform: rotate(45deg); }
+    .t-scale { transform: scale(1.4); }
+    .t-skew { transform: skewX(20deg); }
+</style>
+<div class="stage">
+    <div><div class="box"></div><div class="box t-translate"></div>translate</div>
+    <div><div class="box"></div><div class="box t-rotate"></div>rotate</div>
+    <div><div class="box"></div><div class="box t-scale"></div>scale</div>
+    <div><div class="box"></div><div class="box t-skew"></div>skew</div>
+</div>
 ```
+![[ch6-transform.png]]
 
 > **Important:** `transform` does not affect the document flow. Other elements are not pushed away by a transformed element.
 
@@ -187,23 +196,38 @@ For complex animations with multiple keyframes, use `@keyframes`.
 
 ### 6.3.1 Keyframes Syntax
 
-```css
-@keyframes bounce {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-50px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
+The example below defines a `bounce` animation and places its three keyframe states side by side; the two balls on the right hard-code the keyframe styles for the screenshot (a live ball bounces continuously):
 
-.ball {
-    animation: bounce 1s ease-in-out infinite;
-}
+```html
+<style>
+    .track {
+        display: flex; gap: 80px; align-items: flex-end;
+        height: 170px; padding: 0 40px;
+        border-bottom: 2px solid #9ca3af; font-family: sans-serif;
+    }
+    .col { height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+    .col p { margin: 0 0 6px; font-size: 13px; color: #6b7280; }
+    .ball {
+        width: 46px; height: 46px; border-radius: 50%;
+        background: radial-gradient(circle at 32% 30%, #fca5a5, #dc2626);
+        animation: bounce 1s ease-in-out infinite;
+    }
+    @keyframes bounce {
+        0%   { transform: translateY(0); }
+        50%  { transform: translateY(-56px); }
+        100% { transform: translateY(0); }
+    }
+    /* For the screenshot: last two balls pin the 50% and 100% keyframe states */
+    .at-50 { animation: none; transform: translateY(-56px); }
+    .at-100 { animation: none; }
+</style>
+<div class="track">
+    <div class="col"><p>0% — start</p><div class="ball"></div></div>
+    <div class="col"><p>50% — peak</p><div class="ball at-50"></div></div>
+    <div class="col"><p>100% — return</p><div class="ball at-100"></div></div>
+</div>
 ```
+![[ch6-animation.png]]
 
 ### 6.3.2 Animation Properties
 
@@ -289,6 +313,43 @@ Flexbox (Flexible Box Layout) is a one-dimensional layout system designed for di
 ```
 
 Use `display: inline-flex` when the container should sit inline with surrounding content while its children still form a flex layout.
+
+First, a combined example: the red frame is the flex container and the colored blocks are flex items; the top row shows `justify-content`, and the bottom row shows `align-items`:
+
+```html
+<style>
+    .cap { margin: 14px 0 4px; font-family: sans-serif; font-size: 13px; color: #6b7280; }
+    .container {
+        display: flex; gap: 10px; width: 430px; padding: 10px;
+        border: 2px dashed #ef4444;   /* Red frame marks the flex container boundary */
+        font-family: sans-serif; font-size: 13px;
+    }
+    .container + .container { margin-top: 18px; }
+    .item {
+        width: 70px; padding: 8px 0; text-align: center; background: #93c5fd;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .item:nth-child(2) { background: #86efac; }
+    .item:nth-child(3) { background: #fca5a5; }
+    .between { justify-content: space-between; }
+    .middle { align-items: center; height: 110px; }
+    .tall { height: 84px; }
+    .mid { height: 52px; }
+</style>
+<p class="cap">justify-content: space-between</p>
+<div class="container between">
+    <div class="item">Item 1</div>
+    <div class="item">Item 2</div>
+    <div class="item">Item 3</div>
+</div>
+<p class="cap">align-items: center (items have different heights)</p>
+<div class="container middle">
+    <div class="item tall">Item 1</div>
+    <div class="item mid">Item 2</div>
+    <div class="item">Item 3</div>
+</div>
+```
+![[ch6-flexbox.png]]
 
 ### 6.4.2 Main Axis Direction
 

@@ -6,22 +6,35 @@ Pseudo-classes let you style elements based on their state, position, or user in
 
 ## 7.1 Link and User Action Pseudo-Classes
 
-```css
-/* Unvisited link */
-a:link { color: blue; }
+The five states are shown side by side below: each row shows the normal state first, then the state with styles hardcoded via a class (a static screenshot can't capture hover or mouse-down), so one image shows both states.
 
-/* Visited link */
-a:visited { color: purple; }
+```html
+<style>
+    a { text-decoration: none; font-size: 18px; margin-right: 24px; }
+    input { font-size: 16px; padding: 4px; margin-right: 10px; }
+    /* LVHA order: :link -> :visited -> :hover -> :active */
+    a:link    { color: blue; }
+    a:visited { color: purple; }
+    a:hover   { color: red; text-decoration: underline; }
+    a:active  { color: green; }
+    input:focus { border: 2px solid blue; outline: none; }
+    .row { margin: 12px 0; font-family: Arial, sans-serif; }
+    .tag { display: inline-block; width: 200px; color: #666; }
+    /* Screenshots can't capture hover/press, so state styles are hardcoded for comparison */
+    a.hover-demo   { color: red; text-decoration: underline; }
+    a.active-demo  { color: green; }
+    a.visited-demo { color: purple; }
+    input.focus-demo { border: 2px solid blue; outline: none; }
+</style>
 
-/* Mouse hovering over the element */
-a:hover { color: red; text-decoration: underline; }
-
-/* Element being activated (mouse down) */
-a:active { color: green; }
-
-/* Element has keyboard focus */
-input:focus { border-color: blue; outline: none; }
+<!-- Each row: normal state | simulated state -->
+<div class="row"><span class="tag">:link (unvisited)</span><a href="#">Read the docs</a></div>
+<div class="row"><span class="tag">:hover</span><a href="#">Read the docs</a><a href="#" class="hover-demo">Read the docs</a></div>
+<div class="row"><span class="tag">:active</span><a href="#">Read the docs</a><a href="#" class="active-demo">Read the docs</a></div>
+<div class="row"><span class="tag">:visited</span><a href="#">Read the docs</a><a href="#" class="visited-demo">Read the docs</a></div>
+<div class="row"><span class="tag">:focus</span><input type="text" value="Blurred"><input type="text" value="Focused" class="focus-demo"></div>
 ```
+![[ch7-link-pseudoclasses.png]]
 
 > **Order matters:** Follow the **LVHA** order: `:link` → `:visited` → `:hover` → `:active`.
 
@@ -42,63 +55,74 @@ For clickable elements like links, buttons, and list items, pair `:hover` with `
 
 ## 7.2 Form State Pseudo-Classes
 
-```css
-/* Checked checkbox or radio */
-input:checked + label { color: green; }
+Most of these form states are naturally static — :checked, :disabled, and :valid/:invalid apply directly; only :focus needs a hardcoded style to simulate.
 
-/* Disabled input */
-input:disabled { background: #eee; cursor: not-allowed; }
+```html
+<style>
+    .cap { display: block; color: #666; font-size: 14px; margin: 10px 0 4px; font-family: Arial, sans-serif; }
+    input { font-size: 15px; padding: 4px 6px; margin-right: 12px; }
+    /* :checked — a checked box turns the following label green and bold */
+    input:checked + label { color: green; font-weight: bold; }
+    /* :disabled — dim a disabled input */
+    input:disabled { background: #eee; color: #999; cursor: not-allowed; }
+    /* :valid / :invalid / :required — validation states */
+    input:valid { border-color: green; }
+    input:invalid { border-color: red; }
+    input:required { border-left: 3px solid orange; }
+    input:placeholder-shown { font-style: italic; }
+    /* Screenshots can't capture keyboard focus, so a focused state is hardcoded */
+    input.focus-demo { border: 2px solid blue; outline: none; }
+</style>
 
-/* Enabled input */
-input:enabled { background: white; }
-
-/* Valid input (passes validation) */
-input:valid { border-color: green; }
-
-/* Invalid input (fails validation) */
-input:invalid { border-color: red; }
-
-/* Required field */
-input:required { border-left: 3px solid orange; }
-
-/* Placeholder shown */
-input:placeholder-shown { font-style: italic; }
+<!-- :checked is naturally static: unchecked vs checked -->
+<span class="cap">:checked</span>
+<input type="checkbox" id="c1"><label for="c1">Subscribe</label>
+<input type="checkbox" id="c2" checked><label for="c2">Subscribed</label>
+<span class="cap">:disabled / :enabled</span>
+<input type="text" value="Editable">
+<input type="text" value="Locked" disabled>
+<span class="cap">:valid / :invalid / :required</span>
+<input type="email" required value="andy@example.com">
+<input type="email" required value="not-an-email">
+<span class="cap">:placeholder-shown</span>
+<input type="text" placeholder="Your name (italic)">
+<span class="cap">:focus (normal | focused)</span>
+<input type="text" value="Blurred">
+<input type="text" value="Focused" class="focus-demo">
 ```
+![[ch7-form-pseudoclasses.png]]
 
 ## 7.3 Structural Pseudo-Classes
 
-```css
-/* First child of its parent */
-li:first-child { font-weight: bold; }
+Structural pseudo-classes select by an element's position among its siblings, and their effects are naturally static — a zebra-striped list:
 
-/* Last child of its parent */
-li:last-child { border-bottom: none; }
+```html
+<style>
+    ul { width: 340px; padding: 0; margin: 0; font-family: Arial, sans-serif; }
+    li { list-style: none; padding: 8px 12px; }
+    /* Alternate odd/even row backgrounds for zebra striping */
+    li:nth-child(odd)  { background: #dbeafe; }
+    li:nth-child(even) { background: #f8fafc; }
+    /* First child: bold with a left accent bar */
+    li:first-child { font-weight: bold; border-left: 4px solid #2563eb; }
+    /* Last child: bottom border */
+    li:last-child { border-bottom: 2px solid #2563eb; }
+    /* :not(.active) — dim the inactive items */
+    li:not(.active) { color: #666; }
+</style>
 
-/* Only child of its parent */
-p:only-child { text-align: center; }
-
-/* Nth child (1-based index) */
-li:nth-child(3) { background: yellow; }        /* 3rd child */
-li:nth-child(odd) { background: #f0f0f0; }    /* Odd children */
-li:nth-child(even) { background: white; }      /* Even children */
-li:nth-child(2n) { background: lightblue; }    /* Every 2nd child */
-li:nth-child(3n+1) { background: pink; }       /* 1st, 4th, 7th... */
-
-/* First of a specific type among siblings */
-p:first-of-type { font-size: 1.2em; }
-
-/* Last of a specific type among siblings */
-p:last-of-type { margin-bottom: 0; }
-
-/* Nth of a specific type */
-p:nth-of-type(2) { color: red; }
-
-/* Empty element (no children) */
-div:empty { display: none; }
-
-/* Element that does NOT match a selector */
-li:not(.active) { opacity: 0.5; }
+<ul>
+    <li class="active">Item 1 (active)</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+    <li>Item 4</li>
+    <li>Item 5</li>
+    <li>Item 6</li>
+</ul>
 ```
+![[ch7-structural-pseudoclasses.png]]
+
+Only the most common ones are shown above; `p:only-child`, `p:first-of-type`, `p:nth-of-type(2)`, `div:empty` and the like work the same way — they all select by position.
 
 ### 7.3.1 nth-child Formula Reference
 
@@ -135,24 +159,34 @@ table tr:nth-of-type(even) {
 
 CSS variables allow you to define reusable values. They are especially useful for colors, spacing, and theming.
 
-```css
-:root {
-    --primary-color: #3498db;
-    --secondary-color: #2ecc71;
-    --spacing-unit: 8px;
-    --font-stack: Arial, sans-serif;
-}
+```html
+<style>
+    /* Define global variables on :root */
+    :root { --primary: #3498db; --radius: 8px; }
+    .card {
+        font-family: Arial, sans-serif;
+        border: 2px solid var(--primary);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        margin: 8px 0;
+        width: 320px;
+    }
+    .btn {
+        background: var(--primary);
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: var(--radius);
+        display: inline-block;
+    }
+    /* Dark theme only overrides the variable values; structure stays untouched */
+    .dark { --primary: #e74c3c; background: #2c3e50; color: #fff; }
+</style>
 
-.button {
-    background-color: var(--primary-color);
-    padding: calc(var(--spacing-unit) * 2);
-    font-family: var(--font-stack);
-}
-
-.button:hover {
-    background-color: var(--secondary-color);
-}
+<!-- Same .card/.btn structure, only variable values differ -->
+<div class="card">Theme A <span class="btn">Button</span></div>
+<div class="card dark">Theme B <span class="btn">Button</span></div>
 ```
+![[ch7-css-variables.png]]
 
 | Syntax | Description |
 |--------|-------------|

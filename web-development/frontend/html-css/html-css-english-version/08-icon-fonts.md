@@ -18,6 +18,33 @@ An icon font packages multiple icons into a single font file. The browser render
 
 > **Key idea:** Think of icons as characters. If you can style text, you can style icon fonts.
 
+The demo below loads no font file at all — it uses plain Unicode characters ★ ▶ ✕ ♥ ➜, yet the effect is identical to an icon font: colors and sizes are all controlled by CSS:
+
+```html
+<style>
+/* Unicode symbols behave like text: style them with color / font-size */
+.icon {
+    margin: 0 12px;
+    font-size: 32px;
+}
+.star  { color: #f39c12; }
+.play  { color: #2ecc71; font-size: 20px; }
+.close { color: #e74c3c; }
+.heart { color: #e91e63; font-size: 48px; }
+.arrow { color: #3498db; }
+</style>
+
+<p>
+    <span class="icon star">★</span>
+    <span class="icon play">▶</span>
+    <span class="icon close">✕</span>
+    <span class="icon heart">♥</span>
+    <span class="icon arrow">➜</span>
+</p>
+```
+
+![[ch8-unicode-icons.png]]
+
 ## 8.2 Icon Font Sources
 
 The two most common sources used in the course are:
@@ -109,23 +136,37 @@ You can also use the raw Unicode character:
 
 ## 8.5 Rotating Arrow Animation
 
-Icon fonts work well with CSS transitions and transforms. A common pattern is a dropdown arrow that rotates when its menu opens.
+Icon fonts work well with CSS transitions and transforms. A common pattern is a dropdown arrow that rotates when its menu opens. The demo below uses a Unicode arrow to simulate the same icon in both states: the second row shows the effect after the parent gets the `.open` class.
 
 ```html
-<span class="iconfont icon-arrow-down arrow"></span>
-```
-
-```css
+<style>
 .arrow {
-    display: inline-block;
+    display: inline-block;  /* transform needs a block-level or inline-block element */
+    font-size: 24px;
     transition: transform 0.3s ease;
 }
 
-/* Rotate 180 degrees when the parent is active/open */
+/* The arrow rotates 180 degrees once the parent gets .open */
 .open .arrow {
     transform: rotate(180deg);
 }
+
+.state { margin: 8px 0; }
+.label { margin-right: 8px; color: #666; font-size: 14px; }
+</style>
+
+<!-- Same arrow side by side in both states: row 2 is the opened state -->
+<div class="state">
+    <span class="label">Closed:</span>
+    <span class="iconfont arrow">▼</span>
+</div>
+<div class="state open">
+    <span class="label">Open:</span>
+    <span class="iconfont arrow">▼</span>
+</div>
 ```
+
+![[ch8-arrow-rotation.png]]
 
 **Key points:**
 - Use `display: inline-block` so `transform` applies correctly.

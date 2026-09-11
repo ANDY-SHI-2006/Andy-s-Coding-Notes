@@ -48,6 +48,34 @@ background-position: 50% 50%;       /* Percentage */
 | `contain` | Show full image, letterboxing if needed |
 | `100% 50%` | Stretch to exact dimensions |
 
+Comprehensive example — solid color, two-way tiling, no-repeat with centering, and the size difference between `contain` and `cover` (the background image is an inline SVG data URI, so no external file is needed):
+
+```html
+<style>
+    /* Inline SVG data URI as the background image, no external file needed */
+    .demo > div {
+        width: 160px; height: 110px; padding: 6px;
+        border: 2px solid #94a3b8; font: 13px sans-serif; color: #334155;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Ccircle cx='18' cy='18' r='9' fill='%2360a5fa'/%3E%3C/svg%3E");
+    }
+    .demo { display: flex; gap: 14px; }
+    .demo .solid { background: #fde68a; }               /* Solid color (shorthand resets the background image) */
+    .tile  { background-repeat: repeat; }               /* Default: tile in both directions */
+    .once  { background-repeat: no-repeat; background-position: center; }
+    .fit   { background-repeat: no-repeat; background-size: contain; }
+    .fill  { background-repeat: no-repeat; background-size: cover; }
+    .demo span { background: rgba(255, 255, 255, 0.85); }  /* Backing keeps the text readable */
+</style>
+<div class="demo">
+    <div class="solid"><span>background-color</span></div>
+    <div class="tile"><span>repeat (default)</span></div>
+    <div class="once"><span>no-repeat, centered</span></div>
+    <div class="fit"><span>background-size: contain</span></div>
+    <div class="fill"><span>background-size: cover</span></div>
+</div>
+```
+![[ch4-background.png]]
+
 ### 4.1.2 Background Shorthand
 
 ```css
@@ -211,6 +239,44 @@ When a parent contains only floated children, its height collapses to zero. Thre
 
 > **Modern alternative:** Use `display: flex` or `display: grid` instead of floats for layout.
 
+The comprehensive example below contrasts left/right float text wrapping with parent height collapse and the two fixes:
+
+```html
+<style>
+    .cap { margin: 0 0 4px; font: 13px sans-serif; color: #334155; }
+    .row { display: flex; gap: 16px; margin-bottom: 14px; }
+    .wrap { width: 420px; border: 2px solid #94a3b8; padding: 8px; font: 13px sans-serif; color: #334155; }
+    .img { width: 90px; height: 60px; background: #93c5fd; line-height: 60px; text-align: center; }
+    .left  { float: left; margin-right: 10px; }
+    .right { float: right; margin-left: 10px; }
+    .parent { width: 270px; border: 2px dashed #f59e0b; padding: 6px; }
+    .child  { width: 110px; height: 40px; background: #86efac; margin: 4px; line-height: 40px; }
+    .overflow-fix { overflow: hidden; }   /* Creates a BFC that wraps floated children */
+    .clearfix::after { content: ""; display: block; clear: both; }  /* Clear floats via pseudo-element (recommended) */
+</style>
+<div class="row">
+    <div>
+        <p class="cap">float: left — text wraps on the right</p>
+        <div class="wrap"><div class="img left">img</div>
+            The float property was originally designed to wrap text around images, so inline content wraps around the floated box.</div>
+    </div>
+    <div>
+        <p class="cap">float: right — text wraps on the left</p>
+        <div class="wrap"><div class="img right">img</div>
+            The float property was originally designed to wrap text around images, so inline content wraps around the floated box.</div>
+    </div>
+</div>
+<div class="row" style="margin-bottom: 0;">
+    <div><p class="cap">No clearfix — parent height collapses</p>
+        <div class="parent"><div class="child left">Box A</div><div class="child left">Box B</div></div></div>
+    <div><p class="cap">Fix 1: overflow: hidden</p>
+        <div class="parent overflow-fix"><div class="child left">Box A</div><div class="child left">Box B</div></div></div>
+    <div><p class="cap">Fix 2 / 3: .clearfix::after</p>
+        <div class="parent clearfix"><div class="child left">Box A</div><div class="child left">Box B</div></div></div>
+</div>
+```
+![[ch4-float.png]]
+
 ### 4.2.4 Float vs Inline-Block
 
 For horizontal layouts, `float` was the traditional choice. `inline-block` is simpler but has baseline-alignment and whitespace-gap issues.
@@ -317,6 +383,42 @@ The element is completely removed from the document flow. It is positioned relat
     <span class="badge" style="position: absolute; top: 10px; right: 10px;">NEW</span>
 </div>
 ```
+
+Comprehensive example: in the left panel, Box B is offset relative to its original position (dashed box), which remains reserved in the layout; in the right panel, the NEW badge and the price tag are absolutely positioned against the relative parent container:
+
+```html
+<style>
+    .panel { display: inline-block; vertical-align: top; margin-right: 24px; }
+    .cap { margin: 0 0 4px; font: 13px sans-serif; color: #334155; }
+    .box { width: 260px; height: 44px; background: #dbeafe; border: 2px solid #60a5fa;
+           font: 13px sans-serif; color: #334155; line-height: 44px; text-align: center; }
+    /* Dashed box = original position of the relative element (still reserved in layout) */
+    .origin { width: 260px; height: 44px; margin-top: 10px; border: 2px dashed #94a3b8; }
+    .moved { position: relative; top: 12px; left: 50px; width: 180px;
+             background: #93c5fd; border: 2px solid #3b82f6; }
+    .card { position: relative; width: 300px; height: 150px; background: #e2e8f0; border: 2px solid #94a3b8;
+            font: 13px sans-serif; color: #334155; }
+    .photo { line-height: 150px; text-align: center; }
+    .badge { position: absolute; top: 10px; right: 10px; background: #ef4444; color: white; padding: 3px 8px; }
+    .price { position: absolute; bottom: 10px; left: 10px; background: #f59e0b; color: white; padding: 3px 8px; }
+</style>
+<div class="panel">
+    <p class="cap">relative — offset from its original position</p>
+    <div class="box">Box A (normal flow)</div>
+    <div class="origin">
+        <div class="box moved">Box B — relative</div>
+    </div>
+</div>
+<div class="panel">
+    <p class="cap">absolute — inside a relative parent</p>
+    <div class="card">
+        <div class="photo">photo</div>
+        <span class="badge">NEW</span>
+        <span class="price">$9.99</span>
+    </div>
+</div>
+```
+![[ch4-positioning.png]]
 
 ### 4.3.4 Fixed Positioning
 
@@ -474,6 +576,44 @@ Three common ways to center an absolutely positioned element both horizontally a
     height: 100vh;
 }
 ```
+
+The three common centering methods produce the identical visual result (horizontal centering, absolute centering, and Flexbox centering):
+
+```html
+<style>
+    .panel { display: inline-block; vertical-align: top; margin-right: 18px; }
+    .cap { margin: 0 0 4px; font: 13px sans-serif; color: #334155; }
+    .stage {
+        width: 260px; height: 150px; border: 2px solid #94a3b8;
+        background: #f8fafc;
+    }
+    .item {
+        width: 120px; height: 50px; background: #93c5fd;
+        border: 2px solid #3b82f6; font: 13px sans-serif; color: #334155;
+        line-height: 50px; text-align: center;
+    }
+    .h-auto { width: 120px; margin: 0 auto; }   /* Horizontal center: auto splits the leftover space */
+    .pos-parent { position: relative; }
+    .pos-item {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);   /* Shift back by half its own size */
+    }
+    .flex-parent { display: flex; justify-content: center; align-items: center; }
+</style>
+<div class="panel">
+    <p class="cap">horizontal: margin: 0 auto</p>
+    <div class="stage"><div class="item h-auto">Centered</div></div>
+</div>
+<div class="panel">
+    <p class="cap">absolute + translate(-50%, -50%)</p>
+    <div class="stage pos-parent"><div class="item pos-item">Centered</div></div>
+</div>
+<div class="panel">
+    <p class="cap">flexbox: justify + align center</p>
+    <div class="stage flex-parent"><div class="item">Centered</div></div>
+</div>
+```
+![[ch4-centering.png]]
 
 ### 4.4.4 Fixed Sidebar Vertical Centering
 
