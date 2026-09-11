@@ -169,17 +169,20 @@ Common settings (File → Preferences → Settings):
 
 ### 1.2.1 Container Tags
 
-**`<div>` — Division**
+### 1.2.1.1 `<div>` — Division
 
-A generic block-level container used to group elements for styling or layout.
+A generic block-level container used to group elements for styling or layout. **`<div>` carries no semantic meaning** — it can nest any tags and is commonly used to build page layouts:
 
 ```html
-<div>
-    <p>This is a paragraph inside a div.</p>
-</div>
+<!-- div has no semantics; it is a generic layout container that can nest any tags -->
+<div style="height: 60px; background-color: #e74c3c; color: white;">Header</div>
+<div style="height: 160px; background-color: #f1c40f;">Content</div>
+<div style="height: 60px; background-color: #e74c3c; color: white;">Footer</div>
 ```
 
-**`<span>` — Span**
+![[ch1-div-layout.png]]
+
+### 1.2.1.2 `<span>` — Span
 
 A generic inline container used to style a portion of text within a larger block.
 
@@ -189,7 +192,7 @@ A generic inline container used to style a portion of text within a larger block
 
 ### 1.2.2 Text Tags
 
-**Heading tags:**
+### 1.2.2.1 Heading Tags
 
 ```html
 <h1>Heading Level 1</h1>
@@ -205,7 +208,7 @@ A generic inline container used to style a portion of text within a larger block
 
 > **Best Practice:** Use only one `<h1>` per page. Headings should follow a logical hierarchy (`h1` → `h2` → `h3`) without skipping levels.
 
-**Paragraph tag:**
+### 1.2.2.2 Paragraph Tag
 
 ```html
 <p>This is a paragraph of text.</p>
@@ -213,7 +216,7 @@ A generic inline container used to style a portion of text within a larger block
 
 > **Note:** Do not nest block-level elements (such as `<div>`, `<h1>`–`<h6>`, or another `<p>`) inside a `<p>`. Browsers will auto-close the paragraph, causing unexpected rendering. Use `<div>` or `<span>` for nested text containers instead.
 
-**Text formatting tags:**
+### 1.2.2.3 Text Formatting Tags
 
 | Tag | Visual Effect | Semantic Meaning |
 |-----|---------------|------------------|
@@ -235,15 +238,22 @@ A generic inline container used to style a portion of text within a larger block
 <p>The area is x<sup>2</sup>.</p>
 ```
 
-**Whitespace collapsing**
+### 1.2.2.4 Whitespace Collapsing
 
 Browsers collapse consecutive spaces, tabs, and line breaks into a single space. Use `<br>` for a forced line break inside a paragraph, or use CSS to control larger gaps.
 
 ```html
-<p>This    text    has    collapsed    spaces.</p>
+<!-- Consecutive spaces and manual line breaks are collapsed; only br forces a break -->
+<p>Many      spaces      collapse.</p>
+<p>Manual line breaks
+in source code
+are ignored too.</p>
+<p>Use br to force a break:<br>Line two.</p>
 ```
 
-**Line break and horizontal rule:**
+![[ch1-whitespace-collapse.png]]
+
+### 1.2.2.5 Line Break and Horizontal Rule
 
 ```html
 <p>Line one<br>Line two</p>
@@ -253,7 +263,7 @@ Browsers collapse consecutive spaces, tabs, and line breaks into a single space.
 
 ### 1.2.3 Link and Media Tags
 
-**`<a>` — Anchor (Hyperlink)**
+### 1.2.3.1 `<a>` — Anchor (Hyperlink)
 
 ```html
 <!-- Link to an external website -->
@@ -271,7 +281,7 @@ Browsers collapse consecutive spaces, tabs, and line breaks into a single space.
 | `href` | Destination URL or anchor |
 | `target` | Where to open the link; `_self` (default, same tab) or `_blank` (new tab) |
 
-**Anchor navigation (within the same page):**
+### 1.2.3.2 Anchor Navigation (Within the Same Page)
 
 ```html
 <a href="#section1">Jump to Section 1</a>
@@ -280,7 +290,7 @@ Browsers collapse consecutive spaces, tabs, and line breaks into a single space.
 <h2 id="section1">Section 1</h2>
 ```
 
-**`<img>` — Image**
+### 1.2.3.3 `<img>` — Image
 
 Here is how links and an image render on the page (`photo.svg` is a local placeholder — swap in your own image file):
 

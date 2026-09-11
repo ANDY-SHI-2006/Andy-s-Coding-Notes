@@ -169,17 +169,20 @@ HTML 标签有多种分类方式：
 
 ### 1.2.1 容器标签
 
-**`<div>` — Division（分区）**
+### 1.2.1.1 `<div>` — Division（分区）
 
-一个通用的块级容器，用于组合元素以便进行样式设置或布局。
+一个通用的块级容器，用于组合元素以便进行样式设置或布局。**`<div>` 本身没有语义**，可以嵌套任何标签，常用来搭建页面布局：
 
 ```html
-<div>
-    <p>This is a paragraph inside a div.</p>
-</div>
+<!-- div 没有语义，是通用的布局容器，可以嵌套任何标签 -->
+<div style="height: 60px; background-color: #e74c3c; color: white;">Header</div>
+<div style="height: 160px; background-color: #f1c40f;">Content</div>
+<div style="height: 60px; background-color: #e74c3c; color: white;">Footer</div>
 ```
 
-**`<span>` — Span（跨距）**
+![[ch1-div-layout.png]]
+
+### 1.2.1.2 `<span>` — Span（跨距）
 
 一个通用的行内容器，用于为较大文本块中的一部分文本设置样式。
 
@@ -189,7 +192,7 @@ HTML 标签有多种分类方式：
 
 ### 1.2.2 文本标签
 
-**标题标签：**
+### 1.2.2.1 标题标签
 
 ```html
 <h1>Heading Level 1</h1>
@@ -205,7 +208,7 @@ HTML 标签有多种分类方式：
 
 > **最佳实践：** 每个页面只使用一个 `<h1>`。标题应遵循逻辑层级（`h1` → `h2` → `h3`），不要跳级。
 
-**段落标签：**
+### 1.2.2.2 段落标签
 
 ```html
 <p>This is a paragraph of text.</p>
@@ -213,7 +216,7 @@ HTML 标签有多种分类方式：
 
 > **注意：** 不要在 `<p>` 内嵌套块级元素（如 `<div>`、`<h1>`–`<h6>` 或另一个 `<p>`）。浏览器会自动闭合段落，导致排版异常。应使用 `<div>` 或 `<span>` 作为嵌套文本容器。
 
-**文本格式化标签：**
+### 1.2.2.3 文本格式化标签
 
 | 标签 | 视觉效果 | 语义含义 |
 |-----|---------------|------------------|
@@ -235,15 +238,22 @@ HTML 标签有多种分类方式：
 <p>The area is x<sup>2</sup>.</p>
 ```
 
-**空白折叠（white-space collapsing）**
+### 1.2.2.4 空白折叠（white-space collapsing）
 
 浏览器会把连续的空格、制表符和换行合并为一个空格。如需在段落内强制换行，使用 `<br>`；如需控制更大间距，使用 CSS。
 
 ```html
-<p>This    text    has    collapsed    spaces.</p>
+<!-- 连续空格和手动换行都会被浏览器合并；只有 br 才能强制换行 -->
+<p>Many      spaces      collapse.</p>
+<p>Manual line breaks
+in source code
+are ignored too.</p>
+<p>Use br to force a break:<br>Line two.</p>
 ```
 
-**换行与水平线：**
+![[ch1-whitespace-collapse.png]]
+
+### 1.2.2.5 换行与水平线
 
 ```html
 <p>Line one<br>Line two</p>
@@ -253,7 +263,7 @@ HTML 标签有多种分类方式：
 
 ### 1.2.3 链接与媒体标签
 
-**`<a>` — Anchor（锚点/超链接）**
+### 1.2.3.1 `<a>` — Anchor（锚点/超链接）
 
 ```html
 <!-- 链接到外部网站 -->
@@ -271,7 +281,7 @@ HTML 标签有多种分类方式：
 | `href` | 目标 URL 或锚点 |
 | `target` | 打开位置；`_self`（默认，当前标签页）或 `_blank`（新标签页） |
 
-**锚点导航（同一页面内）：**
+### 1.2.3.2 锚点导航（同一页面内）
 
 ```html
 <a href="#section1">Jump to Section 1</a>
@@ -280,7 +290,7 @@ HTML 标签有多种分类方式：
 <h2 id="section1">Section 1</h2>
 ```
 
-**`<img>` — Image（图像）**
+### 1.2.3.3 `<img>` — Image（图像）
 
 链接和图片渲染到页面上的效果如下（`photo.svg` 是本地占位图，可换成自己的图片文件）：
 
