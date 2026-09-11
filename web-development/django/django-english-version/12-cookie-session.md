@@ -4,8 +4,6 @@
 
 HTTP is stateless — each request is independent. **Cookies** and **Sessions** are mechanisms to persist data across requests, enabling features like user authentication, shopping carts, and personalized content.
 
----
-
 ## 12.1 Cookies
 
 Cookies are small text files stored in the client's browser. They are sent with every request to the same domain.
@@ -63,8 +61,6 @@ response.set_cookie(
 )
 ```
 
----
-
 ## 12.2 Sessions
 
 Sessions store data on the server. The client only holds a **session ID** (usually in a cookie), which maps to server-side data.
@@ -103,8 +99,6 @@ def clear_cart(request):
 
 > **Important:** Set `request.session.modified = True` when mutating session dicts/lists directly. Django only saves sessions when it detects key assignment.
 
----
-
 ## 12.3 Session Engines
 
 Django supports multiple session backends:
@@ -136,8 +130,6 @@ SESSION_COOKIE_SAMESITE = 'Lax'       # CSRF protection
 SESSION_SAVE_EVERY_REQUEST = False    # Only save when modified
 ```
 
----
-
 ## 12.4 Session Security
 
 | Threat | Mitigation |
@@ -163,8 +155,6 @@ def user_login(request):
     return redirect('home')
 ```
 
----
-
 ## 12.5 Cookie vs Session Comparison
 
 | Aspect | Cookie | Session |
@@ -175,8 +165,6 @@ def user_login(request):
 | Performance | Sent with every request | Minimal overhead (just session ID) |
 | Use case | Preferences, tracking, non-sensitive data | Authentication, cart, sensitive data |
 | Server load | None | Storage and lookup required |
-
----
 
 ## 12.6 Best Practices
 

@@ -4,8 +4,6 @@
 
 Django 的**对象关系映射（ORM）**让你用 Python 代码而非 SQL 来操作数据库。模型定义了你的数据结构，ORM 则处理所有数据库操作。
 
----
-
 ## 5.1 定义模型
 
 Django 模型是继承自 `django.db.models.Model` 的 Python 类。
@@ -73,8 +71,6 @@ class Article(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='articles')
 ```
 
----
-
 ## 5.2 模型关系
 
 ### 5.2.1 一对多（ForeignKey）
@@ -130,8 +126,6 @@ article.tags.all()
 # 有 related_name（更简洁）：author.articles.all()
 ```
 
----
-
 ## 5.3 迁移
 
 迁移是 Django 将模型改动传播到数据库结构的方式。
@@ -151,8 +145,6 @@ python manage.py sqlmigrate app_name 0001
 ```
 
 > **工作流程：** 修改 `models.py` → `makemigrations` → `migrate`
-
----
 
 ## 5.4 QuerySet API
 
@@ -250,8 +242,6 @@ articles = Article.objects.prefetch_related('tags').all()
 
 > **性能：** 在循环中访问关联对象时，始终使用 `select_related` 和 `prefetch_related`。
 
----
-
 ## 5.5 CRUD 操作
 
 ### 创建
@@ -309,8 +299,6 @@ article.delete()
 Article.objects.filter(created__year__lt=2020).delete()
 ```
 
----
-
 ## 5.6 自定义管理器
 
 ```python
@@ -327,8 +315,6 @@ class Article(models.Model):
 # 用法
 Article.published.all()    # 仅返回已发布文章
 ```
-
----
 
 ## 5.7 最佳实践
 

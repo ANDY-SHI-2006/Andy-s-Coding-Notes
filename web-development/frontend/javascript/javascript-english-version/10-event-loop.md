@@ -4,8 +4,6 @@
 
 JavaScript runs in a single thread, yet it can handle timers, network requests, and user interactions without freezing the page. The event loop is the mechanism that makes this possible. Understanding the loop helps you write non-blocking code, avoid UI freezes, and reason about the order in which `setTimeout`, `Promise.then`, and `async/await` run.
 
----
-
 ## 10.1 Why JavaScript Is Single-Threaded
 
 ### 10.1.1 What "Single-Threaded" Means
@@ -30,8 +28,6 @@ Benefits of the single-threaded model:
 - The event loop coordinates asynchronous work cleanly
 
 The trade-off is that any long-running synchronous task blocks everything else: UI updates, animations, and event handlers all wait.
-
----
 
 ## 10.2 Synchronous Code and Blocking
 
@@ -72,8 +68,6 @@ Key takeaways:
 - Long tasks should be broken up or moved off the main thread.
 
 > **Best Practice:** Keep synchronous work under 50 ms. For heavier work, use `setTimeout`/`requestIdleCallback` to yield, or move the work to a Web Worker.
-
----
 
 ## 10.3 The Call Stack and Execution Context
 
@@ -128,8 +122,6 @@ function crash() {
 ```
 
 > **Tip:** Tail-call optimization is not widely relied upon in modern browsers. Prefer iterative loops for deep repetition, or increase the delay between recursive calls using `setTimeout` to clear the stack.
-
----
 
 ## 10.4 The Event Loop and Task Queues
 
@@ -218,8 +210,6 @@ In words:
 4. Run the next macrotask.
 5. Start over.
 
----
-
 ## 10.5 Why `setTimeout` Is Not a Precise Timer
 
 ### 10.5.1 Minimum Delay, Not Guaranteed Delay
@@ -258,8 +248,6 @@ Browsers throttle timers in inactive tabs to save power. A `setTimeout` with a v
 
 > **Best Practice:** Use `setTimeout` for scheduling, not for real-time audio, animation, or exact measurements. For animations, prefer `requestAnimationFrame`.
 
----
-
 ## 10.6 `async/await` and the Event Loop
 
 ### 10.6.1 `async` Functions Return Promises
@@ -295,8 +283,6 @@ async function fetchUser(id) {
 While the network request travels on another thread, the main thread stays free. When the response arrives, the continuation after `await` is queued as a microtask and runs before any pending macrotasks.
 
 > **Important:** `await` only pauses the surrounding `async` function. It does not block other scripts, event handlers, or the browser's render loop.
-
----
 
 ## 10.7 Common Mistakes and Best Practices
 

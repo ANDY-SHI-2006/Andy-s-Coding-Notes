@@ -4,8 +4,6 @@
 
 Bootstrap 是最流行的 CSS 框架，用于构建响应式、移动优先的 Web 界面。将 Bootstrap 与 Django 集成，无需从零编写自定义 CSS 即可加速前端开发。
 
----
-
 ## 6.1 在 Django 中引入 Bootstrap
 
 ### 6.1.1 CDN 方式（最简单）
@@ -50,8 +48,6 @@ static/
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 ```
 
----
-
 ## 6.2 栅格系统
 
 Bootstrap 的栅格系统将视口划分为 **12 列**。它支持随屏幕尺寸自适应的响应式布局。
@@ -92,8 +88,6 @@ Bootstrap 的栅格系统将视口划分为 **12 列**。它支持随屏幕尺�
     <div class="col-12 col-md-4 col-lg-3">Sidebar</div>
 </div>
 ```
-
----
 
 ## 6.3 常用组件
 
@@ -179,8 +173,6 @@ Bootstrap 的栅格系统将视口划分为 **12 列**。它支持随屏幕尺�
 </div>
 ```
 
----
-
 ## 6.4 工具类
 
 ### 6.4.1 间距
@@ -225,8 +217,6 @@ Bootstrap 使用 `m-*`（margin）和 `p-*`（padding），尺寸为 0-5：
 </div>
 ```
 
----
-
 ## 6.5 与 Django 表单集成
 
 使用自定义模板标签或 `django-crispy-forms` 将 Django 表单渲染为 Bootstrap 样式：
@@ -250,8 +240,6 @@ Bootstrap 使用 `m-*`（margin）和 `p-*`（padding），尺寸为 0-5：
 ```
 
 > **提示：** 定义一个自定义 `add_class` 过滤器（见"模板"章节），将 Bootstrap 类注入表单控件。
-
----
 
 ## 6.6 最佳实践
 

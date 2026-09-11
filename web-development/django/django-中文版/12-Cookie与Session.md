@@ -4,8 +4,6 @@
 
 HTTP 是无状态的——每个请求都是相互独立的。**Cookie** 和 **Session** 是跨请求持久化数据的机制，用于实现用户认证、购物车、个性化内容等功能。
 
----
-
 ## 12.1 Cookie
 
 Cookie 是存储在客户端浏览器中的小文本文件，向同一域名发送请求时都会携带它们。
@@ -63,8 +61,6 @@ response.set_cookie(
 )
 ```
 
----
-
 ## 12.2 Session
 
 Session 将数据存储在服务器端。客户端只持有一个 **session ID**（通常放在 Cookie 中），该 ID 映射到服务器端的数据。
@@ -103,8 +99,6 @@ def clear_cart(request):
 
 > **重要：** 直接修改 session 中的字典/列表时，要设置 `request.session.modified = True`。Django 只有在检测到键赋值时才会保存 session。
 
----
-
 ## 12.3 Session 引擎
 
 Django 支持多种 session 后端：
@@ -136,8 +130,6 @@ SESSION_COOKIE_SAMESITE = 'Lax'       # CSRF 防护
 SESSION_SAVE_EVERY_REQUEST = False    # 仅在修改时保存
 ```
 
----
-
 ## 12.4 Session 安全
 
 | 威胁 | 缓解措施 |
@@ -163,8 +155,6 @@ def user_login(request):
     return redirect('home')
 ```
 
----
-
 ## 12.5 Cookie 与 Session 对比
 
 | 方面 | Cookie | Session |
@@ -175,8 +165,6 @@ def user_login(request):
 | 性能 | 随每个请求发送 | 开销极小（仅 session ID） |
 | 使用场景 | 偏好、跟踪、非敏感数据 | 认证、购物车、敏感数据 |
 | 服务器负载 | 无 | 需要存储和查找 |
-
----
 
 ## 12.6 最佳实践
 

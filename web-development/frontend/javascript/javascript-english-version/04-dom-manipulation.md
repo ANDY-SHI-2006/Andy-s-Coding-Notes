@@ -37,8 +37,6 @@ The boolean argument controls how much is copied:
 
 > **Use case:** Clone a hidden template element to create new list items, table rows, or cards without rebuilding HTML from strings.
 
----
-
 ## 4.2 Inserting and Moving Nodes
 
 ### 4.2.1 Modern Insertion Methods
@@ -121,8 +119,6 @@ tbody.addEventListener("click", (e) => {
 - Use `textContent` for cell text so user data is not parsed as HTML.
 - Prefer `closest("tr")` over chained `parentElement` lookups; it survives layout changes.
 
----
-
 ## 4.3 Working with HTML Strings
 
 ### 4.3.1 innerHTML
@@ -164,8 +160,6 @@ element.insertAdjacentHTML("afterend", "<p>After the element</p>");
 | `beforeend` | Last child inside the element |
 | `afterend` | Sibling after the element |
 
----
-
 ## 4.4 Reading and Modifying Styles
 
 ### 4.4.1 Inline Styles
@@ -197,8 +191,6 @@ console.log(styles.fontSize);           // "16px"
 
 > **Note:** `getComputedStyle` returns read-only values. You cannot modify styles through it.
 
----
-
 ## 4.5 Dataset (data-* Attributes)
 
 HTML5 `data-*` attributes let you store custom data on elements.
@@ -223,8 +215,6 @@ delete user.dataset.level;
 ```
 
 > **Conversion:** `data-status-active` → `dataset.statusActive` (kebab-case to camelCase).
-
----
 
 ## 4.6 Best Practices
 

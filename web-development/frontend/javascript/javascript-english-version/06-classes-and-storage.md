@@ -219,8 +219,6 @@ console.log(dog.speak()); // "some sound → woof"
 
 > **Rule of thumb:** Child members win on name conflicts; `super` lets you reuse parent behavior.
 
----
-
 ## 6.2 Prototype Chain
 
 Every JavaScript object has an internal link to another object called its **prototype**. When you access a property that doesn't exist on the object, JavaScript looks up the prototype chain.
@@ -286,8 +284,6 @@ settings.prefs.font = 16;
 console.log(defaults.prefs.font); // 16
 ```
 
----
-
 ## 6.3 this Keyword
 
 The value of `this` depends on how a function is called.
@@ -321,8 +317,6 @@ let team = {
 | Constructor function | The new instance |
 | Event handler | The element that triggered the event |
 | Arrow function | Inherits from surrounding scope |
-
----
 
 ## 6.4 Client-Side Storage
 
@@ -472,8 +466,6 @@ form.addEventListener("submit", () => {
 - Always `JSON.stringify` before storing and `JSON.parse` after reading.
 - For sensitive data, prefer session-only storage or server-side sessions.
 
----
-
 ## 6.5 JSON
 
 JSON (JavaScript Object Notation) is the standard format for data exchange.
@@ -498,8 +490,6 @@ console.log(parsed.name);   // "Alice"
 |--------|-------------|
 | `JSON.stringify(obj)` | Convert object to JSON string |
 | `JSON.parse(string)` | Convert JSON string to object |
-
----
 
 ## 6.6 Best Practices
 

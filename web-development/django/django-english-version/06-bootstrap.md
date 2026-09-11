@@ -4,8 +4,6 @@
 
 Bootstrap is the most popular CSS framework for building responsive, mobile-first web interfaces. Integrating Bootstrap with Django accelerates frontend development without writing custom CSS from scratch.
 
----
-
 ## 6.1 Including Bootstrap in Django
 
 ### 6.1.1 CDN Method (Simplest)
@@ -50,8 +48,6 @@ static/
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 ```
 
----
-
 ## 6.2 Grid System
 
 Bootstrap's grid system divides the viewport into **12 columns**. It enables responsive layouts that adapt to screen size.
@@ -92,8 +88,6 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
     <div class="col-12 col-md-4 col-lg-3">Sidebar</div>
 </div>
 ```
-
----
 
 ## 6.3 Common Components
 
@@ -179,8 +173,6 @@ Bootstrap's grid system divides the viewport into **12 columns**. It enables res
 </div>
 ```
 
----
-
 ## 6.4 Utility Classes
 
 ### 6.4.1 Spacing
@@ -225,8 +217,6 @@ Bootstrap uses `m-*` (margin) and `p-*` (padding) with sizes 0-5:
 </div>
 ```
 
----
-
 ## 6.5 Integrating with Django Forms
 
 Render Django forms with Bootstrap styling using custom template tags or `django-crispy-forms`:
@@ -250,8 +240,6 @@ Render Django forms with Bootstrap styling using custom template tags or `django
 ```
 
 > **Tip:** Define a custom `add_class` filter (see Templates chapter) to inject Bootstrap classes into form widgets.
-
----
 
 ## 6.6 Best Practices
 

@@ -44,8 +44,6 @@ HTTP Response
 
 > **Note:** Django's "View" is similar to the "Controller" in MVC frameworks. The "Template" is the "View" in MVC terms.
 
----
-
 ## 1.2 Installation and Environment
 
 ### 1.2.1 Prerequisites
@@ -102,8 +100,6 @@ python manage.py runserver
 
 > **Development only:** The built-in server is for development. Use Gunicorn or uWSGI in production.
 
----
-
 ## 1.3 Creating an App
 
 A Django project can contain multiple **apps** — reusable components that handle specific functionality.
@@ -133,8 +129,6 @@ INSTALLED_APPS = [
     'myapp',           # Add your app here
 ]
 ```
-
----
 
 ## 1.4 First View and URL
 
@@ -171,8 +165,6 @@ urlpatterns = [
 ]
 ```
 
----
-
 ## 1.5 Django Settings Overview
 
 Key settings in `settings.py`:
@@ -188,8 +180,6 @@ Key settings in `settings.py`:
 | `DATABASES` | Database connection settings |
 | `STATIC_URL` | URL prefix for static files (CSS, JS, images) |
 | `MEDIA_URL` | URL prefix for user-uploaded files |
-
----
 
 ## 1.6 Best Practices
 

@@ -4,8 +4,6 @@
 
 缓存通过存储昂贵的计算结果来降低数据库负载、缩短响应时间。Django 的缓存框架支持多种后端，其中 **Redis** 是生产环境中最受欢迎的选择。
 
----
-
 ## 11.1 Django 缓存框架
 
 无论使用哪种后端，Django 都提供统一的缓存 API。
@@ -18,8 +16,6 @@
 | `django.core.cache.backends.filebased.FileBasedCache` | 单服务器部署 |
 | `django.core.cache.backends.db.DatabaseCache` | 没有 Redis 可用时 |
 | `django_redis.cache.RedisCache` | 生产环境（推荐） |
-
----
 
 ## 11.2 Redis 配置
 
@@ -51,8 +47,6 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 ```
-
----
 
 ## 11.3 底层缓存 API
 
@@ -105,8 +99,6 @@ values = cache.get_many(['a', 'b', 'c'])
 # 返回：{'a': 1, 'b': 2, 'c': 3}
 ```
 
----
-
 ## 11.4 缓存模式
 
 ### 11.4.1 缓存昂贵的查询
@@ -148,8 +140,6 @@ def update_user_profile(user_id, data):
     cache.delete(cache_key)   # 更新时使缓存失效
 ```
 
----
-
 ## 11.5 视图级缓存
 
 ### 11.5.1 单视图缓存
@@ -189,8 +179,6 @@ def entry_list(request):
     return render(request, 'entry_list.html', {'entries': entries})
 ```
 
----
-
 ## 11.6 模板片段缓存
 
 缓存模板中的特定部分：
@@ -215,8 +203,6 @@ def entry_list(request):
 {% endcache %}
 ```
 
----
-
 ## 11.7 类视图中的缓存
 
 ```python
@@ -229,8 +215,6 @@ class ArticleListView(ListView):
     model = Article
     template_name = 'article_list.html'
 ```
-
----
 
 ## 11.8 最佳实践
 

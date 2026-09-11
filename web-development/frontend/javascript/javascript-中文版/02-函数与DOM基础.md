@@ -162,8 +162,6 @@ function demo() {
 
 > **重要：** IIFE 后面一定要加分号，尤其是多个 IIFE 连续出现时。否则 JavaScript 可能把它们当作一个连续表达式处理，从而抛出错误。
 
----
-
 ## 2.2 DOM 基础
 
 DOM 将 HTML 文档表示为一个节点树。JavaScript 可以读取和修改这棵树。
@@ -398,8 +396,6 @@ console.log(text.nodeType);     // 3
 let comment = document.createComment("note");
 console.log(comment.nodeType);  // 8
 ```
-
----
 
 ## 2.3 最佳实践
 

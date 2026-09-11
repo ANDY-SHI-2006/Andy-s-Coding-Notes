@@ -105,8 +105,6 @@ btn.removeEventListener("click", handler);
 
 > If you add a listener with `{ capture: true }`, remove it with the same option. Anonymous arrow functions cannot be removed.
 
----
-
 ## 3.2 Common Event Types
 
 ### 3.2.1 Mouse Events
@@ -191,8 +189,6 @@ window.addEventListener("resize", () => {
     console.log(window.innerWidth, window.innerHeight);
 });
 ```
-
----
 
 ## 3.3 The Event Object
 
@@ -293,8 +289,6 @@ setInterval(bound, 1000);
 
 > `bind` is especially handy when a method must keep its `this` inside a delayed callback such as `setInterval` or `addEventListener`.
 
----
-
 ## 3.4 Event Propagation
 
 When an event fires, it travels through the DOM in three phases:
@@ -343,8 +337,6 @@ parent.addEventListener("click", () => {
 });
 ```
 
----
-
 ## 3.5 Event Delegation
 
 Instead of attaching a listener to every child element, attach **one** listener to the parent. Use `event.target` to identify which child was clicked.
@@ -376,8 +368,6 @@ document.getElementById("list").addEventListener("click", (event) => {
 - Works for dynamically added elements
 - Easier to maintain
 
----
-
 ## 3.6 Best Practices
 
 | Do | Don't |
@@ -387,8 +377,6 @@ document.getElementById("list").addEventListener("click", (event) => {
 | Use `event.target` to identify the actual clicked element | Assume `event.currentTarget` is always the clicked element |
 | Call `preventDefault()` when you need to stop browser behavior | Call `preventDefault()` unnecessarily |
 | Remove listeners when components are destroyed | Leave orphaned listeners that cause memory leaks |
-
----
 
 ## 3.7 Mini Case Snippets
 

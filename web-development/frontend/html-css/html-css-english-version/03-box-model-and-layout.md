@@ -156,8 +156,6 @@ The `overflow` property decides what happens when content is larger than its con
 }
 ```
 
----
-
 ## 3.2 Box Sizing
 
 By default, `width` and `height` apply only to the **content** area. Adding padding and border increases the total size.
@@ -192,8 +190,6 @@ To make `width` include padding and border, use `box-sizing`:
 }
 ```
 
----
-
 ## 3.3 Margin Collapse
 
 When two vertical margins meet, they collapse into a single margin equal to the **larger** of the two.
@@ -210,8 +206,6 @@ When two vertical margins meet, they collapse into a single margin equal to the 
 - Does not happen with flex or grid items
 
 > **Common Pitfall:** A child's `margin-top` can "escape" the parent if the parent has no `padding` or `border`. Fix by adding `padding-top: 1px` or `overflow: hidden` to the parent.
-
----
 
 ## 3.4 Display Types
 
@@ -267,8 +261,6 @@ Whitespace between `inline-block` elements in the source HTML is rendered as a s
     font-size: 16px;   /* restore text size */
 }
 ```
-
----
 
 ## 3.5 Border Radius and Box Shadow
 
@@ -331,8 +323,6 @@ When you use `50%`, the browser calculates each corner radius as half of that si
     border-radius: 50%;   /* perfect circle */
 }
 ```
-
----
 
 ## 3.6 Text and Font Styling
 
@@ -518,8 +508,6 @@ Common values: `auto`, `default`, `pointer`, `crosshair`, `move`, `text`, `not-a
 
 Useful for buttons, icons, and UI labels where selection would feel awkward.
 
----
-
 ## 3.7 Pseudo-elements
 
 Pseudo-elements create virtual elements that don't exist in the HTML.
@@ -541,8 +529,6 @@ Pseudo-elements create virtual elements that don't exist in the HTML.
 ```
 
 > **Note:** `content: ''` is required for `::before` and `::after` to appear, even if empty.
-
----
 
 ## 3.8 Resetting Default Styles
 
@@ -578,8 +564,6 @@ a {
 | Normalize | `normalize.css` | Preserves useful defaults instead of wiping everything |
 
 > **Recommendation:** prefer a targeted reset or `normalize.css` over `* { margin: 0; padding: 0; }` in production.
-
----
 
 ## 3.9 Best Practices
 

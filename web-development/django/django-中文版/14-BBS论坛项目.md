@@ -4,8 +4,6 @@
 
 BBS（电子公告板系统）论坛是一个综合性项目，整合了本系列课程中讲到的所有 Django 概念：认证、模型、视图、模板、表单、AJAX、缓存以及 admin 定制。
 
----
-
 ## 14.1 项目概览
 
 | 模块 | 功能 |
@@ -17,8 +15,6 @@ BBS（电子公告板系统）论坛是一个综合性项目，整合了本系�
 | **Moderation（管理）** | 版主、帖子编辑/删除 |
 | **Search（搜索）** | 跨帖子的全文搜索 |
 | **Notifications（通知）** | 实时回复通知 |
-
----
 
 ## 14.2 数据库设计
 
@@ -45,7 +41,6 @@ class Board(models.Model):
     def topic_count(self):
         return self.topics.count()
 
-
 class Topic(models.Model):
     subject = models.CharField(max_length=255)
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='topics')
@@ -64,7 +59,6 @@ class Topic(models.Model):
     @property
     def reply_count(self):
         return self.posts.count() - 1  # 排除首帖
-
 
 class Post(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='posts')
@@ -95,8 +89,6 @@ class User(AbstractUser):
         return self.username
 ```
 
----
-
 ## 14.3 视图架构
 
 ### 板块列表与话题视图
@@ -124,7 +116,6 @@ class BoardListView(ListView):
         )
         return context
 
-
 class TopicListView(ListView):
     model = Topic
     template_name = 'boards/topics.html'
@@ -141,7 +132,6 @@ class TopicListView(ListView):
         context = super().get_context_data(**kwargs)
         context['board'] = self.board
         return context
-
 
 class PostListView(DetailView):
     model = Topic
@@ -188,7 +178,6 @@ class NewTopicView(LoginRequiredMixin, CreateView):
 
         return redirect('topic_posts', pk=board.pk, topic_pk=topic.pk)
 
-
 class ReplyTopicView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
@@ -215,8 +204,6 @@ class ReplyTopicView(LoginRequiredMixin, CreateView):
         return redirect('topic_posts', pk=topic.board.pk, topic_pk=topic.pk)
 ```
 
----
-
 ## 14.4 URL 路由
 
 ```python
@@ -234,8 +221,6 @@ urlpatterns = [
     path('boards/<int:pk>/topics/<int:topic_pk>/reply/', views.ReplyTopicView.as_view(), name='reply_topic'),
 ]
 ```
-
----
 
 ## 14.5 表单
 
@@ -265,8 +250,6 @@ class PostForm(forms.ModelForm):
             'message': forms.Textarea(attrs={'rows': 6, 'class': 'form-control'}),
         }
 ```
-
----
 
 ## 14.6 模板
 
@@ -318,8 +301,6 @@ class PostForm(forms.ModelForm):
 {% endblock %}
 ```
 
----
-
 ## 14.7 AJAX 增强
 
 ### 实时回复预览
@@ -364,8 +345,6 @@ document.querySelectorAll('.upvote-btn').forEach(btn => {
 });
 ```
 
----
-
 ## 14.8 缓存策略
 
 ```python
@@ -383,8 +362,6 @@ def get_board_stats(board_id):
         cache.set(cache_key, stats, 300)
     return stats
 ```
-
----
 
 ## 14.9 Admin 定制
 
@@ -415,8 +392,6 @@ class TopicAdmin(admin.ModelAdmin):
         queryset.update(is_locked=True)
 ```
 
----
-
 ## 14.10 关键架构决策
 
 | 决策 | 实现 | 理由 |
@@ -428,8 +403,6 @@ class TopicAdmin(admin.ModelAdmin):
 | **缓存** | 每个板块的统计缓存 5 分钟 | 减少聚合查询 |
 | **软删除** | `is_locked` 标志 | 保留内容历史 |
 | **AJAX 投票** | 带 CSRF 的 Fetch API | 无需刷新即可获得响应式体验 |
-
----
 
 ## 14.11 最佳实践
 

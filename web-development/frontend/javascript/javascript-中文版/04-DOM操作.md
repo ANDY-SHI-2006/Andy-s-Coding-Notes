@@ -37,8 +37,6 @@ let deep = original.cloneNode(true);
 
 > **使用场景：** 克隆一个隐藏的模板元素，用来创建新的列表项、表格行或卡片，而无需从字符串重新构建 HTML。
 
----
-
 ## 4.2 插入与移动节点
 
 ### 4.2.1 现代插入方法
@@ -121,8 +119,6 @@ tbody.addEventListener("click", (e) => {
 - 单元格文本使用 `textContent`，这样用户数据不会被解析为 HTML。
 - 优先使用 `closest("tr")` 而不是链式 `parentElement` 查找；它在布局变化时更稳定。
 
----
-
 ## 4.3 使用 HTML 字符串
 
 ### 4.3.1 innerHTML
@@ -164,8 +160,6 @@ element.insertAdjacentHTML("afterend", "<p>After the element</p>");
 | `beforeend` | 元素内部最后一个子节点 |
 | `afterend` | 元素之后的兄弟节点 |
 
----
-
 ## 4.4 读取与修改样式
 
 ### 4.4.1 行内样式
@@ -197,8 +191,6 @@ console.log(styles.fontSize);           // "16px"
 
 > **注意：** `getComputedStyle` 返回只读值，你不能通过它修改样式。
 
----
-
 ## 4.5 Dataset（data-* 属性）
 
 HTML5 `data-*` 属性允许你在元素上存储自定义数据。
@@ -223,8 +215,6 @@ delete user.dataset.level;
 ```
 
 > **转换规则：** `data-status-active` → `dataset.statusActive`（短横线命名转为驼峰命名）。
-
----
 
 ## 4.6 最佳实践
 

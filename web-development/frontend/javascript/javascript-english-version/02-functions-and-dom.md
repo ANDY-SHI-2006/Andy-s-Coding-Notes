@@ -162,8 +162,6 @@ function demo() {
 
 > **Important:** Always place a semicolon after an IIFE, especially when multiple IIFEs appear in sequence. Without it, JavaScript may treat them as one continuous expression and throw an error.
 
----
-
 ## 2.2 DOM Basics
 
 The DOM represents the HTML document as a tree of nodes. JavaScript can read and modify this tree.
@@ -398,8 +396,6 @@ console.log(text.nodeType);     // 3
 let comment = document.createComment("note");
 console.log(comment.nodeType);  // 8
 ```
-
----
 
 ## 2.3 Best Practices
 

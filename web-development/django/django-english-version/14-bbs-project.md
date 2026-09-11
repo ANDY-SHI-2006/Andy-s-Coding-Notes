@@ -4,8 +4,6 @@
 
 The BBS (Bulletin Board System) Forum is a capstone project that integrates all Django concepts covered in this series: authentication, models, views, templates, forms, AJAX, caching, and admin customization.
 
----
-
 ## 14.1 Project Overview
 
 | Module | Features |
@@ -17,8 +15,6 @@ The BBS (Bulletin Board System) Forum is a capstone project that integrates all 
 | **Moderation** | Board moderators, post editing/deletion |
 | **Search** | Full-text search across posts |
 | **Notifications** | Real-time reply notifications |
-
----
 
 ## 14.2 Database Design
 
@@ -95,7 +91,6 @@ class User(AbstractUser):
         return self.username
 ```
 
----
 
 ## 14.3 Views Architecture
 
@@ -215,7 +210,6 @@ class ReplyTopicView(LoginRequiredMixin, CreateView):
         return redirect('topic_posts', pk=topic.board.pk, topic_pk=topic.pk)
 ```
 
----
 
 ## 14.4 URL Routing
 
@@ -235,7 +229,6 @@ urlpatterns = [
 ]
 ```
 
----
 
 ## 14.5 Forms
 
@@ -266,7 +259,6 @@ class PostForm(forms.ModelForm):
         }
 ```
 
----
 
 ## 14.6 Templates
 
@@ -318,7 +310,6 @@ class PostForm(forms.ModelForm):
 {% endblock %}
 ```
 
----
 
 ## 14.7 AJAX Enhancements
 
@@ -364,7 +355,6 @@ document.querySelectorAll('.upvote-btn').forEach(btn => {
 });
 ```
 
----
 
 ## 14.8 Caching Strategy
 
@@ -384,7 +374,6 @@ def get_board_stats(board_id):
     return stats
 ```
 
----
 
 ## 14.9 Admin Customization
 
@@ -415,7 +404,6 @@ class TopicAdmin(admin.ModelAdmin):
         queryset.update(is_locked=True)
 ```
 
----
 
 ## 14.10 Key Architecture Decisions
 
@@ -428,8 +416,6 @@ class TopicAdmin(admin.ModelAdmin):
 | **Caching** | Per-board stats cached 5 minutes | Reduces aggregation queries |
 | **Soft-delete** | `is_locked` flag | Preserves content history |
 | **AJAX voting** | Fetch API with CSRF | Responsive UX without reload |
-
----
 
 ## 14.11 Best Practices
 

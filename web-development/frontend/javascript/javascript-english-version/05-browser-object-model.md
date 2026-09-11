@@ -130,8 +130,6 @@ popup.close();
 
 > **Note:** Modern browsers block `window.close()` unless the window was opened by JavaScript. Popups are often blocked unless triggered by a user gesture.
 
----
-
 ## 5.2 The location Object
 
 Contains information about the current URL and provides methods to navigate.
@@ -161,8 +159,6 @@ location.reload(true);                    // Force reload from server
 | `assign(url)` | Navigate to URL, adds to history |
 | `replace(url)` | Navigate to URL, replaces current history entry |
 | `reload()` | Refresh the page |
-
----
 
 ## 5.3 The history Object
 
@@ -200,8 +196,6 @@ window.addEventListener("popstate", (event) => {
 | `pushState(state, title, url)` | Add new history entry, change URL |
 | `replaceState(state, title, url)` | Replace current entry, change URL |
 
----
-
 ## 5.4 The navigator Object
 
 Provides information about the browser and operating system.
@@ -225,8 +219,6 @@ navigator.geolocation.getCurrentPosition(
 );
 ```
 
----
-
 ## 5.5 The screen Object
 
 Provides information about the user's display.
@@ -239,8 +231,6 @@ screen.availHeight;   // Available height
 screen.colorDepth;    // Color depth in bits (e.g., 24)
 screen.orientation;   // Screen orientation object
 ```
-
----
 
 ## 5.6 Getting Element Dimensions and Position
 
@@ -360,8 +350,6 @@ window.addEventListener("scroll", () => {
 
 - Detect near-bottom with `scrollTop + clientHeight ≈ scrollHeight`.
 - Use a flag to throttle requests and prevent duplicate fetches.
-
----
 
 ## 5.7 Best Practices
 

@@ -4,8 +4,6 @@
 
 **AJAX（Asynchronous JavaScript and XML，异步 JavaScript 与 XML）** 通过在后台与服务器交换数据，使网页能够异步更新。Django 使用标准视图处理 AJAX 请求，返回 JSON 而不是 HTML。
 
----
-
 ## 8.1 AJAX 与 Django 的协作方式
 
 ```
@@ -27,8 +25,6 @@
    |  6. JavaScript 更新      |
    |  DOM（无需刷新）         |
 ```
-
----
 
 ## 8.2 Fetch API（现代方式）
 
@@ -91,8 +87,6 @@ fetch('/api/books/create/', {
 });
 ```
 
----
-
 ## 8.3 Django 处理 AJAX 请求
 
 ### JsonResponse 视图
@@ -141,8 +135,6 @@ def my_view(request):
     # 普通请求
     return render(request, 'template.html')
 ```
-
----
 
 ## 8.4 常见的 AJAX 模式
 
@@ -252,8 +244,6 @@ function loadMore() {
 // 点击按钮或滚动时加载
 ```
 
----
-
 ## 8.5 类视图中的 AJAX
 
 ```python
@@ -270,8 +260,6 @@ class BookAPIView(View):
         book = Book.objects.create(title=data['title'])
         return JsonResponse({'id': book.id}, status=201)
 ```
-
----
 
 ## 8.6 最佳实践
 

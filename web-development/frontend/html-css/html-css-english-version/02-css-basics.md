@@ -122,8 +122,6 @@ html { font-size: 16px; }
 .hex     { color: #ff0000; }
 ```
 
----
-
 ## 2.2 CSS Selectors
 
 Selectors determine which HTML elements a CSS rule applies to.
@@ -291,8 +289,6 @@ img[src$=".svg"] {
 }
 ```
 
----
-
 ## 2.3 Style Inheritance
 
 Some CSS properties are automatically inherited by child elements from their parent.
@@ -323,8 +319,6 @@ div {
 ```
 
 > **Tip:** You can force inheritance using the `inherit` keyword: `border: inherit;`
-
----
 
 ## 2.4 The Cascade and Specificity
 
@@ -378,8 +372,6 @@ p { color: green; }          /* Specificity: 0,0,1 */
 | ID selector (`#id`) | High | Beats classes and elements |
 | Class / pseudo-class / attribute | Medium | Beats element selectors |
 | Element selector (`p`, `div`) | Low | Beaten by everything above |
-
----
 
 ## 2.5 Best Practices
 

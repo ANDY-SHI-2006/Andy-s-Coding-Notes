@@ -4,8 +4,6 @@
 
 Django's **Object-Relational Mapping (ORM)** allows you to interact with databases using Python code instead of SQL. Models define your data structure, and the ORM handles all database operations.
 
----
-
 ## 5.1 Defining Models
 
 A Django model is a Python class that subclasses `django.db.models.Model`.
@@ -73,8 +71,6 @@ class Article(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='articles')
 ```
 
----
-
 ## 5.2 Model Relationships
 
 ### 5.2.1 One-to-Many (ForeignKey)
@@ -130,8 +126,6 @@ Use `related_name` to define the reverse accessor:
 # With related_name (cleaner): author.articles.all()
 ```
 
----
-
 ## 5.3 Migrations
 
 Migrations are Django's way of propagating model changes to the database schema.
@@ -151,8 +145,6 @@ python manage.py sqlmigrate app_name 0001
 ```
 
 > **Workflow:** Modify `models.py` → `makemigrations` → `migrate`
-
----
 
 ## 5.4 QuerySet API
 
@@ -250,8 +242,6 @@ articles = Article.objects.prefetch_related('tags').all()
 
 > **Performance:** Always use `select_related` and `prefetch_related` when accessing related objects in loops.
 
----
-
 ## 5.5 CRUD Operations
 
 ### Create
@@ -309,8 +299,6 @@ article.delete()
 Article.objects.filter(created__year__lt=2020).delete()
 ```
 
----
-
 ## 5.6 Custom Managers
 
 ```python
@@ -327,8 +315,6 @@ class Article(models.Model):
 # Usage
 Article.published.all()    # Only published articles
 ```
-
----
 
 ## 5.7 Best Practices
 

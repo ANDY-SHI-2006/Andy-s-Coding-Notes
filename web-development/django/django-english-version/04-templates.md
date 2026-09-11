@@ -4,8 +4,6 @@
 
 Django's template engine separates presentation from business logic. Templates are text files that define the structure of rendered output, with special syntax for dynamic content.
 
----
-
 ## 4.1 Template Syntax
 
 Django templates use three core constructs: **variables**, **tags**, and **filters**.
@@ -67,8 +65,6 @@ Filters transform variable values using `|`:
 {% endcomment %}
 ```
 
----
-
 ## 4.2 Built-in Tags Reference
 
 | Tag | Purpose | Example |
@@ -83,8 +79,6 @@ Filters transform variable values using `|`:
 | `{% include %}` | Include sub-template | `{% include 'navbar.html' %}` |
 | `{% load %}` | Load custom tags/filters | `{% load custom_tags %}` |
 | `{% static %}` | Reference static files | `{% static 'css/style.css' %}` |
-
----
 
 ## 4.3 Built-in Filters Reference
 
@@ -102,8 +96,6 @@ Filters transform variable values using `|`:
 | `slugify` | Convert to slug | `{{ title\|slugify }}` |
 
 > **Security:** Never use `|safe` on untrusted user input. It bypasses HTML escaping and exposes XSS vulnerabilities.
-
----
 
 ## 4.4 Template Inheritance
 
@@ -168,8 +160,6 @@ Template inheritance is Django's most powerful feature for maintaining consisten
 {% endblock %}
 ```
 
----
-
 ## 4.5 Template Loading and Context
 
 ### 4.5.1 Template Search Path
@@ -224,8 +214,6 @@ TEMPLATES = [{
 
 Built-in context processors provide `request`, `user`, `messages`, `perms`, and `debug` variables in all templates.
 
----
-
 ## 4.6 Custom Filters
 
 ### 4.6.1 Creating a Custom Filter
@@ -260,8 +248,6 @@ def add_class(field, css_class):
 {{ form.name|add_class:"form-control" }}
 ```
 
----
-
 ## 4.7 Static Files
 
 Reference CSS, JavaScript, and images in templates:
@@ -279,8 +265,6 @@ Reference CSS, JavaScript, and images in templates:
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 ```
-
----
 
 ## 4.8 Best Practices
 

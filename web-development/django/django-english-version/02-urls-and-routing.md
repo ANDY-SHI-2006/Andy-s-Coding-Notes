@@ -4,8 +4,6 @@
 
 Django's URL routing system maps incoming HTTP requests to the appropriate view functions or class-based views. Clean URL design is fundamental to maintainable web applications.
 
----
-
 ## 2.1 URLconf Basics
 
 Each app contains a `urls.py` that defines its URL patterns. These are included in the project's root URLconf.
@@ -38,8 +36,6 @@ urlpatterns = [
 ```
 
 > **Rule:** Always use `include()` for app URLs. Keeps the root URLconf clean and apps reusable.
-
----
 
 ## 2.2 path() and re_path()
 
@@ -117,8 +113,6 @@ urlpatterns = [
 
 > **Prefer `path()`** over `re_path()` for readability. Use `re_path()` only for complex patterns.
 
----
-
 ## 2.3 URL Parameter Passing
 
 Views receive captured parameters as keyword arguments:
@@ -144,8 +138,6 @@ def search(request):
     page = request.GET.get('page', '1')    # '2'
     # request.GET is a QueryDict (similar to dict)
 ```
-
----
 
 ## 2.4 URL Reversal
 
@@ -196,8 +188,6 @@ class MyRedirectView(RedirectView):
     url = reverse_lazy('about')   # Works at class definition time
 ```
 
----
-
 ## 2.5 URL Namespaces
 
 When multiple apps define URLs with the same name, use **namespaces** to avoid conflicts.
@@ -234,8 +224,6 @@ path('blog/', include('blog.urls', namespace='blog')),
 reverse('blog:detail', kwargs={'id': 1})
 ```
 
----
-
 ## 2.6 Common Routing Patterns
 
 | Pattern | Implementation |
@@ -246,8 +234,6 @@ reverse('blog:detail', kwargs={'id': 1})
 | **Create page** | `path('items/create/', views.create, name='create')` |
 | **Edit page** | `path('items/<int:pk>/edit/', views.edit, name='edit')` |
 | **Delete page** | `path('items/<int:pk>/delete/', views.delete, name='delete')` |
-
----
 
 ## 2.7 Best Practices
 

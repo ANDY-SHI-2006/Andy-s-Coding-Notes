@@ -135,8 +135,6 @@ Key points:
 - Apply `opacity` or `rgba()` to the overlay only.
 - The text and children stay fully opaque.
 
----
-
 ## 4.2 Float
 
 The `float` property was originally designed to wrap text around images. Today it is largely replaced by Flexbox and Grid, but understanding float is still important for maintaining legacy code.
@@ -257,8 +255,6 @@ Key points:
 - `float` cleanly separates left and right columns.
 - Clear the container to avoid height collapse.
 - `line-height` equal to the nav height vertically centers single-line links.
-
----
 
 ## 4.3 Positioning
 
@@ -415,8 +411,6 @@ Key points:
 - `top: 100%` places the list directly below the input.
 - Remove the default `border` and `outline` on the input for custom styling.
 
----
-
 ## 4.4 Centering Techniques
 
 ### 4.4.1 Horizontal Center (Block Element)
@@ -498,8 +492,6 @@ Key points:
 - `top: 50%` aligns the element's top edge with the viewport center.
 - `translateY(-50%)` shifts it up by half its own height.
 - The same idea works for horizontal centering with `left: 50%` and `translateX(-50%)`.
-
----
 
 ## 4.5 Best Practices
 

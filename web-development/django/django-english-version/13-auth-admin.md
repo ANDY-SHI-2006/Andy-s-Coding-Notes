@@ -4,8 +4,6 @@
 
 Django includes a complete, production-ready authentication system and a powerful admin interface. These built-in features eliminate the need to build user management and admin panels from scratch.
 
----
-
 ## 13.1 Built-in Authentication
 
 Django's `django.contrib.auth` provides:
@@ -17,8 +15,6 @@ Django's `django.contrib.auth` provides:
 | `Permission` model | Granular access control |
 | `AuthenticationBackend` | Verify credentials |
 | `PasswordValidators` | Enforce password strength |
-
----
 
 ## 13.2 User Authentication Views
 
@@ -75,8 +71,6 @@ urlpatterns = [
 ]
 ```
 
----
-
 ## 13.3 Login and Logout in Views
 
 ### Programmatic Authentication
@@ -107,8 +101,6 @@ def custom_logout(request):
     messages.info(request, 'You have been logged out.')
     return redirect('home')
 ```
-
----
 
 ## 13.4 Registration
 
@@ -155,8 +147,6 @@ class CustomUserCreationForm(forms.ModelForm):
             user.save()
         return user
 ```
-
----
 
 ## 13.5 Access Control
 
@@ -206,8 +196,6 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 {% endif %}
 ```
 
----
-
 ## 13.6 Custom User Model
 
 **Always define a custom user model at the start of a project.** Changing later requires migration gymnastics.
@@ -240,8 +228,6 @@ from .models import User
 
 admin.site.register(User, UserAdmin)
 ```
-
----
 
 ## 13.7 Django Admin
 
@@ -310,8 +296,6 @@ class BookAdmin(admin.ModelAdmin):
         queryset.update(status='published')
 ```
 
----
-
 ## 13.8 Password Management
 
 ```python
@@ -323,8 +307,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 ```
-
----
 
 ## 13.9 Best Practices
 

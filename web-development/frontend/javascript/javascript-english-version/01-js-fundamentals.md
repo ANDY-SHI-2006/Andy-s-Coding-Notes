@@ -69,8 +69,6 @@ console.log(ok ? "User agreed" : "User cancelled");
 
 > **Caution:** `document.write` is almost never used in modern code because it behaves differently depending on when it runs and can wipe out existing content.
 
----
-
 ## 1.2 Variables and Data Types
 
 ### 1.2.1 Declaring Variables
@@ -254,8 +252,6 @@ console.log(item[42]);         // "also valid, converted to string"
 console.log(item["123"]);      // "numeric string key"
 ```
 
----
-
 ## 1.3 Operators
 
 ### 1.3.1 Arithmetic Operators
@@ -382,8 +378,6 @@ let y = (2 + 3) * 4;    // 20
 let z = !true || false;  // false
 ```
 
----
-
 ## 1.4 Type Conversion
 
 ### 1.4.1 Implicit Conversion (Coercion)
@@ -467,8 +461,6 @@ parseInt("FF", 16);   // 255 (explicit radix)
 - `NaN`
 
 Everything else is **truthy**.
-
----
 
 ## 1.5 Control Flow
 
@@ -586,8 +578,6 @@ for (let key in person) {
 
 > **Tip:** Use `Object.hasOwn(person, key)` or a direct `if (person.hasOwnProperty(key))` check when iterating objects that may have inherited properties.
 
----
-
 ## 1.6 Objects (Basics)
 
 Objects store collections of key-value pairs.
@@ -621,8 +611,6 @@ console.log(Object.keys(person));   // ["name", "age", "email"]
 console.log(Object.values(person)); // ["Alice", 26, "alice@example.com"]
 console.log(Object.entries(person)); // [["name","Alice"], ["age",26], ...]
 ```
-
----
 
 ## 1.7 Best Practices
 

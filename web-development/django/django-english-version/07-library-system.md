@@ -4,8 +4,6 @@
 
 The Library Management System is a comprehensive Django project that consolidates core concepts: models, views, templates, URL routing, and Bootstrap styling. This chapter presents the architecture and key implementation patterns.
 
----
-
 ## 7.1 Requirements Analysis
 
 | Module | Features |
@@ -16,8 +14,6 @@ The Library Management System is a comprehensive Django project that consolidate
 | **Borrowing** | Borrow/return records; due date tracking |
 | **Members** | User registration, profile management |
 | **Admin** | Admin dashboard for staff |
-
----
 
 ## 7.2 Project Structure
 
@@ -49,7 +45,6 @@ library_system/
     └── js/
 ```
 
----
 
 ## 7.3 Database Design
 
@@ -134,7 +129,6 @@ class BorrowRecord(models.Model):
         return f"{self.member.username} - {self.book.title}"
 ```
 
----
 
 ## 7.4 Views and URL Patterns
 
@@ -224,7 +218,6 @@ urlpatterns = [
 ]
 ```
 
----
 
 ## 7.5 Forms
 
@@ -249,7 +242,6 @@ class BookForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
 ```
 
----
 
 ## 7.6 Templates
 
@@ -345,7 +337,6 @@ class BookForm(forms.ModelForm):
 {% endblock %}
 ```
 
----
 
 ## 7.7 Key Patterns Demonstrated
 
@@ -358,8 +349,6 @@ class BookForm(forms.ModelForm):
 | **Form Styling** | `ModelForm` with widget class injection |
 | **Select/Prefetch** | `select_related('publisher')` + `prefetch_related('authors')` |
 | **Messages** | Django messages framework for user feedback |
-
----
 
 ## 7.8 Best Practices
 

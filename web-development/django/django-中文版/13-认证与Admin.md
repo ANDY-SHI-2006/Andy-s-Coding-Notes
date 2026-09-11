@@ -4,8 +4,6 @@
 
 Django 内置了完整、可直接用于生产的认证系统和强大的管理后台。这些内置功能让我们无需从零搭建用户管理和后台面板。
 
----
-
 ## 13.1 内置认证
 
 Django 的 `django.contrib.auth` 提供：
@@ -17,8 +15,6 @@ Django 的 `django.contrib.auth` 提供：
 | `Permission` 模型 | 细粒度的访问控制 |
 | `AuthenticationBackend` | 校验凭据 |
 | `PasswordValidators` | 强制密码强度 |
-
----
 
 ## 13.2 用户认证视图
 
@@ -75,8 +71,6 @@ urlpatterns = [
 ]
 ```
 
----
-
 ## 13.3 视图中的登录与登出
 
 ### 编程式认证
@@ -107,8 +101,6 @@ def custom_logout(request):
     messages.info(request, 'You have been logged out.')
     return redirect('home')
 ```
-
----
 
 ## 13.4 注册
 
@@ -155,8 +147,6 @@ class CustomUserCreationForm(forms.ModelForm):
             user.save()
         return user
 ```
-
----
 
 ## 13.5 访问控制
 
@@ -206,8 +196,6 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 {% endif %}
 ```
 
----
-
 ## 13.6 自定义用户模型
 
 **务必在项目一开始就定义自定义用户模型。** 之后再改就需要折腾数据迁移。
@@ -240,8 +228,6 @@ from .models import User
 
 admin.site.register(User, UserAdmin)
 ```
-
----
 
 ## 13.7 Django Admin
 
@@ -310,8 +296,6 @@ class BookAdmin(admin.ModelAdmin):
         queryset.update(status='published')
 ```
 
----
-
 ## 13.8 密码管理
 
 ```python
@@ -323,8 +307,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 ```
-
----
 
 ## 13.9 最佳实践
 

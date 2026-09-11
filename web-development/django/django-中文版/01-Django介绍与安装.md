@@ -44,8 +44,6 @@ HTTP 响应
 
 > **注意：** Django 的"视图"类似于 MVC 框架中的"控制器"。"模板"就是 MVC 术语中的"视图"。
 
----
-
 ## 1.2 安装与环境
 
 ### 1.2.1 前置条件
@@ -102,8 +100,6 @@ python manage.py runserver
 
 > **仅供开发使用：** 内置服务器仅用于开发。生产环境请使用 Gunicorn 或 uWSGI。
 
----
-
 ## 1.3 创建应用
 
 一个 Django 项目可以包含多个**应用（app）**——处理特定功能的可复用组件。
@@ -133,8 +129,6 @@ INSTALLED_APPS = [
     'myapp',           # 在这里添加你的应用
 ]
 ```
-
----
 
 ## 1.4 第一个视图和 URL
 
@@ -171,8 +165,6 @@ urlpatterns = [
 ]
 ```
 
----
-
 ## 1.5 Django 设置概览
 
 `settings.py` 中的关键设置：
@@ -188,8 +180,6 @@ urlpatterns = [
 | `DATABASES` | 数据库连接设置 |
 | `STATIC_URL` | 静态文件（CSS、JS、图片）的 URL 前缀 |
 | `MEDIA_URL` | 用户上传文件的 URL 前缀 |
-
----
 
 ## 1.6 最佳实践
 

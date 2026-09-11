@@ -113,8 +113,6 @@ Hovering a download link reveals a QR-code panel below it. A CSS triangle is dra
 - Use `height` plus `opacity` for a smooth expand effect; `display: none` cannot be transitioned.
 - The triangle points from the panel back to the trigger.
 
----
-
 ## 6.2 CSS Transforms
 
 The `transform` property applies 2D or 3D transformations to an element.
@@ -182,8 +180,6 @@ Controls the pivot point for transforms.
     transform: rotate(45deg);     /* Clockwise */
 }
 ```
-
----
 
 ## 6.3 CSS Animations
 
@@ -278,8 +274,6 @@ A rotating ring is created with a circular element and one colored border side.
 
 - `border-radius: 50%` makes the element a circle.
 - Only one border side is colored, producing the rotating "gap" effect.
-
----
 
 ## 6.4 Flexbox Layout
 
@@ -407,8 +401,6 @@ When items wrap onto multiple lines, `align-content` controls the spacing betwee
 > ```css
 > .column { flex: 1; }   /* All columns share space equally */
 > ```
-
----
 
 ## 6.5 Best Practices
 

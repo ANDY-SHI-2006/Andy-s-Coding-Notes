@@ -4,8 +4,6 @@
 
 Django 的 URL 路由系统将传入的 HTTP 请求映射到相应的视图函数或基于类的视图。清晰的 URL 设计是可维护 Web 应用的基础。
 
----
-
 ## 2.1 URLconf 基础
 
 每个应用都包含一个 `urls.py`，用于定义其 URL 模式。这些模式被包含在项目的根 URLconf 中。
@@ -38,8 +36,6 @@ urlpatterns = [
 ```
 
 > **规则：** 始终使用 `include()` 来包含应用 URL。这能让根 URLconf 保持简洁，应用也可复用。
-
----
 
 ## 2.2 path() 和 re_path()
 
@@ -117,8 +113,6 @@ urlpatterns = [
 
 > **优先使用 `path()`** 以获得更好的可读性。仅在复杂模式下使用 `re_path()`。
 
----
-
 ## 2.3 URL 参数传递
 
 视图以关键字参数的形式接收捕获到的参数：
@@ -144,8 +138,6 @@ def search(request):
     page = request.GET.get('page', '1')    # '2'
     # request.GET 是一个 QueryDict（类似 dict）
 ```
-
----
 
 ## 2.4 URL 反向解析
 
@@ -196,8 +188,6 @@ class MyRedirectView(RedirectView):
     url = reverse_lazy('about')   # 在类定义时即可使用
 ```
 
----
-
 ## 2.5 URL 命名空间
 
 当多个应用定义了同名的 URL 时，使用**命名空间**来避免冲突。
@@ -234,8 +224,6 @@ path('blog/', include('blog.urls', namespace='blog')),
 reverse('blog:detail', kwargs={'id': 1})
 ```
 
----
-
 ## 2.6 常见路由模式
 
 | 模式 | 实现 |
@@ -246,8 +234,6 @@ reverse('blog:detail', kwargs={'id': 1})
 | **创建页** | `path('items/create/', views.create, name='create')` |
 | **编辑页** | `path('items/<int:pk>/edit/', views.edit, name='edit')` |
 | **删除页** | `path('items/<int:pk>/delete/', views.delete, name='delete')` |
-
----
 
 ## 2.7 最佳实践
 

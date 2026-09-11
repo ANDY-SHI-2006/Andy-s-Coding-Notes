@@ -40,8 +40,6 @@ Promise 可以处于以下三种状态之一：
 | **进度不透明** | 当 Promise 处于 `pending` 状态时，没有内置方法查询其进度。 |
 | **状态不可变** | 一旦 Promise 落定（已完成或已拒绝），其状态和值/原因都不会改变。 |
 
----
-
 ## 9.2 消费 Promise
 
 ### 9.2.1 then / catch / finally
@@ -70,8 +68,6 @@ fetchData()
 | `.finally(onFinally)` | 无论结果如何都执行清理代码 |
 
 > **链式调用：** 每个 `.then()` 都返回一个新的 Promise，从而可以链式执行异步操作。
-
----
 
 ## 9.3 Promise 静态方法
 
@@ -152,8 +148,6 @@ Promise.resolve(42).then(value => console.log(value));  // 42
 // 创建一个立即拒绝的 promise
 Promise.reject(new Error("Fail")).catch(err => console.error(err));
 ```
-
----
 
 ## 9.4 async / await 深入解析
 
@@ -272,8 +266,6 @@ async function loadUserOrderGood() {
 - 任何拒绝都会直接跳到 `catch`。
 - 此处**不要**使用 `Promise.all`，因为这些步骤相互依赖。
 
----
-
 ## 9.5 回调、Promise 与 async/await 对比
 
 ```javascript
@@ -305,8 +297,6 @@ async function run() {
     }
 }
 ```
-
----
 
 ## 9.6 最佳实践
 

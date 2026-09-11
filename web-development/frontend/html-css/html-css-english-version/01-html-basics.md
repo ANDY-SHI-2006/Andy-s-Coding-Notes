@@ -71,35 +71,27 @@ HTML tags are classified in multiple ways:
 
 > **Note:** The actual display behavior is controlled by the CSS `display` property. The table above describes the **default** behavior of each tag.
 
-### 1.1.2.3 Detailed Characteristics of Each Type
+**Detailed Characteristics of Each Type**
 
-#### 1.1.2.3.1 Block-level (`<div>`, `<p>`, `<h1>`–`<h6>`, `<ul>`)
-- Occupies its own line — even if there is spare room, other tags cannot use it.
-- Width and height can be set freely.
-- Width inherits from the parent when not set; height is determined by content when not set.
-- Can nest other tags; however, `<p>` cannot nest block-level tags (the browser will split them).
-- Margins and padding take effect in all directions (see the CSS chapter).
+| Dimension | Block-level | Inline | Inline-block |
+|---------|------|------|--------|
+| Own line? | Occupies its own line, never shares | Shares a line with other inline elements | Shares a line with other inline/inline-block tags |
+| Width/height settable | ✅ Yes, freely | ❌ No — determined by content | ✅ Yes |
+| Default size when unset | Width inherits from parent; height determined by content | Determined by content | Determined by content |
+| Nesting rules | Can nest any tag; however, `<p>` cannot nest block-level tags (the browser splits them) | Can only nest text or inline elements | Same as inline |
+| Margin & padding | Effective in all directions | Only horizontal; vertical has no effect | Effective in all directions (like block-level) |
+| Typical tags | `<div>`, `<p>`, `<h1>`–`<h6>`, `<ul>` | `<span>`, `<a>`, `<strong>`, `<em>` | `<img>`, `<input>`, `<textarea>` |
 
-#### 1.1.2.3.2 Inline (`<span>`, `<a>`, `<strong>`, `<em>`)
-- Does not occupy its own line; shares a line with other inline elements.
-- Width and height cannot be set freely — they are determined by content.
-- Can only nest text or inline elements.
-- Margins and padding only take effect horizontally, not vertically (see the CSS chapter).
+> See the CSS chapter for the full rules on margins and padding.
 
-#### 1.1.2.3.3 Inline-block (`<img>`, `<input>`, `<textarea>`)
-- Does not occupy its own line; shares a line with other inline/inline-block tags.
-- Width and height can be set.
-- When not set, dimensions are determined by content.
-- Margins and padding take effect in all directions, like block-level (see the CSS chapter).
-
-### 1.1.2.4 By Relationship
+### 1.1.2.3 By Relationship
 
 | Relationship | Description | Example |
 |-------------|-------------|---------|
 | **Parent-Child** | One tag is nested inside another | `<ul>` is parent of `<li>` |
 | **Sibling** | Tags at the same nesting level | Two `<li>` inside the same `<ul>` |
 
-### 1.1.2.5 Attribute Syntax
+### 1.1.2.4 Attribute Syntax
 
 Attributes are written inside the opening tag, separated by spaces. Their order does not matter.
 
@@ -143,7 +135,10 @@ Useful shortcuts:
 | `Shift + Alt + ↓` | Duplicate the current line downward |
 | `Ctrl + D` | Select the next occurrence of the current word |
 
----
+Common settings (File → Preferences → Settings):
+
+- **Format On Paste / Format On Save** — Auto-format code when pasting/saving
+- **Word Wrap: on** — Wrap long lines instead of horizontal scrolling
 
 ## 1.2 Common HTML Tags
 
@@ -270,7 +265,7 @@ Browsers collapse consecutive spaces, tabs, and line breaks into a single space.
 | `title` | Tooltip shown on hover |
 | `width` / `height` | Dimensions in pixels |
 
-> **Best Practice:** Always include `alt` text. Use empty `alt=""` for decorative images. Setting only `width` or only `height` scales the image proportionally; setting both to mismatched ratios distorts it.
+> **Best Practice:** Always include `alt` text. Use empty `alt=""` for decorative images. Setting only `width` or only `height` scales the image proportionally; setting both to mismatched ratios distorts it. Images referenced by network URLs may break when the link dies — prefer local images.
 
 ### 1.2.4 List Tags
 
@@ -337,6 +332,8 @@ A list item can contain another complete list:
 | `<dl>` | Description List |
 | `<dt>` | Description Term |
 | `<dd>` | Description Details |
+
+> **Nesting rules:** `<ul>` / `<ol>` may only contain `<li>` directly (putting `<p>` or other tags directly inside is not recommended); an `<li>` can contain any element, including a nested complete list. Likewise, `<dl>` may only contain `<dt>` and `<dd>`, but both may appear multiple times.
 
 ### 1.2.5 Character Entities
 
@@ -408,8 +405,6 @@ The `<iframe>` element embeds another HTML page inside the current page.
 | `allowfullscreen` | Allow full-screen mode |
 
 > **Security note:** Only embed trusted sites, and consider the `sandbox` attribute to restrict the embedded content.
-
----
 
 ## 1.3 HTML Tables
 
@@ -509,8 +504,6 @@ For better structure and styling, tables can be divided into sections:
 | `colspan="n"` | Makes the cell span `n` columns horizontally |
 | `rowspan="n"` | Makes the cell span `n` rows vertically |
 
----
-
 ## 1.4 Semantic HTML5 Elements
 
 HTML5 introduces semantic elements that describe page structure more clearly than generic `<div>` tags.
@@ -538,8 +531,6 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
 ```
 
 > **Note:** `<main>` must be unique per document and should not be nested inside `<article>`, `<aside>`, `<footer>`, `<header>`, or `<nav>`.
-
----
 
 ## 1.5 Best Practices
 

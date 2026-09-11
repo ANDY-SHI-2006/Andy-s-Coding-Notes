@@ -10,8 +10,6 @@ Browser -> URL routing -> middleware -> view -> template rendering -> middleware
 
 > **Rule:** A view function's first parameter is always the `HttpRequest` object, and it must return an `HttpResponse` (or a subclass).
 
----
-
 ## 3.1 Response Types
 
 Django offers several ways to return a response. Choose based on what you need to send back.
@@ -100,8 +98,6 @@ return redirect('app01/index')
 return redirect('home')
 ```
 
----
-
 ## 3.2 Accessing Request Data
 
 ### 3.2.1 The HttpRequest Object
@@ -186,8 +182,6 @@ def register(request):
         return HttpResponse('Registration successful')
 ```
 
----
-
 ## 3.3 File Uploads
 
 ### 3.3.1 Enabling File Uploads
@@ -246,8 +240,6 @@ else:
     return HttpResponse('Invalid file type')
 ```
 
----
-
 ## 3.4 FBV vs CBV
 
 ### 3.4.1 Function-Based Views (FBV)
@@ -298,8 +290,6 @@ class Login(View):
 | Harder to reuse | Highly reusable — just inherit the class |
 
 > **Note:** CBVs are more reusable: if another place needs a specific CBV's logic, it can simply inherit that class.
-
----
 
 ## 3.5 Best Practices
 

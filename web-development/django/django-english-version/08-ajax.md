@@ -4,8 +4,6 @@
 
 **AJAX (Asynchronous JavaScript and XML)** enables web pages to update asynchronously by exchanging data with the server behind the scenes. Django handles AJAX requests using standard views that return JSON instead of HTML.
 
----
-
 ## 8.1 How AJAX Works with Django
 
 ```
@@ -27,8 +25,6 @@ Browser                    Server
    |  6. JavaScript updates   |
    |  DOM without reload      |
 ```
-
----
 
 ## 8.2 Fetch API (Modern Approach)
 
@@ -91,8 +87,6 @@ fetch('/api/books/create/', {
 });
 ```
 
----
-
 ## 8.3 Django Handling AJAX Requests
 
 ### JsonResponse View
@@ -141,8 +135,6 @@ def my_view(request):
     # Regular request
     return render(request, 'template.html')
 ```
-
----
 
 ## 8.4 Common AJAX Patterns
 
@@ -252,8 +244,6 @@ function loadMore() {
 // Load on button click or scroll
 ```
 
----
-
 ## 8.5 AJAX with Class-Based Views
 
 ```python
@@ -270,8 +260,6 @@ class BookAPIView(View):
         book = Book.objects.create(title=data['title'])
         return JsonResponse({'id': book.id}, status=201)
 ```
-
----
 
 ## 8.6 Best Practices
 

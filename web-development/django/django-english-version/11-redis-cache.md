@@ -4,8 +4,6 @@
 
 Caching reduces database load and improves response times by storing expensive computation results. Django's cache framework supports multiple backends, with **Redis** being the most popular choice for production.
 
----
-
 ## 11.1 Django Cache Framework
 
 Django provides a unified API for caching regardless of the backend.
@@ -18,8 +16,6 @@ Django provides a unified API for caching regardless of the backend.
 | `django.core.cache.backends.filebased.FileBasedCache` | Single-server deployments |
 | `django.core.cache.backends.db.DatabaseCache` | When Redis is unavailable |
 | `django_redis.cache.RedisCache` | Production (recommended) |
-
----
 
 ## 11.2 Redis Setup
 
@@ -51,8 +47,6 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 ```
-
----
 
 ## 11.3 Low-Level Cache API
 
@@ -105,8 +99,6 @@ values = cache.get_many(['a', 'b', 'c'])
 # Returns: {'a': 1, 'b': 2, 'c': 3}
 ```
 
----
-
 ## 11.4 Caching Patterns
 
 ### 11.4.1 Cache Expensive Queries
@@ -148,8 +140,6 @@ def update_user_profile(user_id, data):
     cache.delete(cache_key)   # Invalidate cache on update
 ```
 
----
-
 ## 11.5 View-Level Caching
 
 ### 11.5.1 Per-View Caching
@@ -189,8 +179,6 @@ def entry_list(request):
     return render(request, 'entry_list.html', {'entries': entries})
 ```
 
----
-
 ## 11.6 Template Fragment Caching
 
 Cache specific parts of a template:
@@ -215,8 +203,6 @@ Cache specific parts of a template:
 {% endcache %}
 ```
 
----
-
 ## 11.7 Cache in Class-Based Views
 
 ```python
@@ -229,8 +215,6 @@ class ArticleListView(ListView):
     model = Article
     template_name = 'article_list.html'
 ```
-
----
 
 ## 11.8 Best Practices
 

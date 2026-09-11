@@ -26,8 +26,6 @@ A form is a section of a document that contains interactive controls for submitt
 > - `GET`: Appends data to the URL. Limited size (~2048 chars). Used for searches/filters.
 > - `POST`: Sends data in the request body. No size limit. Used for sensitive data and file uploads.
 
----
-
 ## 5.2 Input Elements
 
 The `<input>` element is the most versatile form control. Its behavior changes based on the `type` attribute.
@@ -184,8 +182,6 @@ button {
 - Remove default borders/outlines and add a custom `:focus` ring.
 - Add `required` for basic client-side validation.
 
----
-
 ## 5.3 Labels
 
 A `<label>` associates descriptive text with a form control. Clicking the label focuses or toggles the associated control.
@@ -207,8 +203,6 @@ A `<label>` associates descriptive text with a form control. Clicking the label 
 ```
 
 > **Accessibility:** Always use labels. Screen readers announce the label text when the user focuses the input.
-
----
 
 ## 5.4 Multi-line Text and Selection
 
@@ -287,8 +281,6 @@ textarea {
 - Use `selected` on an `<option>` to make it the default choice when the page loads.
 - Use `<select multiple>` to let users choose several options. Hold **Ctrl** (Windows/Linux) or **Cmd** (macOS) while clicking to select or deselect items.
 
----
-
 ## 5.5 Form Validation
 
 Modern browsers support built-in form validation using HTML attributes.
@@ -322,8 +314,6 @@ Modern browsers support built-in form validation using HTML attributes.
 
 > **Note:** Client-side validation improves UX but is not secure. Always validate data on the server as well.
 
----
-
 ## 5.6 Best Practices
 
 | Do | Don't |
@@ -334,8 +324,6 @@ Modern browsers support built-in form validation using HTML attributes.
 | Validate on both client and server | Rely only on client-side validation |
 | Use `button type="submit"` | Use `<input type="submit">` for new projects |
 | Group related fields with `<fieldset>` | Leave forms as one long list |
-
----
 
 ## 5.7 Table Styling
 

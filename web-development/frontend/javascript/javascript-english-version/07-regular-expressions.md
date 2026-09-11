@@ -104,8 +104,6 @@ pi.toFixed(0);        // "3"
 
 > **Caution:** `toFixed` rounds and always returns a **string**. Convert back with `Number()` or `parseFloat()` if you need to calculate further.
 
----
-
 ## 7.2 Array Methods
 
 ### 7.2.1 Reading and Searching
@@ -186,8 +184,6 @@ Array.from({length: 3}, (_, i) => i); // [0, 1, 2]
 // Create a sorted copy without modifying original
 let sorted = [...arr].sort((a, b) => a - b);
 ```
-
----
 
 ## 7.3 Dates
 
@@ -284,8 +280,6 @@ setInterval(() => console.log(countdown(new Date("2025-01-01"))), 1000);
 - Use `Date.now()` to get the current timestamp.
 - Divide by `1000` first, then use `/ 86400`, `/ 3600 % 24`, `/ 60 % 60`, `% 60`.
 - Pad single digits with `"0" + n` or `String(n).padStart(2, "0")`.
-
----
 
 ## 7.4 Regular Expressions
 
@@ -468,8 +462,6 @@ document.querySelectorAll("input[data-rule]").forEach(input => {
 - One regex per field keeps the logic readable.
 - Show/hide an error tip next to the input.
 
----
-
 ## 7.5 Math
 
 `Math` is a built-in object that holds numeric constants and utility functions. It is not a constructor.
@@ -519,8 +511,6 @@ document.body.style.backgroundColor = randomColor();
 - `Math.random() * 256` produces a value in `[0, 256)`.
 - `Math.floor` turns it into an integer `0-255`.
 
----
-
 ## 7.6 Destructuring Assignment
 
 Destructuring unpacks values from arrays or properties from objects into distinct variables.
@@ -552,8 +542,6 @@ greet({ name: "Bob" });               // "Hello, Bob, age 0"
 - Array destructuring is positional; object destructuring matches property names.
 - Use defaults to avoid `undefined` when a value is missing.
 - Rest patterns (`...rest`) collect remaining items into a real array.
-
----
 
 ## 7.7 Best Practices
 

@@ -40,8 +40,6 @@ A Promise can be in one of three states:
 | **Opaque progress** | While the Promise is `pending`, there is no built-in way to query its progress. |
 | **Immutable state** | Once a Promise settles (fulfilled or rejected), its state and value/reason never change. |
 
----
-
 ## 9.2 Consuming Promises
 
 ### 9.2.1 then / catch / finally
@@ -70,8 +68,6 @@ fetchData()
 | `.finally(onFinally)` | Run cleanup code regardless of outcome |
 
 > **Chaining:** Each `.then()` returns a new Promise, allowing chains of asynchronous operations.
-
----
 
 ## 9.3 Promise Static Methods
 
@@ -152,8 +148,6 @@ Promise.resolve(42).then(value => console.log(value));  // 42
 // Create an immediately rejected promise
 Promise.reject(new Error("Fail")).catch(err => console.error(err));
 ```
-
----
 
 ## 9.4 async / await Deep Dive
 
@@ -272,8 +266,6 @@ async function loadUserOrderGood() {
 - Any rejection skips directly to `catch`.
 - Do **not** use `Promise.all` here because the steps depend on each other.
 
----
-
 ## 9.5 Callbacks vs Promises vs async/await
 
 ```javascript
@@ -305,8 +297,6 @@ async function run() {
     }
 }
 ```
-
----
 
 ## 9.6 Best Practices
 

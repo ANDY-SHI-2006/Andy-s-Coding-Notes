@@ -25,8 +25,6 @@ Middleware's core purpose:
 1. Run logic **before** the request reaches the view (identity checks, permission checks, request logging).
 2. Run logic **before** the response reaches the client (format wrapping, etc.).
 
----
-
 ## 9.1 Built-in Middleware
 
 Django ships with several middleware classes enabled by default in `MIDDLEWARE`:
@@ -43,7 +41,6 @@ MIDDLEWARE = [
 ]
 ```
 
----
 
 ## 9.2 Writing Custom Middleware
 
@@ -70,8 +67,6 @@ There are five hooks you can override:
 | `process_view` | Understand | After `process_request`, before the view |
 | `process_template_response` | Understand | After the view returns a template response |
 | `process_exception` | Understand | When a view raises an exception |
-
----
 
 ## 9.3 process_request and process_response
 
@@ -115,7 +110,6 @@ def process_request(self, request):
     return None
 ```
 
----
 
 ## 9.4 Execution Order with Multiple Middleware
 
@@ -141,7 +135,6 @@ request  -> M1.process_request -> M2.process_request -> ... -> view
 response <- M1.process_response <- M2.process_response <- ... <- view
 ```
 
----
 
 ## 9.5 Other Hooks (Understand)
 
@@ -163,7 +156,6 @@ def process_exception(self, request, exception):
     return HttpResponse("An exception occurred")
 ```
 
----
 
 ## 9.6 CSRF Protection
 
@@ -181,7 +173,6 @@ With CSRF enabled, only requests carrying the correct `{% csrf_token %}` pass th
 </form>
 ```
 
----
 
 ## 9.7 Best Practices
 

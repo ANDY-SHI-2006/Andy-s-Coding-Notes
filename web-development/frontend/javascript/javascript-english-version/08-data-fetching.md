@@ -165,8 +165,6 @@ Key points:
 - Use a single helper for GET and POST so the `readyState`/`status` check is reused.
 - Re-render after POST instead of manually inserting one row.
 
----
-
 ## 8.2 The Fetch API
 
 A modern, promise-based API for making HTTP requests.
@@ -233,8 +231,6 @@ fetch("/api/data")
         // return response.blob();  // Parse as binary blob
     });
 ```
-
----
 
 ## 8.3 async / await
 
@@ -305,8 +301,6 @@ try {
 }
 ```
 
----
-
 ## 8.4 FormData
 
 For sending forms with file uploads or multipart data.
@@ -368,8 +362,6 @@ for (let file of input.files) {
 xhr.send(fd);
 ```
 
----
-
 ## 8.5 JSON Server Communication Pattern
 
 Typical CRUD operations against a REST API:
@@ -412,8 +404,6 @@ async function deleteItem(id) {
 }
 ```
 
----
-
 ## 8.6 Best Practices
 
 | Do | Don't |
@@ -446,8 +436,6 @@ async function deleteItem(id) {
 | `Location` | Redirect target (used with 3xx status codes) |
 
 You can inspect request/response headers in the browser's Network tab.
-
----
 
 ## 8.7 Axios
 
@@ -487,8 +475,6 @@ axios.defaults.headers.common["Authorization"] = "Bearer token";
 
 > **Tip:** Axios responses expose `data`, `status`, `statusText`, `headers`, and `config`. Most of the time you only need `response.data`.
 
----
-
 ## 8.8 Same-Origin Policy and CORS
 
 Browsers enforce the **same-origin policy**: a page may only read responses from the same origin unless the server explicitly allows it.
@@ -513,8 +499,6 @@ Solutions:
 3. **Server-side forwarding** — your own backend calls the external API, then returns the data to the frontend.
 
 > Preflight `OPTIONS` requests are sent automatically by the browser for non-simple requests (custom headers, methods other than GET/HEAD/POST, or certain content types).
-
----
 
 **Summary Mnemonic**
 - **Fetch** = "Request, check ok, parse, handle"

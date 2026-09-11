@@ -4,8 +4,6 @@
 
 Django's form system handles HTML form generation, data validation, and error presentation. It eliminates manual validation code and ensures consistent, secure user input processing.
 
----
-
 ## 10.1 Form Basics
 
 A Django form is a Python class that subclasses `django.forms.Form` or `django.forms.ModelForm`.
@@ -47,8 +45,6 @@ def contact(request):
 ```
 
 > **Pattern:** Instantiate form without data for GET, with `request.POST` for POST.
-
----
 
 ## 10.2 ModelForm
 
@@ -104,8 +100,6 @@ def article_update(request, pk):
 
 > **Key:** Pass `instance=article` to bind the form to an existing object for updates.
 
----
-
 ## 10.3 Form Validation
 
 ### 10.3.1 Field-Level Validation
@@ -155,8 +149,6 @@ Define `clean()` for cross-field validation:
 3. `clean_<field>()` method
 4. `clean()` method (form-level)
 
----
-
 ## 10.4 Common Form Fields
 
 | Field | HTML Widget | Usage |
@@ -176,8 +168,6 @@ Define `clean()` for cross-field validation:
 | `MultipleChoiceField` | `<select multiple>` | Multiple selection |
 | `ModelChoiceField` | `<select>` | Foreign key dropdown |
 | `ModelMultipleChoiceField` | `<select multiple>` | Many-to-many selector |
-
----
 
 ## 10.5 File Uploads
 
@@ -228,8 +218,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 ```
 
----
-
 ## 10.6 Formsets
 
 Formsets manage multiple instances of the same form on one page.
@@ -261,8 +249,6 @@ from django.forms import modelformset_factory
 ArticleModelFormSet = modelformset_factory(Article, fields=['title', 'status'], extra=1)
 ```
 
----
-
 ## 10.7 Rendering Forms in Templates
 
 | Method | Output | Usage |
@@ -292,8 +278,6 @@ ArticleModelFormSet = modelformset_factory(Article, fields=['title', 'status'], 
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 ```
-
----
 
 ## 10.8 Best Practices
 
