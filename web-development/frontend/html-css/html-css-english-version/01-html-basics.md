@@ -84,12 +84,37 @@ HTML tags are classified in multiple ways:
 
 > See the CSS chapter for the full rules on margins and padding.
 
+The example below adds borders and background colors to the three tag types so you can compare their display behavior at a glance:
+
+```html
+<style>
+    /* Borders and background colors only make the box boundaries visible */
+    div, p, h2 { border: 2px solid #60a5fa; background: #dbeafe; padding: 4px; }
+    span, a, strong { border: 2px solid #f59e0b; background: #fef3c7; padding: 2px; }
+    input { border: 2px solid #10b981; background: #d1fae5; padding: 2px; }
+</style>
+<div>&lt;div&gt; — a block-level box</div>
+<p>&lt;p&gt; — another block-level box</p>
+<h2>&lt;h2&gt; — block-level heading</h2>
+<span>&lt;span&gt;</span> <a href="#">&lt;a&gt;</a> <strong>&lt;strong&gt;</strong> <input type="text" value="input">
+```
+![[ch1-display-types.png]]
+
+(A little CSS is added to make the effect easier to see; the style details are covered in Chapter 2 — just copy it for now.)
+
 ### 1.1.2.3 By Relationship
 
 | Relationship | Description | Example |
 |-------------|-------------|---------|
 | **Parent-Child** | One tag is nested inside another | `<ul>` is parent of `<li>` |
 | **Sibling** | Tags at the same nesting level | Two `<li>` inside the same `<ul>` |
+
+```html
+<ul>            <!-- Parent element: contains the two li below -->
+  <li>HTML</li> <!-- Child element; sibling of the li below -->
+  <li>CSS</li>  <!-- Child element; sibling of the li above -->
+</ul>
+```
 
 ### 1.1.2.4 Attribute Syntax
 
@@ -173,7 +198,10 @@ A generic inline container used to style a portion of text within a larger block
 <h4>Heading Level 4</h4>
 <h5>Heading Level 5</h5>
 <h6>Heading Level 6</h6>
+<p>This is <strong>important</strong>, <em>emphasized</em>, <del>deleted</del>, and <ins>inserted</ins> text.</p>
+<p>H<sub>2</sub>O and E = mc<sup>2</sup></p>
 ```
+![[ch1-text-tags.png]]
 
 > **Best Practice:** Use only one `<h1>` per page. Headings should follow a logical hierarchy (`h1` → `h2` → `h3`) without skipping levels.
 
@@ -254,9 +282,19 @@ Browsers collapse consecutive spaces, tabs, and line breaks into a single space.
 
 **`<img>` — Image**
 
+Here is how links and an image render on the page (`photo.svg` is a local placeholder — swap in your own image file):
+
 ```html
-<img src="photo.jpg" alt="A beautiful landscape" width="300" title="Landscape">
+<!-- Several links flow along one line -->
+<a href="https://www.example.com">Visit Example</a>
+<a href="#section1">Jump to Section 1</a>
+<a href="#">Empty Link</a>
+
+<!-- An image is also an inline-block element; use <br> to start a new line -->
+<br>
+<img src="photo.svg" alt="A beautiful landscape" width="300" title="Landscape">
 ```
+![[ch1-links-media.png]]
 
 | Attribute | Purpose |
 |-----------|---------|
@@ -269,42 +307,22 @@ Browsers collapse consecutive spaces, tabs, and line breaks into a single space.
 
 ### 1.2.4 List Tags
 
-**Unordered list:**
+Here is how the four list types render (including a nested example; `start="4"` begins numbering at 4):
 
 ```html
+<!-- Unordered list -->
 <ul>
     <li>Apple</li>
     <li>Banana</li>
-    <li>Cherry</li>
 </ul>
-```
 
-**Ordered list:**
-
-```html
-<ol>
-    <li>First step</li>
-    <li>Second step</li>
-    <li>Third step</li>
-</ol>
-```
-
-**Starting number**
-
-Use the `start` attribute to begin counting from a specific number:
-
-```html
+<!-- Ordered list -->
 <ol start="4">
     <li>Fourth item</li>
     <li>Fifth item</li>
 </ol>
-```
 
-**Nested lists**
-
-A list item can contain another complete list:
-
-```html
+<!-- Nested list: an li can contain another complete list -->
 <ul>
     <li>Fruits
         <ul>
@@ -314,11 +332,8 @@ A list item can contain another complete list:
     </li>
     <li>Vegetables</li>
 </ul>
-```
 
-**Description list (custom list):**
-
-```html
+<!-- Description list -->
 <dl>
     <dt>HTML</dt>
     <dd>HyperText Markup Language, used to create web page structure.</dd>
@@ -326,6 +341,7 @@ A list item can contain another complete list:
     <dd>Cascading Style Sheets, used to style HTML documents.</dd>
 </dl>
 ```
+![[ch1-lists.png]]
 
 | Tag | Meaning |
 |-----|---------|
@@ -360,13 +376,22 @@ Some characters have special meaning in HTML and must be escaped using entities.
 
 HTML5 provides native `<video>` and `<audio>` elements.
 
-**Video:**
+**Demo:**
 
 ```html
-<video src="movie.mp4" controls width="640" height="360" poster="cover.jpg" muted>
+<!-- Video player -->
+<video src="movie.mp4" controls width="480" poster="cover.jpg" muted>
     Your browser does not support the video element.
 </video>
+<br>
+<!-- Audio player -->
+<audio src="music.mp3" controls loop>
+    Your browser does not support the audio element.
+</audio>
 ```
+![[ch1-audio-video.png]]
+
+**Common `<video>` attributes:**
 
 | Attribute | Purpose |
 |-----------|---------|
@@ -378,13 +403,7 @@ HTML5 provides native `<video>` and `<audio>` elements.
 | `poster` | Cover image shown before playback |
 | `width` / `height` | Player dimensions |
 
-**Audio:**
-
-```html
-<audio src="music.mp3" controls loop>
-    Your browser does not support the audio element.
-</audio>
-```
+**`<audio>`:** Works much like `<video>`; commonly uses `src`, `controls`, `loop`, and `autoplay`.
 
 > **Note:** Modern browsers block autoplay with sound. Use `autoplay muted` together if you need a video to start automatically.
 
@@ -393,8 +412,9 @@ HTML5 provides native `<video>` and `<audio>` elements.
 The `<iframe>` element embeds another HTML page inside the current page.
 
 ```html
-<iframe src="https://example.com" width="600" height="400" title="Embedded page"></iframe>
+<iframe src="embedded-page.html" width="600" height="400" title="Embedded page"></iframe>
 ```
+![[ch1-iframe.png]]
 
 | Attribute | Purpose |
 |-----------|---------|
@@ -429,8 +449,14 @@ Tables are used to display tabular data (not for page layout — use CSS for lay
         <td>Bob</td>
         <td>19</td>
     </tr>
+    <tr>
+        <td>003</td>
+        <td>Carol</td>
+        <td>20</td>
+    </tr>
 </table>
 ```
+![[ch1-table-basic.png]]
 
 | Tag | Meaning |
 |-----|---------|
@@ -444,6 +470,12 @@ Tables are used to display tabular data (not for page layout — use CSS for lay
 For better structure and styling, tables can be divided into sections:
 
 ```html
+<style>
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #999; padding: 6px 12px; }
+    thead { background: #dbeafe; }
+    tfoot { background: #fef3c7; }
+</style>
 <table>
     <caption>Student Information</caption>
     <thead>
@@ -459,14 +491,20 @@ For better structure and styling, tables can be divided into sections:
             <td>Alice</td>
             <td>18</td>
         </tr>
+        <tr>
+            <td>002</td>
+            <td>Bob</td>
+            <td>19</td>
+        </tr>
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="3">Total: 1 student</td>
+            <td colspan="3">Total: 2 students</td>
         </tr>
     </tfoot>
 </table>
 ```
+![[ch1-table-sections.png]]
 
 | Tag | Purpose |
 |-----|---------|
@@ -477,27 +515,33 @@ For better structure and styling, tables can be divided into sections:
 
 ### 1.3.3 Cell Merging
 
-**Horizontal merge (spanning columns):**
+`colspan` makes a cell span multiple columns horizontally, and `rowspan` makes it span multiple rows vertically:
 
 ```html
-<tr>
-    <td colspan="2">This cell spans 2 columns</td>
-    <td>Normal cell</td>
-</tr>
+<style>
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #999; padding: 6px 12px; }
+</style>
+<table>
+    <!-- Row 1: the first cell spans 2 columns -->
+    <tr>
+        <td colspan="2">This cell spans 2 columns</td>
+        <td>Normal cell</td>
+    </tr>
+    <!-- Rows 2-3: the first cell spans 2 rows -->
+    <tr>
+        <td rowspan="2">This cell spans 2 rows</td>
+        <td>Row 2, Col 2</td>
+        <td>Row 2, Col 3</td>
+    </tr>
+    <tr>
+        <!-- First column is occupied by the rowspan above -->
+        <td>Row 3, Col 2</td>
+        <td>Row 3, Col 3</td>
+    </tr>
+</table>
 ```
-
-**Vertical merge (spanning rows):**
-
-```html
-<tr>
-    <td rowspan="2">This cell spans 2 rows</td>
-    <td>Row 1, Col 2</td>
-</tr>
-<tr>
-    <!-- First column is occupied by the rowspan above -->
-    <td>Row 2, Col 2</td>
-</tr>
-```
+![[ch1-table-merge.png]]
 
 | Attribute | Effect |
 |-----------|--------|
@@ -519,6 +563,19 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
 | `<footer>` | Footer for a page or section |
 
 ```html
+<style>
+    /* Outlines and light background colors only make the page structure visible */
+    body { font-family: sans-serif; }
+    header, nav, main, article, aside, footer {
+        margin: 6px 0; padding: 10px; border: 2px solid #94a3b8; border-radius: 6px;
+    }
+    header { background: #dbeafe; }
+    nav { background: #e0e7ff; }
+    main { display: flex; gap: 10px; background: #f1f5f9; }
+    article { flex: 2; background: #dcfce7; }
+    aside { flex: 1; background: #fef9c3; }
+    footer { background: #fee2e2; }
+</style>
 <body>
     <header>Site header</header>
     <nav>Main navigation</nav>
@@ -529,6 +586,7 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
     <footer>Copyright info</footer>
 </body>
 ```
+![[ch1-semantic-layout.png]]
 
 > **Note:** `<main>` must be unique per document and should not be nested inside `<article>`, `<aside>`, `<footer>`, `<header>`, or `<nav>`.
 

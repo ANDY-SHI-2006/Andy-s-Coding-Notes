@@ -84,12 +84,37 @@ HTML 标签有多种分类方式：
 
 > 内外边距的详细规则见 CSS 章节。
 
+下面的例子给三类标签加上边框和背景色，直观对比它们的显示行为：
+
+```html
+<style>
+    /* 边框和背景色只为看清盒子的边界 */
+    div, p, h2 { border: 2px solid #60a5fa; background: #dbeafe; padding: 4px; }
+    span, a, strong { border: 2px solid #f59e0b; background: #fef3c7; padding: 2px; }
+    input { border: 2px solid #10b981; background: #d1fae5; padding: 2px; }
+</style>
+<div>&lt;div&gt; — a block-level box</div>
+<p>&lt;p&gt; — another block-level box</p>
+<h2>&lt;h2&gt; — block-level heading</h2>
+<span>&lt;span&gt;</span> <a href="#">&lt;a&gt;</a> <strong>&lt;strong&gt;</strong> <input type="text" value="input">
+```
+![[ch1-display-types.png]]
+
+（代码里加了一点样式让效果更直观，样式细节第 2 章再讲，现在照抄即可）
+
 ### 1.1.2.3 按关系分类
 
 | 关系 | 说明 | 示例 |
 |-------------|-------------|---------|
 | **父子（Parent-Child）** | 一个标签嵌套在另一个标签内部 | `<ul>` 是 `<li>` 的父元素 |
 | **兄弟（Sibling）** | 同一嵌套层级上的标签 | 同一 `<ul>` 中的两个 `<li>` |
+
+```html
+<ul>            <!-- 父元素：包含下面两个 li -->
+  <li>HTML</li> <!-- 子元素；与下面的 li 互为兄弟元素 -->
+  <li>CSS</li>  <!-- 子元素；与上面的 li 互为兄弟元素 -->
+</ul>
+```
 
 ### 1.1.2.4 属性书写规范
 
@@ -173,7 +198,10 @@ HTML 标签有多种分类方式：
 <h4>Heading Level 4</h4>
 <h5>Heading Level 5</h5>
 <h6>Heading Level 6</h6>
+<p>This is <strong>important</strong>, <em>emphasized</em>, <del>deleted</del>, and <ins>inserted</ins> text.</p>
+<p>H<sub>2</sub>O and E = mc<sup>2</sup></p>
 ```
+![[ch1-text-tags.png]]
 
 > **最佳实践：** 每个页面只使用一个 `<h1>`。标题应遵循逻辑层级（`h1` → `h2` → `h3`），不要跳级。
 
@@ -254,9 +282,19 @@ HTML 标签有多种分类方式：
 
 **`<img>` — Image（图像）**
 
+链接和图片渲染到页面上的效果如下（`photo.svg` 是本地占位图，可换成自己的图片文件）：
+
 ```html
-<img src="photo.jpg" alt="A beautiful landscape" width="300" title="Landscape">
+<!-- 多个链接在一行内连续排开 -->
+<a href="https://www.example.com">Visit Example</a>
+<a href="#section1">Jump to Section 1</a>
+<a href="#">Empty Link</a>
+
+<!-- 图片也是行内块元素，用 <br> 让它另起一行 -->
+<br>
+<img src="photo.svg" alt="A beautiful landscape" width="300" title="Landscape">
 ```
+![[ch1-links-media.png]]
 
 | 属性 | 说明 |
 |-----------|---------|
@@ -269,42 +307,22 @@ HTML 标签有多种分类方式：
 
 ### 1.2.4 列表标签
 
-**无序列表：**
+四种列表的效果如下（含嵌套示例，`start="4"` 表示从 4 开始编号）：
 
 ```html
+<!-- 无序列表 -->
 <ul>
     <li>Apple</li>
     <li>Banana</li>
-    <li>Cherry</li>
 </ul>
-```
 
-**有序列表：**
-
-```html
-<ol>
-    <li>First step</li>
-    <li>Second step</li>
-    <li>Third step</li>
-</ol>
-```
-
-**起始编号**
-
-使用 `start` 属性从指定数字开始计数：
-
-```html
+<!-- 有序列表 -->
 <ol start="4">
     <li>Fourth item</li>
     <li>Fifth item</li>
 </ol>
-```
 
-**列表嵌套**
-
-列表项内可以嵌套另一个完整的列表：
-
-```html
+<!-- 嵌套列表：li 内可以再嵌套一个完整列表 -->
 <ul>
     <li>Fruits
         <ul>
@@ -314,11 +332,8 @@ HTML 标签有多种分类方式：
     </li>
     <li>Vegetables</li>
 </ul>
-```
 
-**描述列表（自定义列表）：**
-
-```html
+<!-- 描述列表 -->
 <dl>
     <dt>HTML</dt>
     <dd>HyperText Markup Language, used to create web page structure.</dd>
@@ -326,6 +341,7 @@ HTML 标签有多种分类方式：
     <dd>Cascading Style Sheets, used to style HTML documents.</dd>
 </dl>
 ```
+![[ch1-lists.png]]
 
 | 标签 | 含义 |
 |-----|---------|
@@ -360,13 +376,22 @@ HTML 中某些字符具有特殊含义，必须使用实体（entity）进行转
 
 HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 
-**视频：**
+**效果示例：**
 
 ```html
-<video src="movie.mp4" controls width="640" height="360" poster="cover.jpg" muted>
+<!-- 视频播放器 -->
+<video src="movie.mp4" controls width="480" poster="cover.jpg" muted>
     Your browser does not support the video element.
 </video>
+<br>
+<!-- 音频播放器 -->
+<audio src="music.mp3" controls loop>
+    Your browser does not support the audio element.
+</audio>
 ```
+![[ch1-audio-video.png]]
+
+**`<video>` 常用属性：**
 
 | 属性 | 说明 |
 |-----------|---------|
@@ -378,13 +403,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 | `poster` | 播放前显示的封面图 |
 | `width` / `height` | 播放器尺寸 |
 
-**音频：**
-
-```html
-<audio src="music.mp3" controls loop>
-    Your browser does not support the audio element.
-</audio>
-```
+**`<audio>`：** 用法与 `<video>` 类似，常用 `src`、`controls`、`loop`、`autoplay` 等属性。
 
 > **注意：** 现代浏览器通常会阻止带声音的自动播放。如需自动播放视频，请同时使用 `autoplay muted`。
 
@@ -393,8 +412,9 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 `<iframe>` 标签可在当前页面中嵌入另一个 HTML 页面。
 
 ```html
-<iframe src="https://example.com" width="600" height="400" title="Embedded page"></iframe>
+<iframe src="embedded-page.html" width="600" height="400" title="Embedded page"></iframe>
 ```
+![[ch1-iframe.png]]
 
 | 属性 | 说明 |
 |-----------|---------|
@@ -429,8 +449,14 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
         <td>Bob</td>
         <td>19</td>
     </tr>
+    <tr>
+        <td>003</td>
+        <td>Carol</td>
+        <td>20</td>
+    </tr>
 </table>
 ```
+![[ch1-table-basic.png]]
 
 | 标签 | 含义 |
 |-----|---------|
@@ -444,6 +470,12 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 为了获得更好的结构和样式，表格可以划分为多个区域：
 
 ```html
+<style>
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #999; padding: 6px 12px; }
+    thead { background: #dbeafe; }
+    tfoot { background: #fef3c7; }
+</style>
 <table>
     <caption>Student Information</caption>
     <thead>
@@ -459,14 +491,20 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
             <td>Alice</td>
             <td>18</td>
         </tr>
+        <tr>
+            <td>002</td>
+            <td>Bob</td>
+            <td>19</td>
+        </tr>
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="3">Total: 1 student</td>
+            <td colspan="3">Total: 2 students</td>
         </tr>
     </tfoot>
 </table>
 ```
+![[ch1-table-sections.png]]
 
 | 标签 | 作用 |
 |-----|---------|
@@ -477,27 +515,33 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 
 ### 1.3.3 单元格合并
 
-**横向合并（跨列）：**
+`colspan` 使单元格横向跨多列，`rowspan` 使单元格纵向跨多行，效果如下：
 
 ```html
-<tr>
-    <td colspan="2">This cell spans 2 columns</td>
-    <td>Normal cell</td>
-</tr>
+<style>
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #999; padding: 6px 12px; }
+</style>
+<table>
+    <!-- 第一行：第一个单元格横向跨 2 列 -->
+    <tr>
+        <td colspan="2">This cell spans 2 columns</td>
+        <td>Normal cell</td>
+    </tr>
+    <!-- 第二、三行：第一个单元格纵向跨 2 行 -->
+    <tr>
+        <td rowspan="2">This cell spans 2 rows</td>
+        <td>Row 2, Col 2</td>
+        <td>Row 2, Col 3</td>
+    </tr>
+    <tr>
+        <!-- 第一列已被上面的 rowspan 占据 -->
+        <td>Row 3, Col 2</td>
+        <td>Row 3, Col 3</td>
+    </tr>
+</table>
 ```
-
-**纵向合并（跨行）：**
-
-```html
-<tr>
-    <td rowspan="2">This cell spans 2 rows</td>
-    <td>Row 1, Col 2</td>
-</tr>
-<tr>
-    <!-- 第一列已被上面的 rowspan 占据 -->
-    <td>Row 2, Col 2</td>
-</tr>
-```
+![[ch1-table-merge.png]]
 
 | 属性 | 效果 |
 |-----------|--------|
@@ -519,6 +563,19 @@ HTML5 引入了语义化元素，比通用 `<div>` 更清晰地描述页面结�
 | `<footer>` | 页面或区块的底部 |
 
 ```html
+<style>
+    /* 轮廓和浅色背景只为看清页面结构 */
+    body { font-family: sans-serif; }
+    header, nav, main, article, aside, footer {
+        margin: 6px 0; padding: 10px; border: 2px solid #94a3b8; border-radius: 6px;
+    }
+    header { background: #dbeafe; }
+    nav { background: #e0e7ff; }
+    main { display: flex; gap: 10px; background: #f1f5f9; }
+    article { flex: 2; background: #dcfce7; }
+    aside { flex: 1; background: #fef9c3; }
+    footer { background: #fee2e2; }
+</style>
 <body>
     <header>Site header</header>
     <nav>Main navigation</nav>
@@ -529,6 +586,7 @@ HTML5 引入了语义化元素，比通用 `<div>` 更清晰地描述页面结�
     <footer>Copyright info</footer>
 </body>
 ```
+![[ch1-semantic-layout.png]]
 
 > **注意：** 每个文档只能有一个 `<main>`，且 `<main>` 不能嵌套在 `<article>`、`<aside>`、`<footer>`、`<header>` 或 `<nav>` 内部。
 
