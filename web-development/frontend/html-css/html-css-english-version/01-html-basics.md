@@ -48,7 +48,11 @@ Beyond the skeleton, a few common optional additions must be written manually (`
 | `<meta name="keywords">` | Lists keywords relevant to the page |
 | `<link rel="icon">` | Browser tab icon (favicon) |
 
-> **Root tag:** `<html>` is the root element of the entire page; all tags should be nested inside it. However, browsers are very lenient with HTML — even if content is accidentally written outside `<html>`, the browser usually corrects it and renders it normally. Still, for valid, clear markup, keep all tags inside `<html>`.
+**Root tag rules:**
+
+- **The spec**: `<html>` is the root element of the entire page; all tags should be nested inside it.
+- **Leniency**: content accidentally written outside `<html>` is usually auto-corrected and rendered normally by the browser.
+- **Bottom line**: browser leniency is no excuse for sloppy markup — keep all tags inside `<html>` for valid, clear structure.
 
 ### 1.1.2 Tag Categories and Attributes
 
@@ -209,7 +213,7 @@ A generic inline container used to style a portion of text within a larger block
 
 ### 1.2.2 Text Tags
 
-#### 1.2.2.1 Heading Tags
+#### 1.2.2.1 `<h1>`–`<h6>` — Headings
 
 ```html
 <h1>Heading Level 1</h1>
@@ -223,9 +227,13 @@ A generic inline container used to style a portion of text within a larger block
 ```
 ![[ch1-text-tags.png]]
 
-> **Best Practice:** Use only one `<h1>` per page. Headings should follow a logical hierarchy (`h1` → `h2` → `h3`) without skipping levels. Multiple `<h1>` elements are technically allowed and browsers render them normally — but they confuse screen-reader navigation and dilute the page's topic for search engines, so the convention is one `<h1>` per page.
+**Best practices:**
 
-#### 1.2.2.2 Paragraph Tag
+- **One `<h1>` per page**: it is the page's main topic; all other headings start from `<h2>`.
+- **Keep the hierarchy logical**: follow `h1` → `h2` → `h3` without skipping levels.
+- **Multiple `<h1>` are valid but not recommended**: browsers render them normally, but they confuse screen-reader navigation and dilute the page's topic for search engines — hence the one-`<h1>` convention.
+
+#### 1.2.2.2 `<p>` — Paragraph
 
 `<p>` is the paragraph tag, used to wrap a block of text.
 
@@ -238,9 +246,12 @@ Two default behaviors to know:
 - **Automatic wrapping**: text wraps automatically to fit the browser window width — no manual line breaks needed.
 - **Spacing between paragraphs**: adjacent paragraphs have default top/bottom margins, leaving a visible gap (from the browser's default stylesheet; see the CSS chapter).
 
-> **Note:** Do not nest block-level elements (such as `<div>`, `<h1>`–`<h6>`, or another `<p>`) inside a `<p>`. Browsers will auto-close the paragraph, causing unexpected rendering. Use `<div>` or `<span>` for nested text containers instead. This auto-correction applies only to a few specific tags like `<p>`; other invalid nesting (such as a `<p>` inside a `<span>`) is not corrected and renders as written — but it is still invalid HTML and should be avoided.
+**Nesting notes:**
 
-#### 1.2.2.3 Text Formatting Tags
+- **Never nest block-level elements**: a `<p>` cannot contain `<div>`, `<h1>`~`<h6>`, or another `<p>` — the browser auto-closes the paragraph and the layout breaks; use `<div>` or `<span>` when you need a text container.
+- **Auto-correction is a special case**: it applies only to a few specific tags like `<p>`; other invalid nesting (such as a `<p>` inside a `<span>`) is not corrected and renders as written — but it is still invalid HTML and should be avoided.
+
+#### 1.2.2.3 `<strong>`, `<em>` etc. — Text Formatting
 
 | Tag | Visual Effect | Semantic Meaning |
 |-----|---------------|------------------|
@@ -277,7 +288,7 @@ are ignored too.</p>
 
 ![[ch1-whitespace-collapse.png]]
 
-#### 1.2.2.5 Line Break and Horizontal Rule
+#### 1.2.2.5 `<br>` and `<hr>` — Line Break and Horizontal Rule
 
 ```html
 <p>Line one<br>Line two</p>
@@ -332,14 +343,18 @@ Here is how links and an image render on the page (`photo.svg` is a local placeh
 
 | Attribute | Purpose |
 |-----------|---------|
-| `src` | Path to the image file |
-| `alt` | Alternative text for accessibility and when image fails to load |
+| `src` | Image source path — **required**, the image will not show without it; can be a local path (e.g. `../img/1.jpg`) or a network URL |
+| `alt` | Alternative text — **required by the spec** (validators flag it as an error, though browsers render fine without it); shown when the image fails to load and read aloud by screen readers |
 | `title` | Tooltip shown on hover |
 | `width` / `height` | Dimensions in pixels |
 
-> **Best Practice:** Always include `alt` text. Use empty `alt=""` for decorative images. Setting only `width` or only `height` scales the image proportionally; setting both to mismatched ratios distorts it. Images referenced by network URLs may break when the link dies — prefer local images.
+**Best practices:**
 
-### 1.2.4 List Tags
+- **Always include `alt`**: the fallback text shown when the image fails to load; use empty `alt=""` for decorative images.
+- **Set only one dimension**: setting only `width` or only `height` scales the image proportionally; setting both to mismatched ratios distorts it.
+- **Network URLs are risky**: externally hosted images may break when the link dies — prefer local images.
+
+### 1.2.4 `<ul>`, `<ol>`, `<dl>` — List Tags
 
 Here is how the four list types render (including a nested example; `start="4"` begins numbering at 4):
 
@@ -383,7 +398,11 @@ Here is how the four list types render (including a nested example; `start="4"` 
 | `<dt>` | Description Term |
 | `<dd>` | Description Details |
 
-> **Nesting rules:** `<ul>` / `<ol>` may only contain `<li>` directly (putting `<p>` or other tags directly inside is not recommended); an `<li>` can contain any element, including a nested complete list. Likewise, `<dl>` may only contain `<dt>` and `<dd>`, but both may appear multiple times.
+**Nesting rules:**
+
+- **`<ul>` / `<ol>`**: may only contain `<li>` directly (putting `<p>` or other tags directly inside is not recommended).
+- **`<li>`**: may contain any element, including a complete nested list.
+- **`<dl>`**: may only contain `<dt>` and `<dd>` directly, and both may appear multiple times.
 
 ### 1.2.5 Character Entities
 
@@ -406,7 +425,7 @@ Some characters have special meaning in HTML and must be escaped using entities.
 <p>Copyright &copy; 2024</p>
 ```
 
-### 1.2.6 Audio and Video Tags
+### 1.2.6 `<audio>` and `<video>` — Audio and Video
 
 HTML5 provides native `<video>` and `<audio>` elements.
 
@@ -464,7 +483,7 @@ The `<iframe>` element embeds another HTML page inside the current page.
 
 Tables are used to display tabular data (not for page layout — use CSS for layout).
 
-### 1.3.1 Basic Table Structure
+### 1.3.1 `<table>` — Basic Table Structure
 
 ```html
 <table border="1">
@@ -499,7 +518,7 @@ Tables are used to display tabular data (not for page layout — use CSS for lay
 | `<th>` | Table Header cell (bold and centered by default) |
 | `<td>` | Table Data cell |
 
-### 1.3.2 Table Sections
+### 1.3.2 `<thead>`, `<tbody>`, `<tfoot>` — Table Sections
 
 For better structure and styling, tables can be divided into sections:
 
@@ -547,7 +566,7 @@ For better structure and styling, tables can be divided into sections:
 | `<tbody>` | Body section (data rows) |
 | `<tfoot>` | Footer section (summaries) |
 
-### 1.3.3 Cell Merging
+### 1.3.3 `colspan` and `rowspan` — Cell Merging
 
 `colspan` makes a cell span multiple columns horizontally, and `rowspan` makes it span multiple rows vertically:
 
