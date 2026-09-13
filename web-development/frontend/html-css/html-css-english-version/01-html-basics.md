@@ -370,17 +370,32 @@ are ignored too.</p>
 
 ![[ch1-whitespace-collapse.png]]
 
-#### 1.2.2.5 `<br>` and `<hr>` — Line Break and Horizontal Rule
+#### 1.2.2.5 `<br>` — Line Break
+
+- **What it does**: forces a line break inside a paragraph **without** adding paragraph spacing — unlike splitting into two `<p>` elements (see paragraph spacing in 1.2.2.2).
+- **A void element**: a single tag only (see 1.1.2.1).
+- **Pitfall**: do not chain multiple `<br>` to create vertical space — spacing is CSS's job (margin/padding, see Chapter 3).
+- **Typical use**: text where the line break itself carries meaning, such as addresses and poems.
 
 ```html
 <p>Line one<br>Line two</p>
+```
+
+![[ch1-br.png]]
+
+#### 1.2.2.6 `<hr>` — Horizontal Rule
+
+- **A void element**, rendered as a gray horizontal line by default (style it with CSS).
+- **It has semantics**: in HTML5 it marks a **thematic break** (a paragraph-level change of topic), not mere decoration — for purely decorative lines, a CSS border is the better tool.
+
+```html
 <hr>
 <p>Content after a horizontal line.</p>
 ```
 
-![[ch1-br-hr.png]]
+![[ch1-hr.png]]
 
-#### 1.2.2.6 `<pre>` and `<code>` — Preformatted Text and Code
+#### 1.2.2.7 `<pre>` and `<code>` — Preformatted Text and Code
 
 - **`<pre>` (preformatted text)**: preserves all spaces and line breaks from the source — **immune to whitespace collapsing** (see 1.2.2.4). Commonly used for code blocks, poems, or any text where formatting must be kept.
 - **`<code>` (inline code)**: renders a short piece of code in a monospace font; usually nested inside `<pre>` or a paragraph.
