@@ -112,6 +112,7 @@ The example below adds borders and background colors to the three tag types so y
 <h2>&lt;h2&gt; — block-level heading</h2>
 <span>&lt;span&gt;</span> <a href="#">&lt;a&gt;</a> <strong>&lt;strong&gt;</strong> <input type="text" value="input">
 ```
+
 ![[ch1-display-types.png]]
 
 (A little CSS is added to make the effect easier to see; the style details are covered in Chapter 2 — just copy it for now.)
@@ -230,6 +231,14 @@ HTML has no single official style authority (unlike Python's PEP8). The industry
 - **Formatting goes to the machine**: enable Format On Save in VS Code (see 1.1.4) and `Ctrl+S` tidies everything automatically.
 - **Validity goes to the validator**: paste your code into the W3C validator (validator.w3.org) — it flags duplicate ids, invalid nesting, and more.
 
+### 1.1.6 Browser Developer Tools (DevTools)
+
+Writing HTML goes hand in hand with the browser's built-in developer tools: press `F12` on any page (or right-click → Inspect) to open them.
+
+- **Elements panel**: inspect the DOM as the browser actually parsed it — including the result of its auto-corrections (like split-apart invalid nesting). The go-to tool for debugging structure.
+- **Pick an element**: use the arrow tool at the panel's top-left to click any element on the page and jump straight to its code and styles.
+- **Console panel**: view error messages and run JavaScript (covered in the JS chapters).
+
 ## 1.2 Common HTML Tags
 
 ### 1.2.1 Container Tags
@@ -284,6 +293,7 @@ A generic inline container used to style a portion of text within a larger block
 <h5>Heading Level 5</h5>
 <h6>Heading Level 6</h6>
 ```
+
 ![[ch1-text-tags.png]]
 
 **Best practices:**
@@ -452,19 +462,17 @@ These come from the browser's default stylesheet — no need to worry about them
 
 #### 1.2.3.2 `<img>` — Image
 
-Here is how links and an image render on the page (`photo.svg` is a local placeholder — swap in your own image file):
+Here is how images render on the page (`photo.svg` is a local placeholder — swap in your own file; the second one deliberately uses a wrong path to demonstrate the `alt` fallback):
 
 ```html
-<!-- Several links flow along one line -->
-<a href="https://www.example.com">Visit Example</a>
-<a href="#section1">Jump to Section 1</a>
-<a href="#">Empty Link</a>
+<!-- An image that loads fine -->
+<img src="photo.svg" alt="A beautiful landscape" width="300">
 
-<!-- An image is also an inline-block element; use <br> to start a new line -->
-<br>
-<img src="photo.svg" alt="A beautiful landscape" width="300" title="Landscape">
+<!-- Deliberately wrong path: the alt text shows when loading fails -->
+<img src="not-exist.jpg" alt="Image failed to load" width="300">
 ```
-![[ch1-links-media.png]]
+
+![[ch1-img.png]]
 
 | Attribute | Purpose |
 |-----------|---------|
@@ -650,6 +658,7 @@ HTML5 provides native `<video>` and `<audio>` elements.
     Your browser does not support the audio element.
 </audio>
 ```
+
 ![[ch1-audio-video.png]]
 
 **Common `<video>` attributes:**
@@ -668,13 +677,14 @@ HTML5 provides native `<video>` and `<audio>` elements.
 
 > **Note:** Modern browsers block autoplay with sound. Use `autoplay muted` together if you need a video to start automatically.
 
-### 1.2.7 Embedding Pages with `<iframe>`
+### 1.2.7 `<iframe>` — Inline Frame (Embedding Pages)
 
 The `<iframe>` element embeds another HTML page inside the current page.
 
 ```html
 <iframe src="embedded-page.html" width="600" height="400" title="Embedded page"></iframe>
 ```
+
 ![[ch1-iframe.png]]
 
 | Attribute | Purpose |
@@ -717,6 +727,7 @@ Tables are used to display tabular data (not for page layout — use CSS for lay
     </tr>
 </table>
 ```
+
 ![[ch1-table-basic.png]]
 
 | Tag | Meaning |
@@ -765,6 +776,7 @@ For better structure and styling, tables can be divided into sections:
     </tfoot>
 </table>
 ```
+
 ![[ch1-table-sections.png]]
 
 | Tag | Purpose |
@@ -802,6 +814,7 @@ For better structure and styling, tables can be divided into sections:
     </tr>
 </table>
 ```
+
 ![[ch1-table-merge.png]]
 
 | Attribute | Effect |
@@ -848,6 +861,7 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
     <footer>Copyright info</footer>
 </body>
 ```
+
 ![[ch1-semantic-layout.png]]
 
 > **Note:** `<main>` must be unique per document and should not be nested inside `<article>`, `<aside>`, `<footer>`, `<header>`, or `<nav>`.
@@ -861,8 +875,5 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
 | Write lowercase tag names | Use presentational tags like `<font>` or `<center>` (deprecated) |
 | Close all paired tags properly | Nest block tags inside inline tags |
 | Use `&lt;` and `&gt;` when displaying code | Forget the `<!DOCTYPE html>` declaration |
-
-**Summary Mnemonic**
-- **HTML** = "HyperText Markup Language — the skeleton of the web"
 
 [Next: css basics ->](02-css-basics.md)

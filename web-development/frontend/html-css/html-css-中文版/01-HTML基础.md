@@ -112,6 +112,7 @@ HTML 标签有多种分类方式：
 <h2>&lt;h2&gt; — block-level heading</h2>
 <span>&lt;span&gt;</span> <a href="#">&lt;a&gt;</a> <strong>&lt;strong&gt;</strong> <input type="text" value="input">
 ```
+
 ![[ch1-display-types.png]]
 
 （代码里加了一点样式让效果更直观，样式细节第 2 章再讲，现在照抄即可）
@@ -230,6 +231,14 @@ HTML 没有官方钦定的规范（不像 Python 的 PEP8），业界通行的�
 - **风格交给机器**：VS Code 保存时自动格式化（Format On Save，见 1.1.4），写完 `Ctrl+S` 自动变整齐。
 - **合法性交给验证器**：W3C 验证器（validator.w3.org）粘贴代码即可检查，id 重复、非法嵌套等都会报出来。
 
+### 1.1.6 浏览器开发者工具（DevTools）
+
+写 HTML 离不开浏览器自带的开发者工具：在页面上按 `F12`（或右键 → 检查）打开。
+
+- **Elements 面板**：查看浏览器实际解析出的 DOM 结构——包括浏览器自动纠错后的结果（比如被拆开的非法嵌套），是调试结构的利器。
+- **点选元素**：用面板左上角的箭头工具点击页面上的任意元素，直接定位到对应代码并查看它的样式。
+- **Console 面板**：查看报错信息、执行 JavaScript（详见 JS 章节）。
+
 ## 1.2 常用 HTML 标签
 
 ### 1.2.1 容器标签
@@ -284,6 +293,7 @@ HTML 没有官方钦定的规范（不像 Python 的 PEP8），业界通行的�
 <h5>Heading Level 5</h5>
 <h6>Heading Level 6</h6>
 ```
+
 ![[ch1-text-tags.png]]
 
 **最佳实践：**
@@ -452,19 +462,17 @@ are ignored too.</p>
 
 #### 1.2.3.2 `<img>` — Image（图像）
 
-链接和图片渲染到页面上的效果如下（`photo.svg` 是本地占位图，可换成自己的图片文件）：
+图片渲染到页面上的效果如下（`photo.svg` 是本地占位图，可换成自己的图片文件；第二个故意写错路径，演示加载失败时显示 `alt` 文本）：
 
 ```html
-<!-- 多个链接在一行内连续排开 -->
-<a href="https://www.example.com">Visit Example</a>
-<a href="#section1">Jump to Section 1</a>
-<a href="#">Empty Link</a>
+<!-- 正常显示的图片 -->
+<img src="photo.svg" alt="A beautiful landscape" width="300">
 
-<!-- 图片也是行内块元素，用 <br> 让它另起一行 -->
-<br>
-<img src="photo.svg" alt="A beautiful landscape" width="300" title="Landscape">
+<!-- 故意写错路径：加载失败时显示 alt 文本 -->
+<img src="not-exist.jpg" alt="Image failed to load" width="300">
 ```
-![[ch1-links-media.png]]
+
+![[ch1-img.png]]
 
 | 属性 | 说明 |
 |-----------|---------|
@@ -650,6 +658,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
     Your browser does not support the audio element.
 </audio>
 ```
+
 ![[ch1-audio-video.png]]
 
 **`<video>` 常用属性：**
@@ -668,13 +677,14 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
 
 > **注意：** 现代浏览器通常会阻止带声音的自动播放。如需自动播放视频，请同时使用 `autoplay muted`。
 
-### 1.2.7 使用 `<iframe>` 嵌入页面
+### 1.2.7 `<iframe>` — Inline Frame（嵌入页面）
 
 `<iframe>` 标签可在当前页面中嵌入另一个 HTML 页面。
 
 ```html
 <iframe src="embedded-page.html" width="600" height="400" title="Embedded page"></iframe>
 ```
+
 ![[ch1-iframe.png]]
 
 | 属性 | 说明 |
@@ -717,6 +727,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
     </tr>
 </table>
 ```
+
 ![[ch1-table-basic.png]]
 
 | 标签 | 含义 |
@@ -765,6 +776,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
     </tfoot>
 </table>
 ```
+
 ![[ch1-table-sections.png]]
 
 | 标签 | 作用 |
@@ -802,6 +814,7 @@ HTML5 提供了原生的 `<video>` 和 `<audio>` 标签。
     </tr>
 </table>
 ```
+
 ![[ch1-table-merge.png]]
 
 | 属性 | 效果 |
@@ -848,6 +861,7 @@ HTML5 引入了语义化元素，比通用 `<div>` 更清晰地描述页面结�
     <footer>Copyright info</footer>
 </body>
 ```
+
 ![[ch1-semantic-layout.png]]
 
 > **注意：** 每个文档只能有一个 `<main>`，且 `<main>` 不能嵌套在 `<article>`、`<aside>`、`<footer>`、`<header>` 或 `<nav>` 内部。
@@ -861,8 +875,5 @@ HTML5 引入了语义化元素，比通用 `<div>` 更清晰地描述页面结�
 | 标签名使用小写 | 使用表现型标签如 `<font>`、`<center>`（已废弃） |
 | 正确闭合所有成对标签 | 将块级标签嵌套在行内标签内 |
 | 展示代码时使用 `&lt;` 和 `&gt;` | 忘记 `<!DOCTYPE html>` 声明 |
-
-**记忆口诀**
-- **HTML** = "HyperText Markup Language — 网页的骨架"
 
 [下一篇：CSS 基础 →](02-CSS基础.md)
