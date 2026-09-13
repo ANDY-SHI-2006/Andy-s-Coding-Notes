@@ -80,7 +80,7 @@ p {
 
 CSS declarations need a unit or value type. The most common ones are length units and color values.
 
-#### Length Units
+#### 2.1.4.1 Length Units
 
 | Unit | Relative to | Typical Use |
 |------|-------------|-------------|
@@ -99,7 +99,7 @@ html { font-size: 16px; }
 
 > **Tip:** Use `rem` for font sizes and `px` for borders to keep layouts predictable.
 
-#### Color Values
+#### 2.1.4.2 Color Values
 
 | Notation | Example | Description |
 |----------|---------|-------------|
@@ -145,7 +145,7 @@ The demo below lets each selector hit a different element so the effects are vis
 ```
 ![[ch2-selectors.png]]
 
-#### Class and ID Naming Rules
+#### 2.2.1.1 Class and ID Naming Rules
 
 - Use only letters, digits, hyphens (`-`), and underscores (`_`).
 - The name **must not start with a digit**.
@@ -162,7 +162,7 @@ The demo below lets each selector hit a different element so the effects are vis
 <div class="red-text"></div>  <!-- describes appearance, not purpose -->
 ```
 
-#### Multiple Classes on One Element
+#### 2.2.1.2 Multiple Classes on One Element
 
 Separate class names with spaces to reuse common styles.
 
@@ -181,7 +181,7 @@ Separate class names with spaces to reuse common styles.
 }
 ```
 
-#### Universal Selector Use Case
+#### 2.2.1.3 Universal Selector Use Case
 
 Use `*` mainly to reset default browser margins and paddings. Avoid styling all elements directly (e.g. setting colors or borders) because it is hard to override and can slow down rendering.
 
@@ -399,7 +399,7 @@ When several rules hit the same element, the one with the highest specificity wi
 | Use meaningful class names (`.nav`, `.btn`) | Use meaningless names (`.a`, `.b`, `.c`) |
 | Understand specificity before using `!important` | Use `!important` to fix specificity mistakes |
 
-#### Property Writing Order
+### 2.5.1 Property Writing Order
 
 Writing properties in a consistent order makes stylesheets easier to read and maintain. A common order is:
 
