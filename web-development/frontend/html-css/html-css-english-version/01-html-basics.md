@@ -73,6 +73,8 @@ In short: **tags are the syntax; elements are the structure**.
 | **Paired (double) tags** | Have an opening and closing tag; wrap around content | `<div>...</div>`, `<p>...</p>` |
 | **Self-closing (single) tags** | Stand alone; often used to embed resources | `<img>`, `<br>`, `<hr>` |
 
+The trailing slash on void elements is optional — `<br>`, `<br/>`, and `<br />` are exactly equivalent. The slash is a leftover habit from the XHTML era; HTML5 style omits it. **Only void elements work this way**: `<div />` does not self-close — the browser treats it as a normal opening tag and keeps looking for the `</div>`.
+
 #### 1.1.2.2 By Display Behavior
 
 | Type | Behavior | Examples |
@@ -197,6 +199,36 @@ Common settings (File → Preferences → Settings):
 
 - **Format On Paste / Format On Save** — Auto-format code when pasting/saving
 - **Word Wrap: on** — Wrap long lines instead of horizontal scrolling
+
+### 1.1.5 HTML Code Style Conventions
+
+HTML has no single official style authority (unlike Python's PEP8). The industry-standard references are the Google HTML/CSS Style Guide and Prettier's default rules, which largely agree.
+
+**Formatting rules:**
+
+- **Indent with 2 spaces**: one level per nesting depth, closing tags aligned with their opening tags; no tabs, no 4-space indents (HTML nests deeply, and 2 spaces save horizontal room).
+- **Lowercase tag and attribute names**: `<div class="box">`, not `<DIV CLASS="box">`.
+- **Double quotes around attribute values**: no omitted quotes, no single quotes.
+- **No trailing slash on void elements**: `<br>`, not `<br />` (see 1.1.2.1).
+- **Break long attribute lists onto multiple lines**: one attribute per line to avoid horizontal scrolling.
+- **Separate large blocks with comments**: e.g. `<!-- ===== Header ===== -->` — essential for navigating pages with hundreds of lines.
+
+```html
+<!-- ❌ Amateur -->
+<BODY><DIV CLASS="Box"><P>Hello</P></DIV></BODY>
+
+<!-- ✅ Professional -->
+<body>
+  <div class="box">
+    <p>Hello</p>
+  </div>
+</body>
+```
+
+**Let tools do the work:**
+
+- **Formatting goes to the machine**: enable Format On Save in VS Code (see 1.1.4) and `Ctrl+S` tidies everything automatically.
+- **Validity goes to the validator**: paste your code into the W3C validator (validator.w3.org) — it flags duplicate ids, invalid nesting, and more.
 
 ## 1.2 Common HTML Tags
 
