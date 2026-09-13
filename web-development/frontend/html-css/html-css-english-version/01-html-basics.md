@@ -142,6 +142,16 @@ Common rules:
 - Separate multiple attributes with a single space.
 - Boolean attributes (such as `checked` or `disabled`) can omit the value in HTML5.
 
+**Global attributes (usable on every tag):**
+
+| Attribute | Purpose |
+|-----------|---------|
+| `id` | A unique identifier for the element (used by anchor jumps, CSS, and JS) |
+| `class` | A reusable category name; an element can have several (CSS styles elements by class) |
+| `title` | Tooltip text shown on hover |
+| `style` | Inline styles (CSS written directly on the tag) |
+| `hidden` | Hides the element (a boolean attribute) |
+
 ### 1.1.3 HTML Comments
 
 Comments are not rendered by the browser. They are used to annotate code or temporarily disable a block of markup.
@@ -241,8 +251,6 @@ A generic inline container used to style a portion of text within a larger block
 <h4>Heading Level 4</h4>
 <h5>Heading Level 5</h5>
 <h6>Heading Level 6</h6>
-<p>This is <strong>important</strong>, <em>emphasized</em>, <del>deleted</del>, and <ins>inserted</ins> text.</p>
-<p>H<sub>2</sub>O and E = mc<sup>2</sup></p>
 ```
 ![[ch1-text-tags.png]]
 
@@ -284,14 +292,23 @@ Two default behaviors to know:
 | `<ins>` | Underline | Inserted text |
 | `<sub>` | Subscript | Chemical formulas and indices |
 | `<sup>` | Superscript | Exponents and footnotes |
+| `<mark>` | Yellow highlight | Marked/highlighted text |
+
+**Why the pairs exist, and how to choose:**
+
+- **Presentational vs semantic**: `<b>`/`<i>` only say "how it looks", while `<strong>`/`<em>` say "what it means" — they look identical only because browsers give them the same default styles.
+- **The value of semantics**: screen readers change their tone for `<strong>`/`<em>` (but not for `<b>`/`<i>`); search engines treat `<strong>` content as more important; to restyle all "important text" at once, targeting `strong` in CSS works site-wide.
+- **`<del>`/`<ins>` go further**: they mark document revisions and accept `datetime`/`cite` attributes to record when and why (this powers wiki edit histories); `<s>`/`<u>` merely mean "no longer accurate" or a plain underline.
+- **How to choose**: use the semantic tag whenever there is meaning (`<strong>` for importance, `<em>` for emphasis, `<del>`/`<ins>` for revisions); reserve `<b>`/`<i>` for purely decorative cases. The ultimate rule: **CSS owns presentation; HTML owns meaning**.
 
 ```html
-<!-- One-to-one with the table above: all 10 formatting tags (visually identical pairs share a line) -->
+<!-- One-to-one with the table above: all 11 formatting tags (visually identical pairs share a line) -->
 <p><b>Bold (b)</b> vs <strong>Bold (strong)</strong></p>
 <p><i>Italic (i)</i> vs <em>Italic (em)</em></p>
 <p><del>Strikethrough (del)</del> vs <s>Strikethrough (s)</s></p>
 <p><u>Underline (u)</u> vs <ins>Underline (ins)</ins></p>
 <p>H<sub>2</sub>O (sub) and x<sup>2</sup> (sup)</p>
+<p><mark>Highlight (mark)</mark></p>
 ```
 
 ![[ch1-text-formatting.png]]
@@ -321,6 +338,23 @@ are ignored too.</p>
 
 ![[ch1-br-hr.png]]
 
+#### 1.2.2.6 `<pre>` and `<code>` — Preformatted Text and Code
+
+- **`<pre>` (preformatted text)**: preserves all spaces and line breaks from the source — **immune to whitespace collapsing** (see 1.2.2.4). Commonly used for code blocks, poems, or any text where formatting must be kept.
+- **`<code>` (inline code)**: renders a short piece of code in a monospace font; usually nested inside `<pre>` or a paragraph.
+
+```html
+<!-- pre keeps spaces and line breaks; p collapses them (compare 1.2.2.4) -->
+<pre><code>function hello() {
+    console.log("indented");
+}</code></pre>
+<p>function hello() {
+    console.log("collapsed");
+}</p>
+```
+
+![[ch1-pre-code.png]]
+
 ### 1.2.3 Link and Media Tags
 
 #### 1.2.3.1 `<a>` — Anchor (Hyperlink)
@@ -343,6 +377,10 @@ are ignored too.</p>
 
 <!-- Open in a new tab -->
 <a href="https://www.example.com" target="_blank">Open in New Tab</a>
+
+<!-- Special protocol links: open the mail client / dial a number (common on mobile) -->
+<a href="mailto:someone@example.com">Send Email</a>
+<a href="tel:+8613800138000">Call Us</a>
 ```
 
 ##### 1.2.3.1.3 In-Page Anchor Jump
@@ -413,7 +451,7 @@ Here is how links and an image render on the page (`photo.svg` is a local placeh
 
 #### 1.2.4.1 `<ul>` — Unordered List
 
-For parallel items with no particular order; rendered with bullet markers by default.
+For parallel items with no particular order; rendered with bullet markers by default. Both `<ul>` and `<li>` are block-level elements, so each `<li>` takes its own line.
 
 ```html
 <!-- Unordered list -->
@@ -424,6 +462,28 @@ For parallel items with no particular order; rendered with bullet markers by def
 ```
 
 ![[ch1-list-ul.png]]
+
+**List marker styles (`list-style`, also applies to `<ol>`):**
+
+- **Default**: a round bullet (`disc`) — no action needed.
+- **Change the marker**: `list-style: square;` switches to a square, etc. (good to know, rarely used).
+- **Remove the marker**: `list-style: none;` — **the mainstream practice in real development**: remove the default marker and style the list with CSS (navigation menus are built this way).
+- **Image marker**: `list-style-image: url(...);` (good to know).
+
+```html
+<!-- Three marker styles compared -->
+<ul>
+    <li>Default (disc)</li>
+</ul>
+<ul style="list-style: square;">
+    <li>Square</li>
+</ul>
+<ul style="list-style: none;">
+    <li>None (no marker)</li>
+</ul>
+```
+
+![[ch1-list-style.png]]
 
 #### 1.2.4.2 `<ol>` — Ordered List
 
@@ -439,17 +499,43 @@ For items with a sequence; numbered automatically. The `start` attribute sets th
 
 ![[ch1-list-ol.png]]
 
-#### 1.2.4.3 `<dl>` — Description List
+**Numbering types (`list-style-type`, good to know):**
 
-A list of terms and explanations: `<dt>` holds the term, `<dd>` holds the explanation.
+- **Default**: Arabic numerals (`decimal`: 1, 2, 3)
+- **Roman numerals**: `upper-roman` (I, II, III), `lower-roman` (i, ii, iii)
+- **Letters**: `upper-alpha` (A, B, C), `lower-alpha` (a, b, c)
+- In real development, `list-style: none` is also more common here — remove the numbering and style it yourself (see 1.2.4.1).
 
 ```html
-<!-- Description list -->
+<!-- Three numbering types compared -->
+<ol>
+    <li>decimal</li>
+    <li>decimal</li>
+</ol>
+<ol style="list-style-type: upper-roman;">
+    <li>upper-roman</li>
+    <li>upper-roman</li>
+</ol>
+<ol style="list-style-type: upper-alpha;">
+    <li>upper-alpha</li>
+    <li>upper-alpha</li>
+</ol>
+```
+
+![[ch1-list-style-type.png]]
+
+#### 1.2.4.3 `<dl>` — Description List
+
+A list of terms and explanations: `<dt>` holds the term, `<dd>` holds the explanation; one `<dt>` may have multiple `<dd>`.
+
+```html
+<!-- Description list: one dt may have multiple dd -->
 <dl>
     <dt>HTML</dt>
     <dd>HyperText Markup Language, used to create web page structure.</dd>
     <dt>CSS</dt>
     <dd>Cascading Style Sheets, used to style HTML documents.</dd>
+    <dd>Controls colors, fonts, and page layout.</dd>
 </dl>
 ```
 
@@ -485,6 +571,7 @@ An `<li>` can contain another complete list, forming a multi-level structure.
 - **`<ul>` / `<ol>`**: may only contain `<li>` directly (putting `<p>` or other tags directly inside is not recommended).
 - **`<li>`**: may contain any element, including a complete nested list.
 - **`<dl>`**: may only contain `<dt>` and `<dd>` directly, and both may appear multiple times.
+- **`<dd>`**: like `<li>`, it is a flow-content container and may legitimately hold block-level elements such as `<p>` (valid HTML, not discouraged).
 
 ### 1.2.5 Character Entities
 
@@ -502,10 +589,17 @@ Some characters have special meaning in HTML and must be escaped using entities.
 | `¥` | `&yen;` | Yen symbol |
 
 ```html
-<p>a &lt; b &gt; c</p>
+<p>a &lt; b &gt; c &amp; d</p>
+<p>Quote: &quot;Hello&quot;</p>
+<p>Spaced&nbsp;&nbsp;&nbsp;out (3 nbsp)</p>
+<p>Wide&emsp;space (1 emsp)</p>
 <p>Price: &yen;40</p>
 <p>Copyright &copy; 2024</p>
 ```
+
+![[ch1-entities.png]]
+
+Regular consecutive spaces are collapsed by the browser (see 1.2.2.4), but `&nbsp;` is not — use it when you really need multiple visible spaces on the page.
 
 ### 1.2.6 `<audio>` and `<video>` — Audio and Video
 
@@ -696,6 +790,7 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
 | `<article>` | Self-contained, independently distributable content |
 | `<aside>` | Sidebar or tangentially related content |
 | `<footer>` | Footer for a page or section |
+| `<figure>` | A self-contained unit like an image or diagram (often with `<figcaption>` for a caption) |
 
 ```html
 <style>

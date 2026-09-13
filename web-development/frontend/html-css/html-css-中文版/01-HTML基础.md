@@ -142,6 +142,16 @@ HTML 标签有多种分类方式：
 - 多个属性之间用一个空格分隔。
 - 布尔属性（如 `checked`、`disabled`）在 HTML5 中可以省略值。
 
+**全局属性（所有标签都能用）：**
+
+| 属性 | 作用 |
+|-----------|---------|
+| `id` | 元素的唯一标识（锚点跳转、CSS、JS 都靠它定位） |
+| `class` | 元素的分类名，可复用、可多个（CSS 按类批量设置样式） |
+| `title` | 鼠标悬停时的提示文本 |
+| `style` | 内联样式（直接写在标签里的 CSS） |
+| `hidden` | 隐藏元素（布尔属性） |
+
 ### 1.1.3 HTML 注释
 
 注释不会被浏览器渲染，常用于标注代码或临时禁用某段代码。
@@ -241,8 +251,6 @@ HTML 标签有多种分类方式：
 <h4>Heading Level 4</h4>
 <h5>Heading Level 5</h5>
 <h6>Heading Level 6</h6>
-<p>This is <strong>important</strong>, <em>emphasized</em>, <del>deleted</del>, and <ins>inserted</ins> text.</p>
-<p>H<sub>2</sub>O and E = mc<sup>2</sup></p>
 ```
 ![[ch1-text-tags.png]]
 
@@ -284,14 +292,23 @@ HTML 标签有多种分类方式：
 | `<ins>` | 下划线 | 插入文本 |
 | `<sub>` | 下标 | 化学式、下标索引 |
 | `<sup>` | 上标 | 指数、脚注 |
+| `<mark>` | 黄底高亮 | 标记重点文本 |
+
+**为什么成对存在、怎么选：**
+
+- **表现型 vs 语义型**：`<b>`/`<i>` 只说"长什么样"，`<strong>`/`<em>` 说"是什么意思"——看起来一样只是因为浏览器给了相同的默认样式。
+- **语义的价值**：屏幕阅读器读到 `<strong>`/`<em>` 会重读（`<b>`/`<i>` 不会）；搜索引擎认为 `<strong>` 内容更重要；批量改"重要文本"的样式时，CSS 选 `strong` 一处改全站生效。
+- **`<del>`/`<ins>` 更进一步**：表示"文档修订"，还带 `datetime`、`cite` 属性记录修改时间和依据（维基修订历史就靠它）；`<s>`/`<u>` 只是"不再准确"或纯下划线。
+- **怎么选**：有含义就用语义型（重要用 `<strong>`、强调用 `<em>`、修订用 `<del>`/`<ins>`）；纯装饰才用 `<b>`/`<i>`。终极原则：**样式归 CSS 管，HTML 只管语义**。
 
 ```html
-<!-- 与上表一一对应：10 个格式化标签的渲染效果（同组视觉相同的写在同一行） -->
+<!-- 与上表一一对应：11 个格式化标签的渲染效果（同组视觉相同的写在同一行） -->
 <p><b>Bold (b)</b> vs <strong>Bold (strong)</strong></p>
 <p><i>Italic (i)</i> vs <em>Italic (em)</em></p>
 <p><del>Strikethrough (del)</del> vs <s>Strikethrough (s)</s></p>
 <p><u>Underline (u)</u> vs <ins>Underline (ins)</ins></p>
 <p>H<sub>2</sub>O (sub) and x<sup>2</sup> (sup)</p>
+<p><mark>Highlight (mark)</mark></p>
 ```
 
 ![[ch1-text-formatting.png]]
@@ -321,6 +338,23 @@ are ignored too.</p>
 
 ![[ch1-br-hr.png]]
 
+#### 1.2.2.6 `<pre>` 与 `<code>` — 预格式化与代码
+
+- **`<pre>`（预格式化文本）**：保留源码中的空格和换行，**不受空白折叠影响**（呼应 1.2.2.4），常用于展示代码块、诗歌等需要保留格式的文本。
+- **`<code>`（行内代码）**：以等宽字体显示一小段代码，通常嵌在 `<pre>` 或段落里使用。
+
+```html
+<!-- pre 原样保留空格和换行；p 会折叠空白（对比 1.2.2.4） -->
+<pre><code>function hello() {
+    console.log("indented");
+}</code></pre>
+<p>function hello() {
+    console.log("collapsed");
+}</p>
+```
+
+![[ch1-pre-code.png]]
+
 ### 1.2.3 链接与媒体标签
 
 #### 1.2.3.1 `<a>` — Anchor（超链接）
@@ -343,6 +377,10 @@ are ignored too.</p>
 
 <!-- 在新标签页打开 -->
 <a href="https://www.example.com" target="_blank">Open in New Tab</a>
+
+<!-- 特殊协议链接：唤起邮件客户端 / 拨打电话（移动端常用） -->
+<a href="mailto:someone@example.com">Send Email</a>
+<a href="tel:+8613800138000">Call Us</a>
 ```
 
 ##### 1.2.3.1.3 页内锚点定位
@@ -413,7 +451,7 @@ are ignored too.</p>
 
 #### 1.2.4.1 `<ul>` — 无序列表
 
-无顺序要求的并列条目，默认以圆点符号开头。
+无顺序要求的并列条目，默认以圆点符号开头；`<ul>` 和 `<li>` 都是块级元素，每个 `<li>` 独占一行。
 
 ```html
 <!-- 无序列表 -->
@@ -424,6 +462,28 @@ are ignored too.</p>
 ```
 
 ![[ch1-list-ul.png]]
+
+**列表符号样式（`list-style`，对 `<ol>` 同样适用）：**
+
+- **默认**：圆点（`disc`），不用管。
+- **换符号**：`list-style: square;` 换成方块等样式（了解即可，用得不多）。
+- **去符号**：`list-style: none;` —— **实际开发的主流做法**，去掉默认符号后用 CSS 自定义（导航菜单等都这么做）。
+- **图片符号**：`list-style-image: url(...);`（了解即可）。
+
+```html
+<!-- 三种列表符号对比 -->
+<ul>
+    <li>Default (disc)</li>
+</ul>
+<ul style="list-style: square;">
+    <li>Square</li>
+</ul>
+<ul style="list-style: none;">
+    <li>None (no marker)</li>
+</ul>
+```
+
+![[ch1-list-style.png]]
 
 #### 1.2.4.2 `<ol>` — 有序列表
 
@@ -439,17 +499,43 @@ are ignored too.</p>
 
 ![[ch1-list-ol.png]]
 
-#### 1.2.4.3 `<dl>` — 描述列表
+**序号类型（`list-style-type`，了解即可）：**
 
-术语 + 解释的列表：`<dt>` 写术语，`<dd>` 写解释。
+- **默认**：阿拉伯数字（`decimal`：1、2、3）
+- **罗马数字**：`upper-roman`（I、II、III）、`lower-roman`（i、ii、iii）
+- **字母**：`upper-alpha`（A、B、C）、`lower-alpha`（a、b、c）
+- 实际开发同样更多用 `list-style: none` 去掉序号再自定义（见 1.2.4.1）。
 
 ```html
-<!-- 描述列表 -->
+<!-- 三种序号类型对比 -->
+<ol>
+    <li>decimal</li>
+    <li>decimal</li>
+</ol>
+<ol style="list-style-type: upper-roman;">
+    <li>upper-roman</li>
+    <li>upper-roman</li>
+</ol>
+<ol style="list-style-type: upper-alpha;">
+    <li>upper-alpha</li>
+    <li>upper-alpha</li>
+</ol>
+```
+
+![[ch1-list-style-type.png]]
+
+#### 1.2.4.3 `<dl>` — 描述列表
+
+术语 + 解释的列表：`<dt>` 写术语，`<dd>` 写解释；一个 `<dt>` 可以配多条 `<dd>`。
+
+```html
+<!-- 描述列表：一个 dt 可以配多条 dd -->
 <dl>
     <dt>HTML</dt>
     <dd>HyperText Markup Language, used to create web page structure.</dd>
     <dt>CSS</dt>
     <dd>Cascading Style Sheets, used to style HTML documents.</dd>
+    <dd>Controls colors, fonts, and page layout.</dd>
 </dl>
 ```
 
@@ -485,27 +571,35 @@ are ignored too.</p>
 - **`<ul>` / `<ol>`**：直接子元素只能是 `<li>`（直接放 `<p>` 等其他标签不推荐）。
 - **`<li>`**：可以放任意元素，包括再嵌套一个完整列表。
 - **`<dl>`**：直接子元素只能是 `<dt>` 和 `<dd>`，二者都可以有多个。
+- **`<dd>`**：和 `<li>` 一样是流内容容器，可以合法包含 `<p>` 等块级元素（合法写法，不是不推荐）。
 
 ### 1.2.5 字符实体
 
 HTML 中某些字符具有特殊含义，必须使用实体（entity）进行转义。
 
-| 字符 | 实体 | 说明 |
-|-----------|--------|-------------|
-| `<` | `&lt;` | 小于号 |
-| `>` | `&gt;` | 大于号 |
-| `&` | `&amp;` | 和号 |
-| `"` | `&quot;` | 双引号 |
-| ` ` (单个) | `&nbsp;` | 不间断空格（用于少量空格） |
-| ` ` (宽) | `&emsp;` | 全角空格（用于多个空格 / 缩进） |
-| `©` | `&copy;` | 版权符号 |
-| `¥` | `&yen;` | 日元符号 |
+| 字符       | 实体       | 说明                |
+| -------- | -------- | ----------------- |
+| `<`      | `&lt;`   | 小于号               |
+| `>`      | `&gt;`   | 大于号               |
+| `&`      | `&amp;`  | 和号                |
+| `"`      | `&quot;` | 双引号               |
+| ` ` (单个) | `&nbsp;` | 不间断空格（用于少量空格）     |
+| ` ` (宽)  | `&emsp;` | 全角空格（用于多个空格 / 缩进） |
+| `©`      | `&copy;` | 版权符号              |
+| `¥`      | `&yen;`  | 日元符号              |
 
 ```html
-<p>a &lt; b &gt; c</p>
+<p>a &lt; b &gt; c &amp; d</p>
+<p>Quote: &quot;Hello&quot;</p>
+<p>Spaced&nbsp;&nbsp;&nbsp;out (3 nbsp)</p>
+<p>Wide&emsp;space (1 emsp)</p>
 <p>Price: &yen;40</p>
 <p>Copyright &copy; 2024</p>
 ```
+
+![[ch1-entities.png]]
+
+普通连续空格会被浏览器折叠（见 1.2.2.4），`&nbsp;` 不会——需要在页面上真正留出多个空格时就用它。
 
 ### 1.2.6 `<audio>` 与 `<video>` — 音频与视频
 
@@ -696,6 +790,7 @@ HTML5 引入了语义化元素，比通用 `<div>` 更清晰地描述页面结�
 | `<article>` | 独立、可单独分发的内容 |
 | `<aside>` | 侧边栏或相关内容 |
 | `<footer>` | 页面或区块的底部 |
+| `<figure>` | 图片/图表等独立内容单元（常配合 `<figcaption>` 加图注） |
 
 ```html
 <style>
