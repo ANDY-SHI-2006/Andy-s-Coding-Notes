@@ -881,14 +881,4 @@ HTML5 introduces semantic elements that describe page structure more clearly tha
 
 > **Note:** `<main>` must be unique per document and should not be nested inside `<article>`, `<aside>`, `<footer>`, `<header>`, or `<nav>`.
 
-## 1.5 Best Practices
-
-| Do | Don't |
-|----|-------|
-| Use semantic tags (`<header>`, `<nav>`, `<main>`, `<footer>`) when appropriate | Use tables for page layout |
-| Always include `alt` text for images | Skip heading levels (e.g., `h1` directly to `h3`) |
-| Write lowercase tag names | Use presentational tags like `<font>` or `<center>` (deprecated) |
-| Close all paired tags properly | Nest block tags inside inline tags |
-| Use `&lt;` and `&gt;` when displaying code | Forget the `<!DOCTYPE html>` declaration |
-
 [Next: css basics ->](02-css-basics.md)
