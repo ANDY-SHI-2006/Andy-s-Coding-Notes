@@ -58,6 +58,14 @@ Beyond the skeleton, a few common optional additions must be written manually (`
 
 HTML tags are classified in multiple ways:
 
+**The relationship between tags, elements, and attributes:**
+
+- **Tag**: the marker in source code — `<p>` is an opening tag, `</p>` is a closing tag; attributes go inside the opening tag.
+- **Element**: the complete unit of opening tag + content + closing tag (e.g. `<p class="intro">Hello</p>`); after parsing it becomes a node in the DOM tree.
+- **Void elements**: tags like `<img>`, `<br>`, `<input>` have no content or closing tag — just a single tag — but they are still elements.
+
+In short: **tags are the syntax; elements are the structure**.
+
 #### 1.1.2.1 By Structure
 
 | Type | Description | Examples |
@@ -164,6 +172,17 @@ Useful shortcuts:
 | `Shift + Alt + ↓` | Duplicate the current line downward |
 | `Ctrl + D` | Select the next occurrence of the current word |
 
+**Emmet abbreviations (type the abbreviation and press `Tab`, or press Enter in the suggestion popup):**
+
+The `!` + `Tab` skeleton trick is actually Emmet. Emmet is VS Code's built-in abbreviation engine that expands short expressions into HTML structures:
+
+| Abbreviation | Expands to |
+|------|----------|
+| `li*3` | 3 `<li></li>` elements |
+| `ul>li*3` | A `<ul>` containing 3 `<li>` |
+| `div.box` | `<div class="box"></div>` |
+| `p#intro` | `<p id="intro"></p>` |
+
 Common settings (File → Preferences → Settings):
 
 - **Format On Paste / Format On Save** — Auto-format code when pasting/saving
@@ -267,11 +286,15 @@ Two default behaviors to know:
 | `<sup>` | Superscript | Exponents and footnotes |
 
 ```html
-<p>This is <strong>important</strong> and this is <em>emphasized</em>.</p>
-<p>This is <del>deleted</del> and this is <ins>inserted</ins> text.</p>
-<p>H<sub>2</sub>O is water.</p>
-<p>The area is x<sup>2</sup>.</p>
+<!-- One-to-one with the table above: all 10 formatting tags (visually identical pairs share a line) -->
+<p><b>Bold (b)</b> vs <strong>Bold (strong)</strong></p>
+<p><i>Italic (i)</i> vs <em>Italic (em)</em></p>
+<p><del>Strikethrough (del)</del> vs <s>Strikethrough (s)</s></p>
+<p><u>Underline (u)</u> vs <ins>Underline (ins)</ins></p>
+<p>H<sub>2</sub>O (sub) and x<sup>2</sup> (sup)</p>
 ```
+
+![[ch1-text-formatting.png]]
 
 #### 1.2.2.4 Whitespace Collapsing
 
@@ -296,9 +319,20 @@ are ignored too.</p>
 <p>Content after a horizontal line.</p>
 ```
 
+![[ch1-br-hr.png]]
+
 ### 1.2.3 Link and Media Tags
 
 #### 1.2.3.1 `<a>` — Anchor (Hyperlink)
+
+##### 1.2.3.1.1 Attributes
+
+| Attribute | Purpose |
+|-----------|---------|
+| `href` | Destination URL, or an anchor (`#id`, jumps to the element with that id on this page) |
+| `target` | Where to open the link; `_self` (default, same tab) or `_blank` (new tab) |
+
+##### 1.2.3.1.2 Page-to-Page Navigation
 
 ```html
 <!-- Link to an external website -->
@@ -311,21 +345,42 @@ are ignored too.</p>
 <a href="https://www.example.com" target="_blank">Open in New Tab</a>
 ```
 
-| Attribute | Purpose |
-|-----------|---------|
-| `href` | Destination URL or anchor |
-| `target` | Where to open the link; `_self` (default, same tab) or `_blank` (new tab) |
+##### 1.2.3.1.3 In-Page Anchor Jump
 
-#### 1.2.3.2 Anchor Navigation (Within the Same Page)
+Anchor jumps rely on the target element's `id` attribute: `href="#id"` jumps to the element with that `id` on this page.
 
 ```html
+<!-- Link to an anchor on this page -->
 <a href="#section1">Jump to Section 1</a>
 
 <!-- Later in the document -->
 <h2 id="section1">Section 1</h2>
 ```
 
-#### 1.2.3.3 `<img>` — Image
+**An id must be unique:**
+
+- **The spec**: an `id` must not repeat within a document — duplicates are invalid HTML (browsers do not correct this and render normally anyway).
+- **The consequence**: with duplicates, anchor jumps and JS (`getElementById`) only match the first element, while the CSS `#id` selector matches them all — inconsistent behavior and a source of subtle bugs.
+
+##### 1.2.3.1.4 Default Styles
+
+- **Unvisited**: blue + underline
+- **Visited**: purple + underline (`:visited`)
+- **Being clicked**: red (`:active`)
+
+These come from the browser's default stylesheet — no need to worry about them now; you will override them with CSS later (e.g. `text-decoration: none; color: black;` to make a link look like plain text). State styling is covered by pseudo-classes in Chapter 7:
+
+```html
+<!-- Default style: blue + underline -->
+<a href="https://www.example.com">Default link style</a>
+<br>
+<!-- Manually de-styled: looks like plain text -->
+<a href="https://www.example.com" style="color: black; text-decoration: none;">Manually de-styled link</a>
+```
+
+![[ch1-link-default-style.png]]
+
+#### 1.2.3.2 `<img>` — Image
 
 Here is how links and an image render on the page (`photo.svg` is a local placeholder — swap in your own image file):
 
@@ -356,7 +411,9 @@ Here is how links and an image render on the page (`photo.svg` is a local placeh
 
 ### 1.2.4 `<ul>`, `<ol>`, `<dl>` — List Tags
 
-Here is how the four list types render (including a nested example; `start="4"` begins numbering at 4):
+#### 1.2.4.1 `<ul>` — Unordered List
+
+For parallel items with no particular order; rendered with bullet markers by default.
 
 ```html
 <!-- Unordered list -->
@@ -364,13 +421,51 @@ Here is how the four list types render (including a nested example; `start="4"` 
     <li>Apple</li>
     <li>Banana</li>
 </ul>
+```
 
-<!-- Ordered list -->
+![[ch1-list-ul.png]]
+
+#### 1.2.4.2 `<ol>` — Ordered List
+
+For items with a sequence; numbered automatically. The `start` attribute sets the starting number (e.g. `start="4"` begins at 4).
+
+```html
+<!-- Ordered list; start="4" begins numbering at 4 -->
 <ol start="4">
     <li>Fourth item</li>
     <li>Fifth item</li>
 </ol>
+```
 
+![[ch1-list-ol.png]]
+
+#### 1.2.4.3 `<dl>` — Description List
+
+A list of terms and explanations: `<dt>` holds the term, `<dd>` holds the explanation.
+
+```html
+<!-- Description list -->
+<dl>
+    <dt>HTML</dt>
+    <dd>HyperText Markup Language, used to create web page structure.</dd>
+    <dt>CSS</dt>
+    <dd>Cascading Style Sheets, used to style HTML documents.</dd>
+</dl>
+```
+
+![[ch1-list-dl.png]]
+
+| Tag | Meaning |
+|-----|---------|
+| `<dl>` | Description List |
+| `<dt>` | Description Term |
+| `<dd>` | Description Details |
+
+#### 1.2.4.4 Nested Lists
+
+An `<li>` can contain another complete list, forming a multi-level structure.
+
+```html
 <!-- Nested list: an li can contain another complete list -->
 <ul>
     <li>Fruits
@@ -381,24 +476,11 @@ Here is how the four list types render (including a nested example; `start="4"` 
     </li>
     <li>Vegetables</li>
 </ul>
-
-<!-- Description list -->
-<dl>
-    <dt>HTML</dt>
-    <dd>HyperText Markup Language, used to create web page structure.</dd>
-    <dt>CSS</dt>
-    <dd>Cascading Style Sheets, used to style HTML documents.</dd>
-</dl>
 ```
-![[ch1-lists.png]]
 
-| Tag | Meaning |
-|-----|---------|
-| `<dl>` | Description List |
-| `<dt>` | Description Term |
-| `<dd>` | Description Details |
+![[ch1-list-nested.png]]
 
-**Nesting rules:**
+#### 1.2.4.5 Nesting Rules
 
 - **`<ul>` / `<ol>`**: may only contain `<li>` directly (putting `<p>` or other tags directly inside is not recommended).
 - **`<li>`**: may contain any element, including a complete nested list.

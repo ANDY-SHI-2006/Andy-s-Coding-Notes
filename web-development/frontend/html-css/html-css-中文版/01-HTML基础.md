@@ -58,6 +58,14 @@ HTML（HyperText Markup Language）是创建网页的标准标记语言。它使
 
 HTML 标签有多种分类方式：
 
+**标签、元素、属性的关系：**
+
+- **标签（tag）**：源代码里的记号——`<p>` 是开始标签，`</p>` 是结束标签；属性写在开始标签里。
+- **元素（element）**：开始标签 + 内容 + 结束标签合起来的完整单位（如 `<p class="intro">Hello</p>`），是浏览器解析后 DOM 树中的一个节点。
+- **空元素**：`<img>`、`<br>`、`<input>` 等只有一个标签、没有内容和结束标签，但仍是元素。
+
+一句话：**标签是写法，元素是结构**。
+
 #### 1.1.2.1 按结构分类
 
 | 类型 | 说明 | 示例 |
@@ -164,6 +172,17 @@ HTML 标签有多种分类方式：
 | `Shift + Alt + ↓` | 向下复制当前行 |
 | `Ctrl + D` | 选中下一个相同的词 |
 
+**Emmet 缩写（输入缩写后按 `Tab`，或在提示框中按回车展开）：**
+
+骨架生成用的 `!` + `Tab` 其实就是 Emmet 的一种。Emmet 是 VS Code 内置的缩写引擎，写 HTML 时可以用缩写快速生成结构：
+
+| 缩写 | 展开结果 |
+|------|----------|
+| `li*3` | 3 个 `<li></li>` |
+| `ul>li*3` | `<ul>` 里嵌套 3 个 `<li>` |
+| `div.box` | `<div class="box"></div>` |
+| `p#intro` | `<p id="intro"></p>` |
+
 常用设置（文件 → 首选项 → 设置）：
 
 - **Format On Paste / Format On Save** — 粘贴/保存时自动格式化代码
@@ -267,11 +286,15 @@ HTML 标签有多种分类方式：
 | `<sup>` | 上标 | 指数、脚注 |
 
 ```html
-<p>This is <strong>important</strong> and this is <em>emphasized</em>.</p>
-<p>This is <del>deleted</del> and this is <ins>inserted</ins> text.</p>
-<p>H<sub>2</sub>O is water.</p>
-<p>The area is x<sup>2</sup>.</p>
+<!-- 与上表一一对应：10 个格式化标签的渲染效果（同组视觉相同的写在同一行） -->
+<p><b>Bold (b)</b> vs <strong>Bold (strong)</strong></p>
+<p><i>Italic (i)</i> vs <em>Italic (em)</em></p>
+<p><del>Strikethrough (del)</del> vs <s>Strikethrough (s)</s></p>
+<p><u>Underline (u)</u> vs <ins>Underline (ins)</ins></p>
+<p>H<sub>2</sub>O (sub) and x<sup>2</sup> (sup)</p>
 ```
+
+![[ch1-text-formatting.png]]
 
 #### 1.2.2.4 空白折叠（white-space collapsing）
 
@@ -296,9 +319,20 @@ are ignored too.</p>
 <p>Content after a horizontal line.</p>
 ```
 
+![[ch1-br-hr.png]]
+
 ### 1.2.3 链接与媒体标签
 
-#### 1.2.3.1 `<a>` — Anchor（锚点/超链接）
+#### 1.2.3.1 `<a>` — Anchor（超链接）
+
+##### 1.2.3.1.1 属性
+
+| 属性 | 说明 |
+|-----------|---------|
+| `href` | 目标 URL，或锚点（`#id`，跳转到本页内 id 匹配的元素） |
+| `target` | 打开位置；`_self`（默认，当前标签页）或 `_blank`（新标签页） |
+
+##### 1.2.3.1.2 页面间跳转
 
 ```html
 <!-- 链接到外部网站 -->
@@ -311,21 +345,42 @@ are ignored too.</p>
 <a href="https://www.example.com" target="_blank">Open in New Tab</a>
 ```
 
-| 属性 | 说明 |
-|-----------|---------|
-| `href` | 目标 URL 或锚点 |
-| `target` | 打开位置；`_self`（默认，当前标签页）或 `_blank`（新标签页） |
+##### 1.2.3.1.3 页内锚点定位
 
-#### 1.2.3.2 锚点导航（同一页面内）
+锚点定位依赖目标元素的 `id` 属性：`href="#id"` 会跳转到本页内 `id` 匹配的元素。
 
 ```html
+<!-- 链接到本页的锚点 -->
 <a href="#section1">Jump to Section 1</a>
 
 <!-- 在文档更下方的位置 -->
 <h2 id="section1">Section 1</h2>
 ```
 
-#### 1.2.3.3 `<img>` — Image（图像）
+**id 必须唯一：**
+
+- **规范**：同一文档中 `id` 不能重复，重复属于非法 HTML（浏览器不纠错、照常渲染）。
+- **后果**：重复时锚点跳转和 JS（`getElementById`）都只认第一个匹配元素，而 CSS 的 `#id` 选择器会选中全部——行为不一致，容易出隐蔽 bug。
+
+##### 1.2.3.1.4 默认样式
+
+- **未访问**：蓝色 + 下划线
+- **访问过**：紫色 + 下划线（`:visited`）
+- **点击中**：红色（`:active`）
+
+这些来自浏览器默认样式，不用管它，以后用 CSS 手动改（如 `text-decoration: none; color: black;` 变回普通文字样式），状态样式详见第 7 章伪类：
+
+```html
+<!-- 默认样式：蓝色 + 下划线 -->
+<a href="https://www.example.com">Default link style</a>
+<br>
+<!-- 手动去除默认样式：恢复成普通文字 -->
+<a href="https://www.example.com" style="color: black; text-decoration: none;">Manually de-styled link</a>
+```
+
+![[ch1-link-default-style.png]]
+
+#### 1.2.3.2 `<img>` — Image（图像）
 
 链接和图片渲染到页面上的效果如下（`photo.svg` 是本地占位图，可换成自己的图片文件）：
 
@@ -356,7 +411,9 @@ are ignored too.</p>
 
 ### 1.2.4 `<ul>`、`<ol>`、`<dl>` — 列表标签
 
-四种列表的效果如下（含嵌套示例，`start="4"` 表示从 4 开始编号）：
+#### 1.2.4.1 `<ul>` — 无序列表
+
+无顺序要求的并列条目，默认以圆点符号开头。
 
 ```html
 <!-- 无序列表 -->
@@ -364,13 +421,51 @@ are ignored too.</p>
     <li>Apple</li>
     <li>Banana</li>
 </ul>
+```
 
-<!-- 有序列表 -->
+![[ch1-list-ul.png]]
+
+#### 1.2.4.2 `<ol>` — 有序列表
+
+有顺序的条目，默认自动编号；`start` 属性可以指定起始编号（如 `start="4"` 从 4 开始）。
+
+```html
+<!-- 有序列表，start="4" 表示从 4 开始编号 -->
 <ol start="4">
     <li>Fourth item</li>
     <li>Fifth item</li>
 </ol>
+```
 
+![[ch1-list-ol.png]]
+
+#### 1.2.4.3 `<dl>` — 描述列表
+
+术语 + 解释的列表：`<dt>` 写术语，`<dd>` 写解释。
+
+```html
+<!-- 描述列表 -->
+<dl>
+    <dt>HTML</dt>
+    <dd>HyperText Markup Language, used to create web page structure.</dd>
+    <dt>CSS</dt>
+    <dd>Cascading Style Sheets, used to style HTML documents.</dd>
+</dl>
+```
+
+![[ch1-list-dl.png]]
+
+| 标签 | 含义 |
+|-----|---------|
+| `<dl>` | 描述列表（Description List） |
+| `<dt>` | 描述术语（Description Term） |
+| `<dd>` | 描述详情（Description Details） |
+
+#### 1.2.4.4 嵌套列表
+
+`<li>` 内可以再嵌套一个完整列表，形成多级结构。
+
+```html
 <!-- 嵌套列表：li 内可以再嵌套一个完整列表 -->
 <ul>
     <li>Fruits
@@ -381,24 +476,11 @@ are ignored too.</p>
     </li>
     <li>Vegetables</li>
 </ul>
-
-<!-- 描述列表 -->
-<dl>
-    <dt>HTML</dt>
-    <dd>HyperText Markup Language, used to create web page structure.</dd>
-    <dt>CSS</dt>
-    <dd>Cascading Style Sheets, used to style HTML documents.</dd>
-</dl>
 ```
-![[ch1-lists.png]]
 
-| 标签 | 含义 |
-|-----|---------|
-| `<dl>` | 描述列表（Description List） |
-| `<dt>` | 描述术语（Description Term） |
-| `<dd>` | 描述详情（Description Details） |
+![[ch1-list-nested.png]]
 
-**嵌套规则：**
+#### 1.2.4.5 嵌套规则
 
 - **`<ul>` / `<ol>`**：直接子元素只能是 `<li>`（直接放 `<p>` 等其他标签不推荐）。
 - **`<li>`**：可以放任意元素，包括再嵌套一个完整列表。
